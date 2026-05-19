@@ -48,8 +48,7 @@ jobs:
 
       - name: Sync dist into bundles/units
         run: |
-          rm -rf bundles-worktree
-          mkdir -p bundles-worktree
+          find bundles-worktree -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
           cp -R dist/. bundles-worktree/
 
       - name: Commit, tag, and push bundles branch
