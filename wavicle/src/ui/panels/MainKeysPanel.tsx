@@ -1,5 +1,5 @@
 import { css, domStyled, FC, jsx } from 'alumina';
-import { appConfig, appEnv, IKeyHoldEvent } from '~/base';
+import { appConfig, IKeyHoldEvent } from '~/base';
 import { appStore } from '~/store';
 import { KeysActiveRangeFrame, KeysBlock } from '../organisms';
 
@@ -43,13 +43,13 @@ export const MainKeysPanel: FC = () => {
         holdNoteNumbers={holdNoteNumbers}
         onKeyHoldEvent={handleKeyHoldEvent}
         labelOptions={
-          (appEnv.isPc && {
-            rootNoteNumber: pcKeyboardRootNoteNumber,
-            labels: pcKeyboardKeyLabels,
-          }) ||
+          // (appEnv.isPc && {
+          //   rootNoteNumber: pcKeyboardRootNoteNumber,
+          //   labels: pcKeyboardKeyLabels,
+          // }) ||
           undefined
         }
-        showCenterCMark={true}
+        showCenterCMark={false}
         isMainKeys={true}
       />
     </KeysActiveRangeFrame>,

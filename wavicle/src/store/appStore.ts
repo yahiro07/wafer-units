@@ -1,7 +1,6 @@
 import {
   createMidiInputDriver,
-  IMidiInputDriver,
-  setupPcKeyboardHandler,
+  IMidiInputDriver
 } from '../periphery';
 import { createSynthesizerEngine, ISynthesizerEngine } from '../synthLib';
 import { createUiPresenter, IUiPresenter } from './uiPresenter';
@@ -24,11 +23,11 @@ function createAppStore(): IAppStore {
     async initialize() {
       synthEngine.initialize();
       synthEngine.setInstrument(synthEngine.currentInstrumentKey, false); // initial load
-      setupPcKeyboardHandler(synthEngine, {
-        getRootNoteNumber() {
-          return uiPresenter.readers.pcKeyboardRootNoteNumber;
-        },
-      });
+      // setupPcKeyboardHandler(synthEngine, {
+      //   getRootNoteNumber() {
+      //     return uiPresenter.readers.pcKeyboardRootNoteNumber;
+      //   },
+      // });
       await midiInputDriver.initialize();
     },
   };

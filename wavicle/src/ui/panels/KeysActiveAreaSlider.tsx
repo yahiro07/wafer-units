@@ -21,7 +21,7 @@ export const KeysActiveAreaSlider: FC = () => {
         bottomNoteNumber={bottomNoteNumber}
         numKeys={numKeys}
         holdNoteNumbers={holdNoteNumbers}
-        showCenterCMark={true}
+        showCenterCMark={false}
         isMainKeys={false}
       />
       <div class="cover">
