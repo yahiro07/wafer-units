@@ -1,9 +1,6 @@
-import {
-  createMidiInputDriver,
-  IMidiInputDriver
-} from '../periphery';
-import { createSynthesizerEngine, ISynthesizerEngine } from '../synthLib';
-import { createUiPresenter, IUiPresenter } from './uiPresenter';
+import { createMidiInputDriverDummy, IMidiInputDriver } from "../periphery";
+import { createSynthesizerEngine, ISynthesizerEngine } from "../synthLib";
+import { createUiPresenter, IUiPresenter } from "./uiPresenter";
 
 interface IAppStore {
   initialize(): Promise<void>;
@@ -14,7 +11,7 @@ interface IAppStore {
 
 function createAppStore(): IAppStore {
   const synthEngine = createSynthesizerEngine();
-  const midiInputDriver = createMidiInputDriver(synthEngine);
+  const midiInputDriver = createMidiInputDriverDummy(synthEngine);
   const uiPresenter = createUiPresenter(synthEngine);
   return {
     synthEngine,

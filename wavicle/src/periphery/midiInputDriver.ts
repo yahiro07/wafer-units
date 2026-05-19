@@ -1,5 +1,5 @@
-import { asyncRerender } from 'alumina';
-import { ISynthesizerBase } from '~/base';
+import { asyncRerender } from "alumina";
+import { ISynthesizerBase } from "~/base";
 
 type IMidiInputDeviceEntry = {
   id: string;
@@ -23,7 +23,7 @@ interface IMidiReceiver {
 
 function createMidiReceiver(
   midiIn: WebMidiInput,
-  synth: ISynthesizerBase
+  synth: ISynthesizerBase,
 ): IMidiReceiver {
   function handleMidiMessage(ev: WebMidi.MIDIMessageEvent) {
     const [status, data1, velocity] = ev.data;
@@ -38,20 +38,20 @@ function createMidiReceiver(
   }
   return {
     start() {
-      midiIn.addEventListener('midimessage', handleMidiMessage);
+      midiIn.addEventListener("midimessage", handleMidiMessage);
     },
     stop() {
-      midiIn.removeEventListener('midimessage', handleMidiMessage as any);
+      midiIn.removeEventListener("midimessage", handleMidiMessage as any);
     },
   };
 }
 
-export function createMidiInputDriver(
-  synth: ISynthesizerBase
+export function createMidiInputDriver_notInUse(
+  synth: ISynthesizerBase,
 ): IMidiInputDriver {
   let midiAccess: WebMidiAccess | undefined;
   let allDeviceEntries: IMidiInputDeviceEntry[] = [];
-  let currentDeviceId = '' as string;
+  let currentDeviceId = "" as string;
   let midiReceiver: IMidiReceiver | undefined;
 
   function getMidiInputs(): WebMidiInput[] {
@@ -82,7 +82,7 @@ export function createMidiInputDriver(
       name: it.name || `device_${it.id}`,
     }));
     if (currentDeviceId && !getMidiInputById(currentDeviceId)) {
-      selectDevice('');
+      selectDevice("");
     }
     if (allDeviceEntries.length !== prevNumDevices) {
       asyncRerender();
@@ -106,5 +106,24 @@ export function createMidiInputDriver(
       return currentDeviceId;
     },
     selectDevice,
+  };
+}
+
+export function createMidiInputDriverDummy(
+  _synth: ISynthesizerBase,
+): IMidiInputDriver {
+  return {
+    async initialize() {
+      // do nothing
+    },
+    get allDeviceEntries() {
+      return [];
+    },
+    get currentDeviceId() {
+      return "";
+    },
+    selectDevice(_id: string) {
+      // do nothing
+    },
   };
 }
