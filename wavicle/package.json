@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "@types/node": "^25.9.0",
-    "@types/webmidi": "^3.0.1",
     "alumina": "^0.1.14",
     "alumina-visor": "^0.1.6",
     "typescript": "^6.0.3",

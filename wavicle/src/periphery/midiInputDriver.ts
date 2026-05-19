@@ -13,20 +13,17 @@ export interface IMidiInputDriver {
   selectDevice(id: string): void;
 }
 
-type WebMidiAccess = WebMidi.MIDIAccess;
-type WebMidiInput = WebMidi.MIDIInput;
-
 interface IMidiReceiver {
   start(): void;
   stop(): void;
 }
 
 function createMidiReceiver(
-  midiIn: WebMidiInput,
+  midiIn: MIDIInput,
   synth: ISynthesizerBase,
 ): IMidiReceiver {
-  function handleMidiMessage(ev: WebMidi.MIDIMessageEvent) {
-    const [status, data1, velocity] = ev.data;
+  function handleMidiMessage(ev: MIDIMessageEvent) {
+    const [status, data1, velocity] = Array.from(ev.data!);
     const op = status & 0xf0;
     const noteNumber = data1;
     if (op === 0x90 && velocity > 0) {
@@ -49,17 +46,21 @@ function createMidiReceiver(
 export function createMidiInputDriver_notInUse(
   synth: ISynthesizerBase,
 ): IMidiInputDriver {
-  let midiAccess: WebMidiAccess | undefined;
+  let midiAccess: MIDIAccess | undefined;
   let allDeviceEntries: IMidiInputDeviceEntry[] = [];
   let currentDeviceId = "" as string;
   let midiReceiver: IMidiReceiver | undefined;
 
-  function getMidiInputs(): WebMidiInput[] {
+  function getMidiInputs(): MIDIInput[] {
     if (!midiAccess) return [];
-    return [...midiAccess.inputs].map((it) => it[1]);
+    const res: MIDIInput[] = [];
+    midiAccess.inputs.forEach((it) => {
+      res.push(it);
+    });
+    return res;
   }
 
-  function getMidiInputById(id: string): WebMidiInput | undefined {
+  function getMidiInputById(id: string): MIDIInput | undefined {
     return getMidiInputs().find((it) => it.id === id);
   }
 
