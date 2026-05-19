@@ -1,3 +1,4 @@
+import { setupUnit } from "@/periphery/setupUnit";
 import { createMidiInputDriverDummy, IMidiInputDriver } from "../periphery";
 import { createSynthesizerEngine, ISynthesizerEngine } from "../synthLib";
 import { createUiPresenter, IUiPresenter } from "./uiPresenter";
@@ -26,6 +27,7 @@ function createAppStore(): IAppStore {
       //   },
       // });
       await midiInputDriver.initialize();
+      setupUnit(synthEngine);
     },
   };
 }

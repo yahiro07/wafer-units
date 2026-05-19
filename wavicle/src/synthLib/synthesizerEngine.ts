@@ -1,6 +1,7 @@
 import { asyncRerender } from "alumina";
 import { IInstrumentKey } from "@/base";
 import { arrays } from "@/funcs";
+import { getHostInterface } from "../../../wus-unit-types";
 import { createInstrumentProvider } from "./instrumentProvider";
 import { createPitchShiftedNoteVoice } from "./noteVoice";
 import { createNoteVoiceManager } from "./noteVoiceManager";
@@ -34,7 +35,8 @@ function createNoteKey(noteNumber: number): string {
 }
 
 export function createSynthesizerEngine(): ISynthesizerEngine {
-  const audioContext = new AudioContext();
+  const hostInterface = getHostInterface();
+  const audioContext = hostInterface?.audioContext ?? new AudioContext();
   const instrumentProvider = createInstrumentProvider(audioContext);
   const { allInstrumentKeys } = instrumentProvider;
 
@@ -42,7 +44,9 @@ export function createSynthesizerEngine(): ISynthesizerEngine {
   const voiceMixer = audioContext.createGain();
   const compressor = audioContext.createDynamicsCompressor();
 
-  voiceMixer.connect(compressor).connect(audioContext.destination);
+  voiceMixer
+    .connect(compressor)
+    .connect(hostInterface?.audioDestinationNode ?? audioContext.destination);
 
   let timerId = undefined as NodeJS.Timeout | undefined;
   let masterVolume = 1;
