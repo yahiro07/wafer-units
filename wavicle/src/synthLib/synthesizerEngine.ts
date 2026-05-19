@@ -48,7 +48,7 @@ export function createSynthesizerEngine(): ISynthesizerEngine {
     .connect(compressor)
     .connect(hostInterface?.audioDestinationNode ?? audioContext.destination);
 
-  let timerId = undefined as NodeJS.Timeout | undefined;
+  let timerId = undefined as ReturnType<typeof setTimeout> | undefined;
   let masterVolume = 1;
   let isLoadingSamples = false;
   let instrumentData: IInstrumentData | undefined;

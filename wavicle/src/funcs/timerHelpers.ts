@@ -14,7 +14,7 @@ export function debounce<T extends any[]>(
   targetProc: (...args: T) => void,
   ms: number,
 ) {
-  let timerId: NodeJS.Timeout | undefined;
+  let timerId: ReturnType<typeof setTimeout> | undefined;
   return (...args: T) => {
     if (timerId) {
       clearTimeout(timerId);
