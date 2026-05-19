@@ -1,6 +1,6 @@
-import { jsx } from 'alumina';
-import { IconFontIcon } from './IconFontIcon';
-import { PadButton } from './PadButton';
+import { jsx } from "alumina";
+import { IconFontIcon } from "./IconFontIcon";
+import { PadButton } from "./PadButton";
 
 export default {
   large: () => <PadButton height={100}>aa</PadButton>,

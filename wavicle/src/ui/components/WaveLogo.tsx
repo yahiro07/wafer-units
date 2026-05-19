@@ -1,5 +1,5 @@
-import { css, domStyled, FC, jsx } from 'alumina';
-import { useUiThemeContext } from '../base';
+import { css, domStyled, FC, jsx } from "alumina";
+import { useUiThemeContext } from "../base";
 
 type Props = {
   size: number;
@@ -26,6 +26,6 @@ export const WaveLogo: FC<Props> = ({ size }) => {
       width: ${size}px;
       height: ${size}px;
       fill: ${fgColor};
-    `
+    `,
   );
 };

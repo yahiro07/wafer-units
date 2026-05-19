@@ -1,7 +1,7 @@
-import { css, domStyled, FC, jsx } from 'alumina';
-import { rgbTranslucent } from '~/funcs';
-import { appStore } from '~/store';
-import { cssCommonTransitionSpec, useUiThemeContext } from '../base';
+import { css, domStyled, FC, jsx } from "alumina";
+import { rgbTranslucent } from "~/funcs";
+import { appStore } from "~/store";
+import { cssCommonTransitionSpec, useUiThemeContext } from "../base";
 
 export const LanguageSelectionPart: FC = () => {
   const { clForeground, clControlHighlight } = useUiThemeContext().colors;
@@ -15,14 +15,14 @@ export const LanguageSelectionPart: FC = () => {
   return domStyled(
     <div>
       <div
-        class={languageKey === 'en' && '--active'}
-        onClick={() => setLanguageKey('en')}
+        class={languageKey === "en" && "--active"}
+        onClick={() => setLanguageKey("en")}
       >
         EN
       </div>
       <div
-        class={languageKey === 'ja' && '--active'}
-        onClick={() => setLanguageKey('ja')}
+        class={languageKey === "ja" && "--active"}
+        onClick={() => setLanguageKey("ja")}
       >
         JA
       </div>
@@ -46,6 +46,6 @@ export const LanguageSelectionPart: FC = () => {
           border-color: ${rgbTranslucent(activeColor, 0.5)};
         }
       }
-    `
+    `,
   );
 };

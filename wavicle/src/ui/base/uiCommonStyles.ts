@@ -1,5 +1,5 @@
-import { css } from 'alumina';
-import { useUiThemeContext } from './uiThemeContext';
+import { css } from "alumina";
+import { useUiThemeContext } from "./uiThemeContext";
 
 export const commonTransitionSec = `0.25s`;
 
@@ -18,14 +18,14 @@ export const uiFontFamilySpecPrimaryLabelsJa = `${uiFontFamilyPanelFontJa}, sans
 
 export const uiFontFamilySpecKeyLabels = `Play, sans-serif`;
 
-export const uiFontFamilyLcd = 'Play';
+export const uiFontFamilyLcd = "Play";
 
 export function switchFontByLanguage(
   fontFamilyEn: string,
-  fontFamilyJa: string
+  fontFamilyJa: string,
 ) {
   const { languageKey } = useUiThemeContext();
-  if (languageKey === 'ja') {
+  if (languageKey === "ja") {
     return fontFamilyJa;
   } else {
     return fontFamilyEn;
@@ -34,7 +34,7 @@ export function switchFontByLanguage(
 
 export function switchFontSizeByLanguage(sizeEn: string, sizeJa: string) {
   const { languageKey } = useUiThemeContext();
-  if (languageKey === 'ja') {
+  if (languageKey === "ja") {
     return sizeJa;
   } else {
     return sizeEn;

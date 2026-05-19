@@ -1,7 +1,7 @@
-import { jsx } from 'alumina';
-import { GeneralSelector } from './GeneralSelector';
+import { jsx } from "alumina";
+import { GeneralSelector } from "./GeneralSelector";
 
-const options1 = ['apple', 'orange', 'banana'];
+const options1 = ["apple", "orange", "banana"];
 export default {
   main: () => (
     <GeneralSelector

@@ -12,7 +12,7 @@ export function createLoopIntervalMonitor(): { next(): number } {
 
 export function debounce<T extends any[]>(
   targetProc: (...args: T) => void,
-  ms: number
+  ms: number,
 ) {
   let timerId: NodeJS.Timeout | undefined;
   return (...args: T) => {

@@ -1,5 +1,5 @@
-import { asyncRerender } from 'alumina';
-import { nums } from './utils';
+import { asyncRerender } from "alumina";
+import { nums } from "./utils";
 
 export type IValueAnimator = {
   flush(): void;
@@ -9,7 +9,7 @@ export function animateValue(
   destFn: (value: number) => void,
   v0: number,
   v1: number,
-  timeMs: number
+  timeMs: number,
 ): IValueAnimator {
   const startTime = Date.now();
   const endTime = startTime + timeMs;

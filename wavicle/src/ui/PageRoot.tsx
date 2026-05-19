@@ -1,16 +1,16 @@
-import { css, domStyled, jsx } from 'alumina';
-import { appEnv } from '~/base';
-import { appStore } from '~/store';
-import { MainPanel } from './MainPanel';
+import { css, domStyled, jsx } from "alumina";
+import { appEnv } from "~/base";
+import { appStore } from "~/store";
+import { MainPanel } from "./MainPanel";
 import {
   uiThemeContextValueDefault,
   uiThemeContext,
   switchFontByLanguage,
   uiFontFamilyMainFont,
   uiFontFamilyMainFontJa,
-} from './base';
-import { ScalerBox } from './components';
-import { UsagePanel } from './panels';
+} from "./base";
+import { ScalerBox } from "./components";
+import { UsagePanel } from "./panels";
 
 export const PageRoot = () => {
   const { languageKey, usagePanelVisible } = appStore.uiPresenter.state;
@@ -18,7 +18,7 @@ export const PageRoot = () => {
 
   const mainFontFamily = switchFontByLanguage(
     uiFontFamilyMainFont,
-    uiFontFamilyMainFontJa
+    uiFontFamilyMainFontJa,
   );
   return domStyled(
     <uiThemeContext.Provider value={uiTheme}>
@@ -36,7 +36,7 @@ export const PageRoot = () => {
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: ${appEnv.isPc ? '3%' : 0};
+      padding: ${appEnv.isPc ? "3%" : 0};
       touch-action: none;
 
       font-family: ${mainFontFamily}, sans-serif;
@@ -46,6 +46,6 @@ export const PageRoot = () => {
         background-size: cover;
         border-radius: 2px;
       }
-    `
+    `,
   );
 };

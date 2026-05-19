@@ -1,5 +1,5 @@
-import { FC, domStyled, css, jsx } from 'alumina';
-import { IconFontIcon } from './IconFontIcon';
+import { FC, domStyled, css, jsx } from "alumina";
+import { IconFontIcon } from "./IconFontIcon";
 
 export const LocalLoadingSpinner: FC<{ isLoading: boolean }> = ({
   isLoading,
@@ -8,7 +8,7 @@ export const LocalLoadingSpinner: FC<{ isLoading: boolean }> = ({
     <IconFontIcon
       spec="ph-spinner"
       size={24}
-      class={isLoading && '--visible'}
+      class={isLoading && "--visible"}
     />,
     css`
       @keyframes rotation1 {
@@ -25,6 +25,6 @@ export const LocalLoadingSpinner: FC<{ isLoading: boolean }> = ({
       &.--visible {
         visibility: visible;
       }
-    `
+    `,
   );
 };

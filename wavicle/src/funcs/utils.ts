@@ -15,7 +15,7 @@ export namespace nums {
     s1: number,
     d0: number,
     d1: number,
-    clamp?: boolean
+    clamp?: boolean,
   ) {
     const res = ((val - s0) / (s1 - s0)) * (d1 - d0) + d0;
     if (clamp) {

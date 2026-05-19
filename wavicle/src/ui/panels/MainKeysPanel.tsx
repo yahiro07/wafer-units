@@ -1,11 +1,11 @@
-import { css, domStyled, FC, jsx } from 'alumina';
-import { appConfig, IKeyHoldEvent } from '~/base';
-import { appStore } from '~/store';
-import { KeysActiveRangeFrame, KeysBlock } from '../organisms';
+import { css, domStyled, FC, jsx } from "alumina";
+import { appConfig, IKeyHoldEvent } from "~/base";
+import { appStore } from "~/store";
+import { KeysActiveRangeFrame, KeysBlock } from "../organisms";
 
-const pcKeyboardKeyLabels = 'zsxdcvgbhnjmq2w3er5t6y7ui9o0p'
+const pcKeyboardKeyLabels = "zsxdcvgbhnjmq2w3er5t6y7ui9o0p"
   .toUpperCase()
-  .split('');
+  .split("");
 
 export const MainKeysPanel: FC = () => {
   const { bottomNoteNumber, numKeys } = appConfig;
@@ -58,6 +58,6 @@ export const MainKeysPanel: FC = () => {
       border-left: solid ${edgeWidth2}px #0004;
       border-right: solid ${edgeWidth2}px #fff6;
       padding-bottom: 8px;
-    `
+    `,
   );
 };

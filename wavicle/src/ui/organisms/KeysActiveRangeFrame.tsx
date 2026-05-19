@@ -1,4 +1,4 @@
-import { AluminaNode, css, domStyled, FC, jsx } from 'alumina';
+import { AluminaNode, css, domStyled, FC, jsx } from "alumina";
 
 type Props = {
   unitWidthPx: number;
@@ -34,6 +34,6 @@ export const KeysActiveRangeFrame: FC<Props> = ({
         top: 0;
         left: ${innerLeftPx}px;
       }
-    `
+    `,
   );
 };

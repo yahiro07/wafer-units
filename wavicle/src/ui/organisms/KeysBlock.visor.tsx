@@ -1,5 +1,5 @@
-import { jsx } from 'alumina';
-import { KeysBlock } from './KeysBlock';
+import { jsx } from "alumina";
+import { KeysBlock } from "./KeysBlock";
 
 export default {
   full: () => (

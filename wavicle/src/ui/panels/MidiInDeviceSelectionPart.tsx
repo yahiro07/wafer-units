@@ -1,8 +1,8 @@
-import { FC, jsx } from 'alumina';
-import { appStore } from '~/store';
-import { ISelectorOption } from '../base';
-import { useUiTexts } from '../base/uiTexts';
-import { GeneralSelector, ParameterLabel } from '../components';
+import { FC, jsx } from "alumina";
+import { appStore } from "~/store";
+import { ISelectorOption } from "../base";
+import { useUiTexts } from "../base/uiTexts";
+import { GeneralSelector, ParameterLabel } from "../components";
 
 export const MidiInDeviceSelectionPart: FC = () => {
   const { allDeviceEntries, currentDeviceId, selectDevice } =
@@ -10,7 +10,7 @@ export const MidiInDeviceSelectionPart: FC = () => {
 
   const texts = useUiTexts();
 
-  const blankOption: ISelectorOption = { value: '', label: texts.none };
+  const blankOption: ISelectorOption = { value: "", label: texts.none };
   const options: ISelectorOption[] = [
     blankOption,
     ...allDeviceEntries.map((it) => ({

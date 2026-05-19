@@ -1,6 +1,6 @@
-import { FC, jsx } from 'alumina';
-import { appStore } from '~/store';
-import { ShifterButtonsUi } from '../organisms';
+import { FC, jsx } from "alumina";
+import { appStore } from "~/store";
+import { ShifterButtonsUi } from "../organisms";
 
 export const OctaveShifterPart: FC = () => {
   const {

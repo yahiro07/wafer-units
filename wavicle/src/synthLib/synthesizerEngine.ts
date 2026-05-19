@@ -1,10 +1,10 @@
-import { asyncRerender } from 'alumina';
-import { IInstrumentKey } from '~/base';
-import { arrays } from '~/funcs';
-import { createInstrumentProvider } from './instrumentProvider';
-import { createPitchShiftedNoteVoice } from './noteVoice';
-import { createNoteVoiceManager } from './noteVoiceManager';
-import { IInstrumentData, IInstrumentParameters } from './types';
+import { asyncRerender } from "alumina";
+import { IInstrumentKey } from "~/base";
+import { arrays } from "~/funcs";
+import { createInstrumentProvider } from "./instrumentProvider";
+import { createPitchShiftedNoteVoice } from "./noteVoice";
+import { createNoteVoiceManager } from "./noteVoiceManager";
+import { IInstrumentData, IInstrumentParameters } from "./types";
 
 export interface ISynthesizerEngine {
   allInstrumentKeys: IInstrumentKey[];
@@ -22,7 +22,7 @@ export interface ISynthesizerEngine {
   preloadAllInstrumentSamples(): Promise<void>;
   setInstrument(
     instrumentKey: IInstrumentKey,
-    updateReleaseParam: boolean
+    updateReleaseParam: boolean,
   ): void;
   noteOn(noteNumber: number, velocity?: number): void;
   noteOff(noteNumber: number): void;
@@ -105,13 +105,12 @@ export function createSynthesizerEngine(): ISynthesizerEngine {
     },
     async setInstrument(
       instrumentKey: IInstrumentKey,
-      updateReleaseParam: boolean
+      updateReleaseParam: boolean,
     ) {
       currentInstrumentKey = instrumentKey;
       isLoadingSamples = true;
-      const tmpInstrumentData = await instrumentProvider.loadInstrument(
-        instrumentKey
-      );
+      const tmpInstrumentData =
+        await instrumentProvider.loadInstrument(instrumentKey);
       isLoadingSamples = false;
       if (currentInstrumentKey !== instrumentKey) {
         return;
@@ -119,7 +118,7 @@ export function createSynthesizerEngine(): ISynthesizerEngine {
       instrumentData = tmpInstrumentData;
 
       if (updateReleaseParam) {
-        self.setInstrumentParameter('release', instrumentData.releaseParam);
+        self.setInstrumentParameter("release", instrumentData.releaseParam);
       }
       asyncRerender();
     },
@@ -138,7 +137,7 @@ export function createSynthesizerEngine(): ISynthesizerEngine {
         sampleSources,
         instrumentParameters,
         gainAdjustment,
-        voiceMixer
+        voiceMixer,
       );
       noteVoiceManager.noteOn(noteKey, voice);
       holdNoteNumbers.push(noteNumber);

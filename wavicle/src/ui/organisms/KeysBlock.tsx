@@ -1,12 +1,12 @@
-import { asyncRerender, css, domStyled, FC, jsx, useLocal } from 'alumina';
-import { IKeyHoldEvent } from '~/base';
+import { asyncRerender, css, domStyled, FC, jsx, useLocal } from "alumina";
+import { IKeyHoldEvent } from "~/base";
 import {
   arrays,
   preventDefaultHandler,
   startDragSessionRelative,
-} from '~/funcs';
-import { uiFontFamilySpecKeyLabels } from '../base';
-import { keysBlockHelpers } from './keysBlockHelpers';
+} from "~/funcs";
+import { uiFontFamilySpecKeyLabels } from "../base";
+import { keysBlockHelpers } from "./keysBlockHelpers";
 
 type IKeyLabelOptions = {
   rootNoteNumber: number;
@@ -26,7 +26,7 @@ type Props = {
 
 function getKeyLabel(
   noteNumber: number,
-  labelOptions: IKeyLabelOptions | undefined
+  labelOptions: IKeyLabelOptions | undefined,
 ): string | undefined {
   if (!labelOptions) {
     return undefined;
@@ -46,13 +46,13 @@ export const KeysBlock: FC<Props> = ({
   showCenterCMark,
   isMainKeys,
 }) => {
-  const labelColor = '#f80b';
+  const labelColor = "#f80b";
 
   const { getKeyOffsetInUnits, getKeysOuterWidthU, checkBlackKey } =
     keysBlockHelpers;
   const noteNumbers = arrays.range(
     bottomNoteNumber,
-    bottomNoteNumber + numKeys - 1
+    bottomNoteNumber + numKeys - 1,
   );
   const baseOffset = getKeyOffsetInUnits(bottomNoteNumber, true);
   const blackHeight = height * 0.63;
@@ -83,10 +83,10 @@ export const KeysBlock: FC<Props> = ({
       moveHandler(_, e1) {
         const el = document.elementFromPoint(
           e1.clientX,
-          e1.clientY
+          e1.clientY,
         ) as HTMLElement;
-        if (el?.classList.contains('keyblocks-playable-key')) {
-          const newNoteNumber = parseInt(el.dataset['noteNumber'] || '');
+        if (el?.classList.contains("keyblocks-playable-key")) {
+          const newNoteNumber = parseInt(el.dataset["noteNumber"] || "");
           if (isFinite(newNoteNumber)) {
             if (newNoteNumber !== local.playingNoteNumber) {
               stopTone();
@@ -124,11 +124,11 @@ export const KeysBlock: FC<Props> = ({
           <div
             key={noteNumber}
             class={[
-              'key',
-              isBlackKey && '--black',
-              hold && '--hold',
-              canPlay && '--can-play',
-              canPlay && 'keyblocks-playable-key',
+              "key",
+              isBlackKey && "--black",
+              hold && "--hold",
+              canPlay && "--can-play",
+              canPlay && "keyblocks-playable-key",
             ]}
             style={{ left: `${left}px` }}
             onPointerDown={
@@ -196,7 +196,7 @@ export const KeysBlock: FC<Props> = ({
           height: 5px;
           border-radius: 50%;
           background: ${labelColor};
-          margin-bottom: ${isMainKeys && !labelVisible ? '10px' : '2px'};
+          margin-bottom: ${isMainKeys && !labelVisible ? "10px" : "2px"};
         }
 
         > .label {
@@ -219,6 +219,6 @@ export const KeysBlock: FC<Props> = ({
         z-index: 2;
         pointer-events: none;
       }
-    `
+    `,
   );
 };

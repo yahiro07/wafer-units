@@ -1,4 +1,4 @@
-import { IInstrumentParameters, INoteSampleSource } from './types';
+import { IInstrumentParameters, INoteSampleSource } from "./types";
 
 export type INoteVoice = {
   noteOn(): void;
@@ -9,10 +9,10 @@ export type INoteVoice = {
 
 function getNearestSampleSource(
   noteNumber: number,
-  sampleSources: INoteSampleSource[]
+  sampleSources: INoteSampleSource[],
 ) {
   const distances = sampleSources.map((it) =>
-    Math.abs(it.noteNumber - noteNumber)
+    Math.abs(it.noteNumber - noteNumber),
   );
   const minDistance = Math.min(...distances);
   const index = distances.indexOf(minDistance);
@@ -25,7 +25,7 @@ export function createPitchShiftedNoteVoice(
   samplesSources: INoteSampleSource[],
   toneParameters: IInstrumentParameters,
   gainAdjustment: number,
-  destinationNode: AudioNode
+  destinationNode: AudioNode,
 ): INoteVoice {
   const sr = audioContext.sampleRate;
   const sampleSource = getNearestSampleSource(noteNumber, samplesSources);

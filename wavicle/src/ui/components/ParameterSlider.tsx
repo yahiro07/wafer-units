@@ -1,5 +1,5 @@
-import { css, FC, jsx } from 'alumina';
-import { reflectFloatValue } from '~/funcs';
+import { css, FC, jsx } from "alumina";
+import { reflectFloatValue } from "~/funcs";
 
 type Props = {
   value: number;

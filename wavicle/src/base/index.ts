@@ -1,3 +1,3 @@
-export * from './appConfig';
-export * from './instrumentDefinition';
-export * from './types';
+export * from "./appConfig";
+export * from "./instrumentDefinition";
+export * from "./types";

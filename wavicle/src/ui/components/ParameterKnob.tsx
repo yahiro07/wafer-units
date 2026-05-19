@@ -1,6 +1,6 @@
-import { asyncRerender, css, domStyled, FC, jsx, useLocal } from 'alumina';
-import { nums, startDragSessionRelative } from '~/funcs';
-import { useUiThemeContext, commonTransitionSec } from '../base';
+import { asyncRerender, css, domStyled, FC, jsx, useLocal } from "alumina";
+import { nums, startDragSessionRelative } from "~/funcs";
+import { useUiThemeContext, commonTransitionSec } from "../base";
 
 type Props = {
   value: number;
@@ -25,7 +25,7 @@ export const ParameterKnob: FC<Props> = ({ value, onChange, size }) => {
     0,
     1,
     270 - angleHalfRange,
-    270 + angleHalfRange
+    270 + angleHalfRange,
   );
   const markerTransformSpec = `rotate(${markerAngle})`;
 
@@ -50,7 +50,7 @@ export const ParameterKnob: FC<Props> = ({ value, onChange, size }) => {
   return domStyled(
     <div>
       <div class="cover" />
-      <svg viewBox={viewBoxSpec} class={local.dragging && '--dragging'}>
+      <svg viewBox={viewBoxSpec} class={local.dragging && "--dragging"}>
         <circle
           class="knob"
           cx={0}
@@ -101,6 +101,6 @@ export const ParameterKnob: FC<Props> = ({ value, onChange, size }) => {
           }
         }
       }
-    `
+    `,
   );
 };

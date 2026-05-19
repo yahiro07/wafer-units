@@ -1,7 +1,7 @@
-import { FC, domStyled, jsx, css } from 'alumina';
-import { appConfig } from '~/base';
-import { appStore } from '~/store';
-import { KeysBlock, KeysRangeGauge } from '../organisms';
+import { FC, domStyled, jsx, css } from "alumina";
+import { appConfig } from "~/base";
+import { appStore } from "~/store";
+import { KeysBlock, KeysRangeGauge } from "../organisms";
 
 export const KeysActiveAreaSlider: FC = () => {
   const { bottomNoteNumber, numKeys } = appConfig;
@@ -44,6 +44,6 @@ export const KeysActiveAreaSlider: FC = () => {
         left: 0;
         top: 0;
       }
-    `
+    `,
   );
 };

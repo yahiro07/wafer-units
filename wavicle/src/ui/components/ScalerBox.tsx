@@ -8,7 +8,7 @@ import {
   AluminaNode,
   FC,
   domStyled,
-} from 'alumina';
+} from "alumina";
 
 type Props = {
   contentWidth: number;
@@ -43,7 +43,7 @@ export const ScalerBox: FC<Props> = ({
   return domStyled(
     <div ref={ref}>
       <div
-        class={['inner', 'bg-plane']}
+        class={["inner", "bg-plane"]}
         style={{
           width: `${contentWidth * local.scale}px`,
           height: `${contentHeight * local.scale}px`,
@@ -78,6 +78,6 @@ export const ScalerBox: FC<Props> = ({
         margin: auto auto;
         transform-origin: left top;
       }
-    `
+    `,
   );
 };

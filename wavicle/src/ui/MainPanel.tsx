@@ -1,6 +1,6 @@
-import { css, domStyled, FC, jsx } from 'alumina';
-import { appEnv } from '~/base';
-import { useUiThemeContext } from './base';
+import { css, domStyled, FC, jsx } from "alumina";
+import { appEnv } from "~/base";
+import { useUiThemeContext } from "./base";
 import {
   AppControlsPart,
   InstrumentSelectionPart,
@@ -11,8 +11,8 @@ import {
   ParameterControlsPart,
   SystemMessagePanel,
   TitlesPart,
-} from './panels';
-import { LanguageSelectionPart } from './panels/LanguageSelectionPart';
+} from "./panels";
+import { LanguageSelectionPart } from "./panels/LanguageSelectionPart";
 
 export const MainPanel: FC = () => {
   const { colors } = useUiThemeContext();
@@ -120,6 +120,6 @@ export const MainPanel: FC = () => {
         border-bottom: solid ${edgeWidth}px #0003;
         border-right: solid ${edgeWidth}px #0004;
       }
-    `
+    `,
   );
 };

@@ -14,6 +14,6 @@ export type IPcKeyboardRootNoteGetter = {
   getRootNoteNumber(): number;
 };
 
-export type ILanguageKey = 'en' | 'ja';
+export type ILanguageKey = "en" | "ja";
 
-export type ISampleLoopingMethod = 'SL' | 'XF';
+export type ISampleLoopingMethod = "SL" | "XF";

@@ -1,12 +1,12 @@
-import { ISampleLoopingMethod } from '~/base';
-import { nums } from '~/funcs';
-import { INoteSampleSourceLoopSpec } from './types';
+import { ISampleLoopingMethod } from "~/base";
+import { nums } from "~/funcs";
+import { INoteSampleSourceLoopSpec } from "./types";
 
 function copyBuffer(
   dst: Float32Array,
   src: Float32Array,
   offset: number,
-  length: number
+  length: number,
 ) {
   for (let i = 0; i < length; i++) {
     const pos = offset + i;
@@ -18,7 +18,7 @@ function scaleBuffer(
   buffer: Float32Array,
   offset: number,
   length: number,
-  scale: number
+  scale: number,
 ) {
   for (let i = 0; i < length; i++) {
     const pos = offset + i;
@@ -35,7 +35,7 @@ export function instrumentProvider_sampleLoader_getToneBuffer(
   serialTonesBuffer: AudioBuffer,
   sliceDuration: number,
   sliceIndex: number,
-  audioContext: AudioContext
+  audioContext: AudioContext,
 ): AudioBuffer {
   const sr = serialTonesBuffer.sampleRate;
   const dur = sliceDuration;
@@ -76,7 +76,7 @@ export function instrumentProvider_sampleLoader_getToneBufferWithLoop0(
   sliceDuration: number,
   sliceIndex: number,
   audioContext: AudioContext,
-  noteNumber: number
+  noteNumber: number,
 ): { samples: AudioBuffer; loopSpec: INoteSampleSourceLoopSpec } {
   const sr = serialTonesBuffer.sampleRate;
   const dur = sliceDuration;
@@ -136,7 +136,7 @@ export function instrumentProvider_sampleLoader_getToneBufferWithLoop(
   sliceIndex: number,
   audioContext: AudioContext,
   noteNumber: number,
-  loopingMethod: ISampleLoopingMethod = 'SL'
+  loopingMethod: ISampleLoopingMethod = "SL",
 ): { samples: AudioBuffer; loopSpec: INoteSampleSourceLoopSpec } {
   const sr = serialTonesBuffer.sampleRate;
   const dur = sliceDuration;
@@ -152,7 +152,7 @@ export function instrumentProvider_sampleLoader_getToneBufferWithLoop(
 
   const freq = Math.pow(2, (noteNumber - 69) / 12) * 440;
 
-  if (loopingMethod === 'SL') {
+  if (loopingMethod === "SL") {
     // simple loop
     const loopHeadSec = 0.75;
     const loopDurSecBase = 2;

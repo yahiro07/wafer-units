@@ -1,4 +1,4 @@
-import { css } from 'alumina';
+import { css } from "alumina";
 
 export const cssGlobalStyle = css`
   * {

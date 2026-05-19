@@ -1,7 +1,7 @@
-import { css, domStyled, FC, jsx } from 'alumina';
-import { appStore } from '~/store';
-import { useUiTexts } from '../base/uiTexts';
-import { ParameterKnob, ParameterLabel } from '../components';
+import { css, domStyled, FC, jsx } from "alumina";
+import { appStore } from "~/store";
+import { useUiTexts } from "../base/uiTexts";
+import { ParameterKnob, ParameterLabel } from "../components";
 
 export const ParameterControlsPart: FC = () => {
   const { instrumentParameters, setInstrumentParameter } = appStore.synthEngine;
@@ -14,7 +14,7 @@ export const ParameterControlsPart: FC = () => {
         <ParameterLabel text={texts.volume} />
         <ParameterKnob
           value={instrumentParameters.volume}
-          onChange={(val) => setInstrumentParameter('volume', val)}
+          onChange={(val) => setInstrumentParameter("volume", val)}
           size={knobSize}
         />
       </div>
@@ -22,7 +22,7 @@ export const ParameterControlsPart: FC = () => {
         <ParameterLabel text={texts.release} />
         <ParameterKnob
           value={instrumentParameters.release}
-          onChange={(val) => setInstrumentParameter('release', val)}
+          onChange={(val) => setInstrumentParameter("release", val)}
           size={knobSize}
         />
       </div>
@@ -36,6 +36,6 @@ export const ParameterControlsPart: FC = () => {
         flex-direction: column;
         align-items: center;
       }
-    `
+    `,
   );
 };

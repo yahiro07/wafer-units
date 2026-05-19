@@ -1,5 +1,5 @@
 export const appConfig = {
-  versionCode: 'v220907',
+  versionCode: "v220907",
   bottomNoteNumber: 24,
   numKeys: 85,
   activeKeyRangeUnitOffsetDefault: 14,

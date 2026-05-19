@@ -1,5 +1,5 @@
-import { createContext, useContext } from 'alumina';
-import { ILanguageKey } from '~/base';
+import { createContext, useContext } from "alumina";
+import { ILanguageKey } from "~/base";
 
 type IUiThemeContextValue = {
   languageKey: ILanguageKey;
@@ -12,16 +12,16 @@ type IUiThemeContextValue = {
 };
 
 export const uiThemeContextValueDefault: IUiThemeContextValue = {
-  languageKey: 'en',
+  languageKey: "en",
   colors: {
-    clPanelBody: '#aceefe88',
-    clForeground: '#fff',
-    clControlHighlight: '#0AF',
-    systemMessage: '#F08',
+    clPanelBody: "#aceefe88",
+    clForeground: "#fff",
+    clControlHighlight: "#0AF",
+    systemMessage: "#F08",
   },
 };
 export const uiThemeContext = createContext<IUiThemeContextValue>(
-  uiThemeContextValueDefault
+  uiThemeContextValueDefault,
 );
 
 export function useUiThemeContext() {

@@ -1,5 +1,5 @@
-import { asyncRerender } from 'alumina';
-import { IPcKeyboardRootNoteGetter, ISynthesizerBase } from '~/base';
+import { asyncRerender } from "alumina";
+import { IPcKeyboardRootNoteGetter, ISynthesizerBase } from "~/base";
 
 type IKeySequenceEntry = {
   octave: number;
@@ -9,17 +9,17 @@ type IKeySequenceEntry = {
 const keySequenceEntries1: IKeySequenceEntry[] = [
   {
     octave: 0,
-    keysSequence: 'zsxdcvgbhnjm,l.;/',
+    keysSequence: "zsxdcvgbhnjm,l.;/",
   },
   {
     octave: 1,
-    keysSequence: 'q2w3er5t6y7ui9o0p',
+    keysSequence: "q2w3er5t6y7ui9o0p",
   },
 ];
 
 function getNoteNumberFromKey(
   key: string,
-  rootNoteGetter: IPcKeyboardRootNoteGetter
+  rootNoteGetter: IPcKeyboardRootNoteGetter,
 ): number | undefined {
   const keySequenceEntries = keySequenceEntries1;
   const rootNoteNumber = rootNoteGetter.getRootNoteNumber();
@@ -37,7 +37,7 @@ const keyToNoteNumberMap = new Map<string, number>();
 
 export function setupPcKeyboardHandler(
   synth: ISynthesizerBase,
-  rootNoteGetter: IPcKeyboardRootNoteGetter
+  rootNoteGetter: IPcKeyboardRootNoteGetter,
 ) {
   const keyHandler = (key: string, isDown: boolean) => {
     if (isDown) {
@@ -66,6 +66,6 @@ export function setupPcKeyboardHandler(
     keyHandler(e.key, false);
   };
 
-  window.addEventListener('keydown', onKeyDown);
-  window.addEventListener('keyup', onKeyUp);
+  window.addEventListener("keydown", onKeyDown);
+  window.addEventListener("keyup", onKeyUp);
 }

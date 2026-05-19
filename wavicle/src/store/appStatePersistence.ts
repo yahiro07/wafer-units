@@ -1,7 +1,7 @@
-import { appConfig, IInstrumentKey, ILanguageKey } from '~/base';
-import { nums } from '~/funcs';
-import { IInstrumentParameters } from '~/synthLib';
-import { appStore } from './appStore';
+import { appConfig, IInstrumentKey, ILanguageKey } from "~/base";
+import { nums } from "~/funcs";
+import { IInstrumentParameters } from "~/synthLib";
+import { appStore } from "./appStore";
 
 interface IAppStatePersistence {
   load(): void;
@@ -34,7 +34,7 @@ function createAppStatePersistence(): IAppStatePersistence {
           const { synthEngine, midiInputDriver, uiPresenter } = appStore;
 
           const deviceExists = midiInputDriver.allDeviceEntries.some(
-            (it) => it.id === midiInDeviceId
+            (it) => it.id === midiInDeviceId,
           );
           if (deviceExists) {
             midiInputDriver.selectDevice(midiInDeviceId);
@@ -46,10 +46,10 @@ function createAppStatePersistence(): IAppStatePersistence {
           }
           const { volume, release } = instrumentParameters;
           if (nums.between(volume, 0, 1) && nums.between(release, 0, 1)) {
-            synthEngine.setInstrumentParameter('volume', volume);
-            synthEngine.setInstrumentParameter('release', release);
+            synthEngine.setInstrumentParameter("volume", volume);
+            synthEngine.setInstrumentParameter("release", release);
           }
-          if (languageKey === 'en' || languageKey === 'ja') {
+          if (languageKey === "en" || languageKey === "ja") {
             uiPresenter.actions.setLanguageKey(languageKey);
           }
           const lo = appConfig.octaveSelectionKeyUnitOffsets[0];

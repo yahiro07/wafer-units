@@ -1,6 +1,6 @@
-import { css, domStyled, FC, jsx } from 'alumina';
-import { uiFontFamilySpecAppTitle } from '../base';
-import { WaveLogo } from '../components';
+import { css, domStyled, FC, jsx } from "alumina";
+import { uiFontFamilySpecAppTitle } from "../base";
+import { WaveLogo } from "../components";
 
 export const TitlesPart: FC = () => {
   return domStyled(
@@ -31,6 +31,6 @@ export const TitlesPart: FC = () => {
           line-height: 40px;
         }
       }
-    `
+    `,
   );
 };

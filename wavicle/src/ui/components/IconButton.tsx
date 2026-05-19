@@ -1,6 +1,6 @@
-import { css, domStyled, FC, jsx } from 'alumina';
-import { useUiThemeContext, cssCommonTransitionSpec } from '../base';
-import { IconFontIcon } from './IconFontIcon';
+import { css, domStyled, FC, jsx } from "alumina";
+import { useUiThemeContext, cssCommonTransitionSpec } from "../base";
+import { IconFontIcon } from "./IconFontIcon";
 
 type Props = {
   iconSpec: string;
@@ -18,7 +18,7 @@ export const IconButton: FC<Props> = ({
   const fgColor = useUiThemeContext().colors.clForeground;
 
   return domStyled(
-    <div class={disabled && '--disabled'} onClick={onClick}>
+    <div class={disabled && "--disabled"} onClick={onClick}>
       <IconFontIcon spec={iconSpec} size={size} />
     </div>,
     css`
@@ -33,6 +33,6 @@ export const IconButton: FC<Props> = ({
       &.--disabled {
         opacity: 0.5;
       }
-    `
+    `,
   );
 };

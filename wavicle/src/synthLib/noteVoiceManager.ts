@@ -1,5 +1,5 @@
-import { createLoopIntervalMonitor } from '~/funcs';
-import { INoteVoice } from './noteVoice';
+import { createLoopIntervalMonitor } from "~/funcs";
+import { INoteVoice } from "./noteVoice";
 
 interface INoteVoiceManager {
   noteOn(noteKey: string, voice: INoteVoice): void;

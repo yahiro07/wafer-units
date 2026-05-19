@@ -1,7 +1,7 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import { css, domStyled, FC, jsx } from 'alumina';
+import { css, domStyled, FC, jsx } from "alumina";
 
 type Props = {};
 

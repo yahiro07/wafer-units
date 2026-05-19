@@ -1,13 +1,13 @@
-import { FC, domStyled, jsx, css } from 'alumina';
-import { getInstrumentLabel, IInstrumentKey } from '~/base';
-import { appStore } from '~/store';
-import { ISelectorOption, useUiTexts } from '../base';
+import { FC, domStyled, jsx, css } from "alumina";
+import { getInstrumentLabel, IInstrumentKey } from "~/base";
+import { appStore } from "~/store";
+import { ISelectorOption, useUiTexts } from "../base";
 import {
   GeneralSelector,
   LocalLoadingSpinner,
   ParameterLabel,
-} from '../components';
-import { ShifterButtonsUi } from '../organisms';
+} from "../components";
+import { ShifterButtonsUi } from "../organisms";
 
 export const InstrumentSelectionPart: FC = () => {
   const {
@@ -26,7 +26,7 @@ export const InstrumentSelectionPart: FC = () => {
   const texts = useUiTexts();
 
   const instrumentSelectionOptions: ISelectorOption[] = allInstrumentKeys.map(
-    (key) => ({ value: key, label: getInstrumentLabel(key, languageKey) })
+    (key) => ({ value: key, label: getInstrumentLabel(key, languageKey) }),
   );
 
   const onInstrumentChange = (instrumentKey: IInstrumentKey) => {
@@ -70,6 +70,6 @@ export const InstrumentSelectionPart: FC = () => {
       > .buttons-row {
         margin-top: 9px;
       }
-    `
+    `,
   );
 };

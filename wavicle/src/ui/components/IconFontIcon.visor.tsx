@@ -1,5 +1,5 @@
-import { css, jsx } from 'alumina';
-import { IconFontIcon } from './IconFontIcon';
+import { css, jsx } from "alumina";
+import { IconFontIcon } from "./IconFontIcon";
 
 const redStyle = css`
   color: red;

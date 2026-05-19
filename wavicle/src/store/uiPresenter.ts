@@ -1,7 +1,7 @@
-import { appConfig, appEnv, ILanguageKey, INumberDirection } from '~/base';
-import { animateValue, IValueAnimator } from '~/funcs';
-import { ISynthesizerEngine } from '~/synthLib';
-import { keysBlockHelpers } from '~/ui/organisms';
+import { appConfig, appEnv, ILanguageKey, INumberDirection } from "~/base";
+import { animateValue, IValueAnimator } from "~/funcs";
+import { ISynthesizerEngine } from "~/synthLib";
+import { keysBlockHelpers } from "~/ui/organisms";
 
 function findNearestLowerValue(current: number, values: number[]) {
   for (let i = values.length - 1; i >= 0; i--) {
@@ -21,7 +21,7 @@ export function createUiPresenter(synthEngine: ISynthesizerEngine) {
   const state = {
     keyRangeOffset: appConfig.activeKeyRangeUnitOffsetDefault,
     keysRangeSize: appConfig.activeKeyRangeUnitSize,
-    languageKey: (appEnv.isJapaneseEnvironment ? 'ja' : 'en') as ILanguageKey,
+    languageKey: (appEnv.isJapaneseEnvironment ? "ja" : "en") as ILanguageKey,
     usagePanelVisible: false,
   };
   const readers = {
@@ -49,7 +49,7 @@ export function createUiPresenter(synthEngine: ISynthesizerEngine) {
         findNearestLowerValue(state.keyRangeOffset + 3.5, octaveOffsets) || 0;
       return keysBlockHelpers.getNoteNumberFormKeyOffset(
         offset,
-        appConfig.bottomNoteNumber
+        appConfig.bottomNoteNumber,
       );
     },
     get needUserActionForAudioOutput() {
@@ -84,7 +84,7 @@ export function createUiPresenter(synthEngine: ISynthesizerEngine) {
           actions.setKeyRangeOffset,
           currentOffset,
           nextOffset,
-          500
+          500,
         );
       }
     },

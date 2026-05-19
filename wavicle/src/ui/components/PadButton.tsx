@@ -1,6 +1,6 @@
-import { AluminaNode, css, domStyled, FC, jsx } from 'alumina';
-import { rgbTranslucent } from '~/funcs';
-import { useUiThemeContext, cssCommonTransitionSpec } from '../base';
+import { AluminaNode, css, domStyled, FC, jsx } from "alumina";
+import { rgbTranslucent } from "~/funcs";
+import { useUiThemeContext, cssCommonTransitionSpec } from "../base";
 
 type Props = {
   height: number;
@@ -22,7 +22,7 @@ export const PadButton: FC<Props> = ({
   const width = (height * asr) >> 0;
   return domStyled(
     <div>
-      <div onClick={onClick} class={['inner', disabled && '--disabled']}>
+      <div onClick={onClick} class={["inner", disabled && "--disabled"]}>
         {children}
       </div>
     </div>,
@@ -63,6 +63,6 @@ export const PadButton: FC<Props> = ({
           opacity: 0.4;
         }
       }
-    `
+    `,
   );
 };

@@ -1,6 +1,6 @@
-import { asyncRerender, css, domStyled, FC, jsx } from 'alumina';
-import { nums, startDragSessionRelative } from '~/funcs';
-import { keysBlockHelpers } from './keysBlockHelpers';
+import { asyncRerender, css, domStyled, FC, jsx } from "alumina";
+import { nums, startDragSessionRelative } from "~/funcs";
+import { keysBlockHelpers } from "./keysBlockHelpers";
 
 type Props = {
   unitWidthPx: number;
@@ -22,7 +22,7 @@ export const KeysRangeGauge: FC<Props> = ({
 }) => {
   const outerWidthU = keysBlockHelpers.getKeysOuterWidthU(
     bottomNoteNumber,
-    numKeys
+    numKeys,
   );
   const outerWidthPx = unitWidthPx * outerWidthU;
 
@@ -35,7 +35,7 @@ export const KeysRangeGauge: FC<Props> = ({
         const modOffset = nums.clamp(
           activeRangeOffsetU + delta.x / unitWidthPx,
           0,
-          outerWidthU - activeRangeSizeU
+          outerWidthU - activeRangeSizeU,
         );
         onScrollActiveRange(modOffset);
         asyncRerender();
@@ -67,6 +67,6 @@ export const KeysRangeGauge: FC<Props> = ({
           border: solid 1px #f80b;
         }
       }
-    `
+    `,
   );
 };

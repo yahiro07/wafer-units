@@ -1,9 +1,9 @@
 /* eslint-disable react/no-unescaped-entities */
-import { css, domStyled, FC, jsx } from 'alumina';
-import { appConfig, appEnv } from '~/base';
-import { appStore } from '~/store';
-import { uiFontFamilySpecAppTitle } from '../base';
-import { IconButton } from '../components';
+import { css, domStyled, FC, jsx } from "alumina";
+import { appConfig, appEnv } from "~/base";
+import { appStore } from "~/store";
+import { uiFontFamilySpecAppTitle } from "../base";
+import { IconButton } from "../components";
 
 const PlainLink: FC<{ url: string }> = ({ url }) => {
   return (
@@ -43,13 +43,13 @@ const ResourcesTable: FC = () => {
       > div {
         margin-right: 15px;
       }
-    `
+    `,
   );
 };
 
 const DocumentContent: FC = () => {
   const { languageKey } = appStore.uiPresenter.state;
-  const hiddenLang = languageKey === 'en' ? 'ja' : 'en';
+  const hiddenLang = languageKey === "en" ? "ja" : "en";
 
   return domStyled(
     <div>
@@ -309,12 +309,12 @@ const DocumentContent: FC = () => {
         font-size: 15px;
         margin: 35px;
       }
-    `
+    `,
   );
 };
 
 export const UsagePanel: FC = () => {
-  const frameColor = '#4ae';
+  const frameColor = "#4ae";
   const { hideUsagePanel } = appStore.uiPresenter.actions;
 
   return domStyled(
@@ -366,7 +366,7 @@ export const UsagePanel: FC = () => {
       position: absolute;
       width: 100%;
       height: 100%;
-      padding: ${appEnv.isPc ? '10px' : 0};
-    `
+      padding: ${appEnv.isPc ? "10px" : 0};
+    `,
   );
 };

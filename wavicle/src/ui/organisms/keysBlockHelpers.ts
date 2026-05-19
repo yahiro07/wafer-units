@@ -17,7 +17,7 @@ export namespace keysBlockHelpers {
 
   export function getKeyOffsetInUnits(
     noteNumber: number,
-    integerAligned?: boolean
+    integerAligned?: boolean,
   ) {
     const oct = (noteNumber / 12) >> 0;
     const semi = noteNumber % 12;
@@ -30,7 +30,7 @@ export namespace keysBlockHelpers {
 
   export function getNoteNumberFormKeyOffset(
     offset: number,
-    bottomNoteNumber: number
+    bottomNoteNumber: number,
   ) {
     return Math.floor(bottomNoteNumber + (offset * 12) / 7);
   }
@@ -43,7 +43,7 @@ export namespace keysBlockHelpers {
 
   export function getKeysOuterWidthU(
     bottomNoteNumber: number,
-    numKeys: number
+    numKeys: number,
   ): number {
     const offsetLU = getKeyOffsetInUnits(bottomNoteNumber, true);
     const offsetRU = getKeyOffsetInUnits(bottomNoteNumber + numKeys, true);

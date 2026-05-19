@@ -1,5 +1,5 @@
-import { css, domStyled, FC, jsx } from 'alumina';
-import { reflectValue } from '~/funcs';
+import { css, domStyled, FC, jsx } from "alumina";
+import { reflectValue } from "~/funcs";
 import {
   cssCommonTransitionSpec,
   ISelectorOption,
@@ -8,7 +8,7 @@ import {
   uiFontFamilyLcd,
   uiFontFamilyPanelFontJa,
   useUiThemeContext,
-} from '../base';
+} from "../base";
 
 interface Props {
   options: (string | ISelectorOption)[];
@@ -32,15 +32,15 @@ export const GeneralSelector: FC<Props> = ({
 
   return domStyled(
     <select
-      value={options.length > 0 ? value : ''}
+      value={options.length > 0 ? value : ""}
       onChange={reflectValue(onChange)}
       disabled={disabled}
       onKeyDown={(e) => e.preventDefault()}
       style={style}
     >
       {options.map((it, idx) => {
-        const value = typeof it === 'string' ? it : it.value;
-        const label = typeof it === 'string' ? it : it.label;
+        const value = typeof it === "string" ? it : it.value;
+        const label = typeof it === "string" ? it : it.label;
         return (
           <option value={value} key={idx}>
             {label}
@@ -72,17 +72,17 @@ export const GeneralSelector: FC<Props> = ({
       box-shadow: inset 1px 2px 4px #0003;
 
       font-family: ${switchFontByLanguage(
-          uiFontFamilyLcd,
-          uiFontFamilyPanelFontJa
-        )},
+        uiFontFamilyLcd,
+        uiFontFamilyPanelFontJa,
+      )},
         'sans-serif';
 
-      font-size: ${switchFontSizeByLanguage('16px', '14px')};
+      font-size: ${switchFontSizeByLanguage("16px", "14px")};
 
       ${cssCommonTransitionSpec};
       &:hover {
         border-color: ${activeColor};
       }
-    `
+    `,
   );
 };

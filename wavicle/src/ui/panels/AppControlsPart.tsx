@@ -1,6 +1,6 @@
-import { FC, domStyled, jsx, css } from 'alumina';
-import { appStore } from '~/store';
-import { IconButton } from '../components';
+import { FC, domStyled, jsx, css } from "alumina";
+import { appStore } from "~/store";
+import { IconButton } from "../components";
 
 export const AppControlsPart: FC = () => {
   const { showUsagePanel } = appStore.uiPresenter.actions;
@@ -12,6 +12,6 @@ export const AppControlsPart: FC = () => {
     css`
       display: flex;
       justify-content: flex-end;
-    `
+    `,
   );
 };

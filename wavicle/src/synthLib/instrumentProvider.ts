@@ -2,12 +2,12 @@ import {
   allInstrumentKeys,
   IInstrumentKey,
   ISampleLoopingMethod,
-} from '~/base';
+} from "~/base";
 import {
   instrumentProvider_sampleLoader_getToneBuffer,
   instrumentProvider_sampleLoader_getToneBufferWithLoop,
-} from './instrumentProvider_sampleLoader';
-import { IInstrumentData } from './types';
+} from "./instrumentProvider_sampleLoader";
+import { IInstrumentData } from "./types";
 
 interface IInstrumentProvider {
   allInstrumentKeys: IInstrumentKey[];
@@ -35,8 +35,8 @@ function octaveNoteSequence(first: number, num: number) {
 function createInstrumentsSampleBased(): IInstrumentSourceDefinition[] {
   return [
     {
-      instrumentKey: 'piano',
-      sourcePath: 'samples/freesound/piano_4s_c0c7.mp3',
+      instrumentKey: "piano",
+      sourcePath: "samples/freesound/piano_4s_c0c7.mp3",
       sliceDuration: 4,
       noteNumbers: octaveNoteSequence(24, 8),
       looped: false,
@@ -44,8 +44,8 @@ function createInstrumentsSampleBased(): IInstrumentSourceDefinition[] {
       releaseParam: 0.5,
     },
     {
-      instrumentKey: 'elepi',
-      sourcePath: 'samples/freesound/rhodes_4s_d1d6.mp3',
+      instrumentKey: "elepi",
+      sourcePath: "samples/freesound/rhodes_4s_d1d6.mp3",
       sliceDuration: 4,
       noteNumbers: octaveNoteSequence(36 + 2, 7),
       looped: false,
@@ -53,8 +53,8 @@ function createInstrumentsSampleBased(): IInstrumentSourceDefinition[] {
       releaseParam: 0.7,
     },
     {
-      instrumentKey: 'celesta',
-      sourcePath: 'samples/freesound/celesta_4s_g2g6.mp3',
+      instrumentKey: "celesta",
+      sourcePath: "samples/freesound/celesta_4s_g2g6.mp3",
       sliceDuration: 4,
       noteNumbers: octaveNoteSequence(36 + 7, 5),
       looped: false,
@@ -62,8 +62,8 @@ function createInstrumentsSampleBased(): IInstrumentSourceDefinition[] {
       releaseParam: 0.7,
     },
     {
-      instrumentKey: 'guitar',
-      sourcePath: 'samples/freesound/guitar_4s_e3e6.mp3',
+      instrumentKey: "guitar",
+      sourcePath: "samples/freesound/guitar_4s_e3e6.mp3",
       sliceDuration: 4,
       noteNumbers: octaveNoteSequence(36 + 4, 4),
       looped: false,
@@ -80,35 +80,35 @@ function createInstrumentsArcTrax(): IInstrumentSourceDefinition[] {
     boolean,
     number,
     number,
-    ISampleLoopingMethod | undefined
+    ISampleLoopingMethod | undefined,
   ][] = [
-    ['bell', 'steelbell.mp3', false, 1.5, 0.9, undefined],
-    ['ocarina', 'sleepy.mp3', true, 1, 0.5, 'SL'],
+    ["bell", "steelbell.mp3", false, 1.5, 0.9, undefined],
+    ["ocarina", "sleepy.mp3", true, 1, 0.5, "SL"],
 
-    ['bass1', 'bass2.mp3', false, 1.4, 0.5, undefined],
-    ['bass2', 'slidebass.mp3', true, 1, 0.2, 'SL'],
+    ["bass1", "bass2.mp3", false, 1.4, 0.5, undefined],
+    ["bass2", "slidebass.mp3", true, 1, 0.2, "SL"],
 
-    ['pluck1', 'hipluck2.mp3', false, 1, 0.5, undefined],
-    ['pluck2', 'pluck1.mp3', false, 4, 0.5, undefined],
-    ['pluck3', 'brightkey.mp3', false, 1, 0.7, undefined],
-    ['pluck4', 'key_shiny.mp3', false, 1, 0.7, undefined],
+    ["pluck1", "hipluck2.mp3", false, 1, 0.5, undefined],
+    ["pluck2", "pluck1.mp3", false, 4, 0.5, undefined],
+    ["pluck3", "brightkey.mp3", false, 1, 0.7, undefined],
+    ["pluck4", "key_shiny.mp3", false, 1, 0.7, undefined],
 
-    ['brass1', 'trumpet.mp3', true, 1, 0.4, 'SL'],
-    ['brass2', 'brass2.mp3', true, 1.4, 0.5, 'XF'],
+    ["brass1", "trumpet.mp3", true, 1, 0.4, "SL"],
+    ["brass2", "brass2.mp3", true, 1.4, 0.5, "XF"],
 
-    ['lead1', 'super1.mp3', true, 0.7, 0.7, 'XF'],
-    ['lead2', 'coldwave.mp3', true, 0.8, 0.5, 'XF'],
-    ['lead3', 'lead_bright.mp3', true, 0.4, 0.7, 'XF'],
-    ['lead4', 'finale.mp3', true, 0.8, 0.5, 'XF'],
+    ["lead1", "super1.mp3", true, 0.7, 0.7, "XF"],
+    ["lead2", "coldwave.mp3", true, 0.8, 0.5, "XF"],
+    ["lead3", "lead_bright.mp3", true, 0.4, 0.7, "XF"],
+    ["lead4", "finale.mp3", true, 0.8, 0.5, "XF"],
 
-    ['pad1', 'softkey.mp3', false, 1, 0.8, undefined],
-    ['pad2', 'pad2.mp3', true, 1, 0.7, 'XF'],
+    ["pad1", "softkey.mp3", false, 1, 0.8, undefined],
+    ["pad2", "pad2.mp3", true, 1, 0.7, "XF"],
 
-    ['strings1', 'gradient.mp3', true, 0.8, 0.8, 'XF'],
-    ['strings2', 'slowstrings.mp3', false, 1, 0.8, undefined],
+    ["strings1", "gradient.mp3", true, 0.8, 0.8, "XF"],
+    ["strings2", "slowstrings.mp3", false, 1, 0.8, undefined],
 
-    ['orchestra', 'grandwave.mp3', true, 1, 0.8, 'XF'],
-    ['nes', 'chipwave.mp3', true, 1, 0.4, 'SL'],
+    ["orchestra", "grandwave.mp3", true, 1, 0.8, "XF"],
+    ["nes", "chipwave.mp3", true, 1, 0.4, "SL"],
   ];
 
   return toneFileSpecs.map((toneFileSpec) => {
@@ -136,9 +136,9 @@ function createInstrumentsArcTrax(): IInstrumentSourceDefinition[] {
 
 async function loadSamplesFromFile(
   audioContext: AudioContext,
-  filePath: string
+  filePath: string,
 ) {
-  const fileName = filePath.split('/').pop();
+  const fileName = filePath.split("/").pop();
   console.log(`fetching ${fileName}`);
   const res = await fetch(filePath);
   const buf = await res.arrayBuffer();
@@ -150,11 +150,11 @@ async function loadSamplesFromFile(
 
 async function loadInstrumentData(
   def: IInstrumentSourceDefinition,
-  audioContext: AudioContext
+  audioContext: AudioContext,
 ): Promise<IInstrumentData> {
   const serialTonesBuffer = await loadSamplesFromFile(
     audioContext,
-    def.sourcePath
+    def.sourcePath,
   );
   const toneBuffers = def.noteNumbers.map((noteNumber, sliceIndex) => {
     if (!def.looped) {
@@ -164,7 +164,7 @@ async function loadInstrumentData(
           serialTonesBuffer,
           def.sliceDuration,
           sliceIndex,
-          audioContext
+          audioContext,
         ),
       };
     } else {
@@ -175,7 +175,7 @@ async function loadInstrumentData(
           sliceIndex,
           audioContext,
           noteNumber,
-          def.loopingMethod
+          def.loopingMethod,
         );
       return {
         noteNumber,
@@ -194,16 +194,16 @@ async function loadInstrumentData(
 const instrumentDataCache: Record<string, IInstrumentData> = {};
 async function loadInstrumentDataCached(
   def: IInstrumentSourceDefinition,
-  audioContext: AudioContext
+  audioContext: AudioContext,
 ): Promise<IInstrumentData> {
   return (instrumentDataCache[def.instrumentKey] ||= await loadInstrumentData(
     def,
-    audioContext
+    audioContext,
   ));
 }
 
 export function createInstrumentProvider(
-  audioContext: AudioContext
+  audioContext: AudioContext,
 ): IInstrumentProvider {
   const instrumentSourceDefinitions0: IInstrumentSourceDefinition[] = [
     ...createInstrumentsSampleBased(),
@@ -211,7 +211,7 @@ export function createInstrumentProvider(
   ];
   const instrumentSourceDefinitions = allInstrumentKeys.map((key) => {
     const res = instrumentSourceDefinitions0.find(
-      (def) => def.instrumentKey === key
+      (def) => def.instrumentKey === key,
     );
     if (!res) {
       throw new Error(`instrument definition not found for ${key}`);
@@ -223,7 +223,7 @@ export function createInstrumentProvider(
     allInstrumentKeys,
     loadInstrument(instrumentKey: string): Promise<IInstrumentData> {
       const def = instrumentSourceDefinitions.find(
-        (it) => it.instrumentKey === instrumentKey
+        (it) => it.instrumentKey === instrumentKey,
       );
       if (!def) {
         throw new Error(`instrument definition not found for ${instrumentKey}`);
@@ -233,8 +233,8 @@ export function createInstrumentProvider(
     async preloadAllInstrumentSamples() {
       await Promise.all(
         instrumentSourceDefinitions.map((def) =>
-          loadInstrumentDataCached(def, audioContext)
-        )
+          loadInstrumentDataCached(def, audioContext),
+        ),
       );
     },
   };

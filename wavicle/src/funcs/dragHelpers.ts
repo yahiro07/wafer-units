@@ -5,7 +5,7 @@ export type IVector = {
 
 export function getRelativePointerPosition(
   e: PointerEvent,
-  baseElement?: HTMLElement
+  baseElement?: HTMLElement,
 ) {
   const el = baseElement || (e.currentTarget as HTMLElement);
   const bounds = el.getBoundingClientRect();
@@ -19,7 +19,7 @@ export function startDragSessionRelative(
   options: {
     moveHandler?: (delta: IVector, e: PointerEvent) => void;
     upHandler?: () => void;
-  }
+  },
 ) {
   const originPos = { x: sourceEvent.clientX, y: sourceEvent.clientY };
 
@@ -34,13 +34,13 @@ export function startDragSessionRelative(
   };
 
   const onPointerUp = () => {
-    window.removeEventListener('pointermove', onPointerMove);
-    window.removeEventListener('pointerup', onPointerUp);
+    window.removeEventListener("pointermove", onPointerMove);
+    window.removeEventListener("pointerup", onPointerUp);
     options.upHandler?.();
   };
 
-  window.addEventListener('pointermove', onPointerMove);
-  window.addEventListener('pointerup', onPointerUp);
+  window.addEventListener("pointermove", onPointerMove);
+  window.addEventListener("pointerup", onPointerUp);
 }
 
 export const preventDefaultHandler = (e: Event) => e.preventDefault();
