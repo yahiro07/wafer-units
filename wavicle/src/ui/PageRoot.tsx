@@ -1,5 +1,4 @@
 import { css, domStyled, jsx } from "alumina";
-import { appEnv } from "@/base";
 import { appStore } from "@/store";
 import {
   switchFontByLanguage,
@@ -30,15 +29,14 @@ export const PageRoot = () => {
       </div>
     </uiThemeContext.Provider>,
     css`
-      width: 100%;
-      height: 100%;
+      width: 100dvw;
+      height: 100dvh;
       background: #aaa;
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: ${appEnv.isPc ? "3%" : 0};
       touch-action: none;
-
+      padding: 1%;
       font-family: ${mainFontFamily}, sans-serif;
 
       > .scaler-box > .bg-plane {
