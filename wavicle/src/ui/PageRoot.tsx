@@ -36,7 +36,6 @@ export const PageRoot = () => {
       justify-content: center;
       align-items: center;
       touch-action: none;
-      padding: 1%;
       font-family: ${mainFontFamily}, sans-serif;
 
       > .scaler-box > .bg-plane {
