@@ -1,4 +1,4 @@
-import { FC, domStyled, css, jsx } from "alumina";
+import { css, domStyled, FC, jsx } from "alumina";
 import { IconFontIcon } from "./IconFontIcon";
 
 export const LocalLoadingSpinner: FC<{ isLoading: boolean }> = ({

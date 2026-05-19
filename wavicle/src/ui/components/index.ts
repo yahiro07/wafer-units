@@ -1,3 +1,4 @@
+export * from "./__ComponentTemplate";
 export * from "./GeneralSelector";
 export * from "./GeneralSelector.visor";
 export * from "./IconButton";
@@ -14,4 +15,3 @@ export * from "./ParameterLabel";
 export * from "./ParameterSlider";
 export * from "./ScalerBox";
 export * from "./WaveLogo";
-export * from "./__ComponentTemplate";

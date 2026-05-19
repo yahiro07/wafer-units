@@ -1,5 +1,5 @@
 import { css, domStyled, FC, jsx } from "alumina";
-import { useUiThemeContext, cssCommonTransitionSpec } from "../base";
+import { cssCommonTransitionSpec, useUiThemeContext } from "../base";
 import { IconFontIcon } from "./IconFontIcon";
 
 type Props = {

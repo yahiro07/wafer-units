@@ -3,16 +3,16 @@ import { appConfig, IKeyHoldEvent } from "@/base";
 import { appStore } from "@/store";
 import { KeysActiveRangeFrame, KeysBlock } from "../organisms";
 
-const pcKeyboardKeyLabels = "zsxdcvgbhnjmq2w3er5t6y7ui9o0p"
-  .toUpperCase()
-  .split("");
+// const pcKeyboardKeyLabels = "zsxdcvgbhnjmq2w3er5t6y7ui9o0p"
+//   .toUpperCase()
+//   .split("");
 
 export const MainKeysPanel: FC = () => {
   const { bottomNoteNumber, numKeys } = appConfig;
   const { holdNoteNumbers, noteOn, noteOff } = appStore.synthEngine;
   const {
     state: { keyRangeOffset, keysRangeSize },
-    readers: { pcKeyboardRootNoteNumber },
+    // readers: { pcKeyboardRootNoteNumber },
   } = appStore.uiPresenter;
 
   const edgeWidth = 2;

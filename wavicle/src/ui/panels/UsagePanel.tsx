@@ -1,4 +1,3 @@
-/* eslint-disable react/no-unescaped-entities */
 import { css, domStyled, FC, jsx } from "alumina";
 import { appConfig, appEnv } from "@/base";
 import { appStore } from "@/store";
@@ -89,7 +88,10 @@ const DocumentContent: FC = () => {
 
       <h3 lang="ja">使い方</h3>
       <h3 lang="en">How to use</h3>
-      <img src="https://i.gyazo.com/8feafe0f4775d77b5926239fb6fd57bd.png" />
+      <img
+        src="https://i.gyazo.com/8feafe0f4775d77b5926239fb6fd57bd.png"
+        alt="usage"
+      />
       <div lang="ja" class="usage-block">
         <h4>1.音色選択パート</h4>
         <p>演奏する音色を選択します。</p>
@@ -224,7 +226,10 @@ const DocumentContent: FC = () => {
       </p>
       <p class="mail">
         mail: yahiro1200
-        <img src="https://i.gyazo.com/e54845878425c702a37b27c14c3587e2.png" />
+        <img
+          src="https://i.gyazo.com/e54845878425c702a37b27c14c3587e2.png"
+          alt="mail"
+        />
       </p>
 
       <div class="version">version {appConfig.versionCode}</div>

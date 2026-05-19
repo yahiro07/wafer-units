@@ -60,7 +60,7 @@ function createAppStatePersistence(): IAppStatePersistence {
           if (nums.between(keyRangeOffset, lo, hi)) {
             uiPresenter.actions.setKeyRangeOffset(keyRangeOffset);
           }
-        } catch (error) {
+        } catch (_) {
           console.log(`failed to load persist state`);
         }
       }
