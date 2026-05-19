@@ -28,10 +28,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: npm
 
       - name: Build all units
-        run: bash ./build.sh
+        run: bash ./build_all.sh
 
       - name: Prepare bundles worktree
         run: |
