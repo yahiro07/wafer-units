@@ -1,5 +1,5 @@
-import { FC, domStyled, jsx, css } from "alumina";
-import { appStore } from "~/store";
+import { css, domStyled, FC, jsx } from "alumina";
+import { appStore } from "@/store";
 import { IconButton } from "../components";
 
 export const AppControlsPart: FC = () => {

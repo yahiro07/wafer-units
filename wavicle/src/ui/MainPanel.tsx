@@ -1,5 +1,5 @@
 import { css, domStyled, FC, jsx } from "alumina";
-import { appEnv } from "~/base";
+import { appEnv } from "@/base";
 import { useUiThemeContext } from "./base";
 import {
   AppControlsPart,

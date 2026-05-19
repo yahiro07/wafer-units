@@ -1,4 +1,4 @@
-import { createLoopIntervalMonitor } from "~/funcs";
+import { createLoopIntervalMonitor } from "@/funcs";
 import { INoteVoice } from "./noteVoice";
 
 interface INoteVoiceManager {

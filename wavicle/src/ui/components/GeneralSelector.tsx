@@ -1,5 +1,5 @@
 import { css, domStyled, FC, jsx } from "alumina";
-import { reflectValue } from "~/funcs";
+import { reflectValue } from "@/funcs";
 import {
   cssCommonTransitionSpec,
   ISelectorOption,

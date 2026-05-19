@@ -1,5 +1,5 @@
 import { asyncRerender } from "alumina";
-import { ISynthesizerBase } from "~/base";
+import { ISynthesizerBase } from "@/base";
 
 type IMidiInputDeviceEntry = {
   id: string;

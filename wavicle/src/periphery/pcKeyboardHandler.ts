@@ -1,5 +1,5 @@
 import { asyncRerender } from "alumina";
-import { IPcKeyboardRootNoteGetter, ISynthesizerBase } from "~/base";
+import { IPcKeyboardRootNoteGetter, ISynthesizerBase } from "@/base";
 
 type IKeySequenceEntry = {
   octave: number;

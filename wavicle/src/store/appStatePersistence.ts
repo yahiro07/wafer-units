@@ -1,6 +1,6 @@
-import { appConfig, IInstrumentKey, ILanguageKey } from "~/base";
-import { nums } from "~/funcs";
-import { IInstrumentParameters } from "~/synthLib";
+import { appConfig, IInstrumentKey, ILanguageKey } from "@/base";
+import { nums } from "@/funcs";
+import { IInstrumentParameters } from "@/synthLib";
 import { appStore } from "./appStore";
 
 interface IAppStatePersistence {

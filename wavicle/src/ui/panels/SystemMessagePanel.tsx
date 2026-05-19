@@ -1,6 +1,6 @@
-import { FC, domStyled, jsx, css } from "alumina";
-import { appStore } from "~/store";
-import { useUiThemeContext, useUiTexts } from "../base";
+import { css, domStyled, FC, jsx } from "alumina";
+import { appStore } from "@/store";
+import { useUiTexts, useUiThemeContext } from "../base";
 
 export const SystemMessagePanel: FC = () => {
   const { needUserActionForAudioOutput } = appStore.uiPresenter.readers;

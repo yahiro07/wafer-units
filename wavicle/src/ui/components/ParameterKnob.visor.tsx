@@ -1,5 +1,5 @@
 import { jsx } from "alumina";
-import { fieldSetter } from "~/funcs";
+import { fieldSetter } from "@/funcs";
 import { ParameterKnob } from "./ParameterKnob";
 
 const state = {

@@ -1,6 +1,6 @@
-import { FC, domStyled, jsx, css } from "alumina";
-import { appConfig } from "~/base";
-import { appStore } from "~/store";
+import { css, domStyled, FC, jsx } from "alumina";
+import { appConfig } from "@/base";
+import { appStore } from "@/store";
 import { KeysBlock, KeysRangeGauge } from "../organisms";
 
 export const KeysActiveAreaSlider: FC = () => {

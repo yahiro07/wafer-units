@@ -1,6 +1,6 @@
 import { asyncRerender, css, domStyled, FC, jsx, useLocal } from "alumina";
-import { nums, startDragSessionRelative } from "~/funcs";
-import { useUiThemeContext, commonTransitionSec } from "../base";
+import { nums, startDragSessionRelative } from "@/funcs";
+import { commonTransitionSec, useUiThemeContext } from "../base";
 
 type Props = {
   value: number;

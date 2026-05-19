@@ -1,7 +1,7 @@
 /* eslint-disable react/no-unescaped-entities */
 import { css, domStyled, FC, jsx } from "alumina";
-import { appConfig, appEnv } from "~/base";
-import { appStore } from "~/store";
+import { appConfig, appEnv } from "@/base";
+import { appStore } from "@/store";
 import { uiFontFamilySpecAppTitle } from "../base";
 import { IconButton } from "../components";
 

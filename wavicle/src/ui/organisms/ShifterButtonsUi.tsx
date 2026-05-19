@@ -1,6 +1,6 @@
-import { FC, domStyled, jsx, css } from "alumina";
-import { INumberDirection } from "~/base";
-import { PadButton, IconFontIcon } from "../components";
+import { css, domStyled, FC, jsx } from "alumina";
+import { INumberDirection } from "@/base";
+import { IconFontIcon, PadButton } from "../components";
 
 export const ShifterButtonsUi: FC<{
   canGoPrev: boolean;

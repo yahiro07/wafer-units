@@ -1,5 +1,5 @@
 import { asyncRerender, css, domStyled, FC, jsx } from "alumina";
-import { nums, startDragSessionRelative } from "~/funcs";
+import { nums, startDragSessionRelative } from "@/funcs";
 import { keysBlockHelpers } from "./keysBlockHelpers";
 
 type Props = {

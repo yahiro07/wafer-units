@@ -1,7 +1,7 @@
-import { appConfig, appEnv, ILanguageKey, INumberDirection } from "~/base";
-import { animateValue, IValueAnimator } from "~/funcs";
-import { ISynthesizerEngine } from "~/synthLib";
-import { keysBlockHelpers } from "~/ui/organisms";
+import { appConfig, appEnv, ILanguageKey, INumberDirection } from "@/base";
+import { animateValue, IValueAnimator } from "@/funcs";
+import { ISynthesizerEngine } from "@/synthLib";
+import { keysBlockHelpers } from "@/ui/organisms";
 
 function findNearestLowerValue(current: number, values: number[]) {
   for (let i = values.length - 1; i >= 0; i--) {

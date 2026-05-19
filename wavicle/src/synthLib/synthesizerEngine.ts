@@ -1,6 +1,6 @@
 import { asyncRerender } from "alumina";
-import { IInstrumentKey } from "~/base";
-import { arrays } from "~/funcs";
+import { IInstrumentKey } from "@/base";
+import { arrays } from "@/funcs";
 import { createInstrumentProvider } from "./instrumentProvider";
 import { createPitchShiftedNoteVoice } from "./noteVoice";
 import { createNoteVoiceManager } from "./noteVoiceManager";

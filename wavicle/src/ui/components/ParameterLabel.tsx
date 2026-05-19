@@ -1,6 +1,6 @@
 import { css, domStyled, FC, jsx } from "alumina";
-import { ILanguageKey } from "~/base";
-import { appStore } from "~/store";
+import { ILanguageKey } from "@/base";
+import { appStore } from "@/store";
 import {
   uiFontFamilySpecPrimaryLabels,
   uiFontFamilySpecPrimaryLabelsJa,

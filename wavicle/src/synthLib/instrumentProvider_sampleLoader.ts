@@ -1,5 +1,5 @@
-import { ISampleLoopingMethod } from "~/base";
-import { nums } from "~/funcs";
+import { ISampleLoopingMethod } from "@/base";
+import { nums } from "@/funcs";
 import { INoteSampleSourceLoopSpec } from "./types";
 
 function copyBuffer(

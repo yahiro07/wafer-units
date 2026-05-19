@@ -1,6 +1,6 @@
 import { css, domStyled, FC, jsx } from "alumina";
-import { appConfig, IKeyHoldEvent } from "~/base";
-import { appStore } from "~/store";
+import { appConfig, IKeyHoldEvent } from "@/base";
+import { appStore } from "@/store";
 import { KeysActiveRangeFrame, KeysBlock } from "../organisms";
 
 const pcKeyboardKeyLabels = "zsxdcvgbhnjmq2w3er5t6y7ui9o0p"

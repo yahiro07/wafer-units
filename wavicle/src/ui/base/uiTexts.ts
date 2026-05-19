@@ -1,5 +1,5 @@
-import { ILanguageKey } from "~/base";
-import { appStore } from "~/store";
+import { ILanguageKey } from "@/base";
+import { appStore } from "@/store";
 
 type IUiTextSet = {
   instrument: string;

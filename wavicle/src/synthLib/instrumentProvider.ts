@@ -2,7 +2,7 @@ import {
   allInstrumentKeys,
   IInstrumentKey,
   ISampleLoopingMethod,
-} from "~/base";
+} from "@/base";
 import {
   instrumentProvider_sampleLoader_getToneBuffer,
   instrumentProvider_sampleLoader_getToneBufferWithLoop,

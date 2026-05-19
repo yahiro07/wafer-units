@@ -1,5 +1,5 @@
 import { FC, jsx } from "alumina";
-import { appStore } from "~/store";
+import { appStore } from "@/store";
 import { ISelectorOption } from "../base";
 import { useUiTexts } from "../base/uiTexts";
 import { GeneralSelector, ParameterLabel } from "../components";

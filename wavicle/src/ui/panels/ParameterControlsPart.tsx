@@ -1,5 +1,5 @@
 import { css, domStyled, FC, jsx } from "alumina";
-import { appStore } from "~/store";
+import { appStore } from "@/store";
 import { useUiTexts } from "../base/uiTexts";
 import { ParameterKnob, ParameterLabel } from "../components";
 

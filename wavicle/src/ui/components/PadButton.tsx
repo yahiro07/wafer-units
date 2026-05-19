@@ -1,6 +1,6 @@
 import { AluminaNode, css, domStyled, FC, jsx } from "alumina";
-import { rgbTranslucent } from "~/funcs";
-import { useUiThemeContext, cssCommonTransitionSpec } from "../base";
+import { rgbTranslucent } from "@/funcs";
+import { cssCommonTransitionSpec, useUiThemeContext } from "../base";
 
 type Props = {
   height: number;

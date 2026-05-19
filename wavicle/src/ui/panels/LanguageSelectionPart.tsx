@@ -1,6 +1,6 @@
 import { css, domStyled, FC, jsx } from "alumina";
-import { rgbTranslucent } from "~/funcs";
-import { appStore } from "~/store";
+import { rgbTranslucent } from "@/funcs";
+import { appStore } from "@/store";
 import { cssCommonTransitionSpec, useUiThemeContext } from "../base";
 
 export const LanguageSelectionPart: FC = () => {

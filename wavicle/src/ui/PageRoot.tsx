@@ -1,15 +1,15 @@
 import { css, domStyled, jsx } from "alumina";
-import { appEnv } from "~/base";
-import { appStore } from "~/store";
-import { MainPanel } from "./MainPanel";
+import { appEnv } from "@/base";
+import { appStore } from "@/store";
 import {
-  uiThemeContextValueDefault,
-  uiThemeContext,
   switchFontByLanguage,
   uiFontFamilyMainFont,
   uiFontFamilyMainFontJa,
+  uiThemeContext,
+  uiThemeContextValueDefault,
 } from "./base";
 import { ScalerBox } from "./components";
+import { MainPanel } from "./MainPanel";
 import { UsagePanel } from "./panels";
 
 export const PageRoot = () => {

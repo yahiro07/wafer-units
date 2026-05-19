@@ -1,10 +1,10 @@
 import { asyncRerender, css, domStyled, FC, jsx, useLocal } from "alumina";
-import { IKeyHoldEvent } from "~/base";
+import { IKeyHoldEvent } from "@/base";
 import {
   arrays,
   preventDefaultHandler,
   startDragSessionRelative,
-} from "~/funcs";
+} from "@/funcs";
 import { uiFontFamilySpecKeyLabels } from "../base";
 import { keysBlockHelpers } from "./keysBlockHelpers";
 

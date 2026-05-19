@@ -1,6 +1,6 @@
-import { FC, domStyled, jsx, css } from "alumina";
-import { getInstrumentLabel, IInstrumentKey } from "~/base";
-import { appStore } from "~/store";
+import { css, domStyled, FC, jsx } from "alumina";
+import { getInstrumentLabel, IInstrumentKey } from "@/base";
+import { appStore } from "@/store";
 import { ISelectorOption, useUiTexts } from "../base";
 import {
   GeneralSelector,

@@ -1,5 +1,5 @@
 import { createContext, useContext } from "alumina";
-import { ILanguageKey } from "~/base";
+import { ILanguageKey } from "@/base";
 
 type IUiThemeContextValue = {
   languageKey: ILanguageKey;
