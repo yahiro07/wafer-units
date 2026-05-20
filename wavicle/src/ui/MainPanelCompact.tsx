@@ -8,7 +8,6 @@ import {
   InstrumentSelectionPartHorizontal_Buttons,
   InstrumentSelectionPartHorizontal_Selector,
   ParameterControlsPart,
-  SystemMessagePanel,
   TitlesPartCore,
 } from "./panels";
 
@@ -37,8 +36,6 @@ export const MainPanelCompact: FC = () => {
             <LevelMeterGauge level={outputLevel01} />
           </div>
         </div>
-        <div class="top-row"></div>
-        <SystemMessagePanel />
       </div>
       <div class="cover" />
     </div>,

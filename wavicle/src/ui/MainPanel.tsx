@@ -10,7 +10,6 @@ import {
   MainKeysPanel,
   OctaveShifterPart,
   ParameterControlsPart,
-  SystemMessagePanel,
   TitlesPart,
 } from "./panels";
 
@@ -42,7 +41,6 @@ export const MainPanel: FC = () => {
       <div class="main-keys-row">
         <MainKeysPanel />
       </div>
-      <SystemMessagePanel />
       <div class="cover" />
     </div>,
     css`
