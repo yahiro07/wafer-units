@@ -23,8 +23,8 @@ Source samples are determined by selecting nearest waveform in note scale from p
 
 ## Debug
 ```
-yarn
-yarn start
+pnpm install
+pnpm start
 ```
 
 ## License
