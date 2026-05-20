@@ -20,6 +20,7 @@ function createAppStore(): IAppStore {
     uiPresenter,
     async initialize() {
       synthEngine.initialize();
+      uiPresenter.actions.initialize();
       synthEngine.setInstrument(synthEngine.currentInstrumentKey, false); // initial load
       // setupPcKeyboardHandler(synthEngine, {
       //   getRootNoteNumber() {

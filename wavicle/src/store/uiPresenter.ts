@@ -1,7 +1,13 @@
+import { asyncRerender } from "alumina";
 import { appConfig, appEnv, ILanguageKey, INumberDirection } from "@/base";
 import { animateValue, IValueAnimator } from "@/funcs";
 import { ISynthesizerEngine } from "@/synthLib";
 import { keysBlockHelpers } from "@/ui/organisms";
+
+function mapDbToLevel01(dbValue: number) {
+  const clampedDbValue = Math.max(-80, Math.min(0, dbValue));
+  return (clampedDbValue + 80) / 80;
+}
 
 function findNearestLowerValue(current: number, values: number[]) {
   for (let i = values.length - 1; i >= 0; i--) {
@@ -18,12 +24,16 @@ function findNearestHigherValue(current: number, values: number[]) {
 
 export function createUiPresenter(synthEngine: ISynthesizerEngine) {
   const octaveOffsets = appConfig.octaveSelectionKeyUnitOffsets;
+  let outputLevelTimerId = undefined as
+    | ReturnType<typeof setInterval>
+    | undefined;
   const state = {
     keyRangeOffset: appConfig.activeKeyRangeUnitOffsetDefault,
     keysRangeSize: appConfig.activeKeyRangeUnitSize,
     languageKey: (appEnv.isJapaneseEnvironment ? "ja" : "en") as ILanguageKey,
     isCompactMode: localStorage.getItem("wavicle_is_compact_mode") === "1",
     usagePanelVisible: false,
+    outputLevel01: 0,
   };
   const readers = {
     get currentInstrumentIndex() {
@@ -60,6 +70,24 @@ export function createUiPresenter(synthEngine: ISynthesizerEngine) {
 
   let scrollAnimator: IValueAnimator | undefined;
   const actions = {
+    initialize() {
+      outputLevelTimerId = setInterval(() => {
+        const nextOutputLevel01 = mapDbToLevel01(
+          synthEngine.readOutputLevelDb(),
+        );
+        if (Math.abs(state.outputLevel01 - nextOutputLevel01) < 0.01) {
+          return;
+        }
+        state.outputLevel01 = nextOutputLevel01;
+        asyncRerender();
+      }, 50);
+    },
+    finalize() {
+      if (outputLevelTimerId) {
+        clearInterval(outputLevelTimerId);
+        outputLevelTimerId = undefined;
+      }
+    },
     setKeyRangeOffset(value: number) {
       state.keyRangeOffset = value;
     },

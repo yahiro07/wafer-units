@@ -1,4 +1,6 @@
-import { css, domStyled, FC, jsx } from "alumina";
+import type { FC } from "alumina";
+import { css, domStyled, jsx } from "alumina";
+import { appStore } from "@/store";
 import { LevelMeterGauge } from "@/ui/organisms/LevelMeterGauge";
 import { CompactModeSwitcher } from "@/ui/panels/CompactModeSwitcher";
 import { useUiThemeContext } from "./base";
@@ -14,6 +16,7 @@ import {
 
 export const MainPanel: FC = () => {
   const { colors } = useUiThemeContext();
+  const { outputLevel01 } = appStore.uiPresenter.state;
   const fgColor = colors.clForeground;
   const panelColor = colors.clPanelBody;
 
@@ -34,7 +37,7 @@ export const MainPanel: FC = () => {
           <OctaveShifterPart />
           <KeysActiveAreaSlider />
         </div>
-        <LevelMeterGauge level={0.8} />
+        <LevelMeterGauge level={outputLevel01} />
       </div>
       <div class="main-keys-row">
         <MainKeysPanel />

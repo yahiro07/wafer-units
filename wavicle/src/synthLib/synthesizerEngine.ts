@@ -18,6 +18,7 @@ export interface ISynthesizerEngine {
   noteReceived: boolean;
   initialize(): void;
   activateWebAudioOnUserAction(): void;
+  readOutputLevelDb(): number;
   setMasterVolume(value: number): void;
   setInstrumentParameter(key: keyof IInstrumentParameters, value: number): void;
   preloadAllInstrumentSamples(): Promise<void>;
@@ -43,9 +44,12 @@ export function createSynthesizerEngine(): ISynthesizerEngine {
   const noteVoiceManager = createNoteVoiceManager();
   const voiceMixer = audioContext.createGain();
   const compressor = audioContext.createDynamicsCompressor();
+  const outputAnalyser = audioContext.createAnalyser();
+  const analyserBuffer = new Float32Array(outputAnalyser.fftSize);
 
   voiceMixer
     .connect(compressor)
+    .connect(outputAnalyser)
     .connect(hostInterface?.audioDestinationNode ?? audioContext.destination);
 
   let timerId = undefined as ReturnType<typeof setTimeout> | undefined;
@@ -64,6 +68,19 @@ export function createSynthesizerEngine(): ISynthesizerEngine {
 
   function updateMasterMixerLevel() {
     voiceMixer.gain.value = masterVolume;
+  }
+
+  function readOutputLevelDb() {
+    outputAnalyser.getFloatTimeDomainData(analyserBuffer);
+    let sum = 0;
+    for (const sample of analyserBuffer) {
+      sum += sample * sample;
+    }
+    const rms = Math.sqrt(sum / analyserBuffer.length);
+    if (rms <= 0) {
+      return -80;
+    }
+    return Math.max(-80, Math.min(0, 20 * Math.log10(rms)));
   }
 
   const self: ISynthesizerEngine = {
@@ -100,6 +117,9 @@ export function createSynthesizerEngine(): ISynthesizerEngine {
         console.log(`web audio started`);
         asyncRerender();
       }
+    },
+    readOutputLevelDb() {
+      return readOutputLevelDb();
     },
     get isLoadingSamples() {
       return isLoadingSamples;

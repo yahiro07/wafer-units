@@ -1,4 +1,6 @@
-import { css, domStyled, FC, jsx } from "alumina";
+import type { FC } from "alumina";
+import { css, domStyled, jsx } from "alumina";
+import { appStore } from "@/store";
 import { LevelMeterGauge } from "@/ui/organisms/LevelMeterGauge";
 import { CompactModeSwitcher } from "@/ui/panels/CompactModeSwitcher";
 import { useUiThemeContext } from "./base";
@@ -12,6 +14,7 @@ import {
 
 export const MainPanelCompact: FC = () => {
   const { colors } = useUiThemeContext();
+  const { outputLevel01 } = appStore.uiPresenter.state;
   const fgColor = colors.clForeground;
   const panelColor = colors.clPanelBody;
 
@@ -31,7 +34,7 @@ export const MainPanelCompact: FC = () => {
           </div>
           <div class="controls-part-box">
             <ParameterControlsPart />
-            <LevelMeterGauge level={0.8} />
+            <LevelMeterGauge level={outputLevel01} />
           </div>
         </div>
         <div class="top-row"></div>
@@ -80,6 +83,7 @@ export const MainPanelCompact: FC = () => {
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            padding-bottom: 4px;
           }
         }
       }
