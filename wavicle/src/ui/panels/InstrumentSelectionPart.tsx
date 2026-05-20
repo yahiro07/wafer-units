@@ -122,7 +122,7 @@ export const InstrumentSelectionPartHorizontal_Selector: FC = () => {
           value={currentInstrumentKey}
           onChange={onInstrumentChange}
           width={172}
-          height={46}
+          height={44}
           fontSize={18}
         />
       </div>

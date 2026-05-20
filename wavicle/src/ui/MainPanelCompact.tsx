@@ -50,10 +50,9 @@ export const MainPanelCompact: FC = () => {
       align-items: center;
 
       > .content{
-        margin-top: -12px;
+        margin-top: -20px;
         display: flex;
         flex-direction: column;
-        gap: 8px;
 
         > .top-row{
           display: flex;
