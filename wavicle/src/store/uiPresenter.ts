@@ -22,6 +22,7 @@ export function createUiPresenter(synthEngine: ISynthesizerEngine) {
     keyRangeOffset: appConfig.activeKeyRangeUnitOffsetDefault,
     keysRangeSize: appConfig.activeKeyRangeUnitSize,
     languageKey: (appEnv.isJapaneseEnvironment ? "ja" : "en") as ILanguageKey,
+    isCompactMode: localStorage.getItem("wavicle_is_compact_mode") === "1",
     usagePanelVisible: false,
   };
   const readers = {
@@ -92,6 +93,10 @@ export function createUiPresenter(synthEngine: ISynthesizerEngine) {
       if (appEnv.isJapaneseEnvironment) {
         state.languageKey = languageKey;
       }
+    },
+    setCompactMode(isCompact: boolean) {
+      state.isCompactMode = isCompact;
+      localStorage.setItem("wavicle_is_compact_mode", isCompact ? "1" : "0");
     },
     showUsagePanel() {
       state.usagePanelVisible = true;

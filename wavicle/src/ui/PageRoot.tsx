@@ -13,7 +13,8 @@ import { MainPanel } from "./MainPanel";
 import { UsagePanel } from "./panels";
 
 export const PageRoot = () => {
-  const { languageKey, usagePanelVisible } = appStore.uiPresenter.state;
+  const { languageKey, usagePanelVisible, isCompactMode } =
+    appStore.uiPresenter.state;
   const uiTheme = { ...uiThemeContextValueDefault, languageKey };
 
   const mainFontFamily = switchFontByLanguage(
@@ -23,12 +24,12 @@ export const PageRoot = () => {
   return domStyled(
     <uiThemeContext.Provider value={uiTheme}>
       <div>
-        {0 ? (
+        {!isCompactMode ? (
           <ScalerBox contentWidth={800} contentHeight={450} class="scaler-box">
             <MainPanel />
           </ScalerBox>
         ) : (
-          <ScalerBox contentWidth={420} contentHeight={230} class="scaler-box">
+          <ScalerBox contentWidth={400} contentHeight={225} class="scaler-box">
             <MainPanelCompact />
           </ScalerBox>
         )}

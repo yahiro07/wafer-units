@@ -1,8 +1,8 @@
 import { css, domStyled, FC, jsx } from "alumina";
 import { appEnv } from "@/base";
+import { CompactModeSwitcher } from "@/ui/panels/CompactModeSwitcher";
 import { useUiThemeContext } from "./base";
 import {
-  AppControlsPart,
   InstrumentSelectionPart,
   KeysActiveAreaSlider,
   MainKeysPanel,
@@ -12,7 +12,6 @@ import {
   SystemMessagePanel,
   TitlesPart,
 } from "./panels";
-import { LanguageSelectionPart } from "./panels/LanguageSelectionPart";
 
 export const MainPanel: FC = () => {
   const { colors } = useUiThemeContext();
@@ -27,8 +26,7 @@ export const MainPanel: FC = () => {
         <InstrumentSelectionPart />
         <ParameterControlsPart />
         <div class="top-right-part">
-          <AppControlsPart />
-          <LanguageSelectionPart if={appEnv.isJapaneseEnvironment} />
+          <CompactModeSwitcher />
         </div>
         <TitlesPart />
       </div>

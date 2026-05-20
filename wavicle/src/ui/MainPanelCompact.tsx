@@ -1,4 +1,5 @@
 import { css, domStyled, FC, jsx } from "alumina";
+import { CompactModeSwitcher } from "@/ui/panels/CompactModeSwitcher";
 import { useUiThemeContext } from "./base";
 import {
   InstrumentSelectionPartHorizontal_Buttons,
@@ -20,6 +21,7 @@ export const MainPanelCompact: FC = () => {
       <div class="content">
         <div class="top-row">
           <TitlesPartCore />
+          <CompactModeSwitcher />
         </div>
         <div class="main-row">
           <div class="selectors-part">
@@ -37,8 +39,8 @@ export const MainPanelCompact: FC = () => {
       position: relative;
       background: ${panelColor};
       border-radius: 2px;
-      width: 420px;
-      height: 230px;
+      width: 400px;
+      height: 225px;
       font-size: 16px;
       flex-shrink: 0;
       user-select: none;
@@ -55,6 +57,8 @@ export const MainPanelCompact: FC = () => {
 
         > .top-row{
           display: flex;
+          justify-content: space-between;
+          align-items: center;
           margin-left: -8px;
         }
 
