@@ -6,7 +6,7 @@ import { ISynthesizerEngine } from "@/synthLib";
 import { keysBlockHelpers } from "@/ui/organisms";
 
 function mapDbToLevel01(dbValue: number) {
-  return nums.lerpMap(dbValue, -80, -10, 0, 1, true);
+  return nums.lerpMap(dbValue, -80, -3, 0, 1, true);
 }
 
 function findNearestLowerValue(current: number, values: number[]) {
