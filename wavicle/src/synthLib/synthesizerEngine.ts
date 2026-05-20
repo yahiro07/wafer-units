@@ -1,7 +1,7 @@
+import { getHostInterface } from "@wus/unit-types";
 import { asyncRerender } from "alumina";
 import { IInstrumentKey } from "@/base";
 import { arrays } from "@/funcs";
-import { getHostInterface } from "../../../wus-unit-types";
 import { createInstrumentProvider } from "./instrumentProvider";
 import { createPitchShiftedNoteVoice } from "./noteVoice";
 import { createNoteVoiceManager } from "./noteVoiceManager";

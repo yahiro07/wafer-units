@@ -1,6 +1,6 @@
+import { getHostInterface } from "@wus/unit-types";
 import { asyncRerender } from "alumina";
 import { ISynthesizerBase } from "@/base";
-import { getHostInterface } from "../../../wus-unit-types";
 
 export function setupUnit(synth: ISynthesizerBase) {
   const hostInterface = getHostInterface();
