@@ -1,4 +1,5 @@
 import { css, domStyled, FC, jsx } from "alumina";
+import { LevelMeterGauge } from "@/ui/organisms/LevelMeterGauge";
 import { CompactModeSwitcher } from "@/ui/panels/CompactModeSwitcher";
 import { useUiThemeContext } from "./base";
 import {
@@ -28,7 +29,10 @@ export const MainPanelCompact: FC = () => {
             <InstrumentSelectionPartHorizontal_Selector />
             <InstrumentSelectionPartHorizontal_Buttons class="shifter-buttons" />
           </div>
-          <ParameterControlsPart />
+          <div class="controls-part-box">
+            <ParameterControlsPart />
+            <LevelMeterGauge level={0.8} />
+          </div>
         </div>
         <div class="top-row"></div>
         <SystemMessagePanel />
@@ -70,6 +74,12 @@ export const MainPanelCompact: FC = () => {
             flex-direction: column;
             gap: 10px;
             
+          }
+
+          > .controls-part-box{
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
           }
         }
       }

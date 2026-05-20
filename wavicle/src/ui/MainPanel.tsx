@@ -1,12 +1,11 @@
 import { css, domStyled, FC, jsx } from "alumina";
-import { appEnv } from "@/base";
+import { LevelMeterGauge } from "@/ui/organisms/LevelMeterGauge";
 import { CompactModeSwitcher } from "@/ui/panels/CompactModeSwitcher";
 import { useUiThemeContext } from "./base";
 import {
   InstrumentSelectionPart,
   KeysActiveAreaSlider,
   MainKeysPanel,
-  MidiInDeviceSelectionPart,
   OctaveShifterPart,
   ParameterControlsPart,
   SystemMessagePanel,
@@ -35,10 +34,7 @@ export const MainPanel: FC = () => {
           <OctaveShifterPart />
           <KeysActiveAreaSlider />
         </div>
-        <MidiInDeviceSelectionPart
-          class="midi-in-part"
-          if={appEnv.isWebMidiSupported}
-        />
+        <LevelMeterGauge level={0.8} />
       </div>
       <div class="main-keys-row">
         <MainKeysPanel />
@@ -81,11 +77,9 @@ export const MainPanel: FC = () => {
 
       > .second-row {
         display: flex;
-        align-items: flex-end;
+        align-items: center;
         padding: 0 10px;
         gap: 10px;
-        margin-top: -20px;
-        height: 58px;
 
         > .keys-box {
           display: flex;
