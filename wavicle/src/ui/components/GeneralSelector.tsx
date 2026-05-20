@@ -15,6 +15,8 @@ interface Props {
   value: string;
   onChange(value: string): void;
   width?: number;
+  height?: number;
+  fontSize?: number;
   disabled?: boolean;
 }
 
@@ -23,9 +25,15 @@ export const GeneralSelector: FC<Props> = ({
   value,
   onChange,
   width,
+  height,
+  fontSize,
   disabled,
 }) => {
-  const style = (width && `width: ${width}px`) || undefined;
+  const style = {
+    ...(width ? { width: `${width}px` } : {}),
+    ...(height ? { height: `${height}px` } : {}),
+    ...(fontSize ? { fontSize: `${fontSize}px` } : {}),
+  };
 
   const edgeWidth = 1;
   const activeColor = useUiThemeContext().colors.clControlHighlight;

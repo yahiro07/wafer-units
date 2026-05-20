@@ -1,5 +1,6 @@
 import { css, domStyled, jsx } from "alumina";
 import { appStore } from "@/store";
+import { MainPanelCompact } from "@/ui/MainPanelCompact";
 import {
   switchFontByLanguage,
   uiFontFamilyMainFont,
@@ -22,9 +23,15 @@ export const PageRoot = () => {
   return domStyled(
     <uiThemeContext.Provider value={uiTheme}>
       <div>
-        <ScalerBox contentWidth={800} contentHeight={450} class="scaler-box">
-          <MainPanel />
-        </ScalerBox>
+        {0 ? (
+          <ScalerBox contentWidth={800} contentHeight={450} class="scaler-box">
+            <MainPanel />
+          </ScalerBox>
+        ) : (
+          <ScalerBox contentWidth={420} contentHeight={230} class="scaler-box">
+            <MainPanelCompact />
+          </ScalerBox>
+        )}
         <UsagePanel if={usagePanelVisible} />
       </div>
     </uiThemeContext.Provider>,

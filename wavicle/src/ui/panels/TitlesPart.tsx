@@ -2,19 +2,13 @@ import { css, domStyled, FC, jsx } from "alumina";
 import { uiFontFamilySpecAppTitle } from "../base";
 import { WaveLogo } from "../components";
 
-export const TitlesPart: FC = () => {
+export const TitlesPartCore: FC = () => {
   return domStyled(
     <div>
-      <div class="title-row">
-        <WaveLogo size={44} class="logo" />
-        <h1>Wavicle</h1>
-      </div>
+      <WaveLogo size={44} class="logo" />
+      <h1>Wavicle</h1>
     </div>,
     css`
-      position: absolute;
-      top: 0;
-      left: 0;
-      > .title-row {
         display: flex;
         align-items: center;
         padding: 10px;
@@ -30,7 +24,19 @@ export const TitlesPart: FC = () => {
           font-size: 50px;
           line-height: 40px;
         }
-      }
+    `,
+  );
+};
+
+export const TitlesPart: FC = () => {
+  return domStyled(
+    <div>
+      <TitlesPartCore />
+    </div>,
+    css`
+      position: absolute;
+      top: 0;
+      left: 0;
     `,
   );
 };
