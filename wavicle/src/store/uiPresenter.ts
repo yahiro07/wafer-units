@@ -1,12 +1,12 @@
 import { asyncRerender } from "alumina";
 import { appConfig, appEnv, ILanguageKey, INumberDirection } from "@/base";
 import { animateValue, IValueAnimator } from "@/funcs";
+import { nums } from "@/funcs/utils";
 import { ISynthesizerEngine } from "@/synthLib";
 import { keysBlockHelpers } from "@/ui/organisms";
 
 function mapDbToLevel01(dbValue: number) {
-  const clampedDbValue = Math.max(-80, Math.min(0, dbValue));
-  return (clampedDbValue + 80) / 80;
+  return nums.lerpMap(dbValue, -80, -10, 0, 1, true);
 }
 
 function findNearestLowerValue(current: number, values: number[]) {
