@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "license": "MIT",
   "private": true,
+  "packageManager": "pnpm@10.33.2",
   "scripts": {
     "dev": "vite dev",
     "build": "tsc && vite build",
@@ -10,6 +11,7 @@
   },
   "dependencies": {
     "@types/node": "^25.9.0",
+    "@wus/unit-types": "github:yahiro07/webaudio-unit-system#main&path:/framework/packages/wus-unit-types",
     "alumina": "^0.1.14",
     "alumina-visor": "^0.1.6",
     "typescript": "^6.0.3",

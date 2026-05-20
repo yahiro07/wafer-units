@@ -2,5 +2,5 @@
 
 set -euo pipefail
 
-cd ./wavicle && npm install && npm run build && cd ..
+cd ./wavicle && pnpm install && pnpm build && cd ..
 echo "build done."
