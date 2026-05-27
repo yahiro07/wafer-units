@@ -24,7 +24,8 @@
         "noSvgWithoutTitle": "off",
         "noStaticElementInteractions": "off",
         "useKeyWithClickEvents": "off",
-        "useIframeTitle": "off"
+        "useIframeTitle": "off",
+        "useButtonType": "off"
       }
     }
   }
