@@ -105,7 +105,7 @@ function renderCanvasSpectrum(
   }
 }
 
-function SpectrumView0() {
+const SpectrumView0 = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { fftData, sampleRate } = store.useSnapshot();
 
@@ -125,14 +125,36 @@ function SpectrumView0() {
       />
     </div>
   );
-}
+};
 
-function App() {
+const PanelRoot = () => {
   return (
-    <div className="w-dvw h-dvh flex-c">
+    <div className="w-full h-full flex-c bg-gray-300">
       <SpectrumView0 />
     </div>
   );
-}
+};
+
+const DevelopmentView = () => {
+  return (
+    <div className="flex-vc gap-8">
+      <div className="w-[600px] h-[100px] bd-red">
+        <PanelRoot />
+      </div>
+
+      <div className="w-[400px] h-[250px] bd-red">
+        <PanelRoot />
+      </div>
+    </div>
+  );
+};
+
+const App = () => {
+  return (
+    <div className="w-dvw h-dvh flex-c">
+      {0 ? <PanelRoot /> : <DevelopmentView />}
+    </div>
+  );
+};
 
 mountAppRoot(<App />);
