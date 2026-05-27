@@ -4,6 +4,9 @@ import { mapUnaryFrom, mapUnaryTo } from "@beam/ax/number-utils";
 import { useEffect, useRef } from "react";
 import { createStore } from "snap-store";
 import { getHostInterface } from "wus-unit-types";
+import { setupDummyHost } from "@/dummy-host";
+
+const dummyHost = setupDummyHost();
 
 const store = createStore<{
   fftData: Float32Array | undefined;
@@ -145,6 +148,8 @@ const DevelopmentView = () => {
       <div className="w-[400px] h-[250px] bd-red">
         <PanelRoot />
       </div>
+
+      <dummyHost.ControlComponent />
     </div>
   );
 };
