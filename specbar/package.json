@@ -1,6 +1,12 @@
 {
   "name": "specbar",
   "private": "true",
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "onFail": "error"
+    }
+  },
   "scripts": {
     "dev": "vite dev",
     "build": "vite build",
