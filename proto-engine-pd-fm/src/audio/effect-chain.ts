@@ -1,10 +1,10 @@
-import { createChorusEffect } from "@/web/proto0-ptm-osc/chorus-effect";
-import { createReverberator } from "@/web/proto0-ptm-osc/reverbrator";
+import { createChorusEffect } from "@/audio/chorus-effect";
+import { createReverberator } from "@/audio/reverbrator";
 
 export interface EffectParameters {
-  chorus: number; // 0.0 ~ 1.0 (コーラスの深さ/ウェット量)
-  delay: number; // 0.0 ~ 1.0 (ディレイのフィードバック/ウェット量)
-  reverb: number; // 0.0 ~ 1.0 (リバーブのウェット量)
+  chorus: number; // 0.0 ~ 1.0
+  delay: number; // 0.0 ~ 1.0
+  reverb: number; // 0.0 ~ 1.0
 }
 
 export type EffectChain = {

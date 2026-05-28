@@ -1,4 +1,3 @@
-import { assignTyped } from "@/utils/general-utils";
 import { WaveMode } from "./constants";
 
 export interface SynthParameters {
@@ -35,7 +34,7 @@ export const defaultParams: SynthParameters = {
 };
 
 if (0) {
-  assignTyped(defaultParams, {
+  Object.assign(defaultParams, {
     waveMode: WaveMode.FM,
     shape: 0.5,
     envMod: 0.3,
@@ -50,7 +49,7 @@ if (0) {
 }
 
 if (1) {
-  assignTyped(defaultParams, {
+  Object.assign(defaultParams, {
     waveMode: WaveMode.PD,
     shape: 0.7,
     envMod: 0.5,

@@ -1,12 +1,11 @@
-import { clampValue, linearInterpolate, lowClip } from "@/utils/number-utils";
-import { power2 } from "@/utils/synth-math-utils";
-import { createInterpolator } from "@/web/proto1-pd-fm/interpolator";
-import { WaveMode } from "./constants";
+import { createInterpolator } from "@/audio/interpolator";
+import { WaveMode } from "@/constants";
+import { clampValue, linearInterpolate, lowClip, power2 } from "@/utils/nums";
 
-// PD (Phase Distortion) 計算関数
+// PD (Phase Distortion) calculation
 function computePD(phase: number, amount: number): number {
-  // 1周期の真ん中（0.5）の変形点を、amountに応じて前方に歪ませる
-  const pivot = 0.5 + amount * 0.45; // 0.5 〜 0.95
+  // Shift the midpoint pivot forward based on the amount value.
+  const pivot = 0.5 + amount * 0.45; // 0.5 to 0.95
   let distortedPhase = 0.0;
 
   if (phase < pivot) {
@@ -14,7 +13,7 @@ function computePD(phase: number, amount: number): number {
   } else {
     distortedPhase = 0.5 + ((phase - pivot) / (1.0 - pivot)) * 0.5;
   }
-  // 歪ませた位相をサイン波に流し込むことで、鋸歯状波へとモーフィングする
+  // Feed the warped phase into a sine shape to morph toward a saw-like waveform.
   if (0) {
     return Math.sin(2.0 * Math.PI * distortedPhase + Math.PI);
   } else {
@@ -22,38 +21,38 @@ function computePD(phase: number, amount: number): number {
   }
 }
 
-// PD_RESO (疑似レゾナンス) 計算関数
+// PD_RESO (pseudo resonance) calculation
 function computePDReso(phase: number, amount: number): number {
-  // インデックスに応じて高域倍音の倍率を設定（最大16倍周期）
+  // Set the high-harmonic multiplier from the current index value.
   const resoMultiplier = 1.0 + Math.floor(amount * 15.0);
-  // 1周期の後方に向かって綺麗に減衰する窓関数（CZの特徴）
+  // Apply a trailing decay window across the cycle, similar to CZ behavior.
   const window = 1.0 - phase;
 
   return Math.sin(phase * resoMultiplier * 2.0 * Math.PI) * window;
 }
 
 function createSynthesizerCore() {
-  // オシレーターの位相管理 (2つのOSC分 + サブOSC)
+  // Oscillator phase state for two main oscillators plus the sub oscillator.
   let phase1 = 0.0;
   let phase2 = 0.0;
   let phaseSub = 0.0;
 
-  // FMフィードバック用の1サンプルバッファ
+  // One-sample buffer for FM feedback.
   let fbStorage = 0.0;
 
-  // Drift（ピッチのヨレ）用の不規則LFOの位相
+  // Irregular LFO phase state for pitch drift.
   let driftPhase1 = 0.0;
   let driftPhase2 = 0.0;
 
-  // Lo-Fi（ダウンサンプリング）用のサンプルホールド保持用
+  // Sample-and-hold state for the lo-fi downsampling effect.
   let sampleCount = 0;
   let heldSample = 0.0;
 
-  // エンベロープ（EG）の状態管理
+  // Envelope generator state.
   let egValue = 0.0;
   let isReleased = false;
   let releaseStartValue = 0.0;
-  let egTime = 0.0; // ノートオンまたはオフからの経過時間（秒）
+  let egTime = 0.0; // Elapsed seconds since note-on or note-off.
 
   const interpolators = {
     shape: createInterpolator(),
@@ -67,11 +66,11 @@ function createSynthesizerCore() {
       parameters: Record<string, Float32Array>,
     ): boolean {
       const output = outputs[0];
-      const outputChannel = output[0]; // モノラル出力
-      const sampleRate = globalThis.sampleRate; // Web Audio API提供のグローバル環境変数
-      const bufferSize = outputChannel.length; // 通常は128固定
+      const outputChannel = output[0]; // Mono output.
+      const sampleRate = globalThis.sampleRate; // Global value provided by the Web Audio API.
+      const bufferSize = outputChannel.length; // Usually fixed at 128 samples.
 
-      // 配列アクセスのオーバーヘッドを減らすため、定常パラメーターは最初の値をキャプチャ
+      // Capture steady parameter values once to reduce repeated array access overhead.
       const baseFreq = parameters["frequency"][0];
       const gate = parameters["gate"][0];
       const waveMode = Math.floor(parameters["waveMode"][0]) as WaveMode;
@@ -87,20 +86,20 @@ function createSynthesizerCore() {
       interpolators.shape.feed(_shape, bufferSize);
       interpolators.envMod.feed(_envMod, bufferSize);
 
-      // 128サンプルのブロックループ
+      // Process the current audio block.
       for (let i = 0; i < bufferSize; i++) {
         const shape = interpolators.shape.advance();
         const envMod = interpolators.envMod.advance();
         // -------------------------------------------------------------
-        // 1. エンベロープ（EG）の更新ロジック
+        // 1. Envelope update
         // -------------------------------------------------------------
         if (gate > 0.5) {
           if (isReleased) {
-            // 再度ノートオンされた場合のリセット
+            // Reset when a note is triggered again.
             isReleased = false;
             egTime = 0.0;
           }
-          // Decayフェーズ: 指数関数的な減衰（アタックは0秒の超高速設計）
+          // Decay phase with exponential falloff. Attack is intentionally instantaneous.
           egValue = Math.exp(-egTime / Math.max(0.01, decay));
           const sustain =
             decay < 0.75 ? 0 : linearInterpolate(decay, 0.75, 1, 0, 1);
@@ -108,45 +107,45 @@ function createSynthesizerCore() {
           egTime += 1.0 / sampleRate;
         } else {
           if (!isReleased) {
-            // ノートオフがトリガーされた瞬間
+            // Latch the envelope value at the moment note-off is triggered.
             isReleased = true;
             releaseStartValue = egValue;
             egTime = 0.0;
           }
-          // Releaseフェーズ
+          // Release phase.
           egValue =
             releaseStartValue * Math.exp(-egTime / Math.max(0.01, release));
           egTime += 1.0 / sampleRate;
         }
 
         // -------------------------------------------------------------
-        // 2. Drift（ピッチのヨレ）の計算
+        // 2. Pitch drift calculation
         // -------------------------------------------------------------
         let pitchDrift = 0.0;
         if (driftAmount > 0.0) {
-          // 異なる周期のLFOを掛け合わせて「予測できないヨレ」を演出
+          // Multiply LFOs with different rates to create less predictable drift.
           driftPhase1 += (2.0 * Math.PI * 0.73) / sampleRate; // 0.73Hz
           driftPhase2 += (2.0 * Math.PI * 3.14) / sampleRate; // 3.14Hz
           if (driftPhase1 > 2.0 * Math.PI) driftPhase1 -= 2.0 * Math.PI;
           if (driftPhase2 > 2.0 * Math.PI) driftPhase2 -= 2.0 * Math.PI;
 
           const slowWobble = Math.sin(driftPhase1) * Math.sin(driftPhase2);
-          // 最大で約30セントのピッチ揺らぎを発生させる
+          // Generate up to roughly 30 cents of pitch variation.
           pitchDrift = slowWobble * driftAmount * 0.018;
         }
 
         // -------------------------------------------------------------
-        // 3. オシレーター周波数の決定（Detune処理）
+        // 3. Oscillator frequency setup with detune handling
         // -------------------------------------------------------------
-        // detuneノブが0の時は、OSC2を完全にシャットダウンしてOSC1のみにする
+        // Shut down OSC2 completely when detune is effectively zero.
         const isDualOsc = detune > 0.005;
-        const detuneFactor = 1.0 + detune * 0.015; // 最大で1.5%ほどのデチューン幅
+        const detuneFactor = 1.0 + detune * 0.015; // Up to roughly 1.5% detune.
 
         const f1 = baseFreq * (1.0 + pitchDrift);
         const f2 = baseFreq * detuneFactor * (1.0 + pitchDrift);
-        const fSub = baseFreq * 0.5 * (1.0 + pitchDrift); // 1オクターブ下
+        const fSub = baseFreq * 0.5 * (1.0 + pitchDrift); // One octave below.
 
-        // 位相の進捗更新
+        // Advance oscillator phases.
         phase1 += f1 / sampleRate;
         if (phase1 >= 1.0) phase1 -= 1.0;
 
@@ -159,21 +158,21 @@ function createSynthesizerCore() {
         if (phaseSub >= 1.0) phaseSub -= 1.0;
 
         // -------------------------------------------------------------
-        // 4. モジュレーション値（ノブ値 + Env Mod）の統合
+        // 4. Modulation value combination (knob + envelope modulation)
         // -------------------------------------------------------------
 
         // -------------------------------------------------------------
-        // 5. 各種アルゴリズムによる波形生成
+        // 5. Waveform generation for each algorithm
         // -------------------------------------------------------------
         let osc1Out = 0.0;
         let osc2Out = 0.0;
 
         switch (waveMode) {
           case WaveMode.PD: {
-            // EnvModが1.0のとき、アタック時はcurrentIndexが「ノブの設定＋1.0（上限突破）」になり、Decayと共にノブの位置へ軟着陸
+            // Let envelope modulation overshoot at attack, then settle back during decay.
             let currentIndex = shape + egValue * envMod;
-            currentIndex = clampValue(currentIndex, 0, 1); // 安全のためのクランプ
-            // CZ式 Phase Distortion（ノコギリ波への変形）
+            currentIndex = clampValue(currentIndex, 0, 1); // Safety clamp.
+            // CZ-style phase distortion that bends toward a saw waveform.
             osc1Out = computePD(phase1, currentIndex);
             if (isDualOsc) osc2Out = computePD(phase2, currentIndex);
             break;
@@ -181,7 +180,7 @@ function createSynthesizerCore() {
           case WaveMode.FM: {
             const currentIndex = shape + egValue * power2(envMod);
             const modDepth = currentIndex * 5.0;
-            const ratio = 1.0 + Math.floor(shape * 7.0); // Ratio: 1倍〜8倍
+            const ratio = 1.0 + Math.floor(shape * 7.0); // Ratio: 1x to 8x.
 
             osc1Out = Math.sin(
               2.0 * Math.PI * phase1 +
@@ -196,49 +195,49 @@ function createSynthesizerCore() {
             break;
           }
           case WaveMode.FM_FB: {
-            // EnvModが1.0のとき、アタック時はcurrentIndexが「ノブの設定＋1.0（上限突破）」になり、Decayと共にノブの位置へ軟着陸
+            // Let envelope modulation overshoot at attack, then settle back during decay.
             let currentIndex = shape + egValue * envMod;
-            currentIndex = clampValue(currentIndex, 0, 1); // 安全のためのクランプ
+            currentIndex = clampValue(currentIndex, 0, 1); // Safety clamp.
 
-            // フィードバック付きFM
-            const fbAmount = currentIndex * 2.5; // フィードバック強度
+            // FM with feedback.
+            const fbAmount = currentIndex * 2.5; // Feedback amount.
             const modulator = Math.sin(
               2.0 * Math.PI * phase1 + fbStorage * fbAmount,
             );
-            fbStorage = modulator; // 1サンプル記憶
+            fbStorage = modulator; // Store one sample of feedback.
 
             osc1Out = Math.sin(2.0 * Math.PI * phase1 + modulator * 2.0);
             if (isDualOsc) {
-              osc2Out = Math.sin(2.0 * Math.PI * phase2 + modulator * 2.0); // OSC2も同じモジュレータを共有
+              osc2Out = Math.sin(2.0 * Math.PI * phase2 + modulator * 2.0); // OSC2 shares the same modulator.
             }
             break;
           }
           case WaveMode.PD_RESO: {
-            // EnvModが1.0のとき、アタック時はcurrentIndexが「ノブの設定＋1.0（上限突破）」になり、Decayと共にノブの位置へ軟着陸
+            // Let envelope modulation overshoot at attack, then settle back during decay.
             let currentIndex = shape + egValue * envMod;
-            currentIndex = clampValue(currentIndex, 0, 1); // 安全のためのクランプ
+            currentIndex = clampValue(currentIndex, 0, 1); // Safety clamp.
 
-            // CZ式 疑似レゾナンス・フィルター
+            // CZ-style pseudo-resonance filter.
             osc1Out = computePDReso(phase1, currentIndex);
             if (isDualOsc) osc2Out = computePDReso(phase2, currentIndex);
             break;
           }
         }
 
-        // メインオシレーターのミックス
+        // Mix the main oscillators.
         let mainMix = isDualOsc ? (osc1Out + osc2Out) * 0.5 : osc1Out;
 
         // -------------------------------------------------------------
-        // 6. Lo-Fi（メインOSCにのみ適用し、エッジを尖らせる）
+        // 6. Lo-fi processing on the main oscillator only
         // -------------------------------------------------------------
         if (loFiAmount > 0.005) {
-          // A. ビットクラッシュ (16bitから最小4bitまで落とす)
+          // A. Bit crushing from 16-bit down to as low as 4-bit.
           const bits = 16.0 - loFiAmount * 12.0;
           const step = Math.pow(2, bits);
           mainMix = Math.round(mainMix * step) / step;
 
-          // B. ダウンサンプリング (ホールド処理)
-          // loFiAmountに応じて、何サンプルに1回更新するかを決定（最大で15サンプルに1回＝約3kHz相当）
+          // B. Downsampling via sample hold.
+          // Increase the hold interval with the lo-fi amount, up to 15 samples.
           const sampleHoldInterval = Math.floor(1 + loFiAmount * 14);
           if (sampleCount % sampleHoldInterval === 0) {
             heldSample = mainMix;
@@ -248,29 +247,29 @@ function createSynthesizerCore() {
         }
 
         // -------------------------------------------------------------
-        // 7. サブオシレーターの合流と最終音量 EG
+        // 7. Sub oscillator mix and final amplitude envelope
         // -------------------------------------------------------------
-        // サブOSCは三角波。Lo-Fi化をバイパスさせることで、低域の体幹を維持
+        // Use a triangle wave for the sub oscillator and bypass lo-fi processing to keep the low end stable.
         let subOut = 0.0;
         if (subVol > 0.005) {
           subOut = phaseSub < 0.5 ? 4.0 * phaseSub - 1.0 : 3.0 - 4.0 * phaseSub;
         }
 
-        // 最終ミックスにメインの音量EGを乗せる
+        // Apply the main amplitude envelope to the final mix.
         const finalSample = (mainMix + subOut * subVol * 0.6) * egValue;
 
-        // チャンネルへ書き込み
+        // Write the sample to the output channel.
         outputChannel[i] = finalSample;
 
-        // ステレオ対応が必要な場合、もう片方のチャンネルへもコピー
+        // Mirror the sample to the second channel when stereo output is present.
         if (output.length > 1) {
           output[1][i] = finalSample;
         }
       }
 
-      // EGが完全に収束し、かつノートオフされていれば、このノートの処理は終了（生存フラグ）
+      // Stop processing once the envelope is fully faded after note-off.
       if (isReleased && egValue < 0.0001) {
-        return false; // 以降、このボイスノードは自動的に破棄される
+        return false; // The voice node will be released automatically.
       }
 
       return true;
@@ -287,7 +286,7 @@ class SynthProcessor extends AudioWorkletProcessor {
         minValue: 0.0,
         maxValue: 22000.0,
       },
-      { name: "gate", defaultValue: 1.0, minValue: 0.0, maxValue: 1.0 }, // 1.0でノートオン, 0.0でノートオフ
+      { name: "gate", defaultValue: 1.0, minValue: 0.0, maxValue: 1.0 }, // 1.0 = note on, 0.0 = note off
       { name: "waveMode", defaultValue: 0, minValue: 0, maxValue: 3 },
       { name: "shape", defaultValue: 0.0, minValue: 0.0, maxValue: 1.0 },
       { name: "envMod", defaultValue: 0.0, minValue: 0.0, maxValue: 1.0 },
@@ -310,5 +309,5 @@ class SynthProcessor extends AudioWorkletProcessor {
   }
 }
 
-// 登録手続き
+// Register the worklet processor.
 registerProcessor("synth-processor", SynthProcessor);
