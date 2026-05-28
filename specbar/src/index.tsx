@@ -1,12 +1,12 @@
 import { mountAppRoot } from "@beam/ax-react";
 import "./styles";
+import { mapKnobGainDb } from "@beam/mo-audio/map-knob-gain-db";
+import { ScalerBoxAutoSized } from "@beam/mo-react/components/scaler-box-auto-sized";
 import { createStore } from "snap-store";
 import { getHostInterface } from "wus-unit-types";
 import { BasicSpectrumView } from "@/basic-spectrum-view";
 import { Knob } from "@/components/knob";
 import { setupDummyHost } from "@/dummy-host";
-import { mapKnobGainDb } from "@/map-knog-gain-db";
-import { ScalerBoxAutoSized } from "@/scaler-box-auto-sized";
 import { SegmentedSpectrumView } from "@/segmented-spectrum-view";
 
 const configs = {
