@@ -22,8 +22,8 @@ importers:
         specifier: ^25.7.0
         version: 25.9.1
       beams:
-        specifier: file:///Users/ore/Documents/projects/yahiro/beam/beams
-        version: file:../../beam/beams(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(solid-js@1.9.13)
+        specifier: github:yahiro07/beam#0.1.3&path:/beams
+        version: https://codeload.github.com/yahiro07/beam/tar.gz/fc7e58397a77f7f6ba37810f1ba6998972764ef1#path:/beams(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(solid-js@1.9.13)
       tailwindcss:
         specifier: ^4.3.0
         version: 4.3.0
@@ -394,8 +394,9 @@ packages:
     engines: {node: '>=6.0.0'}
     hasBin: true
 
-  beams@file:../../beam/beams:
-    resolution: {directory: ../../beam/beams, type: directory}
+  beams@https://codeload.github.com/yahiro07/beam/tar.gz/fc7e58397a77f7f6ba37810f1ba6998972764ef1#path:/beams:
+    resolution: {path: /beams, tarball: https://codeload.github.com/yahiro07/beam/tar.gz/fc7e58397a77f7f6ba37810f1ba6998972764ef1}
+    version: 0.0.0
     peerDependencies:
       '@types/react': ^19.2.14
       '@types/react-dom': ^19.2.3
@@ -1070,7 +1071,7 @@ snapshots:
 
   baseline-browser-mapping@2.10.32: {}
 
-  beams@file:../../beam/beams(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(solid-js@1.9.13):
+  beams@https://codeload.github.com/yahiro07/beam/tar.gz/fc7e58397a77f7f6ba37810f1ba6998972764ef1#path:/beams(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(solid-js@1.9.13):
     dependencies:
       '@types/react': 19.2.15
       '@types/react-dom': 19.2.3(@types/react@19.2.15)
