@@ -39,18 +39,12 @@ importers:
       '@vitejs/plugin-react':
         specifier: ^6.0.1
         version: 6.0.2(vite@8.0.14(@types/node@25.9.1)(jiti@2.7.0))
-      note-voicing-adapter:
-        specifier: github:yahiro07/synth-rd-2604#main&path:/sr2605/synth-lib/packages/note-voicing-adapter
-        version: https://codeload.github.com/yahiro07/synth-rd-2604/tar.gz/15fab9abe066a1d04b665762825cc934132b9df5#path:/sr2605/synth-lib/packages/note-voicing-adapter
-      sequencer-tick-driver:
-        specifier: github:yahiro07/synth-rd-2604#main&path:/sr2605/synth-lib/packages/sequencer-tick-driver
-        version: https://codeload.github.com/yahiro07/synth-rd-2604/tar.gz/15fab9abe066a1d04b665762825cc934132b9df5#path:/sr2605/synth-lib/packages/sequencer-tick-driver
+      beams:
+        specifier: file:///Users/ore/Documents/projects/yahiro/beam/beams
+        version: file:../../beam/beams(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       tailwindcss:
         specifier: ^4.3.0
         version: 4.3.0
-      test-synthesizer:
-        specifier: github:yahiro07/synth-rd-2604#main&path:/sr2605/synth-lib/packages/test-synth
-        version: https://codeload.github.com/yahiro07/synth-rd-2604/tar.gz/15fab9abe066a1d04b665762825cc934132b9df5#path:/sr2605/synth-lib/packages/test-synth
       typescript:
         specifier: ~6.0.3
         version: 6.0.3
@@ -316,6 +310,22 @@ packages:
       babel-plugin-react-compiler:
         optional: true
 
+  beams@file:../../beam/beams:
+    resolution: {directory: ../../beam/beams, type: directory}
+    peerDependencies:
+      '@types/react': ^19.2.14
+      '@types/react-dom': ^19.2.3
+      react: '*'
+      react-dom: '*'
+      solid-js: ^1.9.12
+    peerDependenciesMeta:
+      react:
+        optional: true
+      react-dom:
+        optional: true
+      solid-js:
+        optional: true
+
   clsx@2.1.1:
     resolution: {integrity: sha512-eYm0QWBtUrBWZWG0d386OGAw16Z995PiOVo2B7bjWSbHedGl5e0ZWaq65kOGgUSNesEIDkB9ISbTg/JK9dhCZA==}
     engines: {node: '>=6'}
@@ -437,10 +447,6 @@ packages:
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
 
-  note-voicing-adapter@https://codeload.github.com/yahiro07/synth-rd-2604/tar.gz/15fab9abe066a1d04b665762825cc934132b9df5#path:/sr2605/synth-lib/packages/note-voicing-adapter:
-    resolution: {path: /sr2605/synth-lib/packages/note-voicing-adapter, tarball: https://codeload.github.com/yahiro07/synth-rd-2604/tar.gz/15fab9abe066a1d04b665762825cc934132b9df5}
-    version: 0.0.0
-
   picocolors@1.1.1:
     resolution: {integrity: sha512-xceH2snhtb5M9liqDsmEw56le376mTZkEX/jEb/RxNFyegNul7eNslCXP9FDj/Lcu0X8KEyMceP2ntpaHrDEVA==}
 
@@ -474,10 +480,6 @@ packages:
   scheduler@0.27.0:
     resolution: {integrity: sha512-eNv+WrVbKu1f3vbYJT/xtiF5syA5HPIMtf9IgY/nKg0sWqzAUEvqY/xm7OcZc/qafLx/iO9FgOmeSAp4v5ti/Q==}
 
-  sequencer-tick-driver@https://codeload.github.com/yahiro07/synth-rd-2604/tar.gz/15fab9abe066a1d04b665762825cc934132b9df5#path:/sr2605/synth-lib/packages/sequencer-tick-driver:
-    resolution: {path: /sr2605/synth-lib/packages/sequencer-tick-driver, tarball: https://codeload.github.com/yahiro07/synth-rd-2604/tar.gz/15fab9abe066a1d04b665762825cc934132b9df5}
-    version: 0.0.0
-
   snap-store@0.1.6:
     resolution: {integrity: sha512-s1I/YsLjg0yve9lWrHW/VwOLPuiusTCFddmLXBNQ0v5mXvdD6hXWPfimKiep0oUgs9Kuv1pE8kBIw/URHUEWjQ==}
     engines: {node: '>=16.0.0'}
@@ -494,10 +496,6 @@ packages:
   tapable@2.3.3:
     resolution: {integrity: sha512-uxc/zpqFg6x7C8vOE7lh6Lbda8eEL9zmVm/PLeTPBRhh1xCgdWaQ+J1CUieGpIfm2HdtsUpRv+HshiasBMcc6A==}
     engines: {node: '>=6'}
-
-  test-synthesizer@https://codeload.github.com/yahiro07/synth-rd-2604/tar.gz/15fab9abe066a1d04b665762825cc934132b9df5#path:/sr2605/synth-lib/packages/test-synth:
-    resolution: {path: /sr2605/synth-lib/packages/test-synth, tarball: https://codeload.github.com/yahiro07/synth-rd-2604/tar.gz/15fab9abe066a1d04b665762825cc934132b9df5}
-    version: 0.0.0
 
   tinyglobby@0.2.16:
     resolution: {integrity: sha512-pn99VhoACYR8nFHhxqix+uvsbXineAasWm5ojXoN8xEwK5Kd3/TrhNn1wByuD52UxWRLy8pu+kRMniEi6Eq9Zg==}
@@ -747,6 +745,14 @@ snapshots:
       '@rolldown/pluginutils': 1.0.1
       vite: 8.0.14(@types/node@25.9.1)(jiti@2.7.0)
 
+  beams@file:../../beam/beams(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6):
+    dependencies:
+      '@types/react': 19.2.15
+      '@types/react-dom': 19.2.3(@types/react@19.2.15)
+    optionalDependencies:
+      react: 19.2.6
+      react-dom: 19.2.6(react@19.2.6)
+
   clsx@2.1.1: {}
 
   csstype@3.2.3: {}
@@ -826,8 +832,6 @@ snapshots:
 
   nanoid@3.3.12: {}
 
-  note-voicing-adapter@https://codeload.github.com/yahiro07/synth-rd-2604/tar.gz/15fab9abe066a1d04b665762825cc934132b9df5#path:/sr2605/synth-lib/packages/note-voicing-adapter: {}
-
   picocolors@1.1.1: {}
 
   picomatch@4.0.4: {}
@@ -872,8 +876,6 @@ snapshots:
 
   scheduler@0.27.0: {}
 
-  sequencer-tick-driver@https://codeload.github.com/yahiro07/synth-rd-2604/tar.gz/15fab9abe066a1d04b665762825cc934132b9df5#path:/sr2605/synth-lib/packages/sequencer-tick-driver: {}
-
   snap-store@0.1.6(react@19.2.6):
     dependencies:
       immer: 11.1.8
@@ -884,8 +886,6 @@ snapshots:
   tailwindcss@4.3.0: {}
 
   tapable@2.3.3: {}
-
-  test-synthesizer@https://codeload.github.com/yahiro07/synth-rd-2604/tar.gz/15fab9abe066a1d04b665762825cc934132b9df5#path:/sr2605/synth-lib/packages/test-synth: {}
 
   tinyglobby@0.2.16:
     dependencies:

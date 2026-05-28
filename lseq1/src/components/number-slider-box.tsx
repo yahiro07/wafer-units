@@ -1,4 +1,4 @@
-import { KnobFrame } from "./knob-frame";
+import { KnobFrame } from "beams/mo-react/components/knob-frame";
 
 export function NumberSliderBoxView(props: {
   value: number;

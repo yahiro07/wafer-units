@@ -19,12 +19,10 @@
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.1",
-    "note-voicing-adapter": "github:yahiro07/synth-rd-2604#main&path:/sr2605/synth-lib/packages/note-voicing-adapter",
-    "sequencer-tick-driver": "github:yahiro07/synth-rd-2604#main&path:/sr2605/synth-lib/packages/sequencer-tick-driver",
     "tailwindcss": "^4.3.0",
-    "test-synthesizer": "github:yahiro07/synth-rd-2604#main&path:/sr2605/synth-lib/packages/test-synth",
     "typescript": "~6.0.3",
     "vite": "^8.0.12",
-    "wus-unit-types": "^0.1.0"
+    "wus-unit-types": "^0.1.0",
+    "beams": "file:///Users/ore/Documents/projects/yahiro/beam/beams"
   }
 }

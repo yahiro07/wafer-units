@@ -1,3 +1,6 @@
+import { seqNumbers } from "beams/ax/array-utils";
+import { mountAppRoot } from "beams/ax-react/mount-app-root";
+import { setupMidiKeyboardInput } from "beams/mx-audio/midi-keyboard-input";
 import { ReactNode, useEffect } from "react";
 import { createSequencerTickDriver } from "sequencer-tick-driver";
 import { createStore } from "snap-store";
@@ -12,9 +15,6 @@ import {
 import { createSequencerEngine } from "@/sequencer-engine";
 import { createTargetSynthesizer, hostInterface } from "@/target-synthesizer";
 import { LoopBars, SpecialStep, StepStride } from "@/types";
-import { seqNumbers } from "@/utils/array-utils";
-import { setupMidiKeyboardInput } from "@/utils/midi-keyboard-input";
-import { mountAppRoot } from "@/utils/mount-app-root";
 
 const targetSynth = createTargetSynthesizer();
 const sequencerEngine = createSequencerEngine(targetSynth);

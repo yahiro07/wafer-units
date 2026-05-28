@@ -1,5 +1,5 @@
+import { startDragSession } from "beams/ax-ui/drag-session";
 import { ReactNode } from "react";
-import { startDragSession } from "@/utils/drag-session";
 
 export function ClockKnobView({ tickAngle }: { tickAngle: number }) {
   return (

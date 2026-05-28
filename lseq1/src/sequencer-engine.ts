@@ -1,6 +1,6 @@
+import { clampValue } from "beams/ax/number-utils";
 import { createNoteVoicingDurationAdapter } from "note-voicing-adapter";
 import { LoopBars, SpecialStep } from "@/types";
-import { clampValue } from "@/utils/number-utils";
 
 type SequencerState = {
   bpm: number;

@@ -1,7 +1,6 @@
-import { mergeReactProps } from "@/utils/merge-react-props";
-import { mapUnaryTo } from "@/utils/number-utils";
+import { mapUnaryTo } from "beams/ax/number-utils";
+import { KnobFrame } from "beams/mo-react/components/knob-frame";
 import { CellFrame } from "./cell-frame";
-import { KnobFrame } from "./knob-frame";
 
 export function KnobView(props: { value: number; min: number; max: number }) {
   const vm = {
@@ -27,24 +26,28 @@ export function KnobView(props: { value: number; min: number; max: number }) {
   );
 }
 
-export function Knob(inputProps: {
+export function Knob({
+  value,
+  min = 0,
+  max = 1,
+  step = 0.01,
+  onChange,
+}: {
   value: number;
   min?: number;
   max?: number;
   step?: number;
   onChange: (value: number) => void;
 }) {
-  const props = mergeReactProps({ min: 0, max: 1, step: 0.01 }, inputProps);
-  console.log(inputProps, props);
   return (
     <KnobFrame
-      value={props.value}
-      min={props.min}
-      max={props.max}
-      step={props.step}
-      onChange={props.onChange}
+      value={value}
+      min={min}
+      max={max}
+      step={step}
+      onChange={onChange}
     >
-      <KnobView value={props.value} min={props.min} max={props.max} />
+      <KnobView value={value} min={min} max={max} />
     </KnobFrame>
   );
 }
