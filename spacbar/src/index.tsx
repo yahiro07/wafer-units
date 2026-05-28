@@ -7,22 +7,35 @@ import { Knob } from "@/components/knob";
 import { setupDummyHost } from "@/dummy-host";
 import { mapKnobGainDb } from "@/map-knog-gain-db";
 import { ScalerBoxAutoSized } from "@/scaler-box-auto-sized";
+import { SegmentedSpectrumView } from "@/segmented-spectrum-view";
 
-const dummyHost = setupDummyHost();
+const configs = {
+  isDebug: false,
+};
+if (0) {
+  configs.isDebug = true;
+}
+
+const dummyHost = configs.isDebug ? setupDummyHost() : undefined;
 
 const store = createStore<{
   fftData: Float32Array | undefined;
   sampleRate: number;
   level: number;
+  displayMode: number;
 }>({
   fftData: undefined,
   sampleRate: 0,
   level: 0.5,
+  displayMode: 0,
 });
 
 const actions = {
   setLevel(value: number) {
     store.setLevel(value);
+  },
+  shiftDisplayMode() {
+    store.setDisplayMode((prev) => (prev + 1) % 2);
   },
 };
 
@@ -65,11 +78,25 @@ function setupUnitInstance() {
 setupUnitInstance();
 
 const PanelRoot = () => {
-  const { level, fftData } = store.useSnapshot();
+  const { level, fftData, displayMode } = store.useSnapshot();
   return (
     <div className="@container w-full h-full flex-c bg-black">
-      <div className="grow h-full max-h-[33cqw] border border-[#fff2] px-4 py-2">
-        {fftData && <BasicSpectrumView fftData={fftData} />}
+      <div
+        className="grow h-full max-h-[33cqw]  px-4 py-2"
+        onClick={actions.shiftDisplayMode}
+      >
+        {displayMode === 0 && fftData && (
+          <BasicSpectrumView fftData={fftData} />
+        )}
+        {displayMode === 1 && fftData && (
+          <SegmentedSpectrumView
+            nx={16}
+            ny={10}
+            gapX={1}
+            gapY={1.5}
+            fftData={fftData}
+          />
+        )}
       </div>
       <div className="w-[20%] h-full flex-c bg-[#333] border border-[#fff2]">
         <ScalerBoxAutoSized>
@@ -91,7 +118,7 @@ const DevelopmentView = () => {
       <div className="w-[400px] h-[250px] border border-[#fff2]">
         <PanelRoot />
       </div>
-      <dummyHost.ControlComponent />
+      {dummyHost && <dummyHost.ControlComponent />}
     </div>
   );
 };
@@ -99,7 +126,7 @@ const DevelopmentView = () => {
 const App = () => {
   return (
     <div className="w-dvw h-dvh flex-c bg-black">
-      {0 ? <PanelRoot /> : <DevelopmentView />}
+      {1 ? <PanelRoot /> : <DevelopmentView />}
     </div>
   );
 };
