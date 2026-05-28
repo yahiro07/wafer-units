@@ -1,5 +1,5 @@
 {
-  "name": "fm4op",
+  "name": "specbar",
   "private": "true",
   "scripts": {
     "dev": "vite dev",
