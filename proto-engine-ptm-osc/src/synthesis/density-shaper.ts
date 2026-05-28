@@ -1,7 +1,7 @@
-import { mapUnaryTo } from "@/utils/number-utils";
-import { tunableSigmoid } from "@/utils/synth-math-utils";
-import { createEffectWrapper } from "@/web/proto0-ptm-osc/effect-wrapper";
-import { createShaperCurveBufferCache } from "@/web/proto0-ptm-osc/shaper-curve-buffer-cache";
+import { mapUnaryTo } from "beams/ax/number-utils";
+import { tunableSigmoid } from "beams/mo-synthesis/synth-math-utils";
+import { createEffectWrapper } from "@/synthesis/effect-wrapper";
+import { createShaperCurveBufferCache } from "@/synthesis/shaper-curve-buffer-cache";
 
 function fillDensityShaperCurveBuffer(
   curveBuffer: Float32Array,

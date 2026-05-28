@@ -9,7 +9,6 @@ export function ModuleHeader(props: {
   return (
     <div class="w-full flex-ha justify-between bg-indigo-800 py-1.5 px-2 text-[11px] tracking-[0.16em] text-[#dbe4ec] gap-2 mb-0.5">
       <div class="flex-ha gap-1">
-        {/* <span class="text-[#8a99a8]">□</span> */}
         <span>{props.title}</span>
       </div>
       <Show when={props.withIndicator}>

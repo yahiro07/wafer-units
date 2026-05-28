@@ -1,5 +1,5 @@
-import { lowClip } from "@/utils/number-utils";
-import { power2 } from "@/utils/synth-math-utils";
+import { lowClip } from "beams/ax/number-utils";
+import { power2 } from "beams/mo-synthesis/synth-math-utils";
 
 export function createEnvelopeGeneratorADSR(
   audioContext: AudioContext,

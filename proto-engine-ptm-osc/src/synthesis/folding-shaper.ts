@@ -1,6 +1,6 @@
-import { power2 } from "@/utils/synth-math-utils";
-import { createEffectWrapper } from "@/web/proto0-ptm-osc/effect-wrapper";
-import { createShaperCurveBufferCache } from "@/web/proto0-ptm-osc/shaper-curve-buffer-cache";
+import { power2 } from "beams/mo-synthesis/synth-math-utils";
+import { createEffectWrapper } from "@/synthesis/effect-wrapper";
+import { createShaperCurveBufferCache } from "@/synthesis/shaper-curve-buffer-cache";
 
 export enum FoldingShaperWave {
   ws1 = 0,

@@ -1,4 +1,4 @@
-import { seqNumbers } from "@/utils/array-utils";
+import { seqNumbers } from "beams/ax/array-utils";
 
 export function createShaperCurveBufferCache(
   size: number,
