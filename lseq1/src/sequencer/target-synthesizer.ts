@@ -1,4 +1,4 @@
-import { createTestSynthesizer } from "test-synthesizer";
+import { createTestSynthesizer } from "beams/mx-audio/test-synthesizer";
 import { getHostInterface } from "wus-unit-types";
 
 export const hostInterface = getHostInterface();
