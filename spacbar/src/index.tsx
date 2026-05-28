@@ -5,7 +5,7 @@ import { useEffect, useRef } from "react";
 import { createStore } from "snap-store";
 import { getHostInterface } from "wus-unit-types";
 import { setupDummyHost } from "@/dummy-host";
-import { ScalerBoxAutoSized } from "@/scaler-box-auto-sized";
+import { useDomElementSize } from "@/use-dom-element-size";
 
 const dummyHost = setupDummyHost();
 
@@ -113,6 +113,8 @@ const SpectrumView0 = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { fftData, sampleRate } = store.useSnapshot();
 
+  const canvasDomSize = useDomElementSize(canvasRef);
+
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!(fftData && canvas && sampleRate)) return;
@@ -120,23 +122,24 @@ const SpectrumView0 = () => {
   }, [fftData, sampleRate]);
 
   return (
-    <div className="w-[240px] h-[120px] bg-black">
-      <canvas
-        ref={canvasRef}
-        width="200"
-        height="100"
-        className="w-full h-full"
-      />
-    </div>
+    <canvas
+      ref={canvasRef}
+      width={canvasDomSize?.width ?? 0}
+      height={canvasDomSize?.height ?? 0}
+      className="w-full h-full"
+    />
   );
 };
 
 const PanelRoot = () => {
   return (
-    <div className="w-full h-full flex-c bg-gray-300">
-      <ScalerBoxAutoSized>
+    <div className="@container w-full h-full flex-c bg-black">
+      <div className="grow h-full bd-red max-h-[33cqw]">
         <SpectrumView0 />
-      </ScalerBoxAutoSized>
+      </div>
+      <div className="w-[20%] h-full bd-red">
+        {/* <dummyHost.ControlComponent /> */}
+      </div>
     </div>
   );
 };
@@ -147,11 +150,9 @@ const DevelopmentView = () => {
       <div className="w-[600px] h-[100px] bd-red">
         <PanelRoot />
       </div>
-
       <div className="w-[400px] h-[250px] bd-red">
         <PanelRoot />
       </div>
-
       <dummyHost.ControlComponent />
     </div>
   );
@@ -159,7 +160,7 @@ const DevelopmentView = () => {
 
 const App = () => {
   return (
-    <div className="w-dvw h-dvh flex-c">
+    <div className="w-dvw h-dvh flex-c bg-black">
       {0 ? <PanelRoot /> : <DevelopmentView />}
     </div>
   );
