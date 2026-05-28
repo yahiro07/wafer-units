@@ -1,0 +1,35 @@
+export function clampValue(value: number, lo: number, hi: number) {
+  if (value < lo) return lo;
+  if (value > hi) return hi;
+  return value;
+}
+
+export function lowClip(value: number, lo: number) {
+  return Math.max(value, lo);
+}
+
+export function highClip(value: number, hi: number) {
+  return Math.min(value, hi);
+}
+
+export function linearInterpolate(
+  value: number,
+  s0: number,
+  s1: number,
+  d0: number,
+  d1: number,
+  clamp?: boolean,
+) {
+  if (s1 === s0) return d0;
+  const v = ((value - s0) / (s1 - s0)) * (d1 - d0) + d0;
+  if (clamp) {
+    const lo = Math.min(d0, d1);
+    const hi = Math.max(d0, d1);
+    return clampValue(v, lo, hi);
+  }
+  return v;
+}
+
+export function power2(value: number) {
+  return value * value;
+}
