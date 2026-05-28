@@ -1,3 +1,4 @@
+import { getHostInterface } from "wus-unit-types";
 import { createChorusModule } from "@/audio/create-chorus-module";
 import { createReverbModule } from "@/audio/create-reverb-module";
 import {
@@ -10,7 +11,6 @@ import {
   linearInterpolate,
   mapUnaryTo,
 } from "@/utils/number-utils";
-import { getHostInterface } from "wus-unit-types";
 
 export const hostInterface = getHostInterface();
 
@@ -240,7 +240,8 @@ function releaseVoice(
 
 export function createMiniSynthAudio() {
   const audioContext = hostInterface?.audioContext ?? new AudioContext();
-  const destNode = hostInterface?.audioDestinationNode ?? audioContext.destination;
+  const destNode =
+    hostInterface?.audioDestinationNode ?? audioContext.destination;
 
   const outputNode = audioContext.createGain();
   const voiceBusNode = audioContext.createGain();

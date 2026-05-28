@@ -1,2 +1,2 @@
 import "./page.css";
-import "./utility-class.css";
+import "./utility-classes.css";
