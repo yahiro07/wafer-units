@@ -7,7 +7,7 @@ export default defineConfig({
   plugins: [solid(), tailwindcss()],
   resolve: { tsconfigPaths: true },
   build: {
-    outDir: `/Users/ore/wus-my-units/mini-synth-gp`,
+    outDir: `../dist/mini-synth-gp`,
     emptyOutDir: true,
   },
   server: { port: 3000 },

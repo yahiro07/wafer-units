@@ -7,7 +7,7 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   resolve: { tsconfigPaths: true },
   build: {
-    outDir: `/Users/ore/wus-my-units/lseq1`,
+    outDir: `../dist/lseq1`,
     emptyOutDir: true,
   },
   server: { port: 3000 },

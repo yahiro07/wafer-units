@@ -7,7 +7,7 @@ export default defineConfig({
   plugins: [solid(), tailwindcss()],
   resolve: { tsconfigPaths: true },
   build: {
-    outDir: `/Users/ore/wus-my-units/proto-engine-pd-fm`,
+    outDir: `../dist/proto-engine-pd-fm`,
     emptyOutDir: true,
   },
   server: { port: 3000 },

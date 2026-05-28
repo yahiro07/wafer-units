@@ -7,7 +7,7 @@ export default defineConfig({
   plugins: [solid(), tailwindcss()],
   resolve: { tsconfigPaths: true },
   build: {
-    outDir: `/Users/ore/wus-my-units/proto-engine-ptm-osc`,
+    outDir: `../dist/proto-engine-ptm-osc`,
     emptyOutDir: true,
   },
   server: { port: 3000 },
