@@ -64,8 +64,8 @@ importers:
         specifier: ^8.0.12
         version: 8.0.14(@types/node@25.9.1)(jiti@2.7.0)
       wus-unit-types:
-        specifier: ^0.1.0
-        version: 0.1.1
+        specifier: ^0.1.2
+        version: 0.1.2
 
 packages:
 
@@ -577,8 +577,8 @@ packages:
       yaml:
         optional: true
 
-  wus-unit-types@0.1.1:
-    resolution: {integrity: sha512-lAPy6lB1kzr61fQ89nY7snRm8hNBjo3EeR7kfDE+JY5rGtNJPYEZpDHbilCsboETf4OUr2GJhuf5tXrBbXdyvg==}
+  wus-unit-types@0.1.2:
+    resolution: {integrity: sha512-vWQ8ccazqgfHyf+f+cpUd+NwlBBHJl+MpzfYzke/OU9RBG5441qRSxZ47A+G+5abJuFnxUPlK0t/Yat//XcFMA==}
 
 snapshots:
 
@@ -943,4 +943,4 @@ snapshots:
       fsevents: 2.3.3
       jiti: 2.7.0
 
-  wus-unit-types@0.1.1: {}
+  wus-unit-types@0.1.2: {}

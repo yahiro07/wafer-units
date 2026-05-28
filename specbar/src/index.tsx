@@ -73,11 +73,11 @@ function setupUnitInstance() {
     hostInterface.setupUnitAgent({
       type: "effect",
       persistence: {
-        emitStateB() {
+        emitStateBytes() {
           const dm = store.state.displayMode;
           return new Uint8Array([dm]);
         },
-        loadStateB(bytes) {
+        loadStateBytes(bytes) {
           if (bytes.length === 1) {
             const dm = bytes[0] > 0 ? 1 : 0;
             store.setDisplayMode(dm);
