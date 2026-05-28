@@ -92,10 +92,12 @@ function renderCanvasSpectrum(
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.fillStyle = "#000";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
-  for (let i = 0; i < fftData.length; i++) {
-    const pp = i / (fftData.length - 1);
+  for (let x = 0; x < canvas.width; x++) {
+    const i = Math.floor(
+      mapUnaryFrom(x, 0, canvas.width) * (fftData.length - 1),
+    );
     const value = mapUnaryFrom(fftData[i], -120, 0, true);
-    const px = pp * canvas.width;
+    const px = x;
     const py = mapUnaryTo(value, canvas.height, 0);
     ctx.strokeStyle = "#0f0";
     ctx.beginPath();
