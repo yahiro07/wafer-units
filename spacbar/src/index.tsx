@@ -5,6 +5,7 @@ import { useEffect, useRef } from "react";
 import { createStore } from "snap-store";
 import { getHostInterface } from "wus-unit-types";
 import { setupDummyHost } from "@/dummy-host";
+import { ScalerBoxAutoSized } from "@/scaler-box-auto-sized";
 
 const dummyHost = setupDummyHost();
 
@@ -133,7 +134,9 @@ const SpectrumView0 = () => {
 const PanelRoot = () => {
   return (
     <div className="w-full h-full flex-c bg-gray-300">
-      <SpectrumView0 />
+      <ScalerBoxAutoSized>
+        <SpectrumView0 />
+      </ScalerBoxAutoSized>
     </div>
   );
 };
