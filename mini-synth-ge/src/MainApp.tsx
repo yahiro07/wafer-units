@@ -1,9 +1,9 @@
-import { setupMidiKeyboardInput } from "beams/mx-audio/midi-keyboard-input";
 import { onCleanup, onMount } from "solid-js";
 import { getAudioEngine, hostInterface } from "@/audio";
 import { Header } from "@/sections/Header";
 import { LeftColumn } from "@/sections/LeftColumn";
 import { RightColumn } from "@/sections/RightColumn";
+import { setupMidiKeyboardInput } from "@/utils/midi-keyboard-input";
 
 export const MainApp = () => {
   let containerRef!: HTMLDivElement;

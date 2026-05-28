@@ -1,7 +1,7 @@
-import "./page.css";
-import "beams/ax-ui/utility-classes.css";
+import "./styles/page.css";
+import "./styles/utility-classes.css";
 
-import { mountAppRoot } from "beams/ax-solid/mount-app-root";
 import { MainApp } from "@/MainApp";
+import { mountAppRoot } from "@/utils/mount-app-root";
 
 mountAppRoot(() => <MainApp />);

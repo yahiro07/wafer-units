@@ -1,13 +1,13 @@
-import "./page.css";
-import "beams/ax-ui/utility-classes.css";
+import "./styles/page.css";
+import "./styles/utility-classes.css";
 
-import { mountAppRoot } from "beams/ax-solid/mount-app-root";
-import { setupMidiKeyboardInput } from "beams/mx-audio/midi-keyboard-input";
 import { onCleanup, onMount } from "solid-js";
 import { hostInterface } from "@/audio/audio-engine";
 import { MainSection } from "@/sections/main-section";
 import { TopSection } from "@/sections/top-section";
 import { uiActions } from "@/store/app-store";
+import { setupMidiKeyboardInput } from "@/utils/midi-keyboard-input";
+import { mountAppRoot } from "@/utils/mount-app-root";
 
 const App = () => {
   onMount(() => {
