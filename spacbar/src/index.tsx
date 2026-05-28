@@ -10,13 +10,11 @@ import { ScalerBoxAutoSized } from "@/scaler-box-auto-sized";
 import { SegmentedSpectrumView } from "@/segmented-spectrum-view";
 
 const configs = {
-  isDebug: false,
+  debug: false,
 };
-if (0) {
-  configs.isDebug = true;
-}
+// configs.debug = true;
 
-const dummyHost = configs.isDebug ? setupDummyHost() : undefined;
+const dummyHost = configs.debug ? setupDummyHost() : undefined;
 
 const store = createStore<{
   fftData: Float32Array | undefined;
@@ -27,7 +25,7 @@ const store = createStore<{
   fftData: undefined,
   sampleRate: 0,
   level: 0.5,
-  displayMode: 0,
+  displayMode: 1,
 });
 
 const actions = {
@@ -82,23 +80,25 @@ const PanelRoot = () => {
   return (
     <div className="@container w-full h-full flex-c bg-black">
       <div
-        className="grow h-full max-h-[33cqw]  px-4 py-2"
+        className="grow flex-c h-full max-h-[33cqw] px-4 py-2"
         onClick={actions.shiftDisplayMode}
       >
-        {displayMode === 0 && fftData && (
-          <BasicSpectrumView fftData={fftData} />
-        )}
-        {displayMode === 1 && fftData && (
-          <SegmentedSpectrumView
-            nx={16}
-            ny={10}
-            gapX={1}
-            gapY={1.5}
-            fftData={fftData}
-          />
-        )}
+        <div className="w-full max-w-[400px] h-full">
+          {displayMode === 0 && fftData && (
+            <BasicSpectrumView fftData={fftData} />
+          )}
+          {displayMode === 1 && fftData && (
+            <SegmentedSpectrumView
+              nx={16}
+              ny={10}
+              gapX={1}
+              gapY={1.5}
+              fftData={fftData}
+            />
+          )}
+        </div>
       </div>
-      <div className="w-[20%] h-full flex-c bg-[#333] border border-[#fff2]">
+      <div className="w-[19%] h-full flex-c bg-[#333] border border-[#fff2]">
         <ScalerBoxAutoSized>
           <div className="w-[50px] h-[50px] flex-c">
             <Knob value={level} onChange={actions.setLevel} />
@@ -112,7 +112,7 @@ const PanelRoot = () => {
 const DevelopmentView = () => {
   return (
     <div className="flex-vc gap-8">
-      <div className="w-[550px] h-[100px] border border-[#fff2]">
+      <div className="w-[700px] h-[110px] border border-[#fff2]">
         <PanelRoot />
       </div>
       <div className="w-[400px] h-[250px] border border-[#fff2]">
@@ -126,7 +126,7 @@ const DevelopmentView = () => {
 const App = () => {
   return (
     <div className="w-dvw h-dvh flex-c bg-black">
-      {1 ? <PanelRoot /> : <DevelopmentView />}
+      {configs.debug ? <DevelopmentView /> : <PanelRoot />}
     </div>
   );
 };
