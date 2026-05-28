@@ -18,13 +18,13 @@
     "typescript": "~6.0.3",
     "vite": "^8.0.12",
     "vite-plugin-solid": "^2.11.12",
-    "test-synthesizer": "github:yahiro07/synth-rd-2604#main&path:/sr2605/synth-lib/packages/test-synth",
-    "sequencer-tick-driver": "github:yahiro07/synth-rd-2604#main&path:/sr2605/synth-lib/packages/sequencer-tick-driver",
-    "note-voicing-adapter": "github:yahiro07/synth-rd-2604#main&path:/sr2605/synth-lib/packages/note-voicing-adapter",
-    "@beam/midi-keyboard-input": "github:yahiro07/synth-rd-2604#main&path:/beam/midi-keyboard-input",
-    "@beam/ax": "github:yahiro07/synth-rd-2604#main&path:/beam/ax",
-    "@beam/ax-solid": "github:yahiro07/synth-rd-2604#main&path:/beam/ax-solid",
-    "@beam/ax-ui": "github:yahiro07/synth-rd-2604#main&path:/beam/ax-ui",
-    "@beam/mo-audio": "github:yahiro07/synth-rd-2604#main&path:/beam/mo-audio"
+    "test-synthesizer": "github:yahiro07/beam#0.1.0&path:/synth-lib/test-synthesizer",
+    "sequencer-tick-driver": "github:yahiro07/beam#0.1.0&path:/synth-lib/sequencer-tick-driver",
+    "note-voicing-adapter": "github:yahiro07/beam#0.1.0&path:/synth-lib/note-voicing-adapter",
+    "@beam/midi-keyboard-input": "github:yahiro07/beam#0.1.0&path:/synth-lib/midi-keyboard-input",
+    "@beam/ax": "github:yahiro07/beam#0.1.0&path:/beam/ax",
+    "@beam/ax-solid": "github:yahiro07/beam#0.1.0&path:/beam/ax-solid",
+    "@beam/ax-ui": "github:yahiro07/beam#0.1.0&path:/beam/ax-ui",
+    "@beam/mo-audio": "github:yahiro07/beam#0.1.0&path:/beam/mo-audio"
   }
 }

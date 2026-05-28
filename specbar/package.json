@@ -23,10 +23,10 @@
     "typescript": "~6.0.3",
     "vite": "^8.0.12",
     "wus-unit-types": "^0.1.2",
-    "@beam/ax": "github:yahiro07/synth-rd-2604#main&path:/beam/ax",
-    "@beam/ax-ui": "github:yahiro07/synth-rd-2604#main&path:/beam/ax-ui",
-    "@beam/ax-react": "github:yahiro07/synth-rd-2604#main&path:/beam/ax-react",
-    "@beam/mo-audio": "github:yahiro07/synth-rd-2604#main&path:/beam/mo-audio",
-    "@beam/mo-react": "github:yahiro07/synth-rd-2604#main&path:/beam/mo-react"
+    "@beam/ax": "github:yahiro07/beam#0.1.0&path:/beam/ax",
+    "@beam/ax-ui": "github:yahiro07/beam#0.1.0&path:/beam/ax-ui",
+    "@beam/ax-react": "github:yahiro07/beam#0.1.0&path:/beam/ax-react",
+    "@beam/mo-audio": "github:yahiro07/beam#0.1.0&path:/beam/mo-audio",
+    "@beam/mo-react": "github:yahiro07/beam#0.1.0&path:/beam/mo-react"
   }
 }

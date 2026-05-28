@@ -25,20 +25,20 @@ importers:
         version: 0.1.6(react@19.2.6)
     devDependencies:
       '@beam/ax':
-        specifier: github:yahiro07/synth-rd-2604#main&path:/beam/ax
-        version: https://codeload.github.com/yahiro07/synth-rd-2604/tar.gz/c6a47d066f2199ff0b68256f0f3728ec7d8cef9c#path:/beam/ax
+        specifier: github:yahiro07/beam#0.1.0&path:/beam/ax
+        version: https://codeload.github.com/yahiro07/beam/tar.gz/1a69f74729856dd78f1970f3d8acd532d2fd46e8#path:/beam/ax
       '@beam/ax-react':
-        specifier: github:yahiro07/synth-rd-2604#main&path:/beam/ax-react
-        version: https://codeload.github.com/yahiro07/synth-rd-2604/tar.gz/c6a47d066f2199ff0b68256f0f3728ec7d8cef9c#path:/beam/ax-react(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)
+        specifier: github:yahiro07/beam#0.1.0&path:/beam/ax-react
+        version: https://codeload.github.com/yahiro07/beam/tar.gz/1a69f74729856dd78f1970f3d8acd532d2fd46e8#path:/beam/ax-react(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)
       '@beam/ax-ui':
-        specifier: github:yahiro07/synth-rd-2604#main&path:/beam/ax-ui
-        version: https://codeload.github.com/yahiro07/synth-rd-2604/tar.gz/c6a47d066f2199ff0b68256f0f3728ec7d8cef9c#path:/beam/ax-ui
+        specifier: github:yahiro07/beam#0.1.0&path:/beam/ax-ui
+        version: https://codeload.github.com/yahiro07/beam/tar.gz/1a69f74729856dd78f1970f3d8acd532d2fd46e8#path:/beam/ax-ui
       '@beam/mo-audio':
-        specifier: github:yahiro07/synth-rd-2604#main&path:/beam/mo-audio
-        version: https://codeload.github.com/yahiro07/synth-rd-2604/tar.gz/c6a47d066f2199ff0b68256f0f3728ec7d8cef9c#path:/beam/mo-audio
+        specifier: github:yahiro07/beam#0.1.0&path:/beam/mo-audio
+        version: https://codeload.github.com/yahiro07/beam/tar.gz/1a69f74729856dd78f1970f3d8acd532d2fd46e8#path:/beam/mo-audio
       '@beam/mo-react':
-        specifier: github:yahiro07/synth-rd-2604#main&path:/beam/mo-react
-        version: https://codeload.github.com/yahiro07/synth-rd-2604/tar.gz/c6a47d066f2199ff0b68256f0f3728ec7d8cef9c#path:/beam/mo-react(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)
+        specifier: github:yahiro07/beam#0.1.0&path:/beam/mo-react
+        version: https://codeload.github.com/yahiro07/beam/tar.gz/1a69f74729856dd78f1970f3d8acd532d2fd46e8#path:/beam/mo-react(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)
       '@tailwindcss/vite':
         specifier: ^4.3.0
         version: 4.3.0(vite@8.0.14(@types/node@25.9.1)(jiti@2.7.0))
@@ -69,27 +69,31 @@ importers:
 
 packages:
 
-  '@beam/ax-react@https://codeload.github.com/yahiro07/synth-rd-2604/tar.gz/c6a47d066f2199ff0b68256f0f3728ec7d8cef9c#path:/beam/ax-react':
-    resolution: {path: /beam/ax-react, tarball: https://codeload.github.com/yahiro07/synth-rd-2604/tar.gz/c6a47d066f2199ff0b68256f0f3728ec7d8cef9c}
+  '@beam/ax-react@https://codeload.github.com/yahiro07/beam/tar.gz/1a69f74729856dd78f1970f3d8acd532d2fd46e8#path:/beam/ax-react':
+    resolution: {path: /beam/ax-react, tarball: https://codeload.github.com/yahiro07/beam/tar.gz/1a69f74729856dd78f1970f3d8acd532d2fd46e8}
     version: 0.0.0
     peerDependencies:
       '@types/react': ^19.2.14
       '@types/react-dom': ^19.2.3
 
-  '@beam/ax-ui@https://codeload.github.com/yahiro07/synth-rd-2604/tar.gz/c6a47d066f2199ff0b68256f0f3728ec7d8cef9c#path:/beam/ax-ui':
-    resolution: {path: /beam/ax-ui, tarball: https://codeload.github.com/yahiro07/synth-rd-2604/tar.gz/c6a47d066f2199ff0b68256f0f3728ec7d8cef9c}
+  '@beam/ax-ui@https://codeload.github.com/yahiro07/beam/tar.gz/1a69f74729856dd78f1970f3d8acd532d2fd46e8#path:/beam/ax-ui':
+    resolution: {path: /beam/ax-ui, tarball: https://codeload.github.com/yahiro07/beam/tar.gz/1a69f74729856dd78f1970f3d8acd532d2fd46e8}
     version: 0.0.0
 
-  '@beam/ax@https://codeload.github.com/yahiro07/synth-rd-2604/tar.gz/c6a47d066f2199ff0b68256f0f3728ec7d8cef9c#path:/beam/ax':
-    resolution: {path: /beam/ax, tarball: https://codeload.github.com/yahiro07/synth-rd-2604/tar.gz/c6a47d066f2199ff0b68256f0f3728ec7d8cef9c}
+  '@beam/ax@https://codeload.github.com/yahiro07/beam/tar.gz/1a69f74729856dd78f1970f3d8acd532d2fd46e8#path:/beam/ax':
+    resolution: {path: /beam/ax, tarball: https://codeload.github.com/yahiro07/beam/tar.gz/1a69f74729856dd78f1970f3d8acd532d2fd46e8}
     version: 0.0.0
 
-  '@beam/mo-audio@https://codeload.github.com/yahiro07/synth-rd-2604/tar.gz/c6a47d066f2199ff0b68256f0f3728ec7d8cef9c#path:/beam/mo-audio':
-    resolution: {path: /beam/mo-audio, tarball: https://codeload.github.com/yahiro07/synth-rd-2604/tar.gz/c6a47d066f2199ff0b68256f0f3728ec7d8cef9c}
+  '@beam/ax@https://codeload.github.com/yahiro07/synth-rd-2604/tar.gz/33e5c96934cecf1104540b6b91b3a472c8ed3138#path:/beam/ax':
+    resolution: {path: /beam/ax, tarball: https://codeload.github.com/yahiro07/synth-rd-2604/tar.gz/33e5c96934cecf1104540b6b91b3a472c8ed3138}
     version: 0.0.0
 
-  '@beam/mo-react@https://codeload.github.com/yahiro07/synth-rd-2604/tar.gz/c6a47d066f2199ff0b68256f0f3728ec7d8cef9c#path:/beam/mo-react':
-    resolution: {path: /beam/mo-react, tarball: https://codeload.github.com/yahiro07/synth-rd-2604/tar.gz/c6a47d066f2199ff0b68256f0f3728ec7d8cef9c}
+  '@beam/mo-audio@https://codeload.github.com/yahiro07/beam/tar.gz/1a69f74729856dd78f1970f3d8acd532d2fd46e8#path:/beam/mo-audio':
+    resolution: {path: /beam/mo-audio, tarball: https://codeload.github.com/yahiro07/beam/tar.gz/1a69f74729856dd78f1970f3d8acd532d2fd46e8}
+    version: 0.0.0
+
+  '@beam/mo-react@https://codeload.github.com/yahiro07/beam/tar.gz/1a69f74729856dd78f1970f3d8acd532d2fd46e8#path:/beam/mo-react':
+    resolution: {path: /beam/mo-react, tarball: https://codeload.github.com/yahiro07/beam/tar.gz/1a69f74729856dd78f1970f3d8acd532d2fd46e8}
     version: 0.0.0
     peerDependencies:
       '@types/react': ^19.2.14
@@ -582,20 +586,22 @@ packages:
 
 snapshots:
 
-  '@beam/ax-react@https://codeload.github.com/yahiro07/synth-rd-2604/tar.gz/c6a47d066f2199ff0b68256f0f3728ec7d8cef9c#path:/beam/ax-react(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)':
+  '@beam/ax-react@https://codeload.github.com/yahiro07/beam/tar.gz/1a69f74729856dd78f1970f3d8acd532d2fd46e8#path:/beam/ax-react(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)':
     dependencies:
       '@types/react': 19.2.15
       '@types/react-dom': 19.2.3(@types/react@19.2.15)
 
-  '@beam/ax-ui@https://codeload.github.com/yahiro07/synth-rd-2604/tar.gz/c6a47d066f2199ff0b68256f0f3728ec7d8cef9c#path:/beam/ax-ui': {}
+  '@beam/ax-ui@https://codeload.github.com/yahiro07/beam/tar.gz/1a69f74729856dd78f1970f3d8acd532d2fd46e8#path:/beam/ax-ui': {}
 
-  '@beam/ax@https://codeload.github.com/yahiro07/synth-rd-2604/tar.gz/c6a47d066f2199ff0b68256f0f3728ec7d8cef9c#path:/beam/ax': {}
+  '@beam/ax@https://codeload.github.com/yahiro07/beam/tar.gz/1a69f74729856dd78f1970f3d8acd532d2fd46e8#path:/beam/ax': {}
 
-  '@beam/mo-audio@https://codeload.github.com/yahiro07/synth-rd-2604/tar.gz/c6a47d066f2199ff0b68256f0f3728ec7d8cef9c#path:/beam/mo-audio':
+  '@beam/ax@https://codeload.github.com/yahiro07/synth-rd-2604/tar.gz/33e5c96934cecf1104540b6b91b3a472c8ed3138#path:/beam/ax': {}
+
+  '@beam/mo-audio@https://codeload.github.com/yahiro07/beam/tar.gz/1a69f74729856dd78f1970f3d8acd532d2fd46e8#path:/beam/mo-audio':
     dependencies:
-      '@beam/ax': https://codeload.github.com/yahiro07/synth-rd-2604/tar.gz/c6a47d066f2199ff0b68256f0f3728ec7d8cef9c#path:/beam/ax
+      '@beam/ax': https://codeload.github.com/yahiro07/synth-rd-2604/tar.gz/33e5c96934cecf1104540b6b91b3a472c8ed3138#path:/beam/ax
 
-  '@beam/mo-react@https://codeload.github.com/yahiro07/synth-rd-2604/tar.gz/c6a47d066f2199ff0b68256f0f3728ec7d8cef9c#path:/beam/mo-react(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)':
+  '@beam/mo-react@https://codeload.github.com/yahiro07/beam/tar.gz/1a69f74729856dd78f1970f3d8acd532d2fd46e8#path:/beam/mo-react(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)':
     dependencies:
       '@types/react': 19.2.15
       '@types/react-dom': 19.2.3(@types/react@19.2.15)
