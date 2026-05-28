@@ -1,5 +1,5 @@
 import "./page.css";
-import "beams/aax-ui/utility-classes.css";
+import "beams/ax-ui/utility-classes.css";
 
 import { mountAppRoot } from "beams/ax-solid/mount-app-root";
 import { setupMidiKeyboardInput } from "beams/mx-audio/midi-keyboard-input";
