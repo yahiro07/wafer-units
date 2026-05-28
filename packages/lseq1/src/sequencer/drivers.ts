@@ -1,6 +1,7 @@
 import { setupMidiKeyboardInput } from "beams/mx-audio/midi-keyboard-input";
 import { hostInterface } from "@/sequencer/target-synthesizer";
 import { actions } from "@/store/actions";
+import { persistence } from "@/store/persistence";
 import { sequencerEngine } from "@/store/store";
 
 export const drivers = {
@@ -19,6 +20,7 @@ export const drivers = {
           }
         },
         transportHandling: { processStep: actions.wrapProcessStep },
+        persistence,
       });
     }
   },

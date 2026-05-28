@@ -24,6 +24,14 @@ type StoreState = {
   exPlaying: boolean;
 };
 
+export type PersistState = {
+  loopBars: LoopBars;
+  stepStride: StepStride;
+  allSteps: number[];
+  octaveShift: number;
+  stepDuty: number;
+};
+
 export const store = createStore<StoreState>({
   bpm: 120,
   playing: false,
