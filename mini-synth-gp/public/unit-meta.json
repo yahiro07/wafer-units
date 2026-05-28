@@ -2,6 +2,6 @@
   "name": "mini-synth-gp",
   "category": "synthesizer",
   "unitType": "instrument",
-  "repositoryUrl": "unpublished",
+  "repositoryUrl": "https://github.com/yahiro07/wus-units",
   "preferredSize": "680,420"
 }
