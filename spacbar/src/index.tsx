@@ -4,7 +4,9 @@ import { mapUnaryFrom, mapUnaryTo } from "@beam/ax/number-utils";
 import { useEffect, useRef } from "react";
 import { createStore } from "snap-store";
 import { getHostInterface } from "wus-unit-types";
+import { Knob } from "@/components/knob";
 import { setupDummyHost } from "@/dummy-host";
+import { ScalerBoxAutoSized } from "@/scaler-box-auto-sized";
 import { useDomElementSize } from "@/use-dom-element-size";
 
 const dummyHost = setupDummyHost();
@@ -12,10 +14,18 @@ const dummyHost = setupDummyHost();
 const store = createStore<{
   fftData: Float32Array | undefined;
   sampleRate: number;
+  level: number;
 }>({
   fftData: undefined,
   sampleRate: 0,
+  level: 0.5,
 });
+
+const actions = {
+  setLevel(value: number) {
+    store.setLevel(value);
+  },
+};
 
 function setupUnitInstance() {
   const hostInterface = getHostInterface();
@@ -132,13 +142,18 @@ const SpectrumView0 = () => {
 };
 
 const PanelRoot = () => {
+  const { level } = store.useSnapshot();
   return (
     <div className="@container w-full h-full flex-c bg-black">
-      <div className="grow h-full bd-red max-h-[33cqw]">
+      <div className="grow h-full max-h-[33cqw] border border-[#fff2] px-4 py-2">
         <SpectrumView0 />
       </div>
-      <div className="w-[20%] h-full bd-red">
-        {/* <dummyHost.ControlComponent /> */}
+      <div className="w-[20%] h-full flex-c bg-[#333] border border-[#fff2]">
+        <ScalerBoxAutoSized>
+          <div className="w-[50px] h-[50px] flex-c">
+            <Knob value={level} onChange={actions.setLevel} />
+          </div>
+        </ScalerBoxAutoSized>
       </div>
     </div>
   );
@@ -147,10 +162,10 @@ const PanelRoot = () => {
 const DevelopmentView = () => {
   return (
     <div className="flex-vc gap-8">
-      <div className="w-[600px] h-[100px] bd-red">
+      <div className="w-[550px] h-[100px] border border-[#fff2]">
         <PanelRoot />
       </div>
-      <div className="w-[400px] h-[250px] bd-red">
+      <div className="w-[400px] h-[250px] border border-[#fff2]">
         <PanelRoot />
       </div>
       <dummyHost.ControlComponent />
