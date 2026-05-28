@@ -1,6 +1,10 @@
 import { mountAppRoot } from "@beam/ax-react";
 import "./styles";
-import { mapUnaryFrom, mapUnaryTo } from "@beam/ax/number-utils";
+import {
+  linearInterpolate,
+  mapUnaryFrom,
+  mapUnaryTo,
+} from "@beam/ax/number-utils";
 import { useEffect, useRef } from "react";
 import { createStore } from "snap-store";
 import { getHostInterface } from "wus-unit-types";
@@ -27,6 +31,21 @@ const actions = {
   },
 };
 
+function mapKnobGainDb(
+  value: number,
+  knobCenter: number,
+  dbTop = 12,
+  dbBottom = -80,
+) {
+  let db = 0;
+  if (value > knobCenter) {
+    db = linearInterpolate(value, knobCenter, 1, 0, dbTop);
+  } else {
+    db = linearInterpolate(value, 0, knobCenter, dbBottom, 0);
+  }
+  return Math.pow(10, db / 20);
+}
+
 function setupUnitInstance() {
   const hostInterface = getHostInterface();
   if (hostInterface) {
@@ -44,10 +63,23 @@ function setupUnitInstance() {
       store.assigns({ fftData });
     }, 16);
 
-    hostInterface.audioSourceNode.connect(analyzer);
+    const gainNode = audioContext.createGain();
+    hostInterface.audioSourceNode.connect(gainNode);
+    gainNode.connect(analyzer);
     analyzer.connect(hostInterface.audioDestinationNode);
 
     hostInterface.setupUnitAgent({ type: "effect" });
+
+    function updateGain(level: number) {
+      gainNode.gain.value = mapKnobGainDb(level, 0.5);
+    }
+
+    updateGain(store.state.level);
+    store.subscribe(({ level }) => {
+      if (level !== undefined) {
+        updateGain(level);
+      }
+    });
   }
 }
 setupUnitInstance();
