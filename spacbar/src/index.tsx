@@ -1,11 +1,11 @@
 import { mountAppRoot } from "@beam/ax-react";
 import "./styles";
-import { linearInterpolate } from "@beam/ax/number-utils";
 import { createStore } from "snap-store";
 import { getHostInterface } from "wus-unit-types";
 import { BasicSpectrumView } from "@/basic-spectrum-view";
 import { Knob } from "@/components/knob";
 import { setupDummyHost } from "@/dummy-host";
+import { mapKnobGainDb } from "@/map-knog-gain-db";
 import { ScalerBoxAutoSized } from "@/scaler-box-auto-sized";
 
 const dummyHost = setupDummyHost();
@@ -25,21 +25,6 @@ const actions = {
     store.setLevel(value);
   },
 };
-
-function mapKnobGainDb(
-  value: number,
-  knobCenter: number,
-  dbTop = 12,
-  dbBottom = -80,
-) {
-  let db = 0;
-  if (value > knobCenter) {
-    db = linearInterpolate(value, knobCenter, 1, 0, dbTop);
-  } else {
-    db = linearInterpolate(value, 0, knobCenter, dbBottom, 0);
-  }
-  return Math.pow(10, db / 20);
-}
 
 function setupUnitInstance() {
   const hostInterface = getHostInterface();
