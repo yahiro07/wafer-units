@@ -35,8 +35,11 @@ jobs:
         with:
           node-version: 20
 
+      - name: Install workspace dependencies
+        run: pnpm install --frozen-lockfile
+
       - name: Build all units
-        run: bash ./build_all.sh
+        run: pnpm build:all
 
       - name: Prepare bundles worktree
         run: |
