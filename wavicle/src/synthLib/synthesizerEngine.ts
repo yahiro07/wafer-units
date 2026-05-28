@@ -1,5 +1,5 @@
-import { getHostInterface } from "@wus/unit-types";
 import { asyncRerender } from "alumina";
+import { getHostInterface } from "wus-unit-types";
 import { IInstrumentKey } from "@/base";
 import { arrays } from "@/funcs";
 import { createInstrumentProvider } from "./instrumentProvider";
