@@ -2,6 +2,12 @@
   "name": "proto-engine-ptm-osc",
   "private": true,
   "type": "module",
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "onFail": "error"
+    }
+  },
   "scripts": {
     "dev": "vite dev",
     "build": "vite build",
@@ -21,6 +27,6 @@
     "typescript": "~6.0.3",
     "vite": "^8.0.12",
     "vite-plugin-solid": "^2.11.12",
-    "beams": "file:///Users/ore/Documents/projects/yahiro/beam/beams"
+    "beams": "github:yahiro07/beam#0.1.4&path:/beams"
   }
 }

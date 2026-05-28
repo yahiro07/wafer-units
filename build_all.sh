@@ -2,6 +2,6 @@
 
 set -euo pipefail
 
-cd ./wavicle && pnpm install && pnpm build && cd ..
-cd ./specbar && pnpm install && pnpm build && cd ..
+pnpm install
+pnpm build:all
 echo "build done."

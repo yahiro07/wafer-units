@@ -1,0 +1,14 @@
+{
+  "name": "wus-units",
+  "private": true,
+  "packageManager": "pnpm@10.33.2",
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "onFail": "error"
+    }
+  },
+  "scripts": {
+    "build:all": "pnpm -r --if-present --filter './*' build"
+  }
+}

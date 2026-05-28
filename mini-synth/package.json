@@ -2,12 +2,6 @@
   "name": "mini-synth",
   "private": true,
   "type": "module",
-  "devEngines": {
-    "packageManager": {
-      "name": "pnpm",
-      "onFail": "error"
-    }
-  },
   "scripts": {
     "dev": "vite dev",
     "build": "vite build"
