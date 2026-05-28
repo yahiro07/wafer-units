@@ -1,17 +1,12 @@
 import { mountAppRoot } from "@beam/ax-react";
 import "./styles";
-import {
-  linearInterpolate,
-  mapUnaryFrom,
-  mapUnaryTo,
-} from "@beam/ax/number-utils";
-import { useEffect, useRef } from "react";
+import { linearInterpolate } from "@beam/ax/number-utils";
 import { createStore } from "snap-store";
 import { getHostInterface } from "wus-unit-types";
+import { BasicSpectrumView } from "@/basic-spectrum-view";
 import { Knob } from "@/components/knob";
 import { setupDummyHost } from "@/dummy-host";
 import { ScalerBoxAutoSized } from "@/scaler-box-auto-sized";
-import { useDomElementSize } from "@/use-dom-element-size";
 
 const dummyHost = setupDummyHost();
 
@@ -84,57 +79,12 @@ function setupUnitInstance() {
 }
 setupUnitInstance();
 
-function renderCanvasSpectrum(
-  canvas: HTMLCanvasElement,
-  fftData: Float32Array,
-) {
-  const ctx = canvas.getContext("2d")!;
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = "#000";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  for (let x = 0; x < canvas.width; x++) {
-    const i = Math.floor(
-      mapUnaryFrom(x, 0, canvas.width) * (fftData.length - 1),
-    );
-    const value = mapUnaryFrom(fftData[i], -120, 0, true);
-    const px = x;
-    const py = mapUnaryTo(value, canvas.height, 0);
-    ctx.strokeStyle = "#0f0";
-    ctx.beginPath();
-    ctx.moveTo(px, canvas.height);
-    ctx.lineTo(px, py);
-    ctx.stroke();
-  }
-}
-
-const SpectrumView0 = () => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const { fftData, sampleRate } = store.useSnapshot();
-
-  const canvasDomSize = useDomElementSize(canvasRef);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!(fftData && canvas && sampleRate)) return;
-    renderCanvasSpectrum(canvas, fftData);
-  }, [fftData, sampleRate]);
-
-  return (
-    <canvas
-      ref={canvasRef}
-      width={canvasDomSize?.width ?? 0}
-      height={canvasDomSize?.height ?? 0}
-      className="w-full h-full"
-    />
-  );
-};
-
 const PanelRoot = () => {
-  const { level } = store.useSnapshot();
+  const { level, fftData } = store.useSnapshot();
   return (
     <div className="@container w-full h-full flex-c bg-black">
       <div className="grow h-full max-h-[33cqw] border border-[#fff2] px-4 py-2">
-        <SpectrumView0 />
+        {fftData && <BasicSpectrumView fftData={fftData} />}
       </div>
       <div className="w-[20%] h-full flex-c bg-[#333] border border-[#fff2]">
         <ScalerBoxAutoSized>
