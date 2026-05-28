@@ -3,7 +3,7 @@ import { appState, SynthParameters, uiActions } from "@/store";
 type SliderProps = {
   label: string;
   paramKey: keyof SynthParameters;
-  steps?: number; // if defined, round to (value * (steps-1))
+  steps?: number;
 };
 
 export const Slider = (props: SliderProps) => {

@@ -17,6 +17,7 @@
     "tailwindcss": "^4.3.0",
     "typescript": "~6.0.3",
     "vite": "^8.0.12",
-    "vite-plugin-solid": "^2.11.12"
+    "vite-plugin-solid": "^2.11.12",
+    "beams": "github:yahiro07/beam#0.1.3&path:/beams"
   }
 }

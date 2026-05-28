@@ -1,9 +1,9 @@
 import { createEffect } from "solid-js";
+import { getHostInterface } from "wus-unit-types";
 import { appState, SynthParameters } from "@/store";
 import { createChorus } from "./chorus";
 import { createReverb } from "./reverb";
 import { createVoice } from "./voice";
-import { getHostInterface } from "wus-unit-types";
 
 export const hostInterface = getHostInterface();
 
@@ -58,7 +58,6 @@ function createAudioEngine() {
 export function getAudioEngine() {
   if (!engineInstance) {
     engineInstance = createAudioEngine();
-    // Connect to store
     createEffect(() => {
       engineInstance!.updateNodeParameters(appState.parameters);
     });

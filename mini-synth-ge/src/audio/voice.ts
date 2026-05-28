@@ -2,7 +2,6 @@ import { SynthParameters } from "@/store";
 import { midiToFreq } from "./utils";
 
 let pulse125Wave: PeriodicWave | null = null;
-let rectWave: PeriodicWave | null = null;
 let sawWave: PeriodicWave | null = null;
 
 function getPulseWave(context: AudioContext, duty: number) {

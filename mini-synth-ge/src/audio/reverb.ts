@@ -1,5 +1,4 @@
 import { SynthParameters } from "@/store";
-import { createNoiseBuffer } from "./utils";
 
 export function createReverb(context: AudioContext) {
   const inputNode = context.createGain();
@@ -9,7 +8,7 @@ export function createReverb(context: AudioContext) {
   const wetGain = context.createGain();
 
   const convolver = context.createConvolver();
-  
+
   // Simple impulse response
   const length = 2.0;
   const sampleRate = context.sampleRate;
@@ -17,7 +16,7 @@ export function createReverb(context: AudioContext) {
   for (let channel = 0; channel < 2; channel++) {
     const data = buffer.getChannelData(channel);
     for (let i = 0; i < buffer.length; i++) {
-      const decay = Math.exp(-i / (sampleRate * length) * 5);
+      const decay = Math.exp((-i / (sampleRate * length)) * 5);
       data[i] = (Math.random() * 2 - 1) * decay;
     }
   }
