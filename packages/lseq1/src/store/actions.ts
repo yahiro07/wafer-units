@@ -11,11 +11,6 @@ export const actions = {
   setPlayPos(playPos: number) {
     store.setPlayPos(playPos);
   },
-  // wrapProcessStep(stepIndex: number) {
-  //   sequencerEngine.processOnStep(stepIndex);
-  //   const loopSteps = getLoopStepCount(store.state.loopBars);
-  //   actions.setPlayPos(stepIndex % loopSteps);
-  // },
   shiftBar(dir: -1 | 1) {
     const { loopBars } = store.state;
     const loopSteps = getLoopStepCount(loopBars);
@@ -38,10 +33,6 @@ export const actions = {
       newSteps[currentStep + 1] = SpecialStep.tie;
     }
     store.setAllSteps(newSteps);
-    // sequencerEngine.setStepValue(currentStep, value);
-    // if (stepStride === 2) {
-    //   sequencerEngine.setStepValue(currentStep + 1, newSteps[currentStep + 1]);
-    // }
   },
   putRest() {
     actions.putStepValue(SpecialStep.rest);
@@ -64,18 +55,14 @@ export const actions = {
     if (currentPos >= getLoopStepCount(loopBars)) {
       store.setEditPos(0);
     }
-    // sequencerEngine.setAttributes({ loopBars: store.state.loopBars });
   },
   clearSteps() {
     store.setAllSteps(seqNumbers(256).map(() => SpecialStep.rest));
     store.setEditPos(0);
-    // sequencerEngine.setAttributes({ allSteps: store.state.allSteps });
   },
   async inputNoteOn(noteNumber: number) {
-    // await targetSynth.resumeIfNeed();
     await actionsDi.resumeAudioContextFn?.();
     store.setActiveNotes((prev) => [...prev, noteNumber]);
-    // sequencerEngine.previewNoteOn(noteNumber);
     store.setPreviewNote(noteNumber);
     if (store.state.editing) {
       actions.putStepValue(noteNumber);
@@ -85,33 +72,20 @@ export const actions = {
   inputNoteOff(noteNumber: number) {
     store.setActiveNotes((prev) => prev.filter((p) => p !== noteNumber));
     store.setPreviewNote(-1);
-    // sequencerEngine.previewNoteOff(noteNumber);
   },
   setStepDuty(duty: number) {
     store.setStepDuty(duty);
-    // sequencerEngine.setAttributes({ stepDuty: store.state.stepDuty });
   },
   setOctaveShift(octaveShift: number) {
     store.setOctaveShift(octaveShift);
-    // sequencerEngine.setAttributes({ octaveShift: store.state.octaveShift });
   },
   setBpm(bpm: number) {
     store.setBpm(bpm);
-    // sequencerEngine.setAttributes({ bpm });
-    // standaloneTickDriver.setBpm(bpm);
   },
   async setStdPlaying(playing: boolean) {
-    actionsDi.resumeAudioContextFn?.();
     //standalone playback state
+    await actionsDi.resumeAudioContextFn?.();
     store.setStdPlaying(playing);
-    // if (playing) {
-    //   standaloneTickDriver.start({
-    //     processStep: actions.wrapProcessStep,
-    //   });
-    // } else {
-    //   standaloneTickDriver.stop();
-    //   sequencerEngine.allNotesOff();
-    // }
   },
   setExPlaying(exPlaying: boolean) {
     //play state from host transport

@@ -68,17 +68,6 @@ export function createSequencerEngine(notePort: {
         (state as any)[key] = (attrs as any)[key];
       }
     },
-    // setStepValue(index: number, value: number) {
-    //   state.allSteps[index] = value;
-    // },
-    // previewNoteOn(noteNumber: number) {
-    //   const ni = getNoteNumberShifted(noteNumber, state.octaveShift);
-    //   noteVoicingAdapter.noteOn(ni);
-    // },
-    // previewNoteOff(noteNumber: number) {
-    //   const ni = getNoteNumberShifted(noteNumber, state.octaveShift);
-    //   noteVoicingAdapter.noteOff(ni);
-    // },
     emitPreviewNote(noteNumber: number) {
       if (noteNumber >= 0) {
         const ni = getNoteNumberShifted(noteNumber, state.octaveShift);
