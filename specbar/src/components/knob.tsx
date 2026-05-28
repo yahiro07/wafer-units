@@ -1,4 +1,4 @@
-import { mapUnaryTo } from "@beam/ax/number-utils";
+import { mapUnaryTo } from "beams/ax/number-utils";
 import { KnobFrame } from "./knob-frame";
 
 export function KnobView(props: { value: number; min: number; max: number }) {

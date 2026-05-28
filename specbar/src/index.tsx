@@ -1,7 +1,7 @@
-import { mountAppRoot } from "@beam/ax-react";
 import "./styles";
-import { mapKnobGainDb } from "@beam/mo-audio/map-knob-gain-db";
-import { ScalerBoxAutoSized } from "@beam/mo-react/components/scaler-box-auto-sized";
+import { mountAppRoot } from "beams/ax-react/mount-app-root";
+import { mapKnobGainDb } from "beams/mo-audio/map-knob-gain-db";
+import { ScalerBoxAutoSized } from "beams/mo-react/components/scaler-box-auto-sized";
 import { createStore } from "snap-store";
 import { getHostInterface } from "wus-unit-types";
 import { BasicSpectrumView } from "@/basic-spectrum-view";

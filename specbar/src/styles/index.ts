@@ -1,2 +1,2 @@
 import "./page.css";
-import "@beam/ax-ui/utility-classes.css";
+import "beams/ax-ui/utility-classes.css";

@@ -1,5 +1,5 @@
-import { mapUnaryFrom, mapUnaryTo } from "@beam/ax/number-utils";
-import { useDomElementSize } from "@beam/mo-react/hooks/use-dom-element-size";
+import { mapUnaryFrom, mapUnaryTo } from "beams/ax/number-utils";
+import { useDomElementSize } from "beams/mo-react/hooks/use-dom-element-size";
 import { useEffect, useRef } from "react";
 
 function renderCanvasSpectrum(

@@ -24,21 +24,6 @@ importers:
         specifier: ^0.1.6
         version: 0.1.6(react@19.2.6)
     devDependencies:
-      '@beam/ax':
-        specifier: github:yahiro07/beam#0.1.0&path:/beam/ax
-        version: https://codeload.github.com/yahiro07/beam/tar.gz/1a69f74729856dd78f1970f3d8acd532d2fd46e8#path:/beam/ax
-      '@beam/ax-react':
-        specifier: github:yahiro07/beam#0.1.0&path:/beam/ax-react
-        version: https://codeload.github.com/yahiro07/beam/tar.gz/1a69f74729856dd78f1970f3d8acd532d2fd46e8#path:/beam/ax-react(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)
-      '@beam/ax-ui':
-        specifier: github:yahiro07/beam#0.1.0&path:/beam/ax-ui
-        version: https://codeload.github.com/yahiro07/beam/tar.gz/1a69f74729856dd78f1970f3d8acd532d2fd46e8#path:/beam/ax-ui
-      '@beam/mo-audio':
-        specifier: github:yahiro07/beam#0.1.0&path:/beam/mo-audio
-        version: https://codeload.github.com/yahiro07/beam/tar.gz/1a69f74729856dd78f1970f3d8acd532d2fd46e8#path:/beam/mo-audio
-      '@beam/mo-react':
-        specifier: github:yahiro07/beam#0.1.0&path:/beam/mo-react
-        version: https://codeload.github.com/yahiro07/beam/tar.gz/1a69f74729856dd78f1970f3d8acd532d2fd46e8#path:/beam/mo-react(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)
       '@tailwindcss/vite':
         specifier: ^4.3.0
         version: 4.3.0(vite@8.0.14(@types/node@25.9.1)(jiti@2.7.0))
@@ -54,6 +39,9 @@ importers:
       '@vitejs/plugin-react':
         specifier: ^6.0.1
         version: 6.0.2(vite@8.0.14(@types/node@25.9.1)(jiti@2.7.0))
+      beams:
+        specifier: github:yahiro07/beam#0.1.2&path:/beams
+        version: https://codeload.github.com/yahiro07/beam/tar.gz/50f6cb94c4a51f318bf93c89076386082b4fec40#path:/beams(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       tailwindcss:
         specifier: ^4.3.0
         version: 4.3.0
@@ -68,36 +56,6 @@ importers:
         version: 0.1.2
 
 packages:
-
-  '@beam/ax-react@https://codeload.github.com/yahiro07/beam/tar.gz/1a69f74729856dd78f1970f3d8acd532d2fd46e8#path:/beam/ax-react':
-    resolution: {path: /beam/ax-react, tarball: https://codeload.github.com/yahiro07/beam/tar.gz/1a69f74729856dd78f1970f3d8acd532d2fd46e8}
-    version: 0.0.0
-    peerDependencies:
-      '@types/react': ^19.2.14
-      '@types/react-dom': ^19.2.3
-
-  '@beam/ax-ui@https://codeload.github.com/yahiro07/beam/tar.gz/1a69f74729856dd78f1970f3d8acd532d2fd46e8#path:/beam/ax-ui':
-    resolution: {path: /beam/ax-ui, tarball: https://codeload.github.com/yahiro07/beam/tar.gz/1a69f74729856dd78f1970f3d8acd532d2fd46e8}
-    version: 0.0.0
-
-  '@beam/ax@https://codeload.github.com/yahiro07/beam/tar.gz/1a69f74729856dd78f1970f3d8acd532d2fd46e8#path:/beam/ax':
-    resolution: {path: /beam/ax, tarball: https://codeload.github.com/yahiro07/beam/tar.gz/1a69f74729856dd78f1970f3d8acd532d2fd46e8}
-    version: 0.0.0
-
-  '@beam/ax@https://codeload.github.com/yahiro07/synth-rd-2604/tar.gz/33e5c96934cecf1104540b6b91b3a472c8ed3138#path:/beam/ax':
-    resolution: {path: /beam/ax, tarball: https://codeload.github.com/yahiro07/synth-rd-2604/tar.gz/33e5c96934cecf1104540b6b91b3a472c8ed3138}
-    version: 0.0.0
-
-  '@beam/mo-audio@https://codeload.github.com/yahiro07/beam/tar.gz/1a69f74729856dd78f1970f3d8acd532d2fd46e8#path:/beam/mo-audio':
-    resolution: {path: /beam/mo-audio, tarball: https://codeload.github.com/yahiro07/beam/tar.gz/1a69f74729856dd78f1970f3d8acd532d2fd46e8}
-    version: 0.0.0
-
-  '@beam/mo-react@https://codeload.github.com/yahiro07/beam/tar.gz/1a69f74729856dd78f1970f3d8acd532d2fd46e8#path:/beam/mo-react':
-    resolution: {path: /beam/mo-react, tarball: https://codeload.github.com/yahiro07/beam/tar.gz/1a69f74729856dd78f1970f3d8acd532d2fd46e8}
-    version: 0.0.0
-    peerDependencies:
-      '@types/react': ^19.2.14
-      '@types/react-dom': ^19.2.3
 
   '@emnapi/core@1.10.0':
     resolution: {integrity: sha512-yq6OkJ4p82CAfPl0u9mQebQHKPJkY7WrIuk205cTYnYe+k2Z8YBh11FrbRG/H6ihirqcacOgl2BIO8oyMQLeXw==}
@@ -352,6 +310,23 @@ packages:
       babel-plugin-react-compiler:
         optional: true
 
+  beams@https://codeload.github.com/yahiro07/beam/tar.gz/50f6cb94c4a51f318bf93c89076386082b4fec40#path:/beams:
+    resolution: {path: /beams, tarball: https://codeload.github.com/yahiro07/beam/tar.gz/50f6cb94c4a51f318bf93c89076386082b4fec40}
+    version: 0.0.0
+    peerDependencies:
+      '@types/react': ^19.2.14
+      '@types/react-dom': ^19.2.3
+      react: '*'
+      react-dom: '*'
+      solid-js: ^1.9.12
+    peerDependenciesMeta:
+      react:
+        optional: true
+      react-dom:
+        optional: true
+      solid-js:
+        optional: true
+
   clsx@2.1.1:
     resolution: {integrity: sha512-eYm0QWBtUrBWZWG0d386OGAw16Z995PiOVo2B7bjWSbHedGl5e0ZWaq65kOGgUSNesEIDkB9ISbTg/JK9dhCZA==}
     engines: {node: '>=6'}
@@ -586,26 +561,6 @@ packages:
 
 snapshots:
 
-  '@beam/ax-react@https://codeload.github.com/yahiro07/beam/tar.gz/1a69f74729856dd78f1970f3d8acd532d2fd46e8#path:/beam/ax-react(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)':
-    dependencies:
-      '@types/react': 19.2.15
-      '@types/react-dom': 19.2.3(@types/react@19.2.15)
-
-  '@beam/ax-ui@https://codeload.github.com/yahiro07/beam/tar.gz/1a69f74729856dd78f1970f3d8acd532d2fd46e8#path:/beam/ax-ui': {}
-
-  '@beam/ax@https://codeload.github.com/yahiro07/beam/tar.gz/1a69f74729856dd78f1970f3d8acd532d2fd46e8#path:/beam/ax': {}
-
-  '@beam/ax@https://codeload.github.com/yahiro07/synth-rd-2604/tar.gz/33e5c96934cecf1104540b6b91b3a472c8ed3138#path:/beam/ax': {}
-
-  '@beam/mo-audio@https://codeload.github.com/yahiro07/beam/tar.gz/1a69f74729856dd78f1970f3d8acd532d2fd46e8#path:/beam/mo-audio':
-    dependencies:
-      '@beam/ax': https://codeload.github.com/yahiro07/synth-rd-2604/tar.gz/33e5c96934cecf1104540b6b91b3a472c8ed3138#path:/beam/ax
-
-  '@beam/mo-react@https://codeload.github.com/yahiro07/beam/tar.gz/1a69f74729856dd78f1970f3d8acd532d2fd46e8#path:/beam/mo-react(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)':
-    dependencies:
-      '@types/react': 19.2.15
-      '@types/react-dom': 19.2.3(@types/react@19.2.15)
-
   '@emnapi/core@1.10.0':
     dependencies:
       '@emnapi/wasi-threads': 1.2.1
@@ -790,6 +745,14 @@ snapshots:
     dependencies:
       '@rolldown/pluginutils': 1.0.1
       vite: 8.0.14(@types/node@25.9.1)(jiti@2.7.0)
+
+  beams@https://codeload.github.com/yahiro07/beam/tar.gz/50f6cb94c4a51f318bf93c89076386082b4fec40#path:/beams(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6):
+    dependencies:
+      '@types/react': 19.2.15
+      '@types/react-dom': 19.2.3(@types/react@19.2.15)
+    optionalDependencies:
+      react: 19.2.6
+      react-dom: 19.2.6(react@19.2.6)
 
   clsx@2.1.1: {}
 

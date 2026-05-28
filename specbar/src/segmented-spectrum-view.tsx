@@ -1,4 +1,4 @@
-import { mapUnaryFrom } from "@beam/ax/number-utils";
+import { mapUnaryFrom } from "beams/ax/number-utils";
 
 export const SegmentedSpectrumView = ({
   nx,

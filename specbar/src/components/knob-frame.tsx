@@ -1,5 +1,5 @@
-import { clampValue } from "@beam/ax/number-utils";
-import { startDragSession } from "@beam/ax-ui/drag-session";
+import { clampValue } from "beams/ax/number-utils";
+import { startDragSession } from "beams/ax-ui/drag-session";
 import { ReactNode } from "react";
 
 export function KnobFrame(props: {
