@@ -1,5 +1,8 @@
 import { clampValue } from "beams/ax/number-utils";
-import { createNoteVoicingDurationAdapter } from "beams/mx-audio/note-voicing-adapter";
+import {
+  createNoteVoicingDurationAdapter,
+  createNoteVoicingMonophonicAdapter,
+} from "beams/mx-audio/note-voicing-adapter";
 import { LoopBars, SpecialStep } from "@/types";
 
 type SequencerState = {
@@ -19,6 +22,7 @@ export function createSequencerEngine(notePort: {
   noteOff(noteNumber: number): void;
 }) {
   const noteVoicingAdapter = createNoteVoicingDurationAdapter(notePort);
+  const monoSynth = createNoteVoicingMonophonicAdapter(notePort);
 
   const state: SequencerState = {
     bpm: 120,
@@ -64,16 +68,24 @@ export function createSequencerEngine(notePort: {
         (state as any)[key] = (attrs as any)[key];
       }
     },
-    setStepValue(index: number, value: number) {
-      state.allSteps[index] = value;
-    },
-    previewNoteOn(noteNumber: number) {
-      const ni = getNoteNumberShifted(noteNumber, state.octaveShift);
-      noteVoicingAdapter.noteOn(ni);
-    },
-    previewNoteOff(noteNumber: number) {
-      const ni = getNoteNumberShifted(noteNumber, state.octaveShift);
-      noteVoicingAdapter.noteOff(ni);
+    // setStepValue(index: number, value: number) {
+    //   state.allSteps[index] = value;
+    // },
+    // previewNoteOn(noteNumber: number) {
+    //   const ni = getNoteNumberShifted(noteNumber, state.octaveShift);
+    //   noteVoicingAdapter.noteOn(ni);
+    // },
+    // previewNoteOff(noteNumber: number) {
+    //   const ni = getNoteNumberShifted(noteNumber, state.octaveShift);
+    //   noteVoicingAdapter.noteOff(ni);
+    // },
+    emitPreviewNote(noteNumber: number) {
+      if (noteNumber >= 0) {
+        const ni = getNoteNumberShifted(noteNumber, state.octaveShift);
+        monoSynth.playNote(ni);
+      } else {
+        monoSynth.stopNote();
+      }
     },
   };
 }

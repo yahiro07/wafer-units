@@ -1,17 +1,10 @@
 import { seqNumbers } from "beams/ax/array-utils";
-import { createSequencerTickDriver } from "beams/mx-audio/sequencer-tick-driver";
 import { createStore } from "snap-store";
-import { createSequencerEngine } from "@/sequencer/sequencer-engine";
-import { createTargetSynthesizer } from "@/sequencer/target-synthesizer";
 import { LoopBars, SpecialStep, StepStride } from "@/types";
-
-export const targetSynth = createTargetSynthesizer();
-export const sequencerEngine = createSequencerEngine(targetSynth);
-export const standaloneTickDriver = createSequencerTickDriver();
 
 type StoreState = {
   bpm: number;
-  playing: boolean;
+  stdPlaying: boolean;
   activeNotes: number[];
   loopBars: LoopBars;
   stepStride: StepStride;
@@ -22,6 +15,7 @@ type StoreState = {
   editPos: number;
   playPos: number;
   exPlaying: boolean;
+  previewNote: number;
 };
 
 export type PersistState = {
@@ -34,7 +28,7 @@ export type PersistState = {
 
 export const store = createStore<StoreState>({
   bpm: 120,
-  playing: false,
+  stdPlaying: false,
   activeNotes: [],
   loopBars: 4,
   stepStride: 2,
@@ -45,12 +39,5 @@ export const store = createStore<StoreState>({
   editPos: 0,
   playPos: 0,
   exPlaying: false,
+  previewNote: -1,
 });
-sequencerEngine.setAttributes({
-  bpm: store.state.bpm,
-  loopBars: store.state.loopBars,
-  allSteps: store.state.allSteps,
-  octaveShift: store.state.octaveShift,
-  stepDuty: store.state.stepDuty,
-});
-standaloneTickDriver.setBpm(store.state.bpm);
