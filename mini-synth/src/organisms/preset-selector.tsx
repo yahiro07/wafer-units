@@ -5,7 +5,7 @@ import { appState, uiActions } from "@/store/app-store";
 
 export const PresetSelector = (): JSXElement => {
   const handleSelect = (e: Event) => {
-    const idx = Number.parseInt((e.target as HTMLSelectElement).value);
+    const idx = parseInt((e.target as HTMLSelectElement).value, 10);
     uiActions.selectPreset(idx);
   };
 

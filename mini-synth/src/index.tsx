@@ -1,15 +1,17 @@
-import "./styles";
+import "./page.css";
+import "beams/aax-ui/utility-classes.css";
+
+import { mountAppRoot } from "beams/ax-solid/mount-app-root";
+import { setupMidiKeyboardInput } from "beams/mx-audio/midi-keyboard-input";
 import { onCleanup, onMount } from "solid-js";
 import { hostInterface } from "@/audio/audio-engine";
 import { MainSection } from "@/sections/main-section";
 import { TopSection } from "@/sections/top-section";
 import { uiActions } from "@/store/app-store";
-import { setupMidiKeyboardInput } from "@/utils/midi-keyboard-input";
-import { mountAppRoot } from "@/utils/mount-app-root";
 
 const App = () => {
   onMount(() => {
-    if(hostInterface){
+    if (hostInterface) {
       hostInterface.setupUnitAgent({
         type: "instrument",
         categoryHint: "synthesizer",
@@ -18,7 +20,7 @@ const App = () => {
           noteOff: (note) => uiActions.noteOff(note),
         },
       });
-    }else{
+    } else {
       const cleanup = setupMidiKeyboardInput({
         noteOn: (note) => uiActions.noteOn(note, 1),
         noteOff: (note) => uiActions.noteOff(note),
