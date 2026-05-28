@@ -11,9 +11,6 @@ importers:
       '@types/node':
         specifier: ^25.9.0
         version: 25.9.1
-      '@wus/unit-types':
-        specifier: github:yahiro07/webaudio-unit-system#main&path:/framework/packages/wus-unit-types
-        version: https://codeload.github.com/yahiro07/webaudio-unit-system/tar.gz/17fdb4d54234797300b86a680e4b93457dc66bfb#path:/framework/packages/wus-unit-types
       alumina:
         specifier: ^0.1.14
         version: 0.1.14
@@ -26,6 +23,9 @@ importers:
       vite:
         specifier: ^8.0.13
         version: 8.0.13(@types/node@25.9.1)
+      wus-unit-types:
+        specifier: ^0.1.0
+        version: 0.1.0
 
 packages:
 
@@ -150,10 +150,6 @@ packages:
 
   '@types/node@25.9.1':
     resolution: {integrity: sha512-xfrlY7UD5rMJk3ZVJP8BNzS28J36YJg+xp+LPXV1TdWxr8uMH5A860QNxYDGQe/ylDSgjxE52Q9VnO7p75tJxg==}
-
-  '@wus/unit-types@https://codeload.github.com/yahiro07/webaudio-unit-system/tar.gz/17fdb4d54234797300b86a680e4b93457dc66bfb#path:/framework/packages/wus-unit-types':
-    resolution: {path: /framework/packages/wus-unit-types, tarball: https://codeload.github.com/yahiro07/webaudio-unit-system/tar.gz/17fdb4d54234797300b86a680e4b93457dc66bfb}
-    version: 0.0.0
 
   alumina-visor@0.1.6:
     resolution: {integrity: sha512-teCRvUD5m+pE/apudTPAwgAH67mXBof6C2b5nnRbbtiYGE1bitO56p5CHRiMN9cOx6GqqVDDP0XFVYuqgMuQHA==}
@@ -422,6 +418,9 @@ packages:
       yaml:
         optional: true
 
+  wus-unit-types@0.1.0:
+    resolution: {integrity: sha512-tQDFSYGQvCpr41wyJo6L2ucUyDXhIbIblu4HBNLV3DRlne1SlpBQ7Te3k2D/EycO9dJyKyv1RCta9m4KjRivUQ==}
+
 snapshots:
 
   '@emnapi/core@1.10.0':
@@ -508,8 +507,6 @@ snapshots:
   '@types/node@25.9.1':
     dependencies:
       undici-types: 7.24.6
-
-  '@wus/unit-types@https://codeload.github.com/yahiro07/webaudio-unit-system/tar.gz/17fdb4d54234797300b86a680e4b93457dc66bfb#path:/framework/packages/wus-unit-types': {}
 
   alumina-visor@0.1.6(alumina@0.1.14):
     dependencies:
@@ -717,3 +714,5 @@ snapshots:
     optionalDependencies:
       '@types/node': 25.9.1
       fsevents: 2.3.3
+
+  wus-unit-types@0.1.0: {}
