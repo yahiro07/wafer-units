@@ -28,6 +28,7 @@
     "node_modules/beams/**/*"
   ],
   "exclude": [
-    "node_modules/beams/ax-solid/**/*"
+    "node_modules/beams/ax-solid/**/*",
+    "node_modules/beams/mo-solid/**/*"
   ]
 }

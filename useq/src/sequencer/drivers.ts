@@ -1,5 +1,5 @@
-import { setupMidiKeyboardInput } from "@beam/midi-keyboard-input";
-import { createSequencerTickDriver } from "sequencer-tick-driver";
+import { setupMidiKeyboardInput } from "beams/mx-audio/midi-keyboard-input";
+import { createSequencerTickDriver } from "beams/mx-audio/sequencer-tick-driver";
 import { createEffect, onCleanup } from "solid-js";
 import { persistence } from "@/store/persistence";
 import {

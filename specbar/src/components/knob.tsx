@@ -1,5 +1,5 @@
 import { mapUnaryTo } from "beams/ax/number-utils";
-import { KnobFrame } from "./knob-frame";
+import { KnobFrame } from "beams/mo-react/components/knob-frame";
 
 export function KnobView(props: { value: number; min: number; max: number }) {
   const vm = {

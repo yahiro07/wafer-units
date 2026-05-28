@@ -1,16 +1,16 @@
 import "./page.css";
-import "@beam/ax-ui/utility-classes.css";
-import { mountAppRoot } from "@beam/ax-solid/mount-app-root";
+import "beams/ax-ui/utility-classes.css";
+import { mountAppRoot } from "beams/ax-solid/mount-app-root";
 import { Button } from "@/components/button";
 import { Icons } from "@/components/icons";
 import { Knob } from "@/components/knob";
 import { FeNumberSliderBox } from "@/components/number-slider-box";
-import { getNoteName } from "@/note-name-helper";
 import { NoteClockView } from "@/organisms/note-clock-view";
 import { StepButton } from "@/organisms/step-button";
 import { StepRollBar } from "@/organisms/step-roll-bar";
 import { drivers } from "@/sequencer/drivers";
 import { appReaders, appState, uiActions } from "@/store/store";
+import { getNoteName } from "@/utils/note-name-helper";
 
 const TopBar = () => {
   return (

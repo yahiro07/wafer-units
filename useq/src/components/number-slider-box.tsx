@@ -1,5 +1,5 @@
+import { KnobFrame } from "beams/mo-solid/components/knob-frame";
 import { JSXElement, mergeProps } from "solid-js";
-import { KnobFrame } from "./knob-frame";
 
 export function NumberSliderBoxView(props: {
   value: number;

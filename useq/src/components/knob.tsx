@@ -1,6 +1,6 @@
-import { mapUnaryTo } from "@beam/ax/number-utils";
+import { mapUnaryTo } from "beams/ax/number-utils";
+import { KnobFrame } from "beams/mo-solid/components/knob-frame";
 import { mergeProps } from "solid-js";
-import { KnobFrame } from "./knob-frame";
 
 export function KnobView(props: { value: number; min: number; max: number }) {
   const vm = {

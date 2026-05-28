@@ -1,4 +1,4 @@
-import { createNoteVoicingDurationAdapter } from "note-voicing-adapter";
+import { createNoteVoicingDurationAdapter } from "beams/mx-audio/note-voicing-adapter";
 
 export type StepCode = "on" | "off" | "tie";
 

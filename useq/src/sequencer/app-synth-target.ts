@@ -1,4 +1,4 @@
-import { createTestSynthesizer } from "test-synthesizer";
+import { createTestSynthesizer } from "beams/mx-audio/test-synthesizer";
 import { HostInterface } from "wus-unit-types";
 
 type AppSynthTarget = {
