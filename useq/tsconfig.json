@@ -25,6 +25,10 @@
     }
   },
   "include": [
-    "src"
+    "src",
+    "node_modules/beams/**/*"
+  ],
+  "exclude": [
+    "node_modules/beams/ax-solid/**/*"
   ]
 }

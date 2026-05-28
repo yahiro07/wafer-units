@@ -1,5 +1,5 @@
 import { createMemo } from "solid-js";
-import { StepCode } from "@/sequencer-engine";
+import { StepCode } from "@/sequencer/sequencer-engine";
 
 export const StepRollBar = (props: {
   stepCodes: StepCode[];

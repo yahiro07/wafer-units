@@ -5,12 +5,12 @@ import { Button } from "@/components/button";
 import { Icons } from "@/components/icons";
 import { Knob } from "@/components/knob";
 import { FeNumberSliderBox } from "@/components/number-slider-box";
-import { NoteClockView } from "@/components-ex/note-clock-view";
-import { StepButton } from "@/components-ex/step-button";
-import { StepRollBar } from "@/components-ex/step-roll-bar";
-import { drivers } from "@/drivers";
 import { getNoteName } from "@/note-name-helper";
-import { appReaders, appState, uiActions } from "@/store";
+import { NoteClockView } from "@/organisms/note-clock-view";
+import { StepButton } from "@/organisms/step-button";
+import { StepRollBar } from "@/organisms/step-roll-bar";
+import { drivers } from "@/sequencer/drivers";
+import { appReaders, appState, uiActions } from "@/store/store";
 
 const TopBar = () => {
   return (

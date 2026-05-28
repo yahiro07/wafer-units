@@ -1,8 +1,13 @@
 import { setupMidiKeyboardInput } from "@beam/midi-keyboard-input";
 import { createSequencerTickDriver } from "sequencer-tick-driver";
 import { createEffect, onCleanup } from "solid-js";
-import { persistence } from "@/persistence";
-import { appState, hostInterface, sequencerEngine, uiActions } from "@/store";
+import { persistence } from "@/store/persistence";
+import {
+  appState,
+  hostInterface,
+  sequencerEngine,
+  uiActions,
+} from "@/store/store";
 
 export const drivers = {
   wrapProcessStep(stepIndex: number) {

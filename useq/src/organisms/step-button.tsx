@@ -1,7 +1,7 @@
 import { iife } from "@beam/ax/general-utils";
 import { JSX } from "solid-js/jsx-runtime";
 import { Icons } from "@/components/icons";
-import { StepCode } from "@/sequencer-engine";
+import { StepCode } from "@/sequencer/sequencer-engine";
 
 const stepCodeToIcon = {
   on: Icons.Dot,

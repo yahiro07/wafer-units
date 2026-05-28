@@ -1,5 +1,5 @@
-import { StepCode } from "@/sequencer-engine";
-import { appState, PersistedState, uiActions } from "@/store";
+import { StepCode } from "@/sequencer/sequencer-engine";
+import { appState, PersistedState, uiActions } from "@/store/store";
 
 const stepCodeMapper = {
   toByte(stepCode: StepCode): number {

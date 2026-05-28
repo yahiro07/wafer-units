@@ -1,7 +1,7 @@
 import { createStore } from "solid-js/store";
 import { getHostInterface } from "wus-unit-types";
-import { createAppSynthTarget } from "@/app-synth-target";
-import { createSequencerEngine, StepCode } from "@/sequencer-engine";
+import { createAppSynthTarget } from "@/sequencer/app-synth-target";
+import { createSequencerEngine, StepCode } from "@/sequencer/sequencer-engine";
 
 export const hostInterface = getHostInterface();
 const appSynthTarget = createAppSynthTarget(hostInterface);
