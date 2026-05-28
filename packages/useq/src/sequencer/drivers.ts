@@ -30,8 +30,8 @@ export const drivers = {
         },
         transportHandling: { processStep: drivers.wrapProcessStep },
         persistence: {
-          emitStateB: persistence.emitStateBytes,
-          loadStateB: persistence.loadStateBytes,
+          emitStateBytes: persistence.emitStateBytes,
+          loadStateBytes: persistence.loadStateBytes,
         },
       });
     }
