@@ -7,7 +7,7 @@ export default defineConfig({
   plugins: [solid(), tailwindcss()],
   resolve: { tsconfigPaths: true },
   build: {
-    outDir: `../dist/mini-synth`,
+    outDir: `../../dist/proto-engine-ptm-osc`,
     emptyOutDir: true,
   },
   server: { port: 3000 },

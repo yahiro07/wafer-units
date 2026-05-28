@@ -7,7 +7,7 @@ export default defineConfig({
   plugins: [solid(), tailwindcss()],
   resolve: { tsconfigPaths: true },
   build: {
-    outDir: `../dist/mini-synth-ge`,
+    outDir: `../../dist/proto-engine-pd-fm`,
     emptyOutDir: true,
   },
   server: { port: 3000 },

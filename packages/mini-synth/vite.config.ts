@@ -7,7 +7,7 @@ export default defineConfig({
   plugins: [solid(), tailwindcss()],
   resolve: { tsconfigPaths: true },
   build: {
-    outDir: `../dist/mini-synth-gp`,
+    outDir: `../../dist/mini-synth`,
     emptyOutDir: true,
   },
   server: { port: 3000 },

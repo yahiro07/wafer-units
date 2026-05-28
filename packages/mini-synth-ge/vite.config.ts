@@ -1,13 +1,13 @@
 import tailwindcss from "@tailwindcss/vite";
-import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
+import solid from "vite-plugin-solid";
 
 export default defineConfig({
   base: "./",
-  plugins: [react(), tailwindcss()],
+  plugins: [solid(), tailwindcss()],
   resolve: { tsconfigPaths: true },
   build: {
-    outDir: `../dist/lseq1`,
+    outDir: `../../dist/mini-synth-ge`,
     emptyOutDir: true,
   },
   server: { port: 3000 },

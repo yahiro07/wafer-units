@@ -7,7 +7,7 @@ export default defineConfig({
   plugins: [solid(), tailwindcss()],
   resolve: { tsconfigPaths: true },
   build: {
-    outDir: `../dist/proto-engine-ptm-osc`,
+    outDir: `../../dist/useq`,
     emptyOutDir: true,
   },
   server: { port: 3000 },

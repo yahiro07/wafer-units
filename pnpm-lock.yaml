@@ -8,7 +8,7 @@ importers:
 
   .: {}
 
-  lseq1:
+  packages/lseq1:
     dependencies:
       clsx:
         specifier: ^2.1.1
@@ -57,7 +57,7 @@ importers:
         specifier: ^0.1.0
         version: 0.1.2
 
-  mini-synth:
+  packages/mini-synth:
     dependencies:
       solid-icons:
         specifier: ^1.2.0
@@ -88,7 +88,7 @@ importers:
         specifier: ^0.1.0
         version: 0.1.2
 
-  mini-synth-ge:
+  packages/mini-synth-ge:
     dependencies:
       solid-icons:
         specifier: ^1.2.0
@@ -119,7 +119,7 @@ importers:
         specifier: ^0.1.0
         version: 0.1.2
 
-  mini-synth-gp:
+  packages/mini-synth-gp:
     dependencies:
       solid-icons:
         specifier: ^1.2.0
@@ -150,7 +150,7 @@ importers:
         specifier: ^0.1.0
         version: 0.1.2
 
-  proto-engine-pd-fm:
+  packages/proto-engine-pd-fm:
     dependencies:
       function-plot:
         specifier: ^1.25.4
@@ -187,7 +187,7 @@ importers:
         specifier: ^0.1.0
         version: 0.1.2
 
-  proto-engine-ptm-osc:
+  packages/proto-engine-ptm-osc:
     dependencies:
       function-plot:
         specifier: ^1.25.4
@@ -227,7 +227,7 @@ importers:
         specifier: ^0.1.0
         version: 0.1.2
 
-  specbar:
+  packages/specbar:
     dependencies:
       clsx:
         specifier: ^2.1.1
@@ -276,7 +276,7 @@ importers:
         specifier: ^0.1.2
         version: 0.1.2
 
-  useq:
+  packages/useq:
     dependencies:
       solid-icons:
         specifier: ^1.2.0
@@ -310,7 +310,7 @@ importers:
         specifier: ^0.1.0
         version: 0.1.2
 
-  wavicle:
+  packages/wavicle:
     dependencies:
       '@types/node':
         specifier: ^25.9.0
