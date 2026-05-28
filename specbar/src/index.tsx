@@ -41,7 +41,7 @@ function setupUnitInstance() {
   const hostInterface = getHostInterface();
   if (hostInterface) {
     const audioContext = hostInterface.audioContext;
-    store.assigns({ sampleRate: audioContext.sampleRate });
+    store.setSampleRate(audioContext.sampleRate);
     const analyzer = audioContext.createAnalyser();
     analyzer.fftSize = 1024;
     const getLevels = () => {
@@ -51,15 +51,13 @@ function setupUnitInstance() {
     };
     setInterval(() => {
       const fftData = getLevels();
-      store.assigns({ fftData });
+      store.setFftData(fftData);
     }, 16);
 
     const gainNode = audioContext.createGain();
     hostInterface.audioSourceNode.connect(gainNode);
     gainNode.connect(analyzer);
     analyzer.connect(hostInterface.audioDestinationNode);
-
-    hostInterface.setupUnitAgent({ type: "effect" });
 
     function updateGain(level: number) {
       gainNode.gain.value = mapKnobGainDb(level, 0.5);
@@ -70,6 +68,22 @@ function setupUnitInstance() {
       if (level !== undefined) {
         updateGain(level);
       }
+    });
+
+    hostInterface.setupUnitAgent({
+      type: "effect",
+      persistence: {
+        emitStateB() {
+          const dm = store.state.displayMode;
+          return new Uint8Array([dm]);
+        },
+        loadStateB(bytes) {
+          if (bytes.length === 1) {
+            const dm = bytes[0] > 0 ? 1 : 0;
+            store.setDisplayMode(dm);
+          }
+        },
+      },
     });
   }
 }
