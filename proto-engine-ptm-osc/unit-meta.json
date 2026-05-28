@@ -1,0 +1,7 @@
+{
+  "name": "proto-engine-ptm-osc",
+  "category": "synthesizer",
+  "unitType": "instrument",
+  "repositoryUrl": "https://github.com/yahiro07/wus-units",
+  "preferredSize": "800,380"
+}

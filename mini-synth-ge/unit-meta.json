@@ -1,0 +1,7 @@
+{
+  "name": "mini-synth-ge",
+  "category": "synthesizer",
+  "unitType": "instrument",
+  "repositoryUrl": "https://github.com/yahiro07/wus-units",
+  "preferredSize": "560,270"
+}
