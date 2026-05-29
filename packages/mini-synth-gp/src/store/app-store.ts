@@ -1,10 +1,13 @@
 import { createStore } from "solid-js/store";
-import { createMiniSynthAudio, hostInterface } from "@/audio/create-mini-synth-audio";
+import {
+  createMiniSynthAudio,
+  hostInterface,
+} from "@/audio/create-mini-synth-audio";
 import {
   cloneSynthParameters,
-  DEFAULT_SYNTH_PARAMETERS,
+  defaultSynthParameters,
 } from "@/audio/default-parameters";
-import { PROGRAM_PRESETS } from "@/audio/presets";
+import { programPresets } from "@/audio/presets";
 import type { SynthParameterKey, SynthParameters } from "@/audio/types";
 import { setupMidiKeyboardInput } from "@/utils/midi-keyboard-input";
 
@@ -19,7 +22,7 @@ type AppState = {
 const [appState, setAppState] = createStore<AppState>({
   selectedProgramIndex: 0,
   midiConnected: false,
-  parameters: cloneSynthParameters(DEFAULT_SYNTH_PARAMETERS),
+  parameters: cloneSynthParameters(defaultSynthParameters),
 });
 
 let initialized = false;
@@ -30,7 +33,7 @@ function initialize() {
 
   synthAudio.updateParameters(appState.parameters);
 
-  if(hostInterface){
+  if (hostInterface) {
     hostInterface.setupUnitAgent({
       type: "instrument",
       categoryHint: "synthesizer",
@@ -43,8 +46,8 @@ function initialize() {
           synthAudio.noteOff(noteNumber);
         },
       },
-    })
-  }else{
+    });
+  } else {
     return setupMidiKeyboardInput({
       connectionStateCallback(connected) {
         setAppState("midiConnected", connected);
@@ -61,9 +64,8 @@ function initialize() {
 }
 
 function applyPresetByIndex(index: number) {
-  const clampedIndex =
-    (index + PROGRAM_PRESETS.length) % PROGRAM_PRESETS.length;
-  const preset = PROGRAM_PRESETS[clampedIndex];
+  const clampedIndex = (index + programPresets.length) % programPresets.length;
+  const preset = programPresets[clampedIndex];
   setAppState("selectedProgramIndex", clampedIndex);
   setAppState("parameters", cloneSynthParameters(preset.parameters));
   synthAudio.updateParameters(appState.parameters);

@@ -1,9 +1,9 @@
-import { PROGRAM_PRESETS } from "@/audio/presets";
+import { programPresets } from "@/audio/presets";
 import { MainColumnSection } from "@/sections/main-column-section";
 import { TopColumnSection } from "@/sections/top-column-section";
 import { appState, uiActions } from "@/store/app-store";
 
-const PROGRAM_NAMES = PROGRAM_PRESETS.map((preset) => preset.name);
+const PROGRAM_NAMES = programPresets.map((preset) => preset.name);
 
 export function SynthPanelSection() {
   return (

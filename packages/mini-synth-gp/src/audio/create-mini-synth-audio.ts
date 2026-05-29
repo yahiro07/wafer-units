@@ -3,7 +3,7 @@ import { createChorusModule } from "@/audio/create-chorus-module";
 import { createReverbModule } from "@/audio/create-reverb-module";
 import {
   cloneSynthParameters,
-  DEFAULT_SYNTH_PARAMETERS,
+  defaultSynthParameters,
 } from "@/audio/default-parameters";
 import type { SynthParameters } from "@/audio/types";
 import {
@@ -14,7 +14,12 @@ import {
 
 export const hostInterface = getHostInterface();
 
-const WAVE_TYPES: OscillatorType[] = ["sawtooth", "square", "triangle", "sine"];
+const allWaveTypes: OscillatorType[] = [
+  "sawtooth",
+  "square",
+  "triangle",
+  "sine",
+];
 
 type Voice = {
   noteNumber: number;
@@ -39,7 +44,7 @@ function midiNoteToFrequency(noteNumber: number) {
 
 function getWaveType(oscWave: number): OscillatorType {
   const index = Math.round(clampValue(oscWave, 0, 3));
-  return WAVE_TYPES[index];
+  return allWaveTypes[index];
 }
 
 function getFilterCutoffFrequency(cutoff: number) {
@@ -256,7 +261,7 @@ export function createMiniSynthAudio() {
 
   const activeVoices = new Map<number, Voice>();
 
-  let currentParameters = cloneSynthParameters(DEFAULT_SYNTH_PARAMETERS);
+  let currentParameters = cloneSynthParameters(defaultSynthParameters);
 
   function updateParameters(parameters: SynthParameters) {
     currentParameters = cloneSynthParameters(parameters);

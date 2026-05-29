@@ -5,10 +5,10 @@ import { uiActions } from "@/store/app-store";
 import { mountAppRoot } from "@/utils/mount-app-root";
 
 const App = () => {
-  const cleanUpFn = uiActions.initialize();
+  const cleanupFn = uiActions.initialize();
 
   onCleanup(() => {
-    cleanUpFn?.();
+    cleanupFn?.();
     uiActions.allNotesOff();
   });
 
