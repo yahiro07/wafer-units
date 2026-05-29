@@ -1,6 +1,7 @@
 import { onCleanup } from "solid-js";
 import { uiActions } from "@/actions";
 import { hostInterface } from "@/audio/engine";
+import { persistence } from "@/persistence";
 import { setupMidiKeyboardInput } from "@/utils/midi-keyboard-input";
 
 export function setupDrivers() {
@@ -12,6 +13,7 @@ export function setupDrivers() {
         noteOn: uiActions.noteOn,
         noteOff: uiActions.noteOff,
       },
+      persistence,
     });
     return;
   }
