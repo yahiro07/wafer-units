@@ -1,30 +1,12 @@
 import "./styles/page.css";
 import "./styles/utility-classes.css";
 
-import { Component, For, onCleanup } from "solid-js";
-import { hostInterface, synthEngine } from "@/audio/engine";
+import { Component, For } from "solid-js";
+import { uiActions } from "@/actions";
+import { setupDrivers } from "@/drivers";
 import { SynthParameters } from "@/state";
-import { setupMidiKeyboardInput } from "@/utils/midi-keyboard-input";
+import { appState } from "@/store";
 import { mountAppRoot } from "@/utils/mount-app-root";
-
-const appState = synthEngine.state;
-
-void synthEngine.init();
-
-const actions = {
-  setSynthParameters(key: keyof SynthParameters, value: number) {
-    synthEngine.uiActions.setParameter(key, value);
-  },
-
-  async noteOn(noteNumber: number) {
-    await synthEngine.resumeOnUserAction();
-    synthEngine.uiActions.noteOn(noteNumber);
-  },
-
-  noteOff(noteNumber: number) {
-    synthEngine.uiActions.noteOff(noteNumber);
-  },
-};
 
 function LinearSlider(props: {
   paramKey: keyof SynthParameters;
@@ -55,9 +37,9 @@ function LinearSlider(props: {
         min={min}
         max={max}
         step={step}
-        value={appState[props.paramKey]}
+        value={appState.synthParams[props.paramKey]}
         onInput={(e) =>
-          actions.setSynthParameters(
+          uiActions.setSynthParam(
             props.paramKey,
             parseFloat(e.currentTarget.value),
           )
@@ -74,8 +56,8 @@ function LinearSlider(props: {
         }}
       >
         {isWaveMode
-          ? `M${appState[props.paramKey]}`
-          : appState[props.paramKey].toFixed(2)}
+          ? `M${appState.synthParams[props.paramKey]}`
+          : appState.synthParams[props.paramKey].toFixed(2)}
       </span>
     </div>
   );
@@ -109,9 +91,9 @@ const _TestKeyboardPart: Component = () => {
           {(k) => (
             <button
               type="button"
-              onMouseDown={() => actions.noteOn(k.note)}
-              onMouseUp={() => actions.noteOff(k.note)}
-              onMouseLeave={() => actions.noteOff(k.note)}
+              onMouseDown={() => uiActions.noteOn(k.note)}
+              onMouseUp={() => uiActions.noteOff(k.note)}
+              onMouseLeave={() => uiActions.noteOff(k.note)}
               style={{
                 flex: 1,
                 height: "60px",
@@ -203,26 +185,7 @@ export const SynthPanel: Component = () => {
 };
 
 function App() {
-  if (hostInterface) {
-    hostInterface.setupUnitAgent({
-      type: "instrument",
-      categoryHint: "synthesizer",
-      noteInput: {
-        noteOn: actions.noteOn,
-        noteOff: actions.noteOff,
-      },
-    });
-  } else {
-    const closeMidiIn = setupMidiKeyboardInput({
-      noteOn(noteNumber) {
-        actions.noteOn(noteNumber);
-      },
-      noteOff(noteNumber) {
-        actions.noteOff(noteNumber);
-      },
-    });
-    onCleanup(closeMidiIn);
-  }
+  setupDrivers();
   return (
     <div class="w-dvw h-dvh flex-c gap-4 bg-gray-700">
       <SynthPanel />
