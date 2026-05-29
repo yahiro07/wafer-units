@@ -1,0 +1,263 @@
+import { midiToFrequency, power2 } from "beams/mo-synthesis/synth-math-utils";
+import { getHostInterface } from "wus-unit-types";
+import {
+  createSynthParameters,
+  SynthParameters,
+} from "@/definitions/parameters";
+import { createChorusEffectEx } from "@/synthesis/chrous-effect-ex";
+import { createDensityShaperBlock } from "@/synthesis/density-shaper";
+import { createEnvelopeGeneratorADSR } from "@/synthesis/envelope-generator-adsr";
+import {
+  createHighPassFilterBlock,
+  createLowPassFilterBlock,
+} from "@/synthesis/filters";
+import { createFoldingShaperBlock } from "@/synthesis/folding-shaper";
+import { fillShaperCurveBufferWithDcOffsetRemoval } from "@/synthesis/ptm";
+import { createReverberator } from "@/synthesis/reverbrator";
+import { createShaperCurveBufferCache } from "@/synthesis/shaper-curve-buffer-cache";
+import { createAudioNodeChain } from "@/synthesis/webaudio-helper";
+
+const hostInterface = getHostInterface();
+
+function getNoteFrequency(noteNumber: number, oscOctave: number): number {
+  const modNoteNumber = noteNumber + oscOctave * 12;
+  return midiToFrequency(modNoteNumber);
+}
+
+type SynthesisBus = {
+  audioContext: AudioContext;
+  voiceDestinationNode: AudioNode;
+  synthParameters: SynthParameters;
+  finalDestinationNode: AudioNode;
+};
+
+function createSynthesisBus(): SynthesisBus {
+  const audioContext = hostInterface?.audioContext ?? new AudioContext();
+  const voiceDestinationNode = audioContext.createGain();
+  const synthParameters = createSynthParameters();
+  const finalDestinationNode =
+    hostInterface?.audioDestinationNode ?? audioContext.destination;
+  return {
+    audioContext,
+    voiceDestinationNode,
+    synthParameters,
+    finalDestinationNode,
+  };
+}
+
+type Voice = {
+  start(): void;
+  stop(): void;
+  updateNodeParameters(): void;
+};
+
+const shaper1CurveBufferCache = createShaperCurveBufferCache(
+  1024,
+  fillShaperCurveBufferWithDcOffsetRemoval,
+);
+
+function createOscillatorBlock(audioContext: AudioContext, noteNumber: number) {
+  const oscillatorNode = audioContext.createOscillator();
+  oscillatorNode.type = "sawtooth";
+  const oscShaperNode = audioContext.createWaveShaper();
+  oscShaperNode.oversample = "2x";
+  const dcBlockerNode = audioContext.createBiquadFilter();
+  dcBlockerNode.type = "highpass";
+  dcBlockerNode.frequency.value = 10;
+  dcBlockerNode.Q.value = Math.SQRT1_2;
+  let lastAssignedCurve: Float32Array | null;
+
+  return {
+    outputNode: dcBlockerNode,
+    setupNodes() {
+      oscillatorNode.connect(oscShaperNode);
+      oscShaperNode.connect(dcBlockerNode);
+      oscillatorNode.start();
+    },
+    cleanupNodes() {
+      oscillatorNode.disconnect();
+      oscShaperNode.disconnect();
+      oscillatorNode.stop();
+    },
+    updateNodeParameters(params: {
+      wave: number;
+      octave: number;
+      shape: number;
+    }) {
+      const freq = getNoteFrequency(noteNumber, params.octave);
+      if (oscillatorNode.frequency.value !== freq) {
+        oscillatorNode.frequency.value = freq;
+      }
+      const curve = shaper1CurveBufferCache.update(params.wave, params.shape);
+      if (curve !== lastAssignedCurve) {
+        oscShaperNode.curve = curve;
+        lastAssignedCurve = curve;
+      }
+    },
+  };
+}
+
+function createVoice(bus: SynthesisBus, noteNumber: number): Voice {
+  const { audioContext, voiceDestinationNode } = bus;
+  const oscillators = createOscillatorBlock(audioContext, noteNumber);
+  const highPassFilter = createHighPassFilterBlock(audioContext, noteNumber);
+  const lowPassFilter = createLowPassFilterBlock(audioContext, noteNumber);
+  const foldingShaper = createFoldingShaperBlock(audioContext);
+  const masterGainNode = audioContext.createGain();
+
+  const sp = bus.synthParameters;
+  const ampEg = createEnvelopeGeneratorADSR(
+    audioContext,
+    {
+      attack: sp.ampAttack,
+      decay: sp.ampDecay,
+      sustain: sp.ampSustain,
+      release: sp.ampRelease,
+    },
+    {
+      attackMaxSec: 2,
+      decayMaxSec: 3,
+      releaseMaxSec: 3,
+    },
+  );
+
+  function updateNodeParameters() {
+    const { synthParameters: sp } = bus;
+    oscillators.updateNodeParameters({
+      wave: sp.oscWave,
+      octave: sp.oscOctave,
+      shape: sp.oscShape,
+    });
+    highPassFilter.updateNodeParameters({
+      enabled: sp.hpfOn,
+      cutoff: sp.hpfCutoff,
+      peak: sp.hpfPeak,
+    });
+    lowPassFilter.updateNodeParameters({
+      enabled: sp.filterOn,
+      cutoff: sp.filterCutoff,
+      peak: sp.filterPeak,
+    });
+    foldingShaper.updateNodeParameters({
+      enabled: sp.foldingShaperOn,
+      wave: sp.foldingShaperWave,
+      level: sp.foldingShaperLevel,
+    });
+    const vol = power2(sp.masterVolume);
+    if (masterGainNode.gain.value !== vol) {
+      masterGainNode.gain.value = vol;
+    }
+  }
+
+  const nodesChain = createAudioNodeChain(
+    oscillators,
+    highPassFilter,
+    lowPassFilter,
+    foldingShaper,
+    ampEg.node,
+    masterGainNode,
+    voiceDestinationNode,
+  );
+
+  return {
+    start() {
+      updateNodeParameters();
+      nodesChain.connects();
+      ampEg.triggerAttack();
+    },
+    stop() {
+      ampEg.triggerRelease();
+      setTimeout(
+        () => {
+          nodesChain.disconnects();
+        },
+        ampEg.getReleaseTime() * 1000 + 100,
+      );
+    },
+    updateNodeParameters,
+  };
+}
+
+function createEffectChain(bus: SynthesisBus) {
+  const { audioContext } = bus;
+  const chorus = createChorusEffectEx(audioContext);
+  const reverb = createReverberator(audioContext);
+  const densityShaper = createDensityShaperBlock(audioContext);
+
+  const nodesChain = createAudioNodeChain(
+    bus.voiceDestinationNode,
+    densityShaper,
+    chorus,
+    reverb,
+    bus.finalDestinationNode,
+  );
+
+  return {
+    setupNodes() {
+      nodesChain.connects();
+    },
+    cleanupNodes() {
+      nodesChain.disconnects();
+    },
+    updateNodeParameters() {
+      const sp = bus.synthParameters;
+      densityShaper.updateNodeParameters({
+        enabled: sp.densityShaperLevel > 0,
+        level: sp.densityShaperLevel,
+      });
+      chorus.setLevel(sp.chorusLevel);
+      reverb.setLevel(sp.reverbLevel);
+    },
+  };
+}
+
+export function createSynthesizerEngine() {
+  const bus = createSynthesisBus();
+  const voices: Record<number, Voice> = {};
+  const effects = createEffectChain(bus);
+  effects.setupNodes();
+
+  const internal = {
+    addNote(noteNumber: number) {
+      const voice = createVoice(bus, noteNumber);
+      voice.updateNodeParameters();
+      voice.start();
+      voices[noteNumber] = voice;
+    },
+    removeNote(noteNumber: number) {
+      const voice = voices[noteNumber];
+      if (voice) {
+        voice.stop();
+        delete voices[noteNumber];
+      }
+    },
+    updateNodeParameters() {
+      for (const voice of Object.values(voices)) {
+        voice.updateNodeParameters();
+      }
+      effects.updateNodeParameters();
+    },
+  };
+
+  return {
+    async resumeIfNeeded() {
+      if (bus.audioContext.state === "suspended") {
+        await bus.audioContext.resume();
+      }
+    },
+    setParameter<K extends keyof SynthParameters>(
+      param: K,
+      value: SynthParameters[K],
+    ) {
+      bus.synthParameters[param] = value;
+      internal.updateNodeParameters();
+    },
+    noteOn(noteNumber: number) {
+      internal.removeNote(noteNumber);
+      internal.addNote(noteNumber);
+    },
+    noteOff(noteNumber: number) {
+      internal.removeNote(noteNumber);
+    },
+  };
+}
