@@ -64,4 +64,10 @@ export const uiActions = {
   noteOff(note: number): void {
     audioEngine?.noteOff(note);
   },
+
+  loadState(state: AppState) {
+    setAppState("currentPresetIndex", state.currentPresetIndex);
+    setAppState("parameters", state.parameters);
+    audioEngine?.updateParams(state.parameters);
+  },
 };
