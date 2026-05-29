@@ -1,16 +1,16 @@
 import { For } from "solid-js";
 
-const SEGMENT_COUNT = 16;
+const segmentCount = 16;
 
 export function SpectrumBars(props: { values: number[] }) {
   return (
     <div class="w-full flex-ha gap-1 px-2 py-2 border border-[#485462] bg-[#091015]">
       <For each={props.values}>
         {(value) => {
-          const activeSegments = Math.round(value * SEGMENT_COUNT);
+          const activeSegments = Math.round(value * segmentCount);
           return (
             <div class="flex flex-col-reverse justify-end h-full flex-1 gap-[2px]">
-              <For each={Array.from({ length: SEGMENT_COUNT })}>
+              <For each={Array.from({ length: segmentCount })}>
                 {(_, segmentIndex) => {
                   const active = segmentIndex() < activeSegments;
                   const highBand = segmentIndex() > 11;

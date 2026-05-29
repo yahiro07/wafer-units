@@ -1,4 +1,5 @@
-import { appState, SynthParameters, uiActions } from "@/store";
+import { appState, SynthParameters } from "@/store/store";
+import { uiActions } from "@/store/ui-actions";
 
 type SliderProps = {
   label: string;

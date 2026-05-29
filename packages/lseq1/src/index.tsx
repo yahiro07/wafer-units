@@ -7,11 +7,11 @@ import { Button, FeButtonBox } from "@/components/button";
 import { ClockKnob } from "@/components/clock-knob";
 import { Icons } from "@/components/icons";
 import { FeNumberSliderBox } from "@/components/number-slider-box";
+import { drivers } from "@/drivers";
 import {
   KeyboardOctaveBlock,
   KeyboardTopKey,
 } from "@/organisms/keyboard-block";
-import { drivers } from "@/sequencer/drivers";
 import { actions } from "@/store/actions";
 import { store } from "@/store/store";
 import { SpecialStep } from "@/types";
@@ -47,8 +47,8 @@ const TopBar = () => {
       <div className="absolute top-0 w-full flex-c text-xs">LSEQ1</div>
       <div className="flex-h gap-2 items-end">
         <Button
-          active={state.playing}
-          onClick={() => actions.setPlaying(!state.playing)}
+          active={state.stdPlaying}
+          onClick={() => actions.setStdPlaying(!state.stdPlaying)}
         >
           <Icons.Play />
         </Button>
@@ -91,10 +91,10 @@ function getStepCellText(step: number) {
 }
 
 const BeatStepCells = ({ offset }: { offset: number }) => {
-  const { allSteps, editPos, playPos, playing, exPlaying } =
+  const { allSteps, editPos, playPos, stdPlaying, exPlaying } =
     store.useSnapshot();
   const steps = allSteps.slice(offset, offset + 4);
-  const somePlaying = playing || exPlaying;
+  const somePlaying = stdPlaying || exPlaying;
   return (
     <div className="flex-h">
       {seqNumbers(4).map((i) => {
@@ -203,8 +203,8 @@ const KeyboardSection = () => {
           key={baseNoteNumber}
           baseNoteNumber={baseNoteNumber}
           activeNotes={activeNotes}
-          noteOn={actions.noteOn}
-          noteOff={actions.noteOff}
+          noteOn={actions.inputNoteOn}
+          noteOff={actions.inputNoteOff}
           keyWidth={keyWidth}
           keyHeight={keyHeight}
         />
@@ -212,8 +212,8 @@ const KeyboardSection = () => {
       <KeyboardTopKey
         noteNumber={84}
         activeNotes={activeNotes}
-        noteOn={actions.noteOn}
-        noteOff={actions.noteOff}
+        noteOn={actions.inputNoteOn}
+        noteOff={actions.inputNoteOff}
         keyWidth={keyWidth}
         keyHeight={keyHeight}
       />

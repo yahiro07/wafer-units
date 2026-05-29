@@ -1,0 +1,113 @@
+import { setupMidiKeyboardInput } from "beams/mx-audio/midi-keyboard-input";
+import { createSequencerTickDriver } from "beams/mx-audio/sequencer-tick-driver";
+import { createSequencerEngine } from "@/sequencer/sequencer-engine";
+import {
+  createTargetSynthesizer,
+  hostInterface,
+} from "@/sequencer/target-synthesizer";
+import { actions } from "@/store/actions";
+import { persistence } from "@/store/persistence";
+import { getLoopStepCount } from "@/store/steps-helper";
+import { store } from "@/store/store";
+
+const targetSynth = createTargetSynthesizer();
+const sequencerEngine = createSequencerEngine(targetSynth);
+const standaloneTickDriver = createSequencerTickDriver();
+
+const driversInternal = {
+  wrapProcessStep(stepIndex: number) {
+    sequencerEngine.processOnStep(stepIndex);
+    const loopSteps = getLoopStepCount(store.state.loopBars);
+    actions.setPlayPos(stepIndex % loopSteps);
+  },
+};
+export const drivers = {
+  setupHostInterface() {
+    if (hostInterface) {
+      hostInterface.setupUnitAgent({
+        type: "sequencer",
+        categoryHint: "stepSequencer",
+        setBpm(bpm) {
+          actions.setBpm(bpm);
+        },
+        setPlayState(playing) {
+          actions.setExPlaying(playing);
+          if (!playing) {
+            sequencerEngine.allNotesOff();
+          }
+        },
+        transportHandling: { processStep: driversInternal.wrapProcessStep },
+        persistence,
+      });
+    }
+  },
+  setupMidiKeyboardInput() {
+    if (!hostInterface) {
+      return setupMidiKeyboardInput({
+        noteOn: actions.inputNoteOn,
+        noteOff: actions.inputNoteOff,
+      });
+    }
+  },
+  setupStateSynchronization() {
+    sequencerEngine.setAttributes({
+      bpm: store.state.bpm,
+      loopBars: store.state.loopBars,
+      allSteps: store.state.allSteps,
+      octaveShift: store.state.octaveShift,
+      stepDuty: store.state.stepDuty,
+    });
+    standaloneTickDriver.setBpm(store.state.bpm);
+
+    return store.subscribe((attrs) => {
+      const {
+        allSteps,
+        previewNote,
+        loopBars,
+        octaveShift,
+        stepDuty,
+        stdPlaying,
+        bpm,
+      } = attrs;
+      if (allSteps !== undefined) {
+        sequencerEngine.setAttributes({ allSteps });
+      }
+      if (previewNote !== undefined) {
+        sequencerEngine.emitPreviewNote(previewNote);
+      }
+      if (loopBars !== undefined) {
+        sequencerEngine.setAttributes({ loopBars });
+      }
+      if (octaveShift !== undefined) {
+        sequencerEngine.setAttributes({ octaveShift });
+      }
+      if (stepDuty !== undefined) {
+        sequencerEngine.setAttributes({ stepDuty });
+      }
+      if (stdPlaying !== undefined) {
+        if (stdPlaying) {
+          standaloneTickDriver.setBpm(store.state.bpm);
+          standaloneTickDriver.start({
+            processStep: driversInternal.wrapProcessStep,
+          });
+        } else {
+          standaloneTickDriver.stop();
+          sequencerEngine.allNotesOff();
+        }
+      }
+      if (bpm !== undefined) {
+        sequencerEngine.setAttributes({ bpm });
+        standaloneTickDriver.setBpm(bpm);
+      }
+    });
+  },
+  setupAll() {
+    drivers.setupHostInterface();
+    const unsubscribeStore = drivers.setupStateSynchronization();
+    const closeMidiIn = drivers.setupMidiKeyboardInput();
+    return () => {
+      unsubscribeStore();
+      closeMidiIn?.();
+    };
+  },
+};

@@ -1,6 +1,6 @@
 import { createEffect } from "solid-js";
 import { getHostInterface } from "wus-unit-types";
-import { appState, SynthParameters } from "@/store";
+import { appState, SynthParameters } from "@/store/store";
 import { createChorus } from "./chorus";
 import { createReverb } from "./reverb";
 import { createVoice } from "./voice";

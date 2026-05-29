@@ -1,8 +1,8 @@
 import type { SynthParameters } from "@/audio/types";
 import { ParameterColumn } from "@/organisms/parameter-column";
 import {
-  LEFT_COLUMN_PARAMETERS,
-  RIGHT_COLUMN_PARAMETERS,
+  leftColumnParameters,
+  rightColumnParameters,
 } from "@/store/parameter-definitions";
 
 type MainColumnSectionProps = {
@@ -15,14 +15,14 @@ export function MainColumnSection(props: MainColumnSectionProps) {
     <section class="flex-h h-full w-full gap-2">
       <ParameterColumn
         title="OSC / FX"
-        definitions={LEFT_COLUMN_PARAMETERS}
+        definitions={leftColumnParameters}
         parameters={props.parameters}
         onSetParameter={props.onSetParameter}
       />
 
       <ParameterColumn
         title="FILTER / AMP"
-        definitions={RIGHT_COLUMN_PARAMETERS}
+        definitions={rightColumnParameters}
         parameters={props.parameters}
         onSetParameter={props.onSetParameter}
       />

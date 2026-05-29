@@ -1,14 +1,14 @@
 import "./styles";
 import { onCleanup } from "solid-js";
 import { SynthPanelSection } from "@/sections/synth-panel-section";
-import { uiActions } from "@/store/app-store";
+import { uiActions } from "@/store/ui-actions";
 import { mountAppRoot } from "@/utils/mount-app-root";
 
 const App = () => {
-  const cleanUpFn = uiActions.initialize();
+  const cleanupFn = uiActions.initialize();
 
   onCleanup(() => {
-    cleanUpFn?.();
+    cleanupFn?.();
     uiActions.allNotesOff();
   });
 

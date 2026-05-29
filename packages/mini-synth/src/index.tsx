@@ -6,6 +6,7 @@ import { hostInterface } from "@/audio/audio-engine";
 import { MainSection } from "@/sections/main-section";
 import { TopSection } from "@/sections/top-section";
 import { uiActions } from "@/store/app-store";
+import { persistence } from "@/store/persistence";
 import { setupMidiKeyboardInput } from "@/utils/midi-keyboard-input";
 import { mountAppRoot } from "@/utils/mount-app-root";
 
@@ -19,6 +20,7 @@ const App = () => {
           noteOn: (note) => uiActions.noteOn(note, 1),
           noteOff: (note) => uiActions.noteOff(note),
         },
+        persistence,
       });
     } else {
       const cleanup = setupMidiKeyboardInput({

@@ -1,13 +1,13 @@
 import {
   cloneSynthParameters,
-  DEFAULT_SYNTH_PARAMETERS,
+  defaultSynthParameters,
 } from "@/audio/default-parameters";
 import type { ProgramPreset } from "@/audio/types";
 
-export const PROGRAM_PRESETS: ProgramPreset[] = [
+export const programPresets: ProgramPreset[] = [
   {
     name: "Init",
-    parameters: cloneSynthParameters(DEFAULT_SYNTH_PARAMETERS),
+    parameters: cloneSynthParameters(defaultSynthParameters),
   },
   {
     name: "Bass1",

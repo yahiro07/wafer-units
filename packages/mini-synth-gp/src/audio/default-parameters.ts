@@ -1,6 +1,6 @@
 import type { SynthParameters } from "@/audio/types";
 
-export const DEFAULT_SYNTH_PARAMETERS: SynthParameters = {
+export const defaultSynthParameters: SynthParameters = {
   oscWave: 0,
   oscDetune: 0,
   oscSub: 0,
@@ -16,7 +16,7 @@ export const DEFAULT_SYNTH_PARAMETERS: SynthParameters = {
 };
 
 export function cloneSynthParameters(
-  source: SynthParameters = DEFAULT_SYNTH_PARAMETERS,
+  source: SynthParameters = defaultSynthParameters,
 ): SynthParameters {
   return { ...source };
 }

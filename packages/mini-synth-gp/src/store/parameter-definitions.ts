@@ -8,7 +8,7 @@ export type ParameterDefinition = {
   step: number;
 };
 
-export const LEFT_COLUMN_PARAMETERS: ParameterDefinition[] = [
+export const leftColumnParameters: ParameterDefinition[] = [
   { key: "oscWave", label: "Wave", min: 0, max: 3, step: 1 },
   { key: "oscDetune", label: "Detune", min: 0, max: 1, step: 0.01 },
   { key: "oscSub", label: "Sub", min: 0, max: 1, step: 0.01 },
@@ -17,7 +17,7 @@ export const LEFT_COLUMN_PARAMETERS: ParameterDefinition[] = [
   { key: "fxReverb", label: "Reverb", min: 0, max: 1, step: 0.01 },
 ];
 
-export const RIGHT_COLUMN_PARAMETERS: ParameterDefinition[] = [
+export const rightColumnParameters: ParameterDefinition[] = [
   { key: "filterCutoff", label: "Cutoff", min: 0, max: 1, step: 0.01 },
   { key: "filterPeak", label: "Peak", min: 0, max: 1, step: 0.01 },
   { key: "filterEnvMod", label: "EnvMod", min: 0, max: 1, step: 0.01 },

@@ -1,4 +1,3 @@
-import { createStore } from "solid-js/store";
 import { getHostInterface } from "wus-unit-types";
 import { createEffectChain } from "@/audio/effect-chain";
 import { defaultParams, SynthParameters } from "../state";
@@ -6,7 +5,7 @@ import workletUrl from "./worklet?worker&url";
 
 export const hostInterface = getHostInterface();
 
-const mtof = (note: number): number =>
+const midiNoteNumberToFrequency = (note: number): number =>
   440.0 * Math.pow(2.0, (note - 69) / 12.0);
 
 interface ActiveVoice {
@@ -14,143 +13,164 @@ interface ActiveVoice {
   gateParam: AudioParam;
 }
 
-type StoreState = SynthParameters & { numActiveNotes: number };
+type EngineApi = {
+  init(): Promise<void>;
+  resumeIfNeeded(): Promise<void>;
+  setParameter<K extends keyof SynthParameters>(
+    key: K,
+    value: SynthParameters[K],
+  ): void;
+  setAllParameters(params: SynthParameters): void;
+  noteOn(noteNumber: number): void;
+  noteOff(noteNumber: number): void;
+  getNumActiveNotes(): number;
+};
 
-export class SynthEngine {
-  private audioCtx: AudioContext | null = null;
-  private mainOutputNode: GainNode | null = null;
+export function createSynthEngine(): EngineApi {
+  let audioCtx: AudioContext | null = null;
+  let mainOutputNode: GainNode | null = null;
+  let effectChain: ReturnType<typeof createEffectChain> | undefined;
 
-  private activeVoices = new Map<number, ActiveVoice>();
+  const activeVoices = new Map<number, ActiveVoice>();
+  const synthParameters: SynthParameters = { ...defaultParams };
 
-  public state: StoreState;
-  private setState: any;
+  async function init(): Promise<void> {
+    if (audioCtx) return;
 
-  private effectChain?: ReturnType<typeof createEffectChain>;
-
-  constructor() {
-    const [store, setStore] = createStore<StoreState>({
-      ...defaultParams,
-      numActiveNotes: 0,
-    });
-    this.state = store;
-    this.setState = setStore;
-  }
-
-  async init(): Promise<void> {
-    if (this.audioCtx) return;
-
-    this.audioCtx =
+    audioCtx =
       hostInterface?.audioContext ||
       new (window.AudioContext || (window as any).webkitAudioContext)();
 
     const audioDestination =
-      hostInterface?.audioDestinationNode || this.audioCtx.destination;
+      hostInterface?.audioDestinationNode || audioCtx.destination;
 
-    await this.audioCtx.audioWorklet.addModule(workletUrl);
+    await audioCtx.audioWorklet.addModule(workletUrl);
 
-    this.mainOutputNode = this.audioCtx.createGain();
-    this.mainOutputNode.gain.setValueAtTime(
-      this.state.master,
-      this.audioCtx.currentTime,
+    mainOutputNode = audioCtx.createGain();
+    mainOutputNode.gain.setValueAtTime(
+      synthParameters.master,
+      audioCtx.currentTime,
     );
 
-    this.effectChain = createEffectChain(this.audioCtx);
-    this.mainOutputNode.connect(this.effectChain.inputNode);
-    this.effectChain.outputNode.connect(audioDestination);
+    effectChain = createEffectChain(audioCtx);
+    mainOutputNode.connect(effectChain.inputNode);
+    effectChain.outputNode.connect(audioDestination);
   }
 
-  async resumeOnUserAction() {
-    if (this.audioCtx && this.audioCtx.state === "suspended") {
-      await this.audioCtx.resume();
+  function updateVoiceParameter(key: keyof SynthParameters, value: number) {
+    const now = audioCtx?.currentTime || 0;
+    activeVoices.forEach((voice) => {
+      const param = voice.workletNode.parameters.get(key);
+      if (param) {
+        param.setTargetAtTime(value, now, 0.005);
+      }
+    });
+  }
+
+  function updateEffectParameter(key: keyof SynthParameters, value: number) {
+    if (key === "chorus" || key === "delay" || key === "reverb") {
+      effectChain?.updateParameters({ [key]: value });
     }
   }
 
-  public uiActions = {
-    setParameter: (key: keyof SynthParameters, value: number) => {
-      this.setState(key, value);
-
-      const now = this.audioCtx?.currentTime || 0;
+  return {
+    async init() {
+      await init();
+    },
+    async resumeIfNeeded() {
+      if (audioCtx && audioCtx.state === "suspended") {
+        await audioCtx.resume();
+      }
+    },
+    setParameter(key, value) {
+      synthParameters[key] = value;
+      const now = audioCtx?.currentTime || 0;
 
       if (key === "master") {
-        if (this.mainOutputNode) {
-          this.mainOutputNode.gain.setTargetAtTime(value, now, 0.005);
+        if (mainOutputNode) {
+          mainOutputNode.gain.setTargetAtTime(value, now, 0.005);
         }
         return;
       }
 
-      this.activeVoices.forEach((voice) => {
-        const param = voice.workletNode.parameters.get(key);
-        if (param) {
-          param.setTargetAtTime(value, now, 0.005);
-        }
-      });
-
-      if (key === "chorus" || key === "delay" || key === "reverb") {
-        this.effectChain?.updateParameters({ [key]: value });
-      }
+      updateVoiceParameter(key, value);
+      updateEffectParameter(key, value);
     },
+    setAllParameters(params) {
+      Object.assign(synthParameters, params);
 
-    noteOn: (noteNumber: number) => {
-      if (!this.audioCtx || !this.mainOutputNode) {
+      const now = audioCtx?.currentTime || 0;
+      if (mainOutputNode) {
+        mainOutputNode.gain.setTargetAtTime(synthParameters.master, now, 0.005);
+      }
+
+      (Object.keys(synthParameters) as Array<keyof SynthParameters>).forEach(
+        (key) => {
+          updateVoiceParameter(key, synthParameters[key]);
+        },
+      );
+
+      effectChain?.updateParameters({
+        chorus: synthParameters.chorus,
+        delay: synthParameters.delay,
+        reverb: synthParameters.reverb,
+      });
+    },
+    noteOn(noteNumber) {
+      if (!audioCtx || !mainOutputNode) {
         console.warn(
-          "SynthEngineが初期化されていません。先にinit()を実行してください。",
+          "SynthEngine is not initialized. Call init() before using the engine.",
         );
         return;
       }
 
-      if (this.activeVoices.has(noteNumber)) {
-        this.uiActions.noteOff(noteNumber);
+      if (activeVoices.has(noteNumber)) {
+        this.noteOff(noteNumber);
       }
 
-      if (this.audioCtx.state === "suspended") {
-        this.audioCtx.resume();
+      if (audioCtx.state === "suspended") {
+        void audioCtx.resume();
       }
 
-      const workletNode = new AudioWorkletNode(
-        this.audioCtx,
-        "synth-processor",
-        {
-          numberOfInputs: 0,
-          numberOfOutputs: 1,
-          outputChannelCount: [1],
-        },
-      );
+      const workletNode = new AudioWorkletNode(audioCtx, "synth-processor", {
+        numberOfInputs: 0,
+        numberOfOutputs: 1,
+        outputChannelCount: [1],
+      });
 
-      const now = this.audioCtx.currentTime;
+      const now = audioCtx.currentTime;
 
       const freqParam = workletNode.parameters.get("frequency");
-      if (freqParam) freqParam.setValueAtTime(mtof(noteNumber), now);
+      if (freqParam)
+        freqParam.setValueAtTime(midiNoteNumberToFrequency(noteNumber), now);
 
-      (Object.keys(this.state) as Array<keyof SynthParameters>).forEach(
+      (Object.keys(synthParameters) as Array<keyof SynthParameters>).forEach(
         (key) => {
           const p = workletNode.parameters.get(key);
-          if (p) p.setValueAtTime(this.state[key], now);
+          if (p) p.setValueAtTime(synthParameters[key], now);
         },
       );
 
       const gateParam = workletNode.parameters.get("gate")!;
       gateParam.setValueAtTime(1.0, now);
 
-      workletNode.connect(this.mainOutputNode);
+      workletNode.connect(mainOutputNode);
 
-      this.activeVoices.set(noteNumber, { workletNode, gateParam });
-
-      this.setState("numActiveNotes", this.activeVoices.size);
+      activeVoices.set(noteNumber, { workletNode, gateParam });
     },
-
-    noteOff: (noteNumber: number) => {
-      const voice = this.activeVoices.get(noteNumber);
+    noteOff(noteNumber) {
+      const voice = activeVoices.get(noteNumber);
       if (!voice) return;
 
-      const now = this.audioCtx?.currentTime || 0;
-
+      const now = audioCtx?.currentTime || 0;
       voice.gateParam.setValueAtTime(0.0, now);
 
-      this.activeVoices.delete(noteNumber);
-
-      this.setState("numActiveNotes", this.activeVoices.size);
+      activeVoices.delete(noteNumber);
+    },
+    getNumActiveNotes() {
+      return activeVoices.size;
     },
   };
 }
 
-export const synthEngine = new SynthEngine();
+export const synthEngine = createSynthEngine();

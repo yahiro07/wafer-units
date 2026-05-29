@@ -33,6 +33,10 @@ export const defaultParams: SynthParameters = {
   master: 0.7,
 };
 
+export function createSynthParameters(): SynthParameters {
+  return { ...defaultParams };
+}
+
 if (0) {
   Object.assign(defaultParams, {
     waveMode: WaveMode.FM,
