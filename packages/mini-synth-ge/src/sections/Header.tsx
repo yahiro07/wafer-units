@@ -1,5 +1,6 @@
 import { Icons } from "@/components/icons";
-import { appState, PRESET_NAMES, uiActions } from "@/store";
+import { allPresetNames, appState } from "@/store/store";
+import { uiActions } from "@/store/ui-actions";
 
 export const Header = () => {
   return (
@@ -17,7 +18,7 @@ export const Header = () => {
           onChange={(e) => uiActions.setPreset(e.currentTarget.value)}
           class="w-40 h-8.5 px-2 text-center bg-white border border-gray-500 outline-none cursor-pointer appearance-none"
         >
-          {PRESET_NAMES.map((name) => (
+          {allPresetNames.map((name) => (
             <option value={name}>{name}</option>
           ))}
         </select>

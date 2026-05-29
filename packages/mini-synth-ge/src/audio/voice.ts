@@ -1,4 +1,4 @@
-import { SynthParameters } from "@/store";
+import { SynthParameters } from "@/store/store";
 import { midiToFreq } from "./utils";
 
 let pulse125Wave: PeriodicWave | null = null;

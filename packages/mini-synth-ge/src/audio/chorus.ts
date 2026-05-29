@@ -1,4 +1,4 @@
-import { SynthParameters } from "@/store";
+import { SynthParameters } from "@/store/store";
 
 export function createChorus(context: AudioContext) {
   const inputNode = context.createGain();

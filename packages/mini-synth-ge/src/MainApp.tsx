@@ -3,6 +3,7 @@ import { getAudioEngine, hostInterface } from "@/audio";
 import { Header } from "@/sections/Header";
 import { LeftColumn } from "@/sections/LeftColumn";
 import { RightColumn } from "@/sections/RightColumn";
+import { persistence } from "@/store/persistence";
 import { setupMidiKeyboardInput } from "@/utils/midi-keyboard-input";
 
 export const MainApp = () => {
@@ -24,6 +25,7 @@ export const MainApp = () => {
           engine.noteOff(note);
         },
       },
+      persistence,
     });
   } else {
     const closeMidiIn = setupMidiKeyboardInput({
