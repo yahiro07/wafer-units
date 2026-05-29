@@ -252,6 +252,10 @@ export function createSynthesizerEngine() {
       bus.synthParameters[param] = value;
       internal.updateNodeParameters();
     },
+    setAllParameters(params: SynthParameters) {
+      Object.assign(bus.synthParameters, params);
+      internal.updateNodeParameters();
+    },
     noteOn(noteNumber: number) {
       internal.removeNote(noteNumber);
       internal.addNote(noteNumber);

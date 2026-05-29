@@ -1,6 +1,3 @@
-export function MainPanel() {}
-import "./page.css";
-import "beams/ax-ui/utility-classes.css";
 import { uiActions } from "@/actions";
 import { SliderParameter } from "@/components/slider-parameter";
 import {

@@ -2,6 +2,7 @@ import { setupMidiKeyboardInput } from "beams/mx-audio/midi-keyboard-input";
 import { onCleanup } from "solid-js";
 import { getHostInterface } from "wus-unit-types";
 import { uiActions } from "@/actions";
+import { persistence } from "@/persistence";
 
 export function setupDrivers() {
   const hostInterface = getHostInterface();
@@ -13,6 +14,7 @@ export function setupDrivers() {
         noteOn: uiActions.noteOn,
         noteOff: uiActions.noteOff,
       },
+      persistence,
     });
   } else {
     const closeMidiIn = setupMidiKeyboardInput({

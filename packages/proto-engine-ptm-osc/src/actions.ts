@@ -21,4 +21,8 @@ export const uiActions = {
     setAppState("synthParams", paramKey, value);
     synthEngine.setParameter(paramKey, value);
   },
+  loadStates(attrs: { synthParams: SynthParameters }) {
+    setAppState("synthParams", attrs.synthParams);
+    synthEngine.setAllParameters(attrs.synthParams);
+  },
 };
