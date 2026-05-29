@@ -13,7 +13,7 @@ export function SynthPanelSection() {
         selectedProgramIndex={appState.selectedProgramIndex}
         programNames={programNames}
         midiConnected={appState.midiConnected}
-        onSelectProgram={uiActions.selectProgramByIndex}
+        onSelectProgram={uiActions.applyPresetByIndex}
         onShiftProgram={uiActions.shiftProgram}
       />
 
