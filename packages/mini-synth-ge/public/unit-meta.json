@@ -2,6 +2,11 @@
   "name": "mini-synth-ge",
   "category": "synthesizer",
   "unitType": "instrument",
+  "preferredSize": "560,270",
+  "unitTypesVersion": "0.1.4",
+  "outputSignalTypes": "audio",
+  "inputSignalTypes": "audio,state",
   "repositoryUrl": "https://github.com/yahiro07/wus-units",
-  "preferredSize": "560,270"
+  "author": "yahiro",
+  "license": "MIT"
 }

@@ -2,9 +2,11 @@
   "name": "wavicle",
   "unitType": "instrument",
   "category": "synthesizer",
-  "repositoryUrl": "https://github.com/yahiro07/wus-units",
   "preferredSize": "700,394",
   "unitTypesVersion": "0.1.4",
+  "outputSignalTypes": "audio",
   "inputSignalTypes": "note",
-  "outputSignalTypes": "audio"
+  "repositoryUrl": "https://github.com/yahiro07/wus-units",
+  "author": "yahiro",
+  "license": "MIT"
 }

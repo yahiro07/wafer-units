@@ -1,9 +1,11 @@
 {
   "name": "useq",
   "unitType": "sequencer",
-  "repositoryUrl": "https://github.com/yahiro07/wus-units",
   "preferredSize": "390,230",
   "unitTypesVersion": "0.1.4",
+  "outputSignalTypes": "note",
   "inputSignalTypes": "state",
-  "outputSignalTypes": "note"
+  "repositoryUrl": "https://github.com/yahiro07/wus-units",
+  "author": "yahiro",
+  "license": "MIT"
 }
