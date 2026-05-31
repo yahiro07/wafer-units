@@ -2,6 +2,11 @@
   "name": "proto-engine-pd-fm",
   "category": "synthesizer",
   "unitType": "instrument",
+  "preferredSize": "660,384",
+  "unitTypesVersion": "0.1.4",
+  "outputSignalTypes": "audio",
+  "inputSignalTypes": "audio,state",
   "repositoryUrl": "https://github.com/yahiro07/wus-units",
-  "preferredSize": "660,384"
+  "author": "yahiro",
+  "license": "MIT"
 }

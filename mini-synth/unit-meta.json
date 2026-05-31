@@ -2,6 +2,11 @@
   "name": "mini-synth",
   "category": "synthesizer",
   "unitType": "instrument",
+  "preferredSize": "640,320",
+  "unitTypesVersion": "0.1.4",
+  "outputSignalTypes": "audio",
+  "inputSignalTypes": "note,state",
   "repositoryUrl": "https://github.com/yahiro07/wus-units",
-  "preferredSize": "640,320"
+  "author": "yahiro",
+  "license": "MIT"
 }

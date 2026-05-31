@@ -1,6 +1,11 @@
 {
   "name": "lseq1",
   "unitType": "sequencer",
+  "preferredSize": "530,320",
+  "unitTypesVersion": "0.1.4",
+  "outputSignalTypes": "audio",
+  "inputSignalTypes": "audio,state",
   "repositoryUrl": "https://github.com/yahiro07/wus-units",
-  "preferredSize": "530,320"
+  "author": "yahiro",
+  "license": "MIT"
 }
