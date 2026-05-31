@@ -1,7 +1,8 @@
 {
   "name": "mini-synth",
-  "private": true,
   "type": "module",
+  "private": true,
+  "license": "MIT",
   "scripts": {
     "dev": "vite dev",
     "build": "vite build"
