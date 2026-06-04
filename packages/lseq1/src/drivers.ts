@@ -3,7 +3,7 @@ import { createSequencerTickDriver } from "beams/mx-audio/sequencer-tick-driver"
 import { createSequencerEngine } from "@/sequencer/sequencer-engine";
 import {
   createTargetSynthesizer,
-  hostInterface,
+  unitInterface,
 } from "@/sequencer/target-synthesizer";
 import { actions } from "@/store/actions";
 import { persistence } from "@/store/persistence";
@@ -23,26 +23,38 @@ const driversInternal = {
 };
 export const drivers = {
   setupHostInterface() {
-    if (hostInterface) {
-      hostInterface.setupUnitAgent({
+    if (unitInterface) {
+      unitInterface.declareUnitFeatures({
         type: "sequencer",
         categoryHint: "stepSequencer",
+        outputs: ["note"],
+        inputs: ["note", "clock"],
+      });
+      unitInterface.primaryInputPort.setHandlers({
+        clockInput: {
+          start() {
+            actions.setExPlaying(true);
+          },
+          processStep(stepIndex) {
+            driversInternal.wrapProcessStep(stepIndex);
+          },
+          stop() {
+            actions.setExPlaying(false);
+            sequencerEngine.allNotesOff();
+          },
+        },
+        stateInput: persistence,
+      });
+      unitInterface.setHostCallbacks({
         setBpm(bpm) {
           actions.setBpm(bpm);
         },
-        setPlayState(playing) {
-          actions.setExPlaying(playing);
-          if (!playing) {
-            sequencerEngine.allNotesOff();
-          }
-        },
-        transportHandling: { processStep: driversInternal.wrapProcessStep },
-        persistence,
       });
+      unitInterface.completeSetup();
     }
   },
   setupMidiKeyboardInput() {
-    if (!hostInterface) {
+    if (!unitInterface) {
       return setupMidiKeyboardInput({
         noteOn: actions.inputNoteOn,
         noteOff: actions.inputNoteOff,

@@ -1,21 +1,26 @@
 import { setupMidiKeyboardInput } from "beams/mx-audio/midi-keyboard-input";
 import { onCleanup } from "solid-js";
-import { getHostInterface } from "wus-unit-types";
+import { getUnitInterface } from "wus-unit-types";
 import { uiActions } from "@/actions";
 import { persistence } from "@/persistence";
 
 export function setupDrivers() {
-  const hostInterface = getHostInterface();
-  if (hostInterface) {
-    hostInterface.setupUnitAgent({
+  const unitInterface = getUnitInterface();
+  if (unitInterface) {
+    unitInterface.declareUnitFeatures({
       type: "instrument",
       categoryHint: "synthesizer",
+      outputs: ["audio"],
+      inputs: ["note", "state"],
+    });
+    unitInterface.primaryInputPort.setHandlers({
       noteInput: {
         noteOn: uiActions.noteOn,
         noteOff: uiActions.noteOff,
       },
-      persistence,
+      stateInput: persistence,
     });
+    unitInterface.completeSetup();
   } else {
     const closeMidiIn = setupMidiKeyboardInput({
       noteOn(noteNumber) {

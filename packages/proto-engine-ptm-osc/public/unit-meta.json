@@ -1,9 +1,9 @@
 {
   "name": "proto-engine-ptm-osc",
-  "category": "synthesizer",
   "unitType": "instrument",
+  "categoryHint": "synthesizer",
   "preferredSize": "800,380",
-  "unitTypesVersion": "0.1.4",
+  "unitTypesVersion": "0.2.1",
   "outputSignalTypes": "audio",
   "inputSignalTypes": "audio,state",
   "repositoryUrl": "https://github.com/yahiro07/wus-units",

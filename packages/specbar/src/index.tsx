@@ -4,7 +4,7 @@ import { mountAppRoot } from "beams/ax-react/mount-app-root";
 import { mapKnobGainDb } from "beams/mo-audio/map-knob-gain-db";
 import { ScalerBoxAutoSized } from "beams/mo-react/components/scaler-box-auto-sized";
 import { createStore } from "snap-store";
-import { getHostInterface } from "wus-unit-types";
+import { getUnitInterface } from "wus-unit-types";
 import { Knob } from "@/components/knob";
 import { setupDummyHost } from "@/dummy-host";
 import { BasicSpectrumView } from "@/organisms/basic-spectrum-view";
@@ -39,9 +39,9 @@ const actions = {
 };
 
 function setupUnitInstance() {
-  const hostInterface = getHostInterface();
-  if (hostInterface) {
-    const audioContext = hostInterface.audioContext;
+  const unitInterface = getUnitInterface();
+  if (unitInterface) {
+    const audioContext = unitInterface.audioContext;
     store.setSampleRate(audioContext.sampleRate);
     const analyzer = audioContext.createAnalyser();
     analyzer.fftSize = 1024;
@@ -56,9 +56,9 @@ function setupUnitInstance() {
     }, 16);
 
     const gainNode = audioContext.createGain();
-    hostInterface.audioSourceNode.connect(gainNode);
+    unitInterface.primaryInputPort.audioInput.node.connect(gainNode);
     gainNode.connect(analyzer);
-    analyzer.connect(hostInterface.audioDestinationNode);
+    analyzer.connect(unitInterface.primaryOutputPort.audioOutput.node);
 
     function updateGain(level: number) {
       gainNode.gain.value = mapKnobGainDb(level, 0.5);
@@ -71,14 +71,19 @@ function setupUnitInstance() {
       }
     });
 
-    hostInterface.setupUnitAgent({
+    unitInterface.declareUnitFeatures({
       type: "effect",
-      persistence: {
+      categoryHint: "effect",
+      outputs: ["audio"],
+      inputs: ["audio", "state"],
+    });
+    unitInterface.primaryInputPort.setHandlers({
+      stateInput: {
         emitStateBytes() {
           const dm = store.state.displayMode;
           return new Uint8Array([dm]);
         },
-        loadStateBytes(bytes) {
+        applyStateBytes(bytes) {
           if (bytes.length === 1) {
             const dm = bytes[0] > 0 ? 1 : 0;
             store.setDisplayMode(dm);
@@ -86,6 +91,7 @@ function setupUnitInstance() {
         },
       },
     });
+    unitInterface.completeSetup();
   }
 }
 setupUnitInstance();

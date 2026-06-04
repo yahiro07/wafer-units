@@ -1,5 +1,5 @@
 import { onCleanup, onMount } from "solid-js";
-import { getAudioEngine, hostInterface } from "@/audio";
+import { getAudioEngine, unitInterface } from "@/audio";
 import { Header } from "@/sections/Header";
 import { LeftColumn } from "@/sections/LeftColumn";
 import { RightColumn } from "@/sections/RightColumn";
@@ -12,10 +12,14 @@ export const MainApp = () => {
   // User interaction needed to start AudioContext, but we can setup listeners
   const engine = getAudioEngine();
 
-  if (hostInterface) {
-    hostInterface.setupUnitAgent({
+  if (unitInterface) {
+    unitInterface.declareUnitFeatures({
       type: "instrument",
       categoryHint: "synthesizer",
+      outputs: ["audio"],
+      inputs: ["note", "state"],
+    });
+    unitInterface.primaryInputPort.setHandlers({
       noteInput: {
         async noteOn(note) {
           await engine.resumeIfNeed();
@@ -25,8 +29,9 @@ export const MainApp = () => {
           engine.noteOff(note);
         },
       },
-      persistence,
+      stateInput: persistence,
     });
+    unitInterface.completeSetup();
   } else {
     const closeMidiIn = setupMidiKeyboardInput({
       async noteOn(note) {

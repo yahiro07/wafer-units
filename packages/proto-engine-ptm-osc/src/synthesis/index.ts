@@ -1,5 +1,5 @@
 import { midiToFrequency, power2 } from "beams/mo-synthesis/synth-math-utils";
-import { getHostInterface } from "wus-unit-types";
+import { getUnitInterface } from "wus-unit-types";
 import {
   createSynthParameters,
   SynthParameters,
@@ -17,7 +17,7 @@ import { createReverberator } from "@/synthesis/reverbrator";
 import { createShaperCurveBufferCache } from "@/synthesis/shaper-curve-buffer-cache";
 import { createAudioNodeChain } from "@/synthesis/webaudio-helper";
 
-const hostInterface = getHostInterface();
+const unitInterface = getUnitInterface();
 
 function getNoteFrequency(noteNumber: number, oscOctave: number): number {
   const modNoteNumber = noteNumber + oscOctave * 12;
@@ -32,11 +32,12 @@ type SynthesisBus = {
 };
 
 function createSynthesisBus(): SynthesisBus {
-  const audioContext = hostInterface?.audioContext ?? new AudioContext();
+  const audioContext = unitInterface?.audioContext ?? new AudioContext();
   const voiceDestinationNode = audioContext.createGain();
   const synthParameters = createSynthParameters();
   const finalDestinationNode =
-    hostInterface?.audioDestinationNode ?? audioContext.destination;
+    unitInterface?.primaryOutputPort.audioOutput.node ??
+    audioContext.destination;
   return {
     audioContext,
     voiceDestinationNode,

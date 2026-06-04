@@ -1,17 +1,18 @@
 import { createEffect } from "solid-js";
-import { getHostInterface } from "wus-unit-types";
+import { getUnitInterface } from "wus-unit-types";
 import { appState, SynthParameters } from "@/store/store";
 import { createChorus } from "./chorus";
 import { createReverb } from "./reverb";
 import { createVoice } from "./voice";
 
-export const hostInterface = getHostInterface();
+export const unitInterface = getUnitInterface();
 
 let engineInstance: ReturnType<typeof createAudioEngine> | null = null;
 
 function createAudioEngine() {
-  const context = hostInterface?.audioContext ?? new AudioContext();
-  const destNode = hostInterface?.audioDestinationNode ?? context.destination;
+  const context = unitInterface?.audioContext ?? new AudioContext();
+  const destNode =
+    unitInterface?.primaryOutputPort.audioOutput.node ?? context.destination;
 
   const voicesGain = context.createGain();
   const chorus = createChorus(context);

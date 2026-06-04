@@ -1,30 +1,34 @@
 import { onCleanup } from "solid-js";
 import { uiActions } from "@/actions";
-import { hostInterface } from "@/audio/engine";
+import { unitInterface } from "@/audio/engine";
 import { persistence } from "@/persistence";
 import { setupMidiKeyboardInput } from "@/utils/midi-keyboard-input";
 
 export function setupDrivers() {
-  if (hostInterface) {
-    hostInterface.setupUnitAgent({
+  if (unitInterface) {
+    unitInterface.declareUnitFeatures({
       type: "instrument",
       categoryHint: "synthesizer",
+      outputs: ["audio"],
+      inputs: ["note", "state"],
+    });
+    unitInterface.primaryInputPort.setHandlers({
       noteInput: {
         noteOn: uiActions.noteOn,
         noteOff: uiActions.noteOff,
       },
-      persistence,
+      stateInput: persistence,
     });
-    return;
+    unitInterface.completeSetup();
+  } else {
+    const closeMidiIn = setupMidiKeyboardInput({
+      noteOn(noteNumber) {
+        uiActions.noteOn(noteNumber);
+      },
+      noteOff(noteNumber) {
+        uiActions.noteOff(noteNumber);
+      },
+    });
+    onCleanup(closeMidiIn);
   }
-
-  const closeMidiIn = setupMidiKeyboardInput({
-    noteOn(noteNumber) {
-      uiActions.noteOn(noteNumber);
-    },
-    noteOff(noteNumber) {
-      uiActions.noteOff(noteNumber);
-    },
-  });
-  onCleanup(closeMidiIn);
 }
