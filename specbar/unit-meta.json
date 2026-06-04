@@ -1,9 +1,9 @@
 {
   "name": "specbar",
   "unitType": "effect",
-  "category": "visualizer",
+  "categoryHint": "visualizer",
   "preferredSize": "350,55",
-  "unitTypesVersion": "0.1.4",
+  "unitTypesVersion": "0.2.1",
   "outputSignalTypes": "audio",
   "inputSignalTypes": "audio",
   "repositoryUrl": "https://github.com/yahiro07/wus-units",

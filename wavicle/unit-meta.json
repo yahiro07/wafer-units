@@ -1,9 +1,9 @@
 {
   "name": "wavicle",
   "unitType": "instrument",
-  "category": "synthesizer",
+  "categoryHint": "synthesizer",
   "preferredSize": "700,394",
-  "unitTypesVersion": "0.1.4",
+  "unitTypesVersion": "0.2.1",
   "outputSignalTypes": "audio",
   "inputSignalTypes": "note",
   "repositoryUrl": "https://github.com/yahiro07/wus-units",
