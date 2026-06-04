@@ -1,5 +1,5 @@
 import { createTestSynthesizer } from "beams/mx-audio/test-synthesizer";
-import { HostInterface } from "wus-unit-types";
+import { UnitInterface } from "wus-unit-types";
 
 type AppSynthTarget = {
   resumeIfNeed(): Promise<void>;
@@ -8,16 +8,17 @@ type AppSynthTarget = {
 };
 
 export function createAppSynthTarget(
-  hostInterface: HostInterface | undefined,
+  unitInterface: UnitInterface | undefined,
 ): AppSynthTarget {
-  if (hostInterface) {
+  if (unitInterface) {
+    const noteOutput = unitInterface.primaryOutputPort.noteOutput;
     return {
       async resumeIfNeed() {},
       noteOn(noteNumber: number) {
-        hostInterface.noteOutputPort.noteOn(noteNumber, 1);
+        noteOutput.noteOn(noteNumber);
       },
       noteOff(noteNumber: number) {
-        hostInterface.noteOutputPort.noteOff(noteNumber);
+        noteOutput.noteOff(noteNumber);
       },
     };
   } else {

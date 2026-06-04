@@ -1,4 +1,4 @@
-import { getHostInterface } from "wus-unit-types";
+import { getUnitInterface } from "wus-unit-types";
 import { createChorusModule } from "@/audio/create-chorus-module";
 import { createReverbModule } from "@/audio/create-reverb-module";
 import {
@@ -12,7 +12,7 @@ import {
   mapUnaryTo,
 } from "@/utils/number-utils";
 
-export const hostInterface = getHostInterface();
+export const unitInterface = getUnitInterface();
 
 const allWaveTypes: OscillatorType[] = [
   "sawtooth",
@@ -244,9 +244,10 @@ function releaseVoice(
 }
 
 export function createMiniSynthAudio() {
-  const audioContext = hostInterface?.audioContext ?? new AudioContext();
+  const audioContext = unitInterface?.audioContext ?? new AudioContext();
   const destNode =
-    hostInterface?.audioDestinationNode ?? audioContext.destination;
+    unitInterface?.primaryOutputPort.audioOutput.node ??
+    audioContext.destination;
 
   const outputNode = audioContext.createGain();
   const voiceBusNode = audioContext.createGain();

@@ -1,5 +1,5 @@
 import { asyncRerender } from "alumina";
-import { getHostInterface } from "wus-unit-types";
+import { getUnitInterface } from "wus-unit-types";
 import { IInstrumentKey } from "@/base";
 import { arrays } from "@/funcs";
 import { createInstrumentProvider } from "./instrumentProvider";
@@ -36,8 +36,8 @@ function createNoteKey(noteNumber: number): string {
 }
 
 export function createSynthesizerEngine(): ISynthesizerEngine {
-  const hostInterface = getHostInterface();
-  const audioContext = hostInterface?.audioContext ?? new AudioContext();
+  const unitInterface = getUnitInterface();
+  const audioContext = unitInterface?.audioContext ?? new AudioContext();
   const instrumentProvider = createInstrumentProvider(audioContext);
   const { allInstrumentKeys } = instrumentProvider;
 
@@ -50,7 +50,10 @@ export function createSynthesizerEngine(): ISynthesizerEngine {
   voiceMixer
     .connect(compressor)
     .connect(outputAnalyser)
-    .connect(hostInterface?.audioDestinationNode ?? audioContext.destination);
+    .connect(
+      unitInterface?.primaryOutputPort.audioOutput.node ??
+        audioContext.destination,
+    );
 
   let timerId = undefined as ReturnType<typeof setTimeout> | undefined;
   let masterVolume = 1;

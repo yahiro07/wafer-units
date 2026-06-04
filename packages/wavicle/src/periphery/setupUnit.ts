@@ -1,11 +1,16 @@
 import { asyncRerender } from "alumina";
-import { getHostInterface } from "wus-unit-types";
+import { getUnitInterface } from "wus-unit-types";
 import { ISynthesizerBase } from "@/base";
 
 export function setupUnit(synth: ISynthesizerBase) {
-  const hostInterface = getHostInterface();
-  hostInterface?.setupUnitAgent({
+  const unitInterface = getUnitInterface();
+  unitInterface?.declareUnitFeatures({
     type: "instrument",
+    categoryHint: "synthesizer",
+    outputs: ["audio"],
+    inputs: ["note"],
+  });
+  unitInterface?.primaryInputPort.setHandlers({
     noteInput: {
       noteOn(noteNumber) {
         synth.noteOn(noteNumber);
@@ -17,4 +22,5 @@ export function setupUnit(synth: ISynthesizerBase) {
       },
     },
   });
+  unitInterface?.completeSetup();
 }

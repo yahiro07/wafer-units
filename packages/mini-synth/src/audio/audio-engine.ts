@@ -1,10 +1,10 @@
-import { getHostInterface } from "wus-unit-types";
+import { getUnitInterface } from "wus-unit-types";
 import { createEffectsChain } from "./effects";
 import type { SynthParams } from "./synth-params";
 import { defaultParams } from "./synth-params";
 import { createVoice, type Voice } from "./voice";
 
-export const hostInterface = getHostInterface();
+export const unitInterface = getUnitInterface();
 
 function midiNoteToFrequency(note: number): number {
   return 440 * Math.pow(2, (note - 69) / 12);
@@ -26,9 +26,10 @@ export interface AudioEngine {
 const voiceCount = 6;
 
 export function createAudioEngine(): AudioEngine {
-  const audioContext = hostInterface?.audioContext ?? new AudioContext();
+  const audioContext = unitInterface?.audioContext ?? new AudioContext();
   const destNode =
-    hostInterface?.audioDestinationNode ?? audioContext.destination;
+    unitInterface?.primaryOutputPort.audioOutput.node ??
+    audioContext.destination;
   const effects = createEffectsChain(audioContext);
   effects.outputNode.connect(destNode);
 

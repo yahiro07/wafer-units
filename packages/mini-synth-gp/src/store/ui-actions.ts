@@ -1,6 +1,6 @@
 import {
   createMiniSynthAudio,
-  hostInterface,
+  unitInterface,
 } from "@/audio/create-mini-synth-audio";
 import { cloneSynthParameters } from "@/audio/default-parameters";
 import { programPresets } from "@/audio/presets";
@@ -18,10 +18,14 @@ export const uiActions = {
 
     synthAudio.updateParameters(appState.parameters);
 
-    if (hostInterface) {
-      hostInterface.setupUnitAgent({
+    if (unitInterface) {
+      unitInterface.declareUnitFeatures({
         type: "instrument",
         categoryHint: "synthesizer",
+        outputs: ["audio"],
+        inputs: ["note", "state"],
+      });
+      unitInterface.primaryInputPort.setHandlers({
         noteInput: {
           async noteOn(noteNumber) {
             await synthAudio.audioContext.resume();
@@ -31,8 +35,9 @@ export const uiActions = {
             synthAudio.noteOff(noteNumber);
           },
         },
-        persistence,
+        stateInput: persistence,
       });
+      unitInterface.completeSetup();
     } else {
       return setupMidiKeyboardInput({
         connectionStateCallback(connected) {

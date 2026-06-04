@@ -4,9 +4,9 @@ import { createEffect, onCleanup } from "solid-js";
 import { persistence } from "@/store/persistence";
 import {
   appState,
-  hostInterface,
   sequencerEngine,
   uiActions,
+  unitInterface,
 } from "@/store/store";
 
 export const drivers = {
@@ -15,10 +15,14 @@ export const drivers = {
     uiActions.setCurrentStepIndex(stepIndex % 4);
   },
   setupHostInterface() {
-    if (hostInterface) {
-      hostInterface.setupUnitAgent({
+    if (unitInterface) {
+      unitInterface.declareUnitFeatures({
         type: "sequencer",
         categoryHint: "stepSequencer",
+        outputs: ["note"],
+        inputs: ["clock"],
+      });
+      unitInterface.setHostCallbacks({
         setBpm(bpm) {
           uiActions.setBpm(bpm);
         },
@@ -28,12 +32,15 @@ export const drivers = {
             sequencerEngine.allNotesOff();
           }
         },
-        transportHandling: { processStep: drivers.wrapProcessStep },
-        persistence: {
+      });
+      unitInterface.primaryInputPort.setHandlers({
+        clockInput: { processStep: drivers.wrapProcessStep },
+        stateInput: {
           emitStateBytes: persistence.emitStateBytes,
-          loadStateBytes: persistence.loadStateBytes,
+          applyStateBytes: persistence.loadStateBytes,
         },
       });
+      unitInterface.completeSetup();
     }
   },
   setupTickDriver() {
@@ -52,7 +59,7 @@ export const drivers = {
     });
   },
   setupMidiKeyboardInput() {
-    if (!hostInterface) {
+    if (!unitInterface) {
       const cleanup = setupMidiKeyboardInput({
         noteOn: uiActions.noteOn,
         noteOff: uiActions.noteOff,

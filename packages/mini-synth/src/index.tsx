@@ -2,7 +2,7 @@ import "./styles/page.css";
 import "./styles/utility-classes.css";
 
 import { onCleanup, onMount } from "solid-js";
-import { hostInterface } from "@/audio/audio-engine";
+import { unitInterface } from "@/audio/audio-engine";
 import { MainSection } from "@/sections/main-section";
 import { TopSection } from "@/sections/top-section";
 import { uiActions } from "@/store/app-store";
@@ -12,16 +12,21 @@ import { mountAppRoot } from "@/utils/mount-app-root";
 
 const App = () => {
   onMount(() => {
-    if (hostInterface) {
-      hostInterface.setupUnitAgent({
+    if (unitInterface) {
+      unitInterface.declareUnitFeatures({
         type: "instrument",
         categoryHint: "synthesizer",
+        outputs: ["audio"],
+        inputs: ["note", "state"],
+      });
+      unitInterface.primaryInputPort.setHandlers({
         noteInput: {
           noteOn: (note) => uiActions.noteOn(note, 1),
           noteOff: (note) => uiActions.noteOff(note),
         },
-        persistence,
+        stateInput: persistence,
       });
+      unitInterface.completeSetup();
     } else {
       const cleanup = setupMidiKeyboardInput({
         noteOn: (note) => uiActions.noteOn(note, 1),
