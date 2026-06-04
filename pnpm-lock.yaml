@@ -85,8 +85,8 @@ importers:
         specifier: ^2.11.12
         version: 2.11.12(solid-js@1.9.13)(vite@8.0.14(@types/node@25.9.1)(jiti@2.7.0))
       wus-unit-types:
-        specifier: ^0.1.4
-        version: 0.1.4
+        specifier: ^0.2.1
+        version: 0.2.1
 
   packages/mini-synth-ge:
     dependencies:
@@ -116,8 +116,8 @@ importers:
         specifier: ^2.11.12
         version: 2.11.12(solid-js@1.9.13)(vite@8.0.14(@types/node@25.9.1)(jiti@2.7.0))
       wus-unit-types:
-        specifier: ^0.1.4
-        version: 0.1.4
+        specifier: ^0.2.1
+        version: 0.2.1
 
   packages/mini-synth-gp:
     dependencies:
@@ -147,8 +147,8 @@ importers:
         specifier: ^2.11.12
         version: 2.11.12(solid-js@1.9.13)(vite@8.0.14(@types/node@25.9.1)(jiti@2.7.0))
       wus-unit-types:
-        specifier: ^0.1.4
-        version: 0.1.4
+        specifier: ^0.2.1
+        version: 0.2.1
 
   packages/proto-engine-pd-fm:
     dependencies:
@@ -184,8 +184,8 @@ importers:
         specifier: ^2.11.12
         version: 2.11.12(solid-js@1.9.13)(vite@8.0.14(@types/node@25.9.1)(jiti@2.7.0))
       wus-unit-types:
-        specifier: ^0.1.4
-        version: 0.1.4
+        specifier: ^0.2.1
+        version: 0.2.1
 
   packages/proto-engine-ptm-osc:
     dependencies:
@@ -224,8 +224,8 @@ importers:
         specifier: ^2.11.12
         version: 2.11.12(solid-js@1.9.13)(vite@8.0.14(@types/node@25.9.1)(jiti@2.7.0))
       wus-unit-types:
-        specifier: ^0.1.4
-        version: 0.1.4
+        specifier: ^0.2.1
+        version: 0.2.1
 
   packages/specbar:
     dependencies:
@@ -273,8 +273,8 @@ importers:
         specifier: ^8.0.12
         version: 8.0.14(@types/node@25.9.1)(jiti@2.7.0)
       wus-unit-types:
-        specifier: ^0.1.4
-        version: 0.1.4
+        specifier: ^0.2.1
+        version: 0.2.1
 
   packages/useq:
     dependencies:
@@ -307,8 +307,8 @@ importers:
         specifier: ^2.11.12
         version: 2.11.12(solid-js@1.9.13)(vite@8.0.14(@types/node@25.9.1)(jiti@2.7.0))
       wus-unit-types:
-        specifier: ^0.1.4
-        version: 0.1.4
+        specifier: ^0.2.1
+        version: 0.2.1
 
   packages/wavicle:
     dependencies:
@@ -328,8 +328,8 @@ importers:
         specifier: ^8.0.13
         version: 8.0.14(@types/node@25.9.1)(jiti@2.7.0)
       wus-unit-types:
-        specifier: ^0.1.4
-        version: 0.1.4
+        specifier: ^0.2.1
+        version: 0.2.1
 
 packages:
 
@@ -1301,6 +1301,9 @@ packages:
   wus-unit-types@0.1.4:
     resolution: {integrity: sha512-R0ykq7KZ27TfXqhYdstIrqbeeOV4zvoe9CO48Yf9L1Bs18kMwkO0o5yn2DOrmVpDIz2pLPoWejWigTjtD4edSA==}
 
+  wus-unit-types@0.2.1:
+    resolution: {integrity: sha512-kWVdzYCd3eRSrm0MQb/o207jj+brTKLENR9P6SPi7pIukHTiY5hadTzp4rUN6y3goU56z7tGb/L33FYkJAyE8A==}
+
   yallist@3.1.1:
     resolution: {integrity: sha512-a4UGQaWPH59mOXUYnAG2ewncQS4i4F43Tv3JoAM+s2VDAmS9NsK8GpDMLrCHPksFT7h3K6TOoUNn2pb7RoXx4g==}
 
@@ -2128,5 +2131,7 @@ snapshots:
       vite: 8.0.14(@types/node@25.9.1)(jiti@2.7.0)
 
   wus-unit-types@0.1.4: {}
+
+  wus-unit-types@0.2.1: {}
 
   yallist@3.1.1: {}
