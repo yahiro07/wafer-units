@@ -54,8 +54,8 @@ importers:
         specifier: ^8.0.12
         version: 8.0.14(@types/node@25.9.1)(jiti@2.7.0)
       wus-unit-types:
-        specifier: ^0.1.4
-        version: 0.1.4
+        specifier: ^0.2.1
+        version: 0.2.1
 
   packages/mini-synth:
     dependencies:
@@ -1298,9 +1298,6 @@ packages:
       vite:
         optional: true
 
-  wus-unit-types@0.1.4:
-    resolution: {integrity: sha512-R0ykq7KZ27TfXqhYdstIrqbeeOV4zvoe9CO48Yf9L1Bs18kMwkO0o5yn2DOrmVpDIz2pLPoWejWigTjtD4edSA==}
-
   wus-unit-types@0.2.1:
     resolution: {integrity: sha512-kWVdzYCd3eRSrm0MQb/o207jj+brTKLENR9P6SPi7pIukHTiY5hadTzp4rUN6y3goU56z7tGb/L33FYkJAyE8A==}
 
@@ -2129,8 +2126,6 @@ snapshots:
   vitefu@1.1.3(vite@8.0.14(@types/node@25.9.1)(jiti@2.7.0)):
     optionalDependencies:
       vite: 8.0.14(@types/node@25.9.1)(jiti@2.7.0)
-
-  wus-unit-types@0.1.4: {}
 
   wus-unit-types@0.2.1: {}
 
