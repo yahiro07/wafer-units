@@ -22,7 +22,7 @@ const driversInternal = {
   },
 };
 export const drivers = {
-  setupHostInterface() {
+  setupUnitInterface() {
     unitInterface?.completeSetupWithAttributes({
       unitFeatures: {
         type: "sequencer",
@@ -113,7 +113,7 @@ export const drivers = {
     });
   },
   setupAll() {
-    drivers.setupHostInterface();
+    drivers.setupUnitInterface();
     const unsubscribeStore = drivers.setupStateSynchronization();
     const closeMidiIn = drivers.setupMidiKeyboardInput();
     return () => {
