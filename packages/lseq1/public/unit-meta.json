@@ -1,8 +1,9 @@
 {
   "name": "lseq1",
   "unitType": "sequencer",
+  "categoryHint": "stepSequencer",
   "preferredSize": "530,320",
-  "unitTypesVersion": "0.1.4",
+  "unitTypesVersion": "0.2.1",
   "outputSignalTypes": "audio",
   "inputSignalTypes": "audio,state",
   "repositoryUrl": "https://github.com/yahiro07/wus-units",
