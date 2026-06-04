@@ -14,15 +14,22 @@ export const drivers = {
     sequencerEngine.processOnStep(stepIndex % 4);
     uiActions.setCurrentStepIndex(stepIndex % 4);
   },
-  setupHostInterface() {
-    if (unitInterface) {
-      unitInterface.declareUnitFeatures({
+  setupUnitInterface() {
+    unitInterface?.completeSetupWithAttributes({
+      unitFeatures: {
         type: "sequencer",
         categoryHint: "stepSequencer",
         outputs: ["note"],
         inputs: ["clock"],
-      });
-      unitInterface.setHostCallbacks({
+      },
+      primaryInputPortHandlers: {
+        clockInput: { processStep: drivers.wrapProcessStep },
+        stateInput: {
+          emitStateBytes: persistence.emitStateBytes,
+          applyStateBytes: persistence.loadStateBytes,
+        },
+      },
+      hostCallbacks: {
         setBpm(bpm) {
           uiActions.setBpm(bpm);
         },
@@ -32,16 +39,8 @@ export const drivers = {
             sequencerEngine.allNotesOff();
           }
         },
-      });
-      unitInterface.primaryInputPort.setHandlers({
-        clockInput: { processStep: drivers.wrapProcessStep },
-        stateInput: {
-          emitStateBytes: persistence.emitStateBytes,
-          applyStateBytes: persistence.loadStateBytes,
-        },
-      });
-      unitInterface.completeSetup();
-    }
+      },
+    });
   },
   setupTickDriver() {
     const tickDriver = createSequencerTickDriver();
@@ -68,7 +67,7 @@ export const drivers = {
     }
   },
   setupAll() {
-    drivers.setupHostInterface();
+    drivers.setupUnitInterface();
     drivers.setupTickDriver();
     drivers.setupMidiKeyboardInput();
   },
