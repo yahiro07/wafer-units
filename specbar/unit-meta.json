@@ -3,7 +3,7 @@
   "unitType": "effect",
   "categoryHint": "visualizer",
   "preferredSize": "350,55",
-  "unitTypesVersion": "0.2.1",
+  "unitTypesVersion": "0.2.2",
   "outputSignalTypes": "audio",
   "inputSignalTypes": "audio",
   "repositoryUrl": "https://github.com/yahiro07/wus-units",

@@ -3,7 +3,7 @@
   "unitType": "sequencer",
   "categoryHint": "stepSequencer",
   "preferredSize": "390,230",
-  "unitTypesVersion": "0.2.1",
+  "unitTypesVersion": "0.2.2",
   "outputSignalTypes": "note",
   "inputSignalTypes": "state",
   "repositoryUrl": "https://github.com/yahiro07/wus-units",

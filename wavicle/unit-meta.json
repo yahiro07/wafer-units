@@ -3,7 +3,7 @@
   "unitType": "instrument",
   "categoryHint": "synthesizer",
   "preferredSize": "700,394",
-  "unitTypesVersion": "0.2.1",
+  "unitTypesVersion": "0.2.2",
   "outputSignalTypes": "audio",
   "inputSignalTypes": "note",
   "repositoryUrl": "https://github.com/yahiro07/wus-units",
