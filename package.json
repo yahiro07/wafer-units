@@ -9,6 +9,6 @@
     }
   },
   "scripts": {
-    "build:all": "pnpm -r --if-present --filter './packages/*' build"
+    "build": "pnpm -r --if-present --filter './packages/*' build"
   }
 }
