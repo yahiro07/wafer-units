@@ -6,20 +6,21 @@ import { setupMidiKeyboardInput } from "@/utils/midi-keyboard-input";
 
 export function setupDrivers() {
   if (unitInterface) {
-    unitInterface.declareUnitFeatures({
-      type: "instrument",
-      categoryHint: "synthesizer",
-      outputs: ["audio"],
-      inputs: ["note", "state"],
-    });
-    unitInterface.primaryInputPort.setHandlers({
-      noteInput: {
-        noteOn: uiActions.noteOn,
-        noteOff: uiActions.noteOff,
+    unitInterface.completeSetupWithAttributes({
+      unitFeatures: {
+        type: "instrument",
+        categoryHint: "synthesizer",
+        outputs: ["audio"],
+        inputs: ["note", "state"],
       },
-      stateInput: persistence,
+      primaryInputPortHandlers: {
+        noteInput: {
+          noteOn: uiActions.noteOn,
+          noteOff: uiActions.noteOff,
+        },
+        stateInput: persistence,
+      },
     });
-    unitInterface.completeSetup();
   } else {
     const closeMidiIn = setupMidiKeyboardInput({
       noteOn(noteNumber) {

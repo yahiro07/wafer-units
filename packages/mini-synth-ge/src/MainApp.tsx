@@ -13,25 +13,26 @@ export const MainApp = () => {
   const engine = getAudioEngine();
 
   if (unitInterface) {
-    unitInterface.declareUnitFeatures({
-      type: "instrument",
-      categoryHint: "synthesizer",
-      outputs: ["audio"],
-      inputs: ["note", "state"],
-    });
-    unitInterface.primaryInputPort.setHandlers({
-      noteInput: {
-        async noteOn(note) {
-          await engine.resumeIfNeed();
-          engine.noteOn(note, 1);
-        },
-        noteOff(note) {
-          engine.noteOff(note);
-        },
+    unitInterface.completeSetupWithAttributes({
+      unitFeatures: {
+        type: "instrument",
+        categoryHint: "synthesizer",
+        outputs: ["audio"],
+        inputs: ["note", "state"],
       },
-      stateInput: persistence,
+      primaryInputPortHandlers: {
+        noteInput: {
+          async noteOn(note) {
+            await engine.resumeIfNeed();
+            engine.noteOn(note, 1);
+          },
+          noteOff(note) {
+            engine.noteOff(note);
+          },
+        },
+        stateInput: persistence,
+      },
     });
-    unitInterface.completeSetup();
   } else {
     const closeMidiIn = setupMidiKeyboardInput({
       async noteOn(note) {

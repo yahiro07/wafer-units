@@ -23,14 +23,14 @@ const driversInternal = {
 };
 export const drivers = {
   setupHostInterface() {
-    if (unitInterface) {
-      unitInterface.declareUnitFeatures({
+    unitInterface?.completeSetupWithAttributes({
+      unitFeatures: {
         type: "sequencer",
         categoryHint: "stepSequencer",
         outputs: ["note"],
-        inputs: ["note", "clock"],
-      });
-      unitInterface.primaryInputPort.setHandlers({
+        inputs: ["clock", "state"],
+      },
+      primaryInputPortHandlers: {
         clockInput: {
           start() {
             actions.setExPlaying(true);
@@ -44,14 +44,13 @@ export const drivers = {
           },
         },
         stateInput: persistence,
-      });
-      unitInterface.setHostCallbacks({
+      },
+      hostCallbacks: {
         setBpm(bpm) {
           actions.setBpm(bpm);
         },
-      });
-      unitInterface.completeSetup();
-    }
+      },
+    });
   },
   setupMidiKeyboardInput() {
     if (!unitInterface) {

@@ -13,20 +13,21 @@ import { mountAppRoot } from "@/utils/mount-app-root";
 const App = () => {
   onMount(() => {
     if (unitInterface) {
-      unitInterface.declareUnitFeatures({
-        type: "instrument",
-        categoryHint: "synthesizer",
-        outputs: ["audio"],
-        inputs: ["note", "state"],
-      });
-      unitInterface.primaryInputPort.setHandlers({
-        noteInput: {
-          noteOn: (note) => uiActions.noteOn(note, 1),
-          noteOff: (note) => uiActions.noteOff(note),
+      unitInterface.completeSetupWithAttributes({
+        unitFeatures: {
+          type: "instrument",
+          categoryHint: "synthesizer",
+          outputs: ["audio"],
+          inputs: ["note", "state"],
         },
-        stateInput: persistence,
+        primaryInputPortHandlers: {
+          noteInput: {
+            noteOn: (note) => uiActions.noteOn(note, 1),
+            noteOff: (note) => uiActions.noteOff(note),
+          },
+          stateInput: persistence,
+        },
       });
-      unitInterface.completeSetup();
     } else {
       const cleanup = setupMidiKeyboardInput({
         noteOn: (note) => uiActions.noteOn(note, 1),

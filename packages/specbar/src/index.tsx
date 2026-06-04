@@ -71,27 +71,28 @@ function setupUnitInstance() {
       }
     });
 
-    unitInterface.declareUnitFeatures({
-      type: "effect",
-      categoryHint: "effect",
-      outputs: ["audio"],
-      inputs: ["audio", "state"],
-    });
-    unitInterface.primaryInputPort.setHandlers({
-      stateInput: {
-        emitStateBytes() {
-          const dm = store.state.displayMode;
-          return new Uint8Array([dm]);
-        },
-        applyStateBytes(bytes) {
-          if (bytes.length === 1) {
-            const dm = bytes[0] > 0 ? 1 : 0;
-            store.setDisplayMode(dm);
-          }
+    unitInterface.completeSetupWithAttributes({
+      unitFeatures: {
+        type: "effect",
+        categoryHint: "effect",
+        outputs: ["audio"],
+        inputs: ["audio", "state"],
+      },
+      primaryInputPortHandlers: {
+        stateInput: {
+          emitStateBytes() {
+            const dm = store.state.displayMode;
+            return new Uint8Array([dm]);
+          },
+          applyStateBytes(bytes) {
+            if (bytes.length === 1) {
+              const dm = bytes[0] > 0 ? 1 : 0;
+              store.setDisplayMode(dm);
+            }
+          },
         },
       },
     });
-    unitInterface.completeSetup();
   }
 }
 setupUnitInstance();

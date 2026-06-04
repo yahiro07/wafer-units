@@ -19,25 +19,26 @@ export const uiActions = {
     synthAudio.updateParameters(appState.parameters);
 
     if (unitInterface) {
-      unitInterface.declareUnitFeatures({
-        type: "instrument",
-        categoryHint: "synthesizer",
-        outputs: ["audio"],
-        inputs: ["note", "state"],
-      });
-      unitInterface.primaryInputPort.setHandlers({
-        noteInput: {
-          async noteOn(noteNumber) {
-            await synthAudio.audioContext.resume();
-            synthAudio.noteOn(noteNumber, 1);
-          },
-          noteOff(noteNumber) {
-            synthAudio.noteOff(noteNumber);
-          },
+      unitInterface.completeSetupWithAttributes({
+        unitFeatures: {
+          type: "instrument",
+          categoryHint: "synthesizer",
+          outputs: ["audio"],
+          inputs: ["note", "state"],
         },
-        stateInput: persistence,
+        primaryInputPortHandlers: {
+          noteInput: {
+            async noteOn(noteNumber) {
+              await synthAudio.audioContext.resume();
+              synthAudio.noteOn(noteNumber, 1);
+            },
+            noteOff(noteNumber) {
+              synthAudio.noteOff(noteNumber);
+            },
+          },
+          stateInput: persistence,
+        },
       });
-      unitInterface.completeSetup();
     } else {
       return setupMidiKeyboardInput({
         connectionStateCallback(connected) {
