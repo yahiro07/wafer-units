@@ -56,9 +56,9 @@ function setupUnitInstance() {
     }, 16);
 
     const gainNode = audioContext.createGain();
-    unitInterface.audioSourceNode.connect(gainNode);
+    unitInterface.primaryInputPort.audioInput.node.connect(gainNode);
     gainNode.connect(analyzer);
-    analyzer.connect(unitInterface.audioDestinationNode);
+    analyzer.connect(unitInterface.primaryOutputPort.audioOutput.node);
 
     function updateGain(level: number) {
       gainNode.gain.value = mapKnobGainDb(level, 0.5);
@@ -71,14 +71,19 @@ function setupUnitInstance() {
       }
     });
 
-    unitInterface.setupUnitAgent({
+    unitInterface.declareUnitFeatures({
       type: "effect",
-      persistence: {
+      categoryHint: "effect",
+      outputs: ["audio"],
+      inputs: ["audio", "state"],
+    });
+    unitInterface.primaryInputPort.setHandlers({
+      stateInput: {
         emitStateBytes() {
           const dm = store.state.displayMode;
           return new Uint8Array([dm]);
         },
-        loadStateBytes(bytes) {
+        applyStateBytes(bytes) {
           if (bytes.length === 1) {
             const dm = bytes[0] > 0 ? 1 : 0;
             store.setDisplayMode(dm);
@@ -86,6 +91,7 @@ function setupUnitInstance() {
         },
       },
     });
+    unitInterface.completeSetup();
   }
 }
 setupUnitInstance();

@@ -1,5 +1,5 @@
 import { ReactNode, useState } from "react";
-import { HostInterface } from "wus-unit-types";
+import { UnitInterface } from "wus-unit-types";
 
 type DummyHost = {
   ControlComponent: () => ReactNode;
@@ -9,17 +9,31 @@ function createEngine() {
   const audioContext = new AudioContext();
   const audioSourceNode = audioContext.createGain();
 
-  const hostInterface: HostInterface = {
+  const unitInterface: UnitInterface = {
     audioContext,
-    audioDestinationNode: audioContext.destination,
-    audioSourceNode,
-    noteOutputPort: {
-      noteOn() {},
-      noteOff() {},
+    primaryOutputPort: {
+      audioOutput: { node: audioContext.destination },
+      noteOutput: {
+        noteOn() {},
+        noteOff() {},
+      },
+    } as unknown as UnitInterface["primaryOutputPort"],
+    primaryInputPort: {
+      audioInput: { node: audioSourceNode },
+      setCallbacks() {},
+      setHandlers() {},
     },
-    setupUnitAgent: () => {},
+    declareUnitFeatures() {},
+    completeSetup() {},
+    setHostCallbacks() {},
+    createMultiChannelOutputPorts() {
+      throw new Error(`unsupported`);
+    },
+    createMultiChannelInputPorts() {
+      throw new Error(`unsupported`);
+    },
   };
-  (window as any).hostInterface = hostInterface;
+  (window as any).unitInterface = unitInterface;
 
   let noiseSource: AudioBufferSourceNode | null = null;
 
