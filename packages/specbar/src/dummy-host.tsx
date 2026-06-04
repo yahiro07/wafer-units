@@ -23,7 +23,6 @@ function createEngine() {
       setCallbacks() {},
       setHandlers() {},
     },
-    declareUnitFeatures() {},
     completeSetup() {},
     completeSetupWithAttributes() {},
     setHostCallbacks() {},

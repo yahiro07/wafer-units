@@ -273,8 +273,8 @@ importers:
         specifier: ^8.0.12
         version: 8.0.14(@types/node@25.9.1)(jiti@2.7.0)
       wus-unit-types:
-        specifier: ^0.2.2
-        version: 0.2.2
+        specifier: ^0.2.3
+        version: 0.2.3
 
   packages/useq:
     dependencies:
@@ -1301,6 +1301,9 @@ packages:
   wus-unit-types@0.2.2:
     resolution: {integrity: sha512-VooOmkDoC1+fS04WzQhomGziYtSDZjsCswGt9tUKMX9Y4CIK+IkCfm1tiQ7X3D19bG1BxdIhuJzk0zvCyM0CRg==}
 
+  wus-unit-types@0.2.3:
+    resolution: {integrity: sha512-lgjT6+rvo4qKjeCYFlfM4RXfRip4Mw3GXJAdn9XMiVFUYUZ2OcDcPC9Y3GYZrynROZkUajsznxdNmtNxP9PHEw==}
+
   yallist@3.1.1:
     resolution: {integrity: sha512-a4UGQaWPH59mOXUYnAG2ewncQS4i4F43Tv3JoAM+s2VDAmS9NsK8GpDMLrCHPksFT7h3K6TOoUNn2pb7RoXx4g==}
 
@@ -2128,5 +2131,7 @@ snapshots:
       vite: 8.0.14(@types/node@25.9.1)(jiti@2.7.0)
 
   wus-unit-types@0.2.2: {}
+
+  wus-unit-types@0.2.3: {}
 
   yallist@3.1.1: {}
