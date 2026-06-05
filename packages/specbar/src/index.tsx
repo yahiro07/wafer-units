@@ -1,8 +1,8 @@
 import "./page.css";
-import "beams/ax-ui/utility-classes.css";
-import { mountAppRoot } from "beams/ax-react/mount-app-root";
-import { mapKnobGainDb } from "beams/mo-audio/map-knob-gain-db";
-import { ScalerBoxAutoSized } from "beams/mo-react/components/scaler-box-auto-sized";
+import "mofur/ax-ui/utility-classes.css";
+import { mountAppRoot } from "mofur/ax-react";
+import { mapKnobGainDb } from "mofur/mo-audio";
+import { ScalerBoxAutoSized } from "mofur/mo-react";
 import { createStore } from "snap-store";
 import { getUnitInterface } from "wus-unit-types";
 import { Knob } from "@/components/knob";

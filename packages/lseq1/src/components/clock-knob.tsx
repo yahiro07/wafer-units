@@ -1,4 +1,4 @@
-import { startDragSession } from "beams/ax-ui/drag-session";
+import { startDragSession } from "mofur/ax-ui";
 import { ReactNode } from "react";
 
 export function ClockKnobView({ tickAngle }: { tickAngle: number }) {

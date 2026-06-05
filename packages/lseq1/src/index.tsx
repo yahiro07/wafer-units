@@ -1,7 +1,7 @@
 import "./page.css";
-import "beams/ax-ui/utility-classes.css";
-import { seqNumbers } from "beams/ax/array-utils";
-import { mountAppRoot } from "beams/ax-react/mount-app-root";
+import "mofur/ax-ui/utility-classes.css";
+import { seqNumbers } from "mofur/ax";
+import { mountAppRoot } from "mofur/ax-react";
 import { ReactNode, useEffect } from "react";
 import { Button, FeButtonBox } from "@/components/button";
 import { ClockKnob } from "@/components/clock-knob";

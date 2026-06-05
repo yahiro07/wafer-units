@@ -1,4 +1,4 @@
-import { seqNumbers } from "beams/ax/array-utils";
+import { seqNumbers } from "mofur/ax";
 import { createStore } from "snap-store";
 import { LoopBars, SpecialStep, StepStride } from "@/types";
 

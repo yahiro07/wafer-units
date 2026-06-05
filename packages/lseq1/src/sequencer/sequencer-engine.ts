@@ -1,8 +1,8 @@
-import { clampValue } from "beams/ax/number-utils";
+import { clampValue } from "mofur/ax";
 import {
   createNoteVoicingDurationAdapter,
   createNoteVoicingMonophonicAdapter,
-} from "beams/mx-audio/note-voicing-adapter";
+} from "mofur/mx-audio";
 import { LoopBars, SpecialStep } from "@/types";
 
 type SequencerState = {

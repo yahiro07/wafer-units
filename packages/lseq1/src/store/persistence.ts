@@ -1,4 +1,4 @@
-import { pickObjectMembers } from "beams/ax/object-utils";
+import { pickObjectMembers } from "mofur/ax";
 import { PersistState, store } from "@/store/store";
 import { LoopBars, StepStride } from "@/types";
 

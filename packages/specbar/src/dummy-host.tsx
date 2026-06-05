@@ -23,9 +23,7 @@ function createEngine() {
       setCallbacks() {},
       setHandlers() {},
     },
-    completeSetup() {},
     completeSetupWithAttributes() {},
-    setHostCallbacks() {},
     createMultiChannelOutputPorts() {
       throw new Error(`unsupported`);
     },

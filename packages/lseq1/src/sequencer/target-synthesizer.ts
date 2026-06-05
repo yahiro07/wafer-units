@@ -1,4 +1,4 @@
-import { createTestSynthesizer } from "beams/mx-audio/test-synthesizer";
+import { createTestSynthesizer } from "mofur/mx-audio";
 import { getUnitInterface } from "wus-unit-types";
 
 export const unitInterface = getUnitInterface();

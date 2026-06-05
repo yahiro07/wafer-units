@@ -1,5 +1,5 @@
-import { seqNumbers } from "beams/ax/array-utils";
-import { npx } from "beams/ax-ui/styling-utils";
+import { seqNumbers } from "mofur/ax";
+import { npx } from "mofur/ax-ui";
 
 const configs = {
   defaultKeyWidth: 20,

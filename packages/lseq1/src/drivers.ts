@@ -1,5 +1,7 @@
-import { setupMidiKeyboardInput } from "beams/mx-audio/midi-keyboard-input";
-import { createSequencerTickDriver } from "beams/mx-audio/sequencer-tick-driver";
+import {
+  createSequencerTickDriver,
+  setupMidiKeyboardInput,
+} from "mofur/mx-audio";
 import { createSequencerEngine } from "@/sequencer/sequencer-engine";
 import {
   createTargetSynthesizer,
