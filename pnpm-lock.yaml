@@ -209,8 +209,8 @@ importers:
         specifier: ^25.7.0
         version: 25.9.1
       mofus:
-        specifier: ../../../beam/mofus
-        version: link:../../../beam/mofus
+        specifier: ^0.1.0
+        version: 0.1.0(solid-js@1.9.13)
       tailwindcss:
         specifier: ^4.3.0
         version: 4.3.0
@@ -292,8 +292,8 @@ importers:
         specifier: ^25.7.0
         version: 25.9.1
       mofus:
-        specifier: ../../../beam/mofus
-        version: link:../../../beam/mofus
+        specifier: ^0.1.0
+        version: 0.1.0(solid-js@1.9.13)
       tailwindcss:
         specifier: ^4.3.0
         version: 4.3.0
@@ -1048,6 +1048,11 @@ packages:
     peerDependencies:
       react: ^19.0.0
       react-dom: ^19.0.0
+
+  mofus@0.1.0:
+    resolution: {integrity: sha512-WnKVC0iCKeprcCFOvI5aXDRk1deiw3tx4SSqA4jwb76hp3m49e/fh/2UezyQAXAwPwD7VmRFdJxifoKLNbM8Wg==}
+    peerDependencies:
+      solid-js: ^1.9.12
 
   mr-parser@0.2.2:
     resolution: {integrity: sha512-9pMgttJp8pZtiYfoHkhBc9ncOHKmEwLMNBQpS/ZXgj4ORnPMKznYR0lZ1We3ZrD71RevQ34hKyKzDV1p/agXuw==}
@@ -1903,6 +1908,10 @@ snapshots:
     dependencies:
       react: 19.2.6
       react-dom: 19.2.6(react@19.2.6)
+
+  mofus@0.1.0(solid-js@1.9.13):
+    dependencies:
+      solid-js: 1.9.13
 
   mr-parser@0.2.2: {}
 

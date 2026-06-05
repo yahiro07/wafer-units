@@ -28,6 +28,6 @@
     "typescript": "~6.0.3",
     "vite": "^8.0.12",
     "vite-plugin-solid": "^2.11.12",
-    "mofus": "../../../beam/mofus"
+    "mofus": "^0.1.0"
   }
 }
