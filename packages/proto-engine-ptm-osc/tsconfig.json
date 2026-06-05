@@ -14,7 +14,7 @@
       "audioworklet"
     ],
     "jsx": "react-jsx",
-    "jsxImportSource": "solid-js/h",
+    "jsxImportSource": "solid-js",
     "strict": true,
     "ignoreDeprecations": "6.0",
     "noEmit": true,

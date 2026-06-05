@@ -13,7 +13,7 @@
       "vite/client",
     ],
     "jsx": "react-jsx",
-    "jsxImportSource": "solid-js/h",
+    "jsxImportSource": "solid-js",
     "strict": true,
     "noEmit": true,
     "skipLibCheck": true,
@@ -25,11 +25,6 @@
     }
   },
   "include": [
-    "src",
-    "node_modules/mofus/**/*"
-  ],
-  "exclude": [
-    "node_modules/mofus/ax-react/**/*",
-    "node_modules/mofus/mo-react/**/*"
+    "src"
   ]
 }
