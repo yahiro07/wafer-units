@@ -1,5 +1,5 @@
-import { clampValue, mapUnaryTo } from "beams/ax/number-utils";
-import { midiToFrequency, power2 } from "beams/mo-synthesis/synth-math-utils";
+import { clampValue, mapUnaryTo } from "mofus/ax";
+import { midiToFrequency, power2 } from "mofus/mo-synthesis";
 import { createEffectWrapper } from "@/synthesis/effect-wrapper";
 
 export function createHighPassFilterBlock(

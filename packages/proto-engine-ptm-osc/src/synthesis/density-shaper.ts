@@ -1,5 +1,5 @@
-import { mapUnaryTo } from "beams/ax/number-utils";
-import { tunableSigmoid } from "beams/mo-synthesis/synth-math-utils";
+import { mapUnaryTo } from "mofus/ax";
+import { tunableSigmoid } from "mofus/mo-synthesis";
 import { createEffectWrapper } from "@/synthesis/effect-wrapper";
 import { createShaperCurveBufferCache } from "@/synthesis/shaper-curve-buffer-cache";
 

@@ -1,4 +1,4 @@
-import { seqNumbers } from "beams/ax/array-utils";
+import { seqNumbers } from "mofus/ax";
 
 export function createShaperCurveBufferCache(
   size: number,

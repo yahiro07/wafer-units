@@ -1,15 +1,11 @@
-import { seqNumbers } from "beams/ax/array-utils";
 import {
   clampValue,
   linearInterpolate,
   mapUnaryTo,
   mixValue,
-} from "beams/ax/number-utils";
-import {
-  fracPart,
-  invPower2,
-  power2,
-} from "beams/mo-synthesis/synth-math-utils";
+  seqNumbers,
+} from "mofus/ax";
+import { fracPart, invPower2, power2 } from "mofus/mo-synthesis";
 
 type PhaseTweakFn = (phase: number, prColor: number) => [number, number];
 

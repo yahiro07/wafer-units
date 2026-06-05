@@ -1,4 +1,4 @@
-import { KnobFrame } from "beams/mo-solid/components/knob-frame";
+import { KnobFrame } from "mofus/mo-solid";
 import { JSXElement, mergeProps } from "solid-js";
 import { ParameterRow } from "./parameter-row";
 

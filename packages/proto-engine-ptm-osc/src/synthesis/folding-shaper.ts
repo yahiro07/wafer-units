@@ -1,4 +1,4 @@
-import { power2 } from "beams/mo-synthesis/synth-math-utils";
+import { power2 } from "mofus/mo-synthesis";
 import { createEffectWrapper } from "@/synthesis/effect-wrapper";
 import { createShaperCurveBufferCache } from "@/synthesis/shaper-curve-buffer-cache";
 

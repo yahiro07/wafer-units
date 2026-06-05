@@ -1,4 +1,4 @@
-import { setupMidiKeyboardInput } from "beams/mx-audio/midi-keyboard-input";
+import { setupMidiKeyboardInput } from "mofus/mx-audio";
 import { onCleanup } from "solid-js";
 import { getUnitInterface } from "wus-unit-types";
 import { uiActions } from "@/actions";

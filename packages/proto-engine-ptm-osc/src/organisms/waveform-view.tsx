@@ -1,6 +1,5 @@
-import { seqNumbers } from "beams/ax/array-utils";
-import { highClip } from "beams/ax/number-utils";
-import { readBufferInterpolated } from "beams/mo-synthesis/synth-buffer-utils";
+import { highClip, seqNumbers } from "mofus/ax";
+import { readBufferInterpolated } from "mofus/mo-synthesis";
 import { createMemo } from "solid-js";
 import { fillShaperCurveBuffer } from "@/synthesis/ptm";
 import { createShaperCurveBufferCache } from "@/synthesis/shaper-curve-buffer-cache";

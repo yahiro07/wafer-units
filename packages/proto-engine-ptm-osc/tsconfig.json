@@ -14,7 +14,7 @@
       "audioworklet"
     ],
     "jsx": "react-jsx",
-    "jsxImportSource": "solid-js",
+    "jsxImportSource": "solid-js/h",
     "strict": true,
     "ignoreDeprecations": "6.0",
     "noEmit": true,
@@ -26,11 +26,6 @@
     }
   },
   "include": [
-    "src",
-    "node_modules/beams/**/*"
+    "src"
   ],
-  "exclude": [
-    "node_modules/beams/ax-react/**/*",
-    "node_modules/beams/mo-react/**/*"
-  ]
 }

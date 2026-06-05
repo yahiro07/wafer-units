@@ -1,6 +1,6 @@
 import "./page.css";
-import "beams/ax-ui/utility-classes.css";
-import { mountAppRoot } from "beams/ax-solid/mount-app-root";
+import "mofus/ax-ui/utility-classes.css";
+import { mountAppRoot } from "mofus/ax-solid";
 import { setupDrivers } from "@/drivers";
 import { MainView } from "@/sections/main-view";
 

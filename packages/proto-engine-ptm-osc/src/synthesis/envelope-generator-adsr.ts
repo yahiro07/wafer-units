@@ -1,5 +1,5 @@
-import { lowClip } from "beams/ax/number-utils";
-import { power2 } from "beams/mo-synthesis/synth-math-utils";
+import { lowClip } from "mofus/ax";
+import { power2 } from "mofus/mo-synthesis";
 
 export function createEnvelopeGeneratorADSR(
   audioContext: AudioContext,

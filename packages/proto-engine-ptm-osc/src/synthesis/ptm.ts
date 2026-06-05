@@ -1,5 +1,4 @@
-import { removeDcOffsetInBuffer } from "beams/mo-synthesis/synth-buffer-utils";
-import { tunableSigmoid } from "beams/mo-synthesis/synth-math-utils";
+import { removeDcOffsetInBuffer, tunableSigmoid } from "mofus/mo-synthesis";
 import { OscWave } from "@/definitions/parameters";
 import { getOscWaveformPdSaw } from "@/synthesis/pd-saw";
 import { phaseTweakers } from "@/synthesis/phase-tweakers";

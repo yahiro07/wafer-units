@@ -208,9 +208,9 @@ importers:
       '@types/node':
         specifier: ^25.7.0
         version: 25.9.1
-      beams:
-        specifier: github:yahiro07/beam#0.1.4&path:/beams
-        version: https://codeload.github.com/yahiro07/beam/tar.gz/cb5bbf50b9a4bc1d3e837358fce084df3dc30a39#path:/beams(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(solid-js@1.9.13)
+      mofus:
+        specifier: ../../../beam/mofus
+        version: link:../../../beam/mofus
       tailwindcss:
         specifier: ^4.3.0
         version: 4.3.0
@@ -713,23 +713,6 @@ packages:
     resolution: {integrity: sha512-wbPvpyjJPC0zdfdKXxqEL3Ea+bOMD/87X4lftiJkkaBiuG6ALQy1SLmEd7BSmVCuwCQsBrCamgBoLyfFDD1EPg==}
     engines: {node: '>=6.0.0'}
     hasBin: true
-
-  beams@https://codeload.github.com/yahiro07/beam/tar.gz/cb5bbf50b9a4bc1d3e837358fce084df3dc30a39#path:/beams:
-    resolution: {path: /beams, tarball: https://codeload.github.com/yahiro07/beam/tar.gz/cb5bbf50b9a4bc1d3e837358fce084df3dc30a39}
-    version: 0.0.0
-    peerDependencies:
-      '@types/react': ^19.2.14
-      '@types/react-dom': ^19.2.3
-      react: '*'
-      react-dom: '*'
-      solid-js: ^1.9.12
-    peerDependenciesMeta:
-      react:
-        optional: true
-      react-dom:
-        optional: true
-      solid-js:
-        optional: true
 
   binary-extensions@2.3.0:
     resolution: {integrity: sha512-Ceh+7ox5qe7LJuLHoY0feh3pHuUDHAcRUeyL2VYghZwfpkNIy/+8Ocg0a3UuSoYzavmylwuLWQOf3hl0jjMMIw==}
@@ -1632,13 +1615,6 @@ snapshots:
       solid-js: 1.9.13
 
   baseline-browser-mapping@2.10.32: {}
-
-  beams@https://codeload.github.com/yahiro07/beam/tar.gz/cb5bbf50b9a4bc1d3e837358fce084df3dc30a39#path:/beams(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(solid-js@1.9.13):
-    dependencies:
-      '@types/react': 19.2.15
-      '@types/react-dom': 19.2.3(@types/react@19.2.15)
-    optionalDependencies:
-      solid-js: 1.9.13
 
   binary-extensions@2.3.0: {}
 

@@ -1,4 +1,4 @@
-import { midiToFrequency, power2 } from "beams/mo-synthesis/synth-math-utils";
+import { midiToFrequency, power2 } from "mofus/mo-synthesis";
 import { getUnitInterface } from "wus-unit-types";
 import {
   createSynthParameters,
