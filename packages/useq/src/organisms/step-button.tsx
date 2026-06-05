@@ -1,4 +1,4 @@
-import { iife } from "beams/ax/general-utils";
+import { iife } from "mofus/ax";
 import { JSX } from "solid-js/jsx-runtime";
 import { Icons } from "@/components/icons";
 import { StepCode } from "@/sequencer/sequencer-engine";

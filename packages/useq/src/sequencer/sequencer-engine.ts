@@ -1,4 +1,4 @@
-import { createNoteVoicingDurationAdapter } from "beams/mx-audio/note-voicing-adapter";
+import { createNoteVoicingDurationAdapter } from "mofus/mx-audio";
 
 export type StepCode = "on" | "off" | "tie";
 

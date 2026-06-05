@@ -1,6 +1,6 @@
 import "./page.css";
-import "beams/ax-ui/utility-classes.css";
-import { mountAppRoot } from "beams/ax-solid/mount-app-root";
+import "mofus/ax-ui/utility-classes.css";
+import { mountAppRoot } from "mofus/ax-solid";
 import { Button } from "@/components/button";
 import { Icons } from "@/components/icons";
 import { Knob } from "@/components/knob";

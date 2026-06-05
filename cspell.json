@@ -3,6 +3,8 @@
     "webaudio",
     "mofur",
     "lseq",
-    "specbar"
+    "specbar",
+    "mofus",
+    "audioworklet"
   ]
 }
