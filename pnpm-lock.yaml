@@ -41,9 +41,9 @@ importers:
       '@vitejs/plugin-react':
         specifier: ^6.0.1
         version: 6.0.2(vite@8.0.14(@types/node@25.9.1)(jiti@2.7.0))
-      beams:
-        specifier: github:yahiro07/beam#0.1.5&path:/beams
-        version: https://codeload.github.com/yahiro07/beam/tar.gz/a33eef46f72a19ed8fb2942412cf883c271c1474#path:/beams(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(solid-js@1.9.13)
+      mofur:
+        specifier: ^0.1.0
+        version: 0.1.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       tailwindcss:
         specifier: ^4.3.0
         version: 4.3.0
@@ -208,9 +208,9 @@ importers:
       '@types/node':
         specifier: ^25.7.0
         version: 25.9.1
-      beams:
-        specifier: github:yahiro07/beam#0.1.4&path:/beams
-        version: https://codeload.github.com/yahiro07/beam/tar.gz/cb5bbf50b9a4bc1d3e837358fce084df3dc30a39#path:/beams(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(solid-js@1.9.13)
+      mofur:
+        specifier: ^0.1.0
+        version: 0.1.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       tailwindcss:
         specifier: ^4.3.0
         version: 4.3.0
@@ -260,9 +260,9 @@ importers:
       '@vitejs/plugin-react':
         specifier: ^6.0.1
         version: 6.0.2(vite@8.0.14(@types/node@25.9.1)(jiti@2.7.0))
-      beams:
-        specifier: github:yahiro07/beam#0.1.3&path:/beams
-        version: https://codeload.github.com/yahiro07/beam/tar.gz/fc7e58397a77f7f6ba37810f1ba6998972764ef1#path:/beams(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(solid-js@1.9.13)
+      mofur:
+        specifier: ^0.1.0
+        version: 0.1.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       tailwindcss:
         specifier: ^4.3.0
         version: 4.3.0
@@ -291,9 +291,9 @@ importers:
       '@types/node':
         specifier: ^25.7.0
         version: 25.9.1
-      beams:
-        specifier: github:yahiro07/beam#0.1.3&path:/beams
-        version: https://codeload.github.com/yahiro07/beam/tar.gz/fc7e58397a77f7f6ba37810f1ba6998972764ef1#path:/beams(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(solid-js@1.9.13)
+      mofur:
+        specifier: ^0.1.0
+        version: 0.1.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       tailwindcss:
         specifier: ^4.3.0
         version: 4.3.0
@@ -714,57 +714,6 @@ packages:
     engines: {node: '>=6.0.0'}
     hasBin: true
 
-  beams@https://codeload.github.com/yahiro07/beam/tar.gz/a33eef46f72a19ed8fb2942412cf883c271c1474#path:/beams:
-    resolution: {path: /beams, tarball: https://codeload.github.com/yahiro07/beam/tar.gz/a33eef46f72a19ed8fb2942412cf883c271c1474}
-    version: 0.0.0
-    peerDependencies:
-      '@types/react': ^19.2.14
-      '@types/react-dom': ^19.2.3
-      react: '*'
-      react-dom: '*'
-      solid-js: ^1.9.12
-    peerDependenciesMeta:
-      react:
-        optional: true
-      react-dom:
-        optional: true
-      solid-js:
-        optional: true
-
-  beams@https://codeload.github.com/yahiro07/beam/tar.gz/cb5bbf50b9a4bc1d3e837358fce084df3dc30a39#path:/beams:
-    resolution: {path: /beams, tarball: https://codeload.github.com/yahiro07/beam/tar.gz/cb5bbf50b9a4bc1d3e837358fce084df3dc30a39}
-    version: 0.0.0
-    peerDependencies:
-      '@types/react': ^19.2.14
-      '@types/react-dom': ^19.2.3
-      react: '*'
-      react-dom: '*'
-      solid-js: ^1.9.12
-    peerDependenciesMeta:
-      react:
-        optional: true
-      react-dom:
-        optional: true
-      solid-js:
-        optional: true
-
-  beams@https://codeload.github.com/yahiro07/beam/tar.gz/fc7e58397a77f7f6ba37810f1ba6998972764ef1#path:/beams:
-    resolution: {path: /beams, tarball: https://codeload.github.com/yahiro07/beam/tar.gz/fc7e58397a77f7f6ba37810f1ba6998972764ef1}
-    version: 0.0.0
-    peerDependencies:
-      '@types/react': ^19.2.14
-      '@types/react-dom': ^19.2.3
-      react: '*'
-      react-dom: '*'
-      solid-js: ^1.9.12
-    peerDependenciesMeta:
-      react:
-        optional: true
-      react-dom:
-        optional: true
-      solid-js:
-        optional: true
-
   binary-extensions@2.3.0:
     resolution: {integrity: sha512-Ceh+7ox5qe7LJuLHoY0feh3pHuUDHAcRUeyL2VYghZwfpkNIy/+8Ocg0a3UuSoYzavmylwuLWQOf3hl0jjMMIw==}
     engines: {node: '>=8'}
@@ -1093,6 +1042,12 @@ packages:
   merge-anything@5.1.7:
     resolution: {integrity: sha512-eRtbOb1N5iyH0tkQDAoQ4Ipsp/5qSR79Dzrz8hEPxRX10RWWR/iQXdoKmBSRCThY1Fh5EhISDtpSc93fpxUniQ==}
     engines: {node: '>=12.13'}
+
+  mofur@0.1.0:
+    resolution: {integrity: sha512-JATwm1btgZ3Jl1O5GZXHYkDpJZtf1Xzw/4wydg3MnUsAfb12eZe+1VAcufv/I0jK/omgKjI7WqNIfOtxHcsjWQ==}
+    peerDependencies:
+      react: ^19.0.0
+      react-dom: ^19.0.0
 
   mr-parser@0.2.2:
     resolution: {integrity: sha512-9pMgttJp8pZtiYfoHkhBc9ncOHKmEwLMNBQpS/ZXgj4ORnPMKznYR0lZ1We3ZrD71RevQ34hKyKzDV1p/agXuw==}
@@ -1661,31 +1616,6 @@ snapshots:
 
   baseline-browser-mapping@2.10.32: {}
 
-  beams@https://codeload.github.com/yahiro07/beam/tar.gz/a33eef46f72a19ed8fb2942412cf883c271c1474#path:/beams(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(solid-js@1.9.13):
-    dependencies:
-      '@types/react': 19.2.15
-      '@types/react-dom': 19.2.3(@types/react@19.2.15)
-    optionalDependencies:
-      react: 19.2.6
-      react-dom: 19.2.6(react@19.2.6)
-      solid-js: 1.9.13
-
-  beams@https://codeload.github.com/yahiro07/beam/tar.gz/cb5bbf50b9a4bc1d3e837358fce084df3dc30a39#path:/beams(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(solid-js@1.9.13):
-    dependencies:
-      '@types/react': 19.2.15
-      '@types/react-dom': 19.2.3(@types/react@19.2.15)
-    optionalDependencies:
-      solid-js: 1.9.13
-
-  beams@https://codeload.github.com/yahiro07/beam/tar.gz/fc7e58397a77f7f6ba37810f1ba6998972764ef1#path:/beams(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(solid-js@1.9.13):
-    dependencies:
-      '@types/react': 19.2.15
-      '@types/react-dom': 19.2.3(@types/react@19.2.15)
-    optionalDependencies:
-      react: 19.2.6
-      react-dom: 19.2.6(react@19.2.6)
-      solid-js: 1.9.13
-
   binary-extensions@2.3.0: {}
 
   braces@3.0.3:
@@ -1968,6 +1898,11 @@ snapshots:
   merge-anything@5.1.7:
     dependencies:
       is-what: 4.1.16
+
+  mofur@0.1.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6):
+    dependencies:
+      react: 19.2.6
+      react-dom: 19.2.6(react@19.2.6)
 
   mr-parser@0.2.2: {}
 
