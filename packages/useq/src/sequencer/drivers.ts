@@ -25,7 +25,16 @@ export const drivers = {
         inputs: ["clock"],
       },
       primaryInputPortHandlers: {
-        clockInput: { processStep: drivers.wrapProcessStep },
+        clockInput: {
+          start() {
+            uiActions.setExPlaying(true);
+          },
+          stop() {
+            uiActions.setExPlaying(false);
+            sequencerEngine.allNotesOff();
+          },
+          processStep: drivers.wrapProcessStep,
+        },
         stateInput: {
           emitStateBytes: persistence.emitStateBytes,
           applyStateBytes: persistence.applyStateBytes,
@@ -34,12 +43,6 @@ export const drivers = {
       hostCallbacks: {
         setBpm(bpm) {
           uiActions.setBpm(bpm);
-        },
-        setPlayState(playing) {
-          uiActions.setExPlaying(playing);
-          if (!playing) {
-            sequencerEngine.allNotesOff();
-          }
         },
       },
     });
