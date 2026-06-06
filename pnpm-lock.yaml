@@ -36,7 +36,7 @@ importers:
         specifier: ^2.11.12
         version: 2.11.12(solid-js@1.9.13)(vite@8.0.14(@types/node@25.9.1)(jiti@2.7.0))
       wus-unit-types:
-        specifier: ^0.2.2
+        specifier: ^0.2.4
         version: 0.2.4
 
   packages/lseq1:

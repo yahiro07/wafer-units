@@ -17,9 +17,9 @@ export const drivers = {
     uiActions.setCurrentStepIndex(stepIndex % 4);
   },
   setupUnitInterface() {
-    unitInterface?.completeSetupWithAttributes({
-      unitFeatures: {
-        type: "sequencer",
+    unitInterface?.completeSetup({
+      unitAspects: {
+        unitType: "sequencer",
         categoryHint: "stepSequencer",
         outputs: ["note"],
         inputs: ["clock"],

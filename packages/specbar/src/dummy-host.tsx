@@ -20,10 +20,9 @@ function createEngine() {
     } as unknown as UnitInterface["primaryOutputPort"],
     primaryInputPort: {
       audioInput: { node: audioSourceNode },
-      setCallbacks() {},
       setHandlers() {},
     },
-    completeSetupWithAttributes() {},
+    completeSetup() {},
     createMultiChannelOutputPorts() {
       throw new Error(`unsupported`);
     },

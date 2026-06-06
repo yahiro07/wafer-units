@@ -12,7 +12,7 @@ import {
   mapUnaryTo,
 } from "@/utils/number-utils";
 
-export const unitInterface = getUnitInterface();
+export const unitInterface = getUnitInterface("wus-v02");
 
 const allWaveTypes: OscillatorType[] = [
   "sawtooth",

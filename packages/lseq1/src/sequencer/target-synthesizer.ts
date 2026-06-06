@@ -1,7 +1,7 @@
 import { createTestSynthesizer } from "mofur/mx-audio";
 import { getUnitInterface } from "wus-unit-types";
 
-export const unitInterface = getUnitInterface();
+export const unitInterface = getUnitInterface("wus-v02");
 
 export function createTargetSynthesizer() {
   if (unitInterface) {
