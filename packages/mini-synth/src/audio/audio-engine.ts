@@ -4,7 +4,7 @@ import type { SynthParams } from "./synth-params";
 import { defaultParams } from "./synth-params";
 import { createVoice, type Voice } from "./voice";
 
-export const unitInterface = getUnitInterface();
+export const unitInterface = getUnitInterface("wus-v02");
 
 function midiNoteToFrequency(note: number): number {
   return 440 * Math.pow(2, (note - 69) / 12);

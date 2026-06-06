@@ -17,29 +17,32 @@ export const drivers = {
     uiActions.setCurrentStepIndex(stepIndex % 4);
   },
   setupUnitInterface() {
-    unitInterface?.completeSetupWithAttributes({
-      unitFeatures: {
-        type: "sequencer",
+    unitInterface?.completeSetup({
+      unitAspects: {
+        unitType: "sequencer",
         categoryHint: "stepSequencer",
         outputs: ["note"],
         inputs: ["clock"],
       },
       primaryInputPortHandlers: {
-        clockInput: { processStep: drivers.wrapProcessStep },
+        clockInput: {
+          start() {
+            uiActions.setExPlaying(true);
+          },
+          stop() {
+            uiActions.setExPlaying(false);
+            sequencerEngine.allNotesOff();
+          },
+          processStep: drivers.wrapProcessStep,
+        },
         stateInput: {
           emitStateBytes: persistence.emitStateBytes,
-          applyStateBytes: persistence.loadStateBytes,
+          applyStateBytes: persistence.applyStateBytes,
         },
       },
       hostCallbacks: {
         setBpm(bpm) {
           uiActions.setBpm(bpm);
-        },
-        setPlayState(playing) {
-          uiActions.setExPlaying(playing);
-          if (!playing) {
-            sequencerEngine.allNotesOff();
-          }
         },
       },
     });

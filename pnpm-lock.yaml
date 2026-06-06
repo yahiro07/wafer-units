@@ -6,13 +6,44 @@ settings:
 
 importers:
 
-  .: {}
-
-  packages/lseq1:
-    dependencies:
+  .:
+    devDependencies:
+      '@tailwindcss/vite':
+        specifier: ^4.3.0
+        version: 4.3.0(vite@8.0.14(@types/node@25.9.1)(jiti@2.7.0))
+      '@types/audioworklet':
+        specifier: ^0.0.100
+        version: 0.0.100
+      '@types/node':
+        specifier: ^25.7.0
+        version: 25.9.1
+      '@vitejs/plugin-react':
+        specifier: ^6.0.1
+        version: 6.0.2(vite@8.0.14(@types/node@25.9.1)(jiti@2.7.0))
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
+      tailwindcss:
+        specifier: ^4.3.0
+        version: 4.3.0
+      typescript:
+        specifier: ~6.0.3
+        version: 6.0.3
+      vite:
+        specifier: ^8.0.12
+        version: 8.0.14(@types/node@25.9.1)(jiti@2.7.0)
+      vite-plugin-solid:
+        specifier: ^2.11.12
+        version: 2.11.12(solid-js@1.9.13)(vite@8.0.14(@types/node@25.9.1)(jiti@2.7.0))
+      wus-unit-types:
+        specifier: ^0.2.4
+        version: 0.2.4
+
+  packages/lseq1:
+    dependencies:
+      mofur:
+        specifier: ^0.1.0
+        version: 0.1.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       react:
         specifier: ^19.2.6
         version: 19.2.6
@@ -26,36 +57,12 @@ importers:
         specifier: ^0.1.6
         version: 0.1.6(react@19.2.6)
     devDependencies:
-      '@tailwindcss/vite':
-        specifier: ^4.3.0
-        version: 4.3.0(vite@8.0.14(@types/node@25.9.1)(jiti@2.7.0))
-      '@types/node':
-        specifier: ^25.7.0
-        version: 25.9.1
       '@types/react':
         specifier: ^19.2.14
         version: 19.2.15
       '@types/react-dom':
         specifier: ^19.2.3
         version: 19.2.3(@types/react@19.2.15)
-      '@vitejs/plugin-react':
-        specifier: ^6.0.1
-        version: 6.0.2(vite@8.0.14(@types/node@25.9.1)(jiti@2.7.0))
-      mofur:
-        specifier: ^0.1.0
-        version: 0.1.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
-      tailwindcss:
-        specifier: ^4.3.0
-        version: 4.3.0
-      typescript:
-        specifier: ~6.0.3
-        version: 6.0.3
-      vite:
-        specifier: ^8.0.12
-        version: 8.0.14(@types/node@25.9.1)(jiti@2.7.0)
-      wus-unit-types:
-        specifier: ^0.2.2
-        version: 0.2.2
 
   packages/mini-synth:
     dependencies:
@@ -65,28 +72,6 @@ importers:
       solid-js:
         specifier: ^1.9.12
         version: 1.9.13
-    devDependencies:
-      '@tailwindcss/vite':
-        specifier: ^4.3.0
-        version: 4.3.0(vite@8.0.14(@types/node@25.9.1)(jiti@2.7.0))
-      '@types/node':
-        specifier: ^25.7.0
-        version: 25.9.1
-      tailwindcss:
-        specifier: ^4.3.0
-        version: 4.3.0
-      typescript:
-        specifier: ~6.0.3
-        version: 6.0.3
-      vite:
-        specifier: ^8.0.12
-        version: 8.0.14(@types/node@25.9.1)(jiti@2.7.0)
-      vite-plugin-solid:
-        specifier: ^2.11.12
-        version: 2.11.12(solid-js@1.9.13)(vite@8.0.14(@types/node@25.9.1)(jiti@2.7.0))
-      wus-unit-types:
-        specifier: ^0.2.2
-        version: 0.2.2
 
   packages/mini-synth-ge:
     dependencies:
@@ -96,28 +81,6 @@ importers:
       solid-js:
         specifier: ^1.9.12
         version: 1.9.13
-    devDependencies:
-      '@tailwindcss/vite':
-        specifier: ^4.3.0
-        version: 4.3.0(vite@8.0.14(@types/node@25.9.1)(jiti@2.7.0))
-      '@types/node':
-        specifier: ^25.7.0
-        version: 25.9.1
-      tailwindcss:
-        specifier: ^4.3.0
-        version: 4.3.0
-      typescript:
-        specifier: ~6.0.3
-        version: 6.0.3
-      vite:
-        specifier: ^8.0.12
-        version: 8.0.14(@types/node@25.9.1)(jiti@2.7.0)
-      vite-plugin-solid:
-        specifier: ^2.11.12
-        version: 2.11.12(solid-js@1.9.13)(vite@8.0.14(@types/node@25.9.1)(jiti@2.7.0))
-      wus-unit-types:
-        specifier: ^0.2.2
-        version: 0.2.2
 
   packages/mini-synth-gp:
     dependencies:
@@ -127,111 +90,36 @@ importers:
       solid-js:
         specifier: ^1.9.12
         version: 1.9.13
-    devDependencies:
-      '@tailwindcss/vite':
-        specifier: ^4.3.0
-        version: 4.3.0(vite@8.0.14(@types/node@25.9.1)(jiti@2.7.0))
-      '@types/node':
-        specifier: ^25.7.0
-        version: 25.9.1
-      tailwindcss:
-        specifier: ^4.3.0
-        version: 4.3.0
-      typescript:
-        specifier: ~6.0.3
-        version: 6.0.3
-      vite:
-        specifier: ^8.0.12
-        version: 8.0.14(@types/node@25.9.1)(jiti@2.7.0)
-      vite-plugin-solid:
-        specifier: ^2.11.12
-        version: 2.11.12(solid-js@1.9.13)(vite@8.0.14(@types/node@25.9.1)(jiti@2.7.0))
-      wus-unit-types:
-        specifier: ^0.2.2
-        version: 0.2.2
 
   packages/proto-engine-pd-fm:
     dependencies:
-      function-plot:
-        specifier: ^1.25.4
-        version: 1.25.4
       solid-icons:
         specifier: ^1.2.0
         version: 1.2.0(solid-js@1.9.13)
       solid-js:
         specifier: ^1.9.12
         version: 1.9.13
-    devDependencies:
-      '@tailwindcss/vite':
-        specifier: ^4.3.0
-        version: 4.3.0(vite@8.0.14(@types/node@25.9.1)(jiti@2.7.0))
-      '@types/audioworklet':
-        specifier: ^0.0.100
-        version: 0.0.100
-      '@types/node':
-        specifier: ^25.7.0
-        version: 25.9.1
-      tailwindcss:
-        specifier: ^4.3.0
-        version: 4.3.0
-      typescript:
-        specifier: ~6.0.3
-        version: 6.0.3
-      vite:
-        specifier: ^8.0.12
-        version: 8.0.14(@types/node@25.9.1)(jiti@2.7.0)
-      vite-plugin-solid:
-        specifier: ^2.11.12
-        version: 2.11.12(solid-js@1.9.13)(vite@8.0.14(@types/node@25.9.1)(jiti@2.7.0))
-      wus-unit-types:
-        specifier: ^0.2.2
-        version: 0.2.2
 
   packages/proto-engine-ptm-osc:
     dependencies:
-      function-plot:
-        specifier: ^1.25.4
-        version: 1.25.4
+      mofus:
+        specifier: ^0.1.0
+        version: 0.1.0(solid-js@1.9.13)
       solid-icons:
         specifier: ^1.2.0
         version: 1.2.0(solid-js@1.9.13)
       solid-js:
         specifier: ^1.9.12
         version: 1.9.13
-    devDependencies:
-      '@tailwindcss/vite':
-        specifier: ^4.3.0
-        version: 4.3.0(vite@8.0.14(@types/node@25.9.1)(jiti@2.7.0))
-      '@types/audioworklet':
-        specifier: ^0.0.100
-        version: 0.0.100
-      '@types/node':
-        specifier: ^25.7.0
-        version: 25.9.1
-      mofus:
-        specifier: ^0.1.0
-        version: 0.1.0(solid-js@1.9.13)
-      tailwindcss:
-        specifier: ^4.3.0
-        version: 4.3.0
-      typescript:
-        specifier: ~6.0.3
-        version: 6.0.3
-      vite:
-        specifier: ^8.0.12
-        version: 8.0.14(@types/node@25.9.1)(jiti@2.7.0)
-      vite-plugin-solid:
-        specifier: ^2.11.12
-        version: 2.11.12(solid-js@1.9.13)(vite@8.0.14(@types/node@25.9.1)(jiti@2.7.0))
-      wus-unit-types:
-        specifier: ^0.2.2
-        version: 0.2.2
 
   packages/specbar:
     dependencies:
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
+      mofur:
+        specifier: ^0.1.0
+        version: 0.1.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       react:
         specifier: ^19.2.6
         version: 19.2.6
@@ -245,91 +133,33 @@ importers:
         specifier: ^0.1.6
         version: 0.1.6(react@19.2.6)
     devDependencies:
-      '@tailwindcss/vite':
-        specifier: ^4.3.0
-        version: 4.3.0(vite@8.0.14(@types/node@25.9.1)(jiti@2.7.0))
-      '@types/node':
-        specifier: ^25.7.0
-        version: 25.9.1
       '@types/react':
         specifier: ^19.2.14
         version: 19.2.15
       '@types/react-dom':
         specifier: ^19.2.3
         version: 19.2.3(@types/react@19.2.15)
-      '@vitejs/plugin-react':
-        specifier: ^6.0.1
-        version: 6.0.2(vite@8.0.14(@types/node@25.9.1)(jiti@2.7.0))
-      mofur:
-        specifier: ^0.1.0
-        version: 0.1.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
-      tailwindcss:
-        specifier: ^4.3.0
-        version: 4.3.0
-      typescript:
-        specifier: ~6.0.3
-        version: 6.0.3
-      vite:
-        specifier: ^8.0.12
-        version: 8.0.14(@types/node@25.9.1)(jiti@2.7.0)
-      wus-unit-types:
-        specifier: ^0.2.3
-        version: 0.2.3
 
   packages/useq:
     dependencies:
+      mofus:
+        specifier: ^0.1.0
+        version: 0.1.0(solid-js@1.9.13)
       solid-icons:
         specifier: ^1.2.0
         version: 1.2.0(solid-js@1.9.13)
       solid-js:
         specifier: ^1.9.12
         version: 1.9.13
-    devDependencies:
-      '@tailwindcss/vite':
-        specifier: ^4.3.0
-        version: 4.3.0(vite@8.0.14(@types/node@25.9.1)(jiti@2.7.0))
-      '@types/node':
-        specifier: ^25.7.0
-        version: 25.9.1
-      mofus:
-        specifier: ^0.1.0
-        version: 0.1.0(solid-js@1.9.13)
-      tailwindcss:
-        specifier: ^4.3.0
-        version: 4.3.0
-      typescript:
-        specifier: ~6.0.3
-        version: 6.0.3
-      vite:
-        specifier: ^8.0.12
-        version: 8.0.14(@types/node@25.9.1)(jiti@2.7.0)
-      vite-plugin-solid:
-        specifier: ^2.11.12
-        version: 2.11.12(solid-js@1.9.13)(vite@8.0.14(@types/node@25.9.1)(jiti@2.7.0))
-      wus-unit-types:
-        specifier: ^0.2.2
-        version: 0.2.2
 
   packages/wavicle:
     dependencies:
-      '@types/node':
-        specifier: ^25.9.0
-        version: 25.9.1
       alumina:
         specifier: ^0.1.14
         version: 0.1.14
       alumina-visor:
         specifier: ^0.1.6
         version: 0.1.6(alumina@0.1.14)
-      typescript:
-        specifier: ^6.0.3
-        version: 6.0.3
-      vite:
-        specifier: ^8.0.13
-        version: 8.0.14(@types/node@25.9.1)(jiti@2.7.0)
-      wus-unit-types:
-        specifier: ^0.2.2
-        version: 0.2.2
 
 packages:
 
@@ -727,9 +557,6 @@ packages:
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
 
-  built-in-math-eval@0.3.2:
-    resolution: {integrity: sha512-YUEswPdQJYtAP0E9pMq7va05M6iA/8U3Pthnlx+fwbej1G16hy/ZBxyLw+gZpxdijjGGqiwxm7vs3tW7IQuUnw==}
-
   caniuse-lite@1.0.30001793:
     resolution: {integrity: sha512-iwSsYWaCOoh26cV8NwNRViHlrfUvYsHDfRVcbtmw0Kg6PJIZZXwMkj1442FYLBGkeUf1juAsU3DTfxW579mrPA==}
 
@@ -747,76 +574,6 @@ packages:
   csstype@3.2.3:
     resolution: {integrity: sha512-z1HGKcYy2xA8AGQfwrn0PAy+PB7X/GSj3UVJW9qKyn43xWa+gl5nXmU4qqLMRzWVLFC8KusUX8T/0kCiOYpAIQ==}
 
-  d3-array@3.2.4:
-    resolution: {integrity: sha512-tdQAmyA18i4J7wprpYq8ClcxZy3SC31QMeByyCFyRt7BVHdREQZ5lpzoe5mFEYZUWe+oq8HBvk9JjpibyEV4Jg==}
-    engines: {node: '>=12'}
-
-  d3-axis@3.0.0:
-    resolution: {integrity: sha512-IH5tgjV4jE/GhHkRV0HiVYPDtvfjHQlQfJHs0usq7M30XcSBvOotpmH1IgkcXsO/5gEQZD43B//fc7SRT5S+xw==}
-    engines: {node: '>=12'}
-
-  d3-color@3.1.0:
-    resolution: {integrity: sha512-zg/chbXyeBtMQ1LbD/WSoW2DpC3I0mpmPdW+ynRTj/x2DAWYrIY7qeZIHidozwV24m4iavr15lNwIwLxRmOxhA==}
-    engines: {node: '>=12'}
-
-  d3-dispatch@3.0.1:
-    resolution: {integrity: sha512-rzUyPU/S7rwUflMyLc1ETDeBj0NRuHKKAcvukozwhshr6g6c5d8zh4c2gQjY2bZ0dXeGLWc1PF174P2tVvKhfg==}
-    engines: {node: '>=12'}
-
-  d3-drag@3.0.0:
-    resolution: {integrity: sha512-pWbUJLdETVA8lQNJecMxoXfH6x+mO2UQo8rSmZ+QqxcbyA3hfeprFgIT//HW2nlHChWeIIMwS2Fq+gEARkhTkg==}
-    engines: {node: '>=12'}
-
-  d3-ease@3.0.1:
-    resolution: {integrity: sha512-wR/XK3D3XcLIZwpbvQwQ5fK+8Ykds1ip7A2Txe0yxncXSdq1L9skcG7blcedkOX+ZcgxGAmLX1FrRGbADwzi0w==}
-    engines: {node: '>=12'}
-
-  d3-format@3.1.2:
-    resolution: {integrity: sha512-AJDdYOdnyRDV5b6ArilzCPPwc1ejkHcoyFarqlPqT7zRYjhavcT3uSrqcMvsgh2CgoPbK3RCwyHaVyxYcP2Arg==}
-    engines: {node: '>=12'}
-
-  d3-interpolate@3.0.1:
-    resolution: {integrity: sha512-3bYs1rOD33uo8aqJfKP3JWPAibgw8Zm2+L9vBKEHJ2Rg+viTR7o5Mmv5mZcieN+FRYaAOWX5SJATX6k1PWz72g==}
-    engines: {node: '>=12'}
-
-  d3-path@3.1.0:
-    resolution: {integrity: sha512-p3KP5HCf/bvjBSSKuXid6Zqijx7wIfNW+J/maPs+iwR35at5JCbLUT0LzF1cnjbCHWhqzQTIN2Jpe8pRebIEFQ==}
-    engines: {node: '>=12'}
-
-  d3-scale@4.0.2:
-    resolution: {integrity: sha512-GZW464g1SH7ag3Y7hXjf8RoUuAFIqklOAq3MRl4OaWabTFJY9PN/E1YklhXLh+OQ3fM9yS2nOkCoS+WLZ6kvxQ==}
-    engines: {node: '>=12'}
-
-  d3-selection@3.0.0:
-    resolution: {integrity: sha512-fmTRWbNMmsmWq6xJV8D19U/gw/bwrHfNXxrIN+HfZgnzqTHp9jOmKMhsTUjXOJnZOdZY9Q28y4yebKzqDKlxlQ==}
-    engines: {node: '>=12'}
-
-  d3-shape@3.2.0:
-    resolution: {integrity: sha512-SaLBuwGm3MOViRq2ABk3eLoxwZELpH6zhl3FbAoJ7Vm1gofKx6El1Ib5z23NUEhF9AsGl7y+dzLe5Cw2AArGTA==}
-    engines: {node: '>=12'}
-
-  d3-time-format@4.1.0:
-    resolution: {integrity: sha512-dJxPBlzC7NugB2PDLwo9Q8JiTR3M3e4/XANkreKSUxF8vvXKqm1Yfq4Q5dl8budlunRVlUUaDUgFt7eA8D6NLg==}
-    engines: {node: '>=12'}
-
-  d3-time@3.1.0:
-    resolution: {integrity: sha512-VqKjzBLejbSMT4IgbmVgDjpkYrNWUYJnbCGo874u7MMKIWsILRX+OpX/gTk8MqjpT1A/c6HY2dCA77ZN0lkQ2Q==}
-    engines: {node: '>=12'}
-
-  d3-timer@3.0.1:
-    resolution: {integrity: sha512-ndfJ/JxxMd3nw31uyKoY2naivF+r29V+Lc0svZxe1JvvIRmi8hUsrMvdOwgS1o6uBHmiz91geQ0ylPP0aj1VUA==}
-    engines: {node: '>=12'}
-
-  d3-transition@3.0.1:
-    resolution: {integrity: sha512-ApKvfjsSR6tg06xrL434C0WydLr7JewBB3V+/39RMHsaXTOG0zmt/OAXeng5M5LBm0ojmxJrpomQVZ1aPvBL4w==}
-    engines: {node: '>=12'}
-    peerDependencies:
-      d3-selection: 2 - 3
-
-  d3-zoom@3.0.0:
-    resolution: {integrity: sha512-b8AmV3kfQaqWAuacbPuNbL6vahnOJflOhexLzMMNLga62+/nh0JzvJ0aO/5a5MVgUFGS7Hu1P9P03o3fJkDCyw==}
-    engines: {node: '>=12'}
-
   debug@4.4.3:
     resolution: {integrity: sha512-RGwwWnwQvkVfavKVt22FGLw+xYSdzARwm0ru6DhTVA3umU5hZc28V3kO4stgYryrTlLpuvgI9GiijltAjNbcqA==}
     engines: {node: '>=6.0'}
@@ -829,9 +586,6 @@ packages:
   detect-libc@2.1.2:
     resolution: {integrity: sha512-Btj2BOOO83o3WyH59e8MgXsxEQVcarkUOpEYrubB0urwnN10yQ364rsiByU11nZlqWYZm05i/of7io4mzihBtQ==}
     engines: {node: '>=8'}
-
-  double-bits@1.1.1:
-    resolution: {integrity: sha512-BCLEIBq0O/DWoA7BsCu/R+RP0ZXiowP8BhtJT3qeuuQEBpnS8LK/Wo6UTJQv6v8mK1fj8n90YziHLwGdM5whSg==}
 
   electron-to-chromium@1.5.363:
     resolution: {integrity: sha512-VjUKPyWzGnT1fujlkEGC/BvN70Hh70KXtAqcmniXviYlJC/ivcT+BWGPyxWVbJZLfvtKR6dqg1L7T7pgAMBtWA==}
@@ -857,13 +611,6 @@ packages:
     engines: {node: '>=12.0.0'}
     hasBin: true
 
-  events@3.3.0:
-    resolution: {integrity: sha512-mQw+2fkQbALzQ7V0MY0IqdnXNOeTtP4r0lN9z7AAawCXgqea7bDii20AYrIBrFd/Hx0M2Ocz6S111CaFkUcb0Q==}
-    engines: {node: '>=0.8.x'}
-
-  extend@3.0.2:
-    resolution: {integrity: sha512-fjquC59cD7CyW6urNXK0FBufkZcoiGG80wTuPujX590cB5Ttln20E2UB4S/WARVqhXffZl2LNgS+gQdPIIim/g==}
-
   fdir@6.5.0:
     resolution: {integrity: sha512-tIbYtZbucOs0BRGqPJkshJUYdL+SDH7dVM8gjy+ERp3WAUjLEFJE+02kanyHtwjWOnwrKYBiwAmM0p4kLJAnXg==}
     engines: {node: '>=12.0.0'}
@@ -886,9 +633,6 @@ packages:
     engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
     os: [darwin]
 
-  function-plot@1.25.4:
-    resolution: {integrity: sha512-fY8APi3mkhinoPjp5zjVRvazP8YLhsDtb0cTAksoF9HWiWYHRfT2qGHJpDMSs3Co5Zf/NF/j6ZoVzg4BmeVTTQ==}
-
   gensync@1.0.0-beta.2:
     resolution: {integrity: sha512-3hN7NaskYvMDLQY55gnW3NQ+mesEAepTqlg+VEbj7zzqEMBVNhzcGYYeqFo/TlYz6eQiFcp1HcsCZO+nGgS8zg==}
     engines: {node: '>=6.9.0'}
@@ -905,16 +649,6 @@ packages:
 
   immer@11.1.8:
     resolution: {integrity: sha512-/tbkHMW7y10Lx6i1crLjD4/OhNkRG+Fo7byZHtah0547nIeXYcpIXaUh0IAQY6gO5459qpGGYapcEOHtFXkIuA==}
-
-  internmap@2.0.3:
-    resolution: {integrity: sha512-5Hh7Y1wQbvY5ooGgPbDaL5iYLAPzMTUrjMulskHLH6wnv/A+1q5rgEaiuqEjB+oxGXIVZs1FF+R/KPN3ZSQYYg==}
-    engines: {node: '>=12'}
-
-  interval-arithmetic-eval@0.5.3:
-    resolution: {integrity: sha512-8cR5Uerz+h1yDpb8Y2z3XfnI0XOnmWapI1CP/j84EKVocr6m6/rziLU558Vi7VGh4Bgfv9VeoOQAjDV4And+tg==}
-
-  interval-arithmetic@1.1.3:
-    resolution: {integrity: sha512-RdEKOQPUky8ShFdKnsOzXXO7LMaCfZtW9Z6t6LugIWgxU1pty4KEo7hpcIDcg3CYZ2iso9fPUiQPPdhsAhaLSQ==}
 
   is-binary-path@2.1.0:
     resolution: {integrity: sha512-ZMERYes6pDydyuGidse7OsHxtbI7WVeUEozgR/g7rd0xUimYNlvZRE/K2MgZTjWy725IfelLeVcEM97mmtRGXw==}
@@ -1036,9 +770,6 @@ packages:
   magic-string@0.30.21:
     resolution: {integrity: sha512-vd2F4YUyEXKGcLHoq+TEyCjxueSeHnFxyyjNp80yg0XV4vUhnDer/lvvlqM/arB5bXQN5K2/3oinyCRyx8T2CQ==}
 
-  math-codegen@0.4.3:
-    resolution: {integrity: sha512-wDPK9BputFrirD7dXgpeIa1nkTy08Gh+nCALwEmmHSmKoCJtTYu1PjGC6Z08FmCjkHzVkhvep2mzyJWRgtOe5A==}
-
   merge-anything@5.1.7:
     resolution: {integrity: sha512-eRtbOb1N5iyH0tkQDAoQ4Ipsp/5qSR79Dzrz8hEPxRX10RWWR/iQXdoKmBSRCThY1Fh5EhISDtpSc93fpxUniQ==}
     engines: {node: '>=12.13'}
@@ -1054,9 +785,6 @@ packages:
     peerDependencies:
       solid-js: ^1.9.12
 
-  mr-parser@0.2.2:
-    resolution: {integrity: sha512-9pMgttJp8pZtiYfoHkhBc9ncOHKmEwLMNBQpS/ZXgj4ORnPMKznYR0lZ1We3ZrD71RevQ34hKyKzDV1p/agXuw==}
-
   ms@2.1.3:
     resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==}
 
@@ -1064,9 +792,6 @@ packages:
     resolution: {integrity: sha512-ZB9RH/39qpq5Vu6Y+NmUaFhQR6pp+M2Xt76XBnEwDaGcVAqhlvxrl3B2bKS5D3NH3QR76v3aSrKaF/Kiy7lEtQ==}
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
-
-  nextafter@1.0.0:
-    resolution: {integrity: sha512-7PO+A89Tll2rSEfyrjtqO0MaI37+nnxBdnQcPypfbEYYuGaJxWGCqaOwQX4a3GHNTS08l1kazuiLEWZniZjMUQ==}
 
   node-releases@2.0.46:
     resolution: {integrity: sha512-GYVXHE2KnrzAfsAjl4uP++evGFCrAU1jta4ubEjIG7YWt/64Gqv66a30yKwWczVjA6j3bM4nBwH7Pk1JmDHaxQ==}
@@ -1258,11 +983,8 @@ packages:
       vite:
         optional: true
 
-  wus-unit-types@0.2.2:
-    resolution: {integrity: sha512-VooOmkDoC1+fS04WzQhomGziYtSDZjsCswGt9tUKMX9Y4CIK+IkCfm1tiQ7X3D19bG1BxdIhuJzk0zvCyM0CRg==}
-
-  wus-unit-types@0.2.3:
-    resolution: {integrity: sha512-lgjT6+rvo4qKjeCYFlfM4RXfRip4Mw3GXJAdn9XMiVFUYUZ2OcDcPC9Y3GYZrynROZkUajsznxdNmtNxP9PHEw==}
+  wus-unit-types@0.2.4:
+    resolution: {integrity: sha512-H1DJTLegofvfKzgt5NPm1ocyPBAFIRzYCiyEWYMjbMqNSwZrnaNjEZ1rZuc7UlM8pyY1R8uqPCBbif04LbOilQ==}
 
   yallist@3.1.1:
     resolution: {integrity: sha512-a4UGQaWPH59mOXUYnAG2ewncQS4i4F43Tv3JoAM+s2VDAmS9NsK8GpDMLrCHPksFT7h3K6TOoUNn2pb7RoXx4g==}
@@ -1635,10 +1357,6 @@ snapshots:
       node-releases: 2.0.46
       update-browserslist-db: 1.2.3(browserslist@4.28.2)
 
-  built-in-math-eval@0.3.2:
-    dependencies:
-      math-codegen: 0.4.3
-
   caniuse-lite@1.0.30001793: {}
 
   chokidar@3.6.0:
@@ -1659,79 +1377,11 @@ snapshots:
 
   csstype@3.2.3: {}
 
-  d3-array@3.2.4:
-    dependencies:
-      internmap: 2.0.3
-
-  d3-axis@3.0.0: {}
-
-  d3-color@3.1.0: {}
-
-  d3-dispatch@3.0.1: {}
-
-  d3-drag@3.0.0:
-    dependencies:
-      d3-dispatch: 3.0.1
-      d3-selection: 3.0.0
-
-  d3-ease@3.0.1: {}
-
-  d3-format@3.1.2: {}
-
-  d3-interpolate@3.0.1:
-    dependencies:
-      d3-color: 3.1.0
-
-  d3-path@3.1.0: {}
-
-  d3-scale@4.0.2:
-    dependencies:
-      d3-array: 3.2.4
-      d3-format: 3.1.2
-      d3-interpolate: 3.0.1
-      d3-time: 3.1.0
-      d3-time-format: 4.1.0
-
-  d3-selection@3.0.0: {}
-
-  d3-shape@3.2.0:
-    dependencies:
-      d3-path: 3.1.0
-
-  d3-time-format@4.1.0:
-    dependencies:
-      d3-time: 3.1.0
-
-  d3-time@3.1.0:
-    dependencies:
-      d3-array: 3.2.4
-
-  d3-timer@3.0.1: {}
-
-  d3-transition@3.0.1(d3-selection@3.0.0):
-    dependencies:
-      d3-color: 3.1.0
-      d3-dispatch: 3.0.1
-      d3-ease: 3.0.1
-      d3-interpolate: 3.0.1
-      d3-selection: 3.0.0
-      d3-timer: 3.0.1
-
-  d3-zoom@3.0.0:
-    dependencies:
-      d3-dispatch: 3.0.1
-      d3-drag: 3.0.0
-      d3-interpolate: 3.0.1
-      d3-selection: 3.0.0
-      d3-transition: 3.0.1(d3-selection@3.0.0)
-
   debug@4.4.3:
     dependencies:
       ms: 2.1.3
 
   detect-libc@2.1.2: {}
-
-  double-bits@1.1.1: {}
 
   electron-to-chromium@1.5.363: {}
 
@@ -1752,10 +1402,6 @@ snapshots:
     optionalDependencies:
       fsevents: 2.3.3
 
-  events@3.3.0: {}
-
-  extend@3.0.2: {}
-
   fdir@6.5.0(picomatch@4.0.4):
     optionalDependencies:
       picomatch: 4.0.4
@@ -1773,20 +1419,6 @@ snapshots:
   fsevents@2.3.3:
     optional: true
 
-  function-plot@1.25.4:
-    dependencies:
-      built-in-math-eval: 0.3.2
-      d3-axis: 3.0.0
-      d3-color: 3.1.0
-      d3-format: 3.1.2
-      d3-interpolate: 3.0.1
-      d3-scale: 4.0.2
-      d3-selection: 3.0.0
-      d3-shape: 3.2.0
-      d3-zoom: 3.0.0
-      events: 3.3.0
-      interval-arithmetic-eval: 0.5.3
-
   gensync@1.0.0-beta.2: {}
 
   glob-parent@5.1.2:
@@ -1798,17 +1430,6 @@ snapshots:
   html-entities@2.3.3: {}
 
   immer@11.1.8: {}
-
-  internmap@2.0.3: {}
-
-  interval-arithmetic-eval@0.5.3:
-    dependencies:
-      interval-arithmetic: 1.1.3
-      math-codegen: 0.4.3
-
-  interval-arithmetic@1.1.3:
-    dependencies:
-      nextafter: 1.0.0
 
   is-binary-path@2.1.0:
     dependencies:
@@ -1895,11 +1516,6 @@ snapshots:
     dependencies:
       '@jridgewell/sourcemap-codec': 1.5.5
 
-  math-codegen@0.4.3:
-    dependencies:
-      extend: 3.0.2
-      mr-parser: 0.2.2
-
   merge-anything@5.1.7:
     dependencies:
       is-what: 4.1.16
@@ -1913,15 +1529,9 @@ snapshots:
     dependencies:
       solid-js: 1.9.13
 
-  mr-parser@0.2.2: {}
-
   ms@2.1.3: {}
 
   nanoid@3.3.12: {}
-
-  nextafter@1.0.0:
-    dependencies:
-      double-bits: 1.1.1
 
   node-releases@2.0.46: {}
 
@@ -2074,8 +1684,6 @@ snapshots:
     optionalDependencies:
       vite: 8.0.14(@types/node@25.9.1)(jiti@2.7.0)
 
-  wus-unit-types@0.2.2: {}
-
-  wus-unit-types@0.2.3: {}
+  wus-unit-types@0.2.4: {}
 
   yallist@3.1.1: {}

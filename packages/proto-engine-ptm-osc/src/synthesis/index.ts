@@ -17,7 +17,7 @@ import { createReverberator } from "@/synthesis/reverbrator";
 import { createShaperCurveBufferCache } from "@/synthesis/shaper-curve-buffer-cache";
 import { createAudioNodeChain } from "@/synthesis/webaudio-helper";
 
-const unitInterface = getUnitInterface();
+export const unitInterface = getUnitInterface("wus-v02");
 
 function getNoteFrequency(noteNumber: number, oscOctave: number): number {
   const modNoteNumber = noteNumber + oscOctave * 12;

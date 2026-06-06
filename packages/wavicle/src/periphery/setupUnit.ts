@@ -1,12 +1,11 @@
 import { asyncRerender } from "alumina";
-import { getUnitInterface } from "wus-unit-types";
 import { ISynthesizerBase } from "@/base";
+import { unitInterface } from "@/synthLib/unitInterface";
 
 export function setupUnit(synth: ISynthesizerBase) {
-  const unitInterface = getUnitInterface();
-  unitInterface?.completeSetupWithAttributes({
-    unitFeatures: {
-      type: "instrument",
+  unitInterface?.completeSetup({
+    unitAspects: {
+      unitType: "instrument",
       categoryHint: "synthesizer",
       outputs: ["audio"],
       inputs: ["note"],

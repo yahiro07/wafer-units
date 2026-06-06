@@ -1,11 +1,11 @@
 import { asyncRerender } from "alumina";
-import { getUnitInterface } from "wus-unit-types";
 import { IInstrumentKey } from "@/base";
 import { arrays } from "@/funcs";
 import { createInstrumentProvider } from "./instrumentProvider";
 import { createPitchShiftedNoteVoice } from "./noteVoice";
 import { createNoteVoiceManager } from "./noteVoiceManager";
 import { IInstrumentData, IInstrumentParameters } from "./types";
+import { unitInterface } from "@/synthLib/unitInterface";
 
 export interface ISynthesizerEngine {
   allInstrumentKeys: IInstrumentKey[];
@@ -36,7 +36,6 @@ function createNoteKey(noteNumber: number): string {
 }
 
 export function createSynthesizerEngine(): ISynthesizerEngine {
-  const unitInterface = getUnitInterface();
   const audioContext = unitInterface?.audioContext ?? new AudioContext();
   const instrumentProvider = createInstrumentProvider(audioContext);
   const { allInstrumentKeys } = instrumentProvider;

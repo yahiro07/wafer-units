@@ -5,7 +5,7 @@ import { createChorus } from "./chorus";
 import { createReverb } from "./reverb";
 import { createVoice } from "./voice";
 
-export const unitInterface = getUnitInterface();
+export const unitInterface = getUnitInterface("wus-v02");
 
 let engineInstance: ReturnType<typeof createAudioEngine> | null = null;
 

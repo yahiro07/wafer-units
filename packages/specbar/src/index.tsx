@@ -39,7 +39,7 @@ const actions = {
 };
 
 function setupUnitInstance() {
-  const unitInterface = getUnitInterface();
+  const unitInterface = getUnitInterface("wus-v02");
   if (unitInterface) {
     const audioContext = unitInterface.audioContext;
     store.setSampleRate(audioContext.sampleRate);
@@ -71,9 +71,9 @@ function setupUnitInstance() {
       }
     });
 
-    unitInterface.completeSetupWithAttributes({
-      unitFeatures: {
-        type: "effect",
+    unitInterface.completeSetup({
+      unitAspects: {
+        unitType: "effect",
         categoryHint: "effect",
         outputs: ["audio"],
         inputs: ["audio", "state"],

@@ -25,9 +25,9 @@ const driversInternal = {
 };
 export const drivers = {
   setupUnitInterface() {
-    unitInterface?.completeSetupWithAttributes({
-      unitFeatures: {
-        type: "sequencer",
+    unitInterface?.completeSetup({
+      unitAspects: {
+        unitType: "sequencer",
         categoryHint: "stepSequencer",
         outputs: ["note"],
         inputs: ["clock", "state"],

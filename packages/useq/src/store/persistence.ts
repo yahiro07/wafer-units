@@ -43,7 +43,7 @@ export const persistence = {
       ...state.stepCodes.map(stepCodeMapper.toByte),
     ]);
   },
-  loadStateBytes(bytes: Uint8Array) {
+  applyStateBytes(bytes: Uint8Array) {
     if (bytes.length === 5) {
       const duty = bytes[0] / 255;
       const stepCodes = [...bytes.slice(1, 5)].map(stepCodeMapper.fromByte);

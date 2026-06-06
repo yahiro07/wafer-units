@@ -19,9 +19,9 @@ export const uiActions = {
     synthAudio.updateParameters(appState.parameters);
 
     if (unitInterface) {
-      unitInterface.completeSetupWithAttributes({
-        unitFeatures: {
-          type: "instrument",
+      unitInterface.completeSetup({
+        unitAspects: {
+          unitType: "instrument",
           categoryHint: "synthesizer",
           outputs: ["audio"],
           inputs: ["note", "state"],

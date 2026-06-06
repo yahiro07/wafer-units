@@ -55,7 +55,7 @@ export const persistence = {
     const paramBytes = mappers.serializeParameters(parameters);
     return new Uint8Array([formatRevision, currentPresetIndex, ...paramBytes]);
   },
-  loadStateBytes(bytes: Uint8Array) {
+  applyStateBytes(bytes: Uint8Array) {
     if (bytes.length === 2 + 12 && bytes[0] === formatRevision) {
       const currentPresetIndex = bytes[1];
       const parameters = mappers.deserializeParameters([...bytes.slice(2)]);

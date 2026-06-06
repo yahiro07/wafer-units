@@ -6,9 +6,9 @@ import { setupMidiKeyboardInput } from "@/utils/midi-keyboard-input";
 
 export function setupDrivers() {
   if (unitInterface) {
-    unitInterface.completeSetupWithAttributes({
-      unitFeatures: {
-        type: "instrument",
+    unitInterface.completeSetup({
+      unitAspects: {
+        unitType: "instrument",
         categoryHint: "synthesizer",
         outputs: ["audio"],
         inputs: ["note", "state"],

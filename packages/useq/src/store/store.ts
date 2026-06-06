@@ -3,7 +3,7 @@ import { getUnitInterface } from "wus-unit-types";
 import { createAppSynthTarget } from "@/sequencer/app-synth-target";
 import { createSequencerEngine, StepCode } from "@/sequencer/sequencer-engine";
 
-export const unitInterface = getUnitInterface();
+export const unitInterface = getUnitInterface("wus-v02");
 const appSynthTarget = createAppSynthTarget(unitInterface);
 export const sequencerEngine = createSequencerEngine(appSynthTarget);
 
