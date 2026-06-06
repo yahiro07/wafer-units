@@ -66,7 +66,7 @@ export const persistence = {
     const presetIndex = mappers.presetNameToIndex(presetName);
     return new Uint8Array([formatRevision, presetIndex, ...paramBytes]);
   },
-  loadStateBytes(bytes: Uint8Array) {
+  applyStateBytes(bytes: Uint8Array) {
     if (bytes.length === 2 + 12 && bytes[0] === formatRevision) {
       const presetIndex = bytes[1];
       const presetName = mappers.presetNameFromIndex(presetIndex);

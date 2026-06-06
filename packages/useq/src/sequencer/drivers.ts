@@ -28,7 +28,7 @@ export const drivers = {
         clockInput: { processStep: drivers.wrapProcessStep },
         stateInput: {
           emitStateBytes: persistence.emitStateBytes,
-          applyStateBytes: persistence.loadStateBytes,
+          applyStateBytes: persistence.applyStateBytes,
         },
       },
       hostCallbacks: {

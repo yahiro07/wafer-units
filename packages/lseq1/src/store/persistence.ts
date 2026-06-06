@@ -43,7 +43,7 @@ export const persistence = {
       ...allSteps.map(stepCodeMapper.toByte),
     ]);
   },
-  loadStateBytes(bytes: Uint8Array) {
+  applyStateBytes(bytes: Uint8Array) {
     if (bytes.length === 5 + 256 && bytes[0] === formatRevision) {
       const loopBars = bytes[1] as LoopBars;
       const stepStride = bytes[2] as StepStride;
