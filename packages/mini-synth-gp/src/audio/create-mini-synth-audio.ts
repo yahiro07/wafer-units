@@ -77,8 +77,9 @@ function createVoice(
   parameters: SynthParameters,
   noteNumber: number,
   velocity: number,
+  time?: number,
 ) {
-  const now = audioContext.currentTime;
+  const now = time ?? audioContext.currentTime;
   const frequency = midiNoteToFrequency(noteNumber);
 
   const outputNode = audioContext.createGain();
@@ -219,12 +220,13 @@ function releaseVoice(
   audioContext: AudioContext,
   voice: Voice,
   parameters: SynthParameters,
+  time: number | undefined,
   onEnded: () => void,
 ) {
   if (voice.released) return;
   voice.released = true;
 
-  const now = audioContext.currentTime;
+  const now = time ?? audioContext.currentTime;
   const releaseSec = getAmpReleaseTimeSec(parameters.ampRelease);
 
   voice.ampNode.gain.cancelScheduledValues(now);
@@ -240,7 +242,8 @@ function releaseVoice(
   voice.oscSub.stop(stopTime);
   voice.driftLfoNode.stop(stopTime);
 
-  setTimeout(onEnded, releaseSec * 1400);
+  const delayMs = (now - audioContext.currentTime + releaseSec * 1.4) * 1000;
+  setTimeout(onEnded, Math.max(0, delayMs));
 }
 
 export function createMiniSynthAudio() {
@@ -279,26 +282,27 @@ export function createMiniSynthAudio() {
     });
   }
 
-  function noteOn(noteNumber: number, velocity: number) {
-    noteOff(noteNumber);
+  function noteOn(noteNumber: number, velocity: number, time?: number) {
+    noteOff(noteNumber, time);
 
     const voice = createVoice(
       audioContext,
       currentParameters,
       noteNumber,
       velocity,
+      time,
     );
     voice.outputNode.connect(voiceBusNode);
     activeVoices.set(noteNumber, voice);
   }
 
-  function noteOff(noteNumber: number) {
+  function noteOff(noteNumber: number, time?: number) {
     const voice = activeVoices.get(noteNumber);
     if (!voice) return;
 
     activeVoices.delete(noteNumber);
 
-    releaseVoice(audioContext, voice, currentParameters, () => {
+    releaseVoice(audioContext, voice, currentParameters, time, () => {
       voice.outputNode.disconnect();
       if (activeVoices.get(noteNumber) === voice) {
         activeVoices.delete(noteNumber);
