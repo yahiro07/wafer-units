@@ -32,19 +32,25 @@ function createAudioEngine() {
         await context.resume();
       }
     },
-    noteOn(note: number, velocity: number) {
+    noteOn(note: number, velocity: number, time?: number) {
       const existing = activeVoices.get(note);
       if (existing) {
-        existing.noteOff();
+        existing.noteOff(time);
       }
-      const voice = createVoice(context, note, velocity, appState.parameters);
+      const voice = createVoice(
+        context,
+        note,
+        velocity,
+        appState.parameters,
+        time,
+      );
       voice.outputNode.connect(voicesGain);
       activeVoices.set(note, voice);
     },
-    noteOff(note: number) {
+    noteOff(note: number, time?: number) {
       const existing = activeVoices.get(note);
       if (existing) {
-        existing.noteOff();
+        existing.noteOff(time);
         activeVoices.delete(note);
       }
     },

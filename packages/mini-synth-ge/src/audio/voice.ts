@@ -36,6 +36,7 @@ export function createVoice(
   note: number,
   velocity: number,
   params: SynthParameters,
+  time?: number,
 ) {
   const outputNode = context.createGain();
   outputNode.gain.value = 1; // fix output node gain so sound passes through
@@ -118,59 +119,60 @@ export function createVoice(
   filter.connect(ampGain);
   ampGain.connect(outputNode);
 
-  const now = context.currentTime;
+  const t = time && time > context.currentTime ? time : context.currentTime;
 
   // Amp Envelope
   const decayTime =
     params.ampDecay < 1 ? Math.max(0.01, params.ampDecay * 3) : 3;
   const sustain = params.ampDecay === 1 ? 1 : 0;
 
-  ampGain.gain.setValueAtTime(0, now);
-  ampGain.gain.linearRampToValueAtTime(Math.max(0.001, velocity), now + 0.01);
+  ampGain.gain.setValueAtTime(0, t);
+  ampGain.gain.linearRampToValueAtTime(Math.max(0.001, velocity), t + 0.01);
   if (sustain === 0) {
-    ampGain.gain.exponentialRampToValueAtTime(0.001, now + 0.01 + decayTime);
+    ampGain.gain.exponentialRampToValueAtTime(0.001, t + 0.01 + decayTime);
   }
 
   // Filter Envelope
   const envModCents = params.filterEnvMod * 4800; // max 4 octaves
   if (envModCents > 0) {
-    filter.detune.setValueAtTime(envModCents, now);
-    filter.detune.exponentialRampToValueAtTime(1, now + 0.01 + decayTime); // ramp detune back to 0 implicitly
+    filter.detune.setValueAtTime(envModCents, t);
+    filter.detune.exponentialRampToValueAtTime(1, t + 0.01 + decayTime); // ramp detune back to 0 implicitly
   } else {
     filter.detune.value = 0;
   }
 
-  lfo.start(now);
-  osc1.start(now);
-  osc2.start(now);
-  sub.start(now);
+  lfo.start(t);
+  osc1.start(t);
+  osc2.start(t);
+  sub.start(t);
 
   let released = false;
 
   return {
     outputNode,
-    noteOff() {
+    noteOff(offTime?: number) {
       if (released) return;
       released = true;
-      const time = context.currentTime;
+      const tOff =
+        offTime && offTime > context.currentTime
+          ? offTime
+          : context.currentTime;
       const releaseTime = Math.max(0.01, params.ampRelease * 3);
 
-      ampGain.gain.cancelScheduledValues(time);
-      ampGain.gain.setValueAtTime(ampGain.gain.value, time);
-      ampGain.gain.exponentialRampToValueAtTime(0.001, time + releaseTime);
+      ampGain.gain.cancelScheduledValues(tOff);
+      ampGain.gain.setValueAtTime(ampGain.gain.value, tOff);
+      ampGain.gain.exponentialRampToValueAtTime(0.001, tOff + releaseTime);
 
-      const stopTime = time + releaseTime + 0.1;
+      const stopTime = tOff + releaseTime + 0.1;
       lfo.stop(stopTime);
       osc1.stop(stopTime);
       osc2.stop(stopTime);
       sub.stop(stopTime);
 
-      setTimeout(
-        () => {
-          outputNode.disconnect();
-        },
-        (releaseTime + 0.2) * 1000,
-      );
+      const delayMs = (tOff - context.currentTime + releaseTime + 0.2) * 1000;
+      setTimeout(() => {
+        outputNode.disconnect();
+      }, Math.max(0, delayMs));
     },
   };
 }
