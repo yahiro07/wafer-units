@@ -23,7 +23,6 @@ export const MainApp = () => {
       primaryInputPortHandlers: {
         noteInput: {
           async noteOn(note, time) {
-            await engine.resumeIfNeed();
             engine.noteOn(note, 1, time);
           },
           noteOff(note, time) {
