@@ -52,7 +52,7 @@ export function createSequencerEngine(notePort: {
       }
     }
 
-    const stepDurationSec = 15 / state.bpm; // 16分音符の長さ (60 / bpm / 4)
+    const stepDurationSec = 60 / state.bpm / 4; // 16th note duration at current BPM
     const durationSec = (tieCount + state.stepDuty) * stepDurationSec;
 
     noteVoicingAdapter.noteOn(noteNumber, durationSec);
