@@ -4,7 +4,7 @@ import { LoopBars, StepStride } from "@/types";
 
 const stepCodeMapper = {
   toByte(stepCode: number): number {
-    if (stepCode < 0) return 256 - stepCode;
+    if (stepCode < 0) return 256 + stepCode;
     return stepCode;
   },
   fromByte(byte: number): number {
@@ -34,13 +34,14 @@ export const persistence = {
   emitStateBytes(): Uint8Array {
     const { loopBars, stepStride, allSteps, octaveShift, stepDuty } =
       persistenceCore.emitPersistState();
+    const stepBytes = allSteps.map(stepCodeMapper.toByte);
     return new Uint8Array([
       formatRevision,
       loopBars,
       stepStride,
       octaveShift + 100,
       (stepDuty * 255) >>> 0,
-      ...allSteps.map(stepCodeMapper.toByte),
+      ...stepBytes,
     ]);
   },
   applyStateBytes(bytes: Uint8Array) {
@@ -49,7 +50,8 @@ export const persistence = {
       const stepStride = bytes[2] as StepStride;
       const octaveShift = bytes[3] - 100;
       const stepDuty = bytes[4] / 255;
-      const allSteps = [...bytes.slice(5).map(stepCodeMapper.fromByte)];
+      const stepBytes = [...bytes.slice(5)];
+      const allSteps = stepBytes.map(stepCodeMapper.fromByte);
       persistenceCore.loadPersistState({
         loopBars,
         stepStride,
