@@ -22,16 +22,20 @@ const App = () => {
         },
         primaryInputPortHandlers: {
           noteInput: {
-            noteOn: (note) => uiActions.noteOn(note, 1),
-            noteOff: (note) => uiActions.noteOff(note),
+            noteOn(note, time) {
+              uiActions.noteOn(note, time ?? 0, 1);
+            },
+            noteOff(note, time) {
+              uiActions.noteOff(note, time ?? 0);
+            },
           },
           stateInput: persistence,
         },
       });
     } else {
       const cleanup = setupMidiKeyboardInput({
-        noteOn: (note) => uiActions.noteOn(note, 1),
-        noteOff: (note) => uiActions.noteOff(note),
+        noteOn: (note) => uiActions.noteOn(note, 0, 1),
+        noteOff: (note) => uiActions.noteOff(note, 0),
       });
       onCleanup(cleanup);
     }

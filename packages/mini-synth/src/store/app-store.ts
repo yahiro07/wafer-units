@@ -57,12 +57,12 @@ export const uiActions = {
     uiActions.selectPreset(newIndex);
   },
 
-  noteOn(note: number, velocity: number): void {
-    ensureEngine().noteOn(note, velocity);
+  noteOn(note: number, time: number, velocity: number): void {
+    ensureEngine().noteOn(note, time, velocity);
   },
 
-  noteOff(note: number): void {
-    audioEngine?.noteOff(note);
+  noteOff(note: number, time: number): void {
+    audioEngine?.noteOff(note, time);
   },
 
   loadState(state: AppState) {

@@ -2,8 +2,13 @@ import type { SynthParams } from "./synth-params";
 
 export interface Voice {
   outputNode: GainNode;
-  noteOn(frequency: number, params: SynthParams, velocity?: number): void;
-  noteOff(params: SynthParams): void;
+  noteOn(
+    frequency: number,
+    params: SynthParams,
+    velocity?: number,
+    time?: number,
+  ): void;
+  noteOff(params: SynthParams, time?: number): void;
   updateParams(params: SynthParams): void;
   forceStop(): void;
 }
@@ -86,8 +91,8 @@ export function createVoice(audioContext: AudioContext): Voice {
   }
 
   // Apply parameters that don't depend on note frequency
-  function applyStaticParams(params: SynthParams): void {
-    const t = ctx.currentTime;
+  function applyStaticParams(params: SynthParams, time?: number): void {
+    const t = time ?? ctx.currentTime;
 
     mainOsc.type = getWaveType(params.oscWave);
     detuneOsc.type = getWaveType(params.oscWave);
@@ -114,12 +119,17 @@ export function createVoice(audioContext: AudioContext): Voice {
     driftGain.gain.setValueAtTime(params.drift * 30, t);
   }
 
-  function noteOn(frequency: number, params: SynthParams, velocity = 1): void {
+  function noteOn(
+    frequency: number,
+    params: SynthParams,
+    velocity = 1,
+    time?: number,
+  ): void {
     currentFrequency = frequency;
-    const t = ctx.currentTime;
+    const t = time ?? ctx.currentTime;
     const attackTime = 0.003;
 
-    applyStaticParams(params);
+    applyStaticParams(params, t);
 
     // Set oscillator frequencies
     mainOsc.frequency.setValueAtTime(frequency, t);
@@ -171,8 +181,8 @@ export function createVoice(audioContext: AudioContext): Voice {
     // If ampDecay === 1: sustain at full level indefinitely
   }
 
-  function noteOff(params: SynthParams): void {
-    const t = ctx.currentTime;
+  function noteOff(params: SynthParams, time?: number): void {
+    const t = time ?? ctx.currentTime;
     const releaseTime = 0.05 + params.ampRelease * 1.95;
     const current = ampEnv.gain.value;
     ampEnv.gain.cancelScheduledValues(t);
