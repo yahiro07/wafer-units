@@ -30,9 +30,13 @@ export const drivers = {
         unitType: "sequencer",
         categoryHint: "stepSequencer",
         outputs: ["note"],
-        inputs: ["clock", "state"],
+        inputs: ["clock", "state", "note"],
       },
       primaryInputPortHandlers: {
+        noteInput: {
+          noteOn: actions.inputNoteOn,
+          noteOff: actions.inputNoteOff,
+        },
         clockInput: {
           start() {
             actions.setExPlaying(true);
@@ -57,8 +61,13 @@ export const drivers = {
   setupMidiKeyboardInput() {
     if (!unitInterface) {
       return setupMidiKeyboardInput({
-        noteOn: actions.inputNoteOn,
-        noteOff: actions.inputNoteOff,
+        async noteOn(noteNumber) {
+          await actions.resumeAudioContext();
+          actions.inputNoteOn(noteNumber);
+        },
+        async noteOff(noteNumber) {
+          actions.inputNoteOff(noteNumber);
+        },
       });
     }
   },

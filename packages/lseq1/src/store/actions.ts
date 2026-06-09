@@ -60,8 +60,10 @@ export const actions = {
     store.setAllSteps(seqNumbers(256).map(() => SpecialStep.rest));
     store.setEditPos(0);
   },
-  async inputNoteOn(noteNumber: number) {
-    await actionsDi.resumeAudioContextFn?.();
+  async resumeAudioContext() {
+    return actionsDi.resumeAudioContextFn?.();
+  },
+  inputNoteOn(noteNumber: number) {
     store.setActiveNotes((prev) => [...prev, noteNumber]);
     store.setPreviewNote(noteNumber);
     if (store.state.editing) {
