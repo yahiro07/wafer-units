@@ -47,8 +47,8 @@ function createSynthesisBus(): SynthesisBus {
 }
 
 type Voice = {
-  start(): void;
-  stop(): void;
+  start(time?: number): void;
+  stop(time?: number): void;
   updateNodeParameters(): void;
 };
 
@@ -161,18 +161,23 @@ function createVoice(bus: SynthesisBus, noteNumber: number): Voice {
   );
 
   return {
-    start() {
+    start(time?: number) {
       updateNodeParameters();
       nodesChain.connects();
-      ampEg.triggerAttack();
+      ampEg.triggerAttack(time);
     },
-    stop() {
-      ampEg.triggerRelease();
+    stop(time?: number) {
+      ampEg.triggerRelease(time);
+      const t =
+        time && time > audioContext.currentTime
+          ? time
+          : audioContext.currentTime;
+      const delayMs = (t - audioContext.currentTime + ampEg.getReleaseTime()) * 1000 + 100;
       setTimeout(
         () => {
           nodesChain.disconnects();
         },
-        ampEg.getReleaseTime() * 1000 + 100,
+        Math.max(0, delayMs),
       );
     },
     updateNodeParameters,
@@ -219,16 +224,16 @@ export function createSynthesizerEngine() {
   effects.setupNodes();
 
   const internal = {
-    addNote(noteNumber: number) {
+    addNote(noteNumber: number, time?: number) {
       const voice = createVoice(bus, noteNumber);
       voice.updateNodeParameters();
-      voice.start();
+      voice.start(time);
       voices[noteNumber] = voice;
     },
-    removeNote(noteNumber: number) {
+    removeNote(noteNumber: number, time?: number) {
       const voice = voices[noteNumber];
       if (voice) {
-        voice.stop();
+        voice.stop(time);
         delete voices[noteNumber];
       }
     },
@@ -257,12 +262,12 @@ export function createSynthesizerEngine() {
       Object.assign(bus.synthParameters, params);
       internal.updateNodeParameters();
     },
-    noteOn(noteNumber: number) {
-      internal.removeNote(noteNumber);
-      internal.addNote(noteNumber);
+    noteOn(noteNumber: number, time?: number) {
+      internal.removeNote(noteNumber, time);
+      internal.addNote(noteNumber, time);
     },
-    noteOff(noteNumber: number) {
-      internal.removeNote(noteNumber);
+    noteOff(noteNumber: number, time?: number) {
+      internal.removeNote(noteNumber, time);
     },
   };
 }

@@ -1,6 +1,6 @@
 import { setupMidiKeyboardInput } from "mofus/mx-audio";
 import { onCleanup } from "solid-js";
-import { uiActions } from "@/actions";
+import { synthEngine, uiActions } from "@/actions";
 import { persistence } from "@/persistence";
 import { unitInterface } from "@/synthesis";
 
@@ -23,7 +23,8 @@ export function setupDrivers() {
     });
   } else {
     const closeMidiIn = setupMidiKeyboardInput({
-      noteOn(noteNumber) {
+      async noteOn(noteNumber) {
+        await synthEngine.resumeIfNeeded();
         uiActions.noteOn(noteNumber);
       },
       noteOff(noteNumber) {
