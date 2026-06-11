@@ -1,19 +1,12 @@
 {
   "name": "wus-units",
   "private": true,
-  "packageManager": "pnpm@10.33.2",
-  "devEngines": {
-    "packageManager": {
-      "name": "pnpm",
-      "onFail": "error"
-    }
-  },
   "scripts": {
     "build": "pnpm -r --if-present --filter './packages/*' build"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.3.0",
-    "wus-unit-types": "^0.2.4",
+    "wus-unit-types": "^0.2.5",
     "tailwindcss": "^4.3.0",
     "@types/node": "^25.7.0",
     "typescript": "~6.0.3",

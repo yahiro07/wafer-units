@@ -4,7 +4,7 @@
   "categoryHint": "visualizer",
   "preferredSize": "350,55",
   "protocol": "wus-v01",
-  "unitTypesVersion": "0.2.2",
+  "unitTypesVersion": "0.2.5",
   "outputSignalTypes": "audio",
   "inputSignalTypes": "audio",
   "repositoryUrl": "https://github.com/yahiro07/wus-units",

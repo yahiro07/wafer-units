@@ -4,7 +4,7 @@
   "categoryHint": "synthesizer",
   "preferredSize": "680,420",
   "protocol": "wus-v01",
-  "unitTypesVersion": "0.2.2",
+  "unitTypesVersion": "0.2.5",
   "outputSignalTypes": "audio",
   "inputSignalTypes": "note",
   "repositoryUrl": "https://github.com/yahiro07/wus-units",
