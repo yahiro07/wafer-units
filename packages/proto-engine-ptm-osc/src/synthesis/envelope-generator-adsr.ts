@@ -29,26 +29,32 @@ export function createEnvelopeGeneratorADSR(
     getReleaseTime() {
       return times.release;
     },
-    triggerAttack() {
-      const now = audioContext.currentTime;
-      gain.cancelScheduledValues(now);
-      gain.setValueAtTime(gainNode.gain.value, now);
+    triggerAttack(time?: number) {
+      const t =
+        time && time > audioContext.currentTime
+          ? time
+          : audioContext.currentTime;
+      gain.cancelScheduledValues(t);
+      gain.setValueAtTime(gainNode.gain.value, t);
 
-      gain.setValueAtTime(0.001, now);
-      gain.exponentialRampToValueAtTime(1, now + times.attack);
+      gain.setValueAtTime(0.001, t);
+      gain.exponentialRampToValueAtTime(1, t + times.attack);
 
       gain.exponentialRampToValueAtTime(
         lowClip(egParams.sustain, 0.001),
-        now + times.attack + times.decay,
+        t + times.attack + times.decay,
       );
     },
-    triggerRelease() {
-      const now = audioContext.currentTime;
-      gain.cancelScheduledValues(now);
-      gain.setValueAtTime(gainNode.gain.value, now);
+    triggerRelease(time?: number) {
+      const t =
+        time && time > audioContext.currentTime
+          ? time
+          : audioContext.currentTime;
+      gain.cancelScheduledValues(t);
+      gain.setValueAtTime(gainNode.gain.value, t);
 
-      gain.exponentialRampToValueAtTime(0.001, now + times.release);
-      gain.setValueAtTime(0, now + times.release);
+      gain.exponentialRampToValueAtTime(0.001, t + times.release);
+      gain.setValueAtTime(0, t + times.release);
     },
   };
 }

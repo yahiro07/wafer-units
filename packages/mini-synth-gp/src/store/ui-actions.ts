@@ -28,12 +28,11 @@ export const uiActions = {
         },
         primaryInputPortHandlers: {
           noteInput: {
-            async noteOn(noteNumber) {
-              await synthAudio.audioContext.resume();
-              synthAudio.noteOn(noteNumber, 1);
+            async noteOn(noteNumber, time) {
+              synthAudio.noteOn(noteNumber, 1, time);
             },
-            noteOff(noteNumber) {
-              synthAudio.noteOff(noteNumber);
+            async noteOff(noteNumber, time) {
+              synthAudio.noteOff(noteNumber, time);
             },
           },
           stateInput: persistence,

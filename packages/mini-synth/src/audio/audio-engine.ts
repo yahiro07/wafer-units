@@ -18,8 +18,8 @@ interface VoiceSlot {
 }
 
 export interface AudioEngine {
-  noteOn(note: number, velocity: number): void;
-  noteOff(note: number): void;
+  noteOn(note: number, time: number, velocity: number): void;
+  noteOff(note: number, time: number): void;
   updateParams(params: SynthParams): void;
 }
 
@@ -73,7 +73,7 @@ export function createAudioEngine(): AudioEngine {
     return oldest;
   }
 
-  function noteOn(note: number, velocity: number): void {
+  function noteOn(note: number, time: number, velocity: number): void {
     ensureRunning();
 
     // Retrigger if this MIDI note is already playing
@@ -85,27 +85,29 @@ export function createAudioEngine(): AudioEngine {
 
     const slot = findAvailableSlot();
     const frequency = midiNoteToFrequency(note);
-    slot.voice.noteOn(frequency, currentParams, velocity);
+    slot.voice.noteOn(frequency, currentParams, velocity, time);
     slot.midiNote = note;
-    slot.startTime = audioContext.currentTime;
+    slot.startTime = time;
     slot.state = "playing";
     activeNotes.set(note, slot);
   }
 
-  function noteOff(note: number): void {
+  function noteOff(note: number, time: number): void {
     const slot = activeNotes.get(note);
     if (!slot) return;
 
-    slot.voice.noteOff(currentParams);
+    slot.voice.noteOff(currentParams, time);
     slot.state = "releasing";
     activeNotes.delete(note);
 
     // Mark slot idle after release finishes
-    const releaseMs = (0.05 + currentParams.ampRelease * 1.95 + 0.2) * 1000;
+    const releaseDuration = 0.05 + currentParams.ampRelease * 1.95 + 0.2;
+    const releaseMs = releaseDuration * 1000;
+    const delayMs = (time - audioContext.currentTime) * 1000 + releaseMs;
     const capturedSlot = slot;
     setTimeout(() => {
       if (capturedSlot.state === "releasing") capturedSlot.state = "idle";
-    }, releaseMs);
+    }, Math.max(0, delayMs));
   }
 
   function updateParams(params: SynthParams): void {

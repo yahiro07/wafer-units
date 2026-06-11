@@ -22,12 +22,11 @@ export const MainApp = () => {
       },
       primaryInputPortHandlers: {
         noteInput: {
-          async noteOn(note) {
-            await engine.resumeIfNeed();
-            engine.noteOn(note, 1);
+          async noteOn(note, time) {
+            engine.noteOn(note, 1, time);
           },
-          noteOff(note) {
-            engine.noteOff(note);
+          noteOff(note, time) {
+            engine.noteOff(note, time);
           },
         },
         stateInput: persistence,
@@ -37,10 +36,10 @@ export const MainApp = () => {
     const closeMidiIn = setupMidiKeyboardInput({
       async noteOn(note) {
         await engine.resumeIfNeed();
-        engine.noteOn(note, 1);
+        engine.noteOn(note, 1, 0);
       },
       noteOff(note) {
-        engine.noteOff(note);
+        engine.noteOff(note, 0);
       },
     });
     onCleanup(closeMidiIn);

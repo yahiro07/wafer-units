@@ -1,6 +1,6 @@
 import { onCleanup } from "solid-js";
 import { uiActions } from "@/actions";
-import { unitInterface } from "@/audio/engine";
+import { synthEngine, unitInterface } from "@/audio/engine";
 import { persistence } from "@/persistence";
 import { setupMidiKeyboardInput } from "@/utils/midi-keyboard-input";
 
@@ -23,7 +23,8 @@ export function setupDrivers() {
     });
   } else {
     const closeMidiIn = setupMidiKeyboardInput({
-      noteOn(noteNumber) {
+      async noteOn(noteNumber) {
+        await synthEngine.resumeIfNeeded();
         uiActions.noteOn(noteNumber);
       },
       noteOff(noteNumber) {

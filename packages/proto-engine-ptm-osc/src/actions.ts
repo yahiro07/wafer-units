@@ -2,16 +2,15 @@ import { SynthParameters } from "@/definitions/parameters";
 import { setAppState } from "@/store";
 import { createSynthesizerEngine } from "@/synthesis";
 
-const synthEngine = createSynthesizerEngine();
+export const synthEngine = createSynthesizerEngine();
 
 export const uiActions = {
-  async noteOn(noteNumber: number) {
-    await synthEngine.resumeIfNeeded();
-    synthEngine.noteOn(noteNumber);
+  noteOn(noteNumber: number, time = 0, _velocity = 1) {
+    synthEngine.noteOn(noteNumber, time);
     setAppState("notes", (prev) => [...prev, noteNumber]);
   },
-  async noteOff(noteNumber: number) {
-    synthEngine.noteOff(noteNumber);
+  noteOff(noteNumber: number, time = 0) {
+    synthEngine.noteOff(noteNumber, time);
     setAppState("notes", (prev) => prev.filter((n) => n !== noteNumber));
   },
   setSynthParam<K extends keyof SynthParameters>(

@@ -21,8 +21,8 @@ type EngineApi = {
     value: SynthParameters[K],
   ): void;
   setAllParameters(params: SynthParameters): void;
-  noteOn(noteNumber: number): void;
-  noteOff(noteNumber: number): void;
+  noteOn(noteNumber: number, time?: number): void;
+  noteOff(noteNumber: number, time?: number): void;
   getNumActiveNotes(): number;
 };
 
@@ -116,7 +116,7 @@ export function createSynthEngine(): EngineApi {
         reverb: synthParameters.reverb,
       });
     },
-    noteOn(noteNumber) {
+    noteOn(noteNumber, time) {
       if (!audioCtx || !mainOutputNode) {
         console.warn(
           "SynthEngine is not initialized. Call init() before using the engine.",
@@ -125,7 +125,7 @@ export function createSynthEngine(): EngineApi {
       }
 
       if (activeVoices.has(noteNumber)) {
-        this.noteOff(noteNumber);
+        this.noteOff(noteNumber, time);
       }
 
       if (audioCtx.state === "suspended") {
@@ -138,7 +138,8 @@ export function createSynthEngine(): EngineApi {
         outputChannelCount: [1],
       });
 
-      const now = audioCtx.currentTime;
+      const now =
+        time && time > audioCtx.currentTime ? time : audioCtx.currentTime;
 
       const freqParam = workletNode.parameters.get("frequency");
       if (freqParam)
@@ -158,11 +159,14 @@ export function createSynthEngine(): EngineApi {
 
       activeVoices.set(noteNumber, { workletNode, gateParam });
     },
-    noteOff(noteNumber) {
+    noteOff(noteNumber, time) {
       const voice = activeVoices.get(noteNumber);
       if (!voice) return;
 
-      const now = audioCtx?.currentTime || 0;
+      const now =
+        time && audioCtx && time > audioCtx.currentTime
+          ? time
+          : audioCtx?.currentTime || 0;
       voice.gateParam.setValueAtTime(0.0, now);
 
       activeVoices.delete(noteNumber);

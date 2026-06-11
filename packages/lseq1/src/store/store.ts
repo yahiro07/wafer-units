@@ -30,7 +30,7 @@ export const store = createStore<StoreState>({
   bpm: 120,
   stdPlaying: false,
   activeNotes: [],
-  loopBars: 4,
+  loopBars: 1,
   stepStride: 2,
   allSteps: seqNumbers(256).map(() => SpecialStep.rest),
   octaveShift: 0,
