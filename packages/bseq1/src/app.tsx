@@ -1,6 +1,3 @@
-import "./page.css";
-import "mofus/ax-ui/utility-classes.css";
-import { mountAppRoot } from "mofus/ax-solid";
 import { Button } from "@/components/button";
 import { Icons } from "@/components/icons";
 import { Knob } from "@/components/knob";
@@ -60,7 +57,7 @@ const TopBar = () => {
 
 const PageRoot = () => {
   return (
-    <div class="w-dvw h-dvh flex-c text-[#444]">
+    <div class="flex-c text-[#444]">
       <div class="w-[340px] h-[210px] flex-vc bg-zinc-100 border border-[#445]">
         <TopBar />
         <div class="grow flex-vc gap-3">
@@ -89,11 +86,9 @@ const PageRoot = () => {
   );
 };
 
-const App = () => {
-  console.log("useq 0914");
+export const App = () => {
+  console.log("bseq1 0914");
   drivers.setupAll();
 
   return <PageRoot />;
 };
-
-mountAppRoot(() => <App />);

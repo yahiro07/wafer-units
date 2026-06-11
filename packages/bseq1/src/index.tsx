@@ -1,15 +1,16 @@
-import cssText2 from "mofur/ax-ui/utility-classes.css?inline";
-import { createRoot, Root } from "react-dom/client";
+import cssText2 from "mofus/ax-ui/utility-classes.css?inline";
+import { render } from "solid-js/web";
 import { App } from "./app";
 import cssText from "./page.css?inline";
 
 export default class UnitElement extends HTMLElement {
-  isMounted: boolean = false;
-  root: Root | null = null;
+  isMounted: boolean;
+  disposeRender: (() => void) | null = null;
 
   constructor() {
     super();
     this.attachShadow({ mode: "open" });
+    this.isMounted = false;
   }
   connectedCallback() {
     if (this.isMounted || !this.shadowRoot) return;
@@ -19,8 +20,7 @@ export default class UnitElement extends HTMLElement {
     style.textContent = cssText + cssText2;
     this.shadowRoot.appendChild(style);
 
-    this.root = createRoot(this.shadowRoot);
-    this.root.render(<App />);
+    this.disposeRender = render(() => <App />, this.shadowRoot);
     this.isMounted = true;
   }
 
@@ -28,8 +28,8 @@ export default class UnitElement extends HTMLElement {
     if (this.isMounted && this.shadowRoot) {
       setTimeout(() => {
         if (!this.shadowRoot) return;
-        this.root?.unmount();
-        this.root = null;
+        this.disposeRender?.();
+        this.disposeRender = null;
         this.isMounted = false;
       }, 0);
     }

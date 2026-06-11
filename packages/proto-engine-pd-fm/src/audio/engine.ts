@@ -1,9 +1,11 @@
-import { getUnitInterface } from "wus-unit-types";
+import { UnitInterface } from "wus-unit-types";
 import { createEffectChain } from "@/audio/effect-chain";
 import { defaultParams, SynthParameters } from "../state";
 import workletUrl from "./worklet?worker&url";
-
-export const unitInterface = getUnitInterface("wus-v02");
+export const unitInterface = (window as any).queryUnitInterfaceForModule(
+  "wus-v02",
+  import.meta.url,
+) as UnitInterface;
 
 const midiNoteNumberToFrequency = (note: number): number =>
   440.0 * Math.pow(2.0, (note - 69) / 12.0);

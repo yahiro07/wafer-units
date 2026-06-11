@@ -1,9 +1,12 @@
 import { createStore } from "solid-js/store";
-import { getUnitInterface } from "wus-unit-types";
+import { UnitInterface } from "wus-unit-types";
 import { createAppSynthTarget } from "@/sequencer/app-synth-target";
 import { createSequencerEngine, StepCode } from "@/sequencer/sequencer-engine";
+export const unitInterface = (window as any).queryUnitInterfaceForModule(
+  "wus-v02",
+  import.meta.url,
+) as UnitInterface;
 
-export const unitInterface = getUnitInterface("wus-v02");
 const appSynthTarget = createAppSynthTarget(unitInterface);
 export const sequencerEngine = createSequencerEngine(appSynthTarget);
 

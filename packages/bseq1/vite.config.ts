@@ -1,4 +1,5 @@
 import tailwindcss from "@tailwindcss/vite";
+import { resolve } from "path";
 import { defineConfig } from "vite";
 import solid from "vite-plugin-solid";
 
@@ -13,8 +14,12 @@ export default defineConfig({
     tsconfigPaths: true,
   },
   build: {
-    outDir: `../../dist/useq`,
+    lib: {
+      entry: resolve(__dirname, "src/index.tsx"),
+      formats: ["es"],
+      fileName: "index",
+    },
+    outDir: `../../dist/bseq1`,
     emptyOutDir: true,
   },
-  server: { port: 3000 },
 });

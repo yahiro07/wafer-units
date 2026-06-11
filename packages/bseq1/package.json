@@ -1,14 +1,8 @@
 {
-  "name": "useq",
+  "name": "bseq1",
   "type": "module",
   "private": true,
   "license": "MIT",
-  "devEngines": {
-    "packageManager": {
-      "name": "pnpm",
-      "onFail": "error"
-    }
-  },
   "scripts": {
     "dev": "vite dev",
     "build": "vite build"
