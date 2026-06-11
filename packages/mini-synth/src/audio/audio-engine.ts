@@ -1,15 +1,14 @@
-import { getUnitInterface } from "wus-unit-types";
+import { queryUnitInterface } from "wus-unit-types";
 import { createEffectsChain } from "./effects";
 import type { SynthParams } from "./synth-params";
 import { defaultParams } from "./synth-params";
 import { createVoice, type Voice } from "./voice";
 
-export const unitInterface = getUnitInterface("wus-v02");
+export const unitInterface = queryUnitInterface("wus-v01");
 
 function midiNoteToFrequency(note: number): number {
   return 440 * Math.pow(2, (note - 69) / 12);
 }
-
 interface VoiceSlot {
   voice: Voice;
   midiNote: number;
@@ -27,9 +26,7 @@ const voiceCount = 6;
 
 export function createAudioEngine(): AudioEngine {
   const audioContext = unitInterface?.audioContext ?? new AudioContext();
-  const destNode =
-    unitInterface?.primaryOutputPort.audioOutput.node ??
-    audioContext.destination;
+  const destNode = unitInterface?.audioOutputNode ?? audioContext.destination;
   const effects = createEffectsChain(audioContext);
   effects.outputNode.connect(destNode);
 
@@ -105,9 +102,12 @@ export function createAudioEngine(): AudioEngine {
     const releaseMs = releaseDuration * 1000;
     const delayMs = (time - audioContext.currentTime) * 1000 + releaseMs;
     const capturedSlot = slot;
-    setTimeout(() => {
-      if (capturedSlot.state === "releasing") capturedSlot.state = "idle";
-    }, Math.max(0, delayMs));
+    setTimeout(
+      () => {
+        if (capturedSlot.state === "releasing") capturedSlot.state = "idle";
+      },
+      Math.max(0, delayMs),
+    );
   }
 
   function updateParams(params: SynthParams): void {

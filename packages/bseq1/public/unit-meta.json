@@ -3,9 +3,10 @@
   "unitType": "sequencer",
   "categoryHint": "stepSequencer",
   "preferredSize": "390,230",
-  "unitTypesVersion": "0.2.2",
+  "protocol": "wus-v01",
+  "unitTypesVersion": "0.2.5",
   "outputSignalTypes": "note",
-  "inputSignalTypes": "state",
+  "inputSignalTypes": "",
   "repositoryUrl": "https://github.com/yahiro07/wus-units",
   "author": "yahiro",
   "license": "MIT"

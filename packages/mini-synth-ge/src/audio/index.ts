@@ -1,18 +1,17 @@
 import { createEffect } from "solid-js";
-import { getUnitInterface } from "wus-unit-types";
+import { queryUnitInterface } from "wus-unit-types";
 import { appState, SynthParameters } from "@/store/store";
 import { createChorus } from "./chorus";
 import { createReverb } from "./reverb";
 import { createVoice } from "./voice";
 
-export const unitInterface = getUnitInterface("wus-v02");
+export const unitInterface = queryUnitInterface("wus-v01");
 
 let engineInstance: ReturnType<typeof createAudioEngine> | null = null;
 
 function createAudioEngine() {
   const context = unitInterface?.audioContext ?? new AudioContext();
-  const destNode =
-    unitInterface?.primaryOutputPort.audioOutput.node ?? context.destination;
+  const destNode = unitInterface?.audioOutputNode ?? context.destination;
 
   const voicesGain = context.createGain();
   const chorus = createChorus(context);

@@ -11,7 +11,7 @@ export function createAppSynthTarget(
   unitInterface: UnitInterface | undefined,
 ): AppSynthTarget {
   if (unitInterface) {
-    const noteOutput = unitInterface.primaryOutputPort.noteOutput;
+    const noteOutput = unitInterface.noteOutputPort;
     return {
       async resumeIfNeed() {},
       noteOn(noteNumber: number) {

@@ -1,11 +1,12 @@
-import { UnitInterface } from "wus-unit-types";
+import { queryUnitInterfaceForModule } from "wus-unit-types";
 import { createEffectChain } from "@/audio/effect-chain";
 import { defaultParams, SynthParameters } from "../state";
 import workletUrl from "./worklet?worker&url";
-export const unitInterface = (window as any).queryUnitInterfaceForModule(
-  "wus-v02",
+
+export const unitInterface = queryUnitInterfaceForModule(
+  "wus-v01",
   import.meta.url,
-) as UnitInterface;
+);
 
 const midiNoteNumberToFrequency = (note: number): number =>
   440.0 * Math.pow(2.0, (note - 69) / 12.0);
@@ -44,7 +45,7 @@ export function createSynthEngine(): EngineApi {
       new (window.AudioContext || (window as any).webkitAudioContext)();
 
     const audioDestination =
-      unitInterface?.primaryOutputPort.audioOutput.node || audioCtx.destination;
+      unitInterface?.audioOutputNode ?? audioCtx.destination;
 
     await audioCtx.audioWorklet.addModule(workletUrl);
 
