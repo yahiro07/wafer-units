@@ -12,9 +12,6 @@ export default class UnitElement extends HTMLElement {
     this.attachShadow({ mode: "open" });
     this.isMounted = false;
   }
-
-  mountApp() {}
-
   connectedCallback() {
     if (this.isMounted || !this.shadowRoot) return;
 

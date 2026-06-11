@@ -13,8 +13,6 @@ export default class UnitElement extends HTMLElement {
     this.isMounted = false;
   }
 
-  mountApp() {}
-
   connectedCallback() {
     if (this.isMounted || !this.shadowRoot) return;
 
