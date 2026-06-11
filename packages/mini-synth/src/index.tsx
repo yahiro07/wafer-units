@@ -18,19 +18,17 @@ const App = () => {
           unitType: "instrument",
           categoryHint: "synthesizer",
           outputs: ["audio"],
-          inputs: ["note", "state"],
+          inputs: ["note"],
         },
-        primaryInputPortHandlers: {
-          noteInput: {
-            noteOn(note, time) {
-              uiActions.noteOn(note, time ?? 0, 1);
-            },
-            noteOff(note, time) {
-              uiActions.noteOff(note, time ?? 0);
-            },
+        noteInput: {
+          noteOn(note, time) {
+            uiActions.noteOn(note, time ?? 0, 1);
           },
-          stateInput: persistence,
+          noteOff(note, time) {
+            uiActions.noteOff(note, time ?? 0);
+          },
         },
+        persistence,
       });
     } else {
       const cleanup = setupMidiKeyboardInput({
