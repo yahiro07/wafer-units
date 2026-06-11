@@ -22,23 +22,20 @@ export const drivers = {
         unitType: "sequencer",
         categoryHint: "stepSequencer",
         outputs: ["note"],
-        inputs: ["clock"],
       },
-      primaryInputPortHandlers: {
-        clockInput: {
-          start() {
-            uiActions.setExPlaying(true);
-          },
-          stop() {
-            uiActions.setExPlaying(false);
-            sequencerEngine.allNotesOff();
-          },
-          processStep: drivers.wrapProcessStep,
+      clockHandlers: {
+        start() {
+          uiActions.setExPlaying(true);
         },
-        stateInput: {
-          emitStateBytes: persistence.emitStateBytes,
-          applyStateBytes: persistence.applyStateBytes,
+        stop() {
+          uiActions.setExPlaying(false);
+          sequencerEngine.allNotesOff();
         },
+        processStep: drivers.wrapProcessStep,
+      },
+      persistence: {
+        emitStateBytes: persistence.emitStateBytes,
+        applyStateBytes: persistence.applyStateBytes,
       },
       hostCallbacks: {
         setBpm(bpm) {

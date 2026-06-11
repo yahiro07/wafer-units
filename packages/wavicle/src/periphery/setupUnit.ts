@@ -10,16 +10,14 @@ export function setupUnit(synth: ISynthesizerBase) {
       outputs: ["audio"],
       inputs: ["note"],
     },
-    primaryInputPortHandlers: {
-      noteInput: {
-        noteOn(noteNumber) {
-          synth.noteOn(noteNumber);
-          asyncRerender();
-        },
-        noteOff(noteNumber) {
-          synth.noteOff(noteNumber);
-          asyncRerender();
-        },
+    noteInput: {
+      noteOn(noteNumber) {
+        synth.noteOn(noteNumber);
+        asyncRerender();
+      },
+      noteOff(noteNumber) {
+        synth.noteOff(noteNumber);
+        asyncRerender();
       },
     },
   });

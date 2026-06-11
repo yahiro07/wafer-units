@@ -30,27 +30,25 @@ export const drivers = {
         unitType: "sequencer",
         categoryHint: "stepSequencer",
         outputs: ["note"],
-        inputs: ["clock", "state", "note"],
+        inputs: ["note"],
       },
-      primaryInputPortHandlers: {
-        noteInput: {
-          noteOn: actions.inputNoteOn,
-          noteOff: actions.inputNoteOff,
-        },
-        clockInput: {
-          start() {
-            actions.setExPlaying(true);
-          },
-          processStep(stepIndex) {
-            driversInternal.wrapProcessStep(stepIndex);
-          },
-          stop() {
-            actions.setExPlaying(false);
-            sequencerEngine.allNotesOff();
-          },
-        },
-        stateInput: persistence,
+      noteInput: {
+        noteOn: actions.inputNoteOn,
+        noteOff: actions.inputNoteOff,
       },
+      clockHandlers: {
+        start() {
+          actions.setExPlaying(true);
+        },
+        processStep(stepIndex) {
+          driversInternal.wrapProcessStep(stepIndex);
+        },
+        stop() {
+          actions.setExPlaying(false);
+          sequencerEngine.allNotesOff();
+        },
+      },
+      persistence,
       hostCallbacks: {
         setBpm(bpm) {
           actions.setBpm(bpm);

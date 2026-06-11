@@ -3,6 +3,7 @@
   "unitType": "instrument",
   "categoryHint": "synthesizer",
   "preferredSize": "800,380",
+  "protocol": "wus-v01",
   "unitTypesVersion": "0.2.2",
   "outputSignalTypes": "audio",
   "inputSignalTypes": "audio,state",

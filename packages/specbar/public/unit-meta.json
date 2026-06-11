@@ -3,6 +3,7 @@
   "unitType": "effect",
   "categoryHint": "visualizer",
   "preferredSize": "350,55",
+  "protocol": "wus-v01",
   "unitTypesVersion": "0.2.2",
   "outputSignalTypes": "audio",
   "inputSignalTypes": "audio",

@@ -1,7 +1,7 @@
 import { mapKnobGainDb } from "mofur/mo-audio";
 import { ScalerBoxAutoSized } from "mofur/mo-react";
 import { createStore } from "snap-store";
-import { UnitInterface } from "wus-unit-types";
+import { queryUnitInterfaceForModule, UnitInterface } from "wus-unit-types";
 import { Knob } from "@/components/knob";
 import { setupDummyHost } from "@/dummy-host";
 import { BasicSpectrumView } from "@/organisms/basic-spectrum-view";
@@ -36,8 +36,8 @@ const actions = {
 };
 
 function setupUnitInstance() {
-  const unitInterface = (window as any).queryUnitInterfaceForModule(
-    "wus-v02",
+  const unitInterface = queryUnitInterfaceForModule(
+    "wus-v01",
     import.meta.url,
   ) as UnitInterface;
 
@@ -57,9 +57,9 @@ function setupUnitInstance() {
     }, 16);
 
     const gainNode = audioContext.createGain();
-    unitInterface.primaryInputPort.audioInput.node.connect(gainNode);
+    unitInterface.audioInputNode.connect(gainNode);
     gainNode.connect(analyzer);
-    analyzer.connect(unitInterface.primaryOutputPort.audioOutput.node);
+    analyzer.connect(unitInterface.audioOutputNode);
 
     function updateGain(level: number) {
       gainNode.gain.value = mapKnobGainDb(level, 0.5);
@@ -77,20 +77,18 @@ function setupUnitInstance() {
         unitType: "effect",
         categoryHint: "effect",
         outputs: ["audio"],
-        inputs: ["audio", "state"],
+        inputs: ["audio"],
       },
-      primaryInputPortHandlers: {
-        stateInput: {
-          emitStateBytes() {
-            const dm = store.state.displayMode;
-            return new Uint8Array([dm]);
-          },
-          applyStateBytes(bytes) {
-            if (bytes.length === 1) {
-              const dm = bytes[0] > 0 ? 1 : 0;
-              store.setDisplayMode(dm);
-            }
-          },
+      persistence: {
+        emitStateBytes() {
+          const dm = store.state.displayMode;
+          return new Uint8Array([dm]);
+        },
+        applyStateBytes(bytes) {
+          if (bytes.length === 1) {
+            const dm = bytes[0] > 0 ? 1 : 0;
+            store.setDisplayMode(dm);
+          }
         },
       },
     });

@@ -1,11 +1,11 @@
 import { asyncRerender } from "alumina";
 import { IInstrumentKey } from "@/base";
 import { arrays } from "@/funcs";
+import { unitInterface } from "@/synthLib/unitInterface";
 import { createInstrumentProvider } from "./instrumentProvider";
 import { createPitchShiftedNoteVoice } from "./noteVoice";
 import { createNoteVoiceManager } from "./noteVoiceManager";
 import { IInstrumentData, IInstrumentParameters } from "./types";
-import { unitInterface } from "@/synthLib/unitInterface";
 
 export interface ISynthesizerEngine {
   allInstrumentKeys: IInstrumentKey[];
@@ -49,10 +49,7 @@ export function createSynthesizerEngine(): ISynthesizerEngine {
   voiceMixer
     .connect(compressor)
     .connect(outputAnalyser)
-    .connect(
-      unitInterface?.primaryOutputPort.audioOutput.node ??
-        audioContext.destination,
-    );
+    .connect(unitInterface?.audioOutputNode ?? audioContext.destination);
 
   let timerId = undefined as ReturnType<typeof setTimeout> | undefined;
   let masterVolume = 1;

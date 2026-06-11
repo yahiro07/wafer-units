@@ -11,15 +11,13 @@ export function setupDrivers() {
         unitType: "instrument",
         categoryHint: "synthesizer",
         outputs: ["audio"],
-        inputs: ["note", "state"],
+        inputs: ["note"],
       },
-      primaryInputPortHandlers: {
-        noteInput: {
-          noteOn: uiActions.noteOn,
-          noteOff: uiActions.noteOff,
-        },
-        stateInput: persistence,
+      noteInput: {
+        noteOn: uiActions.noteOn,
+        noteOff: uiActions.noteOff,
       },
+      persistence,
     });
   } else {
     const closeMidiIn = setupMidiKeyboardInput({

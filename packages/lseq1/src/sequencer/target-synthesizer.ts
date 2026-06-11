@@ -1,11 +1,11 @@
 import { createTestSynthesizer } from "mofur/mx-audio";
-import { getUnitInterface } from "wus-unit-types";
+import { queryUnitInterface } from "wus-unit-types";
 
-export const unitInterface = getUnitInterface("wus-v02");
+export const unitInterface = queryUnitInterface("wus-v01");
 
 export function createTargetSynthesizer() {
   if (unitInterface) {
-    const noteOutput = unitInterface.primaryOutputPort.noteOutput;
+    const noteOutput = unitInterface.noteOutputPort;
     return {
       async resumeIfNeed() {},
       noteOn(noteNumber: number) {
