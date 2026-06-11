@@ -24,19 +24,17 @@ export const uiActions = {
           unitType: "instrument",
           categoryHint: "synthesizer",
           outputs: ["audio"],
-          inputs: ["note", "state"],
+          inputs: ["note"],
         },
-        primaryInputPortHandlers: {
-          noteInput: {
-            async noteOn(noteNumber, time) {
-              synthAudio.noteOn(noteNumber, 1, time);
-            },
-            async noteOff(noteNumber, time) {
-              synthAudio.noteOff(noteNumber, time);
-            },
+        noteInput: {
+          async noteOn(noteNumber, time) {
+            synthAudio.noteOn(noteNumber, 1, time);
           },
-          stateInput: persistence,
+          async noteOff(noteNumber, time) {
+            synthAudio.noteOff(noteNumber, time);
+          },
         },
+        persistence,
       });
     } else {
       return setupMidiKeyboardInput({
