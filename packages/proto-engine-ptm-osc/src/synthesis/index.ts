@@ -1,5 +1,5 @@
 import { midiToFrequency, power2 } from "mofus/mo-synthesis";
-import { getUnitInterface } from "wus-unit-types";
+import { UnitInterface } from "wus-unit-types";
 import {
   createSynthParameters,
   SynthParameters,
@@ -17,7 +17,10 @@ import { createReverberator } from "@/synthesis/reverbrator";
 import { createShaperCurveBufferCache } from "@/synthesis/shaper-curve-buffer-cache";
 import { createAudioNodeChain } from "@/synthesis/webaudio-helper";
 
-export const unitInterface = getUnitInterface("wus-v02");
+export const unitInterface = (window as any).queryUnitInterfaceForModule(
+  "wus-v02",
+  import.meta.url,
+) as UnitInterface;
 
 function getNoteFrequency(noteNumber: number, oscOctave: number): number {
   const modNoteNumber = noteNumber + oscOctave * 12;
@@ -172,7 +175,8 @@ function createVoice(bus: SynthesisBus, noteNumber: number): Voice {
         time && time > audioContext.currentTime
           ? time
           : audioContext.currentTime;
-      const delayMs = (t - audioContext.currentTime + ampEg.getReleaseTime()) * 1000 + 100;
+      const delayMs =
+        (t - audioContext.currentTime + ampEg.getReleaseTime()) * 1000 + 100;
       setTimeout(
         () => {
           nodesChain.disconnects();

@@ -76,7 +76,7 @@ function ModuleHeaderWithIndicator(props: {
 
 export function MainView() {
   return (
-    <div class="w-dvw h-dvh flex-c gap-4 bg-gray-700">
+    <div class="flex-c gap-4 bg-gray-700">
       <div class="flex-vc gap-4 bg-zinc-900 w-[800px] h-[380px]">
         <div class="flex-h gap-6">
           <div class="flex-vc gap-1 mb-[-20px]">
