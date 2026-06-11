@@ -13,7 +13,7 @@ export default defineConfig({
     tsconfigPaths: true,
   },
   build: {
-    outDir: `../../dist/useq`,
+    outDir: `../../dist/bseq1`,
     emptyOutDir: true,
   },
   server: { port: 3000 },
