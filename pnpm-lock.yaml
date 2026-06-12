@@ -36,8 +36,8 @@ importers:
         specifier: ^2.11.12
         version: 2.11.12(solid-js@1.9.13)(vite@8.0.14(@types/node@25.9.1)(jiti@2.7.0))
       wus-unit-types:
-        specifier: ^0.1.5
-        version: 0.1.5
+        specifier: file:../webaudio-unit-system/contract/wus-unit-types-v01
+        version: file:../webaudio-unit-system/contract/wus-unit-types-v01
 
   packages/bseq1:
     dependencies:
@@ -1164,8 +1164,8 @@ packages:
       vite:
         optional: true
 
-  wus-unit-types@0.1.5:
-    resolution: {integrity: sha512-WfU7jRm1nuaqAylx3PqhWhBruETomGZmnrAyoH7aw9UCwkf5plGP/Emf6mKLJoY1bvfiIOgN8UwFl1fYAOg7SA==}
+  wus-unit-types@file:../webaudio-unit-system/contract/wus-unit-types-v01:
+    resolution: {directory: ../webaudio-unit-system/contract/wus-unit-types-v01, type: directory}
 
   yallist@3.1.1:
     resolution: {integrity: sha512-a4UGQaWPH59mOXUYnAG2ewncQS4i4F43Tv3JoAM+s2VDAmS9NsK8GpDMLrCHPksFT7h3K6TOoUNn2pb7RoXx4g==}
@@ -2030,7 +2030,7 @@ snapshots:
     optionalDependencies:
       vite: 8.0.14(@types/node@25.9.1)(jiti@2.7.0)
 
-  wus-unit-types@0.1.5: {}
+  wus-unit-types@file:../webaudio-unit-system/contract/wus-unit-types-v01: {}
 
   yallist@3.1.1: {}
 
