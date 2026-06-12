@@ -179,7 +179,7 @@ export const createChordProgressionUnit = (unitInterface: UnitInterface) => {
       return (
         <div className="w-[300px] h-[150px] bg-gray-100 flex-c">
           <div className="flex-v gap-2">
-            <div>chord progression</div>
+            <div>chord caster</div>
             <div className="flex-ha gap-4">
               <div className="flex-ha gap-2">
                 <div>key</div>
