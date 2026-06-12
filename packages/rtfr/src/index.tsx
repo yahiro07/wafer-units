@@ -6,6 +6,9 @@ import { createCustomElementClass } from "wus-unit-types/unit-helper";
 import cssText from "./page.css?inline";
 import { createRtfrUnit } from "./unit";
 
+const webFontUrl =
+  "https://fonts.googleapis.com/css2?family=Inter:wght@400..700&display=swap";
+
 function createEntryClass() {
   const unitInterface = queryUnitInterfaceForModule("wus-v01", import.meta.url);
   if (!unitInterface) {
@@ -20,7 +23,7 @@ function createEntryClass() {
         render(null, shadowRoot);
       };
     },
-    [cssText, cssText2, cssText3],
+    { cssTexts: [cssText, cssText2, cssText3], stylesheetUrls: [webFontUrl] },
   );
 }
 
