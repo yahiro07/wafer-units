@@ -25,7 +25,7 @@ function createSequencerEngine() {
     setStepNotes(stepNotes: StepNote[]) {
       state.stepNotes = stepNotes;
     },
-    processStep(stepIndex: number, unitDurationSec: number, time: number) {
+    processStep(stepIndex: number, time: number, unitDurationSec: number) {
       if (stepIndex % 4 === 0) {
         noteOutputPort.noteOn(60, time);
         noteOutputPort.noteOff(60, time + unitDurationSec * 0.5);

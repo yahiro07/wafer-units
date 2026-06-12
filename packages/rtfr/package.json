@@ -6,7 +6,7 @@
     "build": "vite build"
   },
   "dependencies": {
-    "mofur": "^0.1.0",
+    "mofur": "file:../../../beam/mofur",
     "mofur-components": "file:../../../beam/mofur-components",
     "preact": "^10.26.0",
     "snap-store": "^0.1.7"

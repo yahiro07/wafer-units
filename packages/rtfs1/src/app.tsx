@@ -16,8 +16,8 @@ function setupSynchronization() {
       stop() {
         sequencerEngine.allNotesOff();
       },
-      processStep(stepIndex, unitDurationSec, time) {
-        sequencerEngine.processStep(stepIndex, unitDurationSec, time);
+      processStep(stepIndex, time, unitDurationSec) {
+        sequencerEngine.processStep(stepIndex, time, unitDurationSec);
       },
     },
   });

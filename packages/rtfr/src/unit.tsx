@@ -11,8 +11,9 @@ import {
 import { useEffect, useMemo } from "react";
 import { createStore } from "snap-store";
 import { UnitInterface } from "wus-unit-types";
-import { makeStepSchedulingSource } from "@/common/step-scheduling-source";
 import { LabeledRow } from "@/components";
+
+console.log("rtfr 0223");
 
 type DynamicPatternInput = {
   key?: string; //"C", "Am", etc.
@@ -219,36 +220,30 @@ function createSequencer(unitInterface: UnitInterface) {
 
   const { noteOutputPort } = unitInterface;
 
-  const sequencerTickDriver = createSequencerTickDriver();
+  const sequencerTickDriver = createSequencerTickDriver(
+    unitInterface.audioContext,
+  );
 
   const core = {
-    processClock(
-      startTime: number,
-      ppqFrom: number,
-      ppqTo: number,
-      bpm: number,
-    ) {
+    processStep(stepIndex: number, time: number, unitDuration: number) {
       const { pattern } = state;
-      const sss = makeStepSchedulingSource(startTime, ppqFrom, ppqTo, bpm);
-      sss.stepPoints.forEach(({ time, stepIndex }) => {
-        const rtfNote = pattern[stepIndex % pattern.length];
-        const songKey = checkKeyValid(state.key);
-        if (
-          songKey &&
-          rtfNote !== undefined &&
-          state.chordRootNote !== undefined
-        ) {
-          const noteNumber = applyDynamicNoteShift(
-            rtfNote,
-            songKey,
-            state.chordRootNote,
-            state.octaveShift,
-          );
-          const endTime = time + sss.stepDuration * state.noteDuty;
-          noteOutputPort.noteOn(noteNumber, time, 1);
-          noteOutputPort.noteOff(noteNumber, endTime);
-        }
-      });
+      const rtfNote = pattern[stepIndex % pattern.length];
+      const songKey = checkKeyValid(state.key);
+      if (
+        songKey &&
+        rtfNote !== undefined &&
+        state.chordRootNote !== undefined
+      ) {
+        const noteNumber = applyDynamicNoteShift(
+          rtfNote,
+          songKey,
+          state.chordRootNote,
+          state.octaveShift,
+        );
+        const endTime = time + unitDuration * state.noteDuty;
+        noteOutputPort.noteOn(noteNumber, time, 1);
+        noteOutputPort.noteOff(noteNumber, endTime);
+      }
     },
   };
 
@@ -258,11 +253,8 @@ function createSequencer(unitInterface: UnitInterface) {
       state.chordRootNote = note;
       if (!state.isClockInputActive) {
         sequencerTickDriver.setBpm(state.bpm);
-        const startTime = unitInterface.audioContext.currentTime;
         sequencerTickDriver.start({
-          processTickRange(ppqFrom, ppqTo) {
-            core.processClock(startTime, ppqFrom, ppqTo, state.bpm);
-          },
+          processStep: core.processStep,
         });
         state.isInternalTickRunning = true;
       }
@@ -286,7 +278,7 @@ function createSequencer(unitInterface: UnitInterface) {
       state.isClockInputActive = false;
       state.chordRootNote = undefined;
     },
-    processClock: core.processClock,
+    processStep: core.processStep,
     setBpm(bpm: number) {
       state.bpm = bpm;
     },
@@ -353,7 +345,8 @@ export const createRtfrUnit = (unitInterface: UnitInterface) => {
     clockHandlers: {
       start: sequencer.clockStart,
       stop: sequencer.clockStop,
-      processScheduling: sequencer.processClock,
+      // processScheduling: sequencer.processClock,
+      processStep: sequencer.processStep,
     },
     persistence: {
       emitState() {

@@ -146,8 +146,8 @@ importers:
   packages/rtfr:
     dependencies:
       mofur:
-        specifier: ^0.1.0
-        version: 0.1.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+        specifier: file:../../../beam/mofur
+        version: file:../beam/mofur(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       mofur-components:
         specifier: file:../../../beam/mofur-components
         version: file:../beam/mofur-components(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
