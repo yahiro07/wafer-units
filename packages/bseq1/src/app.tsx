@@ -87,7 +87,6 @@ const PageRoot = () => {
 };
 
 export const App = () => {
-  console.log("bseq1 0914");
   drivers.setupAll();
 
   return <PageRoot />;
