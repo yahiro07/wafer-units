@@ -11,7 +11,6 @@ import {
 import { useEffect, useMemo } from "react";
 import { createStore } from "snap-store";
 import { UnitInterface } from "wus-unit-types";
-import { createNoteOffSchedulingAdapter } from "@/common/note-off-scheduling-adapter";
 import { makeStepSchedulingSource } from "@/common/step-scheduling-source";
 import { LabeledRow } from "@/components";
 
@@ -218,9 +217,7 @@ function createSequencer(unitInterface: UnitInterface) {
     isInternalTickRunning: false,
   };
 
-  const adaptedNoteOutput = createNoteOffSchedulingAdapter(
-    unitInterface.noteOutputPort,
-  );
+  const { noteOutputPort } = unitInterface;
 
   const sequencerTickDriver = createSequencerTickDriver();
 
@@ -248,11 +245,10 @@ function createSequencer(unitInterface: UnitInterface) {
             state.octaveShift,
           );
           const endTime = time + sss.stepDuration * state.noteDuty;
-          adaptedNoteOutput.noteOn(noteNumber, time, 1);
-          adaptedNoteOutput.noteOff(noteNumber, endTime);
+          noteOutputPort.noteOn(noteNumber, time, 1);
+          noteOutputPort.noteOff(noteNumber, endTime);
         }
       });
-      adaptedNoteOutput.clock(startTime, ppqFrom, ppqTo, bpm);
     },
   };
 
@@ -277,7 +273,6 @@ function createSequencer(unitInterface: UnitInterface) {
         // noteOutput.noteOff(note, timeAt);
         sequencerTickDriver.stop();
         state.isInternalTickRunning = false;
-        adaptedNoteOutput.flush();
       }
     },
     clockStart() {
@@ -290,7 +285,6 @@ function createSequencer(unitInterface: UnitInterface) {
     clockStop() {
       state.isClockInputActive = false;
       state.chordRootNote = undefined;
-      adaptedNoteOutput.flush();
     },
     processClock: core.processClock,
     setBpm(bpm: number) {
