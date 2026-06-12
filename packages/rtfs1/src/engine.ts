@@ -19,17 +19,16 @@ function createSequencerEngine() {
     stepNotes: [] as StepNote[],
   };
 
+  const { noteOutputPort } = unitInterface;
+
   return {
     setStepNotes(stepNotes: StepNote[]) {
       state.stepNotes = stepNotes;
     },
     processStep(stepIndex: number, unitDurationSec: number, time: number) {
       if (stepIndex % 4 === 0) {
-        // const time = unitInterface.audioContext.currentTime + timeOffset;
-        unitInterface.noteOutputPort.noteOn(60, time);
-      } else if (stepIndex % 4 === 2) {
-        // const time = unitInterface.audioContext.currentTime + timeOffset;
-        unitInterface.noteOutputPort.noteOff(60, time);
+        noteOutputPort.noteOn(60, time);
+        noteOutputPort.noteOff(60, time + unitDurationSec * 0.5);
       }
     },
     allNotesOff() {},
