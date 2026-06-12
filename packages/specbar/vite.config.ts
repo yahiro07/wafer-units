@@ -19,5 +19,4 @@ export default defineConfig({
     outDir: "../../dist/specbar",
     emptyOutDir: true,
   },
-  server: { port: 3000 },
 });
