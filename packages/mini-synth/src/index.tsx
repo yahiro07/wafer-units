@@ -1,53 +1,10 @@
-import "./styles/page.css";
-import "./styles/utility-classes.css";
+import { render } from "solid-js/web";
+import { createCustomElementClass } from "wus-unit-types/unit-helper";
+import { App } from "./app";
+import cssText from "./styles/page.css?inline";
+import cssText2 from "./styles/utility-classes.css?inline";
 
-import { onCleanup, onMount } from "solid-js";
-import { unitInterface } from "@/audio/audio-engine";
-import { MainSection } from "@/sections/main-section";
-import { TopSection } from "@/sections/top-section";
-import { uiActions } from "@/store/app-store";
-import { persistence } from "@/store/persistence";
-import { setupMidiKeyboardInput } from "@/utils/midi-keyboard-input";
-import { mountAppRoot } from "@/utils/mount-app-root";
-
-const App = () => {
-  onMount(() => {
-    if (unitInterface) {
-      unitInterface.completeSetup({
-        unitAspects: {
-          unitType: "instrument",
-          categoryHint: "synthesizer",
-          outputs: ["audio"],
-          inputs: ["note"],
-        },
-        noteInput: {
-          noteOn(note, time) {
-            uiActions.noteOn(note, time ?? 0, 1);
-          },
-          noteOff(note, time) {
-            uiActions.noteOff(note, time ?? 0);
-          },
-        },
-        persistence,
-      });
-    } else {
-      const cleanup = setupMidiKeyboardInput({
-        noteOn: (note) => uiActions.noteOn(note, 0, 1),
-        noteOff: (note) => uiActions.noteOff(note, 0),
-      });
-      onCleanup(cleanup);
-    }
-  });
-
-  return (
-    <div
-      class="flex-v bg-neutral-900 text-white overflow-hidden"
-      style={{ width: "640px", height: "320px" }}
-    >
-      <TopSection />
-      <MainSection />
-    </div>
-  );
-};
-
-mountAppRoot(() => <App />);
+export default createCustomElementClass(
+  (root) => render(() => <App />, root),
+  [cssText, cssText2],
+);

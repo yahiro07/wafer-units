@@ -1,11 +1,13 @@
-import { queryUnitInterface } from "wus-unit-types";
+import { queryUnitInterfaceForModule } from "wus-unit-types";
 import { createEffectsChain } from "./effects";
 import type { SynthParams } from "./synth-params";
 import { defaultParams } from "./synth-params";
 import { createVoice, type Voice } from "./voice";
 
-export const unitInterface = queryUnitInterface("wus-v01");
-
+export const unitInterface = queryUnitInterfaceForModule(
+  "wus-v01",
+  import.meta.url,
+);
 function midiNoteToFrequency(note: number): number {
   return 440 * Math.pow(2, (note - 69) / 12);
 }

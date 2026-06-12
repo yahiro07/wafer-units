@@ -1,4 +1,4 @@
-import { queryUnitInterface } from "wus-unit-types";
+import { queryUnitInterfaceForModule } from "wus-unit-types";
 import { createChorusModule } from "@/audio/create-chorus-module";
 import { createReverbModule } from "@/audio/create-reverb-module";
 import {
@@ -12,7 +12,10 @@ import {
   mapUnaryTo,
 } from "@/utils/number-utils";
 
-export const unitInterface = queryUnitInterface("wus-v01");
+export const unitInterface = queryUnitInterfaceForModule(
+  "wus-v01",
+  import.meta.url,
+);
 
 const allWaveTypes: OscillatorType[] = [
   "sawtooth",

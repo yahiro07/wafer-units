@@ -2,7 +2,7 @@
   "name": "lseq1",
   "unitType": "sequencer",
   "categoryHint": "stepSequencer",
-  "preferredSize": "530,320",
+  "preferredSize": "500,310",
   "protocol": "wus-v01",
   "unitTypesVersion": "0.2.5",
   "outputSignalTypes": "note",

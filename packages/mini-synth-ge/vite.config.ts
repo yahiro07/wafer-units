@@ -1,4 +1,5 @@
 import tailwindcss from "@tailwindcss/vite";
+import { resolve } from "path";
 import { defineConfig } from "vite";
 import solid from "vite-plugin-solid";
 
@@ -7,8 +8,12 @@ export default defineConfig({
   plugins: [solid(), tailwindcss()],
   resolve: { tsconfigPaths: true },
   build: {
+    lib: {
+      entry: resolve(__dirname, "src/index.tsx"),
+      formats: ["es"],
+      fileName: "index",
+    },
     outDir: `../../dist/mini-synth-ge`,
     emptyOutDir: true,
   },
-  server: { port: 3000 },
 });

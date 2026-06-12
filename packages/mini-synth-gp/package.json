@@ -4,7 +4,6 @@
   "private": true,
   "license": "MIT",
   "scripts": {
-    "dev": "vite dev",
     "build": "vite build"
   },
   "dependencies": {
