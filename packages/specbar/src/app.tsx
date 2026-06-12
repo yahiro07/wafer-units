@@ -99,32 +99,34 @@ setupUnitInstance();
 const PanelRoot = () => {
   const { level, fftData, displayMode } = store.useSnapshot();
   return (
-    <div className="@container w-full h-full flex-c bg-black">
-      <div
-        className="grow flex-c h-full max-h-[33cqw] px-4 py-2"
-        onClick={actions.shiftDisplayMode}
-      >
-        <div className="w-full max-w-[400px] h-full">
-          {displayMode === 0 && fftData && (
-            <BasicSpectrumView fftData={fftData} />
-          )}
-          {displayMode === 1 && fftData && (
-            <SegmentedSpectrumView
-              nx={16}
-              ny={10}
-              gapX={1}
-              gapY={1.5}
-              fftData={fftData}
-            />
-          )}
-        </div>
-      </div>
-      <div className="w-[19%] h-full flex-c bg-[#333] border border-[#fff2]">
-        <ScalerBoxAutoSized>
-          <div className="w-[50px] h-[50px] flex-c">
-            <Knob value={level} onChange={actions.setLevel} />
+    <div className="w-[350px] h-[55px]">
+      <div className="@container w-full h-full flex-c bg-black">
+        <div
+          className="grow flex-c h-full max-h-[33cqw] px-4 py-2"
+          onClick={actions.shiftDisplayMode}
+        >
+          <div className="w-full max-w-[400px] h-full">
+            {displayMode === 0 && fftData && (
+              <BasicSpectrumView fftData={fftData} />
+            )}
+            {displayMode === 1 && fftData && (
+              <SegmentedSpectrumView
+                nx={16}
+                ny={10}
+                gapX={1}
+                gapY={1.5}
+                fftData={fftData}
+              />
+            )}
           </div>
-        </ScalerBoxAutoSized>
+        </div>
+        <div className="w-[19%] h-full flex-c bg-[#333] border border-[#fff2]">
+          <ScalerBoxAutoSized>
+            <div className="w-[50px] h-[50px] flex-c">
+              <Knob value={level} onChange={actions.setLevel} />
+            </div>
+          </ScalerBoxAutoSized>
+        </div>
       </div>
     </div>
   );
