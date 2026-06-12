@@ -2,7 +2,8 @@ import { clampValue } from "mofur/ax";
 import { npx, startDragSession } from "mofur/ax-ui";
 import { generateRandomId } from "mofur/mo";
 import { CSSProperties, useState } from "react";
-import { DraftNote, Note, store } from "@/store";
+import { store } from "@/store";
+import { DraftNote, Note } from "@/types";
 
 const sortNotes = (notes: Note[]) =>
   [...notes].sort((a, b) => {

@@ -7,3 +7,15 @@ export type DynamicPatternInput = {
 export type DynamicPatternMeta = {
   dynamicPatternInput?: DynamicPatternInput;
 };
+
+export type Note = {
+  id: string;
+  relNoteNumber: number;
+  position: number;
+  duration: number;
+  lane: number;
+};
+
+export type DraftNote = Note & {
+  pointerId: number;
+};

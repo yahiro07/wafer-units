@@ -1,16 +1,5 @@
 import { createStore } from "snap-store";
-
-export type Note = {
-  id: string;
-  relNoteNumber: number;
-  position: number;
-  duration: number;
-  lane: number;
-};
-
-export type DraftNote = Note & {
-  pointerId: number;
-};
+import { DraftNote, Note } from "@/types";
 
 const defaultNotes: Note[] = [
   { id: "n0", lane: 2, relNoteNumber: 0, position: 0, duration: 2 },

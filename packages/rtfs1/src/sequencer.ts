@@ -38,19 +38,32 @@ function createSequencer() {
   const { noteOutputPort } = unitInterface;
 
   const core = {
-    processStep(stepIndex: number, time: number, unitDurationSec: number) {
-      console.log({ stepIndex, time, unitDurationSec });
-      if (stepIndex % 1 === 0 && time !== undefined) {
-        if (state.chordRootNote !== undefined) {
-          const note = applyDynamicNoteShiftRTFS(
-            0,
-            state.key,
-            state.chordRootNote,
-            0,
-          );
-          noteOutputPort.noteOn(note, time);
-          noteOutputPort.noteOff(note, time + unitDurationSec * 0.5);
-        }
+    processStep(stepIndex: number, time: number, unitDuration: number) {
+      stepIndex %= 8;
+      console.log({ stepIndex, time, unitDuration });
+      if (time === undefined || unitDuration === undefined) {
+        //something wrong with the tick driver
+        return;
+      }
+      if (state.chordRootNote === undefined) return;
+
+      const stepNote = state.stepNotes.find(
+        (note) => note.position === stepIndex,
+      );
+      if (stepNote) {
+        const shiftedNote = applyDynamicNoteShiftRTFS(
+          stepNote.relNoteNumber,
+          state.key,
+          state.chordRootNote,
+          state.octaveShift,
+        );
+        const duration =
+          stepNote.duration * unitDuration -
+          (1 - state.noteDuty) * unitDuration;
+
+        console.log("note on", { stepIndex, shiftedNote, time, duration });
+        noteOutputPort.noteOn(shiftedNote, time);
+        noteOutputPort.noteOff(shiftedNote, time + duration);
       }
     },
   };
