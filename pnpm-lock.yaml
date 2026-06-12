@@ -51,7 +51,7 @@ importers:
         specifier: ^1.9.12
         version: 1.9.13
 
-  packages/chord-cast:
+  packages/chord-caster:
     dependencies:
       mofur:
         specifier: ^0.1.0
@@ -142,6 +142,28 @@ importers:
       solid-js:
         specifier: ^1.9.12
         version: 1.9.13
+
+  packages/rtfr:
+    dependencies:
+      mofur:
+        specifier: ^0.1.0
+        version: 0.1.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+      mofur-components:
+        specifier: file:../../../beam/mofur-components
+        version: file:../beam/mofur-components(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+      preact:
+        specifier: ^10.26.0
+        version: 10.29.2
+      snap-store:
+        specifier: ^0.1.7
+        version: 0.1.7(react@19.2.6)
+    devDependencies:
+      '@preact/preset-vite':
+        specifier: ^2.9.4
+        version: 2.10.5(@babel/core@7.29.7)(preact@10.29.2)(vite@8.0.14(@types/node@25.9.1)(jiti@2.7.0))
+      '@types/react':
+        specifier: ^19.2.14
+        version: 19.2.15
 
   packages/specbar:
     dependencies:
