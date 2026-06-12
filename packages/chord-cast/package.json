@@ -1,0 +1,17 @@
+{
+  "name": "chord-cast",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "vite build"
+  },
+  "dependencies": {
+    "mofur": "^0.1.0",
+    "mofur-components": "file:../../../beam/mofur-components",
+    "preact": "^10.26.0",
+    "snap-store": "^0.1.7"
+  },
+  "devDependencies": {
+    "@preact/preset-vite": "^2.9.4"
+  }
+}
