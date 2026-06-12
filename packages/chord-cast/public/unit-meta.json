@@ -1,0 +1,11 @@
+{
+  "name": "chord-cast",
+  "unitType": "sequencer",
+  "preferredSize": "600,300",
+  "protocol": "wus-v01",
+  "unitTypesVersion": "0.1.5",
+  "integrationFormat": "webComponents",
+  "repositoryUrl": "https://github.com/yahiro07/wus-units",
+  "author": "yahiro",
+  "license": "MIT"
+}

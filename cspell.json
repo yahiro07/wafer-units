@@ -5,6 +5,7 @@
     "lseq",
     "specbar",
     "mofus",
-    "audioworklet"
+    "audioworklet",
+    "bseq"
   ]
 }
