@@ -36,8 +36,8 @@ importers:
         specifier: ^2.11.12
         version: 2.11.12(solid-js@1.9.13)(vite@8.0.14(@types/node@25.9.1)(jiti@2.7.0))
       wus-unit-types:
-        specifier: ^0.2.6
-        version: 0.2.6
+        specifier: ^0.2.7
+        version: 0.2.7
 
   packages/bseq1:
     dependencies:
@@ -983,8 +983,8 @@ packages:
       vite:
         optional: true
 
-  wus-unit-types@0.2.6:
-    resolution: {integrity: sha512-PZxstqVElnMIfWGwZRLS20pldQtEB0QlMMtm240z5EbpCHKyJ8g1m+dJqhBzlcKLsa1mjIpSOjMYp6CLEyNj/g==}
+  wus-unit-types@0.2.7:
+    resolution: {integrity: sha512-driRHwoBORIc68h4llMrOoZonDdAzfPqYl3387UUsXjclD5nb29LFydm9wtdskkc4hrHTM0MetNTQB4sRGPF9A==}
 
   yallist@3.1.1:
     resolution: {integrity: sha512-a4UGQaWPH59mOXUYnAG2ewncQS4i4F43Tv3JoAM+s2VDAmS9NsK8GpDMLrCHPksFT7h3K6TOoUNn2pb7RoXx4g==}
@@ -1684,6 +1684,6 @@ snapshots:
     optionalDependencies:
       vite: 8.0.14(@types/node@25.9.1)(jiti@2.7.0)
 
-  wus-unit-types@0.2.6: {}
+  wus-unit-types@0.2.7: {}
 
   yallist@3.1.1: {}
