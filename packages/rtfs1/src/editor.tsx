@@ -1,31 +1,8 @@
 import { clampValue } from "mofur/ax";
 import { npx, startDragSession } from "mofur/ax-ui";
+import { generateRandomId } from "mofur/mo";
 import { CSSProperties, useState } from "react";
-import { createStore } from "snap-store";
-
-export type Note = {
-  id: string;
-  relNoteNumber: number;
-  position: number;
-  duration: number;
-  lane: number;
-};
-
-type DraftNote = Note & {
-  pointerId: number;
-};
-
-const defaultNotes: Note[] = [
-  { id: "n0", lane: 2, relNoteNumber: 0, position: 0, duration: 2 },
-  { id: "n1", lane: 1, relNoteNumber: 4, position: 2, duration: 2 },
-  { id: "n3", lane: 1, relNoteNumber: 6, position: 4, duration: 4 },
-  { id: "n2", lane: 0, relNoteNumber: 8, position: 4, duration: 4 },
-];
-
-const store = createStore<{ notes: Note[]; draftNote: DraftNote | null }>({
-  notes: defaultNotes,
-  draftNote: null,
-});
+import { DraftNote, Note, store } from "@/store";
 
 const sortNotes = (notes: Note[]) =>
   [...notes].sort((a, b) => {
@@ -81,7 +58,7 @@ const actions = {
     }
     store.mutations.setNotes((prev) => {
       const nextNote: Note = {
-        id: crypto.randomUUID(),
+        id: generateRandomId(6),
         lane: draftNote.lane,
         position: draftNote.position,
         duration: draftNote.duration,
@@ -292,20 +269,12 @@ const SequenceLane = ({ lane }: { lane: number }) => {
   );
 };
 
-const SequenceEditorView = () => {
+export const SequenceEditorView = () => {
   return (
     <div>
       <SequenceLane lane={0} />
       <SequenceLane lane={1} />
       <SequenceLane lane={2} />
-    </div>
-  );
-};
-
-export const Dev0App = () => {
-  return (
-    <div className="flex-c">
-      <SequenceEditorView />
     </div>
   );
 };
