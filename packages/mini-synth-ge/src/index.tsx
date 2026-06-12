@@ -1,7 +1,10 @@
-import "./styles/page.css";
-import "./styles/utility-classes.css";
-
+import { render } from "solid-js/web";
+import { createCustomElementClass } from "wus-unit-types/unit-helper";
 import { MainApp } from "@/MainApp";
-import { mountAppRoot } from "@/utils/mount-app-root";
+import cssText from "./styles/page.css?inline";
+import cssText2 from "./styles/utility-classes.css?inline";
 
-mountAppRoot(() => <MainApp />);
+export default createCustomElementClass(
+  (root) => render(() => <MainApp />, root),
+  [cssText, cssText2],
+);

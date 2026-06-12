@@ -1,27 +1,10 @@
-import "./styles";
-import { onCleanup } from "solid-js";
-import { SynthPanelSection } from "@/sections/synth-panel-section";
-import { uiActions } from "@/store/ui-actions";
-import { mountAppRoot } from "@/utils/mount-app-root";
+import { render } from "solid-js/web";
+import { createCustomElementClass } from "wus-unit-types/unit-helper";
+import { App } from "./app";
+import cssText from "./styles/page.css?inline";
+import cssText2 from "./styles/utility-classes.css?inline";
 
-const App = () => {
-  const cleanupFn = uiActions.initialize();
-
-  onCleanup(() => {
-    cleanupFn?.();
-    uiActions.allNotesOff();
-  });
-
-  return (
-    <div class="flex-c min-h-screen w-full bg-[radial-gradient(circle_at_18%_12%,#232834_0%,#131722_44%,#090d14_100%)] px-2 py-4">
-      <div
-        class="h-auto w-[min(96vw,640px)] border border-slate-600"
-        onPointerDown={uiActions.resumeAudio}
-      >
-        <SynthPanelSection />
-      </div>
-    </div>
-  );
-};
-
-mountAppRoot(() => <App />);
+export default createCustomElementClass(
+  (root) => render(() => <App />, root),
+  [cssText, cssText2],
+);

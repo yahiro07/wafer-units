@@ -5,9 +5,7 @@ import { defineConfig } from "vite";
 
 export default defineConfig({
   base: "./",
-  define: {
-    "process.env.NODE_ENV": JSON.stringify("production"),
-  },
+  define: { "process.env.NODE_ENV": JSON.stringify("production") },
   plugins: [react(), tailwindcss()],
   resolve: { tsconfigPaths: true },
   build: {
@@ -19,5 +17,4 @@ export default defineConfig({
     outDir: "../../dist/specbar",
     emptyOutDir: true,
   },
-  server: { port: 3000 },
 });

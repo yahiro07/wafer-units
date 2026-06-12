@@ -56,7 +56,7 @@ export const MainApp = () => {
   });
 
   return (
-    <div class="flex-c min-h-screen">
+    <div class="flex-c">
       <div
         ref={containerRef}
         class="bg-gray-100 border border-gray-400 shadow-xl overflow-hidden"

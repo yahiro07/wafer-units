@@ -3,10 +3,11 @@
   "unitType": "instrument",
   "categoryHint": "synthesizer",
   "preferredSize": "640,320",
-  "protocol": "wus-v01",
-  "unitTypesVersion": "0.2.5",
   "outputSignalTypes": "audio",
   "inputSignalTypes": "note",
+  "protocol": "wus-v01",
+  "unitTypesVersion": "0.2.5",
+  "integrationFormat": "webComponents",
   "repositoryUrl": "https://github.com/yahiro07/wus-units",
   "author": "yahiro",
   "license": "MIT"
