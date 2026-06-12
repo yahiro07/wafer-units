@@ -18,8 +18,6 @@ type StepNote = {
 };
 
 function createSequencer() {
-  console.log("csq 0258");
-
   const state = {
     stepNotes: [] as StepNote[],
     key: "Am" as SongKey,
@@ -40,17 +38,16 @@ function createSequencer() {
   const core = {
     processStep(stepIndex: number, time: number, unitDuration: number) {
       stepIndex %= 8;
-      console.log({ stepIndex, time, unitDuration });
       if (time === undefined || unitDuration === undefined) {
         //something wrong with the tick driver
         return;
       }
       if (state.chordRootNote === undefined) return;
 
-      const stepNote = state.stepNotes.find(
+      const targetNotes = state.stepNotes.filter(
         (note) => note.position === stepIndex,
       );
-      if (stepNote) {
+      for (const stepNote of targetNotes) {
         const shiftedNote = applyDynamicNoteShiftRTFS(
           stepNote.relNoteNumber,
           state.key,
@@ -61,7 +58,6 @@ function createSequencer() {
           stepNote.duration * unitDuration -
           (1 - state.noteDuty) * unitDuration;
 
-        console.log("note on", { stepIndex, shiftedNote, time, duration });
         noteOutputPort.noteOn(shiftedNote, time);
         noteOutputPort.noteOff(shiftedNote, time + duration);
       }
