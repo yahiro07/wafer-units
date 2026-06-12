@@ -11,24 +11,14 @@ function createEngine() {
 
   const unitInterface: UnitInterface = {
     audioContext,
-    primaryOutputPort: {
-      audioOutput: { node: audioContext.destination },
-      noteOutput: {
-        noteOn() {},
-        noteOff() {},
-      },
-    } as unknown as UnitInterface["primaryOutputPort"],
-    primaryInputPort: {
-      audioInput: { node: audioSourceNode },
-      setHandlers() {},
+    audioOutputNode: audioContext.destination,
+    audioInputNode: audioSourceNode,
+    noteOutputPort: {
+      noteOn() {},
+      noteOff() {},
     },
+    emitMetaAttributes() {},
     completeSetup() {},
-    createMultiChannelOutputPorts() {
-      throw new Error(`unsupported`);
-    },
-    createMultiChannelInputPorts() {
-      throw new Error(`unsupported`);
-    },
   };
   (window as any).unitInterface = unitInterface;
 
