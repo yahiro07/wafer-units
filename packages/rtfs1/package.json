@@ -1,9 +1,10 @@
 {
-  "name": "rtfr",
+  "name": "rtfs1",
   "type": "module",
   "private": true,
   "scripts": {
-    "build": "vite build"
+    "build": "vite build",
+    "watch": "vite build --watch"
   },
   "dependencies": {
     "mofur": "^0.1.0",
