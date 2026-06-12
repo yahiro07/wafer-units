@@ -6,7 +6,7 @@
   "outputSignalTypes": "note",
   "inputSignalTypes": "",
   "protocol": "wus-v01",
-  "unitTypesVersion": "0.2.5",
+  "unitTypesVersion": "0.1.5",
   "integrationFormat": "webComponents",
   "repositoryUrl": "https://github.com/yahiro07/wus-units",
   "author": "yahiro",
