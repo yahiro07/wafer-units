@@ -1,6 +1,6 @@
 import { pickObjectMembers } from "mofur/ax";
 import { useEffect } from "react";
-import { SequenceEditorView } from "@/dev1-note-pitch-edit";
+import { PianoRollEditorView } from "@/dev2-piano-roll-edit";
 import { sequencer, unitInterface } from "@/sequencer";
 import { store } from "@/store";
 import { Note } from "@/types";
@@ -51,5 +51,5 @@ function setupSynchronization() {
 
 export const App = () => {
   useEffect(setupSynchronization, []);
-  return <SequenceEditorView />;
+  return <PianoRollEditorView />;
 };
