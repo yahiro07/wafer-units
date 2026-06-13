@@ -1,6 +1,7 @@
 import { clampValue } from "mofur/ax";
 import { npx, startDragSession } from "mofur/ax-ui";
 import { generateRandomId } from "mofur/mo";
+import { createSelectorOptions, GeneralSelector } from "mofur-components/mono2";
 import { CSSProperties, useState } from "react";
 import { store } from "@/store";
 import { DraftNote, Note } from "@/types";
@@ -137,34 +138,26 @@ function styleLaneCell(
 
 const toneNames = ["R0", "T0", "F0", "S0", "R1", "T1", "F1", "S1", "R2"];
 
-const LaneCellByDragPitch = ({ note }: { note: Note }) => {
-  const [dragging, setDragging] = useState(false);
+const toneNameOptions = createSelectorOptions([
+  ["8", "8"],
+  ["7", "7"],
+  ["6", "6"],
+  ["5", "5"],
+  ["4", "4"],
+  ["3", "3"],
+  ["2", "2"],
+  ["1", "1"],
+  ["0", "0"],
+  ["x", "x"],
+]);
 
-  const handlePointerDown = (e0: React.PointerEvent) => {
-    const dragState = {
-      startPitch: note.relNoteNumber,
-    };
-    startDragSession(e0.nativeEvent, {
-      onMove({ position, originalPosition }) {
-        const deltaY = originalPosition.y - position.y;
-        const pitchOffset = Math.round(deltaY / configs.pitchDragStepPx);
-        actions.setNotePitch(note.id, dragState.startPitch + pitchOffset);
-      },
-      onUp({ position, originalPosition }) {
-        const dist = Math.hypot(
-          originalPosition.x - position.x,
-          originalPosition.y - position.y,
-        );
-        if (dist < configs.clickMoveThresholdPx) {
-          actions.removeNote(note.id);
-        }
-        setDragging(false);
-      },
-      onCancel() {
-        setDragging(false);
-      },
-    });
-    setDragging(true);
+const LaneCellWithSelector = ({ note }: { note: Note }) => {
+  const handleChange = (value: string) => {
+    if (value === "x") {
+      actions.removeNote(note.id);
+      return;
+    }
+    actions.setNotePitch(note.id, Number(value));
   };
 
   return (
@@ -174,18 +167,23 @@ const LaneCellByDragPitch = ({ note }: { note: Note }) => {
           note.duration,
           note.id.startsWith("draft-") ? "draft" : "note",
         ),
-        cursor: dragging ? "ns-resize" : "grab",
-        touchAction: "none",
-        userSelect: "none",
+        paddingLeft: npx(0),
       }}
-      onPointerDown={handlePointerDown}
     >
-      {toneNames[note.relNoteNumber]}
+      <GeneralSelector
+        options={toneNameOptions}
+        value={String(note.relNoteNumber)}
+        onChange={handleChange}
+        className="w-full"
+        style={{
+          color: note.relNoteNumber % 4 === 0 ? "blue" : "black",
+        }}
+      />
     </div>
   );
 };
 
-const LaneCellWithSelector = ({ note }: { note: Note }) => {
+const LaneCellByDragPitch = ({ note }: { note: Note }) => {
   const [dragging, setDragging] = useState(false);
 
   const handlePointerDown = (e0: React.PointerEvent) => {
