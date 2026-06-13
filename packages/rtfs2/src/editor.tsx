@@ -1,4 +1,4 @@
-import { linearInterpolate, seqNumbers } from "mofur/ax";
+import { seqNumbers } from "mofur/ax";
 import { npx, startDragSession } from "mofur/ax-ui";
 import { useState } from "react";
 import { GridBackground } from "@/components/grid-background";
@@ -27,29 +27,69 @@ type DraftNote = {
 const clamp = (value: number, min: number, max: number) =>
   Math.min(Math.max(value, min), max);
 
-const getStepIndexFromClientX = (clientX: number, left: number) => {
-  const localX = clamp(clientX - left, 0, configs.editorWidth - 1);
-  return clamp(Math.floor(localX / cellWidth), 0, configs.stepCount - 1);
+type GridPointerMetrics = {
+  left: number;
+  top: number;
+  scaleX: number;
+  scaleY: number;
+  cellW: number;
+  cellH: number;
+  actualWidth: number;
+  actualHeight: number;
 };
 
-const getRelativeNoteNumberFromClientY = (clientY: number, top: number) => {
-  const localY = clientY - top;
-  const y = linearInterpolate(
-    localY,
+const getGridPointerMetrics = (element: HTMLElement): GridPointerMetrics => {
+  const rect = element.getBoundingClientRect();
+  const actualWidth = element.clientWidth;
+  const actualHeight = element.clientHeight;
+
+  return {
+    left: rect.left,
+    top: rect.top,
+    scaleX: rect.width > 0 ? actualWidth / rect.width : 1,
+    scaleY: rect.height > 0 ? actualHeight / rect.height : 1,
+    cellW: actualWidth / configs.stepCount,
+    cellH: actualHeight / configs.noteRowCount,
+    actualWidth,
+    actualHeight,
+  };
+};
+
+const getStepIndexFromClientX = (
+  clientX: number,
+  metrics: GridPointerMetrics,
+) => {
+  const localX = clamp(
+    (clientX - metrics.left) * metrics.scaleX,
     0,
-    configs.editorHeight,
-    configs.noteRowCount - 1,
-    0,
-    true,
+    metrics.actualWidth - 1,
   );
-  return Math.floor(y);
+  return clamp(Math.floor(localX / metrics.cellW), 0, configs.stepCount - 1);
+};
+
+const getRelativeNoteNumberFromClientY = (
+  clientY: number,
+  metrics: GridPointerMetrics,
+) => {
+  const localY = clamp(
+    (clientY - metrics.top) * metrics.scaleY,
+    0,
+    metrics.actualHeight - 1,
+  );
+  const rowFromTop = Math.floor(localY / metrics.cellH);
+  return clamp(
+    configs.noteRowCount - 1 - rowFromTop,
+    0,
+    configs.noteRowCount - 1,
+  );
 };
 
 const getNoteRect = (note: SynthPatternNote) => {
-  const noteY = configs.editorHeight - note.relativeNoteNumber * cellHeight;
+  const noteY =
+    (configs.noteRowCount - 1 - note.relativeNoteNumber) * cellHeight;
   return {
     x: note.stepPosition * cellWidth,
-    y: noteY - cellHeight,
+    y: noteY,
     width: note.stepDuration * cellWidth,
     height: cellHeight,
   };
@@ -106,13 +146,13 @@ function useSynthPatternEditorViewPresenter() {
   const updateDraftDuration = (
     pointerId: number,
     clientX: number,
-    rect: DOMRect,
+    metrics: GridPointerMetrics,
   ) => {
     setDraftNote((currentDraft) => {
       if (!currentDraft || currentDraft.pointerId !== pointerId) {
         return currentDraft;
       }
-      const currentStep = getStepIndexFromClientX(clientX, rect.left);
+      const currentStep = getStepIndexFromClientX(clientX, metrics);
       return {
         ...currentDraft,
         stepDuration: clamp(
@@ -125,13 +165,12 @@ function useSynthPatternEditorViewPresenter() {
   };
 
   const handlePointerDown = (e0: React.PointerEvent) => {
-    const rect = e0.currentTarget.getBoundingClientRect();
-    const startStep = getStepIndexFromClientX(e0.clientX, rect.left);
+    const metrics = getGridPointerMetrics(e0.currentTarget as HTMLElement);
+    const startStep = getStepIndexFromClientX(e0.clientX, metrics);
     const relativeNoteNumber = getRelativeNoteNumberFromClientY(
       e0.clientY,
-      rect.top,
+      metrics,
     );
-    console.log({ relativeNoteNumber });
     setDraftNote({
       pointerId: e0.pointerId,
       startStep,
@@ -142,10 +181,10 @@ function useSynthPatternEditorViewPresenter() {
 
     startDragSession(e0.nativeEvent, {
       onMove({ position }) {
-        updateDraftDuration(e0.pointerId, position.x, rect);
+        updateDraftDuration(e0.pointerId, position.x, metrics);
       },
       onUp({ position }) {
-        updateDraftDuration(e0.pointerId, position.x, rect);
+        updateDraftDuration(e0.pointerId, position.x, metrics);
         setDraftNote((currentDraft) => {
           if (!currentDraft || currentDraft.pointerId !== e0.pointerId) {
             return currentDraft;
@@ -213,91 +252,94 @@ const SynthPatternEditorView2 = () => {
   } = useSynthPatternEditorViewPresenter();
 
   return (
-    <div className="flex-h gap-2">
-      <div
-        style={{
-          width: npx(30),
-          height: npx(configs.editorHeight),
-          fontSize: "8px",
-        }}
-      >
-        {seqNumbers(9).map((i) => {
-          const toneIndex = 8 - i;
-          return (
+    <div className="flex-v bg-white gap-2">
+      <div className="flex-h gap-2">
+        <div
+          style={{
+            width: npx(30),
+            height: npx(configs.editorHeight),
+            fontSize: "8px",
+          }}
+        >
+          {seqNumbers(9).map((i) => {
+            const toneIndex = 8 - i;
+            return (
+              <div
+                key={i}
+                className="flex-c"
+                style={{
+                  height: npx(cellHeight),
+                  border: "solid 1px #ccc",
+                }}
+                onPointerDown={(e) => handleKeysColumnPointerDown(e, i)}
+              >
+                {getToneLabel(toneIndex)}
+              </div>
+            );
+          })}
+        </div>
+        <div
+          style={{
+            width: npx(configs.editorWidth),
+            height: npx(configs.editorHeight),
+            position: "relative",
+            touchAction: "none",
+            userSelect: "none",
+          }}
+          onPointerDown={handlePointerDown}
+        >
+          <GridBackground
+            width={configs.editorWidth}
+            height={configs.editorHeight}
+            nx={configs.stepCount}
+            ny={configs.noteRowCount}
+            bgAlterStrideX={4}
+          />
+          {notes.map((note) => {
+            const noteRect = getNoteRect(note);
+            return (
+              <div
+                key={`${note.stepPosition}-${note.stepDuration}-${note.relativeNoteNumber}`}
+                style={{
+                  position: "absolute",
+                  left: npx(noteRect.x),
+                  top: npx(noteRect.y),
+                  width: npx(noteRect.width),
+                  height: npx(noteRect.height),
+                  boxSizing: "border-box",
+                  backgroundColor: "#4682b4",
+                  border: "solid 1px #008",
+                  borderRadius: "2px",
+                  cursor: "pointer",
+                }}
+                onPointerDown={(event) => {
+                  event.stopPropagation();
+                }}
+                onClick={() => {
+                  deleteNote(note);
+                }}
+              />
+            );
+          })}
+          {draftNote ? (
             <div
-              key={i}
-              className="flex-c"
-              style={{
-                height: npx(cellHeight),
-                border: "solid 1px #ccc",
-              }}
-              onPointerDown={(e) => handleKeysColumnPointerDown(e, i)}
-            >
-              {getToneLabel(toneIndex)}
-            </div>
-          );
-        })}
-      </div>
-      <div
-        style={{
-          width: npx(configs.editorWidth),
-          height: npx(configs.editorHeight),
-          position: "relative",
-          touchAction: "none",
-          userSelect: "none",
-        }}
-        onPointerDown={handlePointerDown}
-      >
-        <GridBackground
-          width={configs.editorWidth}
-          height={configs.editorHeight}
-          nx={configs.stepCount}
-          ny={configs.noteRowCount}
-          bgAlterStrideX={4}
-        />
-        {notes.map((note) => {
-          const noteRect = getNoteRect(note);
-          return (
-            <div
-              key={`${note.stepPosition}-${note.stepDuration}-${note.relativeNoteNumber}`}
               style={{
                 position: "absolute",
-                left: npx(noteRect.x),
-                top: npx(noteRect.y),
-                width: npx(noteRect.width),
-                height: npx(noteRect.height),
-                backgroundColor: "#4682b4",
-                border: "solid 1px #008",
-                borderRadius: "2px",
-                cursor: "pointer",
-              }}
-              onPointerDown={(event) => {
-                event.stopPropagation();
-              }}
-              onClick={() => {
-                deleteNote(note);
+                left: npx(draftNote.startStep * cellWidth),
+                top: npx(
+                  (configs.noteRowCount - 1 - draftNote.relativeNoteNumber) *
+                    cellHeight,
+                ),
+                width: npx(draftNote.stepDuration * cellWidth),
+                height: npx(cellHeight),
+                boxSizing: "border-box",
+                backgroundColor: "rgb(70 130 180 / 0.45)",
+                border: "1px solid #4682b4",
+                pointerEvents: "none",
               }}
             />
-          );
-        })}
-        {draftNote ? (
-          <div
-            style={{
-              position: "absolute",
-              left: npx(draftNote.startStep * cellWidth),
-              top: npx(
-                configs.editorHeight -
-                  draftNote.relativeNoteNumber * cellHeight -
-                  cellHeight,
-              ),
-              width: npx(draftNote.stepDuration * cellWidth),
-              height: npx(cellHeight),
-              backgroundColor: "rgb(70 130 180 / 0.45)",
-              border: "1px solid #4682b4",
-              pointerEvents: "none",
-            }}
-          />
-        ) : null}
+          ) : null}
+        </div>
       </div>
     </div>
   );
@@ -305,7 +347,7 @@ const SynthPatternEditorView2 = () => {
 
 export const EditorView = () => {
   return (
-    <div className="bg-white">
+    <div className="bg-white w-[400px] h-[200px] flex-c">
       <SynthPatternEditorView2 />
     </div>
   );
