@@ -49,7 +49,7 @@ function setupSynchronization() {
   });
 }
 
-export const App = () => {
+export const App0 = () => {
   useEffect(setupSynchronization, []);
   return <SequenceEditorView />;
 };
