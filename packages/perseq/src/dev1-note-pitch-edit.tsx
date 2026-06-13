@@ -1,5 +1,6 @@
 import { clampValue } from "mofur/ax";
 import { npx, startDragSession } from "mofur/ax-ui";
+import { generateRandomId } from "mofur/mo";
 import { CSSProperties, useState } from "react";
 import { createStore } from "snap-store";
 import { GridBackground } from "@/components/grid-background";
@@ -13,6 +14,8 @@ export type Note = {
 
 type DraftNote = Note & {
   pointerId: number;
+  startPosition: number;
+  startPitch: number;
 };
 
 const defaultNotes: Note[] = [
@@ -48,6 +51,40 @@ const configs = {
   editAreaHeight: 180,
 };
 
+const getCellMetrics = (element: HTMLElement) => {
+  const rect = element.getBoundingClientRect();
+  return {
+    left: rect.left,
+    top: rect.top,
+    width: rect.width,
+    height: rect.height,
+    cellWidth: rect.width / configs.stepCount,
+    cellHeight: rect.height / configs.yCount,
+  };
+};
+
+const getCellPositionFromClientX = (
+  clientX: number,
+  metrics: ReturnType<typeof getCellMetrics>,
+) => {
+  const rawPosition = Math.floor((clientX - metrics.left) / metrics.cellWidth);
+  return clampValue(rawPosition, 0, configs.stepCount - 1);
+};
+
+const getPitchFromClientY = (
+  clientY: number,
+  metrics: ReturnType<typeof getCellMetrics>,
+) => {
+  const localY = clientY - metrics.top;
+  const unscaledY = (localY / metrics.height) * configs.editAreaHeight;
+  const visualPitch = (configs.editAreaHeight * 0.575 - unscaledY) / 5;
+  return clampValue(
+    Math.round(visualPitch),
+    configs.minPitch,
+    configs.maxPitch,
+  );
+};
+
 const actions = {
   setNotePitch(id: string, pitch: number) {
     store.mutations.setNotes((prev) => {
@@ -81,7 +118,7 @@ const actions = {
     }
     store.mutations.setNotes((prev) => {
       const nextNote: Note = {
-        id: crypto.randomUUID(),
+        id: generateRandomId(6),
         position: draftNote.position,
         duration: draftNote.duration,
         relNoteNumber: draftNote.relNoteNumber,
@@ -113,6 +150,8 @@ const LaneCell = ({ note }: { note: Note }) => {
   const [dragging, setDragging] = useState(false);
 
   const handlePointerDown = (e0: React.PointerEvent) => {
+    e0.stopPropagation();
+
     const dragState = {
       startPitch: note.relNoteNumber,
       startTime: Date.now(),
@@ -166,34 +205,114 @@ const LaneCell = ({ note }: { note: Note }) => {
   );
 };
 
-export const SequenceEditorView = () => {
-  const { notes } = store.useSnapshot();
+const DraftLaneCell = ({ note }: { note: DraftNote }) => {
   return (
     <div
-      className="relative"
       style={{
-        width: npx(configs.stepCount * configs.cellWidthPx),
-        height: npx(configs.editAreaHeight),
+        ...styleLaneCell(note.duration, "draft"),
+        position: "absolute",
+        left: npx(note.position * configs.cellWidthPx),
+        top: npx(
+          configs.editAreaHeight * 0.575 -
+            note.relNoteNumber * 5 -
+            configs.noteHeight / 2,
+        ),
+        pointerEvents: "none",
       }}
     >
-      <GridBackground
-        nx={configs.stepCount}
-        ny={configs.yCount}
-        width={configs.stepCount * configs.cellWidthPx}
-        height={configs.editAreaHeight}
-        bgAlterStrideX={4}
-      />
-      {notes.map((note) => (
-        <LaneCell key={note.id} note={note} />
-      ))}
+      {note.relNoteNumber}
     </div>
   );
 };
 
-export const App = () => {
+export const SequenceEditorView = () => {
+  const { notes, draftNote } = store.useSnapshot();
+
+  const handlePointerDown = (e0: React.PointerEvent) => {
+    if (e0.target !== e0.currentTarget) {
+      return;
+    }
+    const metrics = getCellMetrics(e0.currentTarget as HTMLElement);
+    const startPosition = getCellPositionFromClientX(e0.clientX, metrics);
+    const relNoteNumber = getPitchFromClientY(e0.clientY, metrics);
+
+    const updateDraftFromPosition = (currentPosition: number) => {
+      store.mutations.setDraftNote((currentDraft) => {
+        if (!currentDraft || currentDraft.pointerId !== e0.pointerId) {
+          return currentDraft;
+        }
+        return {
+          ...currentDraft,
+          position: Math.min(currentDraft.startPosition, currentPosition),
+          duration: Math.abs(currentPosition - currentDraft.startPosition) + 1,
+        };
+      });
+    };
+
+    const updateDraftPitchFromPosition = (currentY: number) => {
+      store.mutations.setDraftNote((currentDraft) => {
+        if (!currentDraft || currentDraft.pointerId !== e0.pointerId) {
+          return currentDraft;
+        }
+        return {
+          ...currentDraft,
+          relNoteNumber: getPitchFromClientY(currentY, metrics),
+        };
+      });
+    };
+
+    actions.setDraftNote({
+      id: `draft-${generateRandomId(6)}`,
+      pointerId: e0.pointerId,
+      startPosition,
+      position: startPosition,
+      duration: 1,
+      relNoteNumber,
+      startPitch: relNoteNumber,
+    });
+
+    startDragSession(e0.nativeEvent, {
+      onMove({ position }) {
+        const currentPosition = getCellPositionFromClientX(position.x, metrics);
+        updateDraftFromPosition(currentPosition);
+        updateDraftPitchFromPosition(position.y);
+      },
+      onUp({ position }) {
+        const currentPosition = getCellPositionFromClientX(position.x, metrics);
+        updateDraftFromPosition(currentPosition);
+        if (currentPosition < startPosition) {
+          actions.setDraftNote(null);
+          return;
+        }
+        actions.commitDraftNote();
+      },
+      onCancel() {
+        actions.setDraftNote(null);
+      },
+    });
+  };
   return (
-    <div className="flex-c">
-      <SequenceEditorView />
+    <div className="bg-white p-4">
+      <div
+        className="relative"
+        style={{
+          width: npx(configs.stepCount * configs.cellWidthPx),
+          height: npx(configs.editAreaHeight),
+        }}
+        onPointerDown={handlePointerDown}
+      >
+        <GridBackground
+          nx={configs.stepCount}
+          ny={configs.yCount}
+          width={configs.stepCount * configs.cellWidthPx}
+          height={configs.editAreaHeight}
+          bgAlterStrideX={4}
+        />
+        {notes.map((note) => (
+          <LaneCell key={note.id} note={note} />
+        ))}
+        {draftNote ? <DraftLaneCell note={draftNote} /> : null}
+      </div>
     </div>
   );
 };

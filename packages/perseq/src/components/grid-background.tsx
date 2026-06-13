@@ -6,12 +6,14 @@ export const GridBackground = ({
   width,
   height,
   bgAlterStrideX,
+  className,
 }: {
   nx: number;
   ny: number;
   width: number;
   height: number;
   bgAlterStrideX?: number;
+  className?: string;
 }) => {
   const cellW = width / nx;
   const cellH = height / ny;
@@ -20,6 +22,7 @@ export const GridBackground = ({
 
   return (
     <div
+      className={className}
       style={{
         position: "absolute",
         left: npx(0),
@@ -27,6 +30,7 @@ export const GridBackground = ({
         width: npx(width),
         height: npx(height),
         border: "solid 0.5px #d4d4d4",
+        pointerEvents: "none",
       }}
     >
       {Array.from({ length: nx * ny }).map((_, i) => {
