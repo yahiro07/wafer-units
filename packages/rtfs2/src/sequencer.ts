@@ -106,7 +106,7 @@ function createSequencer() {
         state.noteDuty = attrs.noteDuty;
       }
     },
-    setPreviewNote(note: number | null) {},
+    setPreviewNote(_note: number | null) {},
   };
 }
 
