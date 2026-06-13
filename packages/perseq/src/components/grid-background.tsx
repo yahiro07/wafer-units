@@ -7,6 +7,7 @@ export const GridBackground = ({
   height,
   bgAlterStrideX,
   className,
+  dotsInterval,
 }: {
   nx: number;
   ny: number;
@@ -14,6 +15,7 @@ export const GridBackground = ({
   height: number;
   bgAlterStrideX?: number;
   className?: string;
+  dotsInterval?: number;
 }) => {
   const cellW = width / nx;
   const cellH = height / ny;
@@ -42,6 +44,7 @@ export const GridBackground = ({
         return (
           <div
             key={`${xi}-${yi}`}
+            className="flex-c"
             style={{
               position: "absolute",
               left: npx(x),
@@ -50,8 +53,14 @@ export const GridBackground = ({
               height: npx(cellH),
               border: "solid 0.5px #d4d4d4",
               backgroundColor: bgAlter ? "#fff" : "#f0f0f0",
+              color: "#d4d4d4",
             }}
-          />
+          >
+            {dotsInterval &&
+              xi % dotsInterval === 0 &&
+              yi % dotsInterval === 0 &&
+              "・"}
+          </div>
         );
       })}
     </div>

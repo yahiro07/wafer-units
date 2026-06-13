@@ -18,13 +18,15 @@ type DraftNote = Note & {
   startPitch: number;
 };
 
-const defaultNotes: Note[] = [
-  { id: "n0", relNoteNumber: 0, position: 0, duration: 2 },
-  { id: "n1", relNoteNumber: 4, position: 2, duration: 2 },
-  { id: "n2", relNoteNumber: 8, position: 4, duration: 4 },
-  { id: "n3", relNoteNumber: 6, position: 4, duration: 4 },
-  // { id: "n4", relNoteNumber: 0, position: 8, duration: 8 },
-];
+const defaultNotes: Note[] = 0
+  ? [
+      { id: "n0", relNoteNumber: 0, position: 0, duration: 2 },
+      { id: "n1", relNoteNumber: 4, position: 2, duration: 2 },
+      { id: "n2", relNoteNumber: 8, position: 4, duration: 4 },
+      { id: "n3", relNoteNumber: 6, position: 4, duration: 4 },
+      // { id: "n4", relNoteNumber: 0, position: 8, duration: 8 },
+    ]
+  : [];
 
 const store = createStore<{ notes: Note[]; draftNote: DraftNote | null }>({
   notes: defaultNotes,
@@ -40,15 +42,17 @@ const sortNotes = (notes: Note[]) =>
   });
 
 const configs = {
-  minPitch: -12,
-  maxPitch: 18,
+  minPitch: 0,
+  maxPitch: 21,
   pitchDragStepPx: 7,
   clickMoveThresholdPx: 6,
   stepCount: 16,
   cellWidthPx: 30,
   noteHeight: 32,
-  yCount: 7,
-  editAreaHeight: 180,
+  yCount: 4,
+  editAreaHeight: 140,
+  pixelYPerPitch: 5,
+  yCenterOffsetRate: 0.85,
 };
 
 const getCellMetrics = (element: HTMLElement) => {
@@ -77,13 +81,23 @@ const getPitchFromClientY = (
 ) => {
   const localY = clientY - metrics.top;
   const unscaledY = (localY / metrics.height) * configs.editAreaHeight;
-  const visualPitch = (configs.editAreaHeight * 0.575 - unscaledY) / 5;
+  const visualPitch =
+    (configs.editAreaHeight * configs.yCenterOffsetRate - unscaledY) /
+    configs.pixelYPerPitch;
   return clampValue(
     Math.round(visualPitch),
     configs.minPitch,
     configs.maxPitch,
   );
 };
+
+function calcNoteTopY(relNoteNumber: number) {
+  return (
+    configs.editAreaHeight * configs.yCenterOffsetRate -
+    relNoteNumber * configs.pixelYPerPitch -
+    configs.noteHeight / 2
+  );
+}
 
 const actions = {
   setNotePitch(id: string, pitch: number) {
@@ -134,7 +148,7 @@ function styleLaneCell(
   variant: "empty" | "note" | "draft",
 ): CSSProperties {
   const background =
-    variant === "draft" ? "#f8d66d" : variant === "note" ? "#aaea" : "#fff";
+    variant === "draft" ? "#aae2" : variant === "note" ? "#aae8" : "#fff";
   return {
     width: npx(stepWidth * configs.cellWidthPx),
     height: npx(configs.noteHeight),
@@ -144,6 +158,10 @@ function styleLaneCell(
     display: "flex",
     alignItems: "center",
   };
+}
+
+function getPitchDisplayText(relNoteNumber: number): string {
+  return ((relNoteNumber % 7) + 1).toString();
 }
 
 const LaneCell = ({ note }: { note: Note }) => {
@@ -189,18 +207,14 @@ const LaneCell = ({ note }: { note: Note }) => {
         ),
         position: "absolute",
         left: npx(note.position * configs.cellWidthPx),
-        top: npx(
-          configs.editAreaHeight * 0.575 -
-            note.relNoteNumber * 5 -
-            configs.noteHeight / 2,
-        ),
+        top: npx(calcNoteTopY(note.relNoteNumber)),
         cursor: dragging ? "ns-resize" : "grab",
         touchAction: "none",
         userSelect: "none",
       }}
       onPointerDown={handlePointerDown}
     >
-      {note.relNoteNumber}
+      {getPitchDisplayText(note.relNoteNumber)}
     </div>
   );
 };
@@ -212,15 +226,11 @@ const DraftLaneCell = ({ note }: { note: DraftNote }) => {
         ...styleLaneCell(note.duration, "draft"),
         position: "absolute",
         left: npx(note.position * configs.cellWidthPx),
-        top: npx(
-          configs.editAreaHeight * 0.575 -
-            note.relNoteNumber * 5 -
-            configs.noteHeight / 2,
-        ),
+        top: npx(calcNoteTopY(note.relNoteNumber)),
         pointerEvents: "none",
       }}
     >
-      {note.relNoteNumber}
+      {getPitchDisplayText(note.relNoteNumber)}
     </div>
   );
 };
@@ -306,7 +316,8 @@ export const SequenceEditorView = () => {
           ny={configs.yCount}
           width={configs.stepCount * configs.cellWidthPx}
           height={configs.editAreaHeight}
-          bgAlterStrideX={4}
+          bgAlterStrideX={2}
+          dotsInterval={2}
         />
         {notes.map((note) => (
           <LaneCell key={note.id} note={note} />
