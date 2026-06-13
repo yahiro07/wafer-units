@@ -137,7 +137,55 @@ function styleLaneCell(
 
 const toneNames = ["R0", "T0", "F0", "S0", "R1", "T1", "F1", "S1", "R2"];
 
-const LaneCell = ({ note }: { note: Note }) => {
+const LaneCellByDragPitch = ({ note }: { note: Note }) => {
+  const [dragging, setDragging] = useState(false);
+
+  const handlePointerDown = (e0: React.PointerEvent) => {
+    const dragState = {
+      startPitch: note.relNoteNumber,
+    };
+    startDragSession(e0.nativeEvent, {
+      onMove({ position, originalPosition }) {
+        const deltaY = originalPosition.y - position.y;
+        const pitchOffset = Math.round(deltaY / configs.pitchDragStepPx);
+        actions.setNotePitch(note.id, dragState.startPitch + pitchOffset);
+      },
+      onUp({ position, originalPosition }) {
+        const dist = Math.hypot(
+          originalPosition.x - position.x,
+          originalPosition.y - position.y,
+        );
+        if (dist < configs.clickMoveThresholdPx) {
+          actions.removeNote(note.id);
+        }
+        setDragging(false);
+      },
+      onCancel() {
+        setDragging(false);
+      },
+    });
+    setDragging(true);
+  };
+
+  return (
+    <div
+      style={{
+        ...styleLaneCell(
+          note.duration,
+          note.id.startsWith("draft-") ? "draft" : "note",
+        ),
+        cursor: dragging ? "ns-resize" : "grab",
+        touchAction: "none",
+        userSelect: "none",
+      }}
+      onPointerDown={handlePointerDown}
+    >
+      {toneNames[note.relNoteNumber]}
+    </div>
+  );
+};
+
+const LaneCellWithSelector = ({ note }: { note: Note }) => {
   const [dragging, setDragging] = useState(false);
 
   const handlePointerDown = (e0: React.PointerEvent) => {
@@ -253,6 +301,7 @@ const DummyLaneCell = ({
 };
 
 const SequenceLane = ({ lane }: { lane: number }) => {
+  const LaneCell = 1 ? LaneCellWithSelector : LaneCellByDragPitch;
   const cellBoxes = useLaneCellBoxes(lane);
   let position = 0;
   return (
