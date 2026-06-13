@@ -18,12 +18,12 @@ type DraftNote = Note & {
   startPitch: number;
 };
 
-const defaultNotes: Note[] = 0
+const defaultNotes: Note[] = 1
   ? [
       { id: "n0", relNoteNumber: 0, position: 0, duration: 2 },
       { id: "n1", relNoteNumber: 4, position: 2, duration: 2 },
-      { id: "n2", relNoteNumber: 8, position: 4, duration: 4 },
-      { id: "n3", relNoteNumber: 6, position: 4, duration: 4 },
+      { id: "n2", relNoteNumber: 7, position: 4, duration: 2 },
+      { id: "n3", relNoteNumber: 14, position: 6, duration: 2 },
       // { id: "n4", relNoteNumber: 0, position: 8, duration: 8 },
     ]
   : [];
@@ -43,16 +43,16 @@ const sortNotes = (notes: Note[]) =>
 
 const configs = {
   minPitch: 0,
-  maxPitch: 21,
+  maxPitch: 14,
   pitchDragStepPx: 7,
   clickMoveThresholdPx: 6,
   stepCount: 16,
   cellWidthPx: 30,
   noteHeight: 32,
-  yCount: 4,
-  editAreaHeight: 140,
-  pixelYPerPitch: 5,
-  yCenterOffsetRate: 0.85,
+  yCount: 5,
+  editAreaHeight: 142,
+  pixelYPerPitch: 8,
+  yCenterOffsetRate: 0.9,
 };
 
 const getCellMetrics = (element: HTMLElement) => {
@@ -148,7 +148,7 @@ function styleLaneCell(
   variant: "empty" | "note" | "draft",
 ): CSSProperties {
   const background =
-    variant === "draft" ? "#aae2" : variant === "note" ? "#aae8" : "#fff";
+    variant === "draft" ? "#aae1" : variant === "note" ? "#aae7" : "#fff";
   return {
     width: npx(stepWidth * configs.cellWidthPx),
     height: npx(configs.noteHeight),
@@ -157,6 +157,7 @@ function styleLaneCell(
     paddingLeft: npx(8),
     display: "flex",
     alignItems: "center",
+    color: "#447",
   };
 }
 
@@ -316,8 +317,8 @@ export const SequenceEditorView = () => {
           ny={configs.yCount}
           width={configs.stepCount * configs.cellWidthPx}
           height={configs.editAreaHeight}
-          bgAlterStrideX={2}
-          dotsInterval={2}
+          bgAlterStrideX={4}
+          dotsInterval={4}
         />
         {notes.map((note) => (
           <LaneCell key={note.id} note={note} />

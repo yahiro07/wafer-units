@@ -56,10 +56,7 @@ export const GridBackground = ({
               color: "#d4d4d4",
             }}
           >
-            {dotsInterval &&
-              xi % dotsInterval === 0 &&
-              yi % dotsInterval === 0 &&
-              "・"}
+            {dotsInterval && xi % dotsInterval === 0 && yi % 2 === 0 && "・"}
           </div>
         );
       })}
