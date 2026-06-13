@@ -1,5 +1,6 @@
 import { seqNumbers } from "mofur/ax";
 import { npx } from "mofur/ax-ui";
+import { useEffect, useRef } from "react";
 
 const PianoRollBackgroundOctaveBlock = ({
   cellW,
@@ -74,18 +75,29 @@ const PianoRollBackgroundOctaveBlock = ({
 };
 
 const BackgroundGridLayer = () => {
+  const cellW = 16;
+  const cellH = 12;
+  const nx = 32;
   return (
     <div className="flex-v">
-      <PianoRollBackgroundOctaveBlock cellW={16} cellH={12} nx={32} />
-      <PianoRollBackgroundOctaveBlock cellW={16} cellH={12} nx={32} />
-      <PianoRollBackgroundOctaveBlock cellW={16} cellH={12} nx={32} />
+      <PianoRollBackgroundOctaveBlock cellW={cellW} cellH={cellH} nx={nx} />
+      <PianoRollBackgroundOctaveBlock cellW={cellW} cellH={cellH} nx={nx} />
+      <PianoRollBackgroundOctaveBlock cellW={cellW} cellH={cellH} nx={nx} />
     </div>
   );
 };
 
 export const PianoRollEditorView = () => {
+  const refBaseDiv = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const baseDiv = refBaseDiv.current!;
+    baseDiv.scrollTop = baseDiv.scrollHeight / 2 - baseDiv.clientHeight / 2;
+  }, []);
   return (
-    <div style={{ height: "180px", overflowX: "hidden", overflowY: "scroll" }}>
+    <div
+      ref={refBaseDiv}
+      style={{ height: "180px", overflowX: "hidden", overflowY: "scroll" }}
+    >
       <BackgroundGridLayer />
     </div>
   );
