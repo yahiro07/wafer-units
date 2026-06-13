@@ -14,6 +14,15 @@ const configs = {
   previewVelocity: 100,
 };
 
+const noteColors = {
+  noteFill: "#9fe581",
+  noteBorder: "#478915",
+  draftFill: "#4682b473",
+  draftBorder: "#4682b4",
+  keyBorder: "#cccccc",
+  labelText: "#666666",
+} as const;
+
 const cellWidth = configs.editorWidth / configs.stepCount;
 const cellHeight = configs.editorHeight / configs.noteRowCount;
 
@@ -266,10 +275,10 @@ const SynthPatternEditorView2 = () => {
             return (
               <div
                 key={i}
-                className="flex-c"
+                className="flex-c text-[11px]"
                 style={{
                   height: npx(cellHeight),
-                  border: "solid 1px #ccc",
+                  border: `solid 0.5px ${noteColors.keyBorder}`,
                 }}
                 onPointerDown={(e) => handleKeysColumnPointerDown(e, i)}
               >
@@ -307,8 +316,8 @@ const SynthPatternEditorView2 = () => {
                   width: npx(noteRect.width),
                   height: npx(noteRect.height),
                   boxSizing: "border-box",
-                  backgroundColor: "#4682b4",
-                  border: "solid 1px #008",
+                  backgroundColor: noteColors.noteFill,
+                  border: `solid 1px ${noteColors.noteBorder}`,
                   borderRadius: "2px",
                   cursor: "pointer",
                 }}
@@ -333,9 +342,10 @@ const SynthPatternEditorView2 = () => {
                 width: npx(draftNote.stepDuration * cellWidth),
                 height: npx(cellHeight),
                 boxSizing: "border-box",
-                backgroundColor: "rgb(70 130 180 / 0.45)",
-                border: "1px solid #4682b4",
+                backgroundColor: noteColors.draftFill,
+                border: `1px solid ${noteColors.draftBorder}`,
                 pointerEvents: "none",
+                borderRadius: "2px",
               }}
             />
           ) : null}

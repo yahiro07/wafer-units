@@ -26,6 +26,7 @@ export const GridBackground = ({
         top: npx(0),
         width: npx(width),
         height: npx(height),
+        border: "solid 0.5px #d4d4d4",
       }}
     >
       {Array.from({ length: nx * ny }).map((_, i) => {
@@ -43,7 +44,7 @@ export const GridBackground = ({
               top: npx(y),
               width: npx(cellW),
               height: npx(cellH),
-              border: "solid 1px #ddd",
+              border: "solid 0.5px #d4d4d4",
               backgroundColor: bgAlter ? "#fff" : "#f0f0f0",
             }}
           />
