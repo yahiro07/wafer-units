@@ -36,8 +36,8 @@ importers:
         specifier: ^2.11.12
         version: 2.11.12(solid-js@1.9.13)(vite@8.0.14(@types/node@25.9.1)(jiti@2.7.0))
       wus-unit-types:
-        specifier: file:../webaudio-unit-system/contract/wus-unit-types-v01
-        version: file:../webaudio-unit-system/contract/wus-unit-types-v01
+        specifier: link:../webaudio-unit-system/contract/wus-unit-types-v01
+        version: link:../webaudio-unit-system/contract/wus-unit-types-v01
 
   packages/bseq1:
     dependencies:
@@ -173,6 +173,28 @@ importers:
       mofur-components:
         specifier: file:../../../beam/mofur-components
         version: file:../beam/mofur-components(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+      preact:
+        specifier: ^10.26.0
+        version: 10.29.2
+      snap-store:
+        specifier: ^0.1.7
+        version: 0.1.7(react@19.2.6)
+    devDependencies:
+      '@preact/preset-vite':
+        specifier: ^2.9.4
+        version: 2.10.5(@babel/core@7.29.7)(preact@10.29.2)(vite@8.0.14(@types/node@25.9.1)(jiti@2.7.0))
+      '@types/react':
+        specifier: ^19.2.14
+        version: 19.2.15
+
+  packages/rtfs2:
+    dependencies:
+      mofur:
+        specifier: link:../../../beam/mofur
+        version: link:../../../beam/mofur
+      mofur-components:
+        specifier: link:../../../beam/mofur-components
+        version: link:../../../beam/mofur-components
       preact:
         specifier: ^10.26.0
         version: 10.29.2
@@ -1186,9 +1208,6 @@ packages:
       vite:
         optional: true
 
-  wus-unit-types@file:../webaudio-unit-system/contract/wus-unit-types-v01:
-    resolution: {directory: ../webaudio-unit-system/contract/wus-unit-types-v01, type: directory}
-
   yallist@3.1.1:
     resolution: {integrity: sha512-a4UGQaWPH59mOXUYnAG2ewncQS4i4F43Tv3JoAM+s2VDAmS9NsK8GpDMLrCHPksFT7h3K6TOoUNn2pb7RoXx4g==}
 
@@ -2051,8 +2070,6 @@ snapshots:
   vitefu@1.1.3(vite@8.0.14(@types/node@25.9.1)(jiti@2.7.0)):
     optionalDependencies:
       vite: 8.0.14(@types/node@25.9.1)(jiti@2.7.0)
-
-  wus-unit-types@file:../webaudio-unit-system/contract/wus-unit-types-v01: {}
 
   yallist@3.1.1: {}
 

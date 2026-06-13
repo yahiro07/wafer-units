@@ -14,6 +14,6 @@
     "typescript": "~6.0.3",
     "vite": "^8.0.12",
     "vite-plugin-solid": "^2.11.12",
-    "wus-unit-types": "file:../webaudio-unit-system/contract/wus-unit-types-v01"
+    "wus-unit-types": "link:../webaudio-unit-system/contract/wus-unit-types-v01"
   }
 }
