@@ -9,7 +9,6 @@ export function createProgressionCore(
   const state = defaultState;
 
   function emitPatternInput(data: DynamicPatternInput) {
-    // console.log("emitting", data.key, data.chordRootNote);
     unitInterface.emitMetaAttributes({ dynamicPatternInput: data });
   }
 
@@ -22,6 +21,7 @@ export function createProgressionCore(
   let prevIndex = -1;
 
   const clockHandlers: ClockHandlers = {
+    preferSchedulingOrderInPriority: true,
     start() {
       emitPatternInputFromState(0, true);
       prevIndex = 0;
