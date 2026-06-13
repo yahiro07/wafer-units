@@ -1,16 +1,16 @@
 import { pickObjectMembers } from "mofur/ax";
 import { useEffect } from "react";
-import { SequenceEditorView } from "@/editor";
+import { EditorView } from "@/editor";
 import { sequencer, unitInterface } from "@/sequencer";
 import { store } from "@/store";
-import { Note } from "@/types";
+import { SynthPatternNote } from "@/types";
 
 function setupSynchronization() {
-  function affectNotes(notes: Note[]) {
+  function affectNotes(notes: SynthPatternNote[]) {
     const stepNotes = notes.map((note) => ({
-      position: note.position,
-      relNoteNumber: note.relNoteNumber,
-      duration: note.duration,
+      position: note.stepPosition,
+      relNoteNumber: note.relativeNoteNumber,
+      duration: note.stepDuration,
     }));
     sequencer.setStepNotes(stepNotes);
   }
@@ -49,7 +49,7 @@ function setupSynchronization() {
   });
 }
 
-export const App0 = () => {
+export const App = () => {
   useEffect(setupSynchronization, []);
-  return <SequenceEditorView />;
+  return <EditorView />;
 };

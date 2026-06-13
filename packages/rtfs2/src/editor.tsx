@@ -1,379 +1,312 @@
-import { clampValue, seqNumbers } from "mofur/ax";
+import { linearInterpolate, seqNumbers } from "mofur/ax";
 import { npx, startDragSession } from "mofur/ax-ui";
-import { generateRandomId } from "mofur/mo";
-import { ScalerBoxAutoSized } from "mofur/mo-react";
-import {
-  Button,
-  createSelectorOptions,
-  GeneralSelector,
-  Knob,
-} from "mofur-components/mono2";
-import { CSSProperties, useState } from "react";
-import { LabeledRow } from "@/components";
+import { useState } from "react";
+import { GridBackground } from "@/components/grid-background";
+import { sequencer } from "@/sequencer";
 import { store } from "@/store";
-import { DraftNote, Note } from "@/types";
-
-const sortNotes = (notes: Note[]) =>
-  [...notes].sort((a, b) => {
-    if (a.lane !== b.lane) {
-      return a.lane - b.lane;
-    }
-    if (a.position !== b.position) {
-      return a.position - b.position;
-    }
-    return a.duration - b.duration;
-  });
+import { SynthPatternNote } from "@/types";
 
 const configs = {
-  minPitch: 0,
-  maxPitch: 8,
-  pitchDragStepPx: 24,
-  clickMoveThresholdPx: 6,
-  stepCount: 8,
-  cellWidthPx: 30,
-  defaultInsertedPitch: 0,
+  editorWidth: 320,
+  editorHeight: 160,
+  stepCount: 16,
+  noteRowCount: 9,
+  previewVelocity: 100,
 };
 
-const actions = {
-  setNotePitch(id: string, pitch: number) {
-    store.mutations.setNotes((prev) => {
-      return prev.map((note) => {
-        if (note.id === id) {
-          return {
-            ...note,
-            relNoteNumber: clampValue(
-              pitch,
-              configs.minPitch,
-              configs.maxPitch,
-            ),
-          };
-        }
-        return note;
-      });
-    });
-  },
-  removeNote(id: string) {
-    store.mutations.setNotes((prev) => {
-      return prev.filter((note) => note.id !== id);
-    });
-  },
-  setDraftNote(draftNote: DraftNote | null) {
-    store.mutations.setDraftNote(() => draftNote);
-  },
-  commitDraftNote() {
-    const { draftNote } = store.state;
-    if (!draftNote) {
-      return;
-    }
-    store.mutations.setNotes((prev) => {
-      const nextNote: Note = {
-        id: generateRandomId(6),
-        lane: draftNote.lane,
-        position: draftNote.position,
-        duration: draftNote.duration,
-        relNoteNumber: draftNote.relNoteNumber,
-      };
-      return sortNotes([...prev, nextNote]);
-    });
-    store.mutations.setDraftNote(() => null);
-  },
-  clearNotes() {
-    store.mutations.setNotes(() => []);
-  },
+const cellWidth = configs.editorWidth / configs.stepCount;
+const cellHeight = configs.editorHeight / configs.noteRowCount;
+
+type DraftNote = {
+  pointerId: number;
+  startStep: number;
+  relativeNoteNumber: number;
+  stepDuration: number;
 };
 
-type LaneCellBox = {
-  stepWidth: number;
-  note?: Note;
+const clamp = (value: number, min: number, max: number) =>
+  Math.min(Math.max(value, min), max);
+
+const getStepIndexFromClientX = (clientX: number, left: number) => {
+  const localX = clamp(clientX - left, 0, configs.editorWidth - 1);
+  return clamp(Math.floor(localX / cellWidth), 0, configs.stepCount - 1);
 };
 
-const useLaneCellBoxes = (lane: number): LaneCellBox[] => {
-  const { notes, draftNote } = store.useSnapshot();
-  const laneNotes = sortNotes(
-    notes
-      .filter((n) => n.lane === lane)
-      .concat(draftNote && draftNote.lane === lane ? [draftNote] : []),
+const getRelativeNoteNumberFromClientY = (clientY: number, top: number) => {
+  const localY = clientY - top;
+  const y = linearInterpolate(
+    localY,
+    0,
+    configs.editorHeight,
+    configs.noteRowCount - 1,
+    0,
+    true,
   );
-  const boxes: LaneCellBox[] = [];
-  let pos = 0;
-  let noteIndex = 0;
-  while (pos < configs.stepCount) {
-    const note = laneNotes[noteIndex];
-    if (note && note.position === pos) {
-      boxes.push({
-        stepWidth: note.duration,
-        note,
-      });
-      noteIndex++;
-      pos += note.duration;
-    } else {
-      boxes.push({
-        stepWidth: 1,
-        note: undefined,
-      });
-      pos++;
-    }
-  }
-  return boxes;
+  return Math.floor(y);
 };
 
-const getMaxDurationForPosition = (
-  notes: Note[],
-  lane: number,
-  position: number,
-) => {
-  const nextNote = notes
-    .filter((note) => note.lane === lane && note.position > position)
-    .sort((a, b) => a.position - b.position)[0];
-  const laneEnd = nextNote ? nextNote.position : configs.stepCount;
-  return Math.max(1, laneEnd - position);
-};
-
-function styleLaneCell(
-  stepWidth: number,
-  variant: "empty" | "note" | "draft",
-): CSSProperties {
-  const background =
-    variant === "draft" ? "#f8d66d" : variant === "note" ? "#aae" : "#fff";
+const getNoteRect = (note: SynthPatternNote) => {
+  const noteY = configs.editorHeight - note.relativeNoteNumber * cellHeight;
   return {
-    width: npx(stepWidth * configs.cellWidthPx),
-    height: npx(30),
-    border: "solid 1px #ccc",
-    background,
-    paddingLeft: npx(4),
-    display: "flex",
-    alignItems: "center",
+    x: note.stepPosition * cellWidth,
+    y: noteY - cellHeight,
+    width: note.stepDuration * cellWidth,
+    height: cellHeight,
   };
-}
+};
 
-const toneNames = ["R0", "T0", "F0", "S0", "R1", "T1", "F1", "S1", "R2"];
-
-const toneNameOptions = createSelectorOptions([
-  ["8", "8"],
-  ["7", "7"],
-  ["6", "6"],
-  ["5", "5"],
-  ["4", "4"],
-  ["3", "3"],
-  ["2", "2"],
-  ["1", "1"],
-  ["0", "0"],
-  ["x", "x"],
-]);
-
-const LaneCellWithSelector = ({ note }: { note: Note }) => {
-  const handleChange = (value: string) => {
-    if (value === "x") {
-      actions.removeNote(note.id);
-      return;
+const sortNotes = (notes: SynthPatternNote[]) =>
+  [...notes].sort((a, b) => {
+    if (a.stepPosition !== b.stepPosition) {
+      return a.stepPosition - b.stepPosition;
     }
-    actions.setNotePitch(note.id, Number(value));
-  };
+    if (a.relativeNoteNumber !== b.relativeNoteNumber) {
+      return b.relativeNoteNumber - a.relativeNoteNumber;
+    }
+    return a.stepDuration - b.stepDuration;
+  });
 
-  return (
-    <div
-      style={{
-        ...styleLaneCell(
-          note.duration,
-          note.id.startsWith("draft-") ? "draft" : "note",
-        ),
-        paddingLeft: npx(0),
-      }}
-    >
-      <GeneralSelector
-        options={toneNameOptions}
-        value={String(note.relNoteNumber)}
-        onChange={handleChange}
-        className="w-full"
-        style={{
-          color: note.relNoteNumber % 4 === 0 ? "blue" : "black",
-        }}
-      />
-    </div>
-  );
-};
+const notesOverlap = (a: SynthPatternNote, b: SynthPatternNote) =>
+  a.stepPosition < b.stepPosition + b.stepDuration &&
+  b.stepPosition < a.stepPosition + a.stepDuration;
 
-const LaneCellByDragPitch = ({ note }: { note: Note }) => {
-  const [dragging, setDragging] = useState(false);
-
-  const handlePointerDown = (e0: React.PointerEvent) => {
-    const dragState = {
-      startPitch: note.relNoteNumber,
-    };
-    startDragSession(e0.nativeEvent, {
-      onMove({ position, originalPosition }) {
-        const deltaY = originalPosition.y - position.y;
-        const pitchOffset = Math.round(deltaY / configs.pitchDragStepPx);
-        actions.setNotePitch(note.id, dragState.startPitch + pitchOffset);
-      },
-      onUp({ position, originalPosition }) {
-        const dist = Math.hypot(
-          originalPosition.x - position.x,
-          originalPosition.y - position.y,
-        );
-        if (dist < configs.clickMoveThresholdPx) {
-          actions.removeNote(note.id);
-        }
-        setDragging(false);
-      },
-      onCancel() {
-        setDragging(false);
-      },
-    });
-    setDragging(true);
-  };
-
-  return (
-    <div
-      style={{
-        ...styleLaneCell(
-          note.duration,
-          note.id.startsWith("draft-") ? "draft" : "note",
-        ),
-        cursor: dragging ? "ns-resize" : "grab",
-        touchAction: "none",
-        userSelect: "none",
-      }}
-      onPointerDown={handlePointerDown}
-    >
-      {toneNames[note.relNoteNumber]}
-    </div>
-  );
-};
-
-const DummyLaneCell = ({
-  lane,
-  position,
-}: {
-  lane: number;
-  position: number;
-}) => {
+function useSynthPatternEditorViewPresenter() {
+  // const presenter = useCurrentSynthPatternPresenter();
   const { notes } = store.useSnapshot();
-  const [dragging, setDragging] = useState(false);
+  const [draftNote, setDraftNote] = useState<DraftNote | null>(null);
+
+  const coreActions = {
+    replaceNotes(notes: SynthPatternNote[]) {
+      store.mutations.setNotes(notes);
+    },
+  };
+
+  const commitNote = (note: SynthPatternNote) => {
+    const nextNotes = notes.filter((existingNote) => {
+      return !(
+        existingNote.relativeNoteNumber === note.relativeNoteNumber &&
+        notesOverlap(existingNote, note)
+      );
+    });
+    coreActions.replaceNotes(sortNotes([...nextNotes, note]));
+  };
+
+  const deleteNote = (noteToDelete: SynthPatternNote) => {
+    coreActions.replaceNotes(
+      notes.filter((note) => {
+        return !(
+          note.relativeNoteNumber === noteToDelete.relativeNoteNumber &&
+          note.stepPosition === noteToDelete.stepPosition &&
+          note.stepDuration === noteToDelete.stepDuration
+        );
+      }),
+    );
+  };
+
+  const updateDraftDuration = (
+    pointerId: number,
+    clientX: number,
+    rect: DOMRect,
+  ) => {
+    setDraftNote((currentDraft) => {
+      if (!currentDraft || currentDraft.pointerId !== pointerId) {
+        return currentDraft;
+      }
+      const currentStep = getStepIndexFromClientX(clientX, rect.left);
+      return {
+        ...currentDraft,
+        stepDuration: clamp(
+          currentStep - currentDraft.startStep + 1,
+          1,
+          configs.stepCount - currentDraft.startStep,
+        ),
+      };
+    });
+  };
 
   const handlePointerDown = (e0: React.PointerEvent) => {
-    const cellLeft = e0.currentTarget.getBoundingClientRect().left;
-    const maxDuration = getMaxDurationForPosition(notes, lane, position);
-    const draftNoteId = crypto.randomUUID();
-
-    actions.setDraftNote({
-      id: `draft-${draftNoteId}`,
+    const rect = e0.currentTarget.getBoundingClientRect();
+    const startStep = getStepIndexFromClientX(e0.clientX, rect.left);
+    const relativeNoteNumber = getRelativeNoteNumberFromClientY(
+      e0.clientY,
+      rect.top,
+    );
+    console.log({ relativeNoteNumber });
+    setDraftNote({
       pointerId: e0.pointerId,
-      lane,
-      position,
-      duration: 1,
-      relNoteNumber: configs.defaultInsertedPitch,
+      startStep,
+      relativeNoteNumber,
+      stepDuration: 1,
     });
+    e0.currentTarget.setPointerCapture(e0.pointerId);
 
     startDragSession(e0.nativeEvent, {
-      onMove({ position: currentPosition }) {
-        const localX = currentPosition.x - cellLeft;
-        const duration = clampValue(
-          Math.floor(localX / configs.cellWidthPx) + 1,
-          1,
-          maxDuration,
-        );
-        store.mutations.setDraftNote((currentDraft) => {
+      onMove({ position }) {
+        updateDraftDuration(e0.pointerId, position.x, rect);
+      },
+      onUp({ position }) {
+        updateDraftDuration(e0.pointerId, position.x, rect);
+        setDraftNote((currentDraft) => {
           if (!currentDraft || currentDraft.pointerId !== e0.pointerId) {
             return currentDraft;
           }
-          return {
-            ...currentDraft,
-            duration,
-          };
+          commitNote({
+            relativeNoteNumber: currentDraft.relativeNoteNumber,
+            stepPosition: currentDraft.startStep,
+            stepDuration: currentDraft.stepDuration,
+          });
+          return null;
         });
       },
-      onUp() {
-        actions.commitDraftNote();
-        setDragging(false);
-      },
       onCancel() {
-        actions.setDraftNote(null);
-        setDragging(false);
+        setDraftNote(null);
       },
     });
-    setDragging(true);
   };
 
-  return (
-    <div
-      style={{
-        ...styleLaneCell(1, "empty"),
-        cursor: dragging ? "ew-resize" : "cell",
-        touchAction: "none",
-        userSelect: "none",
-      }}
-      onPointerDown={handlePointerDown}
-    />
-  );
-};
+  const handleKeysColumnPointerDown = (
+    e: React.PointerEvent,
+    index: number,
+  ) => {
+    e.preventDefault();
+    e.stopPropagation();
 
-const SequenceLane = ({ lane }: { lane: number }) => {
-  const LaneCell = 1 ? LaneCellWithSelector : LaneCellByDragPitch;
-  const cellBoxes = useLaneCellBoxes(lane);
-  let position = 0;
-  return (
-    <div className="flex">
-      {cellBoxes.map((box, i) => {
-        const cell = box.note ? (
-          <LaneCell key={i.toString()} note={box.note} />
-        ) : (
-          <DummyLaneCell key={i.toString()} lane={lane} position={position} />
-        );
-        position += box.stepWidth;
-        return cell;
-      })}
-    </div>
-  );
-};
+    // const relNote = 8 - index;
+    // const relNote
+    const noteNumber = 48 + index;
 
-export const octaveShiftOptions = createSelectorOptions(
-  seqNumbers(7).map((i) => [i - 3, `${i - 3}`]),
-);
+    const noteOn = () => sequencer.setPreviewNote(noteNumber);
+    const noteOff = () => sequencer.setPreviewNote(null);
 
-const ControlsSection = () => {
-  const st = store.useSnapshot();
+    noteOn();
+
+    startDragSession(e.nativeEvent, {
+      onUp() {
+        noteOff();
+      },
+      onCancel() {
+        noteOff();
+      },
+    });
+  };
+
+  return {
+    handlePointerDown,
+    handleKeysColumnPointerDown,
+    draftNote,
+    notes,
+    deleteNote,
+  };
+}
+
+function getToneLabel(index: number) {
+  return ["R", "3", "5", "7"][index % 4];
+}
+
+const SynthPatternEditorView2 = () => {
+  const {
+    handlePointerDown,
+    handleKeysColumnPointerDown,
+    draftNote,
+    notes,
+    deleteNote,
+  } = useSynthPatternEditorViewPresenter();
+
   return (
-    <div className="flex-ha gap-2 justify-between">
-      <LabeledRow label="octave">
-        <GeneralSelector
-          options={octaveShiftOptions}
-          value={st.octaveShift}
-          onChange={store.setOctaveShift}
-          reverseOptionsOrder
+    <div className="flex-h gap-2">
+      <div
+        style={{
+          width: npx(30),
+          height: npx(configs.editorHeight),
+          fontSize: "8px",
+        }}
+      >
+        {seqNumbers(9).map((i) => {
+          const toneIndex = 8 - i;
+          return (
+            <div
+              key={i}
+              className="flex-c"
+              style={{
+                height: npx(cellHeight),
+                border: "solid 1px #ccc",
+              }}
+              onPointerDown={(e) => handleKeysColumnPointerDown(e, i)}
+            >
+              {getToneLabel(toneIndex)}
+            </div>
+          );
+        })}
+      </div>
+      <div
+        style={{
+          width: npx(configs.editorWidth),
+          height: npx(configs.editorHeight),
+          position: "relative",
+          touchAction: "none",
+          userSelect: "none",
+        }}
+        onPointerDown={handlePointerDown}
+      >
+        <GridBackground
+          width={configs.editorWidth}
+          height={configs.editorHeight}
+          nx={configs.stepCount}
+          ny={configs.noteRowCount}
+          bgAlterStrideX={4}
         />
-      </LabeledRow>
-      <LabeledRow label="duty">
-        <div className="w-[24px] h-[24px]">
-          <ScalerBoxAutoSized>
-            <Knob
-              value={st.noteDuty}
-              min={0}
-              max={1}
-              step={0.01}
-              onChange={store.setNoteDuty}
+        {notes.map((note) => {
+          const noteRect = getNoteRect(note);
+          return (
+            <div
+              key={`${note.stepPosition}-${note.stepDuration}-${note.relativeNoteNumber}`}
+              style={{
+                position: "absolute",
+                left: npx(noteRect.x),
+                top: npx(noteRect.y),
+                width: npx(noteRect.width),
+                height: npx(noteRect.height),
+                backgroundColor: "#4682b4",
+                border: "solid 1px #008",
+                borderRadius: "2px",
+                cursor: "pointer",
+              }}
+              onPointerDown={(event) => {
+                event.stopPropagation();
+              }}
+              onClick={() => {
+                deleteNote(note);
+              }}
             />
-          </ScalerBoxAutoSized>
-        </div>
-      </LabeledRow>
-      <div className="w-[32px] h-[24px]">
-        <ScalerBoxAutoSized>
-          <Button text="x" onClick={actions.clearNotes} asr={1.25} />
-        </ScalerBoxAutoSized>
+          );
+        })}
+        {draftNote ? (
+          <div
+            style={{
+              position: "absolute",
+              left: npx(draftNote.startStep * cellWidth),
+              top: npx(
+                configs.editorHeight -
+                  draftNote.relativeNoteNumber * cellHeight -
+                  cellHeight,
+              ),
+              width: npx(draftNote.stepDuration * cellWidth),
+              height: npx(cellHeight),
+              backgroundColor: "rgb(70 130 180 / 0.45)",
+              border: "1px solid #4682b4",
+              pointerEvents: "none",
+            }}
+          />
+        ) : null}
       </div>
     </div>
   );
 };
 
-export const SequenceEditorView = () => {
+export const EditorView = () => {
   return (
-    <div className="flex-v gap-2 bg-white p-2">
-      <ControlsSection />
-      <div>
-        <SequenceLane lane={0} />
-        <SequenceLane lane={1} />
-        <SequenceLane lane={2} />
-      </div>
+    <div className="bg-white">
+      <SynthPatternEditorView2 />
     </div>
   );
 };

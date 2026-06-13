@@ -37,7 +37,7 @@ function createSequencer() {
 
   const core = {
     processStep(stepIndex: number, time: number, unitDuration: number) {
-      stepIndex %= 8;
+      stepIndex %= 16;
       if (time === undefined || unitDuration === undefined) {
         //something wrong with the tick driver
         return;
@@ -106,6 +106,7 @@ function createSequencer() {
         state.noteDuty = attrs.noteDuty;
       }
     },
+    setPreviewNote(note: number | null) {},
   };
 }
 

@@ -1,23 +1,21 @@
 import { createStore } from "snap-store";
-import { DraftNote, Note } from "@/types";
+import { SynthPatternNote } from "@/types";
 
-const defaultNotes: Note[] = 1
+const defaultNotes: SynthPatternNote[] = 1
   ? [
-      { id: "n0", lane: 2, relNoteNumber: 0, position: 0, duration: 2 },
-      { id: "n1", lane: 1, relNoteNumber: 4, position: 2, duration: 2 },
-      { id: "n2", lane: 2, relNoteNumber: 0, position: 4, duration: 2 },
-      { id: "n3", lane: 1, relNoteNumber: 4, position: 6, duration: 2 },
+      { relativeNoteNumber: 0, stepPosition: 0, stepDuration: 2 },
+      { relativeNoteNumber: 1, stepPosition: 2, stepDuration: 2 },
+      { relativeNoteNumber: 2, stepPosition: 4, stepDuration: 2 },
+      { relativeNoteNumber: 3, stepPosition: 6, stepDuration: 2 },
     ]
   : [];
 
 export const store = createStore<{
-  notes: Note[];
-  draftNote: DraftNote | null;
+  notes: SynthPatternNote[];
   noteDuty: number;
   octaveShift: number;
 }>({
   notes: defaultNotes,
-  draftNote: null,
   noteDuty: 1,
   octaveShift: 0,
 });
