@@ -1,6 +1,14 @@
 import { seqNumbers } from "mofur/ax";
 import { npx, startDragSession } from "mofur/ax-ui";
+import { ScalerBox2 } from "mofur/mo-react";
+import {
+  Button,
+  createSelectorOptions,
+  GeneralSelector,
+  Knob,
+} from "mofur-components/mono2";
 import { useState } from "react";
+import { LabeledRow } from "@/components";
 import { GridBackground } from "@/components/grid-background";
 import { sequencer } from "@/sequencer";
 import { store } from "@/store";
@@ -355,9 +363,50 @@ const SynthPatternEditorView2 = () => {
   );
 };
 
+const octaveShiftOptions = createSelectorOptions(
+  seqNumbers(7).map((i) => [i - 3, `${i - 3}`]),
+);
+
+const ControlsSection = () => {
+  const st = store.useSnapshot();
+  const clearNotes = () => {
+    store.setNotes([]);
+  };
+  return (
+    <div className="flex-ha gap-2 justify-between">
+      <div>RTFS2</div>
+      <div className="flex-ha gap-4">
+        <LabeledRow label="octave">
+          <GeneralSelector
+            options={octaveShiftOptions}
+            value={st.octaveShift}
+            onChange={store.setOctaveShift}
+            reverseOptionsOrder
+          />
+        </LabeledRow>
+        <LabeledRow label="duty">
+          <ScalerBox2 destWidth={24} destHeight={24}>
+            <Knob
+              value={st.noteDuty}
+              min={0}
+              max={1}
+              step={0.01}
+              onChange={store.setNoteDuty}
+            />
+          </ScalerBox2>
+        </LabeledRow>
+      </div>
+      <ScalerBox2 destWidth={32} destHeight={24}>
+        <Button text="x" onClick={clearNotes} asr={1.25} />
+      </ScalerBox2>
+    </div>
+  );
+};
+
 export const EditorView = () => {
   return (
-    <div className="bg-white w-[400px] h-[200px] flex-c">
+    <div className="bg-white w-[392px] h-[240px] flex-v gap-3 p-4">
+      <ControlsSection />
       <SynthPatternEditorView2 />
     </div>
   );

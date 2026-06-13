@@ -327,7 +327,7 @@ const SequenceLane = ({ lane }: { lane: number }) => {
   );
 };
 
-export const octaveShiftOptions = createSelectorOptions(
+const octaveShiftOptions = createSelectorOptions(
   seqNumbers(7).map((i) => [i - 3, `${i - 3}`]),
 );
 

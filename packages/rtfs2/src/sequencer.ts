@@ -1,3 +1,4 @@
+import { mapUnaryTo } from "mofur/ax";
 import { createSequencerTickDriver } from "mofur/mx-audio";
 import { queryUnitInterfaceForModule } from "wus-unit-types";
 import { applyDynamicNoteShiftRTFS } from "@/dynamic-note-shift";
@@ -54,9 +55,14 @@ function createSequencer() {
           state.chordRootNote,
           state.octaveShift,
         );
-        const duration =
-          stepNote.duration * unitDuration -
-          (1 - state.noteDuty) * unitDuration;
+
+        const originalDuration = unitDuration * stepNote.duration;
+        const minDuration = unitDuration * 0.2;
+        const duration = mapUnaryTo(
+          state.noteDuty,
+          minDuration,
+          originalDuration,
+        );
 
         noteOutputPort.noteOn(shiftedNote, time);
         noteOutputPort.noteOff(shiftedNote, time + duration);
