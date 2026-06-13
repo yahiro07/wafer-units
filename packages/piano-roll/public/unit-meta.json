@@ -1,0 +1,13 @@
+{
+  "name": "piano-roll",
+  "unitType": "sequencer",
+  "preferredSize": "600,300",
+  "outputSignalTypes": "note",
+  "inputSignalTypes": "note",
+  "protocol": "wus-v01",
+  "unitTypesVersion": "0.1.5",
+  "integrationFormat": "webComponents",
+  "repositoryUrl": "https://github.com/yahiro07/wus-units",
+  "author": "yahiro",
+  "license": "MIT"
+}
