@@ -98,6 +98,14 @@ function createSequencer() {
         state.isInternalTickRunning = false;
       }
     },
+    setAttrs(attrs: Partial<Pick<typeof state, "octaveShift" | "noteDuty">>) {
+      if (attrs.octaveShift !== undefined) {
+        state.octaveShift = attrs.octaveShift;
+      }
+      if (attrs.noteDuty !== undefined) {
+        state.noteDuty = attrs.noteDuty;
+      }
+    },
   };
 }
 

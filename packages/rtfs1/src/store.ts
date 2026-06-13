@@ -11,7 +11,11 @@ const defaultNotes: Note[] = [
 export const store = createStore<{
   notes: Note[];
   draftNote: DraftNote | null;
+  noteDuty: number;
+  octaveShift: number;
 }>({
   notes: defaultNotes,
   draftNote: null,
+  noteDuty: 1,
+  octaveShift: 0,
 });

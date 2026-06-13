@@ -1,8 +1,14 @@
-import { clampValue } from "mofur/ax";
+import { clampValue, seqNumbers } from "mofur/ax";
 import { npx, startDragSession } from "mofur/ax-ui";
 import { generateRandomId } from "mofur/mo";
-import { createSelectorOptions, GeneralSelector } from "mofur-components/mono2";
+import { ScalerBoxAutoSized } from "mofur/mo-react";
+import {
+  createSelectorOptions,
+  GeneralSelector,
+  Knob,
+} from "mofur-components/mono2";
 import { CSSProperties, useState } from "react";
+import { LabeledRow } from "@/components";
 import { store } from "@/store";
 import { DraftNote, Note } from "@/types";
 
@@ -317,12 +323,48 @@ const SequenceLane = ({ lane }: { lane: number }) => {
   );
 };
 
+export const octaveShiftOptions = createSelectorOptions(
+  seqNumbers(7).map((i) => [i - 3, `${i - 3}`]),
+);
+
+const ControlsSection = () => {
+  const st = store.useSnapshot();
+  return (
+    <div className="flex-ha gap-2 justify-between">
+      <LabeledRow label="octave">
+        <GeneralSelector
+          options={octaveShiftOptions}
+          value={st.octaveShift}
+          onChange={store.setOctaveShift}
+          reverseOptionsOrder
+        />
+      </LabeledRow>
+      <LabeledRow label="duty">
+        <div className="w-[24px] h-[24px]">
+          <ScalerBoxAutoSized>
+            <Knob
+              value={st.noteDuty}
+              min={0}
+              max={1}
+              step={0.01}
+              onChange={store.setNoteDuty}
+            />
+          </ScalerBoxAutoSized>
+        </div>
+      </LabeledRow>
+    </div>
+  );
+};
+
 export const SequenceEditorView = () => {
   return (
-    <div>
-      <SequenceLane lane={0} />
-      <SequenceLane lane={1} />
-      <SequenceLane lane={2} />
+    <div className="flex-v gap-2 bg-white p-2">
+      <ControlsSection />
+      <div>
+        <SequenceLane lane={0} />
+        <SequenceLane lane={1} />
+        <SequenceLane lane={2} />
+      </div>
     </div>
   );
 };

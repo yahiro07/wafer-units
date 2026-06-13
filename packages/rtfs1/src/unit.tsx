@@ -1,3 +1,4 @@
+import { pickObjectMembers } from "mofur/ax";
 import { useEffect } from "react";
 import { SequenceEditorView } from "@/editor";
 import { sequencer, unitInterface } from "@/sequencer";
@@ -17,6 +18,9 @@ function setupSynchronization() {
   store.subscribe((attrs) => {
     if (attrs.notes) {
       affectNotes(attrs.notes);
+    }
+    if (attrs.noteDuty !== undefined || attrs.octaveShift !== undefined) {
+      sequencer.setAttrs(pickObjectMembers(attrs, ["octaveShift", "noteDuty"]));
     }
   });
 
@@ -47,9 +51,5 @@ function setupSynchronization() {
 
 export const App = () => {
   useEffect(setupSynchronization, []);
-  return (
-    <div className="flex-vc">
-      <SequenceEditorView />
-    </div>
-  );
+  return <SequenceEditorView />;
 };
