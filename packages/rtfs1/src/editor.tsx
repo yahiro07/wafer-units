@@ -3,6 +3,7 @@ import { npx, startDragSession } from "mofur/ax-ui";
 import { generateRandomId } from "mofur/mo";
 import { ScalerBoxAutoSized } from "mofur/mo-react";
 import {
+  Button,
   createSelectorOptions,
   GeneralSelector,
   Knob,
@@ -75,6 +76,9 @@ const actions = {
       return sortNotes([...prev, nextNote]);
     });
     store.mutations.setDraftNote(() => null);
+  },
+  clearNotes() {
+    store.mutations.setNotes(() => []);
   },
 };
 
@@ -352,6 +356,11 @@ const ControlsSection = () => {
           </ScalerBoxAutoSized>
         </div>
       </LabeledRow>
+      <div className="w-[32px] h-[24px]">
+        <ScalerBoxAutoSized>
+          <Button text="x" onClick={actions.clearNotes} asr={1.25} />
+        </ScalerBoxAutoSized>
+      </div>
     </div>
   );
 };
