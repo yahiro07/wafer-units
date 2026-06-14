@@ -69,6 +69,13 @@ const NoteBar = ({
   const y = (7 * numOctaves - note.relativeNoteNumber - 1) * cellH;
   const w = note.stepDuration * cellW;
   const h = cellH;
+  let bg: string | undefined;
+  if (isDraft) {
+    bg = "yellow";
+  }
+  if (note.stepDuration <= 0) {
+    bg = "red";
+  }
   return (
     <div
       className="absolute bg-cyan-500/60"
@@ -77,7 +84,7 @@ const NoteBar = ({
         top: y + 1,
         width: w - 1,
         height: h - 1,
-        background: isDraft ? "yellow" : undefined,
+        background: bg,
       }}
     />
   );
