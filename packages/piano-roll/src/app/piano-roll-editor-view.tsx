@@ -15,7 +15,8 @@ const configs = {
 
 const editActions = {
   shiftPage(dir: -1 | 1) {
-    store.setCurrentPageIndex((prev) => (prev + dir + 8) % 8);
+    const pageNum = Math.max(1, store.state.loopBars / 2);
+    store.setCurrentPageIndex((prev) => (prev + dir + pageNum) % pageNum);
   },
   addNote(note: Note) {
     store.setNotes((prev) => [...prev, note]);
@@ -270,7 +271,7 @@ const handleInputLayerPointerDown = (e0: React.PointerEvent) => {
       id,
       stepPosition,
       relativeNoteNumber,
-      stepDuration: store.state.noteDuty,
+      stepDuration: 1,
     };
     startEditNote(e0, newNote, true);
   }
@@ -318,15 +319,21 @@ const PianoRollEditor = () => {
 };
 
 export const PianoRollEditorView = () => {
+  const { loopBars } = store.useSnapshot();
+  const pageNum = Math.max(1, loopBars / 2);
+  const canShiftPage = pageNum > 1;
+
   return (
     <div className="flex-ha gap-2">
       <PageShiftButton
         direction="left"
+        disabled={!canShiftPage}
         onClick={() => editActions.shiftPage(-1)}
       />
       <PianoRollEditor />
       <PageShiftButton
         direction="right"
+        disabled={!canShiftPage}
         onClick={() => editActions.shiftPage(1)}
       />
     </div>

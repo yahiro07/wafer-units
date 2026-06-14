@@ -17,7 +17,8 @@ function setupSynchronization() {
     sequencer.setStepNotes(stepNotes);
   }
   affectNotes(store.state.notes);
-  store.subscribe((attrs) => {
+
+  const unsubscribeStore = store.subscribe((attrs) => {
     if (attrs.notes) {
       affectNotes(attrs.notes);
     }
@@ -49,6 +50,8 @@ function setupSynchronization() {
       setMetaAttributes: sequencer.setMetaAttributes,
     },
   });
+
+  return unsubscribeStore;
 }
 
 export const App = () => {

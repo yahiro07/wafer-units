@@ -21,6 +21,7 @@ export const ControlsSection = () => {
   const st = store.useSnapshot();
   const clearNotes = () => {
     store.setNotes([]);
+    store.setCurrentPageIndex(0);
   };
   return (
     <div className="flex-ha gap-2 justify-between">
