@@ -71,7 +71,7 @@ const NoteBar = ({
   const h = cellH;
   let bg: string | undefined;
   if (isDraft) {
-    bg = "yellow";
+    bg = "orange";
   }
   if (note.stepDuration <= 0) {
     bg = "red";
@@ -210,7 +210,7 @@ function startEditNote(e0: React.PointerEvent, note: Note, isNewNote: boolean) {
         );
         editActions.patchDraftNote({ relativeNoteNumber, stepDuration });
       },
-      onUp(e) {
+      onUp() {
         const draftNote = store.state.draftNote;
         if (!draftNote) return;
         if (isNewNote) {
@@ -232,7 +232,7 @@ function startEditNote(e0: React.PointerEvent, note: Note, isNewNote: boolean) {
         }
         editActions.setDraftNote(null);
       },
-      onCancel(e) {
+      onCancel() {
         editActions.setDraftNote(null);
       },
     },
@@ -276,7 +276,7 @@ const InputLayer = () => {
   const height = configs.cellH * 7 * configs.numOctaves;
   return (
     <div
-      className="absolute-full bd-red"
+      className="absolute-full"
       style={{ width, height }}
       onPointerDown={handleInputLayerPointerDown}
     />
