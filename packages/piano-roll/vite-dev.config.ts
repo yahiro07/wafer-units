@@ -5,6 +5,7 @@ import { defineConfig } from "vite";
 
 const preactPaths = {
   compat: resolve("./node_modules/preact/compat/dist/compat.mjs"),
+  jsxDevRuntime: resolve("./node_modules/preact/compat/jsx-dev-runtime.mjs"),
   jsxRuntime: resolve("./node_modules/preact/compat/jsx-runtime.mjs"),
   client: resolve("./node_modules/preact/compat/client.mjs"),
 };
@@ -12,9 +13,13 @@ const preactPaths = {
 export default defineConfig({
   base: "./",
   define: { "process.env.NODE_ENV": JSON.stringify("production") },
-  plugins: [preact({ reactAliasesEnabled: false }), tailwindcss()],
+  plugins: [
+    preact({ reactAliasesEnabled: false, jsxImportSource: "@emotion/react" }),
+    tailwindcss(),
+  ],
   resolve: {
     alias: [
+      { find: "react/jsx-dev-runtime", replacement: preactPaths.jsxDevRuntime },
       { find: "react/jsx-runtime", replacement: preactPaths.jsxRuntime },
       { find: "react-dom/test-utils", replacement: preactPaths.compat },
       { find: "react-dom/client", replacement: preactPaths.client },
