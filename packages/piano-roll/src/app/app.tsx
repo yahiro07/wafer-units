@@ -1,6 +1,6 @@
 import { pickObjectMembers } from "mofur/ax";
 import { useEffect } from "react";
-import { Dev3PianoRollEditorView } from "@/dev3-piano-roll-edit";
+import { Dev3PianoRollEditorView } from "@/app/dev3-piano-roll-edit";
 import { sequencer, unitInterface } from "@/logic/sequencer";
 import { store } from "@/store/store";
 import { Note } from "@/store/types";

@@ -1,7 +1,7 @@
 import { resolve } from "node:path";
 import preact from "@preact/preset-vite";
 import tailwindcss from "@tailwindcss/vite";
-import { defineConfig } from "vite";
+import { defineConfig, UserConfig } from "vite";
 
 const preactPaths = {
   compat: resolve("./node_modules/preact/compat/dist/compat.mjs"),
@@ -10,9 +10,8 @@ const preactPaths = {
   client: resolve("./node_modules/preact/compat/client.mjs"),
 };
 
-export default defineConfig(({ mode }) => ({
+const configCommon: UserConfig = {
   base: "./",
-  define: { "process.env.NODE_ENV": JSON.stringify("production") },
   plugins: [
     preact({ reactAliasesEnabled: false, jsxImportSource: "@emotion/react" }),
     tailwindcss(),
@@ -31,19 +30,30 @@ export default defineConfig(({ mode }) => ({
   optimizeDeps: {
     exclude: ["wus-unit-types", "mofur", "mofur-components"],
   },
+};
+
+const configDev: UserConfig = {
+  ...configCommon,
+  define: { "process.env.NODE_ENV": JSON.stringify("development") },
   server: {
     port: 3000,
   },
-  build:
-    mode === "production"
-      ? {
-          lib: {
-            entry: "./src/index.tsx",
-            formats: ["es"],
-            fileName: "index",
-          },
-          outDir: "../../dist/piano-roll",
-          emptyOutDir: true,
-        }
-      : undefined,
-}));
+};
+
+const configProd: UserConfig = {
+  ...configCommon,
+  define: { "process.env.NODE_ENV": JSON.stringify("production") },
+  build: {
+    lib: {
+      entry: "./src/wc-entry/index.tsx",
+      formats: ["es"],
+      fileName: "index",
+    },
+    outDir: "../../dist/piano-roll",
+    emptyOutDir: true,
+  },
+};
+
+export default defineConfig(({ mode }) =>
+  mode === "production" ? configProd : configDev,
+);

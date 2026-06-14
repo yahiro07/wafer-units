@@ -177,7 +177,7 @@ export const Dev3PianoRollEditorView = () => {
 
   return (
     <div className="bg-white">
-      <div className="w-[420px] h-[240px] flex-c border border-cyan-600 bg-cyan-100/20">
+      <div className="w-[420px] h-[240px] flex-c border border-cyan-600 bg-blue-100/20">
         <div>
           <div className="flex-ha gap-2">
             <PageShiftButton
