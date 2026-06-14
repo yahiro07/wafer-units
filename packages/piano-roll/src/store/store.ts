@@ -19,10 +19,12 @@ export const store = createStore<{
   octaveShift: number;
   currentPageIndex: number;
   draftNote: Note | null;
+  loopBars: number;
 }>({
   notes: defaultNotes,
   noteDuty: 1,
   octaveShift: 0,
   currentPageIndex: 0,
   draftNote: null,
+  loopBars: 2,
 });

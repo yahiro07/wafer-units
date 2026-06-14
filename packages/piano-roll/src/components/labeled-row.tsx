@@ -6,7 +6,7 @@ export const LabeledRow = ({
   children: React.ReactNode;
 }) => {
   return (
-    <div className="flex-ha gap-3">
+    <div className="flex-ha gap-2">
       <div className="">{label}</div>
       {children}
     </div>

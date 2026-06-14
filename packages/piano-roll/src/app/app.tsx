@@ -1,6 +1,7 @@
 import { pickObjectMembers } from "mofur/ax";
 import { useEffect } from "react";
-import { Dev3PianoRollEditorView } from "@/app/dev3-piano-roll-edit";
+import { ControlsSection } from "@/app/controls-section";
+import { PianoRollEditorView } from "@/app/piano-roll-editor-view";
 import { sequencer, unitInterface } from "@/logic/sequencer";
 import { store } from "@/store/store";
 import { Note } from "@/store/types";
@@ -52,5 +53,14 @@ function setupSynchronization() {
 export const App = () => {
   useEffect(setupSynchronization, []);
   // return <Dev2PianoRollEditorView />;
-  return <Dev3PianoRollEditorView />;
+  return (
+    <div className="bg-white">
+      <div className="w-[420px] h-[240px] border border-cyan-600 bg-blue-100/20 flex-c">
+        <div className="flex-v gap-2">
+          <ControlsSection />
+          <PianoRollEditorView />
+        </div>
+      </div>
+    </div>
+  );
 };
