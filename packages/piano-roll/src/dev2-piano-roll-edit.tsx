@@ -75,9 +75,9 @@ const PianoRollBackgroundOctaveBlock = ({
 };
 
 const BackgroundGridLayer = () => {
-  const cellW = 16;
-  const cellH = 12;
-  const nx = 32;
+  const cellW = 20;
+  const cellH = 14;
+  const nx = 16;
   return (
     <div className="flex-v">
       <PianoRollBackgroundOctaveBlock cellW={cellW} cellH={cellH} nx={nx} />
@@ -94,7 +94,7 @@ export const PianoRollEditorView = () => {
     baseDiv.scrollTop = baseDiv.scrollHeight / 2 - baseDiv.clientHeight / 2;
   }, []);
   return (
-    <div className="w-[580px] h-[300px] flex-c border border-cyan-600 bg-cyan-100/20">
+    <div className="w-[400px] h-[240px] flex-c border border-cyan-600 bg-cyan-100/20">
       <div className="flex-v">
         piano-roll
         <div
