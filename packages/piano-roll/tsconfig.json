@@ -10,7 +10,8 @@
     "strict": true,
     "noEmit": true,
     "skipLibCheck": true,
-    "preserveSymlinks": true,
+    //Setting this to true causes the type of the `emotion` css prop to become `any`, so set it to false
+    "preserveSymlinks": false,
     "paths": {
       "@/*": ["./src/*"]
     }
