@@ -3,10 +3,10 @@ import { Note } from "@/store/types";
 
 const defaultNotes: Note[] = 0
   ? [
-      { relativeNoteNumber: 0, stepPosition: 0, stepDuration: 2 },
-      { relativeNoteNumber: 1, stepPosition: 2, stepDuration: 2 },
-      { relativeNoteNumber: 2, stepPosition: 4, stepDuration: 2 },
-      { relativeNoteNumber: 3, stepPosition: 6, stepDuration: 2 },
+      { relativeNoteNumber: 14, stepPosition: 0, stepDuration: 2 },
+      { relativeNoteNumber: 15, stepPosition: 2, stepDuration: 2 },
+      { relativeNoteNumber: 16, stepPosition: 4, stepDuration: 2 },
+      { relativeNoteNumber: 17, stepPosition: 6, stepDuration: 2 },
     ]
   : [];
 
