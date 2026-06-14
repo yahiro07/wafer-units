@@ -318,22 +318,17 @@ const PianoRollEditor = () => {
 };
 
 export const PianoRollEditorView = () => {
-  const { currentPageIndex } = store.useSnapshot();
-
   return (
-    <div className="flex-vc gap-1">
-      <div className="flex-ha gap-2">
-        <PageShiftButton
-          direction="left"
-          onClick={() => editActions.shiftPage(-1)}
-        />
-        <PianoRollEditor />
-        <PageShiftButton
-          direction="right"
-          onClick={() => editActions.shiftPage(1)}
-        />
-      </div>
-      <div className="text-xs text-center">{currentPageIndex + 1} / 8</div>
+    <div className="flex-ha gap-2">
+      <PageShiftButton
+        direction="left"
+        onClick={() => editActions.shiftPage(-1)}
+      />
+      <PianoRollEditor />
+      <PageShiftButton
+        direction="right"
+        onClick={() => editActions.shiftPage(1)}
+      />
     </div>
   );
 };

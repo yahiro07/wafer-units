@@ -1,5 +1,6 @@
 import { pickObjectMembers } from "mofur/ax";
 import { useEffect } from "react";
+import { BottomBar } from "@/app/bottom-bar";
 import { ControlsSection } from "@/app/controls-section";
 import { PianoRollEditorView } from "@/app/piano-roll-editor-view";
 import { sequencer, unitInterface } from "@/logic/sequencer";
@@ -59,6 +60,7 @@ export const App = () => {
         <div className="flex-v gap-2">
           <ControlsSection />
           <PianoRollEditorView />
+          <BottomBar />
         </div>
       </div>
     </div>
