@@ -1,4 +1,4 @@
-import { SongKey } from "@/types";
+import { SongKey } from "@/store/types";
 
 export function checkKeyValid(key: string): SongKey | undefined {
   const valid = ["Am", "B", "C", "Dm", "Em", "F", "G"].includes(key as SongKey);

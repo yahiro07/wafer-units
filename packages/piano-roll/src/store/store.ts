@@ -1,5 +1,5 @@
 import { createStore } from "snap-store";
-import { Note } from "@/types";
+import { Note } from "@/store/types";
 
 const defaultNotes: Note[] = 0
   ? [

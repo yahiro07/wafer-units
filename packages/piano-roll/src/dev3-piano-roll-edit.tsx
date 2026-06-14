@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { PianoRollBackgroundOctaveBlock } from "@/piano-roll-background-octave-block";
+import { PianoRollBackgroundOctaveBlock } from "@/components/piano-roll-background-octave-block";
 
 const BackgroundGridLayer = () => {
   const cellW = 20;

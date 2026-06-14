@@ -1,9 +1,9 @@
 import { mapUnaryTo } from "mofur/ax";
 import { createSequencerTickDriver } from "mofur/mx-audio";
 import { queryUnitInterfaceForModule } from "wus-unit-types";
-import { applyDynamicNoteShiftRTFS } from "@/dynamic-note-shift";
-import { DynamicPatternMeta, SongKey } from "@/types";
-import { createUnitInterfaceDebugDummy } from "@/unit-interface-debug-dummy";
+import { applyDynamicNoteShiftRTFS } from "@/logic/dynamic-note-shift";
+import { createUnitInterfaceDebugDummy } from "@/logic/unit-interface-debug-dummy";
+import { DynamicPatternMeta, SongKey } from "@/store/types";
 
 export const unitInterface =
   queryUnitInterfaceForModule("wus-v01", import.meta.url) ??

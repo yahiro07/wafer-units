@@ -8,11 +8,11 @@ import {
   Knob,
 } from "mofur-components/mono2";
 import { useState } from "react";
+import { GridBackground } from "@/__development/grid-background";
 import { LabeledRow } from "@/components";
-import { GridBackground } from "@/components/grid-background";
-import { sequencer } from "@/sequencer";
-import { store } from "@/store";
-import { Note } from "@/types";
+import { sequencer } from "@/logic/sequencer";
+import { store } from "@/store/store";
+import { Note } from "@/store/types";
 
 const configs = {
   editorWidth: 320,
@@ -403,7 +403,7 @@ const ControlsSection = () => {
   );
 };
 
-export const EditorView = () => {
+export const EditorView00 = () => {
   return (
     <div className="bg-white w-[392px] h-[240px] flex-v gap-3 p-4">
       <ControlsSection />
