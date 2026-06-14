@@ -19,6 +19,7 @@ function makeCssPianoRollBackgroundOctaveBlock(cellW: number, cellH: number) {
       border: 0.5px solid #8881;
       color: #8884;
       font-size: ${npx(12)};
+      padding-right: ${npx(28)};
     }
 
     & > .overlay-v,
@@ -78,7 +79,7 @@ export const PianoRollBackgroundOctaveBlock = ({
             {seqNumbers(nx).map((xi) => {
               return (
                 <div className="grid-cell">
-                  {xi % 2 === 0 && (yi === 3 || yi === 6) && "・"}
+                  {xi % 1 === 0 && (yi === 3 || yi === 6) && "・"}
                 </div>
               );
             })}

@@ -1,7 +1,7 @@
 import { createStore } from "snap-store";
 import { Note } from "@/store/types";
 
-const defaultNotes: Note[] = 0
+const defaultNotes: Note[] = 1
   ? [
       { stepPosition: 0, stepDuration: 2, relativeNoteNumber: 14 },
       { stepPosition: 2, stepDuration: 2, relativeNoteNumber: 15 },
@@ -16,8 +16,10 @@ export const store = createStore<{
   notes: Note[];
   noteDuty: number;
   octaveShift: number;
+  currentPageIndex: number;
 }>({
   notes: defaultNotes,
   noteDuty: 1,
   octaveShift: 0,
+  currentPageIndex: 0,
 });
