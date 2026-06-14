@@ -1,6 +1,5 @@
-import styled from "@emotion/styled";
 import { useEffect, useRef } from "react";
-import { Icons } from "@/components/icons";
+import { PageShiftButton } from "@/components/page-shift-button";
 import { PianoRollBackgroundOctaveBlock } from "@/components/piano-roll-background-octave-block";
 
 const BackgroundGridLayer = () => {
@@ -33,32 +32,14 @@ const PianoRollEditor = () => {
   );
 };
 
-const NextPageButton = styled.div({
-  width: "25px",
-  height: "40px",
-  background: "#4ce",
-  color: "white",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  cursor: "pointer",
-  "&:hover": {
-    opacity: 0.8,
-  },
-});
-
 export const Dev3PianoRollEditorView = () => {
   return (
     <div className="bg-white">
       <div className="w-[420px] h-[240px] flex-c border border-cyan-600 bg-cyan-100/20">
         <div className="flex-ha gap-2">
-          <NextPageButton>
-            <Icons.ChevronLeft />
-          </NextPageButton>
+          <PageShiftButton direction="left" />
           <PianoRollEditor />
-          <NextPageButton>
-            <Icons.ChevronRight />
-          </NextPageButton>
+          <PageShiftButton direction="right" />
         </div>
       </div>
     </div>
