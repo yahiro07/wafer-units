@@ -16,6 +16,9 @@ const editorActions = {
   shiftPage(dir: -1 | 1) {
     store.setCurrentPageIndex((prev) => (prev + dir + 8) % 8);
   },
+  addNote(note: Note) {
+    store.setNotes((prev) => [...prev, note]);
+  },
 };
 
 const BackgroundGridLayer = () => {
@@ -46,7 +49,6 @@ const NotesLayer = ({
     (note) =>
       stepOffset <= note.stepPosition && note.stepPosition <= stepOffset + 32,
   );
-  console.log({ notes, notesInView });
   return (
     <div>
       {notesInView.map((note, i) => {
@@ -57,12 +59,50 @@ const NotesLayer = ({
         return (
           <div
             key={i}
-            className="absolute bg-cyan-500/80"
-            style={{ left: x, top: y, width: w - 1, height: h }}
+            className="absolute bg-cyan-500/60"
+            style={{ left: x, top: y + 1, width: w - 1, height: h - 1 }}
           />
         );
       })}
     </div>
+  );
+};
+
+function getNoteCoordFromPointPos(x: number, y: number, stepOffset: number) {
+  const stepPosition = Math.floor(x / configs.cellW) + stepOffset;
+  const relativeNoteNumber =
+    7 * configs.numOctaves - 1 - Math.floor(y / configs.cellH);
+  return { stepPosition, relativeNoteNumber };
+}
+
+const InputLayer = () => {
+  const handleClick = (e: React.MouseEvent) => {
+    const rect = (e.target as HTMLDivElement).getBoundingClientRect();
+    const scale = rect.width / (configs.cellW * configs.nx);
+    const x = (e.clientX - rect.left) / scale;
+    const y = (e.clientY - rect.top) / scale;
+    const stepOffset = store.state.currentPageIndex * 32;
+    const { stepPosition, relativeNoteNumber } = getNoteCoordFromPointPos(
+      x,
+      y,
+      stepOffset,
+    );
+    const newNote: Note = {
+      stepPosition,
+      relativeNoteNumber,
+      stepDuration: store.state.noteDuty,
+    };
+    editorActions.addNote(newNote);
+  };
+
+  const width = configs.cellW * configs.nx;
+  const height = configs.cellH * 7 * configs.numOctaves;
+  return (
+    <div
+      className="absolute-full bd-red"
+      style={{ width, height }}
+      onClick={handleClick}
+    />
   );
 };
 
@@ -86,6 +126,7 @@ const PianoRollEditor = () => {
     >
       <BackgroundGridLayer />
       <NotesLayer notes={notes} stepOffset={currentPageIndex * 32} />
+      <InputLayer />
     </div>
   );
 };
