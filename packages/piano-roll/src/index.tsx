@@ -1,3 +1,5 @@
+import createCache from "@emotion/cache";
+import { CacheProvider } from "@emotion/react";
 import cssText2 from "mofur/ax-ui/utility-classes.css?inline";
 import cssText3 from "mofur-components/style.css?inline";
 import { render } from "preact";
@@ -10,7 +12,16 @@ const webFontUrl =
 
 export default createCustomElementClass(
   (shadowRoot) => {
-    render(<App />, shadowRoot);
+    const emotionCache = createCache({
+      key: "cs",
+      container: shadowRoot,
+    });
+    render(
+      <CacheProvider value={emotionCache}>
+        <App />
+      </CacheProvider>,
+      shadowRoot,
+    );
     return () => {
       render(null, shadowRoot);
     };

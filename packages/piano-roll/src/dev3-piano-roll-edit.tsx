@@ -1,3 +1,4 @@
+import { css } from "@emotion/react";
 import { seqNumbers } from "mofur/ax";
 import { npx } from "mofur/ax-ui";
 import { useEffect, useRef } from "react";
@@ -72,6 +73,21 @@ const BackgroundGridLayer = () => {
   );
 };
 
+const cssButton = css`
+  background: #98c379;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: opacity 0.2s;
+
+  &:hover {
+    opacity: 0.8;
+  }
+`;
+
 export const Dev3PianoRollEditorView = () => {
   const refBaseDiv = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -80,6 +96,7 @@ export const Dev3PianoRollEditorView = () => {
   }, []);
   return (
     <div className="w-[420px] h-[240px] flex-c border border-cyan-600 bg-cyan-100/20">
+      <button css={cssButton}>aaa</button>
       <div className="flex-v">
         <div
           ref={refBaseDiv}

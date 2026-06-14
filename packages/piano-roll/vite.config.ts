@@ -12,7 +12,10 @@ const preactPaths = {
 export default defineConfig(({ mode }) => ({
   base: "./",
   define: { "process.env.NODE_ENV": JSON.stringify("production") },
-  plugins: [preact({ reactAliasesEnabled: false }), tailwindcss()],
+  plugins: [
+    preact({ reactAliasesEnabled: false, jsxImportSource: "@emotion/react" }),
+    tailwindcss(),
+  ],
   resolve: {
     tsconfigPaths: true,
     alias: [
