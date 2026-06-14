@@ -23,6 +23,14 @@ const editorActions = {
   setDraftNote(note: Note | null) {
     store.setDraftNote(note);
   },
+  patchNote(id: number, attrs: Partial<Note>) {
+    store.produceNotes((draft) => {
+      const note = draft.find((n) => n.id === id);
+      if (note) {
+        Object.assign(note, attrs);
+      }
+    });
+  },
 };
 
 const BackgroundGridLayer = () => {
@@ -114,16 +122,58 @@ function getNoteHit(
   );
 }
 
+type LineEntry = { y: number; relNote: number };
+
+function generateYLinesMap(): LineEntry[] {
+  const numLanes = configs.numOctaves * 7;
+  const totalH = numLanes * configs.cellH;
+  const lines = new Map(
+    seqNumbers(numLanes).map((i) => {
+      const y = totalH - i * configs.cellH - configs.cellH / 2;
+      return [i, y] as const;
+    }),
+  );
+  function addMiddleLine(i: number) {
+    const a = lines.get(i);
+    const b = lines.get(i + 1);
+    if (a !== undefined && b !== undefined) {
+      lines.set((i + (i + 1)) / 2, (a + b) / 2);
+    }
+  }
+  for (let i = 0; i < configs.numOctaves; i++) {
+    const base = i * 7;
+    const indices = [0, 1, 3, 4, 5];
+    indices.forEach((idx) => {
+      addMiddleLine(base + idx);
+    });
+  }
+  return [...lines.entries()].map(([relNote, y]) => ({ relNote, y }));
+}
+const lines = generateYLinesMap();
+console.log({ lines });
+
+function findNearestYLineNote(y: number): number {
+  let nearest = lines[0];
+  for (const line of lines) {
+    if (Math.abs(line.y - y) < Math.abs(nearest.y - y)) {
+      nearest = line;
+    }
+  }
+  return nearest.relNote;
+}
+
 function noteInputs_editNote(note: Note, e0: React.PointerEvent) {
-  // const rect = (e0.target as HTMLDivElement).getBoundingClientRect();
-  // const scale = rect.width / (configs.cellW * configs.nx);
+  editorActions.setDraftNote(note);
   startDragSession(
     e0.nativeEvent,
     {
       onMove(e) {
         const { x, y } = e.position;
-        const { relativeNoteNumber } = getNoteCoordFromPointerPos(x, y, 0);
-        console.log(y, relativeNoteNumber);
+        const relativeNoteNumber = findNearestYLineNote(y);
+        console.log({ relativeNoteNumber });
+        editorActions.patchNote(note.id, {
+          relativeNoteNumber,
+        });
       },
       onUp(e) {
         editorActions.setDraftNote(null);
@@ -142,7 +192,9 @@ function noteInputs_createNote(
   stepPosition: number,
   relativeNoteNumber: number,
 ) {
+  const id = Math.max(0, ...store.state.notes.map((n) => n.id)) + 1;
   const newNote: Note = {
+    id,
     stepPosition,
     relativeNoteNumber,
     stepDuration: store.state.noteDuty,
