@@ -1,4 +1,5 @@
 import { seqNumbers } from "mofur/ax";
+import { startDragSession } from "mofur/ax-ui";
 import { useEffect, useRef } from "react";
 import { PageShiftButton } from "@/components/page-shift-button";
 import { PianoRollBackgroundOctaveBlock } from "@/components/piano-roll-background-octave-block";
@@ -19,6 +20,9 @@ const editorActions = {
   addNote(note: Note) {
     store.setNotes((prev) => [...prev, note]);
   },
+  setDraftNote(note: Note | null) {
+    store.setDraftNote(note);
+  },
 };
 
 const BackgroundGridLayer = () => {
@@ -37,14 +41,43 @@ const BackgroundGridLayer = () => {
   );
 };
 
+const NoteBar = ({
+  note,
+  stepOffset,
+  isDraft,
+}: {
+  note: Note;
+  stepOffset: number;
+  isDraft?: boolean;
+}) => {
+  const { cellW, cellH, numOctaves } = configs;
+  const x = (note.stepPosition - stepOffset) * cellW;
+  const y = (7 * numOctaves - note.relativeNoteNumber - 1) * cellH;
+  const w = note.stepDuration * cellW;
+  const h = cellH;
+  return (
+    <div
+      className="absolute bg-cyan-500/60"
+      style={{
+        left: x,
+        top: y + 1,
+        width: w - 1,
+        height: h - 1,
+        background: isDraft ? "yellow" : undefined,
+      }}
+    />
+  );
+};
+
 const NotesLayer = ({
   notes,
   stepOffset,
+  draftNote,
 }: {
   notes: Note[];
   stepOffset: number;
+  draftNote: Note | null;
 }) => {
-  const { cellW, cellH, numOctaves } = configs;
   const notesInView = notes.filter(
     (note) =>
       stepOffset <= note.stepPosition && note.stepPosition <= stepOffset + 32,
@@ -52,18 +85,11 @@ const NotesLayer = ({
   return (
     <div>
       {notesInView.map((note, i) => {
-        const x = (note.stepPosition - stepOffset) * cellW;
-        const y = (7 * numOctaves - note.relativeNoteNumber - 1) * cellH;
-        const w = note.stepDuration * cellW;
-        const h = cellH;
-        return (
-          <div
-            key={i}
-            className="absolute bg-cyan-500/60"
-            style={{ left: x, top: y + 1, width: w - 1, height: h - 1 }}
-          />
-        );
+        return <NoteBar key={i} note={note} stepOffset={stepOffset} />;
       })}
+      {draftNote && (
+        <NoteBar note={draftNote} stepOffset={stepOffset} isDraft />
+      )}
     </div>
   );
 };
@@ -75,39 +101,50 @@ function getNoteCoordFromPointPos(x: number, y: number, stepOffset: number) {
   return { stepPosition, relativeNoteNumber };
 }
 
-const InputLayer = () => {
-  const handleClick = (e: React.MouseEvent) => {
-    const rect = (e.target as HTMLDivElement).getBoundingClientRect();
-    const scale = rect.width / (configs.cellW * configs.nx);
-    const x = (e.clientX - rect.left) / scale;
-    const y = (e.clientY - rect.top) / scale;
-    const stepOffset = store.state.currentPageIndex * 32;
-    const { stepPosition, relativeNoteNumber } = getNoteCoordFromPointPos(
-      x,
-      y,
-      stepOffset,
-    );
-    const newNote: Note = {
-      stepPosition,
-      relativeNoteNumber,
-      stepDuration: store.state.noteDuty,
-    };
-    editorActions.addNote(newNote);
+const handleInputLayerPointerDown = (e0: React.PointerEvent) => {
+  const rect = (e0.target as HTMLDivElement).getBoundingClientRect();
+  const scale = rect.width / (configs.cellW * configs.nx);
+  const x = (e0.clientX - rect.left) / scale;
+  const y = (e0.clientY - rect.top) / scale;
+  const stepOffset = store.state.currentPageIndex * 32;
+  const { stepPosition, relativeNoteNumber } = getNoteCoordFromPointPos(
+    x,
+    y,
+    stepOffset,
+  );
+  const newNote: Note = {
+    stepPosition,
+    relativeNoteNumber,
+    stepDuration: store.state.noteDuty,
   };
+  editorActions.setDraftNote(newNote);
 
+  startDragSession(e0.nativeEvent, {
+    onMove(e) {},
+    onUp(e) {
+      editorActions.setDraftNote(null);
+      editorActions.addNote(newNote);
+    },
+    onCancel(e) {
+      editorActions.setDraftNote(null);
+    },
+  });
+};
+
+const InputLayer = () => {
   const width = configs.cellW * configs.nx;
   const height = configs.cellH * 7 * configs.numOctaves;
   return (
     <div
       className="absolute-full bd-red"
       style={{ width, height }}
-      onClick={handleClick}
+      onPointerDown={handleInputLayerPointerDown}
     />
   );
 };
 
 const PianoRollEditor = () => {
-  const { notes, currentPageIndex } = store.useSnapshot();
+  const { notes, currentPageIndex, draftNote } = store.useSnapshot();
   const refBaseDiv = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const baseDiv = refBaseDiv.current!;
@@ -125,7 +162,11 @@ const PianoRollEditor = () => {
       }}
     >
       <BackgroundGridLayer />
-      <NotesLayer notes={notes} stepOffset={currentPageIndex * 32} />
+      <NotesLayer
+        notes={notes}
+        stepOffset={currentPageIndex * 32}
+        draftNote={draftNote}
+      />
       <InputLayer />
     </div>
   );

@@ -18,9 +18,11 @@ export const store = createStore<{
   noteDuty: number;
   octaveShift: number;
   currentPageIndex: number;
+  draftNote: Note | null;
 }>({
   notes: defaultNotes,
   noteDuty: 1,
   octaveShift: 0,
   currentPageIndex: 0,
+  draftNote: null,
 });
