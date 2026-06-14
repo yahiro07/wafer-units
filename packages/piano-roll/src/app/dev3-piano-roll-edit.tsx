@@ -1,6 +1,6 @@
-import { seqNumbers } from "mofur/ax";
+import { getSortOrder, seqNumbers } from "mofur/ax";
 import { startDragSession } from "mofur/ax-ui";
-import { useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { PageShiftButton } from "@/components/page-shift-button";
 import { PianoRollBackgroundOctaveBlock } from "@/components/piano-roll-background-octave-block";
 import { store } from "@/store/store";
@@ -13,7 +13,7 @@ const configs = {
   numOctaves: 4,
 };
 
-const editorActions = {
+const editActions = {
   shiftPage(dir: -1 | 1) {
     store.setCurrentPageIndex((prev) => (prev + dir + 8) % 8);
   },
@@ -22,6 +22,9 @@ const editorActions = {
   },
   setDraftNote(note: Note | null) {
     store.setDraftNote(note);
+  },
+  patchDraftNote(attrs: Partial<Note>) {
+    store.setDraftNote((prev) => (prev ? { ...prev, ...attrs } : null));
   },
   patchNote(id: number, attrs: Partial<Note>) {
     store.produceNotes((draft) => {
@@ -102,26 +105,6 @@ const NotesLayer = ({
   );
 };
 
-function getNoteCoordFromPointerPos(x: number, y: number, stepOffset: number) {
-  const stepPosition = Math.floor(x / configs.cellW) + stepOffset;
-  const relativeNoteNumber =
-    7 * configs.numOctaves - 1 - Math.floor(y / configs.cellH);
-  return { stepPosition, relativeNoteNumber };
-}
-
-function getNoteHit(
-  stepPosition: number,
-  relativeNoteNumber: number,
-  notes: Note[],
-) {
-  return notes.find(
-    (note) =>
-      note.stepPosition <= stepPosition &&
-      stepPosition < note.stepPosition + note.stepDuration &&
-      note.relativeNoteNumber === relativeNoteNumber,
-  );
-}
-
 type LineEntry = { y: number; relNote: number };
 
 function generateYLinesMap(): LineEntry[] {
@@ -149,12 +132,12 @@ function generateYLinesMap(): LineEntry[] {
   }
   return [...lines.entries()].map(([relNote, y]) => ({ relNote, y }));
 }
-const lines = generateYLinesMap();
-console.log({ lines });
+const noteYLines = generateYLinesMap();
+console.log({ lines: noteYLines });
 
 function findNearestYLineNote(y: number): number {
-  let nearest = lines[0];
-  for (const line of lines) {
+  let nearest = noteYLines[0];
+  for (const line of noteYLines) {
     if (Math.abs(line.y - y) < Math.abs(nearest.y - y)) {
       nearest = line;
     }
@@ -162,25 +145,60 @@ function findNearestYLineNote(y: number): number {
   return nearest.relNote;
 }
 
+function getNoteCoordFromPointerPos(x: number, y: number, stepOffset: number) {
+  const stepPosition = Math.floor(x / configs.cellW) + stepOffset;
+  const relativeNoteNumber =
+    7 * configs.numOctaves - 1 - Math.floor(y / configs.cellH);
+  return { stepPosition, relativeNoteNumber };
+}
+
+function getNoteHit(
+  stepPosition: number,
+  relativeNoteNumber: number,
+  y: number,
+  notes: Note[],
+) {
+  const yLines = noteYLines.filter(
+    (line) => Math.abs(line.relNote - relativeNoteNumber) < 0.75,
+  );
+  yLines.sort(getSortOrder((line) => Math.abs(line.y - y)));
+  for (const line of yLines) {
+    const hitNote = notes.find(
+      (note) =>
+        note.stepPosition <= stepPosition &&
+        stepPosition < note.stepPosition + note.stepDuration &&
+        note.relativeNoteNumber === line.relNote,
+    );
+    if (hitNote) {
+      return hitNote;
+    }
+  }
+}
+
 function noteInputs_editNote(note: Note, e0: React.PointerEvent) {
-  editorActions.setDraftNote(note);
+  editActions.setDraftNote(note);
   startDragSession(
     e0.nativeEvent,
     {
       onMove(e) {
         const { x, y } = e.position;
         const relativeNoteNumber = findNearestYLineNote(y);
-        console.log({ relativeNoteNumber });
-        editorActions.patchNote(note.id, {
-          relativeNoteNumber,
-        });
+        editActions.patchDraftNote({ relativeNoteNumber });
       },
       onUp(e) {
-        editorActions.setDraftNote(null);
-        // editorActions.addNote(newNote);
+        const draftNote = store.state.draftNote;
+        if (
+          draftNote &&
+          draftNote.relativeNoteNumber !== note.relativeNoteNumber
+        ) {
+          editActions.patchNote(note.id, {
+            relativeNoteNumber: draftNote.relativeNoteNumber,
+          });
+        }
+        editActions.setDraftNote(null);
       },
       onCancel(e) {
-        editorActions.setDraftNote(null);
+        editActions.setDraftNote(null);
       },
     },
     { coordinate: "relative" },
@@ -199,16 +217,16 @@ function noteInputs_createNote(
     relativeNoteNumber,
     stepDuration: store.state.noteDuty,
   };
-  editorActions.setDraftNote(newNote);
+  editActions.setDraftNote(newNote);
 
   startDragSession(e0.nativeEvent, {
     onMove(e) {},
     onUp(e) {
-      editorActions.setDraftNote(null);
-      editorActions.addNote(newNote);
+      editActions.setDraftNote(null);
+      editActions.addNote(newNote);
     },
     onCancel(e) {
-      editorActions.setDraftNote(null);
+      editActions.setDraftNote(null);
     },
   });
 }
@@ -227,6 +245,7 @@ const handleInputLayerPointerDown = (e0: React.PointerEvent) => {
   const hitNote = getNoteHit(
     stepPosition,
     relativeNoteNumber,
+    y,
     store.state.notes,
   );
   if (hitNote) {
@@ -287,12 +306,12 @@ export const Dev3PianoRollEditorView = () => {
           <div className="flex-ha gap-2">
             <PageShiftButton
               direction="left"
-              onClick={() => editorActions.shiftPage(-1)}
+              onClick={() => editActions.shiftPage(-1)}
             />
             <PianoRollEditor />
             <PageShiftButton
               direction="right"
-              onClick={() => editorActions.shiftPage(1)}
+              onClick={() => editActions.shiftPage(1)}
             />
           </div>
           <div>page: {currentPageIndex + 1} / 8</div>

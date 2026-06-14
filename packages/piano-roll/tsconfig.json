@@ -13,7 +13,8 @@
     //Setting this to true causes the type of the `emotion` css prop to become `any`, so set it to false
     "preserveSymlinks": false,
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "mofur/*": ["../../beam/mofur/src/*"]
     }
   },
   "include": ["src"]
