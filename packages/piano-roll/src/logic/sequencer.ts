@@ -1,9 +1,7 @@
 import { mapUnaryTo } from "mofur/ax";
-import { createSequencerTickDriver } from "mofur/mx-audio";
 import { queryUnitInterfaceForModule } from "wus-unit-types";
-import { applyDynamicNoteShiftRTFS } from "@/logic/dynamic-note-shift";
+import { resolveNotePitch } from "@/logic/resolve-note-pitch";
 import { createUnitInterfaceDebugDummy } from "@/logic/unit-interface-debug-dummy";
-import { DynamicPatternMeta, SongKey } from "@/store/types";
 
 export const unitInterface =
   queryUnitInterfaceForModule("wus-v01", import.meta.url) ??
@@ -21,41 +19,31 @@ type StepNote = {
 function createSequencer() {
   const state = {
     stepNotes: [] as StepNote[],
-    key: "Am" as SongKey,
-    chordRootNote: 60 as number | undefined,
     octaveShift: 0,
     noteDuty: 0.9,
-    bpm: 120,
-    isClockInputActive: false,
-    isInternalTickRunning: false,
+    loopBars: 2,
   };
-
-  const sequencerTickDriver = createSequencerTickDriver(
-    unitInterface.audioContext,
-  );
 
   const { noteOutputPort } = unitInterface;
 
   const core = {
     processStep(stepIndex: number, time: number, unitDuration: number) {
-      stepIndex %= 16;
+      const loopLength = state.loopBars * 16;
+      stepIndex %= loopLength;
+
       if (time === undefined || unitDuration === undefined) {
         //something wrong with the tick driver
         return;
       }
-      if (state.chordRootNote === undefined) return;
 
       const targetNotes = state.stepNotes.filter(
         (note) => note.position === stepIndex,
       );
       for (const stepNote of targetNotes) {
-        const shiftedNote = applyDynamicNoteShiftRTFS(
+        const shiftedNote = resolveNotePitch(
           stepNote.relNoteNumber,
-          state.key,
-          state.chordRootNote,
           state.octaveShift,
         );
-
         const originalDuration = unitDuration * stepNote.duration;
         const minDuration = unitDuration * 0.2;
         const duration = mapUnaryTo(
@@ -63,7 +51,6 @@ function createSequencer() {
           minDuration,
           originalDuration,
         );
-
         noteOutputPort.noteOn(shiftedNote, time);
         noteOutputPort.noteOff(shiftedNote, time + duration);
       }
@@ -76,40 +63,25 @@ function createSequencer() {
     },
     processStep: core.processStep,
     allNotesOff() {},
-    setMetaAttributes(attrs: DynamicPatternMeta) {
-      if (attrs.dynamicPatternInput) {
-        const { key, chordRootNote } = attrs.dynamicPatternInput;
-        if (key !== undefined) {
-          state.key = key;
-        }
-        if (chordRootNote !== undefined) {
-          state.chordRootNote = chordRootNote;
-        }
-      }
+    inputNoteOn(note: number, time: number, velocity: number) {
+      noteOutputPort.noteOn(note, time, velocity);
     },
-    inputNoteOn(note: number, _timeAt: number, _velocity: number) {
-      state.chordRootNote = note;
-      if (!state.isInternalTickRunning) {
-        sequencerTickDriver.setBpm(state.bpm);
-        sequencerTickDriver.start({
-          processStep: core.processStep,
-        });
-        state.isInternalTickRunning = true;
-      }
+    inputNoteOff(note: number, time: number) {
+      noteOutputPort.noteOff(note, time);
     },
-    inputNoteOff(_note: number, _timeAt: number) {
-      state.chordRootNote = undefined;
-      if (state.isInternalTickRunning) {
-        sequencerTickDriver.stop();
-        state.isInternalTickRunning = false;
-      }
-    },
-    setAttrs(attrs: Partial<Pick<typeof state, "octaveShift" | "noteDuty">>) {
+    setAttrs(
+      attrs: Partial<
+        Pick<typeof state, "octaveShift" | "noteDuty" | "loopBars">
+      >,
+    ) {
       if (attrs.octaveShift !== undefined) {
         state.octaveShift = attrs.octaveShift;
       }
       if (attrs.noteDuty !== undefined) {
         state.noteDuty = attrs.noteDuty;
+      }
+      if (attrs.loopBars !== undefined) {
+        state.loopBars = attrs.loopBars;
       }
     },
     setPreviewNote(_note: number | null) {},

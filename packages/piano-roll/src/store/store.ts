@@ -1,7 +1,7 @@
 import { createStore } from "snap-store";
 import { Note } from "@/store/types";
 
-const defaultNotes: Note[] = 1
+const defaultNotes: Note[] = 0
   ? [
       { id: 0, stepPosition: 0, stepDuration: 2, relativeNoteNumber: 14 },
       { id: 1, stepPosition: 2, stepDuration: 2, relativeNoteNumber: 15 },

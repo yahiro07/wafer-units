@@ -22,8 +22,14 @@ function setupSynchronization() {
     if (attrs.notes) {
       affectNotes(attrs.notes);
     }
-    if (attrs.noteDuty !== undefined || attrs.octaveShift !== undefined) {
-      sequencer.setAttrs(pickObjectMembers(attrs, ["octaveShift", "noteDuty"]));
+    if (
+      attrs.noteDuty !== undefined ||
+      attrs.octaveShift !== undefined ||
+      attrs.loopBars !== undefined
+    ) {
+      sequencer.setAttrs(
+        pickObjectMembers(attrs, ["octaveShift", "noteDuty", "loopBars"]),
+      );
     }
   });
 
@@ -45,9 +51,6 @@ function setupSynchronization() {
       processStep(stepIndex, time, unitDurationSec) {
         sequencer.processStep(stepIndex, time, unitDurationSec);
       },
-    },
-    hostCallbacks: {
-      setMetaAttributes: sequencer.setMetaAttributes,
     },
   });
 
