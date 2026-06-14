@@ -3,13 +3,14 @@ import { Icons } from "@/components/icons";
 
 type Props = {
   direction: "left" | "right";
+  onClick?: () => void;
 };
 
-export const PageShiftButton = ({ direction }: Props) => {
+export const PageShiftButton = ({ direction, onClick }: Props) => {
   return (
-    <div css={style}>
+    <button css={style} onClick={onClick}>
       {direction === "left" ? <Icons.ChevronLeft /> : <Icons.ChevronRight />}
-    </div>
+    </button>
   );
 };
 const style = css({

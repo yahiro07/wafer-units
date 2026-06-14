@@ -12,6 +12,12 @@ const configs = {
   numOctaves: 4,
 };
 
+const editorActions = {
+  shiftPage(dir: -1 | 1) {
+    store.setCurrentPageIndex((prev) => (prev + dir + 8) % 8);
+  },
+};
+
 const BackgroundGridLayer = () => {
   const { cellW, cellH, nx } = configs;
   return (
@@ -52,7 +58,7 @@ const NotesLayer = ({
           <div
             key={i}
             className="absolute bg-cyan-500/80"
-            style={{ left: x, top: y, width: w, height: h }}
+            style={{ left: x, top: y, width: w - 1, height: h }}
           />
         );
       })}
@@ -65,7 +71,8 @@ const PianoRollEditor = () => {
   const refBaseDiv = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const baseDiv = refBaseDiv.current!;
-    // baseDiv.scrollTop = baseDiv.scrollHeight / 2 - baseDiv.clientHeight / 2;
+    baseDiv.scrollTop =
+      baseDiv.scrollHeight / 2 - baseDiv.clientHeight / 2 - 50;
   }, []);
   return (
     <div
@@ -84,13 +91,24 @@ const PianoRollEditor = () => {
 };
 
 export const Dev3PianoRollEditorView = () => {
+  const { currentPageIndex } = store.useSnapshot();
+
   return (
     <div className="bg-white">
       <div className="w-[420px] h-[240px] flex-c border border-cyan-600 bg-cyan-100/20">
-        <div className="flex-ha gap-2">
-          <PageShiftButton direction="left" />
-          <PianoRollEditor />
-          <PageShiftButton direction="right" />
+        <div>
+          <div className="flex-ha gap-2">
+            <PageShiftButton
+              direction="left"
+              onClick={() => editorActions.shiftPage(-1)}
+            />
+            <PianoRollEditor />
+            <PageShiftButton
+              direction="right"
+              onClick={() => editorActions.shiftPage(1)}
+            />
+          </div>
+          <div>page: {currentPageIndex + 1} / 8</div>
         </div>
       </div>
     </div>
