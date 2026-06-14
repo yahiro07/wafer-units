@@ -9,6 +9,13 @@
 }
 
 
+:host,
+:host *,
+:host *::before,
+:host *::after {
+  --tw-border-style: solid;
+}
+
 :host {
   font-family: "Inter", sans-serif;
   user-select: none;

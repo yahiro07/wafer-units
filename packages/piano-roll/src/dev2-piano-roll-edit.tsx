@@ -94,11 +94,16 @@ export const PianoRollEditorView = () => {
     baseDiv.scrollTop = baseDiv.scrollHeight / 2 - baseDiv.clientHeight / 2;
   }, []);
   return (
-    <div
-      ref={refBaseDiv}
-      style={{ height: "180px", overflowX: "hidden", overflowY: "scroll" }}
-    >
-      <BackgroundGridLayer />
+    <div className="w-[580px] h-[300px] flex-c border border-cyan-600 bg-cyan-100/20">
+      <div className="flex-v">
+        piano-roll
+        <div
+          ref={refBaseDiv}
+          style={{ height: "180px", overflowX: "hidden", overflowY: "scroll" }}
+        >
+          <BackgroundGridLayer />
+        </div>
+      </div>
     </div>
   );
 };

@@ -37,7 +37,7 @@ export default defineConfig(({ mode }) => ({
             formats: ["es"],
             fileName: "index",
           },
-          outDir: "../../dist/perseq",
+          outDir: "../../dist/piano-roll",
           emptyOutDir: true,
         }
       : undefined,
