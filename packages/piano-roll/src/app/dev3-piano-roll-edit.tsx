@@ -195,13 +195,18 @@ function getNoteHit(
 }
 
 function startEditNote(e0: React.PointerEvent, note: Note, isNewNote: boolean) {
+  const rect = (e0.target as HTMLDivElement).getBoundingClientRect();
+  const scale = rect.width / (configs.cellW * configs.nx);
+
   const pageStepOffset = store.state.currentPageIndex * 32;
   editActions.setDraftNote(note);
   startDragSession(
     e0.nativeEvent,
     {
       onMove(e) {
-        const { x, y } = e.position;
+        const x = (e.position.x - rect.left) / scale;
+        const y = (e.position.y - rect.top) / scale;
+
         const relativeNoteNumber = findNearestYLineNote(y);
         const stepDuration = getModifiedDuration(
           note.stepPosition,
@@ -236,7 +241,7 @@ function startEditNote(e0: React.PointerEvent, note: Note, isNewNote: boolean) {
         editActions.setDraftNote(null);
       },
     },
-    { coordinate: "relative" },
+    { coordinate: "page" },
   );
 }
 
