@@ -1,104 +1,5 @@
-import { css } from "@emotion/react";
-import { seqNumbers } from "mofur/ax";
-import { npx } from "mofur/ax-ui";
-import { useEffect, useMemo, useRef } from "react";
-
-function makeCssPianoRollBackgroundOctaveBlock(cellW: number, cellH: number) {
-  return css`
-    & > .grid-row {
-      display: flex;
-      background: #fff;
-    }
-
-    & > .grid-row > .grid-cell {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: ${npx(cellW)};
-      height: ${npx(cellH)};
-      border: 0.5px solid #8881;
-      color: #8884;
-      font-size: ${npx(12)};
-    }
-
-    & > .overlay-v,
-    & > .overlay-h {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-    }
-
-    & > .overlay-v {
-      display: flex;
-      flex-direction: column;
-    }
-
-    & > .overlay-v > .overlay-v-top {
-      height: 57.14%;
-      border-bottom: 1px solid #ccc;
-    }
-
-    & > .overlay-h {
-      display: flex;
-    }
-
-    & > .overlay-h > .overlay-h-bar {
-      display: flex;
-      flex-grow: 1;
-      border: solid 0.5px #ccc;
-      border-right: none;
-      border-bottom: none;
-    }
-
-    & > .overlay-h > .overlay-h-bar > .overlay-h-split {
-      flex-grow: 1;
-      border: solid 0.5px #ccc8;
-    }
-  `;
-}
-
-const PianoRollBackgroundOctaveBlock = ({
-  cellW,
-  cellH,
-  nx,
-}: {
-  cellW: number;
-  cellH: number;
-  nx: number;
-}) => {
-  const rootCss = useMemo(
-    () => makeCssPianoRollBackgroundOctaveBlock(cellW, cellH),
-    [cellW, cellH],
-  );
-  return (
-    <div className="relative" css={rootCss}>
-      {seqNumbers(7).map((yi) => {
-        return (
-          <div className="grid-row">
-            {seqNumbers(nx).map((xi) => {
-              return (
-                <div className="grid-cell">
-                  {xi % 2 === 0 && (yi === 3 || yi === 6) && "・"}
-                </div>
-              );
-            })}
-          </div>
-        );
-      })}
-
-      <div className="overlay-v">
-        <div className="overlay-v-top" />
-      </div>
-      <div className="overlay-h">
-        <div className="overlay-h-bar">
-          {seqNumbers(2).map(() => (
-            <div className="overlay-h-split" />
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-};
+import { useEffect, useRef } from "react";
+import { PianoRollBackgroundOctaveBlock } from "@/piano-roll-background-octave-block";
 
 const BackgroundGridLayer = () => {
   const cellW = 20;
@@ -114,21 +15,6 @@ const BackgroundGridLayer = () => {
   );
 };
 
-const cssButton = css`
-  background: #98c379;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 4px;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: opacity 0.2s;
-
-  &:hover {
-    opacity: 0.8;
-  }
-`;
-
 export const Dev3PianoRollEditorView = () => {
   const refBaseDiv = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -137,7 +23,6 @@ export const Dev3PianoRollEditorView = () => {
   }, []);
   return (
     <div className="w-[420px] h-[240px] flex-c border border-cyan-600 bg-cyan-100/20">
-      <button css={cssButton}>aaa</button>
       <div className="flex-v">
         <div
           ref={refBaseDiv}
