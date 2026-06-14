@@ -94,24 +94,54 @@ const NotesLayer = ({
   );
 };
 
-function getNoteCoordFromPointPos(x: number, y: number, stepOffset: number) {
+function getNoteCoordFromPointerPos(x: number, y: number, stepOffset: number) {
   const stepPosition = Math.floor(x / configs.cellW) + stepOffset;
   const relativeNoteNumber =
     7 * configs.numOctaves - 1 - Math.floor(y / configs.cellH);
   return { stepPosition, relativeNoteNumber };
 }
 
-const handleInputLayerPointerDown = (e0: React.PointerEvent) => {
-  const rect = (e0.target as HTMLDivElement).getBoundingClientRect();
-  const scale = rect.width / (configs.cellW * configs.nx);
-  const x = (e0.clientX - rect.left) / scale;
-  const y = (e0.clientY - rect.top) / scale;
-  const stepOffset = store.state.currentPageIndex * 32;
-  const { stepPosition, relativeNoteNumber } = getNoteCoordFromPointPos(
-    x,
-    y,
-    stepOffset,
+function getNoteHit(
+  stepPosition: number,
+  relativeNoteNumber: number,
+  notes: Note[],
+) {
+  return notes.find(
+    (note) =>
+      note.stepPosition <= stepPosition &&
+      stepPosition < note.stepPosition + note.stepDuration &&
+      note.relativeNoteNumber === relativeNoteNumber,
   );
+}
+
+function noteInputs_editNote(note: Note, e0: React.PointerEvent) {
+  // const rect = (e0.target as HTMLDivElement).getBoundingClientRect();
+  // const scale = rect.width / (configs.cellW * configs.nx);
+  startDragSession(
+    e0.nativeEvent,
+    {
+      onMove(e) {
+        const { x, y } = e.position;
+        const { relativeNoteNumber } = getNoteCoordFromPointerPos(x, y, 0);
+        console.log(y, relativeNoteNumber);
+      },
+      onUp(e) {
+        editorActions.setDraftNote(null);
+        // editorActions.addNote(newNote);
+      },
+      onCancel(e) {
+        editorActions.setDraftNote(null);
+      },
+    },
+    { coordinate: "relative" },
+  );
+}
+
+function noteInputs_createNote(
+  e0: React.PointerEvent,
+  stepPosition: number,
+  relativeNoteNumber: number,
+) {
   const newNote: Note = {
     stepPosition,
     relativeNoteNumber,
@@ -129,6 +159,29 @@ const handleInputLayerPointerDown = (e0: React.PointerEvent) => {
       editorActions.setDraftNote(null);
     },
   });
+}
+
+const handleInputLayerPointerDown = (e0: React.PointerEvent) => {
+  const rect = (e0.target as HTMLDivElement).getBoundingClientRect();
+  const scale = rect.width / (configs.cellW * configs.nx);
+  const x = (e0.clientX - rect.left) / scale;
+  const y = (e0.clientY - rect.top) / scale;
+  const stepOffset = store.state.currentPageIndex * 32;
+  const { stepPosition, relativeNoteNumber } = getNoteCoordFromPointerPos(
+    x,
+    y,
+    stepOffset,
+  );
+  const hitNote = getNoteHit(
+    stepPosition,
+    relativeNoteNumber,
+    store.state.notes,
+  );
+  if (hitNote) {
+    noteInputs_editNote(hitNote, e0);
+  } else {
+    noteInputs_createNote(e0, stepPosition, relativeNoteNumber);
+  }
 };
 
 const InputLayer = () => {
