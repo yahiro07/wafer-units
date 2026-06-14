@@ -34,6 +34,9 @@ const editActions = {
       }
     });
   },
+  removeNote(id: number) {
+    store.setNotes((prev) => prev.filter((n) => n.id !== id));
+  },
 };
 
 const BackgroundGridLayer = () => {
@@ -145,6 +148,15 @@ function findNearestYLineNote(y: number): number {
   return nearest.relNote;
 }
 
+function getModifiedDuration(
+  originalNoteStepPosition: number,
+  x: number,
+  stepOffset: number,
+) {
+  const stepPosition = Math.floor(x / configs.cellW) + stepOffset;
+  return stepPosition - originalNoteStepPosition + 1;
+}
+
 function getNoteCoordFromPointerPos(x: number, y: number, stepOffset: number) {
   const stepPosition = Math.floor(x / configs.cellW) + stepOffset;
   const relativeNoteNumber =
@@ -175,7 +187,8 @@ function getNoteHit(
   }
 }
 
-function noteInputs_editNote(note: Note, e0: React.PointerEvent) {
+function startEditNote(e0: React.PointerEvent, note: Note, isNewNote: boolean) {
+  const pageStepOffset = store.state.currentPageIndex * 32;
   editActions.setDraftNote(note);
   startDragSession(
     e0.nativeEvent,
@@ -183,17 +196,32 @@ function noteInputs_editNote(note: Note, e0: React.PointerEvent) {
       onMove(e) {
         const { x, y } = e.position;
         const relativeNoteNumber = findNearestYLineNote(y);
-        editActions.patchDraftNote({ relativeNoteNumber });
+        const stepDuration = getModifiedDuration(
+          note.stepPosition,
+          x,
+          pageStepOffset,
+        );
+        editActions.patchDraftNote({ relativeNoteNumber, stepDuration });
       },
       onUp(e) {
         const draftNote = store.state.draftNote;
-        if (
-          draftNote &&
-          draftNote.relativeNoteNumber !== note.relativeNoteNumber
-        ) {
-          editActions.patchNote(note.id, {
-            relativeNoteNumber: draftNote.relativeNoteNumber,
-          });
+        if (!draftNote) return;
+        if (isNewNote) {
+          editActions.addNote(draftNote);
+        } else {
+          if (
+            draftNote.relativeNoteNumber !== note.relativeNoteNumber ||
+            draftNote.stepDuration !== note.stepDuration
+          ) {
+            if (draftNote.stepDuration <= 0) {
+              editActions.removeNote(note.id);
+            } else {
+              editActions.patchNote(note.id, {
+                relativeNoteNumber: draftNote.relativeNoteNumber,
+                stepDuration: draftNote.stepDuration,
+              });
+            }
+          }
         }
         editActions.setDraftNote(null);
       },
@@ -203,32 +231,6 @@ function noteInputs_editNote(note: Note, e0: React.PointerEvent) {
     },
     { coordinate: "relative" },
   );
-}
-
-function noteInputs_createNote(
-  e0: React.PointerEvent,
-  stepPosition: number,
-  relativeNoteNumber: number,
-) {
-  const id = Math.max(0, ...store.state.notes.map((n) => n.id)) + 1;
-  const newNote: Note = {
-    id,
-    stepPosition,
-    relativeNoteNumber,
-    stepDuration: store.state.noteDuty,
-  };
-  editActions.setDraftNote(newNote);
-
-  startDragSession(e0.nativeEvent, {
-    onMove(e) {},
-    onUp(e) {
-      editActions.setDraftNote(null);
-      editActions.addNote(newNote);
-    },
-    onCancel(e) {
-      editActions.setDraftNote(null);
-    },
-  });
 }
 
 const handleInputLayerPointerDown = (e0: React.PointerEvent) => {
@@ -249,9 +251,16 @@ const handleInputLayerPointerDown = (e0: React.PointerEvent) => {
     store.state.notes,
   );
   if (hitNote) {
-    noteInputs_editNote(hitNote, e0);
+    startEditNote(e0, hitNote, false);
   } else {
-    noteInputs_createNote(e0, stepPosition, relativeNoteNumber);
+    const id = Math.max(0, ...store.state.notes.map((n) => n.id)) + 1;
+    const newNote: Note = {
+      id,
+      stepPosition,
+      relativeNoteNumber,
+      stepDuration: store.state.noteDuty,
+    };
+    startEditNote(e0, newNote, true);
   }
 };
 
