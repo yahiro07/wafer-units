@@ -17,6 +17,11 @@ function setupSynchronization() {
     sequencer.setStepNotes(stepNotes);
   }
   affectNotes(store.state.notes);
+  sequencer.setAttrs({
+    octaveShift: store.state.octaveShift,
+    noteDuty: store.state.noteDuty,
+    loopBars: store.state.loopBars,
+  });
 
   const unsubscribeStore = store.subscribe((attrs) => {
     if (attrs.notes) {

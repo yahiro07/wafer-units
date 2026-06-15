@@ -26,5 +26,5 @@ export const store = createStore<{
   octaveShift: 0,
   currentPageIndex: 0,
   draftNote: null,
-  loopBars: 2,
+  loopBars: 1,
 });
