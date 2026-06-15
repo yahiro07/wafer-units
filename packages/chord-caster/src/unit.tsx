@@ -6,7 +6,7 @@ import {
 } from "mofur-components/mono2";
 import { useMemo } from "preact/hooks";
 import { createStore } from "snap-store";
-import { UnitInterface } from "wus-unit-types";
+import { UnitInterface } from "wafer-host/unit-types";
 import { getChordName, getRelNoteValues } from "@/note-defs";
 import { createProgressionCore } from "@/sequencer";
 import { allSongKeys, ProgressionState } from "@/types";

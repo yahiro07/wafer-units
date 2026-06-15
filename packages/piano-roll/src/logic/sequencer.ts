@@ -1,10 +1,10 @@
 import { mapUnaryTo } from "mofur/ax";
-import { queryUnitInterfaceForModule } from "wus-unit-types";
+import { queryUnitInterfaceForModule } from "wafer-host/unit-types";
 import { resolveNotePitch } from "@/logic/resolve-note-pitch";
 import { createUnitInterfaceDebugDummy } from "@/logic/unit-interface-debug-dummy";
 
 export const unitInterface =
-  queryUnitInterfaceForModule("wus-v01", import.meta.url) ??
+  queryUnitInterfaceForModule("wafer-v01", import.meta.url) ??
   createUnitInterfaceDebugDummy();
 if (!unitInterface) {
   throw new Error("undefined unit interface");

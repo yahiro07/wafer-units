@@ -1,4 +1,4 @@
-import { queryUnitInterfaceForModule } from "wus-unit-types";
+import { queryUnitInterfaceForModule } from "wafer-host/unit-types";
 import { createChorusModule } from "@/audio/create-chorus-module";
 import { createReverbModule } from "@/audio/create-reverb-module";
 import {
@@ -13,7 +13,7 @@ import {
 } from "@/utils/number-utils";
 
 export const unitInterface = queryUnitInterfaceForModule(
-  "wus-v01",
+  "wafer-v01",
   import.meta.url,
 );
 

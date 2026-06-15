@@ -1,6 +1,6 @@
 import { seqNumbers } from "mofur/ax";
 import { createSequencerTickDriver } from "mofur/mx-audio";
-import { UnitInterface } from "wus-unit-types";
+import { UnitInterface } from "wafer-host/unit-types";
 import { DynamicPatternMeta } from "@/types";
 
 type SongKey = "Am" | "C" | "Dm" | "Em" | "F" | "G" | "B";

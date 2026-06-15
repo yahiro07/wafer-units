@@ -1,10 +1,10 @@
 import { createSequencerTickDriver } from "mofur/mx-audio";
-import { queryUnitInterfaceForModule } from "wus-unit-types";
+import { queryUnitInterfaceForModule } from "wafer-host/unit-types";
 import { applyDynamicNoteShiftRTFS } from "@/dynamic-note-shift";
 import { DynamicPatternMeta, SongKey } from "@/types";
 
 export const unitInterface = queryUnitInterfaceForModule(
-  "wus-v01",
+  "wafer-v01",
   import.meta.url,
 )!;
 if (!unitInterface) {

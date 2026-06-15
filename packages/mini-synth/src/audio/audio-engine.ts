@@ -1,11 +1,11 @@
-import { queryUnitInterfaceForModule } from "wus-unit-types";
+import { queryUnitInterfaceForModule } from "wafer-host/unit-types";
 import { createEffectsChain } from "./effects";
 import type { SynthParams } from "./synth-params";
 import { defaultParams } from "./synth-params";
 import { createVoice, type Voice } from "./voice";
 
 export const unitInterface = queryUnitInterfaceForModule(
-  "wus-v01",
+  "wafer-v01",
   import.meta.url,
 );
 function midiNoteToFrequency(note: number): number {

@@ -1,4 +1,4 @@
-import { UnitInterface } from "wus-unit-types";
+import { UnitInterface } from "wafer-host/unit-types";
 
 export function createUnitInterfaceDebugDummy(): UnitInterface {
   const audioContext = new AudioContext();

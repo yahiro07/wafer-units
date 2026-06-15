@@ -23,7 +23,7 @@ export default defineConfig({
     ],
   },
   optimizeDeps: {
-    exclude: ["wus-unit-types", "mofur", "mofur-components"],
+    exclude: ["wafer-host", "mofur", "mofur-components"],
   },
   build: {
     lib: {
