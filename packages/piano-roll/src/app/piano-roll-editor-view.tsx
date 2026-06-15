@@ -144,7 +144,6 @@ function generateYLinesMap(): LineEntry[] {
   return [...lines.entries()].map(([relNote, y]) => ({ relNote, y }));
 }
 const noteYLines = generateYLinesMap();
-console.log({ lines: noteYLines });
 
 function findNearestYLineNote(y: number): number {
   let nearest = noteYLines[0];
