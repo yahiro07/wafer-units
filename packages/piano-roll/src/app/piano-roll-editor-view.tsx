@@ -18,14 +18,14 @@ const editActions = {
     const pageNum = Math.max(1, store.state.loopBars / 2);
     store.setCurrentPageIndex((prev) => (prev + dir + pageNum) % pageNum);
   },
-  addNote(note: Note) {
-    store.setNotes((prev) => [...prev, note]);
-  },
   setDraftNote(note: Note | null) {
     store.setDraftNote(note);
   },
   patchDraftNote(attrs: Partial<Note>) {
     store.setDraftNote((prev) => (prev ? { ...prev, ...attrs } : null));
+  },
+  addNote(note: Note) {
+    store.setNotes((prev) => [...prev, note]);
   },
   patchNote(id: number, attrs: Partial<Note>) {
     store.produceNotes((draft) => {
@@ -219,7 +219,7 @@ function startEditNote(e0: React.PointerEvent, note: Note, isNewNote: boolean) {
       onUp() {
         const draftNote = store.state.draftNote;
         if (!draftNote) return;
-        if (isNewNote) {
+        if (isNewNote && draftNote.stepDuration > 0) {
           editActions.addNote(draftNote);
         } else {
           if (
@@ -294,8 +294,7 @@ const PianoRollEditor = () => {
   const refBaseDiv = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const baseDiv = refBaseDiv.current!;
-    baseDiv.scrollTop =
-      baseDiv.scrollHeight / 2 - baseDiv.clientHeight / 2 - 50;
+    baseDiv.scrollTop = baseDiv.scrollHeight / 2 - baseDiv.clientHeight / 2 + 0;
   }, []);
   return (
     <div
