@@ -17,13 +17,15 @@ export function createProgressionCore(
     emitSongKey() {
       unitInterface.emitMetaAttributes({ key: state.songKey });
     },
-    playNote(note: number, time: number) {
-      unitInterface.noteOutputPort.noteOn(note, time);
+    playNote(note: number, _time: number) {
+      //Since we need to transmit the root note of the chord before scheduling
+      //other units, we do not specify a time here and output the note immediately.
+      unitInterface.noteOutputPort.noteOn(note, 0);
       currentNote = note;
     },
-    stopCurrentNote(time: number) {
+    stopCurrentNote(_time: number) {
       if (currentNote !== null) {
-        unitInterface.noteOutputPort.noteOff(currentNote, time);
+        unitInterface.noteOutputPort.noteOff(currentNote, 0);
         currentNote = null;
       }
     },
