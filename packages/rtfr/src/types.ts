@@ -4,12 +4,8 @@ import {
   createSelectorOptions,
 } from "mofur-components/mono2";
 
-export type DynamicPatternInput = {
-  key?: string; //"C", "Am", etc.
-  chordRootNote?: number; //in midi note number
-};
-export type DynamicPatternMeta = {
-  dynamicPatternInput?: DynamicPatternInput;
+export type SongKeyMetaAttrs = {
+  songKey?: string; //"C", "Am", etc.
 };
 
 export const noteRangeValues = [
