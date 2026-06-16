@@ -1,7 +1,7 @@
 import { createSequencerTickDriver } from "mofur/mx-audio";
 import { queryUnitInterfaceForModule } from "wafer-host/unit-types";
 import { applyDynamicNoteShiftRTFS } from "@/dynamic-note-shift";
-import { DynamicPatternMeta, SongKey } from "@/types";
+import { SongKey, SongKeyMetaAttrs } from "@/types";
 
 export const unitInterface = queryUnitInterfaceForModule(
   "wafer-v01",
@@ -37,6 +37,7 @@ function createSequencer() {
 
   const core = {
     processStep(stepIndex: number, time: number, unitDuration: number) {
+      // console.log(`rtfs1 processStep`, stepIndex, time);
       stepIndex %= 8;
       if (time === undefined || unitDuration === undefined) {
         //something wrong with the tick driver
@@ -58,6 +59,7 @@ function createSequencer() {
           stepNote.duration * unitDuration -
           (1 - state.noteDuty) * unitDuration;
 
+        // console.log(`rtfs1 emit note`, shiftedNote, time);
         noteOutputPort.noteOn(shiftedNote, time);
         noteOutputPort.noteOff(shiftedNote, time + duration);
       }
@@ -68,21 +70,23 @@ function createSequencer() {
     setStepNotes(stepNotes: StepNote[]) {
       state.stepNotes = stepNotes;
     },
+    startClock() {
+      state.isClockInputActive = true;
+    },
     processStep: core.processStep,
-    allNotesOff() {},
-    setMetaAttributes(attrs: DynamicPatternMeta) {
-      if (attrs.dynamicPatternInput) {
-        const { key, chordRootNote } = attrs.dynamicPatternInput;
-        if (key !== undefined) {
-          state.key = key;
-        }
-        if (chordRootNote !== undefined) {
-          state.chordRootNote = chordRootNote;
-        }
+    endClock() {
+      state.isClockInputActive = false;
+    },
+    setMetaAttributes(attrs: SongKeyMetaAttrs) {
+      const { songKey } = attrs;
+      if (songKey !== undefined) {
+        state.key = songKey;
       }
     },
     inputNoteOn(note: number, _timeAt: number, _velocity: number) {
+      // console.log(`inputNoteOn`, note, _timeAt);
       state.chordRootNote = note;
+      if (state.isClockInputActive) return;
       if (!state.isInternalTickRunning) {
         sequencerTickDriver.setBpm(state.bpm);
         sequencerTickDriver.start({
@@ -92,7 +96,9 @@ function createSequencer() {
       }
     },
     inputNoteOff(_note: number, _timeAt: number) {
+      // console.log(`inputNoteOff`, _note, _timeAt);
       state.chordRootNote = undefined;
+      if (state.isClockInputActive) return;
       if (state.isInternalTickRunning) {
         sequencerTickDriver.stop();
         state.isInternalTickRunning = false;

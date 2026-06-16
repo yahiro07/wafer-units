@@ -35,13 +35,9 @@ function setupSynchronization() {
       noteOff: sequencer.inputNoteOff,
     },
     clockHandlers: {
-      start() {},
-      stop() {
-        sequencer.allNotesOff();
-      },
-      processStep(stepIndex, time, unitDurationSec) {
-        sequencer.processStep(stepIndex, time, unitDurationSec);
-      },
+      start: sequencer.startClock,
+      stop: sequencer.endClock,
+      processStep: sequencer.processStep,
     },
     hostCallbacks: {
       setMetaAttributes: sequencer.setMetaAttributes,
