@@ -3,8 +3,8 @@ import cssText3 from "mofur-components/style.css?inline";
 import { render } from "preact";
 import { createCustomElementClass } from "wafer-host/unit-helper";
 import { queryUnitInterfaceForModule } from "wafer-host/unit-types";
+import { createChordProgressionUnit } from "@/unit";
 import cssText from "./page.css?inline";
-import { createChordProgressionUnit } from "./unit";
 
 const webFontUrl =
   "https://fonts.googleapis.com/css2?family=Inter:wght@400..700&display=swap";

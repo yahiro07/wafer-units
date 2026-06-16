@@ -25,7 +25,7 @@ function getRelativeOptions(key: string): SelectorOption<number>[] {
 
 export const createChordProgressionUnit = (unitInterface: UnitInterface) => {
   const initialProgressionState: ProgressionState = {
-    key: "Am",
+    songKey: "Am",
     loopBars: 4,
     relatives: [0, -5, -4, -2], //Am-Em-F-G
   };
@@ -47,6 +47,7 @@ export const createChordProgressionUnit = (unitInterface: UnitInterface) => {
   unitInterface.completeSetup({
     unitAspects: {
       unitType: "sequencer",
+      outputs: ["note"],
     },
     clockHandlers: core.clockInput,
     persistence: {
@@ -61,8 +62,11 @@ export const createChordProgressionUnit = (unitInterface: UnitInterface) => {
 
   return {
     RenderUi() {
-      const { key, loopBars, relatives } = store.useSnapshot();
-      const chordOptions = useMemo(() => getRelativeOptions(key), [key]);
+      const { songKey, loopBars, relatives } = store.useSnapshot();
+      const chordOptions = useMemo(
+        () => getRelativeOptions(songKey),
+        [songKey],
+      );
 
       return (
         <div className="w-[300px] h-[150px] bg-gray-100 flex-c">
@@ -73,8 +77,8 @@ export const createChordProgressionUnit = (unitInterface: UnitInterface) => {
                 <div>key</div>
                 <GeneralSelector
                   options={songKeyOptions}
-                  value={key}
-                  onChange={store.setKey}
+                  value={songKey}
+                  onChange={store.setSongKey}
                   reverseOptionsOrder
                 />
               </div>

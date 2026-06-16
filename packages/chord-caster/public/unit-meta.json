@@ -2,6 +2,7 @@
   "name": "chord-caster",
   "unitType": "sequencer",
   "preferredSize": "600,300",
+  "outputSignalTypes": "note",
   "protocol": "wafer-v01",
   "unitTypesVersion": "0.1.5",
   "integrationFormat": "webComponents",
