@@ -1,7 +1,7 @@
 import { seqNumbers } from "mofur/ax";
 import { createSequencerTickDriver } from "mofur/mx-audio";
 import { UnitInterface } from "wafer-host/unit-types";
-import { DynamicPatternMeta } from "@/types";
+import { SongKeyMetaAttrs } from "@/types";
 
 type SongKey = "Am" | "C" | "Dm" | "Em" | "F" | "G" | "B";
 
@@ -134,15 +134,9 @@ export function createSequencer(unitInterface: UnitInterface) {
     setBpm(bpm: number) {
       state.bpm = bpm;
     },
-    setMetaAttributes(attrs: DynamicPatternMeta) {
-      if (attrs.dynamicPatternInput) {
-        const { key, chordRootNote } = attrs.dynamicPatternInput;
-        if (key !== undefined) {
-          state.key = key;
-        }
-        if (chordRootNote !== undefined) {
-          state.chordRootNote = chordRootNote;
-        }
+    setMetaAttributes(attrs: SongKeyMetaAttrs) {
+      if (attrs.songKey !== undefined) {
+        state.key = attrs.songKey;
       }
     },
     setPattern(newPattern: number[]) {

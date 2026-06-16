@@ -151,7 +151,6 @@ export const createRtfrUnit = (unitInterface: UnitInterface) => {
     clockHandlers: {
       start: sequencer.clockStart,
       stop: sequencer.clockStop,
-      // processScheduling: sequencer.processClock,
       processStep: sequencer.processStep,
     },
     persistence: {

@@ -2,7 +2,7 @@ import { mapUnaryTo } from "mofur/ax";
 import { createSequencerTickDriver } from "mofur/mx-audio";
 import { queryUnitInterfaceForModule } from "wafer-host/unit-types";
 import { applyDynamicNoteShiftRTFS } from "@/dynamic-note-shift";
-import { DynamicPatternMeta, SongKey } from "@/types";
+import { SongKey, SongKeyMetaAttrs } from "@/types";
 
 export const unitInterface = queryUnitInterfaceForModule(
   "wafer-v01",
@@ -74,21 +74,22 @@ function createSequencer() {
     setStepNotes(stepNotes: StepNote[]) {
       state.stepNotes = stepNotes;
     },
+    startClock() {
+      state.isClockInputActive = true;
+    },
     processStep: core.processStep,
-    allNotesOff() {},
-    setMetaAttributes(attrs: DynamicPatternMeta) {
-      if (attrs.dynamicPatternInput) {
-        const { key, chordRootNote } = attrs.dynamicPatternInput;
-        if (key !== undefined) {
-          state.key = key;
-        }
-        if (chordRootNote !== undefined) {
-          state.chordRootNote = chordRootNote;
-        }
+    endClock() {
+      state.isClockInputActive = false;
+    },
+    setMetaAttributes(attrs: SongKeyMetaAttrs) {
+      const { songKey } = attrs;
+      if (songKey !== undefined) {
+        state.key = songKey;
       }
     },
     inputNoteOn(note: number, _timeAt: number, _velocity: number) {
       state.chordRootNote = note;
+      if (state.isClockInputActive) return;
       if (!state.isInternalTickRunning) {
         sequencerTickDriver.setBpm(state.bpm);
         sequencerTickDriver.start({
@@ -99,6 +100,7 @@ function createSequencer() {
     },
     inputNoteOff(_note: number, _timeAt: number) {
       state.chordRootNote = undefined;
+      if (state.isClockInputActive) return;
       if (state.isInternalTickRunning) {
         sequencerTickDriver.stop();
         state.isInternalTickRunning = false;
@@ -112,7 +114,6 @@ function createSequencer() {
         state.noteDuty = attrs.noteDuty;
       }
     },
-    setPreviewNote(_note: number | null) {},
   };
 }
 
