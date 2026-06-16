@@ -1,10 +1,10 @@
-import { queryUnitInterfaceForModule } from "wus-unit-types";
+import { queryUnitInterfaceForModule } from "wafer-host/unit-types";
 import { createEffectChain } from "@/audio/effect-chain";
 import { defaultParams, SynthParameters } from "../state";
 import workletUrl from "./worklet?worker&url";
 
 export const unitInterface = queryUnitInterfaceForModule(
-  "wus-v01",
+  "wafer-v01",
   import.meta.url,
 );
 

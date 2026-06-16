@@ -1,7 +1,10 @@
 import { mapKnobGainDb } from "mofur/mo-audio";
 import { ScalerBoxAutoSized } from "mofur/mo-react";
 import { createStore } from "snap-store";
-import { queryUnitInterfaceForModule, UnitInterface } from "wus-unit-types";
+import {
+  queryUnitInterfaceForModule,
+  UnitInterface,
+} from "wafer-host/unit-types";
 import { Knob } from "@/components/knob";
 import { setupDummyHost } from "@/dummy-host";
 import { BasicSpectrumView } from "@/organisms/basic-spectrum-view";
@@ -37,7 +40,7 @@ const actions = {
 
 function setupUnitInstance() {
   const unitInterface = queryUnitInterfaceForModule(
-    "wus-v01",
+    "wafer-v01",
     import.meta.url,
   ) as UnitInterface;
 

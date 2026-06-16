@@ -1,4 +1,4 @@
-import { ClockHandlers, UnitInterface } from "wus-unit-types";
+import { ClockHandlers, UnitInterface } from "wafer-host/unit-types";
 import { getChordRootNote } from "@/note-defs";
 import { DynamicPatternInput, ProgressionState } from "@/types";
 

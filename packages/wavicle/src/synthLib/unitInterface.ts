@@ -1,3 +1,3 @@
-import { queryUnitInterface } from "wus-unit-types";
+import { queryUnitInterface } from "wafer-host/unit-types";
 
-export const unitInterface = queryUnitInterface("wus-v01");
+export const unitInterface = queryUnitInterface("wafer-v01");

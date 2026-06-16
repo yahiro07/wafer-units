@@ -4,7 +4,7 @@ import { npx } from "mofur/ax-ui";
 import { GeneralSelector, Knob } from "mofur-components/mono2";
 import { useEffect, useMemo } from "react";
 import { createStore } from "snap-store";
-import { UnitInterface } from "wus-unit-types";
+import { UnitInterface } from "wafer-host/unit-types";
 import { LabeledRow } from "@/components";
 import { createSequencer } from "@/sequencer";
 import {

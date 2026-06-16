@@ -35,9 +35,9 @@ importers:
       vite-plugin-solid:
         specifier: ^2.11.12
         version: 2.11.12(solid-js@1.9.13)(vite@8.0.14(@types/node@25.9.1)(jiti@2.7.0))
-      wus-unit-types:
-        specifier: link:../webaudio-unit-system/contract/wus-unit-types-v01
-        version: link:../webaudio-unit-system/contract/wus-unit-types-v01
+      wafer-host:
+        specifier: ^0.0.2
+        version: 0.0.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
 
   packages/bseq1:
     dependencies:
@@ -1412,6 +1412,17 @@ packages:
       vite:
         optional: true
 
+  wafer-host@0.0.2:
+    resolution: {integrity: sha512-P71lOwtmj3TBV8GJmVpkkXuRwnXBai88Ulya+jsV7cAo0z6MlKwTxzJf5y+fTd393DLNmkLR21wNvUAMC4Y5Fg==}
+    peerDependencies:
+      react: ^19.2.6
+      react-dom: ^19.2.6
+    peerDependenciesMeta:
+      react:
+        optional: true
+      react-dom:
+        optional: true
+
   yallist@3.1.1:
     resolution: {integrity: sha512-a4UGQaWPH59mOXUYnAG2ewncQS4i4F43Tv3JoAM+s2VDAmS9NsK8GpDMLrCHPksFT7h3K6TOoUNn2pb7RoXx4g==}
 
@@ -2468,6 +2479,11 @@ snapshots:
   vitefu@1.1.3(vite@8.0.14(@types/node@25.9.1)(jiti@2.7.0)):
     optionalDependencies:
       vite: 8.0.14(@types/node@25.9.1)(jiti@2.7.0)
+
+  wafer-host@0.0.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6):
+    optionalDependencies:
+      react: 19.2.6
+      react-dom: 19.2.6(react@19.2.6)
 
   yallist@3.1.1: {}
 

@@ -28,7 +28,7 @@ const configCommon: UserConfig = {
     ],
   },
   optimizeDeps: {
-    exclude: ["wus-unit-types", "mofur", "mofur-components"],
+    exclude: ["wafer-host", "mofur", "mofur-components"],
   },
 };
 

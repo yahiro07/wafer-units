@@ -1,5 +1,5 @@
 import { midiToFrequency, power2 } from "mofus/mo-synthesis";
-import { queryUnitInterfaceForModule } from "wus-unit-types";
+import { queryUnitInterfaceForModule } from "wafer-host/unit-types";
 import {
   createSynthParameters,
   SynthParameters,
@@ -18,7 +18,7 @@ import { createShaperCurveBufferCache } from "@/synthesis/shaper-curve-buffer-ca
 import { createAudioNodeChain } from "@/synthesis/webaudio-helper";
 
 export const unitInterface = queryUnitInterfaceForModule(
-  "wus-v01",
+  "wafer-v01",
   import.meta.url,
 );
 
