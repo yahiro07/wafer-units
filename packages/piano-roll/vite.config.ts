@@ -28,7 +28,7 @@ const configCommon: UserConfig = {
     ],
   },
   optimizeDeps: {
-    exclude: ["wafer-host", "mofur", "mofur-components"],
+    exclude: ["wafer-host", "mofur", "mofur-components", "snap-store"],
   },
 };
 
@@ -39,6 +39,9 @@ const configDev: UserConfig = {
 
 const configProd: UserConfig = {
   ...configCommon,
+  define: {
+    "process.env.NODE_ENV": JSON.stringify("production"),
+  },
   build: {
     lib: {
       entry: "./src/wc-entry/index.tsx",
