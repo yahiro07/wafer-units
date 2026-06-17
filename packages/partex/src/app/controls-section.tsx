@@ -31,14 +31,25 @@ const controlActions = {
     });
   },
   realizeNotes() {
-    const { mappedNotes } = store.state;
+    const st = store.state;
     store.setState({
-      inputNotes: mappedNotes.map((n) => ({
+      backupInputNotes: st.inputNotes,
+      inputNotes: st.mappedNotes.map((n) => ({
         ...n,
         noteType: undefined,
       })),
       ghostEnabled: false,
       realized: true,
+    });
+  },
+  undoRealize() {
+    const st = store.state;
+    if (!st.backupInputNotes) return;
+    store.setState({
+      inputNotes: st.backupInputNotes,
+      backupInputNotes: null,
+      ghostEnabled: true,
+      realized: false,
     });
   },
 };
@@ -104,6 +115,9 @@ export const ControlsSection = () => {
               realize
             </Button>
           </>
+        )}
+        {st.realized && st.backupInputNotes && (
+          <Button onClick={controlActions.undoRealize}>restore</Button>
         )}
         <Button text="x" onClick={controlActions.clearNotes} asr={1.25} />
       </div>

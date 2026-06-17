@@ -25,6 +25,7 @@ export const store = createStore<{
   mappedNotes: Note[];
   ghostEnabled: boolean;
   realized: boolean;
+  backupInputNotes: Note[] | null;
 }>({
   inputNotes: defaultNotes,
   noteDuty: 1,
@@ -37,4 +38,5 @@ export const store = createStore<{
   mappedNotes: [],
   ghostEnabled: true,
   realized: false,
+  backupInputNotes: null,
 });
