@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "lib": ["esnext", "dom", "dom.iterable"],
+    "types": ["vite/client"],
+    "jsx": "react-jsx",
+    "jsxImportSource": "@emotion/react",
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    //Setting this to true causes the type of the `emotion` css prop to become `any`, so set it to false
+    "preserveSymlinks": false,
+    "paths": {
+      "@/*": ["./src/*"],
+      "mofur/*": ["../../beam/mofur/src/*"]
+    }
+  },
+  "include": ["src"]
+}
