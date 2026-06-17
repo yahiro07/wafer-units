@@ -8,7 +8,7 @@ import { Note } from "@/store/types";
 
 const configs = {
   cellW: 20,
-  cellH: 40,
+  cellH: 32,
   nx: 32,
   numOctaves: 3,
   scrollPartHeight: 320,
