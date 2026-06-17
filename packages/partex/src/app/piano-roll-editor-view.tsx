@@ -64,11 +64,13 @@ const NoteBar = ({
   stepOffset,
   isDraft,
   patternBars,
+  ghostEnabled,
 }: {
   note: Note;
   stepOffset: number;
   isDraft?: boolean;
   patternBars: number;
+  ghostEnabled: boolean;
 }) => {
   const { cellW, cellH, numOctaves } = configs;
   const x = (note.position - stepOffset) * cellW;
@@ -76,11 +78,12 @@ const NoteBar = ({
   const w = note.duration * cellW;
   const h = cellH;
   const isDeleting = note.duration <= 0;
-  const isGhostHead = note.noteType === "ghostHead";
-  const isGhostTails = note.noteType === "ghostTails";
+  const isGhostHead = ghostEnabled && note.noteType === "ghostHead";
+  const isGhostTails = ghostEnabled && note.noteType === "ghostTails";
   const isHeadNote = note.position + note.duration <= patternBars * 16;
   const isInputHead = !note.noteType && isHeadNote;
-  const isInputTails = !note.noteType && !isHeadNote;
+  const isInputTails = !ghostEnabled && !note.noteType && !isHeadNote;
+  const isInputTailsInGhostMode = ghostEnabled && !note.noteType && !isHeadNote;
   return (
     <div
       className={clsx(
@@ -90,6 +93,7 @@ const NoteBar = ({
         isGhostTails && "--ghost-tails",
         isInputHead && "--input-head",
         isInputTails && "--input-tails",
+        isInputTailsInGhostMode && "--input-tails-in-ghost-mode",
       )}
       style={{
         left: x,
@@ -103,28 +107,38 @@ const NoteBar = ({
 };
 const noteColors = {
   main: "#0bd8",
-  alt: "#4c48",
+  alt: "#cf68",
 };
 const noteStyles = css({
   position: "absolute",
   "&.--input-head": {
     background: noteColors.main,
+    // border: `solid 1px ${noteColors.main}`,
   },
   "&.--input-tails": {
+    background: noteColors.main,
+    // border: `solid 1px ${noteColors.main}`,
+  },
+  "&.--input-tails-in-ghost-mode": {
     background: noteColors.alt,
+    // border: `solid 1px ${noteColors.main}`,
   },
   "&.--draft": {
-    background: "orange",
+    background: "#f80a",
   },
   "&.--deleting": {
-    background: "red",
+    background: "#f008",
   },
   "&.--ghost-head": {
-    background: "none",
+    // background: noteColors.main,
+    // background: "none",
   },
   "&.--ghost-tails": {
-    background: "none",
-    border: `solid 1px ${noteColors.alt}`,
+    background: "#fff4",
+    // background: noteColors.alt,
+    // marginTop: "2px",
+    // marginBottom: "4px",
+    border: `solid 1px ${noteColors.main}`,
   },
 });
 
@@ -133,11 +147,13 @@ const NotesLayer = ({
   stepOffset,
   draftNote,
   patternBars,
+  ghostEnabled,
 }: {
   notes: Note[];
   stepOffset: number;
   draftNote: Note | null;
   patternBars: number;
+  ghostEnabled: boolean;
 }) => {
   const notesInView = notes.filter(
     (note) => stepOffset <= note.position && note.position <= stepOffset + 32,
@@ -151,6 +167,7 @@ const NotesLayer = ({
             note={note}
             stepOffset={stepOffset}
             patternBars={patternBars}
+            ghostEnabled={ghostEnabled}
           />
         );
       })}
@@ -160,6 +177,7 @@ const NotesLayer = ({
           stepOffset={stepOffset}
           isDraft
           patternBars={patternBars}
+          ghostEnabled={ghostEnabled}
         />
       )}
     </div>
@@ -371,6 +389,7 @@ const PianoRollEditor = () => {
         stepOffset={currentPageIndex * 32}
         draftNote={draftNote}
         patternBars={patternBars}
+        ghostEnabled={ghostEnabled}
       />
       {ghostEnabled && (
         <NotesLayer
@@ -378,6 +397,7 @@ const PianoRollEditor = () => {
           stepOffset={currentPageIndex * 32}
           draftNote={null}
           patternBars={patternBars}
+          ghostEnabled={ghostEnabled}
         />
       )}
       <InputLayer />
