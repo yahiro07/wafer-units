@@ -32,7 +32,7 @@ export const store = createStore<{
   draftNote: null,
   loopBars: 2,
   patternBars: 1,
-  patternMode: "slice",
+  patternMode: "shift",
   mappedNotes: [],
   ghostEnabled: true,
 });
