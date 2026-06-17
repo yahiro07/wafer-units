@@ -1,5 +1,6 @@
 import { pickObjectMembers } from "mofur/ax";
 import { useEffect } from "react";
+import { generateMappedNotes } from "@/logic/ghost-engine";
 import { sequencer, unitInterface } from "@/logic/sequencer";
 import { store } from "@/store/store";
 import { Note } from "@/store/types";
@@ -24,8 +25,8 @@ function setupSynchronization() {
   });
 
   const unsubscribeStore = store.subscribe((attrs) => {
-    if (attrs.inputNotes) {
-      affectNotes(attrs.inputNotes);
+    if (attrs.mappedNotes) {
+      affectNotes(attrs.mappedNotes);
     }
     if (
       attrs.noteDuty !== undefined ||
@@ -62,9 +63,21 @@ function setupSynchronization() {
   return unsubscribeStore;
 }
 
+function useGenerateMappedNotes() {
+  const { inputNotes, loopBars, patternBars, ghostEnabled, patternMode } =
+    store.useSnapshot();
+  useEffect(() => {
+    const mappedNotes = ghostEnabled
+      ? generateMappedNotes(inputNotes, { loopBars, patternBars, patternMode })
+      : inputNotes;
+    store.setMappedNotes(mappedNotes);
+  }, [inputNotes, loopBars, patternBars, ghostEnabled, patternMode]);
+}
+
 export const App = () => {
   useEffect(setupSynchronization, []);
   // return <Dev2PianoRollEdit />;
+  useGenerateMappedNotes();
   return (
     <div className="bg-white">
       <div className="w-[800px] h-[500px] border border-cyan-600 bg-blue-100/20 flex-c">

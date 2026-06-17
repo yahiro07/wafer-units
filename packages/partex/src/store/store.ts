@@ -22,7 +22,7 @@ export const store = createStore<{
   loopBars: number;
   patternBars: number;
   patternMode: PatternMode;
-  // ghostNotes: Note[] | null;
+  mappedNotes: Note[];
   ghostEnabled: boolean;
 }>({
   inputNotes: defaultNotes,
@@ -33,6 +33,6 @@ export const store = createStore<{
   loopBars: 2,
   patternBars: 1,
   patternMode: "simple",
-  // ghostNotes: null,
+  mappedNotes: [],
   ghostEnabled: true,
 });
