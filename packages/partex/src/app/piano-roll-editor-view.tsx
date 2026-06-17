@@ -63,10 +63,12 @@ const NoteBar = ({
   note,
   stepOffset,
   isDraft,
+  patternBars,
 }: {
   note: Note;
   stepOffset: number;
   isDraft?: boolean;
+  patternBars: number;
 }) => {
   const { cellW, cellH, numOctaves } = configs;
   const x = (note.position - stepOffset) * cellW;
@@ -76,6 +78,9 @@ const NoteBar = ({
   const isDeleting = note.duration <= 0;
   const isGhostHead = note.noteType === "ghostHead";
   const isGhostTails = note.noteType === "ghostTails";
+  const isHeadNote = note.position + note.duration <= patternBars * 16;
+  const isInputHead = !note.noteType && isHeadNote;
+  const isInputTails = !note.noteType && !isHeadNote;
   return (
     <div
       className={clsx(
@@ -83,6 +88,8 @@ const NoteBar = ({
         isDeleting && "--deleting",
         isGhostHead && "--ghost-head",
         isGhostTails && "--ghost-tails",
+        isInputHead && "--input-head",
+        isInputTails && "--input-tails",
       )}
       style={{
         left: x,
@@ -94,21 +101,30 @@ const NoteBar = ({
     />
   );
 };
+const noteColors = {
+  main: "#0bd8",
+  alt: "#4c48",
+};
 const noteStyles = css({
   position: "absolute",
-  background: "#0bd8",
+  "&.--input-head": {
+    background: noteColors.main,
+  },
+  "&.--input-tails": {
+    background: noteColors.alt,
+  },
   "&.--draft": {
-    backgroundColor: "orange",
+    background: "orange",
   },
   "&.--deleting": {
-    backgroundColor: "red",
+    background: "red",
   },
   "&.--ghost-head": {
     background: "none",
   },
   "&.--ghost-tails": {
     background: "none",
-    border: "solid 1px #0bd",
+    border: `solid 1px ${noteColors.alt}`,
   },
 });
 
@@ -116,10 +132,12 @@ const NotesLayer = ({
   notes,
   stepOffset,
   draftNote,
+  patternBars,
 }: {
   notes: Note[];
   stepOffset: number;
   draftNote: Note | null;
+  patternBars: number;
 }) => {
   const notesInView = notes.filter(
     (note) => stepOffset <= note.position && note.position <= stepOffset + 32,
@@ -127,10 +145,22 @@ const NotesLayer = ({
   return (
     <div>
       {notesInView.map((note, i) => {
-        return <NoteBar key={i} note={note} stepOffset={stepOffset} />;
+        return (
+          <NoteBar
+            key={i}
+            note={note}
+            stepOffset={stepOffset}
+            patternBars={patternBars}
+          />
+        );
       })}
       {draftNote && (
-        <NoteBar note={draftNote} stepOffset={stepOffset} isDraft />
+        <NoteBar
+          note={draftNote}
+          stepOffset={stepOffset}
+          isDraft
+          patternBars={patternBars}
+        />
       )}
     </div>
   );
@@ -312,8 +342,14 @@ const InputLayer = () => {
 };
 
 const PianoRollEditor = () => {
-  const { inputNotes, currentPageIndex, draftNote, mappedNotes } =
-    store.useSnapshot();
+  const {
+    inputNotes,
+    currentPageIndex,
+    draftNote,
+    mappedNotes,
+    patternBars,
+    ghostEnabled,
+  } = store.useSnapshot();
   const refBaseDiv = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const baseDiv = refBaseDiv.current!;
@@ -334,12 +370,16 @@ const PianoRollEditor = () => {
         notes={inputNotes}
         stepOffset={currentPageIndex * 32}
         draftNote={draftNote}
+        patternBars={patternBars}
       />
-      <NotesLayer
-        notes={mappedNotes}
-        stepOffset={currentPageIndex * 32}
-        draftNote={null}
-      />
+      {ghostEnabled && (
+        <NotesLayer
+          notes={mappedNotes}
+          stepOffset={currentPageIndex * 32}
+          draftNote={null}
+          patternBars={patternBars}
+        />
+      )}
       <InputLayer />
     </div>
   );
