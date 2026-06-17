@@ -26,10 +26,10 @@ const editActions = {
     store.setDraftNote((prev) => (prev ? { ...prev, ...attrs } : null));
   },
   addNote(note: Note) {
-    store.setNotes((prev) => [...prev, note]);
+    store.setInputNotes((prev) => [...prev, note]);
   },
   patchNote(id: number, attrs: Partial<Note>) {
-    store.produceNotes((draft) => {
+    store.produceInputNotes((draft) => {
       const note = draft.find((n) => n.id === id);
       if (note) {
         Object.assign(note, attrs);
@@ -37,7 +37,7 @@ const editActions = {
     });
   },
   removeNote(id: number) {
-    store.setNotes((prev) => prev.filter((n) => n.id !== id));
+    store.setInputNotes((prev) => prev.filter((n) => n.id !== id));
   },
 };
 
@@ -261,12 +261,12 @@ const handleInputLayerPointerDown = (e0: React.PointerEvent) => {
     stepPosition,
     relativeNoteNumber,
     y,
-    store.state.notes,
+    store.state.inputNotes,
   );
   if (hitNote) {
     startEditNote(e0, hitNote, false);
   } else {
-    const id = Math.max(0, ...store.state.notes.map((n) => n.id)) + 1;
+    const id = Math.max(0, ...store.state.inputNotes.map((n) => n.id)) + 1;
     const newNote: Note = {
       id,
       stepPosition,
@@ -290,7 +290,7 @@ const InputLayer = () => {
 };
 
 const PianoRollEditor = () => {
-  const { notes, currentPageIndex, draftNote } = store.useSnapshot();
+  const { inputNotes, currentPageIndex, draftNote } = store.useSnapshot();
   const refBaseDiv = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const baseDiv = refBaseDiv.current!;
@@ -308,7 +308,7 @@ const PianoRollEditor = () => {
     >
       <BackgroundGridLayer />
       <NotesLayer
-        notes={notes}
+        notes={inputNotes}
         stepOffset={currentPageIndex * 32}
         draftNote={draftNote}
       />

@@ -1,5 +1,4 @@
 import { seqNumbers } from "mofur/ax";
-import { ScalerBox2 } from "mofur/mo-react";
 import {
   Button,
   createSelectorOptions,
@@ -20,7 +19,7 @@ const loopBarsOptions = createSelectorOptions(
 export const ControlsSection = () => {
   const st = store.useSnapshot();
   const clearNotes = () => {
-    store.setNotes([]);
+    store.setInputNotes([]);
     store.setCurrentPageIndex(0);
   };
   return (
@@ -36,15 +35,13 @@ export const ControlsSection = () => {
           />
         </LabeledRow>
         <LabeledRow label="duty">
-          <ScalerBox2 destWidth={20} destHeight={20}>
-            <Knob
-              value={st.noteDuty}
-              min={0}
-              max={1}
-              step={0.01}
-              onChange={store.setNoteDuty}
-            />
-          </ScalerBox2>
+          <Knob
+            value={st.noteDuty}
+            min={0}
+            max={1}
+            step={0.01}
+            onChange={store.setNoteDuty}
+          />
         </LabeledRow>
         <LabeledRow label="bars">
           <GeneralSelector
@@ -53,10 +50,11 @@ export const ControlsSection = () => {
             onChange={store.setLoopBars}
           />
         </LabeledRow>
+        <Button active={st.ghostEnabled} onClick={store.toggleGhostEnabled}>
+          ghost
+        </Button>
       </div>
-      <ScalerBox2 destWidth={24} destHeight={20}>
-        <Button text="x" onClick={clearNotes} asr={1.25} />
-      </ScalerBox2>
+      <Button text="x" onClick={clearNotes} asr={1.25} />
     </div>
   );
 };

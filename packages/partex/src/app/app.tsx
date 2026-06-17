@@ -16,7 +16,7 @@ function setupSynchronization() {
     }));
     sequencer.setStepNotes(stepNotes);
   }
-  affectNotes(store.state.notes);
+  affectNotes(store.state.inputNotes);
   sequencer.setAttrs({
     octaveShift: store.state.octaveShift,
     noteDuty: store.state.noteDuty,
@@ -24,8 +24,8 @@ function setupSynchronization() {
   });
 
   const unsubscribeStore = store.subscribe((attrs) => {
-    if (attrs.notes) {
-      affectNotes(attrs.notes);
+    if (attrs.inputNotes) {
+      affectNotes(attrs.inputNotes);
     }
     if (
       attrs.noteDuty !== undefined ||

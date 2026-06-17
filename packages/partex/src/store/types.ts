@@ -22,3 +22,5 @@ export type DraftNote = {
   stepPosition: number;
   stepDuration: number;
 };
+
+export type PatternMode = "simple";
