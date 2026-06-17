@@ -10,17 +10,11 @@ export type DynamicPatternMeta = {
 
 export type Note = {
   id: number;
-  relativeNoteNumber: number;
-  stepPosition: number;
-  stepDuration: number;
+  pitch: number;
+  position: number;
+  duration: number;
 };
 
-export type DraftNote = {
-  id: number;
-  // pointerId: number;
-  relativeNoteNumber: number;
-  stepPosition: number;
-  stepDuration: number;
-};
+export type DraftNote = Note;
 
 export type PatternMode = "simple";

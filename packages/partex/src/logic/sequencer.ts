@@ -11,7 +11,7 @@ if (!unitInterface) {
 }
 
 type StepNote = {
-  relNoteNumber: number;
+  pitch: number;
   position: number;
   duration: number;
 };
@@ -40,10 +40,7 @@ function createSequencer() {
         (note) => note.position === stepIndex && note.duration > 0,
       );
       for (const note of targetNotes) {
-        const shiftedNote = resolveNotePitch(
-          note.relNoteNumber,
-          state.octaveShift,
-        );
+        const shiftedNote = resolveNotePitch(note.pitch, state.octaveShift);
         const originalDuration = unitDuration * note.duration;
         const minDuration = unitDuration * 0.2;
         const duration = mapUnaryTo(

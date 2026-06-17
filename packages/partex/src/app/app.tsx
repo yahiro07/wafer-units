@@ -11,9 +11,9 @@ import { PianoRollEditorView } from "./piano-roll-editor-view";
 function setupSynchronization() {
   function affectNotes(notes: Note[]) {
     const stepNotes = notes.map((note) => ({
-      position: note.stepPosition,
-      relNoteNumber: note.relativeNoteNumber,
-      duration: note.stepDuration,
+      pitch: note.pitch,
+      position: note.position,
+      duration: note.duration,
     }));
     sequencer.setStepNotes(stepNotes);
   }

@@ -67,15 +67,15 @@ const NoteBar = ({
   isDraft?: boolean;
 }) => {
   const { cellW, cellH, numOctaves } = configs;
-  const x = (note.stepPosition - stepOffset) * cellW;
-  const y = (7 * numOctaves - note.relativeNoteNumber - 1) * cellH;
-  const w = note.stepDuration * cellW;
+  const x = (note.position - stepOffset) * cellW;
+  const y = (7 * numOctaves - note.pitch - 1) * cellH;
+  const w = note.duration * cellW;
   const h = cellH;
   let bg: string | undefined;
   if (isDraft) {
     bg = "orange";
   }
-  if (note.stepDuration <= 0) {
+  if (note.duration <= 0) {
     bg = "red";
   }
   return (
@@ -102,8 +102,7 @@ const NotesLayer = ({
   draftNote: Note | null;
 }) => {
   const notesInView = notes.filter(
-    (note) =>
-      stepOffset <= note.stepPosition && note.stepPosition <= stepOffset + 32,
+    (note) => stepOffset <= note.position && note.position <= stepOffset + 32,
   );
   return (
     <div>
@@ -185,9 +184,9 @@ function getNoteHit(
   for (const line of yLines) {
     const hitNote = notes.find(
       (note) =>
-        note.stepPosition <= stepPosition &&
-        stepPosition < note.stepPosition + note.stepDuration &&
-        note.relativeNoteNumber === line.relNote,
+        note.position <= stepPosition &&
+        stepPosition < note.position + note.duration &&
+        note.pitch === line.relNote,
     );
     if (hitNote) {
       return hitNote;
@@ -210,28 +209,31 @@ function startEditNote(e0: React.PointerEvent, note: Note, isNewNote: boolean) {
 
         const relativeNoteNumber = findNearestYLineNote(y);
         const stepDuration = getModifiedDuration(
-          note.stepPosition,
+          note.position,
           x,
           pageStepOffset,
         );
-        editActions.patchDraftNote({ relativeNoteNumber, stepDuration });
+        editActions.patchDraftNote({
+          pitch: relativeNoteNumber,
+          duration: stepDuration,
+        });
       },
       onUp() {
         const draftNote = store.state.draftNote;
         if (!draftNote) return;
-        if (isNewNote && draftNote.stepDuration > 0) {
+        if (isNewNote && draftNote.duration > 0) {
           editActions.addNote(draftNote);
         } else {
           if (
-            draftNote.relativeNoteNumber !== note.relativeNoteNumber ||
-            draftNote.stepDuration !== note.stepDuration
+            draftNote.pitch !== note.pitch ||
+            draftNote.duration !== note.duration
           ) {
-            if (draftNote.stepDuration <= 0) {
+            if (draftNote.duration <= 0) {
               editActions.removeNote(note.id);
             } else {
               editActions.patchNote(note.id, {
-                relativeNoteNumber: draftNote.relativeNoteNumber,
-                stepDuration: draftNote.stepDuration,
+                pitch: draftNote.pitch,
+                duration: draftNote.duration,
               });
             }
           }
@@ -269,9 +271,9 @@ const handleInputLayerPointerDown = (e0: React.PointerEvent) => {
     const id = Math.max(0, ...store.state.inputNotes.map((n) => n.id)) + 1;
     const newNote: Note = {
       id,
-      stepPosition,
-      relativeNoteNumber,
-      stepDuration: 1,
+      position: stepPosition,
+      pitch: relativeNoteNumber,
+      duration: 1,
     };
     startEditNote(e0, newNote, true);
   }

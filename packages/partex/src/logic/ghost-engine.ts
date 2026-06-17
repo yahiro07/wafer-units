@@ -13,7 +13,7 @@ export function generateMappedNotes(
     mappedNotes.push(note);
     mappedNotes.push({
       ...note,
-      stepPosition: note.stepPosition + 16,
+      position: note.position + 16,
     });
   }
   return mappedNotes;

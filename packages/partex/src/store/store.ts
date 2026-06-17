@@ -3,13 +3,13 @@ import { Note, PatternMode } from "@/store/types";
 
 const defaultNotes: Note[] = 1
   ? [
-      { id: 0, stepPosition: 0, stepDuration: 2, relativeNoteNumber: 7 },
-      { id: 1, stepPosition: 2, stepDuration: 2, relativeNoteNumber: 8 },
-      { id: 2, stepPosition: 4, stepDuration: 2, relativeNoteNumber: 9 },
-      { id: 3, stepPosition: 6, stepDuration: 2, relativeNoteNumber: 10 },
-      { id: 4, stepPosition: 8, stepDuration: 8, relativeNoteNumber: 11 },
-      { id: 5, stepPosition: 16, stepDuration: 16, relativeNoteNumber: 5 },
-      { id: 6, stepPosition: 32, stepDuration: 16, relativeNoteNumber: 14 },
+      { id: 0, position: 0, duration: 2, pitch: 7 },
+      { id: 1, position: 2, duration: 2, pitch: 8 },
+      { id: 2, position: 4, duration: 2, pitch: 9 },
+      { id: 3, position: 6, duration: 2, pitch: 10 },
+      { id: 4, position: 8, duration: 8, pitch: 11 },
+      { id: 5, position: 16, duration: 16, pitch: 5 },
+      { id: 6, position: 32, duration: 16, pitch: 14 },
     ]
   : [];
 
