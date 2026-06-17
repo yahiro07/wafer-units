@@ -24,6 +24,7 @@ export const store = createStore<{
   patternMode: PatternMode;
   mappedNotes: Note[];
   ghostEnabled: boolean;
+  realized: boolean;
 }>({
   inputNotes: defaultNotes,
   noteDuty: 1,
@@ -32,7 +33,8 @@ export const store = createStore<{
   draftNote: null,
   loopBars: 2,
   patternBars: 1,
-  patternMode: "multiShift",
+  patternMode: "slice",
   mappedNotes: [],
   ghostEnabled: true,
+  realized: false,
 });

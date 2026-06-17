@@ -22,59 +22,91 @@ const loopBarsOptions = createSelectorOptions(
   [0.5, 1, 2, 4, 8, 16].map((v) => [v, `${v === 0.5 ? "1/2" : v}`]),
 );
 
+const controlActions = {
+  clearNotes() {
+    store.setState({
+      inputNotes: [],
+      currentPageIndex: 0,
+      realized: false,
+    });
+  },
+  realizeNotes() {
+    const { mappedNotes } = store.state;
+    store.setState({
+      inputNotes: mappedNotes.map((n) => ({
+        ...n,
+        noteType: undefined,
+      })),
+      ghostEnabled: false,
+      realized: true,
+    });
+  },
+};
+
 export const ControlsSection = () => {
   const st = store.useSnapshot();
-  const clearNotes = () => {
-    store.setInputNotes([]);
-    store.setCurrentPageIndex(0);
-  };
   return (
-    <div className="flex-ha gap-2 justify-between">
-      <div>piano-roll</div>
-      <div className="flex-ha gap-4 text-sm">
-        <LabeledRow label="oct">
-          <GeneralSelector
-            options={octaveShiftOptions}
-            value={st.octaveShift}
-            onChange={store.setOctaveShift}
-            reverseOptionsOrder
-          />
-        </LabeledRow>
-        <LabeledRow label="duty">
-          <Knob
-            value={st.noteDuty}
-            min={0}
-            max={1}
-            step={0.01}
-            onChange={store.setNoteDuty}
-          />
-        </LabeledRow>
-        <LabeledRow label="pt_mode">
-          <GeneralSelector
-            options={patternModeOptions}
-            value={st.patternMode}
-            onChange={store.setPatternMode}
-          />
-        </LabeledRow>
-        <LabeledRow label="pt_bars">
-          <GeneralSelector
-            options={patternBarsOptions}
-            value={st.patternBars}
-            onChange={store.setPatternBars}
-          />
-        </LabeledRow>
-        <LabeledRow label="bars">
-          <GeneralSelector
-            options={loopBarsOptions}
-            value={st.loopBars}
-            onChange={store.setLoopBars}
-          />
-        </LabeledRow>
-        <Button active={st.ghostEnabled} onClick={store.toggleGhostEnabled}>
-          ghost
-        </Button>
+    <div className="flex-v">
+      <div className="flex-ha gap-2 justify-between">
+        <div>piano-roll</div>
+        <div className="flex-ha gap-4 text-sm">
+          <LabeledRow label="oct">
+            <GeneralSelector
+              options={octaveShiftOptions}
+              value={st.octaveShift}
+              onChange={store.setOctaveShift}
+              reverseOptionsOrder
+            />
+          </LabeledRow>
+          <LabeledRow label="duty">
+            <Knob
+              value={st.noteDuty}
+              min={0}
+              max={1}
+              step={0.01}
+              onChange={store.setNoteDuty}
+            />
+          </LabeledRow>
+          <LabeledRow label="pt_mode">
+            <GeneralSelector
+              options={patternModeOptions}
+              value={st.patternMode}
+              onChange={store.setPatternMode}
+            />
+          </LabeledRow>
+          <LabeledRow label="pt_bars">
+            <GeneralSelector
+              options={patternBarsOptions}
+              value={st.patternBars}
+              onChange={store.setPatternBars}
+            />
+          </LabeledRow>
+          <LabeledRow label="bars">
+            <GeneralSelector
+              options={loopBarsOptions}
+              value={st.loopBars}
+              onChange={store.setLoopBars}
+            />
+          </LabeledRow>
+        </div>
       </div>
-      <Button text="x" onClick={clearNotes} asr={1.25} />
+      <div className="flex-ha gap-4">
+        <div className="grow" />
+        {!st.realized && (
+          <>
+            <Button active={st.ghostEnabled} onClick={store.toggleGhostEnabled}>
+              ghost
+            </Button>
+            <Button
+              onClick={controlActions.realizeNotes}
+              disabled={!st.ghostEnabled}
+            >
+              realize
+            </Button>
+          </>
+        )}
+        <Button text="x" onClick={controlActions.clearNotes} asr={1.25} />
+      </div>
     </div>
   );
 };
