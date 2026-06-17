@@ -21,9 +21,10 @@ export type Note = {
 
 export type DraftNote = Note;
 
-export type PatternMode = "slice" | "shift";
+export type PatternMode = "slice" | "shift" | "multiShift";
 
 export const patternModeOptions = createPlainSelectorOptions<PatternMode>([
   "slice",
   "shift",
+  "multiShift",
 ]);
