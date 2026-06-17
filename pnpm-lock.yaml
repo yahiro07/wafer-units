@@ -149,8 +149,8 @@ importers:
         specifier: ^5.6.0
         version: 5.6.0(react@19.2.6)
       snap-store:
-        specifier: ^0.1.8
-        version: 0.1.8(react@19.2.6)
+        specifier: ^0.1.9
+        version: 0.1.9(react@19.2.6)
     devDependencies:
       '@preact/preset-vite':
         specifier: ^2.10.5
@@ -1268,8 +1268,8 @@ packages:
     peerDependencies:
       react: '>=18.0.0'
 
-  snap-store@0.1.8:
-    resolution: {integrity: sha512-HCOwILzAxVQjafqxLmmTJ+LLsAX7KVwexF/x2gJycHS9NGjCKgV2PiOIcaJMivZGA8gKNBEL7/24hCp58VqjUA==}
+  snap-store@0.1.9:
+    resolution: {integrity: sha512-6bIIzq01lhg4hOLx1oV4uyJo0HE8+VgCVClpBZcBaluvvZMjrxCjZ8p54oTMQYC9kOA4wXQajULRzRbG8haCOw==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
       react: '>=18.0.0'
@@ -2378,7 +2378,7 @@ snapshots:
       immer: 11.1.8
       react: 19.2.6
 
-  snap-store@0.1.8(react@19.2.6):
+  snap-store@0.1.9(react@19.2.6):
     dependencies:
       react: 19.2.6
 

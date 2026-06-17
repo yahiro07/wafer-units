@@ -34,15 +34,11 @@ const configCommon: UserConfig = {
 
 const configDev: UserConfig = {
   ...configCommon,
-  define: { "process.env.NODE_ENV": JSON.stringify("development") },
-  server: {
-    port: 3000,
-  },
+  server: { port: 3000 },
 };
 
 const configProd: UserConfig = {
   ...configCommon,
-  define: { "process.env.NODE_ENV": JSON.stringify("production") },
   build: {
     lib: {
       entry: "./src/wc-entry/index.tsx",
