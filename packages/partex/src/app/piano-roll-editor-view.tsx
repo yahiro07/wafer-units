@@ -294,8 +294,7 @@ const PianoRollEditor = () => {
   const refBaseDiv = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const baseDiv = refBaseDiv.current!;
-    baseDiv.scrollTop =
-      baseDiv.scrollHeight / 2 - baseDiv.clientHeight / 2 + 120;
+    baseDiv.scrollTop = baseDiv.scrollHeight / 2 - baseDiv.clientHeight / 2;
   }, []);
   return (
     <div
