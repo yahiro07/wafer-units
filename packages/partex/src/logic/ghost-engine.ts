@@ -1,5 +1,24 @@
 import { Note, PatternMode } from "@/store/types";
 
+function makePatternNotesRepeated(
+  headNotes: Note[],
+  patternBarsSteps: number,
+  stepsTo: number,
+): Note[] {
+  const resNotes: Note[] = [];
+  const nx = Math.ceil(stepsTo / patternBarsSteps);
+  for (let i = 0; i < nx; i++) {
+    const offset = i * patternBarsSteps;
+    for (const note of headNotes) {
+      resNotes.push({
+        ...note,
+        position: offset + note.position,
+      });
+    }
+  }
+  return resNotes;
+}
+
 function generateNotesSliced(
   inputNote: Note,
   patternNotes: Note[],
@@ -74,8 +93,14 @@ export function generateMappedNotes(
     shift: generateNotesShifted,
   }[configs.patternMode];
 
+  const patternNotes = makePatternNotesRepeated(
+    headNotes,
+    patternBarsSteps,
+    32,
+  );
+
   for (const note of tailNotes) {
-    const slicedNotes = generatorFn(note, headNotes, patternBarsSteps);
+    const slicedNotes = generatorFn(note, patternNotes, patternBarsSteps);
     mappedNotes.push(...slicedNotes);
   }
   return mappedNotes;
