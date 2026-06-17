@@ -10,10 +10,11 @@ export function generateMappedNotes(
 ): Note[] {
   const mappedNotes: Note[] = [];
   for (const note of inputNotes) {
-    mappedNotes.push(note);
+    mappedNotes.push({ ...note, noteType: "ghostHead" });
     mappedNotes.push({
       ...note,
       position: note.position + 16,
+      noteType: "ghostTails",
     });
   }
   return mappedNotes;

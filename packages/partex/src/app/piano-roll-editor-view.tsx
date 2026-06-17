@@ -1,3 +1,5 @@
+import { css } from "@emotion/react";
+import clsx from "clsx";
 import { getSortOrder, seqNumbers } from "mofur/ax";
 import { npx, startDragSession } from "mofur/ax-ui";
 import React, { useEffect, useRef } from "react";
@@ -71,26 +73,44 @@ const NoteBar = ({
   const y = (7 * numOctaves - note.pitch - 1) * cellH;
   const w = note.duration * cellW;
   const h = cellH;
-  let bg: string | undefined;
-  if (isDraft) {
-    bg = "orange";
-  }
-  if (note.duration <= 0) {
-    bg = "red";
-  }
+  const isDeleting = note.duration <= 0;
+  const isGhostHead = note.noteType === "ghostHead";
+  const isGhostTails = note.noteType === "ghostTails";
   return (
     <div
-      className="absolute bg-cyan-500/60"
+      className={clsx(
+        isDraft && "--draft",
+        isDeleting && "--deleting",
+        isGhostHead && "--ghost-head",
+        isGhostTails && "--ghost-tails",
+      )}
       style={{
         left: x,
         top: y + 1,
         width: w - 1,
         height: h - 1,
-        background: bg,
       }}
+      css={noteStyles}
     />
   );
 };
+const noteStyles = css({
+  position: "absolute",
+  background: "#0bd8",
+  "&.--draft": {
+    backgroundColor: "orange",
+  },
+  "&.--deleting": {
+    backgroundColor: "red",
+  },
+  "&.--ghost-head": {
+    background: "none",
+  },
+  "&.--ghost-tails": {
+    background: "none",
+    border: "solid 1px #0bd",
+  },
+});
 
 const NotesLayer = ({
   notes,
@@ -292,7 +312,8 @@ const InputLayer = () => {
 };
 
 const PianoRollEditor = () => {
-  const { inputNotes, currentPageIndex, draftNote } = store.useSnapshot();
+  const { inputNotes, currentPageIndex, draftNote, mappedNotes } =
+    store.useSnapshot();
   const refBaseDiv = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const baseDiv = refBaseDiv.current!;
@@ -313,6 +334,11 @@ const PianoRollEditor = () => {
         notes={inputNotes}
         stepOffset={currentPageIndex * 32}
         draftNote={draftNote}
+      />
+      <NotesLayer
+        notes={mappedNotes}
+        stepOffset={currentPageIndex * 32}
+        draftNote={null}
       />
       <InputLayer />
     </div>
