@@ -48,7 +48,7 @@ const configProd: UserConfig = {
       formats: ["es"],
       fileName: "index",
     },
-    outDir: "../../dist/piano-roll",
+    outDir: "../../dist/partex",
     emptyOutDir: true,
   },
 };
