@@ -1,5 +1,5 @@
 import { getSortOrder, seqNumbers } from "mofur/ax";
-import { startDragSession } from "mofur/ax-ui";
+import { npx, startDragSession } from "mofur/ax-ui";
 import React, { useEffect, useRef } from "react";
 import { PageShiftButton } from "@/components/page-shift-button";
 import { PianoRollBackgroundOctaveBlock } from "@/components/piano-roll-background-octave-block";
@@ -7,10 +7,11 @@ import { store } from "@/store/store";
 import { Note } from "@/store/types";
 
 const configs = {
-  cellW: 10,
-  cellH: 16,
+  cellW: 20,
+  cellH: 40,
   nx: 32,
-  numOctaves: 4,
+  numOctaves: 3,
+  scrollPartHeight: 320,
 };
 
 const editActions = {
@@ -293,13 +294,14 @@ const PianoRollEditor = () => {
   const refBaseDiv = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const baseDiv = refBaseDiv.current!;
-    baseDiv.scrollTop = baseDiv.scrollHeight / 2 - baseDiv.clientHeight / 2 + 0;
+    baseDiv.scrollTop =
+      baseDiv.scrollHeight / 2 - baseDiv.clientHeight / 2 + 120;
   }, []);
   return (
     <div
       ref={refBaseDiv}
       css={{
-        height: "160px",
+        height: npx(configs.scrollPartHeight),
         overflowX: "hidden",
         overflowY: "scroll",
         position: "relative",

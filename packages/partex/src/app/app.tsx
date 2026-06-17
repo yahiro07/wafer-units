@@ -1,11 +1,11 @@
 import { pickObjectMembers } from "mofur/ax";
 import { useEffect } from "react";
-import { BottomBar } from "@/app/bottom-bar";
-import { ControlsSection } from "@/app/controls-section";
-import { PianoRollEditorView } from "@/app/piano-roll-editor-view";
 import { sequencer, unitInterface } from "@/logic/sequencer";
 import { store } from "@/store/store";
 import { Note } from "@/store/types";
+import { BottomBar } from "./bottom-bar";
+import { ControlsSection } from "./controls-section";
+import { PianoRollEditorView } from "./piano-roll-editor-view";
 
 function setupSynchronization() {
   function affectNotes(notes: Note[]) {
@@ -64,10 +64,10 @@ function setupSynchronization() {
 
 export const App = () => {
   useEffect(setupSynchronization, []);
-  // return <Dev2PianoRollEditorView />;
+  // return <Dev2PianoRollEdit />;
   return (
     <div className="bg-white">
-      <div className="w-[420px] h-[240px] border border-cyan-600 bg-blue-100/20 flex-c">
+      <div className="w-[800px] h-[500px] border border-cyan-600 bg-blue-100/20 flex-c">
         <div className="flex-v gap-2">
           <ControlsSection />
           <PianoRollEditorView />

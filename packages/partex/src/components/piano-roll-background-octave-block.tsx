@@ -1,4 +1,5 @@
 import { css } from "@emotion/react";
+import clsx from "clsx";
 import { seqNumbers } from "mofur/ax";
 import { npx } from "mofur/ax-ui";
 import { useMemo } from "react";
@@ -19,22 +20,26 @@ export const PianoRollBackgroundOctaveBlock = ({
   return (
     <div className="relative" css={rootCss}>
       {seqNumbers(7).map((yi) => {
+        const isTonic = yi === 6;
+        const isDominant = yi === 2;
         return (
-          <div className="grid-row">
+          <div
+            className={clsx(
+              "grid-row",
+              isTonic && "--tonic",
+              isDominant && "--dominant",
+            )}
+          >
             {seqNumbers(nx).map((xi) => {
               return (
                 <div className="grid-cell">
-                  <div>{xi % 1 === 0 && (yi === 3 || yi === 6) && "・"}</div>
+                  {/* <div>{xi % 4 === 0 && yi === 6 && "・"}</div> */}
                 </div>
               );
             })}
           </div>
         );
       })}
-
-      <div className="overlay-v">
-        <div className="overlay-v-top" />
-      </div>
       <div className="overlay-h">
         <div className="overlay-h-bar">
           {seqNumbers(2).map(() => (
@@ -51,19 +56,24 @@ function makeCssPianoRollBackgroundOctaveBlock(cellW: number, cellH: number) {
     & > .grid-row {
       display: flex;
       background: #fff;
+
+      &.--tonic {
+        background: #fd94;
+      }
+      &.--dominant {
+        background: #fd92;
+      }
     }
 
     & > .grid-row > .grid-cell {
       display: flex;
+      justify-content: center;
       align-items: center;
       width: ${npx(cellW)};
       height: ${npx(cellH)};
       border: 0.5px solid #8881;
       color: #8884;
       font-size: ${npx(12)};
-      >div{
-        margin-left: -2px;
-      }
     }
 
     & > .overlay-v,
@@ -97,7 +107,7 @@ function makeCssPianoRollBackgroundOctaveBlock(cellW: number, cellH: number) {
 
     & > .overlay-h > .overlay-h-bar > .overlay-h-split {
       flex-grow: 1;
-      border: solid 0.5px #ccc8;
+      border: solid 0.5px #ccc4;
     }
   `;
 }
