@@ -7,11 +7,17 @@ import {
 } from "mofur-components/mono2";
 import { LabeledRow } from "@/components";
 import { store } from "@/store/store";
+import { patternModeOptions } from "@/store/types";
 
 const octaveShiftOptions = createSelectorOptions(
   seqNumbers(7).map((i) => [i - 3, `${i - 3}`]),
 );
 
+const patternBarsOptions = createSelectorOptions([
+  [0.25, "1/4"],
+  [0.5, "1/2"],
+  [1, "1"],
+]);
 const loopBarsOptions = createSelectorOptions(
   [0.5, 1, 2, 4, 8, 16].map((v) => [v, `${v === 0.5 ? "1/2" : v}`]),
 );
@@ -26,7 +32,7 @@ export const ControlsSection = () => {
     <div className="flex-ha gap-2 justify-between">
       <div>piano-roll</div>
       <div className="flex-ha gap-4 text-sm">
-        <LabeledRow label="octave">
+        <LabeledRow label="oct">
           <GeneralSelector
             options={octaveShiftOptions}
             value={st.octaveShift}
@@ -41,6 +47,20 @@ export const ControlsSection = () => {
             max={1}
             step={0.01}
             onChange={store.setNoteDuty}
+          />
+        </LabeledRow>
+        <LabeledRow label="pt_mode">
+          <GeneralSelector
+            options={patternModeOptions}
+            value={st.patternMode}
+            onChange={store.setPatternMode}
+          />
+        </LabeledRow>
+        <LabeledRow label="pt_bars">
+          <GeneralSelector
+            options={patternBarsOptions}
+            value={st.patternBars}
+            onChange={store.setPatternBars}
           />
         </LabeledRow>
         <LabeledRow label="bars">

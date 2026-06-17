@@ -1,3 +1,5 @@
+import { createPlainSelectorOptions } from "mofur-components/mono2";
+
 export type SongKey = "Am" | "C" | "Dm" | "Em" | "F" | "G" | "B";
 
 export type DynamicPatternInput = {
@@ -20,3 +22,8 @@ export type Note = {
 export type DraftNote = Note;
 
 export type PatternMode = "slice" | "shift";
+
+export const patternModeOptions = createPlainSelectorOptions<PatternMode>([
+  "slice",
+  "shift",
+]);
