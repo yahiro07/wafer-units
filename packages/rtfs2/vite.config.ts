@@ -11,7 +11,6 @@ const preactPaths = {
 
 export default defineConfig({
   base: "./",
-  define: { "process.env.NODE_ENV": JSON.stringify("production") },
   plugins: [preact({ reactAliasesEnabled: false }), tailwindcss()],
   resolve: {
     alias: [

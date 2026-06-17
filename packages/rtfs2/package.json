@@ -10,7 +10,7 @@
     "mofur": "link:../../../beam/mofur",
     "mofur-components": "link:../../../beam/mofur-components",
     "preact": "^10.26.0",
-    "snap-store": "^0.1.7"
+    "snap-store": "^0.1.9"
   },
   "devDependencies": {
     "@preact/preset-vite": "^2.9.4",

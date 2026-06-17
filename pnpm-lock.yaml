@@ -236,8 +236,8 @@ importers:
         specifier: ^10.26.0
         version: 10.29.2
       snap-store:
-        specifier: ^0.1.7
-        version: 0.1.7(react@19.2.6)
+        specifier: ^0.1.9
+        version: 0.1.9(react@19.2.6)
     devDependencies:
       '@preact/preset-vite':
         specifier: ^2.9.4
