@@ -34,7 +34,7 @@ function generateNotesSliced(
     )
     .map((it) => {
       return {
-        id: inputNote.id * 1000 + it.id,
+        id: 0,
         position: inputNote.position + it.position - offset,
         duration: it.duration,
         pitch: inputNote.pitch,
@@ -56,17 +56,11 @@ function generateNotesShifted(
         it.position + it.duration <= offset + inputNote.duration,
     )
     .map((it) => {
-      const id = inputNote.id * 1000 + it.id;
+      const id = 0;
       const position = inputNote.position + it.position - offset;
       const duration = it.duration;
       const pitch = inputNote.pitch + (it.pitch - patternNotes[0].pitch);
-      return {
-        id,
-        position,
-        duration,
-        pitch,
-        noteType: "ghostTails",
-      };
+      return { id, position, duration, pitch, noteType: "ghostTails" };
     });
 }
 
@@ -95,7 +89,7 @@ function generateMappedNotes_sliceOrShift(
     const slicedNotes = generatorFn(note, patternNotes, patternBarsSteps);
     mappedNotes.push(...slicedNotes);
   }
-  return mappedNotes;
+  return refreshNoteIds(mappedNotes);
 }
 
 function extractNotePitchesInSpan(
@@ -128,6 +122,15 @@ function mapNotePitch(
   return destPitches[destIndex];
 }
 
+function refreshNoteIds(notes: Note[]): Note[] {
+  return notes.map((note, index) => {
+    return {
+      ...note,
+      id: index,
+    };
+  });
+}
+
 function generateMappedNotes_MultiShift(
   headNotes: Note[],
   tailNotes: Note[],
@@ -155,7 +158,7 @@ function generateMappedNotes_MultiShift(
       const position = offset + note.position;
       const pitch = mapNotePitch(note.pitch, srcPitches, destPitches);
       mappedNotes.push({
-        id: note.id * 1000 + position,
+        id: 0,
         pitch,
         position,
         duration: note.duration,
@@ -163,7 +166,7 @@ function generateMappedNotes_MultiShift(
       });
     }
   }
-  return mappedNotes;
+  return refreshNoteIds(mappedNotes);
 }
 export function generateMappedNotes(
   inputNotes: Note[],
