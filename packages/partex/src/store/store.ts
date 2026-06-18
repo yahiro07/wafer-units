@@ -13,7 +13,7 @@ function getDefaultNotes() {
       { id: 6, position: 32, duration: 16, pitch: 14 },
     ];
   }
-  if (1) {
+  if (0) {
     return [
       { id: 0, position: 0, duration: 2, pitch: 5 },
       { id: 1, position: 2, duration: 2, pitch: 9 },
@@ -25,31 +25,34 @@ function getDefaultNotes() {
 const defaultNotes: Note[] = getDefaultNotes();
 
 export const store = createStore<{
+  //persisted
   inputNotes: Note[];
   noteDuty: number;
   octaveShift: number;
-  currentPageIndex: number;
-  draftNote: Note | null;
   loopBars: number;
   patternBars: number;
   patternMode: PatternMode;
-  mappedNotes: Note[];
   ghostEnabled: boolean;
   realized: boolean;
-  backupInputNotes: Note[] | null;
   songKey: SongKey;
+  //temporal
+  currentPageIndex: number;
+  draftNote: Note | null;
+  mappedNotes: Note[];
+  backupInputNotes: Note[] | null;
 }>({
   inputNotes: defaultNotes,
   noteDuty: 1,
   octaveShift: 0,
-  currentPageIndex: 0,
-  draftNote: null,
   loopBars: 2,
   patternBars: 1,
   patternMode: "shift",
-  mappedNotes: [],
   ghostEnabled: true,
   realized: false,
-  backupInputNotes: null,
   songKey: "Am",
+  //
+  currentPageIndex: 0,
+  draftNote: null,
+  mappedNotes: [],
+  backupInputNotes: null,
 });
