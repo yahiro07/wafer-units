@@ -188,6 +188,16 @@ function generateMappedNotes_MultiShift(
   }
   const srcPitches = extractNotePitchesInSpan(headNotes, 0, patternBarsSteps);
 
+  const headNotesFilled = makeHeadNotesToFillPatternBars(
+    headNotes,
+    patternBarsSteps,
+  );
+  for (const note of headNotesFilled) {
+    if (!mappedNotes.some((it) => it.position === note.position)) {
+      mappedNotes.push({ ...note, noteType: "ghostTails" });
+    }
+  }
+
   for (let i = 1; i <= nx; i++) {
     const offset = i * patternBarsSteps;
     const destPitches = extractNotePitchesInSpan(
@@ -196,8 +206,8 @@ function generateMappedNotes_MultiShift(
       offset + patternBarsSteps,
     );
     if (destPitches.length === 0) continue;
-    for (let i = 0; i < headNotes.length; i++) {
-      const note = headNotes[i];
+    for (let i = 0; i < headNotesFilled.length; i++) {
+      const note = headNotesFilled[i];
       const position = offset + note.position;
       const pitch = mapNotePitch(note.pitch, srcPitches, destPitches);
       mappedNotes.push({
