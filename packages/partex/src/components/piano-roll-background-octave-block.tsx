@@ -8,10 +8,12 @@ export const PianoRollBackgroundOctaveBlock = ({
   cellW,
   cellH,
   nx,
+  isComplementalMinorKey,
 }: {
   cellW: number;
   cellH: number;
   nx: number;
+  isComplementalMinorKey?: boolean; //Am for C, Dm for G, etc.
 }) => {
   const rootCss = useMemo(
     () => makeCssPianoRollBackgroundOctaveBlock(cellW, cellH),
@@ -20,8 +22,12 @@ export const PianoRollBackgroundOctaveBlock = ({
   return (
     <div className="relative" css={rootCss}>
       {seqNumbers(7).map((yi) => {
-        const isTonic = yi === 6;
-        const isDominant = yi === 2;
+        const subIndex = 6 - yi;
+        const [tonicIndex, dominantIndex] = !isComplementalMinorKey
+          ? [0, 4]
+          : [5, 2];
+        const isTonic = subIndex === tonicIndex;
+        const isDominant = subIndex === dominantIndex;
         return (
           <div
             className={clsx(
@@ -33,7 +39,7 @@ export const PianoRollBackgroundOctaveBlock = ({
             {seqNumbers(nx).map((xi) => {
               return (
                 <div className="grid-cell">
-                  <div>{xi % 1 === 0 && (yi === 2 || yi === 6) && "・"}</div>
+                  <div>{xi % 1 === 0 && isTonic && "・"}</div>
                 </div>
               );
             })}
@@ -72,8 +78,8 @@ function makeCssPianoRollBackgroundOctaveBlock(cellW: number, cellH: number) {
       height: ${npx(cellH)};
       border: 0.5px solid #8881;
       color: #8884;
-      font-size: ${npx(12)};
-      padding-left: ${npx(3)};
+      font-size: ${npx(17)};
+      padding-left: ${npx(0)};
     }
 
     & > .overlay-v,

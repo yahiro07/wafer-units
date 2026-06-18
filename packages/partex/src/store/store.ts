@@ -1,5 +1,5 @@
 import { createStore } from "snap-store";
-import { Note, PatternMode } from "@/store/types";
+import { Note, PatternMode, SongKey } from "@/store/types";
 
 function getDefaultNotes() {
   if (0) {
@@ -37,6 +37,7 @@ export const store = createStore<{
   ghostEnabled: boolean;
   realized: boolean;
   backupInputNotes: Note[] | null;
+  songKey: SongKey;
 }>({
   inputNotes: defaultNotes,
   noteDuty: 1,
@@ -50,4 +51,5 @@ export const store = createStore<{
   ghostEnabled: true,
   realized: false,
   backupInputNotes: null,
+  songKey: "Am",
 });

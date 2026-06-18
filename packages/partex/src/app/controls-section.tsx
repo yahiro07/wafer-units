@@ -1,13 +1,22 @@
 import { seqNumbers } from "mofur/ax";
 import {
   Button,
+  createPlainSelectorOptions,
   createSelectorOptions,
   GeneralSelector,
   Knob,
 } from "mofur-components/mono2";
 import { LabeledRow } from "@/components";
 import { store } from "@/store/store";
-import { patternModeOptions } from "@/store/types";
+import { PatternMode, SongKey } from "@/store/types";
+
+export const patternModeOptions = createPlainSelectorOptions<PatternMode>([
+  "slice",
+  "shift",
+  "multiShift",
+]);
+
+export const songKeyOptions = createPlainSelectorOptions<SongKey>(["C", "Am"]);
 
 const octaveShiftOptions = createSelectorOptions(
   seqNumbers(7).map((i) => [i - 3, `${i - 3}`]),
@@ -61,6 +70,13 @@ export const ControlsSection = () => {
       <div className="flex-ha gap-2 justify-between">
         <div>piano-roll</div>
         <div className="flex-ha gap-4 text-sm">
+          <LabeledRow label="key">
+            <GeneralSelector
+              options={songKeyOptions}
+              value={st.songKey}
+              onChange={store.setSongKey}
+            />
+          </LabeledRow>
           <LabeledRow label="oct">
             <GeneralSelector
               options={octaveShiftOptions}
