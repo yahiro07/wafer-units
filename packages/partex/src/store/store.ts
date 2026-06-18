@@ -1,8 +1,9 @@
 import { createStore } from "snap-store";
 import { Note, PatternMode } from "@/store/types";
 
-const defaultNotes: Note[] = 1
-  ? [
+function getDefaultNotes() {
+  if (0) {
+    return [
       { id: 0, position: 0, duration: 2, pitch: 7 },
       { id: 1, position: 2, duration: 2, pitch: 8 },
       { id: 2, position: 4, duration: 2, pitch: 9 },
@@ -10,8 +11,18 @@ const defaultNotes: Note[] = 1
       { id: 4, position: 8, duration: 8, pitch: 11 },
       { id: 5, position: 16, duration: 16, pitch: 5 },
       { id: 6, position: 32, duration: 16, pitch: 14 },
-    ]
-  : [];
+    ];
+  }
+  if (1) {
+    return [
+      { id: 0, position: 0, duration: 2, pitch: 5 },
+      { id: 1, position: 2, duration: 2, pitch: 9 },
+    ];
+  }
+  return [];
+}
+
+const defaultNotes: Note[] = getDefaultNotes();
 
 export const store = createStore<{
   inputNotes: Note[];
@@ -34,7 +45,7 @@ export const store = createStore<{
   draftNote: null,
   loopBars: 2,
   patternBars: 1,
-  patternMode: "slice",
+  patternMode: "shift",
   mappedNotes: [],
   ghostEnabled: true,
   realized: false,
