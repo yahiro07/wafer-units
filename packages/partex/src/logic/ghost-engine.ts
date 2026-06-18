@@ -1,5 +1,41 @@
-import { getSortOrder, linearInterpolate, uniqueArrayItems } from "mofur/ax";
+import {
+  getSortOrder,
+  highClip,
+  linearInterpolate,
+  uniqueArrayItems,
+} from "mofur/ax";
 import { Note, PatternMode } from "@/store/types";
+
+function ceilToPowerOfTwo(x: number): number {
+  return 2 ** Math.ceil(Math.log2(x));
+}
+
+function makeHeadNotesToFillPatternBars(
+  headNotes: Note[],
+  patternBarsSteps: number,
+): Note[] {
+  if (headNotes.length === 0) return [];
+  const lastNote = headNotes[headNotes.length - 1];
+  const tailPos = highClip(
+    lastNote.position + lastNote.duration,
+    patternBarsSteps,
+  );
+  const spanSteps = ceilToPowerOfTwo(tailPos);
+  const spanNum = patternBarsSteps / spanSteps;
+
+  const resNotes: Note[] = [];
+  for (let i = 0; i < spanNum; i++) {
+    const offset = i * spanSteps;
+    for (const note of headNotes) {
+      resNotes.push({
+        ...note,
+        id: 0,
+        position: offset + note.position,
+      });
+    }
+  }
+  return resNotes;
+}
 
 function makePatternNotesRepeated(
   headNotes: Note[],
@@ -13,6 +49,7 @@ function makePatternNotesRepeated(
     for (const note of headNotes) {
       resNotes.push({
         ...note,
+        id: 0,
         position: offset + note.position,
       });
     }
@@ -75,13 +112,23 @@ function generateMappedNotes_sliceOrShift(
     mappedNotes.push({ ...note, noteType: "ghostHead" });
   }
 
+  const headNotesFilled = makeHeadNotesToFillPatternBars(
+    headNotes,
+    patternBarsSteps,
+  );
+  for (const note of headNotesFilled) {
+    if (!mappedNotes.some((it) => it.position === note.position)) {
+      mappedNotes.push({ ...note, noteType: "ghostTails" });
+    }
+  }
+
   const generatorFn = {
     slice: generateNotesSliced,
     shift: generateNotesShifted,
   }[patternMode];
 
   const patternNotes = makePatternNotesRepeated(
-    headNotes,
+    headNotesFilled,
     patternBarsSteps,
     32,
   );
@@ -179,6 +226,7 @@ export function generateMappedNotes(
   const { loopBars, patternBars, patternMode } = configs;
   const patternBarsSteps = patternBars * 16;
   const loopBarsSteps = loopBars * 16;
+
   const headNotes = inputNotes.filter(
     (note) => note.position + note.duration <= patternBarsSteps,
   );
