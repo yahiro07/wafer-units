@@ -10,10 +10,10 @@ import { LabeledRow } from "@/components";
 import { store } from "@/store/store";
 import { PatternMode, SongKey } from "@/store/types";
 
-export const patternModeOptions = createPlainSelectorOptions<PatternMode>([
-  "slice",
-  "shift",
-  "multiShift",
+export const patternModeOptions = createSelectorOptions<PatternMode>([
+  ["slice", "slice"],
+  ["shift", "shift"],
+  ["polyphonicShift", "polyShift"],
 ]);
 
 export const songKeyOptions = createPlainSelectorOptions<SongKey>(["C", "Am"]);

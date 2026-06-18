@@ -174,7 +174,7 @@ function refreshNoteIds(notes: Note[]): Note[] {
   });
 }
 
-function generateMappedNotes_MultiShift(
+function generateMappedNotes_PolyphonicShift(
   headNotes: Note[],
   tailNotes: Note[],
   patternBarsSteps: number,
@@ -249,8 +249,8 @@ export function generateMappedNotes(
       patternBarsSteps,
       patternMode,
     );
-  } else if (patternMode === "multiShift") {
-    return generateMappedNotes_MultiShift(
+  } else if (patternMode === "polyphonicShift") {
+    return generateMappedNotes_PolyphonicShift(
       headNotes,
       tailNotes,
       patternBarsSteps,

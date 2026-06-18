@@ -19,4 +19,4 @@ export type Note = {
 
 export type DraftNote = Note;
 
-export type PatternMode = "slice" | "shift" | "multiShift";
+export type PatternMode = "slice" | "shift" | "polyphonicShift";
