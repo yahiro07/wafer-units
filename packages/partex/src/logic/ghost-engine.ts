@@ -2,6 +2,7 @@ import {
   getSortOrder,
   highClip,
   linearInterpolate,
+  lowClip,
   uniqueArrayItems,
 } from "mofur/ax";
 import { Note, PatternMode } from "@/store/types";
@@ -20,18 +21,13 @@ function makeHeadNotesToFillPatternBars(
     lastNote.position + lastNote.duration,
     patternBarsSteps,
   );
-  const spanSteps = ceilToPowerOfTwo(tailPos);
+  const spanSteps = lowClip(ceilToPowerOfTwo(tailPos), 4);
   const spanNum = patternBarsSteps / spanSteps;
-
   const resNotes: Note[] = [];
   for (let i = 0; i < spanNum; i++) {
     const offset = i * spanSteps;
     for (const note of headNotes) {
-      resNotes.push({
-        ...note,
-        id: 0,
-        position: offset + note.position,
-      });
+      resNotes.push({ ...note, id: 0, position: offset + note.position });
     }
   }
   return resNotes;
