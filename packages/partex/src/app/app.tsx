@@ -3,21 +3,11 @@ import { useEffect } from "react";
 import { generateMappedNotes } from "@/logic/ghost-engine";
 import { sequencer, unitInterface } from "@/logic/sequencer";
 import { store } from "@/store/store";
-import { Note } from "@/store/types";
 import { BottomBar } from "./bottom-bar";
 import { ControlsSection } from "./controls-section";
 import { PianoRollEditorView } from "./piano-roll-editor-view";
 
 function setupSynchronization() {
-  function affectNotes(notes: Note[]) {
-    const stepNotes = notes.map((note) => ({
-      pitch: note.pitch,
-      position: note.position,
-      duration: note.duration,
-    }));
-    sequencer.setStepNotes(stepNotes);
-  }
-  affectNotes(store.state.inputNotes);
   sequencer.setAttrs({
     octaveShift: store.state.octaveShift,
     noteDuty: store.state.noteDuty,
@@ -25,8 +15,9 @@ function setupSynchronization() {
   });
 
   const unsubscribeStore = store.subscribe((attrs) => {
+    //ui states are affected to sequencer in reactive way
     if (attrs.mappedNotes) {
-      affectNotes(attrs.mappedNotes);
+      sequencer.setStepNotes(attrs.mappedNotes);
     }
     if (
       attrs.noteDuty !== undefined ||
@@ -73,6 +64,20 @@ function setupSynchronization() {
         });
       },
       applyState(state) {
+        //to support state swapping at bar boundary while playing,
+        //generated mapped notes here and affect it to sequencer in advance
+        const { inputNotes, loopBars, patternBars, ghostEnabled, patternMode } =
+          state;
+        const mappedNotes = ghostEnabled
+          ? generateMappedNotes(inputNotes, {
+              loopBars,
+              patternBars,
+              patternMode,
+            })
+          : inputNotes;
+        sequencer.setStepNotes(mappedNotes);
+
+        //this also triggers mapped notes generation but it's asynchronous and delayed
         store.setState(state);
       },
     },
@@ -85,6 +90,7 @@ function useGenerateMappedNotes() {
   const { inputNotes, loopBars, patternBars, ghostEnabled, patternMode } =
     store.useSnapshot();
   useEffect(() => {
+    //usually mapped notes are generated when user edits notes or options
     const mappedNotes = ghostEnabled
       ? generateMappedNotes(inputNotes, { loopBars, patternBars, patternMode })
       : inputNotes;
