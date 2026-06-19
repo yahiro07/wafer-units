@@ -14,17 +14,20 @@ const defaultNotes: Note[] = 0
   : [];
 
 export const store = createStore<{
+  //persisted
   notes: Note[];
   noteDuty: number;
   octaveShift: number;
+  loopBars: number;
+  //temporal
   currentPageIndex: number;
   draftNote: Note | null;
-  loopBars: number;
 }>({
   notes: defaultNotes,
   noteDuty: 1,
   octaveShift: 0,
+  loopBars: 1,
+  //
   currentPageIndex: 0,
   draftNote: null,
-  loopBars: 1,
 });
