@@ -9,11 +9,11 @@ import { store } from "@/store/store";
 import { Note } from "@/store/types";
 
 const configs = {
-  cellW: 20,
-  cellH: 32,
+  cellW: 16,
+  cellH: 20,
   nx: 32,
   numOctaves: 3,
-  scrollPartHeight: 320,
+  scrollPartHeight: 240,
 };
 
 const editActions = {

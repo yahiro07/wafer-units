@@ -66,34 +66,10 @@ const controlActions = {
 export const ControlsSection = () => {
   const st = store.useSnapshot();
   return (
-    <div className="flex-v">
+    <div className="flex-v gap-2">
       <div className="flex-ha gap-2 justify-between">
-        <div>piano-roll</div>
+        <div>partex</div>
         <div className="flex-ha gap-4 text-sm">
-          <LabeledRow label="key">
-            <GeneralSelector
-              options={songKeyOptions}
-              value={st.songKey}
-              onChange={store.setSongKey}
-            />
-          </LabeledRow>
-          <LabeledRow label="oct">
-            <GeneralSelector
-              options={octaveShiftOptions}
-              value={st.octaveShift}
-              onChange={store.setOctaveShift}
-              reverseOptionsOrder
-            />
-          </LabeledRow>
-          <LabeledRow label="duty">
-            <Knob
-              value={st.noteDuty}
-              min={0}
-              max={1}
-              step={0.01}
-              onChange={store.setNoteDuty}
-            />
-          </LabeledRow>
           <LabeledRow label="pt_mode">
             <GeneralSelector
               options={patternModeOptions}
@@ -118,6 +94,31 @@ export const ControlsSection = () => {
         </div>
       </div>
       <div className="flex-ha gap-4">
+        <LabeledRow label="key">
+          <GeneralSelector
+            options={songKeyOptions}
+            value={st.songKey}
+            onChange={store.setSongKey}
+          />
+        </LabeledRow>
+        <LabeledRow label="oct">
+          <GeneralSelector
+            options={octaveShiftOptions}
+            value={st.octaveShift}
+            onChange={store.setOctaveShift}
+            reverseOptionsOrder
+          />
+        </LabeledRow>
+        <LabeledRow label="duty">
+          <Knob
+            value={st.noteDuty}
+            min={0}
+            max={1}
+            step={0.01}
+            onChange={store.setNoteDuty}
+          />
+        </LabeledRow>
+
         <div className="grow" />
         {!st.realized && (
           <>

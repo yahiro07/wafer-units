@@ -112,8 +112,8 @@ export const App = () => {
   useGenerateMappedNotes();
   return (
     <div className="bg-white">
-      <div className="w-[800px] h-[500px] border border-cyan-600 bg-blue-100/20 flex-c">
-        <div className="flex-v gap-2">
+      <div className="w-[620px] h-[380px] border border-cyan-600 bg-blue-100/20 flex-c">
+        <div className="flex-vc gap-2">
           <ControlsSection />
           <PianoRollEditorView />
           <BottomBar />
