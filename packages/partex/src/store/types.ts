@@ -1,4 +1,4 @@
-export type SongKey = "Am" | "C" | "Dm" | "Em" | "F" | "G" | "B";
+export type SongKey = "Am" | "C"; //| "Dm" | "Em" | "F" | "G" | "B";
 
 export type DynamicPatternInput = {
   key?: SongKey; //"C", "Am", etc.

@@ -1,5 +1,9 @@
 import { pickObjectMembers } from "mofur/ax";
 import { useEffect } from "react";
+import {
+  deserializePersistState,
+  serializePersistState,
+} from "@/app/serializer";
 import { generateMappedNotes } from "@/logic/ghost-engine";
 import { sequencer, unitInterface } from "@/logic/sequencer";
 import { store } from "@/store/store";
@@ -50,8 +54,8 @@ function setupSynchronization() {
       },
     },
     persistence: {
-      emitState() {
-        return pickObjectMembers(store.state, {
+      emitStateBytes() {
+        const state = pickObjectMembers(store.state, {
           inputNotes: 1,
           noteDuty: 1,
           octaveShift: 1,
@@ -62,8 +66,12 @@ function setupSynchronization() {
           realized: 1,
           songKey: 1,
         });
+        return serializePersistState(state);
       },
-      applyState(state) {
+      applyStateBytes(bytes) {
+        const state = deserializePersistState(bytes);
+        // console.log(`applyStateBytes`, bytes, state);
+        if (!state) return;
         //to support state swapping at bar boundary while playing,
         //generated mapped notes here and affect it to sequencer in advance
         const { inputNotes, loopBars, patternBars, ghostEnabled, patternMode } =

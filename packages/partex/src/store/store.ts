@@ -24,7 +24,7 @@ function getDefaultNotes() {
 
 const defaultNotes: Note[] = getDefaultNotes();
 
-export const store = createStore<{
+type StoreState = {
   //persisted
   inputNotes: Note[];
   noteDuty: number;
@@ -40,7 +40,21 @@ export const store = createStore<{
   draftNote: Note | null;
   mappedNotes: Note[];
   backupInputNotes: Note[] | null;
-}>({
+};
+
+export type PersistState = {
+  inputNotes: Note[];
+  noteDuty: number;
+  octaveShift: number;
+  loopBars: number;
+  patternBars: number;
+  patternMode: PatternMode;
+  ghostEnabled: boolean;
+  realized: boolean;
+  songKey: SongKey;
+};
+
+export const store = createStore<StoreState>({
   inputNotes: defaultNotes,
   noteDuty: 1,
   octaveShift: 0,
