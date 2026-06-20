@@ -1,4 +1,5 @@
 import { applyGlobalStyle, asyncRerender, jsx, render } from "alumina";
+import { setupUnit } from "@/periphery/setupUnit";
 import { appConfig } from "./base";
 import { debounce, preventDefaultHandler } from "./funcs";
 import { appStatePersistence, appStore } from "./store";
@@ -8,9 +9,12 @@ async function start() {
   console.log(`wavicle ${appConfig.versionCode}`);
 
   await appStore.initialize();
+
   appStatePersistence.load();
   applyGlobalStyle(cssGlobalStyle);
   render(() => <PageRoot />, document.getElementById("app"));
+
+  setupUnit();
 
   const { activateWebAudioOnUserAction } = appStore.synthEngine;
   window.addEventListener("pointerdown", activateWebAudioOnUserAction);
