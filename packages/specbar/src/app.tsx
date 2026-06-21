@@ -1,8 +1,8 @@
-import { mapKnobGainDb } from "mofur/mo-audio";
 import { ScalerBoxAutoSized } from "mofur/mo-react";
 import { createStore } from "snap-store";
 import { UnitInterface } from "wafer-host/unit-types";
 import { Knob } from "@/components/knob";
+import { mapKnobCurveCenterUnity } from "@/curve";
 import { setupDummyHost } from "@/dummy-host";
 import { BasicSpectrumView } from "@/organisms/basic-spectrum-view";
 import { SegmentedSpectrumView } from "@/organisms/segmented-spectrum-view";
@@ -57,7 +57,7 @@ export function createApp(unitInterface: UnitInterface) {
     analyzer.connect(unitInterface.audioOutputNode);
 
     function updateGain(level: number) {
-      gainNode.gain.value = mapKnobGainDb(level, 0.5);
+      gainNode.gain.value = mapKnobCurveCenterUnity(level);
     }
 
     updateGain(store.state.level);
