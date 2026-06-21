@@ -76,13 +76,14 @@ export function createApp(unitInterface: UnitInterface) {
       },
       persistence: {
         emitStateBytes() {
-          const dm = store.state.displayMode;
-          return new Uint8Array([dm]);
+          const { displayMode: dm, level } = store.state;
+          return new Uint8Array([dm, Math.round(level * 255)]);
         },
         applyStateBytes(bytes) {
-          if (bytes.length === 1) {
+          if (bytes.length === 2) {
             const dm = bytes[0] > 0 ? 1 : 0;
-            store.setDisplayMode(dm);
+            const level = bytes[1] / 255;
+            store.assign({ displayMode: dm, level });
           }
         },
       },
