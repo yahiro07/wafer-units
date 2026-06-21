@@ -14,6 +14,6 @@
     "typescript": "~6.0.3",
     "vite": "^8.0.12",
     "vite-plugin-solid": "^2.11.12",
-    "wafer-host": "^0.0.2"
+    "wafer-host": "link:../wafer/wafer"
   }
 }

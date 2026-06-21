@@ -1,50 +1,42 @@
 import { mapKnobGainDb } from "mofur/mo-audio";
 import { ScalerBoxAutoSized } from "mofur/mo-react";
 import { createStore } from "snap-store";
-import {
-  queryUnitInterfaceForModule,
-  UnitInterface,
-} from "wafer-host/unit-types";
+import { UnitInterface } from "wafer-host/unit-types";
 import { Knob } from "@/components/knob";
 import { setupDummyHost } from "@/dummy-host";
 import { BasicSpectrumView } from "@/organisms/basic-spectrum-view";
 import { SegmentedSpectrumView } from "@/organisms/segmented-spectrum-view";
 
-const configs = {
-  debug: false,
-};
-// configs.debug = true;
+export function createApp(unitInterface: UnitInterface) {
+  const configs = {
+    debug: false,
+  };
+  // configs.debug = true;
 
-const dummyHost = configs.debug ? setupDummyHost() : undefined;
+  const dummyHost = configs.debug ? setupDummyHost() : undefined;
 
-const store = createStore<{
-  fftData: Float32Array | undefined;
-  sampleRate: number;
-  level: number;
-  displayMode: number;
-}>({
-  fftData: undefined,
-  sampleRate: 0,
-  level: 0.5,
-  displayMode: 1,
-});
+  const store = createStore<{
+    fftData: Float32Array | undefined;
+    sampleRate: number;
+    level: number;
+    displayMode: number;
+  }>({
+    fftData: undefined,
+    sampleRate: 0,
+    level: 0.5,
+    displayMode: 1,
+  });
 
-const actions = {
-  setLevel(value: number) {
-    store.setLevel(value);
-  },
-  shiftDisplayMode() {
-    store.setDisplayMode((prev) => (prev + 1) % 2);
-  },
-};
+  const actions = {
+    setLevel(value: number) {
+      store.setLevel(value);
+    },
+    shiftDisplayMode() {
+      store.setDisplayMode((prev) => (prev + 1) % 2);
+    },
+  };
 
-function setupUnitInstance() {
-  const unitInterface = queryUnitInterfaceForModule(
-    "wafer-v01",
-    import.meta.url,
-  ) as UnitInterface;
-
-  if (unitInterface) {
+  function setupUnitInstance() {
     const audioContext = unitInterface.audioContext;
     store.setSampleRate(audioContext.sampleRate);
     const analyzer = audioContext.createAnalyser();
@@ -96,59 +88,61 @@ function setupUnitInstance() {
       },
     });
   }
-}
-setupUnitInstance();
+  setupUnitInstance();
 
-const PanelRoot = () => {
-  const { level, fftData, displayMode } = store.useSnapshot();
-  return (
-    <div className="w-[350px] h-[55px]">
-      <div className="@container w-full h-full flex-c bg-black">
-        <div
-          className="grow flex-c h-full max-h-[33cqw] px-4 py-2"
-          onClick={actions.shiftDisplayMode}
-        >
-          <div className="w-full max-w-[400px] h-full">
-            {displayMode === 0 && fftData && (
-              <BasicSpectrumView fftData={fftData} />
-            )}
-            {displayMode === 1 && fftData && (
-              <SegmentedSpectrumView
-                nx={16}
-                ny={10}
-                gapX={1}
-                gapY={1.5}
-                fftData={fftData}
-              />
-            )}
+  const PanelRoot = () => {
+    const { level, fftData, displayMode } = store.useSnapshot();
+    return (
+      <div className="w-[350px] h-[55px]">
+        <div className="@container w-full h-full flex-c bg-black">
+          <div
+            className="grow flex-c h-full max-h-[33cqw] px-4 py-2"
+            onClick={actions.shiftDisplayMode}
+          >
+            <div className="w-full max-w-[400px] h-full">
+              {displayMode === 0 && fftData && (
+                <BasicSpectrumView fftData={fftData} />
+              )}
+              {displayMode === 1 && fftData && (
+                <SegmentedSpectrumView
+                  nx={16}
+                  ny={10}
+                  gapX={1}
+                  gapY={1.5}
+                  fftData={fftData}
+                />
+              )}
+            </div>
+          </div>
+          <div className="w-[19%] h-full flex-c bg-[#333] border border-[#fff2]">
+            <ScalerBoxAutoSized>
+              <div className="w-[50px] h-[50px] flex-c">
+                <Knob value={level} onChange={actions.setLevel} />
+              </div>
+            </ScalerBoxAutoSized>
           </div>
         </div>
-        <div className="w-[19%] h-full flex-c bg-[#333] border border-[#fff2]">
-          <ScalerBoxAutoSized>
-            <div className="w-[50px] h-[50px] flex-c">
-              <Knob value={level} onChange={actions.setLevel} />
-            </div>
-          </ScalerBoxAutoSized>
+      </div>
+    );
+  };
+
+  const DevelopmentView = () => {
+    return (
+      <div className="flex-vc gap-8">
+        <div className="w-[700px] h-[110px] border border-[#fff2]">
+          <PanelRoot />
         </div>
+        <div className="w-[400px] h-[250px] border border-[#fff2]">
+          <PanelRoot />
+        </div>
+        {dummyHost && <dummyHost.ControlComponent />}
       </div>
-    </div>
-  );
-};
+    );
+  };
 
-const DevelopmentView = () => {
-  return (
-    <div className="flex-vc gap-8">
-      <div className="w-[700px] h-[110px] border border-[#fff2]">
-        <PanelRoot />
-      </div>
-      <div className="w-[400px] h-[250px] border border-[#fff2]">
-        <PanelRoot />
-      </div>
-      {dummyHost && <dummyHost.ControlComponent />}
-    </div>
-  );
-};
+  const App = () => {
+    return configs.debug ? <DevelopmentView /> : <PanelRoot />;
+  };
 
-export const App = () => {
-  return configs.debug ? <DevelopmentView /> : <PanelRoot />;
-};
+  return { App };
+}
