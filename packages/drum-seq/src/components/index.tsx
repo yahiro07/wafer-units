@@ -119,8 +119,19 @@ export const PieceNameBox = ({ pieceName }: { pieceName: string }) => {
   );
 };
 
-export const PieceOperationButton = () => {
-  return <div className={clsx("w-8 h-8", uiClasses.bgPieceOperationButton)} />;
+export const PieceOperationButton = ({ children }: { children: ReactNode }) => {
+  return (
+    <div
+      className={clsx(
+        "w-8 h-8 flex-c text-white text-lg",
+        uiClasses.bgPieceOperationButton,
+        uiClasses.borderCommon,
+        uiClasses.roundedFew,
+      )}
+    >
+      {children}
+    </div>
+  );
 };
 
 export const PieceIndicator = ({ active }: { active: boolean }) => {

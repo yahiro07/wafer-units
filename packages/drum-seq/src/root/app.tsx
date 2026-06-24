@@ -6,9 +6,11 @@ import {
   PieceActiveButton,
   PieceIndicator,
   PieceNameBox,
+  PieceOperationButton,
   PieceRowFrame,
   StepButton,
 } from "@/components";
+import { Icons } from "@/common/icons";
 
 function getRandomBoolean(th = 0.5) {
   return Math.random() < th;
@@ -23,7 +25,9 @@ const PieceHeadPart = ({ pieceName }: { pieceName: string }) => {
         <Knob value={0.5} onChange={() => {}} />
       </div>
       <PieceNameBox pieceName={pieceName} />
-      {/* <PieceOperationButton /> */}
+      <PieceOperationButton>
+        <Icons.Swap />
+      </PieceOperationButton>
       <PieceIndicator active={getRandomBoolean()} />
     </div>
   );
