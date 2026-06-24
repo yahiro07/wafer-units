@@ -112,18 +112,25 @@ export const Knob = ({
   );
 };
 
-export const PieceNameBox = ({ pieceName }: { pieceName: string }) => {
+export const PieceNameBox = ({
+  pieceName,
+  onClick,
+}: {
+  pieceName: string;
+  onClick?: () => void;
+}) => {
   return (
-    <div
+    <button
       className={clsx(
         "w-[75px] h-8",
         "flex-ha",
         "overflow-hidden text-ellipsis whitespace-nowrap",
         "text-white font-bold text-sm",
       )}
+      onClick={onClick}
     >
       {pieceName}
-    </div>
+    </button>
   );
 };
 

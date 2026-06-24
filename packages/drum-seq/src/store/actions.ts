@@ -7,6 +7,7 @@ export type Actions = {
   start(): void;
   processStep(stepIndex: number, time: number): void;
   stop(): void;
+  previewPiece(id: string): void;
 };
 
 export function createActions(
@@ -31,6 +32,9 @@ export function createActions(
     stop() {
       sequencer.stop();
       store.setStepPosition(-1);
+    },
+    previewPiece(id: string) {
+      sequencer.previewPiece(id);
     },
   };
 }

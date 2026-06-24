@@ -10,6 +10,7 @@ export type DrumSequencer = {
   start(): void;
   stop(): void;
   processStep(stepIndex: number, time: number): void;
+  previewPiece(id: string): void;
 };
 
 export function createDrumSequencer(
@@ -49,6 +50,20 @@ export function createDrumSequencer(
             tonePlayer.playTone(uri, time, piece.pitch, piece.volume);
           }
         }
+      }
+    },
+    async previewPiece(id: string) {
+      const piece = state.pieces.find((piece) => piece.id === id);
+      if (piece) {
+        await tonePlayer.preloadTone(
+          pieceSampleUrls[piece.id][piece.variationIndex],
+        );
+        tonePlayer.playTone(
+          pieceSampleUrls[piece.id][piece.variationIndex],
+          0,
+          piece.pitch,
+          piece.volume,
+        );
       }
     },
   };

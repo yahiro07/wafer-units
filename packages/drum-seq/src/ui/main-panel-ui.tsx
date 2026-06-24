@@ -42,6 +42,9 @@ const PieceHeadPart = ({
         (piece.variationIndex + 1 + numVariations) % numVariations;
       actions.patchPiece(piece.id, { variationIndex: nextIndex });
     },
+    previewPiece() {
+      actions.previewPiece(piece.id);
+    },
   };
   return (
     <div className="flex-ha gap-3 px-1">
@@ -53,7 +56,7 @@ const PieceHeadPart = ({
         <Knob value={piece.volume} onChange={handlers.setVolume} />
         <Knob value={piece.pitch} onChange={handlers.setPitch} />
       </div>
-      <PieceNameBox pieceName={pieceName} />
+      <PieceNameBox pieceName={pieceName} onClick={handlers.previewPiece} />
       <PieceOperationButton
         coverContent={
           <PieceAssignIndexLabel label={piece.variationIndex.toString()} />
