@@ -8,7 +8,7 @@ import {
   PieceNameBox,
   PieceRowFrame,
   StepButton,
-} from "@/components/tw";
+} from "@/components";
 
 const PieceHeadPart = ({ pieceName }: { pieceName: string }) => {
   return (
