@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import { useEffect, useState } from "react";
-import { useAppContext } from "@/root/app-context";
+import { useAppContext } from "@/store/app-context";
 
 export const DebugUi = () => {
   const { actions } = useAppContext();

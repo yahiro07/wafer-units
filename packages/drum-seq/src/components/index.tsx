@@ -2,8 +2,8 @@ import clsx from "clsx";
 import { linearInterpolate } from "mofur/ax";
 import { KnobFrame } from "mofur/mo-react";
 import { ReactNode } from "react";
-import { camelToKebab } from "@/common/casing-helper";
-import { colorMod } from "@/common/color-mod";
+import { camelToKebab } from "@/utils/casing-helper";
+import { colorMod } from "@/utils/color-mod";
 
 const colors = {
   clPanelBg: colorMod("#445060", "v-3 s-5"),

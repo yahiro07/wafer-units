@@ -1,8 +1,8 @@
 import { UnitInterface } from "wafer-host/unit-types";
-import { isBitSet } from "@/common/bit-operation-helper";
-import { pieceSampleUrls } from "@/root/constants";
-import { createTonePlayer } from "@/root/tone-player";
-import { PieceItem } from "@/root/type";
+import { createTonePlayer } from "@/audio/tone-player";
+import { pieceSampleUrls } from "@/base/constants";
+import { PieceItem } from "@/base/type";
+import { isBitSet } from "@/utils/bit-operation-helper";
 
 export type DrumSequencer = {
   patchPiece(id: string, attrs: Partial<PieceItem>): void;
@@ -25,6 +25,7 @@ export function createDrumSequencer(
       const piece = state.pieces.find((piece) => piece.id === id);
       if (piece) {
         Object.assign(piece, attrs);
+        tonePlayer.preloadTone(pieceSampleUrls[piece.id][piece.variationIndex]);
       }
     },
     start() {},

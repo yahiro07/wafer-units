@@ -1,6 +1,6 @@
 import { createStore, Store } from "snap-store";
-import { defaultPieces } from "@/root/constants";
-import { PieceItem } from "@/root/type";
+import { defaultPieces } from "@/base/constants";
+import { PieceItem } from "@/base/type";
 
 type StorState = {
   pieces: PieceItem[];

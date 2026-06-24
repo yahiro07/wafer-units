@@ -1,7 +1,7 @@
 import cssText2 from "mofur/ax-ui/utility-classes.css?inline";
 import { render } from "preact";
 import { createCustomElementSharableClass } from "wafer-host/unit-helper";
-import { createApp } from "@/root/app";
+import { createApp } from "@/ui/app";
 import cssText from "./page.css?inline";
 
 const webFontUrl =

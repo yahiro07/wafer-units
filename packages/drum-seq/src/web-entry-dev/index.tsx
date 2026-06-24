@@ -1,6 +1,6 @@
 import "mofur/ax-ui/utility-classes.css";
 import { render } from "preact";
-import { createApp } from "../root/app";
+import { createApp } from "../ui/app";
 import "./page.css";
 import { queryUnitInterface } from "wafer-host/unit-types";
 

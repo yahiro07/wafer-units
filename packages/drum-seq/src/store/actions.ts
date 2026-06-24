@@ -1,6 +1,6 @@
-import { DrumSequencer } from "@/root/drum-sequencer";
-import { AppStore } from "@/root/store";
-import { PieceItem } from "@/root/type";
+import { DrumSequencer } from "@/audio/drum-sequencer";
+import { PieceItem } from "@/base/type";
+import { AppStore } from "@/store/store";
 
 export type Actions = {
   patchPiece(id: string, attrs: Partial<PieceItem>): void;

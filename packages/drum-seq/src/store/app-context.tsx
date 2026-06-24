@@ -1,6 +1,6 @@
 import { createContext, ReactNode, useContext } from "react";
-import { Actions } from "@/root/actions";
-import { AppStore } from "@/root/store";
+import { Actions } from "@/store/actions";
+import { AppStore } from "@/store/store";
 
 export const AppContext = createContext<{
   store: AppStore;

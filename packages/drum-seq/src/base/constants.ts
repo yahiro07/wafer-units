@@ -1,4 +1,4 @@
-import { PieceId, PieceItem } from "@/root/type";
+import { PieceId, PieceItem } from "@/base/type";
 
 const pieceIds: PieceId[] = ["kick", "snare", "opHat", "clHat", "clap"];
 
@@ -16,7 +16,7 @@ export const defaultPieces: PieceItem[] = pieceIds.map((id) => ({
   active: true,
   pitch: 0.5,
   volume: 0.5,
-  patternBits: 0,
+  patternBits: id === "kick" ? (1 << 0) | (1 << 4) | (1 << 8) | (1 << 12) : 0,
 }));
 
 export const pieceDisplayNames: Record<PieceId, string> = {

@@ -1,15 +1,13 @@
 import { UnitInterface } from "wafer-host/unit-types";
-import { appConfig } from "@/common/app-config";
+import { createDrumSequencer } from "@/audio/drum-sequencer";
+import { appConfig } from "@/base/app-config";
+import { defaultPieces } from "@/base/constants";
 import { CssVariablesFrame } from "@/components";
-import { createActions } from "@/root/actions";
-import { AppProvider } from "@/root/app-context";
-import { defaultPieces } from "@/root/constants";
-import { DebugUi } from "@/root/debug-ui";
-import { createDrumSequencer } from "@/root/drum-sequencer";
-import { MainPanelUi } from "@/root/main-panel-ui";
-import { createAppStore } from "@/root/store";
-
-// const unitInterface = queryUnitInterface("wafer-v01");
+import { createActions } from "@/store/actions";
+import { AppProvider } from "@/store/app-context";
+import { createAppStore } from "@/store/store";
+import { DebugUi } from "@/ui/debug-ui";
+import { MainPanelUi } from "@/ui/main-panel-ui";
 
 export function createApp(unitInterface: UnitInterface | undefined) {
   const sequencer = createDrumSequencer(unitInterface, defaultPieces);

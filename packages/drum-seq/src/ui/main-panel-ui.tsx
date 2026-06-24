@@ -1,7 +1,8 @@
 import { seqNumbers } from "mofur/ax";
 import { ReactNode } from "react";
-import { isBitSet, toggleBit } from "@/common/bit-operation-helper";
-import { Icons } from "@/common/icons";
+import { pieceDisplayNames, pieceSampleUrls } from "@/base/constants";
+import { Icons } from "@/base/icons";
+import { PieceItem } from "@/base/type";
 import {
   Knob,
   PanelFrame,
@@ -13,9 +14,8 @@ import {
   PieceRowFrame,
   StepButton,
 } from "@/components";
-import { useAppContext } from "@/root/app-context";
-import { pieceDisplayNames, pieceSampleUrls } from "@/root/constants";
-import { PieceItem } from "@/root/type";
+import { useAppContext } from "@/store/app-context";
+import { isBitSet, toggleBit } from "@/utils/bit-operation-helper";
 
 const PieceHeadPart = ({
   piece,
