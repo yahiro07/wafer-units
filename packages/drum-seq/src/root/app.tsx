@@ -12,7 +12,7 @@ import {
 
 const PieceHeadPart = ({ pieceName }: { pieceName: string }) => {
   return (
-    <div className="flex-ha gap-2">
+    <div className="flex-ha gap-2 px-1">
       <Knob />
       <Knob />
       <PieceNameBox pieceName={pieceName} />
@@ -23,12 +23,12 @@ const PieceHeadPart = ({ pieceName }: { pieceName: string }) => {
 };
 const PieceBodyPart = () => {
   return (
-    <div className="flex-ha gap-4 px-2">
+    <div className="flex-ha gap-4 px-3">
       {seqNumbers(4).map((i) => {
         return (
           <div className="flex-ha gap-2">
             {seqNumbers(4).map((j) => (
-              <StepButton key={i + j} />
+              <StepButton key={i + j} altColor={i % 2 === 1} />
             ))}
           </div>
         );
