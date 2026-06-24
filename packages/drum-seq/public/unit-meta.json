@@ -1,0 +1,12 @@
+{
+  "name": "drum-seq",
+  "unitType": "instrument",
+  "preferredSize": "600,300",
+  "outputSignalTypes": "note",
+  "protocol": "wafer-v01",
+  "unitTypesVersion": "0.0.1",
+  "integrationFormat": "webComponents",
+  "repositoryUrl": "https://github.com/yahiro07/wus-units",
+  "author": "yahiro",
+  "license": "MIT"
+}
