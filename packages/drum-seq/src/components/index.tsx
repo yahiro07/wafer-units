@@ -19,6 +19,7 @@ const colors = {
   clKnobTickBg: colorMod("#fff"),
   clIndicatorActive: colorMod("#8e6", "a90"),
   clIndicatorActiveAlt: colorMod("#fff", "a70"),
+  clStepIndicator: colorMod("#333", "a60"),
 };
 
 export const CssVariablesFrame = ({ children }: { children: ReactNode }) => {
@@ -36,6 +37,7 @@ const cssVariablesCss = css(
 
 const uiClasses = {
   borderCommon: "border border-black/40",
+  roundedFew: "rounded-[2px]",
   bgPanel: "bg-(--cl-panel-bg)",
   bgHeadPart: "bg-(--cl-head-part-bg)",
   bgBodyPart: "bg-(--cl-body-part-bg)",
@@ -48,14 +50,14 @@ const uiClasses = {
   bgKnobTick: "bg-(--cl-knob-tick-bg)",
   bgIndicatorActive: "bg-(--cl-indicator-active)",
   bgIndicatorActiveAlt: "bg-(--cl-indicator-active-alt)",
-  roundedFew: "rounded-[2px]",
+  bgStepIndicator: "bg-(--cl-step-indicator)",
 };
 
 //----------
 
 export const PieceActiveButton = ({ active }: { active: boolean }) => {
   return (
-    <div className={clsx("w-8 h-8", "flex-c")}>
+    <button className={clsx("w-8 h-8", "flex-c", "cursor-pointer")}>
       <div
         className={clsx(
           "w-6 h-6",
@@ -66,7 +68,7 @@ export const PieceActiveButton = ({ active }: { active: boolean }) => {
           uiClasses.roundedFew,
         )}
       />
-    </div>
+    </button>
   );
 };
 
@@ -121,16 +123,17 @@ export const PieceNameBox = ({ pieceName }: { pieceName: string }) => {
 
 export const PieceOperationButton = ({ children }: { children: ReactNode }) => {
   return (
-    <div
+    <button
       className={clsx(
         "w-8 h-8 flex-c text-white text-lg",
+        "cursor-pointer",
         uiClasses.bgPieceOperationButton,
         uiClasses.borderCommon,
         uiClasses.roundedFew,
       )}
     >
       {children}
-    </div>
+    </button>
   );
 };
 
@@ -160,7 +163,7 @@ export const StepButton = ({
   return (
     <div
       className={clsx(
-        "w-5.5 h-8 relative flex-va",
+        "w-5.5 h-8 relative flex-va cursor-pointer",
         "overflow-hidden",
         uiClasses.roundedFew,
         altColor ? uiClasses.bgStepButtonAlt : uiClasses.bgStepButton,
@@ -169,9 +172,9 @@ export const StepButton = ({
     >
       <div
         className={clsx(
-          "w-3 h-1 mt-[3px]",
-          uiClasses.borderCommon,
-          lightOn && uiClasses.bgIndicatorActive,
+          "w-[11px] h-[3.5px] mt-[4px]",
+          lightOn ? uiClasses.bgIndicatorActive : uiClasses.bgStepIndicator,
+          "border-[0.5px] border-black/20",
           "rounded-[1px]",
         )}
       />
