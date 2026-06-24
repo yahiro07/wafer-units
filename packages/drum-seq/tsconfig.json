@@ -6,7 +6,6 @@
     "lib": ["esnext", "dom", "dom.iterable"],
     "types": ["vite/client"],
     "jsx": "react-jsx",
-    "jsxImportSource": "@emotion/react",
     "strict": true,
     "noEmit": true,
     "skipLibCheck": true,

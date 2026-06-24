@@ -12,10 +12,7 @@ const preactPaths = {
 
 const configCommon: UserConfig = {
   base: "./",
-  plugins: [
-    preact({ reactAliasesEnabled: false, jsxImportSource: "@emotion/react" }),
-    tailwindcss(),
-  ],
+  plugins: [preact({ reactAliasesEnabled: false }), tailwindcss()],
   resolve: {
     tsconfigPaths: true,
     alias: [

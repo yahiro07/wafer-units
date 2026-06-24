@@ -1,7 +1,7 @@
 {
   "name": "drum-seq",
   "unitType": "instrument",
-  "preferredSize": "600,300",
+  "preferredSize": "840,360",
   "outputSignalTypes": "note",
   "protocol": "wafer-v01",
   "unitTypesVersion": "0.0.1",

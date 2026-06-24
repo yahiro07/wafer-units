@@ -1,4 +1,3 @@
-import { css } from "@emotion/react";
 import clsx from "clsx";
 import { linearInterpolate } from "mofur/ax";
 import { KnobFrame } from "mofur/mo-react";
@@ -22,18 +21,16 @@ const colors = {
   clStepIndicator: colorMod("#333", "a60"),
 };
 
-export const CssVariablesFrame = ({ children }: { children: ReactNode }) => {
-  return <div css={cssVariablesCss}>{children}</div>;
-};
-
-const cssVariablesCss = css(
-  Object.fromEntries(
-    Object.entries(colors).map(([key, value]) => [
-      `--${camelToKebab(key)}`,
-      value,
-    ]),
-  ),
+const cssVariablesCss = Object.fromEntries(
+  Object.entries(colors).map(([key, value]) => [
+    `--${camelToKebab(key)}`,
+    value,
+  ]),
 );
+
+export const CssVariablesFrame = ({ children }: { children: ReactNode }) => {
+  return <div style={cssVariablesCss}>{children}</div>;
+};
 
 const uiClasses = {
   borderCommon: "border border-black/40",
