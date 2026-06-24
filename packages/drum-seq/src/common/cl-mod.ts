@@ -6,7 +6,11 @@
 //example: colorMod('#ff0000', 'h120')
 //output: #RRGGBBAA
 
-type Op = { type: "h" | "v" | "l" | "s" | "a"; relative: boolean; amount: number };
+type Op = {
+  type: "h" | "v" | "l" | "s" | "a";
+  relative: boolean;
+  amount: number;
+};
 type ColorSpace = "hsv" | "hsl";
 
 function parseColor(color: string): { r: number; g: number; b: number } {
@@ -208,7 +212,7 @@ function toHexByte(n: number): string {
     .toUpperCase();
 }
 
-export function colorMod(color: string, spec: string): string {
+export function colorMod(color: string, spec: string = ""): string {
   let { r, g, b } = parseColor(color);
   let a = 255;
   let space: ColorSpace = "hsv";

@@ -1,5 +1,7 @@
 import { css } from "@emotion/react";
 import clsx from "clsx";
+import { linearInterpolate } from "mofur/ax";
+import { KnobFrame } from "mofur/mo-react";
 import { ReactNode } from "react";
 import { colorMod } from "@/common/cl-mod";
 
@@ -16,6 +18,7 @@ const cssVariablesCss = css({
   "--cl-piece-indicator-bg": colorMod("#666", "v-12"),
   "--cl-piece-operation-button-bg": colorMod("#445", "h-20 s-8 v+5"),
   "--cl-piece-active-button-bg": colorMod("#445", "h-20 s-8 v+5"),
+  "--cl-knob-tick-bg": colorMod("#fff"),
 });
 
 //----------
@@ -28,8 +31,36 @@ export const PieceActiveButton = () => {
   );
 };
 
-export const Knob = () => {
-  return <div className={clsx("w-8 h-8", "bg-(--cl-knob-bg) rounded-full")} />;
+export const Knob = ({
+  value,
+  onChange,
+}: {
+  value: number;
+  onChange: (value: number) => void;
+}) => {
+  const min = 0;
+  const max = 1;
+  const tickAngle = linearInterpolate(value, min, max, -135, 135);
+  return (
+    <KnobFrame value={0.5} min={0} max={1} step={0.01} onChange={onChange}>
+      <div
+        className={clsx(
+          "w-8 h-8",
+          "bg-(--cl-knob-bg) rounded-full",
+          "relative",
+        )}
+      >
+        <div
+          className="w-full h-full flex justify-center"
+          style={{
+            transform: `rotate(${tickAngle}deg)`,
+          }}
+        >
+          <div className={clsx("w-[2px] h-[10px]", "bg-(--cl-knob-tick-bg)")} />
+        </div>
+      </div>
+    </KnobFrame>
+  );
 };
 
 export const PieceNameBox = ({ pieceName }: { pieceName: string }) => {

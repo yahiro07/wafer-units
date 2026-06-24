@@ -14,8 +14,10 @@ const PieceHeadPart = ({ pieceName }: { pieceName: string }) => {
   return (
     <div className="flex-ha gap-3 px-1">
       <PieceActiveButton />
-      <Knob />
-      <Knob />
+      <div className="flex-ha gap-3">
+        <Knob value={0.5} onChange={() => {}} />
+        <Knob value={0.5} onChange={() => {}} />
+      </div>
       <PieceNameBox pieceName={pieceName} />
       {/* <PieceOperationButton /> */}
       <PieceIndicator />
