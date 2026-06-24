@@ -1,14 +1,28 @@
+import { mapObjectEntries } from "mofur/ax";
 import { PieceId, PieceItem } from "@/base/type";
 
 const pieceIds: PieceId[] = ["kick", "snare", "opHat", "clHat", "clap"];
 
-export const pieceSampleUrls: Record<PieceId, string[]> = {
+function getUrlBase() {
+  if (import.meta.url.includes("index.js")) {
+    return import.meta.url.replace(/\/index\.js.*$/, "");
+  }
+  return "";
+}
+
+export const pieceSampleUrlSources: Record<PieceId, string[]> = {
   kick: ["samples/bd-01.wav", "samples/bd-05.wav"],
   snare: ["samples/hsnare-03.wav"],
   opHat: ["samples/ho-01.wav"],
   clHat: ["samples/hc-03.wav"],
   clap: ["samples/pc-02.wav"],
 };
+
+const urlBase = getUrlBase();
+export const pieceSampleUrls = mapObjectEntries(
+  pieceSampleUrlSources,
+  (_, urls) => urls.map((url) => `${urlBase}/${url}`),
+);
 
 export const defaultPieces: PieceItem[] = pieceIds.map((id) => ({
   id,
