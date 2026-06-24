@@ -1,4 +1,4 @@
-import { seqNumbers } from "mofur/ax";
+import { isBitSet, seqNumbers, toggleBit } from "mofur/ax";
 import { ReactNode } from "react";
 import { pieceDisplayNames, pieceSampleUrls } from "@/base/constants";
 import { Icons } from "@/base/icons";
@@ -15,7 +15,6 @@ import {
   StepButton,
 } from "@/components";
 import { useAppContext } from "@/store/app-context";
-import { isBitSet, toggleBit } from "@/utils/bit-operation-helper";
 
 const PieceHeadPart = ({
   piece,
