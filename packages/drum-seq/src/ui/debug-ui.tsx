@@ -15,7 +15,7 @@ const PlayButton = () => {
       const timerId = setInterval(() => {
         actions.processStep(stepIndex, 0);
         stepIndex = stepIndex + 1;
-      }, 125);
+      }, 110);
       return () => {
         clearInterval(timerId);
         actions.stop();
