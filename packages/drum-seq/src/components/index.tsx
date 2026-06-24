@@ -141,7 +141,7 @@ export const PieceOperationButton = ({
   return (
     <button
       className={clsx(
-        "w-8 h-8 flex-c text-white text-lg",
+        "w-8 h-8 flex-c text-white text-md",
         "cursor-pointer",
         "relative",
         uiClasses.bgPieceOperationButton,
