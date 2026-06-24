@@ -3,20 +3,21 @@ import {
   CssVariablesFrame,
   Knob,
   PanelFrame,
+  PieceActiveButton,
   PieceIndicator,
   PieceNameBox,
-  PieceOperationButton,
   PieceRowFrame,
   StepButton,
 } from "@/components/tw";
 
 const PieceHeadPart = ({ pieceName }: { pieceName: string }) => {
   return (
-    <div className="flex-ha gap-2 px-1">
+    <div className="flex-ha gap-3 px-1">
+      <PieceActiveButton />
       <Knob />
       <Knob />
       <PieceNameBox pieceName={pieceName} />
-      <PieceOperationButton />
+      {/* <PieceOperationButton /> */}
       <PieceIndicator />
     </div>
   );
@@ -53,9 +54,9 @@ export const App = () => {
         <div className="flex-v gap-2">
           <PieceRow pieceName="KICK" />
           <PieceRow pieceName="SNARE" />
-          <PieceRow pieceName="CLAP" />
           <PieceRow pieceName="OP-HIHAT" />
           <PieceRow pieceName="CL-HIHAT" />
+          <PieceRow pieceName="CLAP" />
         </div>
       </PanelFrame>
     </CssVariablesFrame>

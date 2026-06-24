@@ -15,9 +15,18 @@ const cssVariablesCss = css({
   "--cl-step-button-bg-alt": colorMod("#655", "v23 s4"),
   "--cl-piece-indicator-bg": colorMod("#666", "v-12"),
   "--cl-piece-operation-button-bg": colorMod("#445", "h-20 s-8 v+5"),
+  "--cl-piece-active-button-bg": colorMod("#445", "h-20 s-8 v+5"),
 });
 
 //----------
+
+export const PieceActiveButton = () => {
+  return (
+    <div className={clsx("w-8 h-8", "flex-c")}>
+      <div className={clsx("w-6 h-6", "bg-(--cl-piece-active-button-bg)")} />
+    </div>
+  );
+};
 
 export const Knob = () => {
   return <div className={clsx("w-8 h-8", "bg-(--cl-knob-bg) rounded-full")} />;
@@ -30,7 +39,7 @@ export const PieceNameBox = ({ pieceName }: { pieceName: string }) => {
         "w-[80px] h-8",
         "flex-ha",
         "overflow-hidden text-ellipsis whitespace-nowrap",
-        "text-white",
+        "text-white font-bold text-sm",
       )}
     >
       {pieceName}
