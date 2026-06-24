@@ -41,7 +41,7 @@ export function createTonePlayer(unitInterface: UnitInterface | undefined) {
       // console.log("playing", uri, time, pitch, volume);
       const sourceNode = audioContext.createBufferSource();
       sourceNode.buffer = audioBuffer;
-      const speedRate = 2 ** (pitch * 2 - 1);
+      const speedRate = 2 ** ((pitch * 2 - 1) * 0.5);
       sourceNode.playbackRate.value = speedRate;
       const gainNode = audioContext.createGain();
       const gainValue = mapVolumeControlCurveCenterUnity(volume);
