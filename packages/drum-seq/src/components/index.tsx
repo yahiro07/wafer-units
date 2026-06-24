@@ -52,9 +52,18 @@ const uiClasses = {
 
 //----------
 
-export const PieceActiveButton = ({ active }: { active: boolean }) => {
+export const PieceActiveButton = ({
+  active,
+  onClick,
+}: {
+  active: boolean;
+  onClick?: () => void;
+}) => {
   return (
-    <button className={clsx("w-8 h-8", "flex-c", "cursor-pointer")}>
+    <button
+      className={clsx("w-8 h-8", "flex-c", "cursor-pointer")}
+      onClick={onClick}
+    >
       <div
         className={clsx(
           "w-6 h-6",
@@ -134,9 +143,11 @@ export const PieceAssignIndexLabel = ({ label }: { label: string }) => {
 export const PieceOperationButton = ({
   children,
   coverContent,
+  onClick,
 }: {
   children: ReactNode;
   coverContent?: ReactNode;
+  onClick?: () => void;
 }) => {
   return (
     <button
@@ -148,6 +159,7 @@ export const PieceOperationButton = ({
         uiClasses.borderCommon,
         uiClasses.roundedFew,
       )}
+      onClick={onClick}
     >
       {children}
       {coverContent}
@@ -172,10 +184,12 @@ export const StepButton = ({
   active,
   lightOn,
   altColor,
+  onClick,
 }: {
   active: boolean;
   lightOn: boolean;
   altColor: boolean;
+  onClick: () => void;
 }) => {
   const lightOpacity = active ? 0.4 : 0;
   return (
@@ -187,6 +201,7 @@ export const StepButton = ({
         altColor ? uiClasses.bgStepButtonAlt : uiClasses.bgStepButton,
         uiClasses.borderCommon,
       )}
+      onClick={onClick}
     >
       <div
         className={clsx(
