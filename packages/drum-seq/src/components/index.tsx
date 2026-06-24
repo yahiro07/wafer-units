@@ -17,6 +17,8 @@ const colors = {
   clPieceOperationButtonBg: colorMod("#445", "h-20 s-8 v+5"),
   clPieceActiveButtonBg: colorMod("#445", "h-20 s-8 v+5"),
   clKnobTickBg: colorMod("#fff"),
+  clIndicatorActive: colorMod("#8e6", "a90"),
+  clIndicatorActiveAlt: colorMod("#fff", "a70"),
 };
 
 export const CssVariablesFrame = ({ children }: { children: ReactNode }) => {
@@ -33,6 +35,7 @@ const cssVariablesCss = css(
 );
 
 const uiClasses = {
+  borderCommon: "border border-black/40",
   bgPanel: "bg-(--cl-panel-bg)",
   bgHeadPart: "bg-(--cl-head-part-bg)",
   bgBodyPart: "bg-(--cl-body-part-bg)",
@@ -43,7 +46,9 @@ const uiClasses = {
   bgPieceOperationButton: "bg-(--cl-piece-operation-button-bg)",
   bgPieceActiveButton: "bg-(--cl-piece-active-button-bg)",
   bgKnobTick: "bg-(--cl-knob-tick-bg)",
-  borderCommon: "border border-black/40",
+  bgIndicatorActive: "bg-(--cl-indicator-active)",
+  bgIndicatorActiveAlt: "bg-(--cl-indicator-active-alt)",
+  roundedFew: "rounded-[2px]",
 };
 
 //----------
@@ -54,8 +59,11 @@ export const PieceActiveButton = ({ active }: { active: boolean }) => {
       <div
         className={clsx(
           "w-6 h-6",
-          uiClasses.bgPieceActiveButton,
           uiClasses.borderCommon,
+          active
+            ? uiClasses.bgIndicatorActiveAlt
+            : uiClasses.bgPieceActiveButton,
+          uiClasses.roundedFew,
         )}
       />
     </div>
@@ -100,7 +108,7 @@ export const PieceNameBox = ({ pieceName }: { pieceName: string }) => {
   return (
     <div
       className={clsx(
-        "w-[80px] h-8",
+        "w-[75px] h-8",
         "flex-ha",
         "overflow-hidden text-ellipsis whitespace-nowrap",
         "text-white font-bold text-sm",
@@ -115,6 +123,19 @@ export const PieceOperationButton = () => {
   return <div className={clsx("w-8 h-8", uiClasses.bgPieceOperationButton)} />;
 };
 
+export const PieceIndicator = ({ active }: { active: boolean }) => {
+  return (
+    <div
+      className={clsx(
+        "w-2.5 h-7",
+        uiClasses.borderCommon,
+        active ? uiClasses.bgIndicatorActive : uiClasses.bgPieceIndicator,
+        uiClasses.roundedFew,
+      )}
+    />
+  );
+};
+
 export const StepButton = ({
   active,
   lightOn,
@@ -124,41 +145,30 @@ export const StepButton = ({
   lightOn: boolean;
   altColor: boolean;
 }) => {
-  let lightOpacity = 0;
-  if (active && lightOn) {
-    lightOpacity = 1;
-  } else if (active) {
-    lightOpacity = 0.4;
-  } else if (lightOn) {
-    lightOpacity = 0.1;
-  }
-
+  const lightOpacity = active ? 0.4 : 0;
   return (
     <div
       className={clsx(
-        "w-5.5 h-8 relative",
-        "rounded-[2px] overflow-hidden",
+        "w-5.5 h-8 relative flex-va",
+        "overflow-hidden",
+        uiClasses.roundedFew,
         altColor ? uiClasses.bgStepButtonAlt : uiClasses.bgStepButton,
         uiClasses.borderCommon,
       )}
     >
       <div
-        className={clsx("w-full h-full", "bg-white/50")}
+        className={clsx(
+          "w-3 h-1 mt-[3px]",
+          uiClasses.borderCommon,
+          lightOn && uiClasses.bgIndicatorActive,
+          "rounded-[1px]",
+        )}
+      />
+      <div
+        className={clsx("absolute-full", "bg-white/50")}
         style={{ opacity: lightOpacity }}
       />
     </div>
-  );
-};
-
-export const PieceIndicator = ({ active }: { active: boolean }) => {
-  return (
-    <div
-      className={clsx(
-        "w-2.5 h-8",
-        uiClasses.bgPieceIndicator,
-        uiClasses.borderCommon,
-      )}
-    />
   );
 };
 
