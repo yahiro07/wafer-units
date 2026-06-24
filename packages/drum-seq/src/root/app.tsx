@@ -1,16 +1,17 @@
 import { seqNumbers } from "mofur/ax";
+import { Icons } from "@/common/icons";
 import {
   CssVariablesFrame,
   Knob,
   PanelFrame,
   PieceActiveButton,
+  PieceAssignIndexLabel,
   PieceIndicator,
   PieceNameBox,
   PieceOperationButton,
   PieceRowFrame,
   StepButton,
 } from "@/components";
-import { Icons } from "@/common/icons";
 
 function getRandomBoolean(th = 0.5) {
   return Math.random() < th;
@@ -25,7 +26,11 @@ const PieceHeadPart = ({ pieceName }: { pieceName: string }) => {
         <Knob value={0.5} onChange={() => {}} />
       </div>
       <PieceNameBox pieceName={pieceName} />
-      <PieceOperationButton>
+      <PieceOperationButton
+        coverContent={
+          <PieceAssignIndexLabel label={(Math.random() * 20).toFixed(0)} />
+        }
+      >
         <Icons.Swap />
       </PieceOperationButton>
       <PieceIndicator active={getRandomBoolean()} />

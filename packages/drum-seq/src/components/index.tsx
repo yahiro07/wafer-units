@@ -121,18 +121,39 @@ export const PieceNameBox = ({ pieceName }: { pieceName: string }) => {
   );
 };
 
-export const PieceOperationButton = ({ children }: { children: ReactNode }) => {
+export const PieceAssignIndexLabel = ({ label }: { label: string }) => {
+  return (
+    <div
+      className={clsx(
+        "absolute right-0 top-0 mr-[2px]",
+        "text-white text-[8px]",
+      )}
+    >
+      {label}
+    </div>
+  );
+};
+
+export const PieceOperationButton = ({
+  children,
+  coverContent,
+}: {
+  children: ReactNode;
+  coverContent?: ReactNode;
+}) => {
   return (
     <button
       className={clsx(
         "w-8 h-8 flex-c text-white text-lg",
         "cursor-pointer",
+        "relative",
         uiClasses.bgPieceOperationButton,
         uiClasses.borderCommon,
         uiClasses.roundedFew,
       )}
     >
       {children}
+      {coverContent}
     </button>
   );
 };
