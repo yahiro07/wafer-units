@@ -11,7 +11,7 @@ export function createTonePlayer(unitInterface: UnitInterface | undefined) {
   const destinationNode =
     unitInterface?.audioOutputNode ?? audioContext.destination;
 
-  const toneCache = new Map<string, AudioBuffer>();
+  const toneCache = new Map<string, AudioBuffer | null>();
 
   return {
     async preloadTone(uri: string) {
@@ -19,9 +19,20 @@ export function createTonePlayer(unitInterface: UnitInterface | undefined) {
         return;
       }
       const response = await fetch(uri);
-      const arrayBuffer = await response.arrayBuffer();
-      const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
-      toneCache.set(uri, audioBuffer);
+      if (!response.ok) {
+        console.error("failed to fetch", uri);
+        toneCache.set(uri, null);
+        return;
+      }
+      try {
+        const arrayBuffer = await response.arrayBuffer();
+        const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+        toneCache.set(uri, audioBuffer);
+      } catch (_) {
+        console.error("failed to decode", uri);
+        toneCache.set(uri, null);
+      }
+
       // console.log("preloaded", uri);
     },
     playTone(uri: string, time: number, pitch: number, volume: number) {
