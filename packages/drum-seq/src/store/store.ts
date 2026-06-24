@@ -1,5 +1,4 @@
 import { createStore, Store } from "snap-store";
-import { defaultPieces } from "@/base/constants";
 import { PieceItem } from "@/base/type";
 
 type StorState = {
@@ -9,9 +8,9 @@ type StorState = {
 
 export type AppStore = Store<StorState>;
 
-export function createAppStore(): AppStore {
+export function createAppStore(pieces: PieceItem[]): AppStore {
   return createStore<StorState>({
-    pieces: defaultPieces,
+    pieces,
     stepPosition: -1,
   });
 }

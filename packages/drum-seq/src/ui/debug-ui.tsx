@@ -1,5 +1,6 @@
 import clsx from "clsx";
 import { useEffect, useState } from "react";
+import { debugGlobal } from "@/audio/tone-player";
 import { useAppContext } from "@/store/app-context";
 
 export const DebugUi = () => {
@@ -7,10 +8,11 @@ export const DebugUi = () => {
   const [playing, setPlaying] = useState(false);
   useEffect(() => {
     if (playing) {
+      debugGlobal.gAudioContext?.resume();
       actions.start();
       let stepIndex = 0;
       const timerId = setInterval(() => {
-        actions.processStep(stepIndex, Date.now());
+        actions.processStep(stepIndex, 0);
         stepIndex = stepIndex + 1;
       }, 125);
       return () => {

@@ -1,8 +1,13 @@
 import { UnitInterface } from "wafer-host/unit-types";
 import { mapVolumeControlCurveCenterUnity } from "@/utils/curve";
 
+export const debugGlobal = {
+  gAudioContext: undefined as AudioContext | undefined,
+};
+
 export function createTonePlayer(unitInterface: UnitInterface | undefined) {
   const audioContext = unitInterface?.audioContext ?? new AudioContext();
+  debugGlobal.gAudioContext = audioContext;
   const destinationNode =
     unitInterface?.audioOutputNode ?? audioContext.destination;
 
@@ -23,11 +28,12 @@ export function createTonePlayer(unitInterface: UnitInterface | undefined) {
       if (!audioBuffer) return;
       const sourceNode = audioContext.createBufferSource();
       sourceNode.buffer = audioBuffer;
-      sourceNode.connect(destinationNode);
       const speedRate = 2 ** (pitch * 2 - 1);
       sourceNode.playbackRate.value = speedRate;
       const gainNode = audioContext.createGain();
-      gainNode.gain.value = mapVolumeControlCurveCenterUnity(volume);
+      const gainValue = mapVolumeControlCurveCenterUnity(volume);
+      gainNode.gain.value = gainValue;
+      console.log({ volume, gainValue });
       sourceNode.connect(gainNode);
       gainNode.connect(destinationNode);
       sourceNode.start(time);

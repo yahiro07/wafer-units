@@ -89,7 +89,7 @@ export const Knob = ({
   const max = 1;
   const tickAngle = linearInterpolate(value, min, max, -135, 135);
   return (
-    <KnobFrame value={0.5} min={0} max={1} step={0.01} onChange={onChange}>
+    <KnobFrame value={value} min={0} max={1} step={0.01} onChange={onChange}>
       <div
         className={clsx(
           "w-8 h-8",

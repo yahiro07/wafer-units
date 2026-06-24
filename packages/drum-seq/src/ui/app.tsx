@@ -11,9 +11,9 @@ import { MainPanelUi } from "@/ui/main-panel-ui";
 
 export function createApp(unitInterface: UnitInterface | undefined) {
   const sequencer = createDrumSequencer(unitInterface, defaultPieces);
-
-  const store = createAppStore();
+  const store = createAppStore(defaultPieces);
   const actions = createActions(store, sequencer);
+  sequencer.preloadFirst();
 
   unitInterface?.completeSetup({
     unitAspects: {

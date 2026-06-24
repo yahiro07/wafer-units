@@ -5,6 +5,7 @@ import { PieceItem } from "@/base/type";
 import { isBitSet } from "@/utils/bit-operation-helper";
 
 export type DrumSequencer = {
+  preloadFirst(): void;
   patchPiece(id: string, attrs: Partial<PieceItem>): void;
   start(): void;
   stop(): void;
@@ -21,6 +22,15 @@ export function createDrumSequencer(
     pieces: defaultPieces,
   };
   return {
+    preloadFirst() {
+      for (const piece of state.pieces) {
+        if (piece.active && piece.patternBits > 0) {
+          tonePlayer.preloadTone(
+            pieceSampleUrls[piece.id][piece.variationIndex],
+          );
+        }
+      }
+    },
     patchPiece(id: string, attrs: Partial<PieceItem>) {
       const piece = state.pieces.find((piece) => piece.id === id);
       if (piece) {
