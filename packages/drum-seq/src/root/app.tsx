@@ -1,5 +1,7 @@
+import clsx from "clsx";
 import { seqNumbers } from "mofur/ax";
-import { ReactNode } from "react";
+import { ReactNode, useEffect, useState } from "react";
+import { appConfig } from "@/common/app-config";
 import { isBitSet, toggleBit } from "@/common/bit-operation-helper";
 import { Icons } from "@/common/icons";
 import {
@@ -89,14 +91,15 @@ const PieceBodyPart = ({ piece }: { piece: PieceItem }) => {
             {seqNumbers(4).map((j) => {
               const altColor = i % 2 === 1;
               const si = i * 4 + j;
-              const isCurrentStep = piece.active && si === stepPosition;
-              const isActive = isBitSet(piece.patternBits, si);
+              const isStepActive = isBitSet(piece.patternBits, si);
+              const isStepCurrent =
+                piece.active && piece.patternBits > 0 && si === stepPosition;
               return (
                 <StepButton
                   key={j}
                   altColor={altColor}
-                  active={isActive}
-                  lightOn={isCurrentStep}
+                  isStepActive={isStepActive}
+                  isStepCurrent={isStepCurrent}
                   onClick={() => toggleStep(si)}
                 />
               );
@@ -122,6 +125,35 @@ const PieceRow = ({ piece }: { piece: PieceItem }) => {
   );
 };
 
+const DebugUi = () => {
+  const [playing, setPlaying] = useState(false);
+  useEffect(() => {
+    if (playing) {
+      store.setStepPosition(0);
+      const timerId = setInterval(() => {
+        store.setStepPosition((prev) => (prev + 1) % 16);
+      }, 125);
+      return () => {
+        clearInterval(timerId);
+        store.setStepPosition(-1);
+      };
+    }
+  }, [playing]);
+  return (
+    <div>
+      <button
+        className={clsx(
+          "p-2 cursor-pointer",
+          playing ? "bg-green-500" : "bg-gray-400",
+        )}
+        onClick={() => setPlaying(!playing)}
+      >
+        play
+      </button>
+    </div>
+  );
+};
+
 export const App = () => {
   const { pieces } = store.useSnapshot();
   return (
@@ -133,6 +165,7 @@ export const App = () => {
           ))}
         </div>
       </PanelFrame>
+      {appConfig.isDevelopment && <DebugUi />}
     </CssVariablesFrame>
   );
 };

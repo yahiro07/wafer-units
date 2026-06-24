@@ -181,17 +181,24 @@ export const PieceIndicator = ({ active }: { active: boolean }) => {
 };
 
 export const StepButton = ({
-  active,
-  lightOn,
+  isStepActive,
+  isStepCurrent,
   altColor,
   onClick,
 }: {
-  active: boolean;
-  lightOn: boolean;
+  isStepActive: boolean;
+  isStepCurrent: boolean;
   altColor: boolean;
   onClick: () => void;
 }) => {
-  const lightOpacity = active ? 0.4 : 0;
+  let lightOpacity = 0;
+  if (isStepActive && isStepCurrent) {
+    lightOpacity = 0.7;
+  } else if (isStepActive) {
+    lightOpacity = 0.4;
+  } else if (isStepCurrent) {
+    lightOpacity = 0.1;
+  }
   return (
     <div
       className={clsx(
@@ -206,7 +213,9 @@ export const StepButton = ({
       <div
         className={clsx(
           "w-[11px] h-[3.5px] mt-[4px]",
-          lightOn ? uiClasses.bgIndicatorActive : uiClasses.bgStepIndicator,
+          isStepCurrent
+            ? uiClasses.bgIndicatorActive
+            : uiClasses.bgStepIndicator,
           "border-[0.5px] border-black/20",
           "rounded-[1px]",
         )}
