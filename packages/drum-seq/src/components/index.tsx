@@ -23,10 +23,20 @@ const cssVariablesCss = css({
 
 //----------
 
-export const PieceActiveButton = () => {
+const uiClasses = {
+  borderCommon: "border border-black/40",
+};
+
+export const PieceActiveButton = ({ active }: { active: boolean }) => {
   return (
     <div className={clsx("w-8 h-8", "flex-c")}>
-      <div className={clsx("w-6 h-6", "bg-(--cl-piece-active-button-bg)")} />
+      <div
+        className={clsx(
+          "w-6 h-6",
+          "bg-(--cl-piece-active-button-bg)",
+          uiClasses.borderCommon,
+        )}
+      />
     </div>
   );
 };
@@ -48,6 +58,7 @@ export const Knob = ({
           "w-8 h-8",
           "bg-(--cl-knob-bg) rounded-full",
           "relative",
+          uiClasses.borderCommon,
         )}
       >
         <div
@@ -84,19 +95,51 @@ export const PieceOperationButton = () => {
   );
 };
 
-export const StepButton = ({ altColor }: { altColor: boolean }) => {
+export const StepButton = ({
+  active,
+  lightOn,
+  altColor,
+}: {
+  active: boolean;
+  lightOn: boolean;
+  altColor: boolean;
+}) => {
+  let lightOpacity = 0;
+  if (active && lightOn) {
+    lightOpacity = 1;
+  } else if (active) {
+    lightOpacity = 0.4;
+  } else if (lightOn) {
+    lightOpacity = 0.1;
+  }
+
   return (
     <div
       className={clsx(
-        "w-5 h-8",
+        "w-5.5 h-8 relative",
         altColor ? "bg-(--cl-step-button-bg-alt)" : "bg-(--cl-step-button-bg)",
+        uiClasses.borderCommon,
+        "rounded-[2px] overflow-hidden",
       )}
-    />
+    >
+      <div
+        className={clsx("w-full h-full", "bg-white/50")}
+        style={{ opacity: lightOpacity }}
+      />
+    </div>
   );
 };
 
-export const PieceIndicator = () => {
-  return <div className={clsx("w-2.5 h-8", "bg-(--cl-piece-indicator-bg)")} />;
+export const PieceIndicator = ({ active }: { active: boolean }) => {
+  return (
+    <div
+      className={clsx(
+        "w-2.5 h-8",
+        "bg-(--cl-piece-indicator-bg)",
+        uiClasses.borderCommon,
+      )}
+    />
+  );
 };
 
 export const PieceRowFrame = ({
