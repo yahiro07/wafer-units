@@ -53,13 +53,15 @@ const PieceHeadPart = ({
         onClick={handlers.toggleActive}
       />
       <div className="flex-ha gap-3">
-        <Knob value={piece.volume} onChange={handlers.setVolume} />
         <Knob value={piece.pitch} onChange={handlers.setPitch} />
+        <Knob value={piece.volume} onChange={handlers.setVolume} />
       </div>
       <PieceNameBox pieceName={pieceName} onClick={handlers.previewPiece} />
       <PieceOperationButton
         coverContent={
-          <PieceAssignIndexLabel label={piece.variationIndex.toString()} />
+          <PieceAssignIndexLabel
+            label={(piece.variationIndex + 1).toString()}
+          />
         }
         onClick={handlers.shiftVariationIndex}
       >
