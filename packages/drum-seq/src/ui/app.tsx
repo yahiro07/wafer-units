@@ -17,9 +17,9 @@ export function createApp(unitInterface: UnitInterface | undefined) {
 
   unitInterface?.completeSetup({
     unitAspects: {
-      unitType: "sequencer",
+      unitType: "instrument",
       categoryHint: "drumMachine",
-      outputs: ["note"],
+      outputs: ["audio"],
     },
     clockHandlers: {
       start: actions.start,
