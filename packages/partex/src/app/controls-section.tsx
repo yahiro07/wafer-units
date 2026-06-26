@@ -5,8 +5,8 @@ import {
   createSelectorOptions,
   GeneralSelector,
   Knob,
-} from "mofur-components/mono2";
-import { LabeledRow } from "@/components";
+  LabeledRow,
+} from "@/components";
 import { store } from "@/store/store";
 import { PatternMode, SongKey } from "@/store/types";
 
@@ -110,13 +110,7 @@ export const ControlsSection = () => {
           />
         </LabeledRow>
         <LabeledRow label="duty">
-          <Knob
-            value={st.noteDuty}
-            min={0}
-            max={1}
-            step={0.01}
-            onChange={store.setNoteDuty}
-          />
+          <Knob value={st.noteDuty} onChange={store.setNoteDuty} />
         </LabeledRow>
 
         <div className="grow" />

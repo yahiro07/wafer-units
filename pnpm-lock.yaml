@@ -167,9 +167,6 @@ importers:
       mofur:
         specifier: link:../../../beam/mofur
         version: link:../../../beam/mofur
-      mofur-components:
-        specifier: link:../../../beam/mofur-components
-        version: link:../../../beam/mofur-components
       preact:
         specifier: ^10.29.2
         version: 10.29.2

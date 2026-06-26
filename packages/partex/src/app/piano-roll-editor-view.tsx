@@ -378,12 +378,11 @@ const PianoRollEditor = () => {
   return (
     <div
       ref={refBaseDiv}
-      css={{
-        height: npx(configs.scrollPartHeight),
-        overflowX: "hidden",
-        overflowY: "scroll",
-        position: "relative",
-      }}
+      className={clsx(
+        "bg-white overflow-x-hidden overflow-y-scroll relative",
+        "border border-gray-300",
+      )}
+      style={{ height: npx(configs.scrollPartHeight) }}
     >
       <BackgroundGridLayer />
       <NotesLayer

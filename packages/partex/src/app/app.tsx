@@ -4,6 +4,7 @@ import {
   deserializePersistState,
   serializePersistState,
 } from "@/app/serializer";
+import { CssVariablesFrame, PanelFrame } from "@/components";
 import { generateMappedNotes } from "@/logic/ghost-engine";
 import { sequencer, unitInterface } from "@/logic/sequencer";
 import { store } from "@/store/store";
@@ -108,17 +109,21 @@ function useGenerateMappedNotes() {
 
 export const App = () => {
   useEffect(setupSynchronization, []);
-  // return <Dev2PianoRollEdit />;
   useGenerateMappedNotes();
   return (
-    <div className="bg-white">
-      <div className="w-[620px] h-[380px] border border-cyan-600 bg-blue-100/20 flex-c">
-        <div className="flex-vc gap-2">
-          <ControlsSection />
-          <PianoRollEditorView />
-          <BottomBar />
+    <CssVariablesFrame>
+      <div className="bg-white flex-vc">
+        <div className="w-[620px] h-[380px] border border-cyan-600 bg-blue-100/20 flex-c">
+          <div className="flex-vc gap-2">
+            <ControlsSection />
+            <PianoRollEditorView />
+            <BottomBar />
+          </div>
         </div>
+        <PanelFrame>
+          <PianoRollEditorView />
+        </PanelFrame>
       </div>
-    </div>
+    </CssVariablesFrame>
   );
 };
