@@ -47,7 +47,10 @@ export function createAudioEngine(): AudioEngine {
   let currentParams: SynthParams = { ...defaultParams };
 
   function ensureRunning(): void {
-    if (audioContext.state === "suspended") {
+    if (
+      !(audioContext instanceof OfflineAudioContext) &&
+      audioContext.state === "suspended"
+    ) {
       void audioContext.resume();
     }
   }

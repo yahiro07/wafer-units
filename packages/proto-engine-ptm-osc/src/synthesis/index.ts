@@ -250,7 +250,10 @@ export function createSynthesizerEngine() {
 
   return {
     async resumeIfNeeded() {
-      if (bus.audioContext.state === "suspended") {
+      if (
+        !(bus.audioContext instanceof OfflineAudioContext) &&
+        bus.audioContext.state === "suspended"
+      ) {
         await bus.audioContext.resume();
       }
     },

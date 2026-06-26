@@ -111,7 +111,12 @@ export function createSynthesizerEngine(): ISynthesizerEngine {
     },
     activateWebAudioOnUserAction() {
       if (!webAudioInitialized) {
-        audioContext.resume();
+        if (
+          !(audioContext instanceof OfflineAudioContext) &&
+          audioContext.state === "suspended"
+        ) {
+          void audioContext.resume();
+        }
         webAudioInitialized = true;
         console.log(`web audio started`);
         asyncRerender();

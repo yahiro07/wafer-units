@@ -27,10 +27,10 @@ export const uiActions = {
           inputs: ["note"],
         },
         noteInput: {
-          async noteOn(noteNumber, time) {
+          noteOn(noteNumber, time) {
             synthAudio.noteOn(noteNumber, 1, time);
           },
-          async noteOff(noteNumber, time) {
+          noteOff(noteNumber, time) {
             synthAudio.noteOff(noteNumber, time);
           },
         },
@@ -42,7 +42,7 @@ export const uiActions = {
           setAppState("midiConnected", connected);
         },
         noteOn(noteNumber, velocity) {
-          void synthAudio.audioContext.resume();
+          synthAudio.resumeIfNeeded();
           synthAudio.noteOn(noteNumber, velocity);
         },
         noteOff(noteNumber) {
@@ -66,9 +66,6 @@ export const uiActions = {
   },
   shiftProgram(step: number) {
     uiActions.applyPresetByIndex(appState.selectedProgramIndex + step);
-  },
-  resumeAudio() {
-    void synthAudio.audioContext.resume();
   },
   allNotesOff() {
     synthAudio.allNotesOff();

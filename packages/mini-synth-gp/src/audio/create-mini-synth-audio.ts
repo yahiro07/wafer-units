@@ -319,11 +319,21 @@ export function createMiniSynthAudio() {
 
   updateParameters(currentParameters);
 
+  function resumeIfNeeded() {
+    if (
+      !(audioContext instanceof OfflineAudioContext) &&
+      audioContext.state === "suspended"
+    ) {
+      void audioContext.resume();
+    }
+  }
+
   return {
     audioContext,
     updateParameters,
     noteOn,
     noteOff,
     allNotesOff,
+    resumeIfNeeded,
   };
 }

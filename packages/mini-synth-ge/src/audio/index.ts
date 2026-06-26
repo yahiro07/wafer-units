@@ -30,7 +30,10 @@ function createAudioEngine() {
 
   return {
     async resumeIfNeed() {
-      if (context.state === "suspended") {
+      if (
+        !(context instanceof OfflineAudioContext) &&
+        context.state === "suspended"
+      ) {
         await context.resume();
       }
     },

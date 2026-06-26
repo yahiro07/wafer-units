@@ -81,7 +81,11 @@ export function createSynthEngine(): EngineApi {
       await init();
     },
     async resumeIfNeeded() {
-      if (audioCtx && audioCtx.state === "suspended") {
+      if (
+        audioCtx &&
+        !(audioCtx instanceof OfflineAudioContext) &&
+        audioCtx.state === "suspended"
+      ) {
         await audioCtx.resume();
       }
     },
@@ -131,9 +135,7 @@ export function createSynthEngine(): EngineApi {
         this.noteOff(noteNumber, time);
       }
 
-      if (audioCtx.state === "suspended") {
-        void audioCtx.resume();
-      }
+      this.resumeIfNeeded();
 
       const workletNode = new AudioWorkletNode(audioCtx, "synth-processor", {
         numberOfInputs: 0,
