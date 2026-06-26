@@ -1,5 +1,3 @@
-import { createNoteVoicingDurationAdapter } from "mofus/mx-audio";
-
 export type StepCode = "on" | "off" | "tie";
 
 const STEP_COUNT = 4;
@@ -9,10 +7,9 @@ const normalizeStepIndex = (rawIndex: number) => {
 };
 
 export function createSequencerEngine(notePort: {
-  noteOn(noteNumber: number): void;
-  noteOff(noteNumber: number): void;
+  noteOn(noteNumber: number, time: number): void;
+  noteOff(noteNumber: number, time: number): void;
 }) {
-  const noteVoicingAdapter = createNoteVoicingDurationAdapter(notePort);
   let duty = 1;
   let bpm = 120;
   let stepCodes: StepCode[] = ["off", "on", "on", "on"];
@@ -31,7 +28,7 @@ export function createSequencerEngine(notePort: {
     return durationStepCount;
   };
 
-  const processOnStep = (rawStepIndex: number) => {
+  const processOnStep = (rawStepIndex: number, time: number) => {
     const stepIndex = normalizeStepIndex(rawStepIndex);
     onStepChange?.(stepIndex);
 
@@ -44,9 +41,8 @@ export function createSequencerEngine(notePort: {
     const actualDurationStep = durationStepCount + duty - 1;
     const durationSec = (actualDurationStep * 60) / (bpm * 4);
 
-    // Ensure repeated same-note triggers restart the envelope cleanly.
-    noteVoicingAdapter.noteOff(noteNumber);
-    noteVoicingAdapter.noteOn(noteNumber, durationSec);
+    notePort.noteOn(noteNumber, time);
+    notePort.noteOff(noteNumber, time + durationSec);
   };
 
   return {
@@ -54,9 +50,7 @@ export function createSequencerEngine(notePort: {
     setOnStep(onStep: ((stepIndex: number) => void) | null) {
       onStepChange = onStep;
     },
-    allNotesOff() {
-      noteVoicingAdapter.allNotesOff();
-    },
+    allNotesOff() {},
     setBpm(newBpm: number) {
       bpm = newBpm;
     },

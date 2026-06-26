@@ -12,8 +12,8 @@ import {
 } from "@/store/store";
 
 export const drivers = {
-  wrapProcessStep(stepIndex: number) {
-    sequencerEngine.processOnStep(stepIndex % 4);
+  wrapProcessStep(stepIndex: number, time: number) {
+    sequencerEngine.processOnStep(stepIndex % 4, time);
     uiActions.setCurrentStepIndex(stepIndex % 4);
   },
   setupUnitInterface() {
@@ -52,7 +52,9 @@ export const drivers = {
     createEffect(() => {
       const playing = appState.playing;
       if (playing) {
-        tickDriver.start({ processStep: drivers.wrapProcessStep });
+        tickDriver.start({
+          processStep: (stepIndex) => drivers.wrapProcessStep(stepIndex, 0),
+        });
       } else {
         tickDriver.stop();
         sequencerEngine.allNotesOff();
@@ -62,8 +64,12 @@ export const drivers = {
   setupMidiKeyboardInput() {
     if (!unitInterface) {
       const cleanup = setupMidiKeyboardInput({
-        noteOn: uiActions.noteOn,
-        noteOff: uiActions.noteOff,
+        noteOn(noteNumber: number) {
+          uiActions.noteOn(noteNumber, 0);
+        },
+        noteOff(noteNumber: number) {
+          uiActions.noteOff(noteNumber, 0);
+        },
       });
       onCleanup(cleanup);
     }
