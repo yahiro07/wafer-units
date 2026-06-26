@@ -131,11 +131,11 @@ export function createSynthEngine(): EngineApi {
         return;
       }
 
+      this.resumeIfNeeded();
+
       if (activeVoices.has(noteNumber)) {
         this.noteOff(noteNumber, time);
       }
-
-      this.resumeIfNeeded();
 
       const workletNode = new AudioWorkletNode(audioCtx, "synth-processor", {
         numberOfInputs: 0,
@@ -143,22 +143,28 @@ export function createSynthEngine(): EngineApi {
         outputChannelCount: [1],
       });
 
-      const now =
+      const targetTime =
         time && time > audioCtx.currentTime ? time : audioCtx.currentTime;
 
       const freqParam = workletNode.parameters.get("frequency");
       if (freqParam)
-        freqParam.setValueAtTime(midiNoteNumberToFrequency(noteNumber), now);
+        freqParam.setValueAtTime(
+          midiNoteNumberToFrequency(noteNumber),
+          targetTime,
+        );
 
       (Object.keys(synthParameters) as Array<keyof SynthParameters>).forEach(
         (key) => {
           const p = workletNode.parameters.get(key);
-          if (p) p.setValueAtTime(synthParameters[key], now);
+          if (p) p.setValueAtTime(synthParameters[key], targetTime);
         },
       );
 
       const gateParam = workletNode.parameters.get("gate")!;
-      gateParam.setValueAtTime(1.0, now);
+      if (targetTime > audioCtx.currentTime) {
+        gateParam.setValueAtTime(0.0, audioCtx.currentTime);
+      }
+      gateParam.setValueAtTime(1.0, targetTime);
 
       workletNode.connect(mainOutputNode);
 
@@ -168,11 +174,11 @@ export function createSynthEngine(): EngineApi {
       const voice = activeVoices.get(noteNumber);
       if (!voice) return;
 
-      const now =
+      const targetTime =
         time && audioCtx && time > audioCtx.currentTime
           ? time
           : audioCtx?.currentTime || 0;
-      voice.gateParam.setValueAtTime(0.0, now);
+      voice.gateParam.setValueAtTime(0.0, targetTime);
 
       activeVoices.delete(noteNumber);
     },

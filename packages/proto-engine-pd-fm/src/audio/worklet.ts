@@ -53,6 +53,7 @@ function createSynthesizerCore() {
   let isReleased = false;
   let releaseStartValue = 0.0;
   let egTime = 0.0; // Elapsed seconds since note-on or note-off.
+  let hasStarted = false;
 
   const interpolators = {
     shape: createInterpolator(),
@@ -94,6 +95,7 @@ function createSynthesizerCore() {
         // 1. Envelope update
         // -------------------------------------------------------------
         if (gate > 0.5) {
+          hasStarted = true;
           if (isReleased) {
             // Reset when a note is triggered again.
             isReleased = false;
@@ -105,7 +107,7 @@ function createSynthesizerCore() {
             decay < 0.75 ? 0 : linearInterpolate(decay, 0.75, 1, 0, 1);
           egValue = lowClip(egValue, sustain);
           egTime += 1.0 / sampleRate;
-        } else {
+        } else if (hasStarted) {
           if (!isReleased) {
             // Latch the envelope value at the moment note-off is triggered.
             isReleased = true;
@@ -116,6 +118,8 @@ function createSynthesizerCore() {
           egValue =
             releaseStartValue * Math.exp(-egTime / Math.max(0.01, release));
           egTime += 1.0 / sampleRate;
+        } else {
+          egValue = 0.0;
         }
 
         // -------------------------------------------------------------
@@ -268,7 +272,7 @@ function createSynthesizerCore() {
       }
 
       // Stop processing once the envelope is fully faded after note-off.
-      if (isReleased && egValue < 0.0001) {
+      if (hasStarted && isReleased && egValue < 0.0001) {
         return false; // The voice node will be released automatically.
       }
 
@@ -286,7 +290,7 @@ class SynthProcessor extends AudioWorkletProcessor {
         minValue: 0.0,
         maxValue: 22000.0,
       },
-      { name: "gate", defaultValue: 1.0, minValue: 0.0, maxValue: 1.0 }, // 1.0 = note on, 0.0 = note off
+      { name: "gate", defaultValue: 0.0, minValue: 0.0, maxValue: 1.0 }, // 1.0 = note on, 0.0 = note off
       { name: "waveMode", defaultValue: 0, minValue: 0, maxValue: 3 },
       { name: "shape", defaultValue: 0.0, minValue: 0.0, maxValue: 1.0 },
       { name: "envMod", defaultValue: 0.0, minValue: 0.0, maxValue: 1.0 },
