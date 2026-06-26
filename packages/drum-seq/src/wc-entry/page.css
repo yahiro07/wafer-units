@@ -1,0 +1,26 @@
+@import "tailwindcss";
+
+@layer base {
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+}
+
+
+:host,
+:host *,
+:host *::before,
+:host *::after {
+  --tw-border-style: solid;
+}
+
+:host {
+  font-family: "Inter", sans-serif;
+  user-select: none;
+}
+
+img {
+  -webkit-user-drag: none;
+}
