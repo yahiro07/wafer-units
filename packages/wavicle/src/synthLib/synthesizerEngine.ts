@@ -152,9 +152,11 @@ export function createSynthesizerEngine(): ISynthesizerEngine {
     },
     noteOn(noteNumber, _velocity?: number) {
       if (!instrumentData) {
+        console.warn(`noteOn called while instrumentData is not loaded`);
         return;
       }
       if (isLoadingSamples) {
+        console.warn(`noteOn called while isLoadingSamples`);
         return;
       }
       const noteKey = createNoteKey(noteNumber);
