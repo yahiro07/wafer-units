@@ -174,8 +174,8 @@ importers:
         specifier: ^5.6.0
         version: 5.6.0(react@19.2.6)
       snap-store:
-        specifier: ^0.1.9
-        version: 0.1.9(react@19.2.6)
+        specifier: link:../../../snap-store
+        version: link:../../../snap-store
     devDependencies:
       '@preact/preset-vite':
         specifier: ^2.10.5
