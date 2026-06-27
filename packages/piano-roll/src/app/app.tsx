@@ -57,6 +57,19 @@ function setupSynchronization() {
         sequencer.processStep(stepIndex, time, unitDurationSec);
       },
     },
+    persistence: {
+      emitState() {
+        return pickObjectMembers(store.state, {
+          notes: 1,
+          noteDuty: 1,
+          octaveShift: 1,
+          loopBars: 1,
+        });
+      },
+      applyState(state) {
+        store.setState(state);
+      },
+    },
   });
 
   return unsubscribeStore;
