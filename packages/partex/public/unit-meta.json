@@ -1,7 +1,7 @@
 {
   "name": "partex",
   "unitType": "sequencer",
-  "preferredSize": "600,300",
+  "preferredSize": "620,380",
   "outputSignalTypes": "note",
   "inputSignalTypes": "note",
   "protocol": "wafer-v01",
