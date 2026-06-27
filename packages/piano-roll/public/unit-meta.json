@@ -1,7 +1,7 @@
 {
   "name": "piano-roll",
   "unitType": "sequencer",
-  "preferredSize": "600,300",
+  "preferredSize": "420,240",
   "outputSignalTypes": "note",
   "inputSignalTypes": "note",
   "protocol": "wafer-v01",
