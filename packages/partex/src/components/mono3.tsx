@@ -1,82 +1,12 @@
 import clsx from "clsx";
-import { camelToKebab, linearInterpolate } from "mofur/ax";
+import { linearInterpolate } from "mofur/ax";
 import { npx } from "mofur/ax-ui";
 import { KnobFrame } from "mofur/mo-react";
 import { ReactNode } from "react";
-import { colorMod } from "@/utils/color-mod";
-
-const colors = {
-  clPanelBg: colorMod("#eee"),
-  clHeadPartBg: colorMod("#444850", "s-3 v-6"),
-  clBodyPartBg: colorMod("#444850", "s-10 v-10"),
-  clKnobBg: colorMod("#bbb"),
-  clStepButtonBg: colorMod("#565", "v23 s4"),
-  clStepButtonBgAlt: colorMod("#655", "v23 s4"),
-  clPieceIndicatorBg: colorMod("#666", "v-12"),
-  clPieceOperationButtonBg: colorMod("#445", "h-20 s-8 v+5"),
-  clPieceActiveButtonBg: colorMod("#445", "h-20 s-8 v+5"),
-  clKnobTickBg: colorMod("#fff"),
-  clIndicatorActive: colorMod("#8e6", "a90"),
-  clIndicatorActiveAlt: colorMod("#fff", "a70"),
-  clStepIndicator: colorMod("#333", "a60"),
-};
-
-const cssVariablesCss = Object.fromEntries(
-  Object.entries(colors).map(([key, value]) => [
-    `--${camelToKebab(key)}`,
-    value,
-  ]),
-);
-
-export const CssVariablesFrame = ({ children }: { children: ReactNode }) => {
-  return <div style={cssVariablesCss}>{children}</div>;
-};
-
-const uiClasses = {
-  borderCommon: "border border-black/40",
-  roundedFew: "rounded-[2px]",
-  bgPanel: "bg-(--cl-panel-bg)",
-  bgHeadPart: "bg-(--cl-head-part-bg)",
-  bgBodyPart: "bg-(--cl-body-part-bg)",
-  bgKnob: "bg-(--cl-knob-bg)",
-  bgStepButton: "bg-(--cl-step-button-bg)",
-  bgStepButtonAlt: "bg-(--cl-step-button-bg-alt)",
-  bgPieceIndicator: "bg-(--cl-piece-indicator-bg)",
-  bgPieceOperationButton: "bg-(--cl-piece-operation-button-bg)",
-  bgPieceActiveButton: "bg-(--cl-piece-active-button-bg)",
-  bgKnobTick: "bg-(--cl-knob-tick-bg)",
-  bgIndicatorActive: "bg-(--cl-indicator-active)",
-  bgIndicatorActiveAlt: "bg-(--cl-indicator-active-alt)",
-  bgStepIndicator: "bg-(--cl-step-indicator)",
-};
-
-//----------
-
-export const PieceActiveButton = ({
-  active,
-  onClick,
-}: {
-  active: boolean;
-  onClick?: () => void;
-}) => {
-  return (
-    <button
-      className={clsx("w-8 h-8", "flex-c", "cursor-pointer")}
-      onClick={onClick}
-    >
-      <div
-        className={clsx(
-          "w-6 h-6",
-          uiClasses.borderCommon,
-          active
-            ? uiClasses.bgIndicatorActiveAlt
-            : uiClasses.bgPieceActiveButton,
-          uiClasses.roundedFew,
-        )}
-      />
-    </button>
-  );
-};
+import { ShifterFrame } from "@/components/control-frames";
+import { Icons } from "@/components/icons";
+import { SelectorOption } from "@/components/selector-option";
+import { colorVars, uiClasses } from "@/components/ui-theme";
 
 export const Knob = ({
   value,
@@ -92,20 +22,19 @@ export const Knob = ({
     <KnobFrame value={value} min={0} max={1} step={0.01} onChange={onChange}>
       <div
         className={clsx(
-          "w-7 h-7",
-          "rounded-full",
-          "relative",
-          uiClasses.bgKnob,
+          "w-7 h-7 rounded-full relative",
           uiClasses.borderCommon,
         )}
+        style={{ background: colorVars.clKnobBg }}
       >
         <div
           className="w-full h-full flex justify-center"
-          style={{
-            transform: `rotate(${tickAngle}deg)`,
-          }}
+          style={{ transform: `rotate(${tickAngle}deg)` }}
         >
-          <div className={clsx("w-[2px] h-[10px]", uiClasses.bgKnobTick)} />
+          <div
+            className={clsx("w-[2px] h-[10px]")}
+            style={{ background: colorVars.clKnobTickBg }}
+          />
         </div>
       </div>
     </KnobFrame>
@@ -122,8 +51,7 @@ export const PieceNameBox = ({
   return (
     <button
       className={clsx(
-        "w-[75px] h-8",
-        "flex-ha",
+        "w-[75px] h-8 flex-ha",
         "overflow-hidden text-ellipsis whitespace-nowrap",
         "text-white font-bold text-sm",
       )}
@@ -134,125 +62,16 @@ export const PieceNameBox = ({
   );
 };
 
-// export const PieceAssignIndexLabel = ({ label }: { label: string }) => {
-//   return (
-//     <div
-//       className={clsx(
-//         "absolute right-0 top-0 mr-[2px]",
-//         "text-white text-[8px]",
-//       )}
-//     >
-//       {label}
-//     </div>
-//   );
-// };
-
-// export const PieceOperationButton = ({
-//   children,
-//   coverContent,
-//   onClick,
-// }: {
-//   children: ReactNode;
-//   coverContent?: ReactNode;
-//   onClick?: () => void;
-// }) => {
-//   return (
-//     <button
-//       className={clsx(
-//         "w-8 h-8 flex-c text-white text-md",
-//         "cursor-pointer",
-//         "relative",
-//         uiClasses.bgPieceOperationButton,
-//         uiClasses.borderCommon,
-//         uiClasses.roundedFew,
-//       )}
-//       onClick={onClick}
-//     >
-//       {children}
-//       {coverContent}
-//     </button>
-//   );
-// };
-
-// export const PieceIndicator = ({ active }: { active: boolean }) => {
-//   return (
-//     <div
-//       className={clsx(
-//         "w-2.5 h-7",
-//         uiClasses.borderCommon,
-//         active ? uiClasses.bgIndicatorActive : uiClasses.bgPieceIndicator,
-//         uiClasses.roundedFew,
-//       )}
-//     />
-//   );
-// };
-
-// export const StepButton = ({
-//   isStepActive,
-//   isStepCurrent,
-//   altColor,
-//   onClick,
-// }: {
-//   isStepActive: boolean;
-//   isStepCurrent: boolean;
-//   altColor: boolean;
-//   onClick: () => void;
-// }) => {
-//   let lightOpacity = 0;
-//   if (isStepActive && isStepCurrent) {
-//     lightOpacity = 0.7;
-//   } else if (isStepActive) {
-//     lightOpacity = 0.4;
-//   } else if (isStepCurrent) {
-//     lightOpacity = 0.1;
-//   }
-//   return (
-//     <div
-//       className={clsx(
-//         "w-5.5 h-8 relative flex-va cursor-pointer",
-//         "overflow-hidden",
-//         uiClasses.roundedFew,
-//         altColor ? uiClasses.bgStepButtonAlt : uiClasses.bgStepButton,
-//         uiClasses.borderCommon,
-//       )}
-//       onClick={onClick}
-//     >
-//       <div
-//         className={clsx(
-//           "w-[11px] h-[3.5px] mt-[4px]",
-//           isStepCurrent
-//             ? uiClasses.bgIndicatorActive
-//             : uiClasses.bgStepIndicator,
-//           "border-[0.5px] border-black/20",
-//           "rounded-[1px]",
-//         )}
-//       />
-//       <div
-//         className={clsx("absolute-full", "bg-white/50")}
-//         style={{ opacity: lightOpacity }}
-//       />
-//     </div>
-//   );
-// };
-
-// export const PieceRowFrame = ({
-//   headPart,
-//   bodyPart,
-// }: {
-//   headPart: ReactNode;
-//   bodyPart: ReactNode;
-// }) => {
-//   return (
-//     <div className={clsx("flex-h")}>
-//       <div className={clsx("p-2.5", uiClasses.bgHeadPart)}>{headPart}</div>
-//       <div className={clsx("p-2.5", uiClasses.bgBodyPart)}>{bodyPart}</div>
-//     </div>
-//   );
-// };
+export const TitleLabel = ({ title }: { title: string }) => {
+  return <div className="text-xl font-bold">{title}</div>;
+};
 
 export const PanelFrame = ({ children }: { children: ReactNode }) => {
   return (
-    <div className={clsx("flex-c", "w-[640px] h-[400px]", uiClasses.bgPanel)}>
+    <div
+      className={clsx("flex-c", "w-[620px] h-[380px]")}
+      style={{ background: colorVars.clPanelBg }}
+    >
       {children}
     </div>
   );
@@ -274,12 +93,101 @@ export const UpperLabel = ({
         className={clsx(
           "absolute left-0 flex-c text-[11px] font-bold",
           "whitespace-nowrap",
-          "text-gray-600",
         )}
         style={{ top: npx(yOffset - 16) }}
       >
         {label}
       </div>
     </div>
+  );
+};
+
+export const Button = ({
+  className,
+  active,
+  disabled,
+  text,
+  children,
+  onClick,
+}: {
+  className?: string;
+  active?: boolean;
+  disabled?: boolean;
+  text?: string;
+  children?: ReactNode;
+  onClick: () => void;
+}) => {
+  return (
+    <button
+      className={clsx(
+        "flex-c justify-between",
+        "w-15 h-7",
+        uiClasses.borderCommon,
+        "text-white text-[14px] font-medium",
+        "cursor-pointer",
+        className,
+      )}
+      onClick={onClick}
+      disabled={disabled}
+      style={{
+        backgroundColor: active
+          ? colorVars.clButtonActiveBg
+          : colorVars.clKnobBg,
+        cursor: disabled ? "default" : "pointer",
+        opacity: disabled ? 0.5 : 1,
+      }}
+    >
+      {text && <span>{text}</span>}
+      {children}
+    </button>
+  );
+};
+
+export const ShiftSelector = <T extends string | number>({
+  className,
+  options,
+  value,
+  onChange,
+}: {
+  className?: string;
+  options: SelectorOption<T>[];
+  value: T;
+  onChange: (value: T) => void;
+}) => {
+  const currentIndex = options.findIndex((option) => option.value === value);
+  const currentOption = options[currentIndex];
+  const canShiftLeft = currentIndex > 0;
+  const canShiftRight = currentIndex < options.length - 1;
+
+  const handleShift = (dir: -1 | 1) => {
+    const newIndex = currentIndex + dir;
+    if (newIndex < 0) return;
+    if (newIndex >= options.length) return;
+    onChange(options[newIndex].value);
+  };
+  return (
+    <ShifterFrame onShift={handleShift}>
+      <div
+        className={clsx(
+          className,
+          "flex-ha justify-between",
+          "min-w-13 h-7",
+          uiClasses.borderCommon,
+          "text-white text-[14px] font-medium",
+          "cursor-pointer",
+        )}
+        style={{ background: colorVars.clKnobBg }}
+      >
+        <Icons.ArrowLeft
+          size={20}
+          className={clsx("ml-[-6px]", !canShiftLeft && "invisible")}
+        />
+        <div>{currentOption?.label}</div>
+        <Icons.ArrowRight
+          size={20}
+          className={clsx("mr-[-6px]", !canShiftRight && "invisible")}
+        />
+      </div>
+    </ShifterFrame>
   );
 };

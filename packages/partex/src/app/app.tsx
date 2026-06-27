@@ -1,10 +1,11 @@
 import { pickObjectMembers } from "mofur/ax";
 import { useEffect } from "react";
+import { PageDev } from "@/app/page-dev";
 import {
   deserializePersistState,
   serializePersistState,
 } from "@/app/serializer";
-import { CssVariablesFrame, Knob, PanelFrame, UpperLabel } from "@/components";
+import { CssVariablesFrame } from "@/components/ui-theme";
 import { generateMappedNotes } from "@/logic/ghost-engine";
 import { sequencer, unitInterface } from "@/logic/sequencer";
 import { store } from "@/store/store";
@@ -120,22 +121,7 @@ export const App = () => {
             <BottomBar />
           </div>
         </div>
-        <PanelFrame>
-          <div className="flex-v gap-2">
-            <div className="flex-ha gap-6">
-              <UpperLabel label="octave">
-                <Knob value={0.5} onChange={() => {}} />
-              </UpperLabel>
-              <UpperLabel label="duty-s">
-                <Knob value={0.5} onChange={() => {}} />
-              </UpperLabel>
-              <UpperLabel label="duty-l">
-                <Knob value={0.5} onChange={() => {}} />
-              </UpperLabel>
-            </div>
-            <PianoRollEditorView />
-          </div>
-        </PanelFrame>
+        <PageDev />
       </div>
     </CssVariablesFrame>
   );

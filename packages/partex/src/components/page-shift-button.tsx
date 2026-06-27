@@ -15,9 +15,9 @@ export const PageShiftButton = ({ direction, onClick, disabled }: Props) => {
   );
 };
 const style = css({
-  width: "25px",
-  height: "40px",
-  background: "#4ce",
+  width: "28px",
+  height: "44px",
+  background: "var(--cl-button-active-bg)",
   color: "white",
   display: "flex",
   alignItems: "center",

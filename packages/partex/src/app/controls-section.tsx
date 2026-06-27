@@ -4,30 +4,30 @@ import {
   createPlainSelectorOptions,
   createSelectorOptions,
   GeneralSelector,
-  Knob,
   LabeledRow,
 } from "@/components";
+import { Knob } from "@/components/mono3";
 import { store } from "@/store/store";
 import { PatternMode, SongKey } from "@/store/types";
 
 export const patternModeOptions = createSelectorOptions<PatternMode>([
   ["slice", "slice"],
   ["shift", "shift"],
-  ["polyphonicShift", "polyShift"],
+  ["polyphonicShift", "poly-shift"],
 ]);
 
-export const songKeyOptions = createPlainSelectorOptions<SongKey>(["C", "Am"]);
+export const songKeyOptions = createPlainSelectorOptions<SongKey>(["Am", "C"]);
 
 const octaveShiftOptions = createSelectorOptions(
   seqNumbers(7).map((i) => [i - 3, `${i - 3}`]),
 );
 
-const patternBarsOptions = createSelectorOptions([
+export const patternBarsOptions = createSelectorOptions([
   [0.25, "1/4"],
   [0.5, "1/2"],
   [1, "1"],
 ]);
-const loopBarsOptions = createSelectorOptions(
+export const loopBarsOptions = createSelectorOptions(
   [0.5, 1, 2, 4, 8, 16].map((v) => [v, `${v === 0.5 ? "1/2" : v}`]),
 );
 

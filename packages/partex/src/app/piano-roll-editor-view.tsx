@@ -412,7 +412,7 @@ export const PianoRollEditorView = () => {
   const canShiftPage = pageNum > 1;
 
   return (
-    <div className="flex-ha gap-2">
+    <div className="flex-ha gap-1.5">
       <PageShiftButton
         direction="left"
         disabled={!canShiftPage}
