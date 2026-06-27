@@ -1,8 +1,3 @@
-import { seqNumbers } from "mofur/ax";
-import {
-  createPlainSelectorOptions,
-  createSelectorOptions,
-} from "@/components";
 import {
   Button,
   Knob,
@@ -10,6 +5,10 @@ import {
   TitleLabel,
   UpperLabel,
 } from "@/components/mono3";
+import {
+  createPlainSelectorOptions,
+  createSelectorOptions,
+} from "@/components/selector-option";
 import { colorVars } from "@/components/ui-theme";
 import { store } from "@/store/store";
 import { PatternMode, SongKey } from "@/store/types";
@@ -21,10 +20,6 @@ export const patternModeOptions = createSelectorOptions<PatternMode>([
 ]);
 
 export const songKeyOptions = createPlainSelectorOptions<SongKey>(["Am", "C"]);
-
-const octaveShiftOptions = createSelectorOptions(
-  seqNumbers(7).map((i) => [i - 3, `${i - 3}`]),
-);
 
 export const patternBarsOptions = createSelectorOptions([
   [0.25, "1/4"],
