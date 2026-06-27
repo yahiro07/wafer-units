@@ -1,5 +1,6 @@
 import clsx from "clsx";
 import { camelToKebab, linearInterpolate } from "mofur/ax";
+import { npx } from "mofur/ax-ui";
 import { KnobFrame } from "mofur/mo-react";
 import { ReactNode } from "react";
 import { colorMod } from "@/utils/color-mod";
@@ -91,7 +92,7 @@ export const Knob = ({
     <KnobFrame value={value} min={0} max={1} step={0.01} onChange={onChange}>
       <div
         className={clsx(
-          "w-8 h-8",
+          "w-7 h-7",
           "rounded-full",
           "relative",
           uiClasses.bgKnob,
@@ -133,126 +134,152 @@ export const PieceNameBox = ({
   );
 };
 
-export const PieceAssignIndexLabel = ({ label }: { label: string }) => {
-  return (
-    <div
-      className={clsx(
-        "absolute right-0 top-0 mr-[2px]",
-        "text-white text-[8px]",
-      )}
-    >
-      {label}
-    </div>
-  );
-};
+// export const PieceAssignIndexLabel = ({ label }: { label: string }) => {
+//   return (
+//     <div
+//       className={clsx(
+//         "absolute right-0 top-0 mr-[2px]",
+//         "text-white text-[8px]",
+//       )}
+//     >
+//       {label}
+//     </div>
+//   );
+// };
 
-export const PieceOperationButton = ({
-  children,
-  coverContent,
-  onClick,
-}: {
-  children: ReactNode;
-  coverContent?: ReactNode;
-  onClick?: () => void;
-}) => {
-  return (
-    <button
-      className={clsx(
-        "w-8 h-8 flex-c text-white text-md",
-        "cursor-pointer",
-        "relative",
-        uiClasses.bgPieceOperationButton,
-        uiClasses.borderCommon,
-        uiClasses.roundedFew,
-      )}
-      onClick={onClick}
-    >
-      {children}
-      {coverContent}
-    </button>
-  );
-};
+// export const PieceOperationButton = ({
+//   children,
+//   coverContent,
+//   onClick,
+// }: {
+//   children: ReactNode;
+//   coverContent?: ReactNode;
+//   onClick?: () => void;
+// }) => {
+//   return (
+//     <button
+//       className={clsx(
+//         "w-8 h-8 flex-c text-white text-md",
+//         "cursor-pointer",
+//         "relative",
+//         uiClasses.bgPieceOperationButton,
+//         uiClasses.borderCommon,
+//         uiClasses.roundedFew,
+//       )}
+//       onClick={onClick}
+//     >
+//       {children}
+//       {coverContent}
+//     </button>
+//   );
+// };
 
-export const PieceIndicator = ({ active }: { active: boolean }) => {
-  return (
-    <div
-      className={clsx(
-        "w-2.5 h-7",
-        uiClasses.borderCommon,
-        active ? uiClasses.bgIndicatorActive : uiClasses.bgPieceIndicator,
-        uiClasses.roundedFew,
-      )}
-    />
-  );
-};
+// export const PieceIndicator = ({ active }: { active: boolean }) => {
+//   return (
+//     <div
+//       className={clsx(
+//         "w-2.5 h-7",
+//         uiClasses.borderCommon,
+//         active ? uiClasses.bgIndicatorActive : uiClasses.bgPieceIndicator,
+//         uiClasses.roundedFew,
+//       )}
+//     />
+//   );
+// };
 
-export const StepButton = ({
-  isStepActive,
-  isStepCurrent,
-  altColor,
-  onClick,
-}: {
-  isStepActive: boolean;
-  isStepCurrent: boolean;
-  altColor: boolean;
-  onClick: () => void;
-}) => {
-  let lightOpacity = 0;
-  if (isStepActive && isStepCurrent) {
-    lightOpacity = 0.7;
-  } else if (isStepActive) {
-    lightOpacity = 0.4;
-  } else if (isStepCurrent) {
-    lightOpacity = 0.1;
-  }
-  return (
-    <div
-      className={clsx(
-        "w-5.5 h-8 relative flex-va cursor-pointer",
-        "overflow-hidden",
-        uiClasses.roundedFew,
-        altColor ? uiClasses.bgStepButtonAlt : uiClasses.bgStepButton,
-        uiClasses.borderCommon,
-      )}
-      onClick={onClick}
-    >
-      <div
-        className={clsx(
-          "w-[11px] h-[3.5px] mt-[4px]",
-          isStepCurrent
-            ? uiClasses.bgIndicatorActive
-            : uiClasses.bgStepIndicator,
-          "border-[0.5px] border-black/20",
-          "rounded-[1px]",
-        )}
-      />
-      <div
-        className={clsx("absolute-full", "bg-white/50")}
-        style={{ opacity: lightOpacity }}
-      />
-    </div>
-  );
-};
+// export const StepButton = ({
+//   isStepActive,
+//   isStepCurrent,
+//   altColor,
+//   onClick,
+// }: {
+//   isStepActive: boolean;
+//   isStepCurrent: boolean;
+//   altColor: boolean;
+//   onClick: () => void;
+// }) => {
+//   let lightOpacity = 0;
+//   if (isStepActive && isStepCurrent) {
+//     lightOpacity = 0.7;
+//   } else if (isStepActive) {
+//     lightOpacity = 0.4;
+//   } else if (isStepCurrent) {
+//     lightOpacity = 0.1;
+//   }
+//   return (
+//     <div
+//       className={clsx(
+//         "w-5.5 h-8 relative flex-va cursor-pointer",
+//         "overflow-hidden",
+//         uiClasses.roundedFew,
+//         altColor ? uiClasses.bgStepButtonAlt : uiClasses.bgStepButton,
+//         uiClasses.borderCommon,
+//       )}
+//       onClick={onClick}
+//     >
+//       <div
+//         className={clsx(
+//           "w-[11px] h-[3.5px] mt-[4px]",
+//           isStepCurrent
+//             ? uiClasses.bgIndicatorActive
+//             : uiClasses.bgStepIndicator,
+//           "border-[0.5px] border-black/20",
+//           "rounded-[1px]",
+//         )}
+//       />
+//       <div
+//         className={clsx("absolute-full", "bg-white/50")}
+//         style={{ opacity: lightOpacity }}
+//       />
+//     </div>
+//   );
+// };
 
-export const PieceRowFrame = ({
-  headPart,
-  bodyPart,
-}: {
-  headPart: ReactNode;
-  bodyPart: ReactNode;
-}) => {
-  return (
-    <div className={clsx("flex-h")}>
-      <div className={clsx("p-2.5", uiClasses.bgHeadPart)}>{headPart}</div>
-      <div className={clsx("p-2.5", uiClasses.bgBodyPart)}>{bodyPart}</div>
-    </div>
-  );
-};
+// export const PieceRowFrame = ({
+//   headPart,
+//   bodyPart,
+// }: {
+//   headPart: ReactNode;
+//   bodyPart: ReactNode;
+// }) => {
+//   return (
+//     <div className={clsx("flex-h")}>
+//       <div className={clsx("p-2.5", uiClasses.bgHeadPart)}>{headPart}</div>
+//       <div className={clsx("p-2.5", uiClasses.bgBodyPart)}>{bodyPart}</div>
+//     </div>
+//   );
+// };
 
 export const PanelFrame = ({ children }: { children: ReactNode }) => {
   return (
     <div className={clsx("flex-c", "w-[640px] h-[400px]", uiClasses.bgPanel)}>
       {children}
+    </div>
+  );
+};
+
+export const UpperLabel = ({
+  label,
+  children,
+  yOffset = 0,
+}: {
+  label: string;
+  children: ReactNode;
+  yOffset?: number;
+}) => {
+  return (
+    <div className="relative">
+      {children}
+      <div
+        className={clsx(
+          "absolute left-0 flex-c text-[11px] font-bold",
+          "whitespace-nowrap",
+          "text-gray-600",
+        )}
+        style={{ top: npx(yOffset - 16) }}
+      >
+        {label}
+      </div>
     </div>
   );
 };

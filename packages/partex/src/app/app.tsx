@@ -4,7 +4,7 @@ import {
   deserializePersistState,
   serializePersistState,
 } from "@/app/serializer";
-import { CssVariablesFrame, PanelFrame } from "@/components";
+import { CssVariablesFrame, Knob, PanelFrame, UpperLabel } from "@/components";
 import { generateMappedNotes } from "@/logic/ghost-engine";
 import { sequencer, unitInterface } from "@/logic/sequencer";
 import { store } from "@/store/store";
@@ -121,7 +121,20 @@ export const App = () => {
           </div>
         </div>
         <PanelFrame>
-          <PianoRollEditorView />
+          <div className="flex-v gap-2">
+            <div className="flex-ha gap-6">
+              <UpperLabel label="octave">
+                <Knob value={0.5} onChange={() => {}} />
+              </UpperLabel>
+              <UpperLabel label="duty-s">
+                <Knob value={0.5} onChange={() => {}} />
+              </UpperLabel>
+              <UpperLabel label="duty-l">
+                <Knob value={0.5} onChange={() => {}} />
+              </UpperLabel>
+            </div>
+            <PianoRollEditorView />
+          </div>
         </PanelFrame>
       </div>
     </CssVariablesFrame>
