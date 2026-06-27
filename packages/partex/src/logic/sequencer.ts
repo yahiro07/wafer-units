@@ -43,10 +43,9 @@ function createSequencer() {
         const shiftedNote = resolveNotePitch(note.pitch, state.octaveShift);
         const originalDuration = unitDuration * note.duration;
 
-        const minDuration = Math.max(
-          originalDuration - unitDuration,
-          unitDuration * 0.2,
-        );
+        const minDuration =
+          originalDuration * (note.duration === 1 ? 0.2 : 0.4);
+
         const paramNoteDuty = state.noteDuty;
         const duration = mapUnaryTo(
           paramNoteDuty,
