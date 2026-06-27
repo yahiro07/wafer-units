@@ -110,7 +110,7 @@ function useGenerateMappedNotes() {
 export function PageRoot() {
   return (
     <PanelFrame className="w-[620px] h-[380px]">
-      <div className="flex-v gap-2">
+      <div className="flex-v gap-2 pt-3">
         <ControlsSection />
         <div className="pt-1">
           <PianoRollEditorView />

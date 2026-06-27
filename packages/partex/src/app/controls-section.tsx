@@ -65,7 +65,7 @@ const controlActions = {
 export const ControlsSection = () => {
   const st = store.useSnapshot();
   return (
-    <div>
+    <div className="flex-v gap-3">
       <div className="flex-ha justify-between px-9">
         <div className="mt-[-14px]">
           <TitleLabel title="PARTEX" />
@@ -95,7 +95,7 @@ export const ControlsSection = () => {
           </UpperLabel>
         </div>
       </div>
-      <div className="flex-ha pt-2 justify-between px-9">
+      <div className="flex-ha justify-between px-9">
         <div className="flex-ha gap-8">
           <div className="flex-ha gap-4">
             <UpperLabel label="key">
@@ -116,17 +116,12 @@ export const ControlsSection = () => {
                 step={1}
               />
             </UpperLabel>
-            <UpperLabel label="duty-s">
+            <UpperLabel label="duty">
               <Knob value={st.noteDuty} onChange={store.setNoteDuty} />
             </UpperLabel>
-            <div className="invisible">
-              <UpperLabel label="duty-l">
-                <Knob value={st.noteDuty} onChange={store.setNoteDuty} />
-              </UpperLabel>
-            </div>
           </div>
           <div
-            className="font-medium text-md"
+            className="font-medium text-md ml-[40px]"
             style={{ color: colorVars.clForeground }}
           >
             {st.currentPageIndex + 1} / {Math.max(1, st.loopBars / 2)}

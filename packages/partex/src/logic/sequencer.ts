@@ -20,7 +20,7 @@ function createSequencer() {
   const state = {
     stepNotes: [] as StepNote[],
     octaveShift: 0,
-    noteDuty: 0.9,
+    noteDuty: 1,
     loopBars: 2,
   };
 
@@ -42,9 +42,14 @@ function createSequencer() {
       for (const note of targetNotes) {
         const shiftedNote = resolveNotePitch(note.pitch, state.octaveShift);
         const originalDuration = unitDuration * note.duration;
-        const minDuration = unitDuration * 0.2;
+
+        const minDuration = Math.max(
+          originalDuration - unitDuration,
+          unitDuration * 0.2,
+        );
+        const paramNoteDuty = state.noteDuty;
         const duration = mapUnaryTo(
-          state.noteDuty,
+          paramNoteDuty,
           minDuration,
           originalDuration,
         );
