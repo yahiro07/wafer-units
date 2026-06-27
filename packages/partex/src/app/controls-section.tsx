@@ -1,12 +1,16 @@
 import { seqNumbers } from "mofur/ax";
 import {
-  Button,
   createPlainSelectorOptions,
   createSelectorOptions,
-  GeneralSelector,
-  LabeledRow,
 } from "@/components";
-import { Knob } from "@/components/mono3";
+import {
+  Button,
+  Knob,
+  ShiftSelector,
+  TitleLabel,
+  UpperLabel,
+} from "@/components/mono3";
+import { colorVars } from "@/components/ui-theme";
 import { store } from "@/store/store";
 import { PatternMode, SongKey } from "@/store/types";
 
@@ -66,71 +70,99 @@ const controlActions = {
 export const ControlsSection = () => {
   const st = store.useSnapshot();
   return (
-    <div className="flex-v gap-2">
-      <div className="flex-ha gap-2 justify-between">
-        <div>partex</div>
-        <div className="flex-ha gap-4 text-sm">
-          <LabeledRow label="pt_mode">
-            <GeneralSelector
+    <div>
+      <div className="flex-ha justify-between px-9">
+        <div className="mt-[-14px]">
+          <TitleLabel title="PARTEX" />
+        </div>
+        <div className="flex-ha gap-5">
+          <UpperLabel label="pt-mode">
+            <ShiftSelector
+              className="w-24"
               options={patternModeOptions}
               value={st.patternMode}
               onChange={store.setPatternMode}
             />
-          </LabeledRow>
-          <LabeledRow label="pt_bars">
-            <GeneralSelector
+          </UpperLabel>
+          <UpperLabel label="pt-bars">
+            <ShiftSelector
               options={patternBarsOptions}
               value={st.patternBars}
               onChange={store.setPatternBars}
             />
-          </LabeledRow>
-          <LabeledRow label="bars">
-            <GeneralSelector
+          </UpperLabel>
+          <UpperLabel label="bars">
+            <ShiftSelector
               options={loopBarsOptions}
               value={st.loopBars}
               onChange={store.setLoopBars}
             />
-          </LabeledRow>
+          </UpperLabel>
         </div>
       </div>
-      <div className="flex-ha gap-4">
-        <LabeledRow label="key">
-          <GeneralSelector
-            options={songKeyOptions}
-            value={st.songKey}
-            onChange={store.setSongKey}
+      <div className="flex-ha pt-2 justify-between px-9">
+        <div className="flex-ha gap-8">
+          <div className="flex-ha gap-4">
+            <UpperLabel label="key">
+              <ShiftSelector
+                options={songKeyOptions}
+                value={st.songKey}
+                onChange={store.setSongKey}
+              />
+            </UpperLabel>
+          </div>
+          <div className="flex-ha gap-7">
+            <UpperLabel label="octave">
+              <Knob
+                value={st.octaveShift}
+                onChange={store.setOctaveShift}
+                min={-3}
+                max={3}
+                step={1}
+              />
+            </UpperLabel>
+            <UpperLabel label="duty-s">
+              <Knob value={st.noteDuty} onChange={store.setNoteDuty} />
+            </UpperLabel>
+            <div className="invisible">
+              <UpperLabel label="duty-l">
+                <Knob value={st.noteDuty} onChange={store.setNoteDuty} />
+              </UpperLabel>
+            </div>
+          </div>
+          <div
+            className="font-medium text-md"
+            style={{ color: colorVars.clForeground }}
+          >
+            {st.currentPageIndex + 1} / {Math.max(1, st.loopBars / 2)}
+          </div>
+        </div>
+        <div className="flex-ha gap-4">
+          {!st.realized && (
+            <>
+              <Button
+                active={st.ghostEnabled}
+                onClick={store.toggleGhostEnabled}
+              >
+                ghost
+              </Button>
+              <Button
+                onClick={controlActions.realizeNotes}
+                disabled={!st.ghostEnabled}
+              >
+                realize
+              </Button>
+            </>
+          )}
+          {st.realized && st.backupInputNotes && (
+            <Button onClick={controlActions.undoRealize}>restore</Button>
+          )}
+          <Button
+            text="x"
+            className="w-9!"
+            onClick={controlActions.clearNotes}
           />
-        </LabeledRow>
-        <LabeledRow label="oct">
-          <GeneralSelector
-            options={octaveShiftOptions}
-            value={st.octaveShift}
-            onChange={store.setOctaveShift}
-            reverseOptionsOrder
-          />
-        </LabeledRow>
-        <LabeledRow label="duty">
-          <Knob value={st.noteDuty} onChange={store.setNoteDuty} />
-        </LabeledRow>
-
-        <div className="grow" />
-        {!st.realized && (
-          <>
-            <Button active={st.ghostEnabled} onClick={store.toggleGhostEnabled}>
-              ghost
-            </Button>
-            <Button
-              onClick={controlActions.realizeNotes}
-              disabled={!st.ghostEnabled}
-            >
-              realize
-            </Button>
-          </>
-        )}
-        {st.realized && st.backupInputNotes && (
-          <Button onClick={controlActions.undoRealize}>restore</Button>
-        )}
-        <Button text="x" onClick={controlActions.clearNotes} asr={1.25} />
+        </div>
       </div>
     </div>
   );

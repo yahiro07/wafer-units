@@ -1,15 +1,14 @@
 import { pickObjectMembers } from "mofur/ax";
 import { useEffect } from "react";
-import { PageDev } from "@/app/page-dev";
 import {
   deserializePersistState,
   serializePersistState,
 } from "@/app/serializer";
+import { PanelFrame } from "@/components/mono3";
 import { CssVariablesFrame } from "@/components/ui-theme";
 import { generateMappedNotes } from "@/logic/ghost-engine";
 import { sequencer, unitInterface } from "@/logic/sequencer";
 import { store } from "@/store/store";
-import { BottomBar } from "./bottom-bar";
 import { ControlsSection } from "./controls-section";
 import { PianoRollEditorView } from "./piano-roll-editor-view";
 
@@ -108,21 +107,25 @@ function useGenerateMappedNotes() {
   }, [inputNotes, loopBars, patternBars, ghostEnabled, patternMode]);
 }
 
+export function PageRoot() {
+  return (
+    <PanelFrame className="w-[620px] h-[380px]">
+      <div className="flex-v gap-2">
+        <ControlsSection />
+        <div className="pt-1">
+          <PianoRollEditorView />
+        </div>
+      </div>
+    </PanelFrame>
+  );
+}
+
 export const App = () => {
   useEffect(setupSynchronization, []);
   useGenerateMappedNotes();
   return (
     <CssVariablesFrame>
-      <div className="bg-white flex-vc">
-        <div className="w-[620px] h-[380px] border border-cyan-600 bg-blue-100/20 flex-c">
-          <div className="flex-vc gap-2">
-            <ControlsSection />
-            <PianoRollEditorView />
-            <BottomBar />
-          </div>
-        </div>
-        <PageDev />
-      </div>
+      <PageRoot />
     </CssVariablesFrame>
   );
 };

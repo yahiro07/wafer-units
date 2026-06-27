@@ -11,15 +11,25 @@ import { colorVars, uiClasses } from "@/components/ui-theme";
 export const Knob = ({
   value,
   onChange,
+  min = 0,
+  max = 1,
+  step = 0.01,
 }: {
   value: number;
   onChange: (value: number) => void;
+  min?: number;
+  max?: number;
+  step?: number;
 }) => {
-  const min = 0;
-  const max = 1;
   const tickAngle = linearInterpolate(value, min, max, -135, 135);
   return (
-    <KnobFrame value={value} min={0} max={1} step={0.01} onChange={onChange}>
+    <KnobFrame
+      value={value}
+      min={min}
+      max={max}
+      step={step}
+      onChange={onChange}
+    >
       <div
         className={clsx(
           "w-7 h-7 rounded-full relative",
@@ -66,10 +76,16 @@ export const TitleLabel = ({ title }: { title: string }) => {
   return <div className="text-xl font-bold">{title}</div>;
 };
 
-export const PanelFrame = ({ children }: { children: ReactNode }) => {
+export const PanelFrame = ({
+  children,
+  className,
+}: {
+  children: ReactNode;
+  className?: string;
+}) => {
   return (
     <div
-      className={clsx("flex-c", "w-[620px] h-[380px]")}
+      className={clsx("flex-c", className)}
       style={{ background: colorVars.clPanelBg }}
     >
       {children}
