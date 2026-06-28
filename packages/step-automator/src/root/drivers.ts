@@ -5,12 +5,12 @@ import { store } from "@/root/store";
 const unitInterface = queryUnitInterface("wafer-v01");
 
 const sequencer = createSequencer(unitInterface);
-sequencer.setLfoSlots(store.state.slots);
+sequencer.setAutomationLanes(store.state.lanes);
 
 export function setupSynchronization() {
-  return store.subscribe(({ slots }) => {
-    if (slots) {
-      sequencer.setLfoSlots(slots);
+  return store.subscribe(({ lanes }) => {
+    if (lanes) {
+      sequencer.setAutomationLanes(lanes);
     }
   });
 }

@@ -2,7 +2,6 @@ import { linearInterpolate } from "mofur/ax";
 import { npx } from "mofur/ax-ui";
 import { ComponentChildren } from "preact";
 import { Children } from "@/base/jsx-types";
-import { LfoWave, XStep, YStep } from "@/base/types";
 import { KnobFrame } from "@/components/knob-frame";
 import { cx, qu } from "@/utils/qstyle-goober";
 
@@ -78,66 +77,66 @@ export const PlainCellContent = ({
   return <div class={qu.flexC().w(width)}>{text}</div>;
 };
 
-export const WaveButton = ({
-  wave,
-  onClick,
-}: {
-  wave: LfoWave;
-  onClick: () => void;
-}) => {
-  const text = {
-    [LfoWave.Sine]: "◯",
-    [LfoWave.Triangle]: "△",
-    [LfoWave.Saw]: "⊿",
-    [LfoWave.Rect]: "□",
-    [LfoWave.SampleHold]: "◉",
-  }[wave];
-  return (
-    <div class={qu.flexC().wh(40, 40).bg("#ddd")} onClick={onClick}>
-      {text}
-    </div>
-  );
-};
+// export const WaveButton = ({
+//   wave,
+//   onClick,
+// }: {
+//   wave: LfoWave;
+//   onClick: () => void;
+// }) => {
+//   const text = {
+//     [LfoWave.Sine]: "◯",
+//     [LfoWave.Triangle]: "△",
+//     [LfoWave.Saw]: "⊿",
+//     [LfoWave.Rect]: "□",
+//     [LfoWave.SampleHold]: "◉",
+//   }[wave];
+//   return (
+//     <div class={qu.flexC().wh(40, 40).bg("#ddd")} onClick={onClick}>
+//       {text}
+//     </div>
+//   );
+// };
 
-export const XStepButton = ({
-  xStep,
-  onClick,
-}: {
-  xStep: XStep;
-  onClick: () => void;
-}) => {
-  const text = {
-    [XStep.None]: "--",
-    [XStep.div16]: "/16",
-    [XStep.div8]: "/8",
-    [XStep.div4]: "/4",
-  }[xStep];
-  return (
-    <div class={qu.flexC().wh(40, 40).bg("#ddd")} onClick={onClick}>
-      {text}
-    </div>
-  );
-};
+// export const XStepButton = ({
+//   xStep,
+//   onClick,
+// }: {
+//   xStep: XStep;
+//   onClick: () => void;
+// }) => {
+//   const text = {
+//     [XStep.None]: "--",
+//     [XStep.div16]: "/16",
+//     [XStep.div8]: "/8",
+//     [XStep.div4]: "/4",
+//   }[xStep];
+//   return (
+//     <div class={qu.flexC().wh(40, 40).bg("#ddd")} onClick={onClick}>
+//       {text}
+//     </div>
+//   );
+// };
 
-export const YStepButton = ({
-  yStep,
-  onClick,
-}: {
-  yStep: YStep;
-  onClick: () => void;
-}) => {
-  const text = {
-    [YStep.None]: "--",
-    [YStep.step3]: "3",
-    [YStep.step4]: "4",
-    [YStep.step8]: "8",
-  }[yStep];
-  return (
-    <div class={qu.flexC().wh(40, 40).bg("#ddd")} onClick={onClick}>
-      {text}
-    </div>
-  );
-};
+// export const YStepButton = ({
+//   yStep,
+//   onClick,
+// }: {
+//   yStep: YStep;
+//   onClick: () => void;
+// }) => {
+//   const text = {
+//     [YStep.None]: "--",
+//     [YStep.step3]: "3",
+//     [YStep.step4]: "4",
+//     [YStep.step8]: "8",
+//   }[yStep];
+//   return (
+//     <div class={qu.flexC().wh(40, 40).bg("#ddd")} onClick={onClick}>
+//       {text}
+//     </div>
+//   );
+// };
 
 export function reteToStepText(rate: number) {
   const steps = ["16", "8", "4", "2", "1", "/2", "/4", "/8", "/16"];

@@ -1,30 +1,25 @@
 import { seqNumbers } from "mofur/ax";
 import { createStore } from "snap-store";
-import { LfoSlot, LfoWave, XStep, YStep } from "@/base/types";
+import { AutomationLaneItem } from "@/base/types";
 
 export const store = createStore<{
   count: number;
   connected: boolean;
   parameterIds: string[];
-  slots: LfoSlot[];
+  lanes: AutomationLaneItem[];
 }>({
   count: 0,
   connected: false,
   parameterIds: [],
-  slots: seqNumbers(4).map((i) => ({
-    id: i,
-    enabled: true,
-    targetParameterId: null,
-    wave: LfoWave.Sine,
-    centerValue: 0.5,
-    rate: 0.5,
-    rateStepped: true,
-    depth: 0.5,
-    xStep: XStep.None,
-    yStep: YStep.None,
-    inverted: false,
-    shifted: false,
-  })),
+  lanes: [
+    {
+      id: 0,
+      enabled: true,
+      targetParameterId: null,
+      stepValues: seqNumbers(16).map(() => 0.5),
+      patternRange: 4,
+    },
+  ],
 });
 
 if (1) {
