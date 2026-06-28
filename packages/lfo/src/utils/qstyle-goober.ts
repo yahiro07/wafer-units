@@ -1,4 +1,5 @@
 import { css } from "goober";
+import { CSSProperties } from "preact";
 
 function npx(value: number) {
   return `${value}px`;
@@ -62,6 +63,7 @@ const core = {
   }),
   relative: () => ({ position: "relative" }),
   full: () => ({ width: "100%", height: "100%" }),
+  css: (attrs: CSSProperties) => attrs,
 };
 
 function makeAdapter<T extends Record<string, (...args: any[]) => any>, R>(

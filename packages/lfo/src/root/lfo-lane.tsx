@@ -5,10 +5,11 @@ import {
   Knob,
   LabeledBox,
   SteppedButton,
-  WaveButton,
   XStepButton,
   YStepButton,
 } from "@/components";
+import { ButtonFrame } from "@/components/button-frame";
+import { UnitWaveView } from "@/components/unit-wave-view";
 import { store } from "@/root/store";
 import { qu } from "@/utils/qstyle-goober";
 
@@ -44,7 +45,7 @@ export const LfoLane = ({ slot }: { slot: LfoSlot }) => {
       </LabeledBox>
       <LabeledBox label="Target Parameter" labelAlign="left">
         <div
-          class={qu.flexC().wh(100, 40).bg("#ddd")}
+          class={qu.flexC().wh(100, 40).bg("#ddd").fontSize(12)}
           onClick={handleClickParamId}
         >
           {slot.targetParameterId ?? "--"}
@@ -57,10 +58,9 @@ export const LfoLane = ({ slot }: { slot: LfoSlot }) => {
         />
       </LabeledBox>
       <LabeledBox label="Wave">
-        <WaveButton
-          wave={slot.wave}
-          onClick={() => patchSlot({ wave: (slot.wave + 1) % 5 })}
-        />
+        <ButtonFrame onClick={() => patchSlot({ wave: (slot.wave + 1) % 5 })}>
+          <UnitWaveView wave={slot.wave} />
+        </ButtonFrame>
       </LabeledBox>
       <LabeledBox label="Rate">
         <Knob
