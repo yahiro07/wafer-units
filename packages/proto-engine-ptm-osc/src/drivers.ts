@@ -1,6 +1,7 @@
 import { setupMidiKeyboardInput } from "mofus/mx-audio";
 import { onCleanup } from "solid-js";
 import { synthEngine, uiActions } from "@/actions";
+import { createAutomationInput } from "@/automation-input";
 import { persistence } from "@/persistence";
 import { unitInterface } from "@/synthesis";
 
@@ -11,12 +12,13 @@ export function setupDrivers() {
         unitType: "instrument",
         categoryHint: "synthesizer",
         outputs: ["audio"],
-        inputs: ["note"],
+        inputs: ["note", "automation"],
       },
       noteInput: {
         noteOn: uiActions.noteOn,
         noteOff: uiActions.noteOff,
       },
+      automationInput: createAutomationInput(),
       persistence,
     });
   } else {
