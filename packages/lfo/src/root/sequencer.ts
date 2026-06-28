@@ -1,7 +1,31 @@
-import { clampValue, mapUnaryTo } from "mofur/ax";
+import {
+  clampValue,
+  highClip,
+  lowClip,
+  mapUnaryTo,
+  seqNumbers,
+} from "mofur/ax";
 import { ClockHandlers, UnitInterface } from "wafer-host/unit-types";
-import { LfoSlot } from "@/base/types";
+import { LfoSlot, LfoWave } from "@/base/types";
 import { mapUnaryToArray } from "@/utils/helpers";
+
+const randomSequence = seqNumbers(100).map(() => Math.random());
+
+function getLfoValue(wave: LfoWave, phase: number) {
+  const pp = phase - Math.floor(phase);
+  if (wave === LfoWave.Sine) {
+    return -Math.cos(2 * Math.PI * pp) * 0.5 + 0.5;
+  } else if (wave === LfoWave.Triangle) {
+    return pp < 0.5 ? pp * 2 : 1 - (pp - 0.5) * 2;
+  } else if (wave === LfoWave.Saw) {
+    return 1 - pp;
+  } else if (wave === LfoWave.Rect) {
+    return pp < 0.5 ? 1 : 0;
+  } else if (wave === LfoWave.SampleHold) {
+    return randomSequence[((phase * 16) >>> 0) % randomSequence.length];
+  }
+  return 0;
+}
 
 export function createSequencer(unitInterface: UnitInterface | undefined) {
   const state = {
@@ -19,14 +43,11 @@ export function createSequencer(unitInterface: UnitInterface | undefined) {
       for (const slot of state.lfoSlots) {
         if (slot.enabled && slot.targetParameterId) {
           const speedRate = mapUnaryToArray(slot.rate, speedRates);
-          const hi = slot.centerValue + slot.depth / 2;
-          const lo = slot.centerValue - slot.depth / 2;
-          const lfoValue = clampValue(
-            Math.sin((stepIndex / 16) * Math.PI * 2 * speedRate) * 0.5 + 0.5,
-            0,
-            1,
-          );
-          const value = mapUnaryTo(lfoValue, lo, hi);
+          const hi = highClip(slot.centerValue + slot.depth / 2, 1);
+          const lo = lowClip(slot.centerValue - slot.depth / 2, 0);
+          const phase = (stepIndex / 16) * speedRate;
+          const y = getLfoValue(slot.wave, phase);
+          const value = clampValue(mapUnaryTo(y, lo, hi), 0, 1);
           if (value !== sentValues[slot.targetParameterId]) {
             unitInterface?.automationOutputPort?.setParameter(
               slot.targetParameterId,
