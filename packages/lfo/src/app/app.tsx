@@ -19,6 +19,20 @@ enum LfoWave {
   SampleHold,
 }
 
+enum XStep {
+  None = 0,
+  div16,
+  div8,
+  div4,
+}
+
+enum YStep {
+  None = 0,
+  step3,
+  step4,
+  step8,
+}
+
 type LfoSlot = {
   id: number;
   enabled: boolean;
@@ -28,6 +42,8 @@ type LfoSlot = {
   rate: number;
   rateStepped: boolean;
   depth: number;
+  xStep: XStep;
+  yStep: YStep;
 };
 
 const store = createStore<{
@@ -48,6 +64,8 @@ const store = createStore<{
     rate: 0.5,
     rateStepped: true,
     depth: 0.5,
+    xStep: XStep.None,
+    yStep: YStep.None,
   })),
 });
 
@@ -159,6 +177,46 @@ const WaveButton = ({
     [LfoWave.Rect]: "□",
     [LfoWave.SampleHold]: "◉",
   }[wave];
+  return (
+    <div class={qu.flexC().wh(40, 40).bg("#ddd")} onClick={onClick}>
+      {text}
+    </div>
+  );
+};
+
+const XStepButton = ({
+  xStep,
+  onClick,
+}: {
+  xStep: XStep;
+  onClick: () => void;
+}) => {
+  const text = {
+    [XStep.None]: "--",
+    [XStep.div16]: "/16",
+    [XStep.div8]: "/8",
+    [XStep.div4]: "/4",
+  }[xStep];
+  return (
+    <div class={qu.flexC().wh(40, 40).bg("#ddd")} onClick={onClick}>
+      {text}
+    </div>
+  );
+};
+
+const YStepButton = ({
+  yStep,
+  onClick,
+}: {
+  yStep: YStep;
+  onClick: () => void;
+}) => {
+  const text = {
+    [YStep.None]: "--",
+    [YStep.step3]: "3",
+    [YStep.step4]: "4",
+    [YStep.step8]: "8",
+  }[yStep];
   return (
     <div class={qu.flexC().wh(40, 40).bg("#ddd")} onClick={onClick}>
       {text}
@@ -296,6 +354,18 @@ const LfoLane = ({ slot }: { slot: LfoSlot }) => {
           onChange={(value) => patchSlot({ depth: value })}
         />
       </LabeledBox>
+      <LabeledBox label="X Step">
+        <XStepButton
+          xStep={slot.xStep}
+          onClick={() => patchSlot({ xStep: (slot.xStep + 1) % 4 })}
+        />
+      </LabeledBox>
+      <LabeledBox label="Y Step">
+        <YStepButton
+          yStep={slot.yStep}
+          onClick={() => patchSlot({ yStep: (slot.yStep + 1) % 4 })}
+        />
+      </LabeledBox>
     </div>
   );
 };
@@ -312,7 +382,7 @@ export const App = () => {
             <div>{connected ? "Connected" : "Disconnected"}</div>
           </div>
           <div>parameterIds: {JSON.stringify(parameterIds)}</div>
-          <div class={qu.flexV().gap(2)}>
+          <div class={qu.flexVC().gap(2)}>
             {slots.map((slot) => (
               <LfoLane key={slot.id} slot={slot} />
             ))}

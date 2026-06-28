@@ -28,6 +28,12 @@ const core = {
     flexDirection: "column",
     alignItems: "center",
   }),
+  flexVC: () => ({
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+  }),
   flexVL: () => ({
     display: "flex",
     flexDirection: "column",
