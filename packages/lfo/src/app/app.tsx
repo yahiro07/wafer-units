@@ -1,50 +1,23 @@
 import { setup } from "goober";
-import { iife, linearInterpolate, seqNumbers } from "mofur/ax";
-import { npx } from "mofur/ax-ui";
-import { ComponentChildren, h } from "preact";
+import { iife, seqNumbers } from "mofur/ax";
+import { h } from "preact";
 import { createStore } from "snap-store/preact";
 import { queryUnitInterface } from "wafer-host/unit-types";
-import { KnobFrame } from "@/components/knob-frame";
+import { LfoSlot, LfoWave, XStep, YStep } from "@/base/types";
+import {
+  IndicatorButton,
+  Knob,
+  LabeledBox,
+  SteppedButton,
+  WaveButton,
+  XStepButton,
+  YStepButton,
+} from "@/components";
 import { qu } from "@/utils/qstyle-goober";
 
 setup(h);
 
 const unitInterface = queryUnitInterface("wafer-v01");
-
-enum LfoWave {
-  Sine = 0,
-  Triangle,
-  Saw,
-  Rect,
-  SampleHold,
-}
-
-enum XStep {
-  None = 0,
-  div16,
-  div8,
-  div4,
-}
-
-enum YStep {
-  None = 0,
-  step3,
-  step4,
-  step8,
-}
-
-type LfoSlot = {
-  id: number;
-  enabled: boolean;
-  targetParameterId: string | null;
-  wave: LfoWave;
-  centerValue: number;
-  rate: number;
-  rateStepped: boolean;
-  depth: number;
-  xStep: XStep;
-  yStep: YStep;
-};
 
 const store = createStore<{
   count: number;
@@ -96,193 +69,6 @@ unitInterface?.completeSetup({
     },
   },
 });
-
-export const Knob = ({
-  value,
-  onChange,
-  min = 0,
-  max = 1,
-  step = 0.01,
-  onClick,
-  disabled,
-}: {
-  value: number;
-  onChange: (value: number) => void;
-  min?: number;
-  max?: number;
-  step?: number;
-  onClick?: () => void;
-  disabled?: boolean;
-}) => {
-  const tickAngle = linearInterpolate(value, min, max, -135, 135);
-  return (
-    <KnobFrame
-      value={value}
-      min={min}
-      max={max}
-      step={step}
-      onChange={onChange}
-      onClick={onClick}
-      dragDisabled={disabled}
-    >
-      <div
-        class={qu.wh(28, 28).rounded(14).relative().bd("#444")}
-        style={{ opacity: disabled ? 0.5 : 1 }}
-      >
-        <div
-          class={qu.full().flexVA()}
-          style={{ transform: `rotate(${tickAngle}deg)` }}
-        >
-          <div class={qu.wh(2, 10).bg("#fff")} />
-        </div>
-      </div>
-    </KnobFrame>
-  );
-};
-
-const IndicatorButton = ({
-  active,
-  onClick,
-}: {
-  active: boolean;
-  onClick: () => void;
-}) => {
-  return (
-    <div
-      class={qu.flexC().wh(20, 20)}
-      style={{
-        background: active ? "#9f9" : "#ddd",
-        cursor: "pointer",
-      }}
-      onClick={onClick}
-    />
-  );
-};
-
-const PlainCellContent = ({ text, width }: { text: string; width: number }) => {
-  return <div class={qu.flexC().w(width)}>{text}</div>;
-};
-
-const WaveButton = ({
-  wave,
-  onClick,
-}: {
-  wave: LfoWave;
-  onClick: () => void;
-}) => {
-  const text = {
-    [LfoWave.Sine]: "◯",
-    [LfoWave.Triangle]: "△",
-    [LfoWave.Saw]: "⊿",
-    [LfoWave.Rect]: "□",
-    [LfoWave.SampleHold]: "◉",
-  }[wave];
-  return (
-    <div class={qu.flexC().wh(40, 40).bg("#ddd")} onClick={onClick}>
-      {text}
-    </div>
-  );
-};
-
-const XStepButton = ({
-  xStep,
-  onClick,
-}: {
-  xStep: XStep;
-  onClick: () => void;
-}) => {
-  const text = {
-    [XStep.None]: "--",
-    [XStep.div16]: "/16",
-    [XStep.div8]: "/8",
-    [XStep.div4]: "/4",
-  }[xStep];
-  return (
-    <div class={qu.flexC().wh(40, 40).bg("#ddd")} onClick={onClick}>
-      {text}
-    </div>
-  );
-};
-
-const YStepButton = ({
-  yStep,
-  onClick,
-}: {
-  yStep: YStep;
-  onClick: () => void;
-}) => {
-  const text = {
-    [YStep.None]: "--",
-    [YStep.step3]: "3",
-    [YStep.step4]: "4",
-    [YStep.step8]: "8",
-  }[yStep];
-  return (
-    <div class={qu.flexC().wh(40, 40).bg("#ddd")} onClick={onClick}>
-      {text}
-    </div>
-  );
-};
-
-function reteToStepText(rate: number) {
-  const steps = [
-    "/64",
-    "/32",
-    "/16",
-    "/8",
-    "/4",
-    "/2",
-    "1",
-    "2",
-    "4",
-    "8",
-    "16",
-    "32",
-    "64",
-  ];
-  const index = Math.min(Math.floor(rate * steps.length), steps.length - 1);
-  return steps[index];
-}
-
-const SteppedButton = ({
-  active,
-  rate,
-  onClick,
-}: {
-  active: boolean;
-  rate: number;
-  onClick: () => void;
-}) => {
-  return (
-    <div class={qu.flexC().wh(40, 40).bg("#ddd")} onClick={onClick}>
-      {active ? reteToStepText(rate) : "--"}
-    </div>
-  );
-};
-
-const LabeledBox = ({
-  label,
-  children,
-  labelAlign = "center",
-  width,
-}: {
-  label: string;
-  labelAlign?: "left" | "center" | "right";
-  children: ComponentChildren;
-  width?: number;
-}) => {
-  return (
-    <div class={qu.flexV()} style={width ? { width: npx(width) } : undefined}>
-      <div
-        class={qu.fontSize(10).weight("bold").h(15)}
-        style={{ textAlign: labelAlign }}
-      >
-        {label}
-      </div>
-      <div class={qu.flexC().h(40)}>{children}</div>
-    </div>
-  );
-};
 
 const LfoLane = ({ slot }: { slot: LfoSlot }) => {
   const patchSlot = (attrs: Partial<LfoSlot>) => {

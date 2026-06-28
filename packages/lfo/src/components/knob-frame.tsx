@@ -1,6 +1,6 @@
 import { clampValue } from "mofur/ax";
 import { startDragSession } from "mofur/ax-ui";
-import { Children } from "@/utils/jsx-types";
+import { Children } from "@/base/jsx-types";
 
 export function KnobFrame(props: {
   value: number;
