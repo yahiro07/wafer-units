@@ -5,7 +5,7 @@ import {
   Knob,
   LabeledBox,
   NarrowButton,
-  SteppedButton,
+  reteToStepText,
   YStepButton,
 } from "@/components";
 import { ButtonFrame } from "@/components/button-frame";
@@ -66,20 +66,22 @@ export const LfoLane = ({ slot }: { slot: LfoSlot }) => {
           />
         </ButtonFrame>
       </LabeledBox>
-      <LabeledBox label="Rate">
+      <LabeledBox label={`Rate ${reteToStepText(slot.rate)}`} width={40}>
         <Knob
           value={slot.rate}
           onChange={(value) => patchSlot({ rate: value })}
+          min={0}
+          max={1}
+          step={1 / 8}
         />
       </LabeledBox>
-
-      <LabeledBox label="Step">
+      {/* <LabeledBox label="Step">
         <SteppedButton
           active={slot.rateStepped}
           rate={slot.rate}
           // onClick={() => patchSlot({ rateStepped: !slot.rateStepped })}
         />
-      </LabeledBox>
+      </LabeledBox> */}
       <LabeledBox label="Depth">
         <Knob
           value={slot.depth}

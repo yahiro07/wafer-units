@@ -139,7 +139,7 @@ export const YStepButton = ({
   );
 };
 
-function reteToStepText(rate: number) {
+export function reteToStepText(rate: number) {
   const steps = ["16", "8", "4", "2", "1", "/2", "/4", "/8", "/16"];
   const index = Math.min(Math.floor(rate * steps.length), steps.length - 1);
   return steps[index];
