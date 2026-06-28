@@ -5,28 +5,41 @@ function npx(value: number) {
 }
 
 const core = {
-  flexC: (gap?: number) => ({
+  flexH: () => ({
+    display: "flex",
+    flexDirection: "row",
+  }),
+  flexHA: () => ({
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+  }),
+  flexC: () => ({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    ...(gap && { gap: npx(gap * 4) }),
   }),
-  flexV: (gap?: number) => ({
+  flexV: () => ({
     display: "flex",
     flexDirection: "column",
-    ...(gap && { gap: npx(gap * 4) }),
   }),
-  flexVL: (gap?: number) => ({
+  flexVA: () => ({
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+  }),
+  flexVL: () => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "flex-start",
-    ...(gap && { gap: npx(gap * 4) }),
   }),
+  gap: (value: number) => ({
+    gap: npx(value * 4),
+  }),
+  grow: () => ({ flexGrow: 1 }),
+  w: (width: number) => ({ width: npx(width) }),
+  h: (height: number) => ({ height: npx(height) }),
   wh: (width: number, height: number) => ({
-    width: npx(width * 4),
-    height: npx(height * 4),
-  }),
-  wh_px: (width: number, height: number) => ({
     width: npx(width),
     height: npx(height),
   }),
@@ -37,6 +50,12 @@ const core = {
   color: (color: string) => ({ color }),
   weight: (weight: string) => ({ fontWeight: weight }),
   inlineBlock: () => ({ display: "inline-block" }),
+  fontSize: (size: number) => ({ fontSize: npx(size) }),
+  rounded: (radius: number | string) => ({
+    borderRadius: typeof radius === "number" ? npx(radius) : radius,
+  }),
+  relative: () => ({ position: "relative" }),
+  full: () => ({ width: "100%", height: "100%" }),
 };
 
 function makeAdapter<T extends Record<string, (...args: any[]) => any>, R>(
@@ -94,6 +113,6 @@ function createQCursor(initialObj?: Record<string, any>): QCursor {
 
 export const qu = makeAdapter(core, (style) => createQCursor(style));
 
-export function cx(...cursors: QCursor[]): string {
-  return cursors.map((cursor) => cursor.toString()).join(" ");
+export function cx(...items: QCursor[]): string {
+  return items.map((cursor) => cursor.toString()).join(" ");
 }
