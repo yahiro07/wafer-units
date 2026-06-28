@@ -67,6 +67,8 @@ const core = {
   bd: (color: string) => ({ border: `solid 1px ${color}` }),
   p: (padding: number) => ({ padding: npx(padding * 4) }),
   m: (margin: number) => ({ margin: npx(margin * 4) }),
+  ml: (margin: number) => ({ marginLeft: npx(margin * 4) }),
+  mr: (margin: number) => ({ marginRight: npx(margin * 4) }),
   color: (color: string) => ({ color }),
   weight: (weight: string) => ({ fontWeight: weight }),
   inlineBlock: () => ({ display: "inline-block" }),
@@ -79,6 +81,7 @@ const core = {
   css: (attrs: CSSProperties) => attrs,
   cp: () => ({ cursor: "pointer" }),
   minW: (width: number) => ({ minWidth: npx(width) }),
+  invisible: () => ({ visibility: "hidden" }),
 };
 
 function makeAdapter<T extends Record<string, (...args: any[]) => any>, R>(

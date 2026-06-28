@@ -1,3 +1,4 @@
+import { Icons } from "@/base/icons";
 import { Children } from "@/base/jsx-types";
 import { SelectorOption } from "@/base/selector-option";
 import { qlsx, qu } from "@/utils/qstyle-goober";
@@ -22,12 +23,10 @@ export const ShifterFrame = ({
 };
 
 export const ShiftSelector = <T extends string | number>({
-  className,
   options,
   value,
   onChange,
 }: {
-  className?: string;
   options: SelectorOption<T>[];
   value: T;
   onChange: (value: T) => void;
@@ -47,19 +46,19 @@ export const ShiftSelector = <T extends string | number>({
     <ShifterFrame onShift={handleShift}>
       <div
         class={qlsx(
-          qu.flexHA().justify("between").minW(52).h(28).fontSize(14).cp(),
-          qu.bd("#ddd").color("#fff"),
+          qu.flexHA().justify("between").minW(60).h(30).fontSize(14).cp(),
+          qu.bg("#ddd"),
         )}
       >
-        {/* <Icons.ArrowLeft
-          size={20}
-          className={clsx("ml-[-6px]", !canShiftLeft && "invisible")}
-        /> */}
+        <Icons.CaretLeft
+          size={13}
+          class={qlsx(qu.ml(-0.75), !canShiftLeft && qu.invisible())}
+        />
         <div>{currentOption?.label}</div>
-        {/* <Icons.ArrowRight
-          size={20}
-          className={clsx("mr-[-6px]", !canShiftRight && "invisible")}
-        /> */}
+        <Icons.CaretRight
+          size={13}
+          class={qlsx(qu.mr(-0.75), !canShiftRight && qu.invisible())}
+        />
       </div>
     </ShifterFrame>
   );

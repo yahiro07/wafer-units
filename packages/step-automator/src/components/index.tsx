@@ -174,7 +174,7 @@ export const LabeledBox = ({
   return (
     <div class={qu.flexV()} style={width ? { width: npx(width) } : undefined}>
       <div
-        class={qu.fontSize(10).weight("bold").h(15)}
+        class={qu.fontSize(10).weight("bold").h(12)}
         style={{ textAlign: labelAlign }}
       >
         {label}

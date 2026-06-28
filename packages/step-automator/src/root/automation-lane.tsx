@@ -50,15 +50,15 @@ export const AutomationLane = ({ lane }: { lane: AutomationLaneItem }) => {
     <div class={qu.flexV().gap(4)}>
       <div class={qu.flexHA().justify("between")}>
         <div class={qu.flexHA().gap(2)}>
-          <LabeledBox label={`lane ${lane.id + 1}`} width={30}>
+          <LabeledBox width={30}>
             <IndicatorButton
               active={lane.enabled}
               onClick={() => patchLane({ enabled: !lane.enabled })}
             />
           </LabeledBox>
-          <LabeledBox label="Target Parameter" labelAlign="left">
+          <LabeledBox label="target parameter" labelAlign="left">
             <div
-              class={qu.flexC().wh(100, 40).bg("#ddd").fontSize(12)}
+              class={qu.flexC().wh(100, 30).bg("#ddd").fontSize(12)}
               onClick={handleClickParamId}
             >
               {lane.targetParameterId ?? "--"}
