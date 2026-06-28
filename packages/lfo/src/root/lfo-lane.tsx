@@ -66,6 +66,21 @@ export const LfoLane = ({ slot }: { slot: LfoSlot }) => {
           />
         </ButtonFrame>
       </LabeledBox>
+      <LabeledBox>
+        <div class={qu.flexV().gap(1)}>
+          <NarrowButton
+            text="INV"
+            active={slot.inverted}
+            onClick={() => patchSlot({ inverted: !slot.inverted })}
+          />
+          <NarrowButton
+            text="SHIFT"
+            active={slot.shifted}
+            onClick={() => patchSlot({ shifted: !slot.shifted })}
+          />
+        </div>
+      </LabeledBox>
+
       <LabeledBox label={`Rate ${reteToStepText(slot.rate)}`} width={40}>
         <Knob
           value={slot.rate}
@@ -88,20 +103,7 @@ export const LfoLane = ({ slot }: { slot: LfoSlot }) => {
           onChange={(value) => patchSlot({ depth: value })}
         />
       </LabeledBox>
-      <LabeledBox>
-        <div class={qu.flexV().gap(1)}>
-          <NarrowButton
-            text="INV"
-            active={slot.inverted}
-            onClick={() => patchSlot({ inverted: !slot.inverted })}
-          />
-          <NarrowButton
-            text="SHIFT"
-            active={slot.shifted}
-            onClick={() => patchSlot({ shifted: !slot.shifted })}
-          />
-        </div>
-      </LabeledBox>
+
       {/* <LabeledBox label="X Step">
         <XStepButton
           xStep={slot.xStep}
