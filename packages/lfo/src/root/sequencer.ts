@@ -11,8 +11,12 @@ import { mapUnaryToArray } from "@/utils/helpers";
 
 const randomSequence = seqNumbers(100).map(() => Math.random());
 
-function getLfoValue(wave: LfoWave, phase: number) {
-  const pp = phase - Math.floor(phase);
+function getLfoValue(wave: LfoWave, phase: number, shifted: boolean) {
+  let pp = phase - Math.floor(phase);
+  if (shifted && wave !== LfoWave.SampleHold) {
+    const shiftAmount = wave === LfoWave.Saw ? 0.5 : 0.25;
+    pp = (pp - shiftAmount + 1) % 1;
+  }
   if (wave === LfoWave.Sine) {
     return -Math.cos(2 * Math.PI * pp) * 0.5 + 0.5;
   } else if (wave === LfoWave.Triangle) {
@@ -46,7 +50,10 @@ export function createSequencer(unitInterface: UnitInterface | undefined) {
           const hi = highClip(slot.centerValue + slot.depth / 2, 1);
           const lo = lowClip(slot.centerValue - slot.depth / 2, 0);
           const phase = (stepIndex / 16) * speedRate;
-          const y = getLfoValue(slot.wave, phase);
+          let y = getLfoValue(slot.wave, phase, slot.shifted);
+          if (slot.inverted) {
+            y = 1 - y;
+          }
           const value = clampValue(mapUnaryTo(y, lo, hi), 0, 1);
           if (value !== sentValues[slot.targetParameterId]) {
             unitInterface?.automationOutputPort?.setParameter(

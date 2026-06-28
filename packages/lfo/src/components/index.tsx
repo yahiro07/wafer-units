@@ -60,7 +60,7 @@ export const IndicatorButton = ({
     <div
       class={qu.flexC().wh(20, 20)}
       style={{
-        background: active ? "#9f9" : "#ddd",
+        background: active ? "#59e" : "#ddd",
         cursor: "pointer",
       }}
       onClick={onClick}
