@@ -204,7 +204,7 @@ export const NarrowButton = ({
       )}
       onClick={onClick}
     >
-      {text && <div class={qu.fontSize(10)}>{text}</div>}
+      {text && <div class={qu.fontSize(9)}>{text}</div>}
       {children}
     </div>
   );
