@@ -14,8 +14,7 @@ export const ParameterGauge = ({
     <KnobFrame value={value} min={0} max={1} step={0.01} onChange={onChange}>
       <div
         class={cx(
-          qu.wh(25, 100).flexV(),
-          qu.css({ justifyContent: "flex-end" }),
+          qu.wh(25, 100).flexV().justify("end"),
           qu.bg(altColor ? "#555" : "#777"),
         )}
       >

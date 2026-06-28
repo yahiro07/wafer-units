@@ -18,6 +18,7 @@ export const store = createStore<{
       targetParameterId: null,
       stepValues: seqNumbers(16).map(() => 0.5),
       patternRange: 4,
+      clockDivision: 1,
     },
   ],
 });

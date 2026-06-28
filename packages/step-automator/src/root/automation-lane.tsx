@@ -1,8 +1,13 @@
 import { iife, seqNumbers } from "mofur/ax";
+import {
+  clockDivisionOptions,
+  patternRangeOptions,
+} from "@/base/selector-options";
 import { AutomationLaneItem, PatternRange } from "@/base/types";
 import { IndicatorButton, LabeledBox } from "@/components";
 import { StepIndicatorLed } from "@/components/led";
 import { ParameterGauge } from "@/components/parameter-gauge";
+import { ShiftSelector } from "@/components/shift-selector";
 import { store } from "@/root/store";
 import { qu } from "@/utils/qstyle-goober";
 
@@ -42,22 +47,40 @@ export const AutomationLane = ({ lane }: { lane: AutomationLaneItem }) => {
     });
   };
   return (
-    <div class={qu.flexV().gap(2)}>
-      <div class={qu.flexHA().gap(3)}>
-        <LabeledBox label={`lane ${lane.id + 1}`} width={30}>
-          <IndicatorButton
-            active={lane.enabled}
-            onClick={() => patchLane({ enabled: !lane.enabled })}
-          />
-        </LabeledBox>
-        <LabeledBox label="Target Parameter" labelAlign="left">
-          <div
-            class={qu.flexC().wh(100, 40).bg("#ddd").fontSize(12)}
-            onClick={handleClickParamId}
-          >
-            {lane.targetParameterId ?? "--"}
-          </div>
-        </LabeledBox>
+    <div class={qu.flexV().gap(4)}>
+      <div class={qu.flexHA().justify("between")}>
+        <div class={qu.flexHA().gap(2)}>
+          <LabeledBox label={`lane ${lane.id + 1}`} width={30}>
+            <IndicatorButton
+              active={lane.enabled}
+              onClick={() => patchLane({ enabled: !lane.enabled })}
+            />
+          </LabeledBox>
+          <LabeledBox label="Target Parameter" labelAlign="left">
+            <div
+              class={qu.flexC().wh(100, 40).bg("#ddd").fontSize(12)}
+              onClick={handleClickParamId}
+            >
+              {lane.targetParameterId ?? "--"}
+            </div>
+          </LabeledBox>
+        </div>
+        <div class={qu.flexHA().gap(3)}>
+          <LabeledBox label="clock-div">
+            <ShiftSelector
+              options={clockDivisionOptions}
+              value={lane.clockDivision}
+              onChange={(value) => patchLane({ clockDivision: value })}
+            />
+          </LabeledBox>
+          <LabeledBox label="pt-range">
+            <ShiftSelector
+              options={patternRangeOptions}
+              value={lane.patternRange}
+              onChange={(value) => patchLane({ patternRange: value })}
+            />
+          </LabeledBox>
+        </div>
       </div>
       <div class={qu.flexH().gap(2)}>
         {lane.stepValues.map((_, index) => {

@@ -40,6 +40,19 @@ const core = {
     flexDirection: "column",
     alignItems: "flex-start",
   }),
+  justify: (
+    value: "start" | "center" | "end" | "between" | "around" | "evenly",
+  ) => {
+    const actualValue = {
+      start: "flex-start",
+      center: "center",
+      end: "flex-end",
+      between: "space-between",
+      around: "space-around",
+      evenly: "space-evenly",
+    }[value];
+    return { justifyContent: actualValue };
+  },
   gap: (value: number) => ({
     gap: npx(value * 4),
   }),
@@ -65,6 +78,7 @@ const core = {
   full: () => ({ width: "100%", height: "100%" }),
   css: (attrs: CSSProperties) => attrs,
   cp: () => ({ cursor: "pointer" }),
+  minW: (width: number) => ({ minWidth: npx(width) }),
 };
 
 function makeAdapter<T extends Record<string, (...args: any[]) => any>, R>(
@@ -128,3 +142,5 @@ export function cx(...items: (QCursor | false | undefined)[]): string {
     .map((cursor) => cursor!.toString())
     .join(" ");
 }
+
+export const qlsx = cx;
