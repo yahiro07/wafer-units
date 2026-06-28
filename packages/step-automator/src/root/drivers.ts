@@ -21,7 +21,21 @@ export function setupUnit() {
       unitType: "sequencer",
       outputs: ["automation"],
     },
-    clockHandlers: sequencer.clockHandlers,
+    clockHandlers: {
+      processStep(stepIndexInput, time, unitDuration) {
+        sequencer.clockHandlers.processStep?.(
+          stepIndexInput,
+          time,
+          unitDuration,
+        );
+        const lane = store.state.lanes[0];
+        const playPos = ((stepIndexInput / lane.clockDivision) >>> 0) % 16;
+        store.setPlaybackStepIndex(playPos);
+      },
+      stop() {
+        store.setPlaybackStepIndex(-1);
+      },
+    },
     unitCallbacks: {
       onConnectedTo(linkedPortSubtypes) {
         if (linkedPortSubtypes.includes("automation")) {

@@ -12,7 +12,13 @@ import { ShiftSelector } from "@/components/shift-selector";
 import { store } from "@/root/store";
 import { qu } from "@/utils/qstyle-goober";
 
-export const AutomationLane = ({ lane }: { lane: AutomationLaneItem }) => {
+export const AutomationLane = ({
+  lane,
+  playbackStepIndex,
+}: {
+  lane: AutomationLaneItem;
+  playbackStepIndex: number;
+}) => {
   const patchLane = (attrs: Partial<AutomationLaneItem>) => {
     store.setLanes((prev) =>
       prev.map((s) => (s.id === lane.id ? { ...s, ...attrs } : s)),
@@ -81,7 +87,7 @@ export const AutomationLane = ({ lane }: { lane: AutomationLaneItem }) => {
           const value = lane.stepValues[destIndex];
           return (
             <div class={qu.flexVC().gap(3)}>
-              <StepIndicatorLed active={index === 3} />
+              <StepIndicatorLed active={playbackStepIndex === index} />
               <ParameterGauge
                 key={index}
                 value={value}

@@ -7,6 +7,7 @@ export const store = createStore<{
   connected: boolean;
   parameterIds: string[];
   lanes: AutomationLaneItem[];
+  playbackStepIndex: number;
 }>({
   count: 0,
   connected: false,
@@ -21,6 +22,7 @@ export const store = createStore<{
       clockDivision: 1,
     },
   ],
+  playbackStepIndex: -1,
 });
 
 if (1) {

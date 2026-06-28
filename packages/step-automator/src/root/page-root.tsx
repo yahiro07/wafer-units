@@ -3,7 +3,8 @@ import { store } from "@/root/store";
 import { qu } from "@/utils/qstyle-goober";
 
 export const PageRoot = () => {
-  const { parameterIds, connected, lanes } = store.useSnapshot();
+  const { parameterIds, connected, lanes, playbackStepIndex } =
+    store.useSnapshot();
   return (
     <div class={qu.flexC()}>
       <div class={qu.wh(600, 350).bg("#aaa").p(4).color("#333")}>
@@ -19,7 +20,11 @@ export const PageRoot = () => {
           </div>
           <div class={qu.flexVC().gap(2)}>
             {lanes.map((lane) => (
-              <AutomationLane key={lane.id} lane={lane} />
+              <AutomationLane
+                key={lane.id}
+                lane={lane}
+                playbackStepIndex={playbackStepIndex}
+              />
             ))}
           </div>
         </div>

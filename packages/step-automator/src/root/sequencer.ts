@@ -11,9 +11,10 @@ export function createSequencer(unitInterface: UnitInterface | undefined) {
   const clockHandlers: ClockHandlers = {
     start() {},
     // processScheduling(timeFrom, barFrom, barTo, bpm) {},
-    processStep(stepIndex, time, unitDuration) {
+    processStep(stepIndexInput, time, unitDuration) {
       for (const lane of state.lanes) {
         if (lane.enabled && lane.targetParameterId) {
+          const stepIndex = (stepIndexInput / lane.clockDivision) >>> 0;
           const referenceIndex =
             gaugeReferenceIndexMap[lane.patternRange][stepIndex % 16];
           const value = lane.stepValues[referenceIndex];
