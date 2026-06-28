@@ -1,5 +1,5 @@
 {
-  "name": "lfo",
+  "name": "multi-lfo",
   "unitType": "sequencer",
   "preferredSize": "600,350",
   "outputSignalTypes": "note",
