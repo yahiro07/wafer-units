@@ -139,21 +139,7 @@ export const YStepButton = ({
 };
 
 function reteToStepText(rate: number) {
-  const steps = [
-    "/64",
-    "/32",
-    "/16",
-    "/8",
-    "/4",
-    "/2",
-    "1",
-    "2",
-    "4",
-    "8",
-    "16",
-    "32",
-    "64",
-  ];
+  const steps = ["16", "8", "4", "2", "1", "/2", "/4", "/8", "/16"];
   const index = Math.min(Math.floor(rate * steps.length), steps.length - 1);
   return steps[index];
 }
@@ -165,7 +151,7 @@ export const SteppedButton = ({
 }: {
   active: boolean;
   rate: number;
-  onClick: () => void;
+  onClick?: () => void;
 }) => {
   return (
     <div class={qu.flexC().wh(40, 40).bg("#ddd")} onClick={onClick}>

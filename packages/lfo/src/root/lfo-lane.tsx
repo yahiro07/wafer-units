@@ -73,7 +73,7 @@ export const LfoLane = ({ slot }: { slot: LfoSlot }) => {
         <SteppedButton
           active={slot.rateStepped}
           rate={slot.rate}
-          onClick={() => patchSlot({ rateStepped: !slot.rateStepped })}
+          // onClick={() => patchSlot({ rateStepped: !slot.rateStepped })}
         />
       </LabeledBox>
       <LabeledBox label="Depth">
