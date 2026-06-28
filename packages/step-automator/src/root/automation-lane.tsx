@@ -1,23 +1,16 @@
-import { iife, seqNumbers } from "mofur/ax";
+import { iife } from "mofur/ax";
 import {
   clockDivisionOptions,
+  gaugeReferenceIndexMap,
   patternRangeOptions,
-} from "@/base/selector-options";
-import { AutomationLaneItem, PatternRange } from "@/base/types";
+} from "@/base/constants";
+import { AutomationLaneItem } from "@/base/types";
 import { IndicatorButton, LabeledBox } from "@/components";
 import { StepIndicatorLed } from "@/components/led";
 import { ParameterGauge } from "@/components/parameter-gauge";
 import { ShiftSelector } from "@/components/shift-selector";
 import { store } from "@/root/store";
 import { qu } from "@/utils/qstyle-goober";
-
-const gaugeReferenceIndexMap: Record<PatternRange, number[]> = {
-  2: seqNumbers(8).flatMap(() => [0, 1]),
-  3: seqNumbers(2).flatMap(() => [0, 1, 2, 0, 1, 2, 0, 1]),
-  4: seqNumbers(4).flatMap(() => [0, 1, 2, 3]),
-  8: seqNumbers(2).flatMap(() => [0, 1, 2, 3, 4, 5, 6, 7]),
-  16: seqNumbers(16),
-};
 
 export const AutomationLane = ({ lane }: { lane: AutomationLaneItem }) => {
   const patchLane = (attrs: Partial<AutomationLaneItem>) => {
