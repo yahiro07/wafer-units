@@ -16,9 +16,19 @@ const core = {
     flexDirection: "column",
     ...(gap && { gap: npx(gap * 4) }),
   }),
+  flexVL: (gap?: number) => ({
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "flex-start",
+    ...(gap && { gap: npx(gap * 4) }),
+  }),
   wh: (width: number, height: number) => ({
     width: npx(width * 4),
     height: npx(height * 4),
+  }),
+  wh_px: (width: number, height: number) => ({
+    width: npx(width),
+    height: npx(height),
   }),
   bg: (color: string) => ({ background: color }),
   bd: (color: string) => ({ border: `solid 1px ${color}` }),
@@ -26,6 +36,7 @@ const core = {
   m: (margin: number) => ({ margin: npx(margin * 4) }),
   color: (color: string) => ({ color }),
   weight: (weight: string) => ({ fontWeight: weight }),
+  inlineBlock: () => ({ display: "inline-block" }),
 };
 
 function makeAdapter<T extends Record<string, (...args: any[]) => any>, R>(

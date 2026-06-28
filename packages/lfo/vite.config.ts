@@ -5,7 +5,7 @@ import { defineConfig } from "vite";
 export default defineConfig({
   base: "./",
   plugins: [preact(), tailwindcss()],
-  resolve: { tsconfigPaths: true },
+  resolve: { tsconfigPaths: true, dedupe: ["preact"] },
   optimizeDeps: {
     exclude: ["wafer-host", "mofur", "snap-store"],
   },

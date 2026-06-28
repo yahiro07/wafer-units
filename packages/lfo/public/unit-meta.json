@@ -1,7 +1,7 @@
 {
   "name": "lfo",
   "unitType": "sequencer",
-  "preferredSize": "620,380",
+  "preferredSize": "500,300",
   "outputSignalTypes": "note",
   "inputSignalTypes": "note",
   "protocol": "wafer-v01",
