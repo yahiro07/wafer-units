@@ -22,6 +22,8 @@ export const store = createStore<{
     depth: 0.5,
     xStep: XStep.None,
     yStep: YStep.None,
+    inverted: false,
+    shifted: false,
   })),
 });
 

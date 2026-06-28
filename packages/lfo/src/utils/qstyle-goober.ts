@@ -64,6 +64,7 @@ const core = {
   relative: () => ({ position: "relative" }),
   full: () => ({ width: "100%", height: "100%" }),
   css: (attrs: CSSProperties) => attrs,
+  cp: () => ({ cursor: "pointer" }),
 };
 
 function makeAdapter<T extends Record<string, (...args: any[]) => any>, R>(
@@ -121,6 +122,9 @@ function createQCursor(initialObj?: Record<string, any>): QCursor {
 
 export const qu = makeAdapter(core, (style) => createQCursor(style));
 
-export function cx(...items: QCursor[]): string {
-  return items.map((cursor) => cursor.toString()).join(" ");
+export function cx(...items: (QCursor | false | undefined)[]): string {
+  return items
+    .filter(Boolean)
+    .map((cursor) => cursor!.toString())
+    .join(" ");
 }

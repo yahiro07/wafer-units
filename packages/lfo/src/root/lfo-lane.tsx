@@ -4,8 +4,8 @@ import {
   IndicatorButton,
   Knob,
   LabeledBox,
+  NarrowButton,
   SteppedButton,
-  XStepButton,
   YStepButton,
 } from "@/components";
 import { ButtonFrame } from "@/components/button-frame";
@@ -59,7 +59,11 @@ export const LfoLane = ({ slot }: { slot: LfoSlot }) => {
       </LabeledBox>
       <LabeledBox label="Wave">
         <ButtonFrame onClick={() => patchSlot({ wave: (slot.wave + 1) % 5 })}>
-          <UnitWaveView wave={slot.wave} />
+          <UnitWaveView
+            wave={slot.wave}
+            inverted={slot.inverted}
+            shifted={slot.shifted}
+          />
         </ButtonFrame>
       </LabeledBox>
       <LabeledBox label="Rate">
@@ -82,12 +86,26 @@ export const LfoLane = ({ slot }: { slot: LfoSlot }) => {
           onChange={(value) => patchSlot({ depth: value })}
         />
       </LabeledBox>
-      <LabeledBox label="X Step">
+      <LabeledBox>
+        <div class={qu.flexV().gap(1)}>
+          <NarrowButton
+            text="INV"
+            active={slot.inverted}
+            onClick={() => patchSlot({ inverted: !slot.inverted })}
+          />
+          <NarrowButton
+            text="SHIFT"
+            active={slot.shifted}
+            onClick={() => patchSlot({ shifted: !slot.shifted })}
+          />
+        </div>
+      </LabeledBox>
+      {/* <LabeledBox label="X Step">
         <XStepButton
           xStep={slot.xStep}
           onClick={() => patchSlot({ xStep: (slot.xStep + 1) % 4 })}
         />
-      </LabeledBox>
+      </LabeledBox> */}
       <LabeledBox label="Y Step">
         <YStepButton
           yStep={slot.yStep}

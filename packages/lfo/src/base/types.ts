@@ -31,4 +31,6 @@ export type LfoSlot = {
   depth: number;
   xStep: XStep;
   yStep: YStep;
+  inverted: boolean;
+  shifted: boolean;
 };

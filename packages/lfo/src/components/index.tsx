@@ -1,9 +1,10 @@
 import { linearInterpolate } from "mofur/ax";
 import { npx } from "mofur/ax-ui";
 import { ComponentChildren } from "preact";
+import { Children } from "@/base/jsx-types";
 import { LfoWave, XStep, YStep } from "@/base/types";
 import { KnobFrame } from "@/components/knob-frame";
-import { qu } from "@/utils/qstyle-goober";
+import { cx, qu } from "@/utils/qstyle-goober";
 
 export const Knob = ({
   value,
@@ -166,7 +167,7 @@ export const LabeledBox = ({
   labelAlign = "center",
   width,
 }: {
-  label: string;
+  label?: string;
   labelAlign?: "left" | "center" | "right";
   children: ComponentChildren;
   width?: number;
@@ -180,6 +181,31 @@ export const LabeledBox = ({
         {label}
       </div>
       <div class={qu.flexC().h(40)}>{children}</div>
+    </div>
+  );
+};
+
+export const NarrowButton = ({
+  text,
+  children,
+  active,
+  onClick,
+}: {
+  text?: string;
+  children?: Children;
+  active?: boolean;
+  onClick?: () => void;
+}) => {
+  return (
+    <div
+      class={cx(
+        qu.flexC().wh(40, 20).bg("#ddd").weight("bold").cp(),
+        active && qu.bg("#48c").color("#fff"),
+      )}
+      onClick={onClick}
+    >
+      {text && <div class={qu.fontSize(10)}>{text}</div>}
+      {children}
     </div>
   );
 };
