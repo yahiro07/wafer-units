@@ -1,6 +1,6 @@
-import { Icons } from "@/base/icons";
-import { Children } from "@/base/jsx-types";
-import { SelectorOption } from "@/base/selector-option";
+import { Icons } from "@/common/icons";
+import { Children } from "@/common/jsx-types";
+import { SelectorOption } from "@/common/selector-option";
 import { qlsx, qu } from "@/utils/qstyle-goober";
 
 export const ShifterFrame = ({

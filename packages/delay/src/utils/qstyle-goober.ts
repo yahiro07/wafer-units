@@ -5,6 +5,10 @@ function npx(value: number) {
   return `${value}px`;
 }
 
+function npx4(value: number) {
+  return npx(value * 4);
+}
+
 const core = {
   flexH: () => ({
     display: "flex",
@@ -65,10 +69,14 @@ const core = {
   }),
   bg: (color: string) => ({ background: color }),
   bd: (color: string) => ({ border: `solid 1px ${color}` }),
-  p: (padding: number) => ({ padding: npx(padding * 4) }),
-  m: (margin: number) => ({ margin: npx(margin * 4) }),
-  ml: (margin: number) => ({ marginLeft: npx(margin * 4) }),
-  mr: (margin: number) => ({ marginRight: npx(margin * 4) }),
+  p: (padding: number) => ({ padding: npx4(padding) }),
+  pt: (padding: number) => ({ paddingTop: npx4(padding) }),
+  pb: (padding: number) => ({ paddingBottom: npx4(padding) }),
+  pl: (padding: number) => ({ paddingLeft: npx4(padding) }),
+  pr: (padding: number) => ({ paddingRight: npx4(padding) }),
+  m: (margin: number) => ({ margin: npx4(margin) }),
+  ml: (margin: number) => ({ marginLeft: npx4(margin) }),
+  mr: (margin: number) => ({ marginRight: npx4(margin) }),
   color: (color: string) => ({ color }),
   weight: (weight: string) => ({ fontWeight: weight }),
   inlineBlock: () => ({ display: "inline-block" }),
@@ -139,7 +147,7 @@ function createQCursor(initialObj?: Record<string, any>): QCursor {
 
 export const qu = makeAdapter(core, (style) => createQCursor(style));
 
-export function cx(...items: (QCursor | false | undefined)[]): string {
+export function cx(...items: (QCursor | false | string | undefined)[]): string {
   return items
     .filter(Boolean)
     .map((cursor) => cursor!.toString())

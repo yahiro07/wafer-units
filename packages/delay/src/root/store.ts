@@ -1,30 +1,13 @@
-import { seqNumbers } from "mofur/ax";
 import { createStore } from "snap-store";
-import { AutomationLaneItem } from "@/base/types";
+import { EffectParameters } from "@/common/types";
 
 export const store = createStore<{
-  count: number;
-  connected: boolean;
-  parameterIds: string[];
-  lanes: AutomationLaneItem[];
-  playbackStepIndex: number;
+  parameters: EffectParameters;
 }>({
-  count: 0,
-  connected: false,
-  parameterIds: [],
-  lanes: [
-    {
-      id: 0,
-      enabled: true,
-      targetParameterId: null,
-      stepValues: seqNumbers(16).map(() => 0.5),
-      patternRange: 4,
-      clockDivision: 1,
-    },
-  ],
-  playbackStepIndex: -1,
+  parameters: {
+    isOn: true,
+    rate: 16,
+    feed: 0.5,
+    mix: 0.5,
+  },
 });
-
-if (1) {
-  store.setParameterIds(["param1", "param2", "param3", "param4", "param5"]);
-}

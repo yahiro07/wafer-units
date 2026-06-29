@@ -1,34 +1,59 @@
-import { AutomationLane } from "@/root/automation-lane";
+import { rateDivisionOptions } from "@/common/constants";
+import { EffectParameters, RateDivision } from "@/common/types";
+import { EffectorBody } from "@/components/effector-body";
+import { Knob } from "@/components/knob";
+import { LabeledBox } from "@/components/labeled-box";
+import { LedIndicator } from "@/components/led-indicator";
+import { OptionMappedKnob } from "@/components/option-mapped-knob";
+import { StompButton } from "@/components/stomp-button";
 import { store } from "@/root/store";
-import { qu } from "@/utils/qstyle-goober";
+import { qlsx, qu } from "@/utils/qstyle-goober";
 
 export const PageRoot = () => {
-  const { parameterIds, connected, lanes, playbackStepIndex } =
-    store.useSnapshot();
+  const { parameters } = store.useSnapshot();
+  const setParameter = <K extends keyof EffectParameters>(
+    key: K,
+    value: EffectParameters[K],
+  ) => {
+    store.setParameters({ ...parameters, [key]: value });
+  };
+  const cellW = 48;
   return (
     <div class={qu.flexC()}>
-      <div class={qu.wh(600, 350).bg("#aaa").p(4).color("#333")}>
-        <div class={qu.flexV().gap(2)}>
+      <EffectorBody className={qlsx(qu.wh(180, 260), qu.flexVA())}>
+        <div class={qu.flexVC().gap(4)}>
           <div class={qu.flexH().gap(2)}>
-            <div>Step Automator</div>
-            <div class={qu.grow()} />
-            <div class={qu.fontSize(12)}>
-              {connected
-                ? `Connected, ${parameterIds.length > 0 ? parameterIds.length : "no"} parameters available`
-                : "Disconnected"}
-            </div>
+            <div class={qu.fontSize(20).weight("bold")}>Step Delay</div>
           </div>
-          <div class={qu.flexVC().gap(2)}>
-            {lanes.map((lane) => (
-              <AutomationLane
-                key={lane.id}
-                lane={lane}
-                playbackStepIndex={playbackStepIndex}
+          <div class={qu.flexHA().gap(2)}>
+            <LabeledBox label={`Rate /${parameters.rate}`} width={cellW}>
+              <OptionMappedKnob<RateDivision>
+                options={rateDivisionOptions}
+                value={parameters.rate}
+                onChange={(value) => setParameter("rate", value)}
               />
-            ))}
+            </LabeledBox>
+            <LabeledBox label="Feed" width={cellW}>
+              <Knob
+                value={parameters.feed}
+                onChange={(value) => setParameter("feed", value)}
+              />
+            </LabeledBox>
+            <LabeledBox label="Mix" width={cellW}>
+              <Knob
+                value={parameters.mix}
+                onChange={(value) => setParameter("mix", value)}
+              />
+            </LabeledBox>
+          </div>
+          <div class={qu.flexVC().gap(2.5).pt(4)}>
+            <LedIndicator active={parameters.isOn} />
+            <StompButton
+              onClick={() => setParameter("isOn", !parameters.isOn)}
+            />
           </div>
         </div>
-      </div>
+      </EffectorBody>
     </div>
   );
 };

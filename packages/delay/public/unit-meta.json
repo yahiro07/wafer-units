@@ -1,7 +1,7 @@
 {
   "name": "delay",
   "unitType": "effect",
-  "preferredSize": "600,350",
+  "preferredSize": "180,260",
   "outputSignalTypes": "audio",
   "inputSignalTypes": "audio",
   "protocol": "wafer-v01",
