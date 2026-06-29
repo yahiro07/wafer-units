@@ -1,9 +1,14 @@
 import { createStore } from "snap-store";
-import { defaultParameters } from "@/common/constants";
-import { EffectParameters } from "@/common/types";
+import { defaultSequencerState } from "@/common/defs";
 
 export const store = createStore<{
-  parameters: EffectParameters;
+  octave: number;
+  duty: number;
+  stepBits: number[];
+  playPos: number;
 }>({
-  parameters: defaultParameters,
+  octave: defaultSequencerState.octave,
+  duty: defaultSequencerState.duty,
+  stepBits: defaultSequencerState.stepBits,
+  playPos: -1,
 });

@@ -1,5 +1,5 @@
 import { npx } from "mofur/ax-ui";
-import { Children } from "@/common/jsx-types";
+import { Children } from "@/utils/jsx-types";
 import { qu } from "@/utils/qstyle-goober";
 
 export const LabeledBox = ({
@@ -21,7 +21,7 @@ export const LabeledBox = ({
       style={width ? { width: npx(width) } : undefined}
     >
       <div
-        class={qu.fontSize(11).weight("bold")}
+        class={qu.fontSize(11).weight("bold").h(12)}
         style={{ textAlign: labelAlign }}
       >
         {label}

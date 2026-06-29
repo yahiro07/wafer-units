@@ -1,5 +1,5 @@
-import { SelectorOption } from "@/common/selector-option";
 import { Knob } from "@/components/knob";
+import { SelectorOption } from "@/utils/selector-option";
 
 export const OptionMappedKnob = <T extends string | number>({
   value,

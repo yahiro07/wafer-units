@@ -31,7 +31,7 @@ export const Knob = ({
       dragDisabled={disabled}
     >
       <div
-        class={qu.wh(34, 34).rounded("100%").relative().bg("#777").bd("#444")}
+        class={qu.wh(28, 28).rounded("100%").relative().bg("#aaa").bd("#666")}
         style={{ opacity: disabled ? 0.5 : 1 }}
       >
         <div

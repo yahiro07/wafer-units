@@ -1,7 +1,7 @@
 import { Icons } from "@/common/icons";
-import { Children } from "@/common/jsx-types";
-import { SelectorOption } from "@/common/selector-option";
+import { Children } from "@/utils/jsx-types";
 import { qlsx, qu } from "@/utils/qstyle-goober";
+import { SelectorOption } from "@/utils/selector-option";
 
 export const ShifterFrame = ({
   children,

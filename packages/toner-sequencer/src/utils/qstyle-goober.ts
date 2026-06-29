@@ -63,6 +63,8 @@ const core = {
   grow: () => ({ flexGrow: 1 }),
   w: (width: number) => ({ width: npx(width) }),
   h: (height: number) => ({ height: npx(height) }),
+  wFull: () => ({ width: "100%" }),
+  hFull: () => ({ height: "100%" }),
   wh: (width: number, height: number) => ({
     width: npx(width),
     height: npx(height),

@@ -1,121 +1,72 @@
-import { delayTimeOptions } from "@/common/constants";
-import { DelayTime, EffectParameters } from "@/common/types";
-import { ButtonWithIndicator } from "@/components/button-with-indicator";
+import { isBitSet, seqNumbers, toggleBit } from "mofur/ax";
 import { EffectorBody } from "@/components/effector-body";
 import { Knob } from "@/components/knob";
 import { LabeledBox } from "@/components/labeled-box";
-import { OptionMappedKnob } from "@/components/option-mapped-knob";
-import { LedIndicator } from "@/components/unused/led-indicator";
-import { StompButton } from "@/components/unused/stomp-button";
 import { store } from "@/root/store";
 import { qlsx, qu } from "@/utils/qstyle-goober";
 
-const ControlsPart = () => {
-  const { parameters } = store.useSnapshot();
-  const setParameter = <K extends keyof EffectParameters>(
-    key: K,
-    value: EffectParameters[K],
-  ) => {
-    store.setParameters({ ...parameters, [key]: value });
+const TitleLabel = ({ title }: { title: string }) => {
+  return <div class={qu.fontSize(18).weight("bold")}>{title}</div>;
+};
+
+const MatrixPart = () => {
+  const { stepBits, playPos } = store.useSnapshot();
+
+  const toggleStep = (yi: number, xi: number) => {
+    const newStepBits = [...stepBits];
+    newStepBits[yi] = toggleBit(newStepBits[yi], xi);
+    store.setStepBits(newStepBits);
   };
-  const cellW = 48;
 
   return (
-    <div class={qu.flexVC().gap(5)}>
-      <div class={qu.flexHA().gap(2)}>
-        <LabeledBox label="ON" width={cellW}>
-          <ButtonWithIndicator
-            active={parameters.isOn}
-            onClick={() => setParameter("isOn", !parameters.isOn)}
-          />
-        </LabeledBox>
-        <LabeledBox label="Time" width={cellW} className={qu.relative()}>
-          <OptionMappedKnob<DelayTime>
-            options={delayTimeOptions}
-            value={parameters.time}
-            onChange={(value) => setParameter("time", value)}
-          />
-          <div
-            class={qlsx(
-              qu.absolute().bottom(-14).left(0).fontSize(12).w(cellW),
-              qu.flexC(),
-            )}
-          >
-            {parameters.time.toString()}
+    <div class={qu.flexV().gap(1)}>
+      {seqNumbers(10).map((i) => {
+        const yi = 9 - i;
+        return (
+          <div class={qu.flexHA().gap(1)}>
+            {seqNumbers(16).map((xi) => {
+              const isStepActive = isBitSet(stepBits[yi], xi);
+              const isHalfActive = playPos === xi;
+              let color = "#888";
+              if (isStepActive) {
+                color = "#fff";
+              } else if (isHalfActive) {
+                color = "#999";
+              }
+              return (
+                <div
+                  class={qu.wh(20, 20).cp()}
+                  style={{ background: color }}
+                  onPointerDown={() => toggleStep(yi, xi)}
+                />
+              );
+            })}
           </div>
-        </LabeledBox>
-        <LabeledBox label="Feed" width={cellW}>
-          <Knob
-            value={parameters.feed}
-            onChange={(value) => setParameter("feed", value)}
-          />
-        </LabeledBox>
-        <LabeledBox label="Tone" width={cellW}>
-          <Knob
-            value={parameters.tone}
-            onChange={(value) => setParameter("tone", value)}
-          />
-        </LabeledBox>
-        <LabeledBox label="Mix" width={cellW}>
-          <Knob
-            value={parameters.mix}
-            onChange={(value) => setParameter("mix", value)}
-          />
-        </LabeledBox>
-      </div>
-      <div class={qu.flexHA().gap(2)}>
-        <LabeledBox label="LFO" width={cellW}>
-          <ButtonWithIndicator
-            active={parameters.lfoOn}
-            onClick={() => setParameter("lfoOn", !parameters.lfoOn)}
-          />
-        </LabeledBox>
-        <LabeledBox label="Rate" width={cellW}>
-          <Knob
-            value={parameters.lfoRate}
-            onChange={(value) => setParameter("lfoRate", value)}
-          />
-        </LabeledBox>
-        <LabeledBox label="Depth" width={cellW}>
-          <Knob
-            value={parameters.lfoDepth}
-            onChange={(value) => setParameter("lfoDepth", value)}
-          />
-        </LabeledBox>
-      </div>
-      {false && (
-        <div class={qu.flexVC().gap(2.5).pt(4)}>
-          <LedIndicator active={parameters.isOn} />
-          <StompButton onClick={() => setParameter("isOn", !parameters.isOn)} />
-        </div>
-      )}
+        );
+      })}
     </div>
   );
 };
 
-const SafetyPart = () => {
-  const { parameters } = store.useSnapshot();
-  const setParameter = <K extends keyof EffectParameters>(
-    key: K,
-    value: EffectParameters[K],
-  ) => {
-    store.setParameters({ ...parameters, [key]: value });
-  };
+const ControlsPart = () => {
+  const { octave, duty } = store.useSnapshot();
   return (
-    <div>
-      <label class={qu.flexH().gap(1)}>
-        <input
-          type="checkbox"
-          checked={parameters.safety}
-          onChange={(e) =>
-            setParameter(
-              "safety",
-              (e.currentTarget as HTMLInputElement).checked,
-            )
-          }
-        />
-        safety
-      </label>
+    <div class={qu.wFull().flexHA().gap(2).justify("between")}>
+      <TitleLabel title="Toner Sequencer" />
+      <div class={qu.flexHA().gap(6)}>
+        <LabeledBox label="Octave">
+          <Knob
+            value={octave}
+            onChange={(value) => store.setOctave(value)}
+            min={-2}
+            max={2}
+            step={1}
+          />
+        </LabeledBox>
+        <LabeledBox label="Duty">
+          <Knob value={duty} onChange={(value) => store.setDuty(value)} />
+        </LabeledBox>
+      </div>
     </div>
   );
 };
@@ -123,13 +74,10 @@ const SafetyPart = () => {
 export const PageRoot = () => {
   return (
     <div class={qu.flexC()}>
-      <EffectorBody className={qlsx(qu.wh(320, 210), qu.flexVC())}>
-        <div class={qu.flexV().gap(3)}>
-          <div class={qu.flexHA().gap(2).justify("between")}>
-            <div class={qu.fontSize(18).weight("bold")}>Ping-Pong Delay</div>
-            <SafetyPart />
-          </div>
+      <EffectorBody className={qlsx(qu.wh(480, 330), qu.flexVC())}>
+        <div class={qu.flexV().gap(1)}>
           <ControlsPart />
+          <MatrixPart />
         </div>
       </EffectorBody>
     </div>

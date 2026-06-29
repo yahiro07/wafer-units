@@ -1,4 +1,4 @@
-import { Children } from "@/common/jsx-types";
+import { Children } from "@/utils/jsx-types";
 
 export const ButtonFrame = ({
   children,
