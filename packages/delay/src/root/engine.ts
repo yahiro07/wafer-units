@@ -1,0 +1,21 @@
+import { UnitInterface } from "wafer-host/unit-types";
+import { createPingPongDelayEffect } from "@/root/ping-pong-delay-effect";
+
+export function createEngine(unitInterface: UnitInterface | undefined) {
+  const audioContext = unitInterface?.audioContext ?? new AudioContext();
+  const effect = createPingPongDelayEffect(audioContext);
+  const destinationNode =
+    unitInterface?.audioOutputNode ?? audioContext.destination;
+  return {
+    setup() {
+      unitInterface?.audioInputNode.connect(effect.inputNode);
+      effect.outputNode.connect(destinationNode);
+    },
+    teardown() {
+      unitInterface?.audioInputNode.disconnect(effect.inputNode);
+      effect.outputNode.disconnect(destinationNode);
+    },
+    setParameters: effect.setParameters,
+    setBpm: effect.setBpm,
+  };
+}
