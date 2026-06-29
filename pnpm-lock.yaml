@@ -383,6 +383,31 @@ importers:
         specifier: ^19.2.3
         version: 19.2.3(@types/react@19.2.15)
 
+  packages/toner-sequencer:
+    dependencies:
+      '@preact-icons/fa':
+        specifier: npm:@jsr/preact-icons__fa@^1.0.13
+        version: '@jsr/preact-icons__fa@1.0.13'
+      clsx:
+        specifier: ^2.1.1
+        version: 2.1.1
+      goober:
+        specifier: ^2.1.19
+        version: 2.1.19(csstype@3.2.3)
+      mofur:
+        specifier: link:../../../beam/mofur
+        version: link:../../../beam/mofur
+      preact:
+        specifier: ^10.29.2
+        version: 10.29.2
+      snap-store:
+        specifier: 0.1.12
+        version: 0.1.12(preact@10.29.2)(react@19.2.6)
+    devDependencies:
+      '@preact/preset-vite':
+        specifier: ^2.10.5
+        version: 2.10.5(@babel/core@7.29.7)(preact@10.29.2)(vite@8.0.14(@types/node@25.9.1)(jiti@2.7.0))
+
   packages/wavicle:
     dependencies:
       alumina:
@@ -1067,6 +1092,11 @@ packages:
     resolution: {integrity: sha512-AOIgSQCepiJYwP3ARnGx+5VnTu2HBYdzbGP45eLw1vr3zB3vZLeyed1sC9hnbcOc9/SrMyM5RPQrkGz4aS9Zow==}
     engines: {node: '>= 6'}
 
+  goober@2.1.19:
+    resolution: {integrity: sha512-U7veizMqxyKlM58+Z5j2ngJBH/r9siDmxpvNxSw0PylF6WQvrASJEZrxh1hidRBJc2jqoBVSyOban5u8m+6Rxg==}
+    peerDependencies:
+      csstype: ^3.0.10
+
   graceful-fs@4.2.11:
     resolution: {integrity: sha512-RbJ5/jmFcNNCcDV5o9eTnBLJ/HszWV0P73bc+Ff4nS/rJj+YaS6IGyiOL0VoBYX+l1Wrl3k63h/KrH+nhJ0XvQ==}
 
@@ -1379,6 +1409,18 @@ packages:
     engines: {node: '>=16.0.0'}
     peerDependencies:
       react: '>=18.0.0'
+
+  snap-store@0.1.12:
+    resolution: {integrity: sha512-THAvor6MQ3YLSn5euN4LUv4Woaisb5sWfquLvCIu9pg2kl6KSV2rJt7ejrzDx9Ohp9F2T9Zyv4hUCiAbQYMTPw==}
+    engines: {node: '>=16.0.0'}
+    peerDependencies:
+      preact: '>=10.0.0'
+      react: '>=18.0.0'
+    peerDependenciesMeta:
+      preact:
+        optional: true
+      react:
+        optional: true
 
   snap-store@0.1.6:
     resolution: {integrity: sha512-s1I/YsLjg0yve9lWrHW/VwOLPuiusTCFddmLXBNQ0v5mXvdD6hXWPfimKiep0oUgs9Kuv1pE8kBIw/URHUEWjQ==}
@@ -2234,6 +2276,10 @@ snapshots:
     dependencies:
       is-glob: 4.0.3
 
+  goober@2.1.19(csstype@3.2.3):
+    dependencies:
+      csstype: 3.2.3
+
   graceful-fs@4.2.11: {}
 
   hasown@2.0.4:
@@ -2494,6 +2540,11 @@ snapshots:
 
   snap-store@0.1.11(react@19.2.6):
     dependencies:
+      react: 19.2.6
+
+  snap-store@0.1.12(preact@10.29.2)(react@19.2.6):
+    optionalDependencies:
+      preact: 10.29.2
       react: 19.2.6
 
   snap-store@0.1.6(react@19.2.6):
