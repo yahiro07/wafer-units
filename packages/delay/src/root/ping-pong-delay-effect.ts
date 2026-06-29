@@ -15,6 +15,7 @@ export function createPingPongDelayEffect(audioContext: AudioContext) {
       lfoDepth: 0.5,
       feed: 0.5,
       mix: 0.5,
+      safety: true,
     },
   };
 
@@ -81,12 +82,35 @@ export function createPingPongDelayEffect(audioContext: AudioContext) {
     const beatDuration = 60 / bpm;
     const baseDelayTime = beatDuration * parameters.time;
 
+    if (parameters.safety) {
+      const currentDelaySeconds = beatDuration * parameters.time; // current delay time in seconds
+      /**
+       * Oscillation prevention algorithm.
+       * Shorter delay times increase loop count and energy can run away.
+       * We compute a safe maximum feedback from currentDelaySeconds.
+       *
+       * - Long delays (2s+): allow up to 0.95 (deep tail)
+       * - Short delays (0.2s, e.g. 1/8 note at 120 BPM): auto-capped around 0.75–0.8
+       */
+      const safetyCeiling = Math.min(0.95, 0.5 + currentDelaySeconds * 0.25);
+
+      // Map user feed (0–1) to the computed safe ceiling
+      const targetFeed = parameters.feed * safetyCeiling;
+
+      // High mix (strong wet) makes perceived level run away — trim feedback slightly
+      // As mix approaches 1.0, pull feedback down by a few percent
+      const mixClampedFeed = targetFeed * (1.0 - parameters.mix * 0.05);
+
+      feedbackGain.gain.setTargetAtTime(mixClampedFeed, now, 0.05);
+    } else {
+      // No safety limit — can oscillate at high feedback
+      const targetFeed = parameters.feed * 0.96;
+      feedbackGain.gain.setTargetAtTime(targetFeed, now, 0.05);
+    }
+
     delayL.delayTime.setTargetAtTime(baseDelayTime, now, 0.1);
     //delay R is 20ms later than delay L
     delayR.delayTime.setTargetAtTime(baseDelayTime + 0.02, now, 0.1);
-
-    const targetFeed = parameters.feed * 0.96;
-    feedbackGain.gain.setTargetAtTime(targetFeed, now, 0.05);
 
     const targetFreq = 200 * Math.pow(10000 / 200, parameters.tone);
     filterNode.frequency.setTargetAtTime(targetFreq, now, 0.05);

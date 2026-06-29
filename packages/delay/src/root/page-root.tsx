@@ -93,13 +93,41 @@ const ControlsPart = () => {
   );
 };
 
+const SafetyPart = () => {
+  const { parameters } = store.useSnapshot();
+  const setParameter = <K extends keyof EffectParameters>(
+    key: K,
+    value: EffectParameters[K],
+  ) => {
+    store.setParameters({ ...parameters, [key]: value });
+  };
+  return (
+    <div>
+      <label class={qu.flexH().gap(1)}>
+        <input
+          type="checkbox"
+          checked={parameters.safety}
+          onChange={(e) =>
+            setParameter(
+              "safety",
+              (e.currentTarget as HTMLInputElement).checked,
+            )
+          }
+        />
+        safety
+      </label>
+    </div>
+  );
+};
+
 export const PageRoot = () => {
   return (
     <div class={qu.flexC()}>
       <EffectorBody className={qlsx(qu.wh(320, 210), qu.flexVC())}>
-        <div class={qu.flexVC().gap(3)}>
-          <div class={qu.flexH().gap(2)}>
+        <div class={qu.flexV().gap(3)}>
+          <div class={qu.flexHA().gap(2).justify("between")}>
             <div class={qu.fontSize(18).weight("bold")}>Ping-Pong Delay</div>
+            <SafetyPart />
           </div>
           <ControlsPart />
         </div>

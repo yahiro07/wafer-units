@@ -1,7 +1,4 @@
-//0.5: 1/8th note
-//1: 1/4th note
-//...
-//export type DelayTime = 0.5 | 0.75 | 1 | 1.5;
+//1 for 1/4 note
 export type DelayTime = 0.333 | 0.5 | 0.666 | 0.75 | 1 | 1.5 | 2 | 2.5 | 3;
 
 export type EffectParameters = {
@@ -13,4 +10,5 @@ export type EffectParameters = {
   lfoOn: boolean;
   lfoRate: number; //0~1
   lfoDepth: number; //0~1
+  safety: boolean;
 };
