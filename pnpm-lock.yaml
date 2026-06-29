@@ -336,6 +336,31 @@ importers:
         specifier: ^19.2.3
         version: 19.2.3(@types/react@19.2.15)
 
+  packages/toner-sequencer:
+    dependencies:
+      '@preact-icons/fa':
+        specifier: npm:@jsr/preact-icons__fa@^1.0.13
+        version: '@jsr/preact-icons__fa@1.0.13'
+      clsx:
+        specifier: ^2.1.1
+        version: 2.1.1
+      goober:
+        specifier: ^2.1.19
+        version: 2.1.19(csstype@3.2.3)
+      mofur:
+        specifier: link:../../../beam/mofur
+        version: link:../../../beam/mofur
+      preact:
+        specifier: ^10.29.2
+        version: 10.29.2
+      snap-store:
+        specifier: 0.1.12
+        version: 0.1.12(preact@10.29.2)(react@19.2.6)
+    devDependencies:
+      '@preact/preset-vite':
+        specifier: ^2.10.5
+        version: 2.10.5(@babel/core@7.29.7)(preact@10.29.2)(vite@8.0.14(@types/node@25.9.1)(jiti@2.7.0))
+
   packages/wavicle:
     dependencies:
       alumina:
@@ -529,6 +554,12 @@ packages:
 
   '@jridgewell/trace-mapping@0.3.31':
     resolution: {integrity: sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==}
+
+  '@jsr/preact-icons__common@1.1.0':
+    resolution: {integrity: sha512-mVjtQUxBw+NjQ29oTq33LgAO8gjgiGtvkWAExwdW7iHLtxZiIXwCEEfFR3IRvZhpg2htEwTJZ6V5h+GMli36Yg==, tarball: https://npm.jsr.io/~/11/@jsr/preact-icons__common/1.1.0.tgz}
+
+  '@jsr/preact-icons__fa@1.0.13':
+    resolution: {integrity: sha512-RxDqel5V25PRPQF1Emuz64qIdY/hyUBsjKyiWpR0CL5p65nQ424yQrNEFodrRAaknj3lUFrTpd1NV85VboSF3A==, tarball: https://npm.jsr.io/~/11/@jsr/preact-icons__fa/1.0.13.tgz}
 
   '@napi-rs/wasm-runtime@1.1.4':
     resolution: {integrity: sha512-3NQNNgA1YSlJb/kMH1ildASP9HW7/7kYnRI2szWJaofaS1hWmbGI4H+d3+22aGzXXN9IJ+n+GiFVcGipJP18ow==}
@@ -1014,6 +1045,11 @@ packages:
     resolution: {integrity: sha512-AOIgSQCepiJYwP3ARnGx+5VnTu2HBYdzbGP45eLw1vr3zB3vZLeyed1sC9hnbcOc9/SrMyM5RPQrkGz4aS9Zow==}
     engines: {node: '>= 6'}
 
+  goober@2.1.19:
+    resolution: {integrity: sha512-U7veizMqxyKlM58+Z5j2ngJBH/r9siDmxpvNxSw0PylF6WQvrASJEZrxh1hidRBJc2jqoBVSyOban5u8m+6Rxg==}
+    peerDependencies:
+      csstype: ^3.0.10
+
   graceful-fs@4.2.11:
     resolution: {integrity: sha512-RbJ5/jmFcNNCcDV5o9eTnBLJ/HszWV0P73bc+Ff4nS/rJj+YaS6IGyiOL0VoBYX+l1Wrl3k63h/KrH+nhJ0XvQ==}
 
@@ -1256,6 +1292,9 @@ packages:
     resolution: {integrity: sha512-FfR8sjd4em2T6fb3I2MwAJU7HWVMr9zba+enmQeeWFfCbm+UOC/0X4DS8XtpUTMwWMGbjKYP7xjfNekzyGmB3A==}
     engines: {node: ^10 || ^12 || >=14}
 
+  preact@10.22.1:
+    resolution: {integrity: sha512-jRYbDDgMpIb5LHq3hkI0bbl+l/TQ9UnkdQ0ww+lp+4MMOdqaUYdFc5qeyP+IV8FAd/2Em7drVPeKdQxsiWCf/A==}
+
   preact@10.29.2:
     resolution: {integrity: sha512-7tNmwg/7mzzAoB/8kSg6Hl37JraAZw3Z3A0JSY7VXlZwo82Xn0G7wKbNNs2qoF4ZEEsQGTwDAroNdqKs1ofJxQ==}
 
@@ -1323,6 +1362,18 @@ packages:
     engines: {node: '>=16.0.0'}
     peerDependencies:
       react: '>=18.0.0'
+
+  snap-store@0.1.12:
+    resolution: {integrity: sha512-THAvor6MQ3YLSn5euN4LUv4Woaisb5sWfquLvCIu9pg2kl6KSV2rJt7ejrzDx9Ohp9F2T9Zyv4hUCiAbQYMTPw==}
+    engines: {node: '>=16.0.0'}
+    peerDependencies:
+      preact: '>=10.0.0'
+      react: '>=18.0.0'
+    peerDependenciesMeta:
+      preact:
+        optional: true
+      react:
+        optional: true
 
   snap-store@0.1.6:
     resolution: {integrity: sha512-s1I/YsLjg0yve9lWrHW/VwOLPuiusTCFddmLXBNQ0v5mXvdD6hXWPfimKiep0oUgs9Kuv1pE8kBIw/URHUEWjQ==}
@@ -1755,6 +1806,15 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
 
+  '@jsr/preact-icons__common@1.1.0':
+    dependencies:
+      preact: 10.29.2
+
+  '@jsr/preact-icons__fa@1.0.13':
+    dependencies:
+      '@jsr/preact-icons__common': 1.1.0
+      preact: 10.22.1
+
   '@napi-rs/wasm-runtime@1.1.4(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)':
     dependencies:
       '@emnapi/core': 1.10.0
@@ -2169,6 +2229,10 @@ snapshots:
     dependencies:
       is-glob: 4.0.3
 
+  goober@2.1.19(csstype@3.2.3):
+    dependencies:
+      csstype: 3.2.3
+
   graceful-fs@4.2.11: {}
 
   hasown@2.0.4:
@@ -2360,6 +2424,8 @@ snapshots:
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
+  preact@10.22.1: {}
+
   preact@10.29.2: {}
 
   react-dom@19.2.6(react@19.2.6):
@@ -2427,6 +2493,11 @@ snapshots:
 
   snap-store@0.1.11(react@19.2.6):
     dependencies:
+      react: 19.2.6
+
+  snap-store@0.1.12(preact@10.29.2)(react@19.2.6):
+    optionalDependencies:
+      preact: 10.29.2
       react: 19.2.6
 
   snap-store@0.1.6(react@19.2.6):
