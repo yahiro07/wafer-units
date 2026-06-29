@@ -3,10 +3,10 @@ export type SelectorOption<T extends string | number> = {
   value: T;
 };
 
-export function createPlainSelectorOptions<T extends string>(
+export function createPlainSelectorOptions<T extends string | number>(
   values: T[],
 ): SelectorOption<T>[] {
-  return values.map((v) => ({ label: v, value: v }));
+  return values.map((v) => ({ label: v.toString(), value: v }));
 }
 
 export function createSelectorOptions<T extends string | number>(

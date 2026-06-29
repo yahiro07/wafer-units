@@ -81,15 +81,24 @@ const core = {
   weight: (weight: string) => ({ fontWeight: weight }),
   inlineBlock: () => ({ display: "inline-block" }),
   fontSize: (size: number) => ({ fontSize: npx(size) }),
-  rounded: (radius: number | string) => ({
-    borderRadius: typeof radius === "number" ? npx(radius) : radius,
-  }),
+  rounded: (radius: number | string) => {
+    if (radius === "full") {
+      radius = "100%";
+    }
+    return { borderRadius: typeof radius === "number" ? npx(radius) : radius };
+  },
   relative: () => ({ position: "relative" }),
+  absolute: () => ({ position: "absolute" }),
   full: () => ({ width: "100%", height: "100%" }),
   css: (attrs: CSSProperties) => attrs,
   cp: () => ({ cursor: "pointer" }),
   minW: (width: number) => ({ minWidth: npx(width) }),
   invisible: () => ({ visibility: "hidden" }),
+  addClass: (className: string | undefined) => className,
+  top: (top: number) => ({ top: npx(top) }),
+  right: (right: number) => ({ right: npx(right) }),
+  bottom: (bottom: number) => ({ bottom: npx(bottom) }),
+  left: (left: number) => ({ left: npx(left) }),
 };
 
 function makeAdapter<T extends Record<string, (...args: any[]) => any>, R>(
@@ -107,6 +116,7 @@ function makeAdapter<T extends Record<string, (...args: any[]) => any>, R>(
 type QCursor = string & {
   [K in keyof typeof core]: (...args: Parameters<(typeof core)[K]>) => QCursor;
 } & {
+  __isQCursor: true;
   getStylesObject: () => Record<string, any>;
   toString: () => string;
   [Symbol.toPrimitive]: () => string;
@@ -114,11 +124,20 @@ type QCursor = string & {
 
 function createQCursor(initialObj?: Record<string, any>): QCursor {
   const obj: any = initialObj ?? {};
+  const additionalClasses: string[] = [];
 
   let cachedClassName: string | undefined;
 
+  const flush = () => {
+    let className = css(obj);
+    if (additionalClasses.length > 0) {
+      className += " " + additionalClasses.join(" ");
+    }
+    return className;
+  };
+
   const toClassName = () => {
-    cachedClassName ??= css(obj);
+    cachedClassName ??= flush();
     return cachedClassName;
   };
 
@@ -127,13 +146,22 @@ function createQCursor(initialObj?: Record<string, any>): QCursor {
   const coreAdapted = makeAdapter<typeof core, QCursor>(
     core,
     (style): QCursor => {
-      Object.assign(obj, style);
+      if (typeof style === "string") {
+        additionalClasses.push(style);
+      } else if (typeof style === "object") {
+        if ((style as unknown as QCursor).__isQCursor) {
+          Object.assign(obj, (style as unknown as QCursor).getStylesObject());
+        } else {
+          Object.assign(obj, style);
+        }
+      }
       cachedClassName = undefined;
       return self;
     },
   );
 
   self = {
+    __isQCursor: true,
     getStylesObject() {
       return obj;
     },
@@ -145,7 +173,9 @@ function createQCursor(initialObj?: Record<string, any>): QCursor {
   return self;
 }
 
-export const qu = makeAdapter(core, (style) => createQCursor(style));
+export const qu = makeAdapter(core, (style) =>
+  createQCursor(style as Record<string, any>),
+);
 
 export function cx(...items: (QCursor | false | string | undefined)[]): string {
   return items
