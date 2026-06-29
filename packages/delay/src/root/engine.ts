@@ -1,9 +1,9 @@
 import { UnitInterface } from "wafer-host/unit-types";
-import { createStepDelayEffect } from "@/root/step-delay-effect";
+import { createPingPongDelayEffect } from "@/root/ping-pong-delay-effect";
 
 export function createEngine(unitInterface: UnitInterface | undefined) {
   const audioContext = unitInterface?.audioContext ?? new AudioContext();
-  const effect = createStepDelayEffect(audioContext);
+  const effect = createPingPongDelayEffect(audioContext);
   const destinationNode =
     unitInterface?.audioOutputNode ?? audioContext.destination;
   return {
