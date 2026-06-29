@@ -8,11 +8,16 @@ const engine = createEngine(unitInterface);
 engine.setParameters(store.state.parameters);
 
 export function setupSynchronization() {
-  return store.subscribe(({ parameters }) => {
+  engine.setup();
+  const unsubscribeStore = store.subscribe(({ parameters }) => {
     if (parameters) {
       engine.setParameters(parameters);
     }
   });
+  return () => {
+    engine.teardown();
+    unsubscribeStore();
+  };
 }
 
 export function setupUnit() {

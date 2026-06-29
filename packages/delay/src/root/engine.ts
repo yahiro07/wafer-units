@@ -1,22 +1,21 @@
 import { UnitInterface } from "wafer-host/unit-types";
-import { EffectParameters } from "@/common/types";
+import { createStepDelayEffect } from "@/root/step-delay-effect";
 
 export function createEngine(unitInterface: UnitInterface | undefined) {
-  const state = {
-    bpm: 120,
-    parameters: {
-      rate: 16,
-      feed: 0.5,
-      mix: 0.5,
-    } as EffectParameters,
-  };
-
+  const audioContext = unitInterface?.audioContext ?? new AudioContext();
+  const effect = createStepDelayEffect(audioContext);
+  const destinationNode =
+    unitInterface?.audioOutputNode ?? audioContext.destination;
   return {
-    setParameters(parameters: EffectParameters) {
-      state.parameters = parameters;
+    setup() {
+      unitInterface?.audioInputNode.connect(effect.inputNode);
+      effect.outputNode.connect(destinationNode);
     },
-    setBpm(bpm: number) {
-      state.bpm = bpm;
+    teardown() {
+      unitInterface?.audioInputNode.disconnect(effect.inputNode);
+      effect.outputNode.disconnect(destinationNode);
     },
+    setParameters: effect.setParameters,
+    setBpm: effect.setBpm,
   };
 }
