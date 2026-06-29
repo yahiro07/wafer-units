@@ -4,7 +4,7 @@ import "./page.css";
 import { App } from "@/root/app";
 
 render(
-  <div className="w-dvw h-dvh bg-white flex-vc">
+  <div className="w-dvw h-dvh flex-vc">
     <App />
   </div>,
   document.getElementById("app")!,

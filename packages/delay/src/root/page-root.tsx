@@ -4,13 +4,13 @@ import { ButtonWithIndicator } from "@/components/button-with-indicator";
 import { EffectorBody } from "@/components/effector-body";
 import { Knob } from "@/components/knob";
 import { LabeledBox } from "@/components/labeled-box";
-import { LedIndicator } from "@/components/led-indicator";
 import { OptionMappedKnob } from "@/components/option-mapped-knob";
-import { StompButton } from "@/components/stomp-button";
+import { LedIndicator } from "@/components/unused/led-indicator";
+import { StompButton } from "@/components/unused/stomp-button";
 import { store } from "@/root/store";
 import { qlsx, qu } from "@/utils/qstyle-goober";
 
-export const PageRoot = () => {
+const ControlsPart = () => {
   const { parameters } = store.useSnapshot();
   const setParameter = <K extends keyof EffectParameters>(
     key: K,
@@ -19,6 +19,81 @@ export const PageRoot = () => {
     store.setParameters({ ...parameters, [key]: value });
   };
   const cellW = 48;
+
+  return (
+    <div class={qu.flexVC().gap(5)}>
+      <div class={qu.flexHA().gap(2)}>
+        <LabeledBox label="ON" width={cellW}>
+          <ButtonWithIndicator
+            active={parameters.isOn}
+            onClick={() => setParameter("isOn", !parameters.isOn)}
+          />
+        </LabeledBox>
+        <LabeledBox label="Time" width={cellW} className={qu.relative()}>
+          <OptionMappedKnob<DelayTime>
+            options={delayTimeOptions}
+            value={parameters.time}
+            onChange={(value) => setParameter("time", value)}
+          />
+          <div
+            class={qlsx(
+              qu.absolute().bottom(-14).left(0).fontSize(12).w(cellW),
+              qu.flexC(),
+            )}
+          >
+            {parameters.time.toString()}
+          </div>
+        </LabeledBox>
+        <LabeledBox label="Feed" width={cellW}>
+          <Knob
+            value={parameters.feed}
+            onChange={(value) => setParameter("feed", value)}
+          />
+        </LabeledBox>
+        <LabeledBox label="Tone" width={cellW}>
+          <Knob
+            value={parameters.tone}
+            onChange={(value) => setParameter("tone", value)}
+          />
+        </LabeledBox>
+        <LabeledBox label="Mix" width={cellW}>
+          <Knob
+            value={parameters.mix}
+            onChange={(value) => setParameter("mix", value)}
+          />
+        </LabeledBox>
+      </div>
+      <div class={qu.flexHA().gap(2)}>
+        <LabeledBox label="LFO" width={cellW}>
+          <ButtonWithIndicator
+            active={parameters.lfoOn}
+            onClick={() => setParameter("lfoOn", !parameters.lfoOn)}
+          />
+        </LabeledBox>
+        <LabeledBox label="Rate" width={cellW}>
+          <Knob
+            value={parameters.lfoRate}
+            onChange={(value) => setParameter("lfoRate", value)}
+          />
+        </LabeledBox>
+        <LabeledBox label="Depth" width={cellW}>
+          <Knob
+            value={parameters.lfoDepth}
+            onChange={(value) => setParameter("lfoDepth", value)}
+          />
+        </LabeledBox>
+      </div>
+      {false && (
+        <div class={qu.flexVC().gap(2.5).pt(4)}>
+          <LedIndicator active={parameters.isOn} />
+          <StompButton onClick={() => setParameter("isOn", !parameters.isOn)} />
+        </div>
+      )}
+    </div>
+  );
+};
+
+export const PageRoot = () => {
   return (
     <div class={qu.flexC()}>
       <EffectorBody className={qlsx(qu.wh(320, 210), qu.flexVC())}>
@@ -26,77 +101,7 @@ export const PageRoot = () => {
           <div class={qu.flexH().gap(2)}>
             <div class={qu.fontSize(18).weight("bold")}>Ping-Pong Delay</div>
           </div>
-          <div class={qu.flexVC().gap(5)}>
-            <div class={qu.flexHA().gap(2)}>
-              <LabeledBox label="ON" width={cellW}>
-                <ButtonWithIndicator
-                  active={parameters.isOn}
-                  onClick={() => setParameter("isOn", !parameters.isOn)}
-                />
-              </LabeledBox>
-              <LabeledBox label="Time" width={cellW} className={qu.relative()}>
-                <OptionMappedKnob<DelayTime>
-                  options={delayTimeOptions}
-                  value={parameters.time}
-                  onChange={(value) => setParameter("time", value)}
-                />
-                <div
-                  class={qlsx(
-                    qu.absolute().bottom(-14).left(0).fontSize(12).w(cellW),
-                    qu.flexC(),
-                  )}
-                >
-                  {parameters.time.toString()}
-                </div>
-              </LabeledBox>
-              <LabeledBox label="Feed" width={cellW}>
-                <Knob
-                  value={parameters.feed}
-                  onChange={(value) => setParameter("feed", value)}
-                />
-              </LabeledBox>
-              <LabeledBox label="Tone" width={cellW}>
-                <Knob
-                  value={parameters.tone}
-                  onChange={(value) => setParameter("tone", value)}
-                />
-              </LabeledBox>
-              <LabeledBox label="Mix" width={cellW}>
-                <Knob
-                  value={parameters.mix}
-                  onChange={(value) => setParameter("mix", value)}
-                />
-              </LabeledBox>
-            </div>
-            <div class={qu.flexHA().gap(2)}>
-              <LabeledBox label="LFO" width={cellW}>
-                <ButtonWithIndicator
-                  active={parameters.lfoOn}
-                  onClick={() => setParameter("lfoOn", !parameters.lfoOn)}
-                />
-              </LabeledBox>
-              <LabeledBox label="Rate" width={cellW}>
-                <Knob
-                  value={parameters.lfoRate}
-                  onChange={(value) => setParameter("lfoRate", value)}
-                />
-              </LabeledBox>
-              <LabeledBox label="Depth" width={cellW}>
-                <Knob
-                  value={parameters.lfoDepth}
-                  onChange={(value) => setParameter("lfoDepth", value)}
-                />
-              </LabeledBox>
-            </div>
-            {false && (
-              <div class={qu.flexVC().gap(2.5).pt(4)}>
-                <LedIndicator active={parameters.isOn} />
-                <StompButton
-                  onClick={() => setParameter("isOn", !parameters.isOn)}
-                />
-              </div>
-            )}
-          </div>{" "}
+          <ControlsPart />
         </div>
       </EffectorBody>
     </div>

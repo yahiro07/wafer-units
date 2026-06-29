@@ -11,8 +11,8 @@ export const EffectorBody = ({
   return (
     <div
       class={qlsx(
-        qu.bg("#fd6").p(4).color("#333").rounded(8),
-        qu.css({ border: `inset 3px #aaa4` }),
+        qu.bg("#ffe899").p(4).color("#333").rounded(2),
+        qu.css({ border: `inset 1px #0004` }),
         className,
       )}
     >

@@ -18,7 +18,7 @@ export const delayTimeOptions = createPlainSelectorOptions<DelayTime>([
 
 export const defaultParameters: EffectParameters = {
   isOn: true,
-  time: 0.5,
+  time: 1,
   tone: 0.5,
   feed: 0.5,
   mix: 0.5,
