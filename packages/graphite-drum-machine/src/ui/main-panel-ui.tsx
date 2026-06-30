@@ -153,9 +153,18 @@ export const MainPanelUi = () => {
   return (
     <PanelFrame>
       <div className="flex-v gap-2">
-        {pieces.map((piece) => (
-          <PieceRow key={piece.id} piece={piece} stepPosition={stepPosition} />
-        ))}
+        <h3 className="text-xl font-medium text-white">
+          Graphite Drum Machine
+        </h3>
+        <div className="flex-v gap-2">
+          {pieces.map((piece) => (
+            <PieceRow
+              key={piece.id}
+              piece={piece}
+              stepPosition={stepPosition}
+            />
+          ))}
+        </div>
       </div>
     </PanelFrame>
   );

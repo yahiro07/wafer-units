@@ -252,7 +252,7 @@ export const PieceRowFrame = ({
 
 export const PanelFrame = ({ children }: { children: ReactNode }) => {
   return (
-    <div className={clsx("flex-c", "w-[840px] h-[360px]", uiClasses.bgPanel)}>
+    <div className={clsx("flex-c", "w-[840px] h-[380px]", uiClasses.bgPanel)}>
       {children}
     </div>
   );
