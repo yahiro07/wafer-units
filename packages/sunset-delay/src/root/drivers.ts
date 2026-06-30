@@ -1,5 +1,6 @@
 import { queryUnitInterface } from "wafer-host/unit-types";
 import { createEngine } from "@/root/engine";
+import { persistence } from "@/root/persistence";
 import { store } from "@/root/store";
 
 const unitInterface = queryUnitInterface("wafer-v01");
@@ -30,5 +31,6 @@ export function setupUnit() {
     hostCallbacks: {
       setBpm: engine.setBpm,
     },
+    persistence,
   });
 }
