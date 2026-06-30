@@ -157,7 +157,7 @@ export const MainPanelUi = () => {
       <div className="flex-v gap-2">
         <div className="flex-ha justify-between">
           <h3 className="text-xl font-medium text-white">
-            Graphite Drum Machine
+            Graphite Drum Sequencer
           </h3>
           <div className="flex-ha gap-3">
             <div className="flex-ha gap-2">
