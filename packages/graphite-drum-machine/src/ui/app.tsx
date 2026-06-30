@@ -7,6 +7,7 @@ import { createActions } from "@/store/actions";
 import { AppProvider } from "@/store/app-context";
 import { createPersistence } from "@/store/persistence";
 import { createAppStore } from "@/store/store";
+import { createAutomationInput } from "@/ui/automation-input";
 import { DebugUi } from "@/ui/debug-ui";
 import { MainPanelUi } from "@/ui/main-panel-ui";
 
@@ -20,12 +21,14 @@ export function createApp(unitInterface: UnitInterface | undefined) {
   sequencer.preloadFirst();
   sequencer.setMasterVolume(store.state.masterVolume);
   const persistence = createPersistence(store);
+  const automationInput = createAutomationInput(store, actions);
 
   unitInterface?.completeSetup({
     unitAspects: {
       unitType: "instrument",
       categoryHint: "drumMachine",
       outputs: ["audio"],
+      inputs: ["automation"],
     },
     clockHandlers: {
       start: actions.start,
@@ -33,6 +36,7 @@ export function createApp(unitInterface: UnitInterface | undefined) {
       stop: actions.stop,
     },
     persistence,
+    automationInput,
   });
 
   const Render = () => {
