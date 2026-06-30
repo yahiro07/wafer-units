@@ -1,4 +1,5 @@
 import { appConfig } from "@/base/app-config";
+import { pieceIds } from "@/base/constants";
 import { PieceId, Preset } from "@/base/type";
 
 function mapPattern(text: string): number {
@@ -17,8 +18,6 @@ function mapPatterns(source: Record<PieceId, string>): Record<PieceId, number> {
     Object.entries(source).map(([id, text]) => [id, mapPattern(text)]),
   ) as Record<PieceId, number>;
 }
-
-const pieceIds: PieceId[] = ["kick", "snare", "opHat", "clHat", "clap"];
 
 export const pieceAdjustedGains: Record<PieceId, number> = {
   kick: 0.55,
