@@ -1,3 +1,4 @@
+import { appConfig } from "@/base/app-config";
 import { PieceId, Preset } from "@/base/type";
 
 function mapPattern(text: string): number {
@@ -19,6 +20,14 @@ function mapPatterns(source: Record<PieceId, string>): Record<PieceId, number> {
 
 const pieceIds: PieceId[] = ["kick", "snare", "opHat", "clHat", "clap"];
 
+export const pieceAdjustedGains: Record<PieceId, number> = {
+  kick: 0.5,
+  snare: 0.5,
+  opHat: 0.4,
+  clHat: 0.3,
+  clap: 0.5,
+};
+
 export const presets = {
   init: {
     pieceItems: pieceIds.map((id) => ({
@@ -26,7 +35,7 @@ export const presets = {
       variationIndex: 0,
       active: true,
       pitch: 0.5,
-      volume: 0.5,
+      volume: pieceAdjustedGains[id],
       patternBits: mapPatterns({
         kick: "",
         snare: "",
@@ -42,14 +51,7 @@ export const presets = {
       variationIndex: 0,
       active: true,
       pitch: 0.5,
-      volume:
-        {
-          clHat: 0.25,
-          clap: 0.3,
-          opHat: 0.35,
-          snare: 0.5,
-          kick: 0.5,
-        }[id] ?? 0.5,
+      volume: pieceAdjustedGains[id],
       patternBits: mapPatterns({
         kick: "|o---|o---|o---|o---|",
         snare: "",
@@ -65,14 +67,7 @@ export const presets = {
       variationIndex: 0,
       active: true,
       pitch: 0.5,
-      volume:
-        {
-          clHat: 0.25,
-          clap: 0.3,
-          opHat: 0.35,
-          snare: 0.5,
-          kick: 0.5,
-        }[id] ?? 0.5,
+      volume: pieceAdjustedGains[id],
       patternBits: mapPatterns({
         kick: "|o---|o---|o---|o---|",
         snare: "|----|o---|----|o---|",
@@ -85,3 +80,29 @@ export const presets = {
 } satisfies Record<string, Preset>;
 
 export type PresetKey = keyof typeof presets;
+
+export const initialPreset = structuredClone(presets.preset2) as Preset;
+
+if (appConfig.isDevelopment && false) {
+  initialPreset.pieceItems = pieceIds.map((id) => ({
+    id,
+    variationIndex: 0,
+    active:
+      {
+        kick: true,
+        snare: true,
+        opHat: true,
+        clHat: true,
+        clap: true,
+      }[id] ?? false,
+    pitch: 0.5,
+    volume: pieceAdjustedGains[id],
+    patternBits: mapPatterns({
+      kick: "|o---|o---|o---|o---|",
+      snare: "|----|o---|----|o---|",
+      opHat: "|--o-|--o-|--o-|--o-|",
+      clHat: "|oo-o|oo-o|oo-o|oo-o|",
+      clap: "|----|o---|----|o---|",
+    })[id],
+  }));
+}

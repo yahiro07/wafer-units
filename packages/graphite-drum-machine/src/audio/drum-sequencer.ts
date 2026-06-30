@@ -58,12 +58,8 @@ export function createDrumSequencer(
         await tonePlayer.preloadTone(
           pieceSampleUrls[piece.id][piece.variationIndex],
         );
-        tonePlayer.playTone(
-          pieceSampleUrls[piece.id][piece.variationIndex],
-          0,
-          piece.pitch,
-          piece.volume,
-        );
+        const uri = pieceSampleUrls[piece.id][piece.variationIndex];
+        tonePlayer.playTone(uri, 0, piece.pitch, piece.volume);
       }
     },
   };
