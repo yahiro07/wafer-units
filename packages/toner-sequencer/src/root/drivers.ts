@@ -1,5 +1,7 @@
 import { queryUnitInterface } from "wafer-host/unit-types";
+import { automationInput } from "@/root/automation";
 import { createEngine } from "@/root/engine";
+import { persistence } from "@/root/persistence";
 import { store } from "@/root/store";
 
 const unitInterface = queryUnitInterface("wafer-v01");
@@ -31,6 +33,7 @@ export function setupUnit() {
     unitAspects: {
       unitType: "sequencer",
       outputs: ["note"],
+      inputs: ["automation"],
     },
     clockHandlers: {
       start() {
@@ -46,5 +49,7 @@ export function setupUnit() {
         store.setPlayPos(-1);
       },
     },
+    persistence: persistence,
+    automationInput: automationInput,
   });
 }

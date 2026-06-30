@@ -3,7 +3,7 @@
   "unitType": "sequencer",
   "preferredSize": "480,330",
   "outputSignalTypes": "note",
-  "inputSignalTypes": "",
+  "inputSignalTypes": "automation",
   "protocol": "wafer-v01",
   "unitTypesVersion": "0.1.5",
   "integrationFormat": "iframe",
