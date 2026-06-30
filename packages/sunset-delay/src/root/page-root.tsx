@@ -126,7 +126,7 @@ export const PageRoot = () => {
       <EffectorBody className={qlsx(qu.wh(320, 210), qu.flexVC())}>
         <div class={qu.flexV().gap(3)}>
           <div class={qu.flexHA().gap(2).justify("between")}>
-            <div class={qu.fontSize(18).weight("bold")}>Ping-Pong Delay</div>
+            <div class={qu.fontSize(18).weight("bold")}>Sunset Delay</div>
             <SafetyPart />
           </div>
           <ControlsPart />

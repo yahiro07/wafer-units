@@ -1,5 +1,5 @@
 {
-  "name": "delay",
+  "name": "sunset-delay",
   "unitType": "effect",
   "preferredSize": "320,210",
   "outputSignalTypes": "audio",
