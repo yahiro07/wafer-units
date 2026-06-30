@@ -10,6 +10,7 @@ export type Actions = {
   processStep(stepIndex: number, time: number): void;
   stop(): void;
   previewPiece(id: string): void;
+  resetPreset(): void;
   applyPreset(presetKey: PresetKey): void;
   randomizePieces(): void;
 };
@@ -40,11 +41,24 @@ export function createActions(
     previewPiece(id: string) {
       sequencer.previewPiece(id);
     },
-    applyPreset(presetKey: PresetKey) {
-      const pieceItems = presets[presetKey].pieceItems;
+    resetPreset() {
+      const pieceItems = presets["init"].pieceItems;
       store.setPieces(pieceItems);
       for (const piece of pieceItems) {
         sequencer.patchPiece(piece.id, piece);
+      }
+    },
+    applyPreset(presetKey: PresetKey) {
+      const pieceItems = presets[presetKey].pieceItems;
+      store.setPieces((prev) => {
+        return prev.map((piece, index) => {
+          const { variationIndex, ...attrs } = pieceItems[index];
+          return { ...piece, ...attrs };
+        });
+      });
+      for (const piece of pieceItems) {
+        const { variationIndex, ...attrs } = piece;
+        sequencer.patchPiece(piece.id, attrs);
       }
     },
     randomizePieces() {

@@ -25,7 +25,7 @@ export const pieceAdjustedGains: Record<PieceId, number> = {
   snare: 0.4,
   opHat: 0.4,
   clHat: 0.3,
-  clap: 0.5,
+  clap: 0.4,
 };
 
 export const presets = {

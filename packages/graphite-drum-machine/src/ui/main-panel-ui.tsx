@@ -160,20 +160,17 @@ export const MainPanelUi = () => {
             Graphite Drum Machine
           </h3>
           <div className="flex-ha gap-2">
+            <PresetButton text="reset" onClick={() => actions.resetPreset()} />
             <PresetButton
-              text="reset"
-              onClick={() => actions.applyPreset("init")}
-            />
-            <PresetButton
-              text="preset1"
+              text="pattern1"
               onClick={() => actions.applyPreset("preset1")}
             />
             <PresetButton
-              text="preset2"
+              text="pattern2"
               onClick={() => actions.applyPreset("preset2")}
             />
             <PresetButton
-              text="preset3"
+              text="pattern3"
               onClick={() => actions.applyPreset("preset3")}
             />
             <PresetButton
