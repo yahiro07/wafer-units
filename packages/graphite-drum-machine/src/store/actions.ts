@@ -1,4 +1,5 @@
 import { DrumSequencer } from "@/audio/drum-sequencer";
+import { pieceSampleUrls } from "@/base/piece-sample-urls";
 import { PresetKey, presets } from "@/base/presets";
 import { PieceItem } from "@/base/type";
 import { AppStore } from "@/store/store";
@@ -10,6 +11,7 @@ export type Actions = {
   stop(): void;
   previewPiece(id: string): void;
   applyPreset(presetKey: PresetKey): void;
+  randomizePieces(): void;
 };
 
 export function createActions(
@@ -43,6 +45,24 @@ export function createActions(
       store.setPieces(pieceItems);
       for (const piece of pieceItems) {
         sequencer.patchPiece(piece.id, piece);
+      }
+    },
+    randomizePieces() {
+      const pieceItems = store.state.pieces;
+      const newVariationIndices = pieceItems.map((piece) =>
+        Math.floor(Math.random() * pieceSampleUrls[piece.id].length),
+      );
+      store.setPieces(
+        pieceItems.map((piece, index) => ({
+          ...piece,
+          variationIndex: newVariationIndices[index],
+        })),
+      );
+      for (let i = 0; i < pieceItems.length; i++) {
+        const piece = pieceItems[i];
+        sequencer.patchPiece(piece.id, {
+          variationIndex: newVariationIndices[i],
+        });
       }
     },
   };

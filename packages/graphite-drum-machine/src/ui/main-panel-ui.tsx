@@ -172,6 +172,10 @@ export const MainPanelUi = () => {
               text="preset2"
               onClick={() => actions.applyPreset("preset2")}
             />
+            <PresetButton
+              text="rnd tone"
+              onClick={() => actions.randomizePieces()}
+            />
           </div>
         </div>
         <div className="flex-v gap-2">
