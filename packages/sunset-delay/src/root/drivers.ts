@@ -1,4 +1,5 @@
 import { queryUnitInterface } from "wafer-host/unit-types";
+import { automationInput } from "@/root/automation";
 import { createEngine } from "@/root/engine";
 import { persistence } from "@/root/persistence";
 import { store } from "@/root/store";
@@ -26,11 +27,12 @@ export function setupUnit() {
     unitAspects: {
       unitType: "effect",
       outputs: ["audio"],
-      inputs: ["audio"],
+      inputs: ["audio", "automation"],
     },
     hostCallbacks: {
       setBpm: engine.setBpm,
     },
     persistence,
+    automationInput,
   });
 }
