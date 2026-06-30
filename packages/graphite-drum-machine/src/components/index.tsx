@@ -270,7 +270,7 @@ export const PresetButton = ({
   return (
     <button
       className={clsx(
-        "w-16 h-8 flex-c text-white text-[15px]",
+        "w-16 h-8 flex-c text-white text-[14px]",
         "cursor-pointer",
         "relative",
         uiClasses.bgPieceOperationButton,

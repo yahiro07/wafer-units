@@ -22,7 +22,7 @@ const pieceIds: PieceId[] = ["kick", "snare", "opHat", "clHat", "clap"];
 
 export const pieceAdjustedGains: Record<PieceId, number> = {
   kick: 0.5,
-  snare: 0.5,
+  snare: 0.4,
   opHat: 0.4,
   clHat: 0.3,
   clap: 0.5,
@@ -55,13 +55,29 @@ export const presets = {
       patternBits: mapPatterns({
         kick: "|o---|o---|o---|o---|",
         snare: "",
+        opHat: "|--o-|--o-|--o-|--o-|",
+        clHat: "",
+        clap: "",
+      })[id],
+    })),
+  },
+  preset2: {
+    pieceItems: pieceIds.map((id) => ({
+      id,
+      variationIndex: 0,
+      active: true,
+      pitch: 0.5,
+      volume: pieceAdjustedGains[id],
+      patternBits: mapPatterns({
+        kick: "|o---|o---|o---|o---|",
+        snare: "",
         opHat: "",
         clHat: "|oooo|oooo|oooo|oooo|",
         clap: "",
       })[id],
     })),
   },
-  preset2: {
+  preset3: {
     pieceItems: pieceIds.map((id) => ({
       id,
       variationIndex: 0,

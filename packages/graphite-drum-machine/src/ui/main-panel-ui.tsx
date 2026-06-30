@@ -173,6 +173,10 @@ export const MainPanelUi = () => {
               onClick={() => actions.applyPreset("preset2")}
             />
             <PresetButton
+              text="preset3"
+              onClick={() => actions.applyPreset("preset3")}
+            />
+            <PresetButton
               text="rnd tone"
               onClick={() => actions.randomizePieces()}
             />
