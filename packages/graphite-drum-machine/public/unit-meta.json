@@ -1,5 +1,5 @@
 {
-  "name": "drum-seq",
+  "name": "graphite-drum-machine",
   "unitType": "instrument",
   "preferredSize": "840,360",
   "outputSignalTypes": "note",

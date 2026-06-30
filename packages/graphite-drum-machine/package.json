@@ -1,5 +1,5 @@
 {
-  "name": "drum-seq",
+  "name": "graphite-drum-machine",
   "type": "module",
   "private": true,
   "scripts": {
