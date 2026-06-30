@@ -1,7 +1,8 @@
 import { isBitSet, seqNumbers, toggleBit } from "mofur/ax";
 import { ReactNode } from "react";
-import { pieceDisplayNames, pieceSampleUrls } from "@/base/constants";
+import { pieceDisplayNames } from "@/base/constants";
 import { Icons } from "@/base/icons";
+import { pieceSampleUrls } from "@/base/piece-sample-urls";
 import { PieceItem } from "@/base/type";
 import {
   Knob,
@@ -12,6 +13,7 @@ import {
   PieceNameBox,
   PieceOperationButton,
   PieceRowFrame,
+  PresetButton,
   StepButton,
 } from "@/components";
 import { useAppContext } from "@/store/app-context";
@@ -148,14 +150,30 @@ const PieceRow = ({
 };
 
 export const MainPanelUi = () => {
-  const { store } = useAppContext();
+  const { store, actions } = useAppContext();
   const { pieces, stepPosition } = store.useSnapshot();
   return (
     <PanelFrame>
       <div className="flex-v gap-2">
-        <h3 className="text-xl font-medium text-white">
-          Graphite Drum Machine
-        </h3>
+        <div className="flex-ha justify-between">
+          <h3 className="text-xl font-medium text-white">
+            Graphite Drum Machine
+          </h3>
+          <div className="flex-ha gap-2">
+            <PresetButton
+              text="reset"
+              onClick={() => actions.applyPreset("init")}
+            />
+            <PresetButton
+              text="preset1"
+              onClick={() => actions.applyPreset("preset1")}
+            />
+            <PresetButton
+              text="preset2"
+              onClick={() => actions.applyPreset("preset2")}
+            />
+          </div>
+        </div>
         <div className="flex-v gap-2">
           {pieces.map((piece) => (
             <PieceRow

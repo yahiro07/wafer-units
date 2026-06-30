@@ -8,3 +8,7 @@ export type PieceItem = {
   volume: number;
   patternBits: number;
 };
+
+export type Preset = {
+  pieceItems: PieceItem[];
+};

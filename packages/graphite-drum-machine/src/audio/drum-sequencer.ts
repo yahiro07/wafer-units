@@ -1,7 +1,7 @@
 import { isBitSet } from "mofur/ax";
 import { UnitInterface } from "wafer-host/unit-types";
 import { createTonePlayer } from "@/audio/tone-player";
-import { pieceSampleUrls } from "@/base/constants";
+import { pieceSampleUrls } from "@/base/piece-sample-urls";
 import { PieceItem } from "@/base/type";
 
 export type DrumSequencer = {

@@ -1,4 +1,5 @@
 import { DrumSequencer } from "@/audio/drum-sequencer";
+import { PresetKey, presets } from "@/base/presets";
 import { PieceItem } from "@/base/type";
 import { AppStore } from "@/store/store";
 
@@ -8,6 +9,7 @@ export type Actions = {
   processStep(stepIndex: number, time: number): void;
   stop(): void;
   previewPiece(id: string): void;
+  applyPreset(presetKey: PresetKey): void;
 };
 
 export function createActions(
@@ -35,6 +37,13 @@ export function createActions(
     },
     previewPiece(id: string) {
       sequencer.previewPiece(id);
+    },
+    applyPreset(presetKey: PresetKey) {
+      const pieceItems = presets[presetKey].pieceItems;
+      store.setPieces(pieceItems);
+      for (const piece of pieceItems) {
+        sequencer.patchPiece(piece.id, piece);
+      }
     },
   };
 }

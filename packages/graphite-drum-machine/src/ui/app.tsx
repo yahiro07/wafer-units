@@ -1,7 +1,7 @@
 import { UnitInterface } from "wafer-host/unit-types";
 import { createDrumSequencer } from "@/audio/drum-sequencer";
 import { appConfig } from "@/base/app-config";
-import { defaultPieces } from "@/base/constants";
+import { presets } from "@/base/presets";
 import { CssVariablesFrame } from "@/components";
 import { createActions } from "@/store/actions";
 import { AppProvider } from "@/store/app-context";
@@ -10,8 +10,9 @@ import { DebugUi } from "@/ui/debug-ui";
 import { MainPanelUi } from "@/ui/main-panel-ui";
 
 export function createApp(unitInterface: UnitInterface | undefined) {
-  const sequencer = createDrumSequencer(unitInterface, defaultPieces);
-  const store = createAppStore(defaultPieces);
+  const initialPieces = structuredClone(presets.preset2.pieceItems);
+  const sequencer = createDrumSequencer(unitInterface, initialPieces);
+  const store = createAppStore(initialPieces);
   const actions = createActions(store, sequencer);
   sequencer.preloadFirst();
 
