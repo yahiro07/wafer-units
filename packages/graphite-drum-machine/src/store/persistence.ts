@@ -1,5 +1,6 @@
 import { seqNumbers } from "mofur/ax";
 import { Persistence } from "wafer-host/unit-types";
+import { DrumSequencer } from "@/audio/drum-sequencer";
 import { pieceIds } from "@/base/constants";
 import { AppStore } from "@/store/store";
 
@@ -10,7 +11,10 @@ function unaryParameterFromByte(byte: number): number {
   return byte / 255;
 }
 
-export function createPersistence(store: AppStore): Persistence {
+export function createPersistence(
+  store: AppStore,
+  sequencer: DrumSequencer,
+): Persistence {
   return {
     emitStateBytes(): Uint8Array {
       const { pieces, masterVolume } = store.state;
@@ -22,23 +26,24 @@ export function createPersistence(store: AppStore): Persistence {
           piece.active ? 1 : 0,
           unaryParameterToByte(piece.volume),
           unaryParameterToByte(piece.pitch),
-          piece.patternBits,
+          (piece.patternBits >> 8) & 0xff,
+          piece.patternBits & 0xff,
         ]),
       ]);
     },
-    applyStateBytes(allBytes: Uint8Array) {
+    applyStateBytes(bytes: Uint8Array) {
       const numPieces = pieceIds.length;
-      if (allBytes.length !== 6 * numPieces + 1) return;
-      const masterVolume = unaryParameterFromByte(allBytes[0]);
+      if (bytes.length !== 7 * numPieces + 1) return;
+      const masterVolume = unaryParameterFromByte(bytes[0]);
       const pieceItems = seqNumbers(numPieces).map((index) => {
-        const bytes = allBytes.slice(1 + index * 6, 1 + (index + 1) * 6);
+        const offset = 1 + index * 7;
         return {
-          id: pieceIds[bytes[0]],
-          variationIndex: bytes[1],
-          active: bytes[2] !== 0,
-          volume: unaryParameterFromByte(bytes[3]),
-          pitch: unaryParameterFromByte(bytes[4]),
-          patternBits: bytes[5],
+          id: pieceIds[bytes[offset + 0]],
+          variationIndex: bytes[offset + 1],
+          active: bytes[offset + 2] !== 0,
+          volume: unaryParameterFromByte(bytes[offset + 3]),
+          pitch: unaryParameterFromByte(bytes[offset + 4]),
+          patternBits: (bytes[offset + 5] << 8) | bytes[offset + 6],
         };
       });
       const valid = pieceItems.every(
@@ -47,6 +52,10 @@ export function createPersistence(store: AppStore): Persistence {
       if (valid) {
         store.setPieces(pieceItems);
         store.setMasterVolume(masterVolume);
+        sequencer.setMasterVolume(masterVolume);
+        for (const piece of pieceItems) {
+          sequencer.patchPiece(piece.id, piece);
+        }
       }
     },
   };

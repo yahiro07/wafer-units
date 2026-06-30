@@ -5,9 +5,9 @@ import { initialPreset } from "@/base/presets";
 import { CssVariablesFrame } from "@/components";
 import { createActions } from "@/store/actions";
 import { AppProvider } from "@/store/app-context";
+import { createAutomationInput } from "@/store/automation-input";
 import { createPersistence } from "@/store/persistence";
 import { createAppStore } from "@/store/store";
-import { createAutomationInput } from "@/ui/automation-input";
 import { DebugUi } from "@/ui/debug-ui";
 import { MainPanelUi } from "@/ui/main-panel-ui";
 
@@ -20,7 +20,7 @@ export function createApp(unitInterface: UnitInterface | undefined) {
   const actions = createActions(store, sequencer);
   sequencer.preloadFirst();
   sequencer.setMasterVolume(store.state.masterVolume);
-  const persistence = createPersistence(store);
+  const persistence = createPersistence(store, sequencer);
   const automationInput = createAutomationInput(store, actions);
 
   unitInterface?.completeSetup({
