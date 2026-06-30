@@ -151,7 +151,7 @@ const PieceRow = ({
 
 export const MainPanelUi = () => {
   const { store, actions } = useAppContext();
-  const { pieces, stepPosition } = store.useSnapshot();
+  const { pieces, stepPosition, masterVolume } = store.useSnapshot();
   return (
     <PanelFrame>
       <div className="flex-v gap-2">
@@ -159,24 +159,30 @@ export const MainPanelUi = () => {
           <h3 className="text-xl font-medium text-white">
             Graphite Drum Machine
           </h3>
-          <div className="flex-ha gap-2">
-            <PresetButton text="reset" onClick={() => actions.resetPreset()} />
-            <PresetButton
-              text="pattern1"
-              onClick={() => actions.applyPreset("preset1")}
-            />
-            <PresetButton
-              text="pattern2"
-              onClick={() => actions.applyPreset("preset2")}
-            />
-            <PresetButton
-              text="pattern3"
-              onClick={() => actions.applyPreset("preset3")}
-            />
-            <PresetButton
-              text="rnd tone"
-              onClick={() => actions.randomizePieces()}
-            />
+          <div className="flex-ha gap-3">
+            <div className="flex-ha gap-2">
+              <PresetButton
+                text="reset"
+                onClick={() => actions.resetPreset()}
+              />
+              <PresetButton
+                text="pattern1"
+                onClick={() => actions.applyPreset("preset1")}
+              />
+              <PresetButton
+                text="pattern2"
+                onClick={() => actions.applyPreset("preset2")}
+              />
+              <PresetButton
+                text="pattern3"
+                onClick={() => actions.applyPreset("preset3")}
+              />
+              <PresetButton
+                text="rnd tone"
+                onClick={() => actions.randomizePieces()}
+              />
+            </div>
+            <Knob value={masterVolume} onChange={actions.setMasterVolume} />
           </div>
         </div>
         <div className="flex-v gap-2">

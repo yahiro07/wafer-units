@@ -11,6 +11,7 @@ export type DrumSequencer = {
   stop(): void;
   processStep(stepIndex: number, time: number): void;
   previewPiece(id: string): void;
+  setMasterVolume(value: number): void;
 };
 
 export function createDrumSequencer(
@@ -61,6 +62,9 @@ export function createDrumSequencer(
         const uri = pieceSampleUrls[piece.id][piece.variationIndex];
         tonePlayer.playTone(uri, 0, piece.pitch, piece.volume);
       }
+    },
+    setMasterVolume(value: number) {
+      tonePlayer.setMasterVolume(value);
     },
   };
 }

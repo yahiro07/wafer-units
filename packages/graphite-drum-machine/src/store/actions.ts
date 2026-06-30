@@ -13,6 +13,7 @@ export type Actions = {
   resetPreset(): void;
   applyPreset(presetKey: PresetKey): void;
   randomizePieces(): void;
+  setMasterVolume(value: number): void;
 };
 
 export function createActions(
@@ -78,6 +79,10 @@ export function createActions(
           variationIndex: newVariationIndices[i],
         });
       }
+    },
+    setMasterVolume(value: number) {
+      sequencer.setMasterVolume(value);
+      store.setMasterVolume(value);
     },
   };
 }

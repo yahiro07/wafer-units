@@ -17,6 +17,10 @@ export function createTonePlayer(unitInterface: UnitInterface | undefined) {
   const destinationNode =
     unitInterface?.audioOutputNode ?? audioContext.destination;
 
+  const masterGainNode = audioContext.createGain();
+  masterGainNode.gain.value = 0.5;
+  masterGainNode.connect(destinationNode);
+
   const toneCache = new Map<string, ToneItem | null>();
 
   return {
@@ -56,8 +60,16 @@ export function createTonePlayer(unitInterface: UnitInterface | undefined) {
         toneItem.volume * mapVolumeControlCurveCenterUnity(volume);
       gainNode.gain.value = gainValue;
       sourceNode.connect(gainNode);
-      gainNode.connect(destinationNode);
+      gainNode.connect(masterGainNode);
       sourceNode.start(time);
+    },
+    setMasterVolume(value: number) {
+      const gainValue = mapVolumeControlCurveCenterUnity(value);
+      masterGainNode.gain.setTargetAtTime(
+        gainValue,
+        audioContext.currentTime,
+        0.005,
+      );
     },
   };
 }

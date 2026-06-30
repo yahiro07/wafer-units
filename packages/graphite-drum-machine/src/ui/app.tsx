@@ -17,6 +17,7 @@ export function createApp(unitInterface: UnitInterface | undefined) {
   const store = createAppStore(initialPreset.pieceItems);
   const actions = createActions(store, sequencer);
   sequencer.preloadFirst();
+  sequencer.setMasterVolume(store.state.masterVolume);
 
   unitInterface?.completeSetup({
     unitAspects: {

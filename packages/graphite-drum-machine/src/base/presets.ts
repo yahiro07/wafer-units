@@ -21,7 +21,7 @@ function mapPatterns(source: Record<PieceId, string>): Record<PieceId, number> {
 const pieceIds: PieceId[] = ["kick", "snare", "opHat", "clHat", "clap"];
 
 export const pieceAdjustedGains: Record<PieceId, number> = {
-  kick: 0.5,
+  kick: 0.55,
   snare: 0.4,
   opHat: 0.4,
   clHat: 0.3,
@@ -97,7 +97,7 @@ export const presets = {
 
 export type PresetKey = keyof typeof presets;
 
-export const initialPreset = structuredClone(presets.preset2) as Preset;
+export const initialPreset = structuredClone(presets.preset3) as Preset;
 
 if (appConfig.isDevelopment && false) {
   initialPreset.pieceItems = pieceIds.map((id) => ({
