@@ -1,7 +1,7 @@
 import { isBitSet } from "mofur/ax";
 import { UnitInterface } from "wafer-host/unit-types";
 import { createTonePlayer } from "@/audio/tone-player";
-import { pieceSampleUrls } from "@/base/constants";
+import { pieceSampleUrls } from "@/base/piece-sample-urls";
 import { PieceItem } from "@/base/type";
 
 export type DrumSequencer = {
@@ -11,6 +11,7 @@ export type DrumSequencer = {
   stop(): void;
   processStep(stepIndex: number, time: number): void;
   previewPiece(id: string): void;
+  setMasterVolume(value: number): void;
 };
 
 export function createDrumSequencer(
@@ -58,13 +59,12 @@ export function createDrumSequencer(
         await tonePlayer.preloadTone(
           pieceSampleUrls[piece.id][piece.variationIndex],
         );
-        tonePlayer.playTone(
-          pieceSampleUrls[piece.id][piece.variationIndex],
-          0,
-          piece.pitch,
-          piece.volume,
-        );
+        const uri = pieceSampleUrls[piece.id][piece.variationIndex];
+        tonePlayer.playTone(uri, 0, piece.pitch, piece.volume);
       }
+    },
+    setMasterVolume(value: number) {
+      tonePlayer.setMasterVolume(value);
     },
   };
 }

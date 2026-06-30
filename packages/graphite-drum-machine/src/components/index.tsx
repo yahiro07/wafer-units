@@ -257,3 +257,30 @@ export const PanelFrame = ({ children }: { children: ReactNode }) => {
     </div>
   );
 };
+
+export const PresetButton = ({
+  children,
+  text,
+  onClick,
+}: {
+  children?: ReactNode;
+  text?: string;
+  onClick?: () => void;
+}) => {
+  return (
+    <button
+      className={clsx(
+        "w-18 h-8 flex-c text-white text-[14px]",
+        "cursor-pointer",
+        "relative",
+        uiClasses.bgPieceOperationButton,
+        uiClasses.borderCommon,
+        uiClasses.roundedFew,
+      )}
+      onClick={onClick}
+    >
+      {text}
+      {children}
+    </button>
+  );
+};

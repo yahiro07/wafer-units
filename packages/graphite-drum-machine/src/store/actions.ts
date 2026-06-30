@@ -1,4 +1,6 @@
 import { DrumSequencer } from "@/audio/drum-sequencer";
+import { pieceSampleUrls } from "@/base/piece-sample-urls";
+import { PresetKey, presets } from "@/base/presets";
 import { PieceItem } from "@/base/type";
 import { AppStore } from "@/store/store";
 
@@ -8,6 +10,10 @@ export type Actions = {
   processStep(stepIndex: number, time: number): void;
   stop(): void;
   previewPiece(id: string): void;
+  resetPreset(): void;
+  applyPreset(presetKey: PresetKey): void;
+  randomizePieces(): void;
+  setMasterVolume(value: number): void;
 };
 
 export function createActions(
@@ -35,6 +41,48 @@ export function createActions(
     },
     previewPiece(id: string) {
       sequencer.previewPiece(id);
+    },
+    resetPreset() {
+      const pieceItems = presets["init"].pieceItems;
+      store.setPieces(pieceItems);
+      for (const piece of pieceItems) {
+        sequencer.patchPiece(piece.id, piece);
+      }
+    },
+    applyPreset(presetKey: PresetKey) {
+      const pieceItems = presets[presetKey].pieceItems;
+      store.setPieces((prev) => {
+        return prev.map((piece, index) => {
+          const { variationIndex, ...attrs } = pieceItems[index];
+          return { ...piece, ...attrs };
+        });
+      });
+      for (const piece of pieceItems) {
+        const { variationIndex, ...attrs } = piece;
+        sequencer.patchPiece(piece.id, attrs);
+      }
+    },
+    randomizePieces() {
+      const pieceItems = store.state.pieces;
+      const newVariationIndices = pieceItems.map((piece) =>
+        Math.floor(Math.random() * pieceSampleUrls[piece.id].length),
+      );
+      store.setPieces(
+        pieceItems.map((piece, index) => ({
+          ...piece,
+          variationIndex: newVariationIndices[index],
+        })),
+      );
+      for (let i = 0; i < pieceItems.length; i++) {
+        const piece = pieceItems[i];
+        sequencer.patchPiece(piece.id, {
+          variationIndex: newVariationIndices[i],
+        });
+      }
+    },
+    setMasterVolume(value: number) {
+      sequencer.setMasterVolume(value);
+      store.setMasterVolume(value);
     },
   };
 }

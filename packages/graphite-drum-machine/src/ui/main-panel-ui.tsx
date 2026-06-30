@@ -1,7 +1,8 @@
 import { isBitSet, seqNumbers, toggleBit } from "mofur/ax";
 import { ReactNode } from "react";
-import { pieceDisplayNames, pieceSampleUrls } from "@/base/constants";
+import { pieceDisplayNames } from "@/base/constants";
 import { Icons } from "@/base/icons";
+import { pieceSampleUrls } from "@/base/piece-sample-urls";
 import { PieceItem } from "@/base/type";
 import {
   Knob,
@@ -12,6 +13,7 @@ import {
   PieceNameBox,
   PieceOperationButton,
   PieceRowFrame,
+  PresetButton,
   StepButton,
 } from "@/components";
 import { useAppContext } from "@/store/app-context";
@@ -148,14 +150,41 @@ const PieceRow = ({
 };
 
 export const MainPanelUi = () => {
-  const { store } = useAppContext();
-  const { pieces, stepPosition } = store.useSnapshot();
+  const { store, actions } = useAppContext();
+  const { pieces, stepPosition, masterVolume } = store.useSnapshot();
   return (
     <PanelFrame>
       <div className="flex-v gap-2">
-        <h3 className="text-xl font-medium text-white">
-          Graphite Drum Machine
-        </h3>
+        <div className="flex-ha justify-between">
+          <h3 className="text-xl font-medium text-white">
+            Graphite Drum Sequencer
+          </h3>
+          <div className="flex-ha gap-3">
+            <div className="flex-ha gap-2">
+              <PresetButton
+                text="reset"
+                onClick={() => actions.resetPreset()}
+              />
+              <PresetButton
+                text="pattern1"
+                onClick={() => actions.applyPreset("preset1")}
+              />
+              <PresetButton
+                text="pattern2"
+                onClick={() => actions.applyPreset("preset2")}
+              />
+              <PresetButton
+                text="pattern3"
+                onClick={() => actions.applyPreset("preset3")}
+              />
+              <PresetButton
+                text="rnd tone"
+                onClick={() => actions.randomizePieces()}
+              />
+            </div>
+            <Knob value={masterVolume} onChange={actions.setMasterVolume} />
+          </div>
+        </div>
         <div className="flex-v gap-2">
           {pieces.map((piece) => (
             <PieceRow
