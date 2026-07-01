@@ -32,7 +32,6 @@ export function createProgressionCore(
   };
 
   const clockHandlers: ClockHandlers = {
-    preferSchedulingOrderInPriority: true,
     start() {
       core.emitSongKey();
     },
