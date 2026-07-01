@@ -10,7 +10,8 @@ function mapDutyToDuration(paramDuty: number): number {
   }
 }
 
-const subNotes = [0, 3, 5, 7, 10];
+// const subNotes = [0, 3, 5, 7, 10]; //la do re mi so
+const subNotes = [0, 2, 4, 7, 9]; //do re mi so la
 function yIndexToSubNote(yIndex: number) {
   return subNotes[yIndex % subNotes.length];
 }
