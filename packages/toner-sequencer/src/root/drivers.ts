@@ -33,7 +33,7 @@ export function setupUnit() {
     unitAspects: {
       unitType: "sequencer",
       outputs: ["note"],
-      inputs: ["automation"],
+      inputs: ["note", "automation"],
     },
     clockHandlers: {
       start() {
@@ -48,6 +48,10 @@ export function setupUnit() {
         engine.clockHandlers.stop?.();
         store.setPlayPos(-1);
       },
+    },
+    noteInput: {
+      noteOn: engine.inputNoteOn,
+      noteOff: engine.inputNoteOff,
     },
     persistence: persistence,
     automationInput: automationInput,

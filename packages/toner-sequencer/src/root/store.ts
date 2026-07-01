@@ -1,5 +1,5 @@
 import { createStore } from "snap-store";
-import { defaultSequencerState } from "@/common/defs";
+import { defaultSequencerEditState } from "@/common/defs";
 
 export const store = createStore<{
   octave: number;
@@ -7,8 +7,8 @@ export const store = createStore<{
   stepBits: number[];
   playPos: number;
 }>({
-  octave: defaultSequencerState.octave,
-  duty: defaultSequencerState.duty,
-  stepBits: defaultSequencerState.stepBits,
+  octave: defaultSequencerEditState.octave,
+  duty: defaultSequencerEditState.duty,
+  stepBits: defaultSequencerEditState.stepBits,
   playPos: -1,
 });
