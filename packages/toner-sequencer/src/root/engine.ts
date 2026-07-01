@@ -38,21 +38,22 @@ function getKeyType(rootNoteNumber: number): KeyType {
 export function createEngine(unitInterface: UnitInterface | undefined) {
   const state = {
     editState: { ...defaultSequencerEditState },
-    rootNoteNumber: 60,
+    rootNoteNumber: 48,
   };
 
   const clockHandlers: ClockHandlers = {
     processStep(inputStepIndex, time, unitDuration) {
       const stepIndex = inputStepIndex % 16;
-      const { octave, duty, stepBits } = state.editState;
+      const { octave: octaveShift, duty, stepBits } = state.editState;
       const durationSec = unitDuration * mapDutyToDuration(duty);
       for (let i = 0; i < 10; i++) {
         const isStepActive = isBitSet(stepBits[i], stepIndex);
         if (isStepActive) {
           const keyType = getKeyType(state.rootNoteNumber);
+          const octave = (i / 5) >>> 0;
           const subNote = yIndexToSubNote(i, keyType);
           const noteNumber = clampValue(
-            state.rootNoteNumber + octave * 12 + subNote,
+            state.rootNoteNumber + (octave + octaveShift) * 12 + subNote,
             0,
             127,
           );
