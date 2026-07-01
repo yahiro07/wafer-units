@@ -158,7 +158,7 @@ export const createRtfrUnit = (unitInterface: UnitInterface) => {
         return { ...store.state };
       },
       applyState(state) {
-        store.setState(state);
+        store.assign(state);
       },
     },
     hostCallbacks: {

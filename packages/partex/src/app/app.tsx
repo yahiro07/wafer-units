@@ -87,7 +87,7 @@ function setupSynchronization() {
         sequencer.setStepNotes(mappedNotes);
 
         //this also triggers mapped notes generation but it's asynchronous and delayed
-        store.setState(state);
+        store.assign(state);
       },
     },
   });

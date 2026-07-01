@@ -67,7 +67,7 @@ function setupSynchronization() {
         });
       },
       applyState(state) {
-        store.setState(state);
+        store.assign(state);
       },
     },
   });

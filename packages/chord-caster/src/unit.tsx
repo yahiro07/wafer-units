@@ -36,7 +36,7 @@ export const createChordProgressionUnit = (unitInterface: UnitInterface) => {
 
   const actions = {
     setRelative(index: number, relative: number) {
-      store.setState({
+      store.assign({
         relatives: store.state.relatives.map((r, i) =>
           i === index ? relative : r,
         ),
@@ -55,7 +55,7 @@ export const createChordProgressionUnit = (unitInterface: UnitInterface) => {
         return { ...store.state };
       },
       applyState(state) {
-        store.setState(state);
+        store.assign(state);
       },
     },
   });

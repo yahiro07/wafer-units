@@ -13,7 +13,7 @@
     "goober": "^2.1.19",
     "mofur": "link:../../../beam/mofur",
     "preact": "^10.29.2",
-    "snap-store": "0.1.12"
+    "snap-store": "^0.1.12"
   },
   "devDependencies": {
     "@preact/preset-vite": "^2.10.5"

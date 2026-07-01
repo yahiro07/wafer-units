@@ -32,7 +32,7 @@ export const loopBarsOptions = createSelectorOptions(
 
 const controlActions = {
   clearNotes() {
-    store.setState({
+    store.assign({
       inputNotes: [],
       currentPageIndex: 0,
       realized: false,
@@ -40,7 +40,7 @@ const controlActions = {
   },
   realizeNotes() {
     const st = store.state;
-    store.setState({
+    store.assign({
       backupInputNotes: st.inputNotes,
       inputNotes: st.mappedNotes.map((n) => ({
         ...n,
@@ -53,7 +53,7 @@ const controlActions = {
   undoRealize() {
     const st = store.state;
     if (!st.backupInputNotes) return;
-    store.setState({
+    store.assign({
       inputNotes: st.backupInputNotes,
       backupInputNotes: null,
       ghostEnabled: true,
