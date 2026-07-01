@@ -1,9 +1,9 @@
 import { clampValue, mapUnaryTo } from "mofur/ax";
 import { ClockHandlers, UnitInterface } from "wafer-host/unit-types";
 import {
-  defaultSequencerState,
+  defaultSequencerEditState,
   PatternRange,
-  SequencerState,
+  SequencerEditState,
   stepReferenceIndexMap,
 } from "@/common/defs";
 import { getStep } from "@/common/step-bits-helper";
@@ -26,11 +26,14 @@ function resolveDuration(
 }
 
 export function createEngine(unitInterface: UnitInterface | undefined) {
-  const state = { ...defaultSequencerState };
+  const state = {
+    editState: { ...defaultSequencerEditState },
+    rootNoteNumber: 60,
+  };
 
   const clockHandlers: ClockHandlers = {
     processStep(inputStepIndex, time, unitDuration) {
-      const { octave, duty, stepBits, patternRange } = state;
+      const { octave, duty, stepBits, patternRange } = state.editState;
 
       const xi = inputStepIndex % 16;
       const si = stepReferenceIndexMap[patternRange][xi];
@@ -39,7 +42,11 @@ export function createEngine(unitInterface: UnitInterface | undefined) {
         const duration = resolveDuration(stepBits, si, patternRange);
         const dutyRate = mapUnaryTo(duty, 0.1, 1);
         const durationSec = unitDuration * duration * dutyRate;
-        const noteNumber = clampValue(36 + octave * 12, 0, 127);
+        const noteNumber = clampValue(
+          state.rootNoteNumber - 24 + octave * 12,
+          0,
+          127,
+        );
         unitInterface?.noteOutputPort.noteOn(noteNumber, time, 1);
         unitInterface?.noteOutputPort.noteOff(noteNumber, time + durationSec);
       }
@@ -49,15 +56,16 @@ export function createEngine(unitInterface: UnitInterface | undefined) {
   return {
     setup() {},
     teardown() {},
-    setState: (attrs: Partial<SequencerState>) => {
-      Object.assign(state, attrs);
+    setState: (attrs: Partial<SequencerEditState>) => {
+      Object.assign(state.editState, attrs);
     },
     clockHandlers,
     inputNoteOn(noteNumber: number) {
-      unitInterface?.noteOutputPort.noteOn(noteNumber);
+      state.rootNoteNumber = noteNumber;
+      // unitInterface?.noteOutputPort.noteOn(noteNumber);
     },
     inputNoteOff(noteNumber: number) {
-      unitInterface?.noteOutputPort.noteOff(noteNumber);
+      // unitInterface?.noteOutputPort.noteOff(noteNumber);
     },
   };
 }

@@ -5,14 +5,14 @@ export type PatternRange = 4 | 8 | 16;
 
 export const PatterRangeOptions = createPlainSelectorOptions([4, 8, 16]);
 
-export type SequencerState = {
+export type SequencerEditState = {
   octave: number;
   duty: number;
   patternRange: PatternRange;
   stepBits: number; //2bit x 16
 };
 
-export const defaultSequencerState: SequencerState = {
+export const defaultSequencerEditState: SequencerEditState = {
   octave: 0,
   duty: 0.5,
   patternRange: 4,
