@@ -28,7 +28,7 @@ export const persistence: Persistence = {
     if (bytes.length !== 9) return;
     const isOn = bytes[0] !== 0;
     const volume = unaryFromByte(bytes[1]);
-    const pan = unaryFromByte(bytes[2] * 2 - 1);
+    const pan = unaryFromByte(bytes[2]) * 2 - 1;
     const haas = unaryFromByte(bytes[3]);
     const lowCut = unaryFromByte(bytes[4]);
     const eqLow = unaryFromByte(bytes[5]);
