@@ -123,8 +123,11 @@ export function createChannelStripEffect(
     // --- Haas Effect (Stereo Width) ---
     // Map 0~1 to 0ms~30ms (0.03s) delay
     const delayTime = p.haas * 0.03;
-    delayNode.delayTime.setValueAtTime(delayTime, audioContext.currentTime);
-
+    const rampTime = 0.05;
+    delayNode.delayTime.linearRampToValueAtTime(
+      delayTime,
+      audioContext.currentTime + rampTime,
+    );
     // --- Stereo Pan ---
     pannerNode.pan.setValueAtTime(p.pan, audioContext.currentTime);
 
