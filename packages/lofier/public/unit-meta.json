@@ -1,0 +1,13 @@
+{
+  "name": "lofier",
+  "unitType": "effect",
+  "preferredSize": "320,210",
+  "outputSignalTypes": "audio",
+  "inputSignalTypes": "audio,automation",
+  "protocol": "wafer-v01",
+  "unitTypesVersion": "0.1.5",
+  "integrationFormat": "iframe",
+  "repositoryUrl": "https://github.com/yahiro07/wus-units",
+  "author": "yahiro",
+  "license": "MIT"
+}
