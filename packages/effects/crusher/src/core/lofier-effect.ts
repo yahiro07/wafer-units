@@ -48,6 +48,9 @@ export function createLofierEffect(
   // 1. サチュレーター
   const saturatorPreGain = audioContext.createGain();
   const waveShaper = audioContext.createWaveShaper();
+  const waveShaperDryGain = audioContext.createGain();
+  const waveShaperWetGain = audioContext.createGain();
+  const waveShaperMixGain = audioContext.createGain();
   waveShaper.oversample = "4x";
 
   // 2. テープ・ワウフラッター (Delay + LFO)
@@ -78,9 +81,13 @@ export function createLofierEffect(
   dryGain.connect(outputNode);
 
   // ウェットライン (エフェクト用)
+  inputNode.connect(waveShaperDryGain);
   inputNode.connect(saturatorPreGain);
   saturatorPreGain.connect(waveShaper);
-  waveShaper.connect(delayNode);
+  waveShaper.connect(waveShaperWetGain);
+  waveShaperDryGain.connect(waveShaperMixGain);
+  waveShaperWetGain.connect(waveShaperMixGain);
+  waveShaperMixGain.connect(delayNode);
   // (注: Workletノードはロード完了後に delayNode と hpFilter の間に動的に挿入します)
   delayNode.connect(hpFilter);
   hpFilter.connect(lpFilter);
@@ -144,6 +151,11 @@ export function createLofierEffect(
     // Gritが上がるほど前段のゲインを上げて歪ませ、後段のWaveShaperで受ける
     const preGainValue = 1 + pr.grit * 5; // 最大6倍の入力突っ込み
     saturatorPreGain.gain.linearRampToValueAtTime(preGainValue, t + rampTime);
+    waveShaperDryGain.gain.linearRampToValueAtTime(
+      1 - pr.grit,
+      t + rampTime,
+    );
+    waveShaperWetGain.gain.linearRampToValueAtTime(pr.grit, t + rampTime);
     waveShaper.curve = makeDistortionCurve(pr.saturationMode, pr.grit);
 
     // 3. Age (ワウフラッターの深さ)

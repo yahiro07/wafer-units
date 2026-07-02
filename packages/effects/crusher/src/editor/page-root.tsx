@@ -25,19 +25,14 @@ const ControlsPart = () => {
             onClick={() => setParameter("isOn", !parameters.isOn)}
           />
         </LabeledBox>
-        <LabeledBox label="Age" className="w-12">
+        <LabeledBox label="Wow" className="w-12">
           <Knob
             value={parameters.age}
             onChange={(value) => setParameter("age", value)}
           />
         </LabeledBox>
-        <LabeledBox label="Grit" className="w-12">
-          <Knob
-            value={parameters.grit}
-            onChange={(value) => setParameter("grit", value)}
-          />
-        </LabeledBox>
-        <LabeledBox label="Degrade" className="w-12">
+
+        <LabeledBox label="Crush" className="w-12">
           <Knob
             value={parameters.degrade}
             onChange={(value) => setParameter("degrade", value)}
@@ -45,7 +40,7 @@ const ControlsPart = () => {
         </LabeledBox>
       </div>
       <div class="flex-ha gap-2">
-        <LabeledBox label="Saturation Mode" className="w-12">
+        <LabeledBox label="Type" className="w-12">
           <Knob
             value={parameters.saturationMode}
             min={0}
@@ -54,7 +49,13 @@ const ControlsPart = () => {
             onChange={(value) => setParameter("saturationMode", value)}
           />
         </LabeledBox>
-        <LabeledBox label="Tone Color" className="w-12">
+        <LabeledBox label="Drive" className="w-12">
+          <Knob
+            value={parameters.grit}
+            onChange={(value) => setParameter("grit", value)}
+          />
+        </LabeledBox>
+        <LabeledBox label="Tone" className="w-12">
           <Knob
             value={parameters.toneColor}
             onChange={(value) => setParameter("toneColor", value)}
