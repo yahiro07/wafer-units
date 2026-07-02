@@ -67,10 +67,10 @@ export function createLofierEffect(
   lpFilter.type = "lowpass";
   const toneLowShelf = audioContext.createBiquadFilter();
   toneLowShelf.type = "lowshelf";
-  toneLowShelf.frequency.setValueAtTime(1000, audioContext.currentTime);
+  toneLowShelf.frequency.setValueAtTime(700, audioContext.currentTime);
   const toneHighShelf = audioContext.createBiquadFilter();
   toneHighShelf.type = "highshelf";
-  toneHighShelf.frequency.setValueAtTime(2000, audioContext.currentTime);
+  toneHighShelf.frequency.setValueAtTime(2400, audioContext.currentTime);
 
   // --- Workletのプレースホルダーノード ---
   let workletNode: AudioWorkletNode | null = null;
@@ -146,7 +146,7 @@ export function createLofierEffect(
       grit: pr.grit,
       age: pr.age ** 3,
       toneColor: pr.toneColor,
-      degrade: pr.degrade,
+      degrade: pr.degrade ** 2,
       saturationMode: pr.saturationMode,
     };
 
