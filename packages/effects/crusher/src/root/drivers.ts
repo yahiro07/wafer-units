@@ -1,5 +1,7 @@
 import { queryUnitInterface } from "wafer-host/unit-types";
+import { automationInput } from "@/root/automation";
 import { createEngine } from "@/root/engine";
+import { persistence } from "@/root/persistence";
 import { store } from "@/root/store";
 
 const unitInterface = queryUnitInterface("wafer-v01");
@@ -27,7 +29,7 @@ export function setupUnit() {
       outputs: ["audio"],
       inputs: ["audio", "automation"],
     },
-    // persistence,
-    // automationInput,
+    persistence: persistence,
+    automationInput: automationInput,
   });
 }
