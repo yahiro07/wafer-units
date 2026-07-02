@@ -1,12 +1,12 @@
+import { ComponentChildren } from "preact";
 import { startDragSession } from "@/utils/drag-session";
-import { Children } from "@/utils/jsx-types";
 
 export function KnobFrame(props: {
   value: number;
   min: number;
   max: number;
   step: number;
-  children: Children;
+  children: ComponentChildren;
   onChange: (value: number) => void;
   dragRange?: number;
   onClick?: () => void;
