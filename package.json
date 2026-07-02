@@ -2,7 +2,7 @@
   "name": "wus-units",
   "private": true,
   "scripts": {
-    "build": "pnpm -r --if-present --filter './packages/*' build"
+    "build": "pnpm -r --if-present --filter './packages/**/*' build"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.3.0",

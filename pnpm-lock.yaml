@@ -39,32 +39,20 @@ importers:
         specifier: link:../wafer/wafer
         version: link:../wafer/wafer
 
-  packages/bseq1:
+  packages/drum-machines/graphite-drum-machine:
     dependencies:
-      mofus:
-        specifier: ^0.1.0
-        version: 0.1.0(solid-js@1.9.13)
-      solid-icons:
-        specifier: ^1.2.0
-        version: 1.2.0(solid-js@1.9.13)
-      solid-js:
-        specifier: ^1.9.12
-        version: 1.9.13
-
-  packages/bseq2:
-    dependencies:
-      '@preact-icons/fa':
-        specifier: npm:@jsr/preact-icons__fa@^1.0.13
-        version: '@jsr/preact-icons__fa@1.0.13'
-      goober:
-        specifier: ^2.1.19
-        version: 2.1.19(csstype@3.2.3)
+      clsx:
+        specifier: ^2.1.1
+        version: 2.1.1
       mofur:
-        specifier: link:../../../beam/mofur
-        version: link:../../../beam/mofur
+        specifier: link:../../../../beam/mofur
+        version: link:../../../../beam/mofur
       preact:
         specifier: ^10.29.2
         version: 10.29.2
+      react-icons:
+        specifier: ^5.6.0
+        version: 5.6.0(react@19.2.6)
       snap-store:
         specifier: ^0.1.12
         version: 0.1.12(preact@10.29.2)(react@19.2.6)
@@ -72,8 +60,11 @@ importers:
       '@preact/preset-vite':
         specifier: ^2.10.5
         version: 2.10.5(@babel/core@7.29.7)(preact@10.29.2)(vite@8.0.14(@types/node@25.9.1)(jiti@2.7.0))
+      '@types/react':
+        specifier: ^19.2.17
+        version: 19.2.17
 
-  packages/channe-strip:
+  packages/effects/channe-strip:
     dependencies:
       '@preact-icons/fa':
         specifier: npm:@jsr/preact-icons__fa@^1.0.13
@@ -85,14 +76,14 @@ importers:
         specifier: ^2.1.19
         version: 2.1.19(csstype@3.2.3)
       mofur:
-        specifier: link:../../../beam/mofur
-        version: link:../../../beam/mofur
+        specifier: link:../../../../beam/mofur
+        version: link:../../../../beam/mofur
       preact:
         specifier: ^10.29.2
         version: 10.29.2
       snap-store:
-        specifier: link:../../../snap-store
-        version: link:../../../snap-store
+        specifier: link:../../../../snap-store
+        version: link:../../../../snap-store
     devDependencies:
       '@preact/preset-vite':
         specifier: ^2.10.5
@@ -101,39 +92,51 @@ importers:
         specifier: ^0.0.100
         version: 0.0.100
 
-  packages/chord-caster:
+  packages/effects/crusher:
     dependencies:
-      mofur:
-        specifier: ^0.1.0
-        version: 0.1.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
-      mofur-components:
-        specifier: file:../../../beam/mofur-components
-        version: file:../beam/mofur-components(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
-      preact:
-        specifier: ^10.26.0
-        version: 10.29.2
-      snap-store:
-        specifier: ^0.1.12
-        version: 0.1.12(preact@10.29.2)(react@19.2.6)
-    devDependencies:
-      '@preact/preset-vite':
-        specifier: ^2.9.4
-        version: 2.10.5(@babel/core@7.29.7)(preact@10.29.2)(vite@8.0.14(@types/node@25.9.1)(jiti@2.7.0))
-
-  packages/graphite-drum-machine:
-    dependencies:
+      '@preact-icons/fa':
+        specifier: npm:@jsr/preact-icons__fa@^1.0.13
+        version: '@jsr/preact-icons__fa@1.0.13'
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
+      goober:
+        specifier: ^2.1.19
+        version: 2.1.19(csstype@3.2.3)
       mofur:
-        specifier: link:../../../beam/mofur
-        version: link:../../../beam/mofur
+        specifier: link:../../../../beam/mofur
+        version: link:../../../../beam/mofur
       preact:
         specifier: ^10.29.2
         version: 10.29.2
-      react-icons:
-        specifier: ^5.6.0
-        version: 5.6.0(react@19.2.6)
+      snap-store:
+        specifier: link:../../../../snap-store
+        version: link:../../../../snap-store
+    devDependencies:
+      '@preact/preset-vite':
+        specifier: ^2.10.5
+        version: 2.10.5(@babel/core@7.29.7)(preact@10.29.2)(vite@8.0.14(@types/node@25.9.1)(jiti@2.7.0))
+      '@types/audioworklet':
+        specifier: ^0.0.100
+        version: 0.0.100
+
+  packages/effects/sunset-delay:
+    dependencies:
+      '@preact-icons/fa':
+        specifier: npm:@jsr/preact-icons__fa@^1.0.13
+        version: '@jsr/preact-icons__fa@1.0.13'
+      clsx:
+        specifier: ^2.1.1
+        version: 2.1.1
+      goober:
+        specifier: ^2.1.19
+        version: 2.1.19(csstype@3.2.3)
+      mofur:
+        specifier: link:../../../../beam/mofur
+        version: link:../../../../beam/mofur
+      preact:
+        specifier: ^10.29.2
+        version: 10.29.2
       snap-store:
         specifier: ^0.1.12
         version: 0.1.12(preact@10.29.2)(react@19.2.6)
@@ -141,11 +144,8 @@ importers:
       '@preact/preset-vite':
         specifier: ^2.10.5
         version: 2.10.5(@babel/core@7.29.7)(preact@10.29.2)(vite@8.0.14(@types/node@25.9.1)(jiti@2.7.0))
-      '@types/react':
-        specifier: ^19.2.17
-        version: 19.2.17
 
-  packages/lfo:
+  packages/modulator/lfo:
     dependencies:
       clsx:
         specifier: ^2.1.1
@@ -154,155 +154,67 @@ importers:
         specifier: ^2.1.19
         version: 2.1.19(csstype@3.2.3)
       mofur:
-        specifier: link:../../../beam/mofur
-        version: link:../../../beam/mofur
+        specifier: link:../../../../beam/mofur
+        version: link:../../../../beam/mofur
       preact:
         specifier: ^10.29.2
         version: 10.29.2
       snap-store:
-        specifier: link:../../../snap-store
-        version: link:../../../snap-store
+        specifier: link:../../../../snap-store
+        version: link:../../../../snap-store
     devDependencies:
       '@preact/preset-vite':
         specifier: ^2.10.5
         version: 2.10.5(@babel/core@7.29.7)(preact@10.29.2)(vite@8.0.14(@types/node@25.9.1)(jiti@2.7.0))
 
-  packages/lseq1:
+  packages/modulator/multi-lfo:
     dependencies:
-      mofur:
-        specifier: ^0.1.0
-        version: 0.1.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
-      react:
-        specifier: ^19.2.6
-        version: 19.2.6
-      react-dom:
-        specifier: ^19.2.6
-        version: 19.2.6(react@19.2.6)
-      react-icons:
-        specifier: ^5.6.0
-        version: 5.6.0(react@19.2.6)
-      snap-store:
-        specifier: ^0.1.12
-        version: 0.1.12(preact@10.29.2)(react@19.2.6)
-    devDependencies:
-      '@types/react':
-        specifier: ^19.2.14
-        version: 19.2.15
-      '@types/react-dom':
-        specifier: ^19.2.3
-        version: 19.2.3(@types/react@19.2.15)
-
-  packages/mini-synth:
-    dependencies:
-      solid-icons:
-        specifier: ^1.2.0
-        version: 1.2.0(solid-js@1.9.13)
-      solid-js:
-        specifier: ^1.9.12
-        version: 1.9.13
-
-  packages/mini-synth-ge:
-    dependencies:
-      solid-icons:
-        specifier: ^1.2.0
-        version: 1.2.0(solid-js@1.9.13)
-      solid-js:
-        specifier: ^1.9.12
-        version: 1.9.13
-
-  packages/mini-synth-gp:
-    dependencies:
-      solid-icons:
-        specifier: ^1.2.0
-        version: 1.2.0(solid-js@1.9.13)
-      solid-js:
-        specifier: ^1.9.12
-        version: 1.9.13
-
-  packages/partex:
-    dependencies:
-      '@emotion/cache':
-        specifier: ^11.14.0
-        version: 11.14.0
-      '@emotion/css':
-        specifier: ^11.13.5
-        version: 11.13.5
-      '@emotion/react':
-        specifier: ^11.14.0
-        version: 11.14.0(@types/react@19.2.17)(react@19.2.6)
-      '@emotion/styled':
-        specifier: ^11.14.1
-        version: 11.14.1(@emotion/react@11.14.0(@types/react@19.2.17)(react@19.2.6))(@types/react@19.2.17)(react@19.2.6)
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
+      goober:
+        specifier: ^2.1.19
+        version: 2.1.19(csstype@3.2.3)
       mofur:
-        specifier: link:../../../beam/mofur
-        version: link:../../../beam/mofur
+        specifier: link:../../../../beam/mofur
+        version: link:../../../../beam/mofur
       preact:
         specifier: ^10.29.2
         version: 10.29.2
-      react-icons:
-        specifier: ^5.6.0
-        version: 5.6.0(react@19.2.6)
       snap-store:
-        specifier: ^0.1.12
-        version: 0.1.12(preact@10.29.2)(react@19.2.6)
+        specifier: link:../../../../snap-store
+        version: link:../../../../snap-store
     devDependencies:
       '@preact/preset-vite':
         specifier: ^2.10.5
         version: 2.10.5(@babel/core@7.29.7)(preact@10.29.2)(vite@8.0.14(@types/node@25.9.1)(jiti@2.7.0))
-      '@types/react':
-        specifier: ^19.2.17
-        version: 19.2.17
 
-  packages/piano-roll:
+  packages/modulator/step-automator:
     dependencies:
-      '@emotion/cache':
-        specifier: ^11.14.0
-        version: 11.14.0
-      '@emotion/css':
-        specifier: ^11.13.5
-        version: 11.13.5
-      '@emotion/react':
-        specifier: ^11.14.0
-        version: 11.14.0(@types/react@19.2.17)(react@19.2.6)
-      '@emotion/styled':
-        specifier: ^11.14.1
-        version: 11.14.1(@emotion/react@11.14.0(@types/react@19.2.17)(react@19.2.6))(@types/react@19.2.17)(react@19.2.6)
+      '@preact-icons/fa':
+        specifier: npm:@jsr/preact-icons__fa@^1.0.13
+        version: '@jsr/preact-icons__fa@1.0.13'
+      clsx:
+        specifier: ^2.1.1
+        version: 2.1.1
+      goober:
+        specifier: ^2.1.19
+        version: 2.1.19(csstype@3.2.3)
       mofur:
-        specifier: link:../../../beam/mofur
-        version: link:../../../beam/mofur
-      mofur-components:
-        specifier: link:../../../beam/mofur-components
-        version: link:../../../beam/mofur-components
+        specifier: link:../../../../beam/mofur
+        version: link:../../../../beam/mofur
       preact:
         specifier: ^10.29.2
         version: 10.29.2
-      react-icons:
-        specifier: ^5.6.0
-        version: 5.6.0(react@19.2.6)
       snap-store:
-        specifier: ^0.1.12
-        version: 0.1.12(preact@10.29.2)(react@19.2.6)
+        specifier: link:../../../../snap-store
+        version: link:../../../../snap-store
     devDependencies:
       '@preact/preset-vite':
         specifier: ^2.10.5
         version: 2.10.5(@babel/core@7.29.7)(preact@10.29.2)(vite@8.0.14(@types/node@25.9.1)(jiti@2.7.0))
-      '@types/react':
-        specifier: ^19.2.17
-        version: 19.2.17
 
-  packages/proto-engine-pd-fm:
-    dependencies:
-      solid-icons:
-        specifier: ^1.2.0
-        version: 1.2.0(solid-js@1.9.13)
-      solid-js:
-        specifier: ^1.9.12
-        version: 1.9.13
-
-  packages/proto-engine-ptm-osc:
+  packages/sequencers/bseq1:
     dependencies:
       mofus:
         specifier: ^0.1.0
@@ -314,13 +226,153 @@ importers:
         specifier: ^1.9.12
         version: 1.9.13
 
-  packages/rtfr:
+  packages/sequencers/bseq2:
+    dependencies:
+      '@preact-icons/fa':
+        specifier: npm:@jsr/preact-icons__fa@^1.0.13
+        version: '@jsr/preact-icons__fa@1.0.13'
+      goober:
+        specifier: ^2.1.19
+        version: 2.1.19(csstype@3.2.3)
+      mofur:
+        specifier: link:../../../../beam/mofur
+        version: link:../../../../beam/mofur
+      preact:
+        specifier: ^10.29.2
+        version: 10.29.2
+      snap-store:
+        specifier: ^0.1.12
+        version: 0.1.12(preact@10.29.2)(react@19.2.6)
+    devDependencies:
+      '@preact/preset-vite':
+        specifier: ^2.10.5
+        version: 2.10.5(@babel/core@7.29.7)(preact@10.29.2)(vite@8.0.14(@types/node@25.9.1)(jiti@2.7.0))
+
+  packages/sequencers/chord-caster:
     dependencies:
       mofur:
-        specifier: file:../../../beam/mofur
+        specifier: ^0.1.0
+        version: 0.1.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+      mofur-components:
+        specifier: file:../../../../beam/mofur-components
+        version: file:../beam/mofur-components(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+      preact:
+        specifier: ^10.26.0
+        version: 10.29.2
+      snap-store:
+        specifier: ^0.1.12
+        version: 0.1.12(preact@10.29.2)(react@19.2.6)
+    devDependencies:
+      '@preact/preset-vite':
+        specifier: ^2.9.4
+        version: 2.10.5(@babel/core@7.29.7)(preact@10.29.2)(vite@8.0.14(@types/node@25.9.1)(jiti@2.7.0))
+
+  packages/sequencers/lseq1:
+    dependencies:
+      mofur:
+        specifier: ^0.1.0
+        version: 0.1.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+      react:
+        specifier: ^19.2.6
+        version: 19.2.6
+      react-dom:
+        specifier: ^19.2.6
+        version: 19.2.6(react@19.2.6)
+      react-icons:
+        specifier: ^5.6.0
+        version: 5.6.0(react@19.2.6)
+      snap-store:
+        specifier: ^0.1.12
+        version: 0.1.12(preact@10.29.2)(react@19.2.6)
+    devDependencies:
+      '@types/react':
+        specifier: ^19.2.14
+        version: 19.2.17
+      '@types/react-dom':
+        specifier: ^19.2.3
+        version: 19.2.3(@types/react@19.2.17)
+
+  packages/sequencers/partex:
+    dependencies:
+      '@emotion/cache':
+        specifier: ^11.14.0
+        version: 11.14.0
+      '@emotion/css':
+        specifier: ^11.13.5
+        version: 11.13.5
+      '@emotion/react':
+        specifier: ^11.14.0
+        version: 11.14.0(@types/react@19.2.17)(react@19.2.6)
+      '@emotion/styled':
+        specifier: ^11.14.1
+        version: 11.14.1(@emotion/react@11.14.0(@types/react@19.2.17)(react@19.2.6))(@types/react@19.2.17)(react@19.2.6)
+      clsx:
+        specifier: ^2.1.1
+        version: 2.1.1
+      mofur:
+        specifier: link:../../../../beam/mofur
+        version: link:../../../../beam/mofur
+      preact:
+        specifier: ^10.29.2
+        version: 10.29.2
+      react-icons:
+        specifier: ^5.6.0
+        version: 5.6.0(react@19.2.6)
+      snap-store:
+        specifier: ^0.1.12
+        version: 0.1.12(preact@10.29.2)(react@19.2.6)
+    devDependencies:
+      '@preact/preset-vite':
+        specifier: ^2.10.5
+        version: 2.10.5(@babel/core@7.29.7)(preact@10.29.2)(vite@8.0.14(@types/node@25.9.1)(jiti@2.7.0))
+      '@types/react':
+        specifier: ^19.2.17
+        version: 19.2.17
+
+  packages/sequencers/piano-roll:
+    dependencies:
+      '@emotion/cache':
+        specifier: ^11.14.0
+        version: 11.14.0
+      '@emotion/css':
+        specifier: ^11.13.5
+        version: 11.13.5
+      '@emotion/react':
+        specifier: ^11.14.0
+        version: 11.14.0(@types/react@19.2.17)(react@19.2.6)
+      '@emotion/styled':
+        specifier: ^11.14.1
+        version: 11.14.1(@emotion/react@11.14.0(@types/react@19.2.17)(react@19.2.6))(@types/react@19.2.17)(react@19.2.6)
+      mofur:
+        specifier: link:../../../../beam/mofur
+        version: link:../../../../beam/mofur
+      mofur-components:
+        specifier: link:../../../../beam/mofur-components
+        version: link:../../../../beam/mofur-components
+      preact:
+        specifier: ^10.29.2
+        version: 10.29.2
+      react-icons:
+        specifier: ^5.6.0
+        version: 5.6.0(react@19.2.6)
+      snap-store:
+        specifier: ^0.1.12
+        version: 0.1.12(preact@10.29.2)(react@19.2.6)
+    devDependencies:
+      '@preact/preset-vite':
+        specifier: ^2.10.5
+        version: 2.10.5(@babel/core@7.29.7)(preact@10.29.2)(vite@8.0.14(@types/node@25.9.1)(jiti@2.7.0))
+      '@types/react':
+        specifier: ^19.2.17
+        version: 19.2.17
+
+  packages/sequencers/rtfr:
+    dependencies:
+      mofur:
+        specifier: file:../../../../beam/mofur
         version: file:../beam/mofur(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       mofur-components:
-        specifier: file:../../../beam/mofur-components
+        specifier: file:../../../../beam/mofur-components
         version: file:../beam/mofur-components(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       preact:
         specifier: ^10.26.0
@@ -334,38 +386,38 @@ importers:
         version: 2.10.5(@babel/core@7.29.7)(preact@10.29.2)(vite@8.0.14(@types/node@25.9.1)(jiti@2.7.0))
       '@types/react':
         specifier: ^19.2.14
-        version: 19.2.15
+        version: 19.2.17
 
-  packages/rtfs1:
+  packages/sequencers/rtfs1:
     dependencies:
       mofur:
-        specifier: file:../../../beam/mofur
+        specifier: file:../../../../beam/mofur
         version: file:../beam/mofur(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       mofur-components:
-        specifier: file:../../../beam/mofur-components
+        specifier: file:../../../../beam/mofur-components
         version: file:../beam/mofur-components(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       preact:
         specifier: ^10.26.0
         version: 10.29.2
       snap-store:
         specifier: ^0.1.7
-        version: 0.1.7(react@19.2.6)
+        version: 0.1.12(preact@10.29.2)(react@19.2.6)
     devDependencies:
       '@preact/preset-vite':
         specifier: ^2.9.4
         version: 2.10.5(@babel/core@7.29.7)(preact@10.29.2)(vite@8.0.14(@types/node@25.9.1)(jiti@2.7.0))
       '@types/react':
         specifier: ^19.2.14
-        version: 19.2.15
+        version: 19.2.17
 
-  packages/rtfs2:
+  packages/sequencers/rtfs2:
     dependencies:
       mofur:
-        specifier: link:../../../beam/mofur
-        version: link:../../../beam/mofur
+        specifier: link:../../../../beam/mofur
+        version: link:../../../../beam/mofur
       mofur-components:
-        specifier: link:../../../beam/mofur-components
-        version: link:../../../beam/mofur-components
+        specifier: link:../../../../beam/mofur-components
+        version: link:../../../../beam/mofur-components
       preact:
         specifier: ^10.26.0
         version: 10.29.2
@@ -378,9 +430,91 @@ importers:
         version: 2.10.5(@babel/core@7.29.7)(preact@10.29.2)(vite@8.0.14(@types/node@25.9.1)(jiti@2.7.0))
       '@types/react':
         specifier: ^19.2.14
-        version: 19.2.15
+        version: 19.2.17
 
-  packages/specbar:
+  packages/sequencers/toner-sequencer:
+    dependencies:
+      '@preact-icons/fa':
+        specifier: npm:@jsr/preact-icons__fa@^1.0.13
+        version: '@jsr/preact-icons__fa@1.0.13'
+      clsx:
+        specifier: ^2.1.1
+        version: 2.1.1
+      goober:
+        specifier: ^2.1.19
+        version: 2.1.19(csstype@3.2.3)
+      mofur:
+        specifier: link:../../../../beam/mofur
+        version: link:../../../../beam/mofur
+      preact:
+        specifier: ^10.29.2
+        version: 10.29.2
+      snap-store:
+        specifier: ^0.1.12
+        version: 0.1.12(preact@10.29.2)(react@19.2.6)
+    devDependencies:
+      '@preact/preset-vite':
+        specifier: ^2.10.5
+        version: 2.10.5(@babel/core@7.29.7)(preact@10.29.2)(vite@8.0.14(@types/node@25.9.1)(jiti@2.7.0))
+
+  packages/synthesizers/mini-synth:
+    dependencies:
+      solid-icons:
+        specifier: ^1.2.0
+        version: 1.2.0(solid-js@1.9.13)
+      solid-js:
+        specifier: ^1.9.12
+        version: 1.9.13
+
+  packages/synthesizers/mini-synth-ge:
+    dependencies:
+      solid-icons:
+        specifier: ^1.2.0
+        version: 1.2.0(solid-js@1.9.13)
+      solid-js:
+        specifier: ^1.9.12
+        version: 1.9.13
+
+  packages/synthesizers/mini-synth-gp:
+    dependencies:
+      solid-icons:
+        specifier: ^1.2.0
+        version: 1.2.0(solid-js@1.9.13)
+      solid-js:
+        specifier: ^1.9.12
+        version: 1.9.13
+
+  packages/synthesizers/proto-engine-pd-fm:
+    dependencies:
+      solid-icons:
+        specifier: ^1.2.0
+        version: 1.2.0(solid-js@1.9.13)
+      solid-js:
+        specifier: ^1.9.12
+        version: 1.9.13
+
+  packages/synthesizers/proto-engine-ptm-osc:
+    dependencies:
+      mofus:
+        specifier: ^0.1.0
+        version: 0.1.0(solid-js@1.9.13)
+      solid-icons:
+        specifier: ^1.2.0
+        version: 1.2.0(solid-js@1.9.13)
+      solid-js:
+        specifier: ^1.9.12
+        version: 1.9.13
+
+  packages/synthesizers/wavicle:
+    dependencies:
+      alumina:
+        specifier: ^0.1.14
+        version: 0.1.14
+      alumina-visor:
+        specifier: ^0.1.6
+        version: 0.1.6(alumina@0.1.14)
+
+  packages/visualizers/specbar:
     dependencies:
       clsx:
         specifier: ^2.1.1
@@ -403,69 +537,10 @@ importers:
     devDependencies:
       '@types/react':
         specifier: ^19.2.14
-        version: 19.2.15
+        version: 19.2.17
       '@types/react-dom':
         specifier: ^19.2.3
-        version: 19.2.3(@types/react@19.2.15)
-
-  packages/sunset-delay:
-    dependencies:
-      '@preact-icons/fa':
-        specifier: npm:@jsr/preact-icons__fa@^1.0.13
-        version: '@jsr/preact-icons__fa@1.0.13'
-      clsx:
-        specifier: ^2.1.1
-        version: 2.1.1
-      goober:
-        specifier: ^2.1.19
-        version: 2.1.19(csstype@3.2.3)
-      mofur:
-        specifier: link:../../../beam/mofur
-        version: link:../../../beam/mofur
-      preact:
-        specifier: ^10.29.2
-        version: 10.29.2
-      snap-store:
-        specifier: ^0.1.12
-        version: 0.1.12(preact@10.29.2)(react@19.2.6)
-    devDependencies:
-      '@preact/preset-vite':
-        specifier: ^2.10.5
-        version: 2.10.5(@babel/core@7.29.7)(preact@10.29.2)(vite@8.0.14(@types/node@25.9.1)(jiti@2.7.0))
-
-  packages/toner-sequencer:
-    dependencies:
-      '@preact-icons/fa':
-        specifier: npm:@jsr/preact-icons__fa@^1.0.13
-        version: '@jsr/preact-icons__fa@1.0.13'
-      clsx:
-        specifier: ^2.1.1
-        version: 2.1.1
-      goober:
-        specifier: ^2.1.19
-        version: 2.1.19(csstype@3.2.3)
-      mofur:
-        specifier: link:../../../beam/mofur
-        version: link:../../../beam/mofur
-      preact:
-        specifier: ^10.29.2
-        version: 10.29.2
-      snap-store:
-        specifier: ^0.1.12
-        version: 0.1.12(preact@10.29.2)(react@19.2.6)
-    devDependencies:
-      '@preact/preset-vite':
-        specifier: ^2.10.5
-        version: 2.10.5(@babel/core@7.29.7)(preact@10.29.2)(vite@8.0.14(@types/node@25.9.1)(jiti@2.7.0))
-
-  packages/wavicle:
-    dependencies:
-      alumina:
-        specifier: ^0.1.14
-        version: 0.1.14
-      alumina-visor:
-        specifier: ^0.1.6
-        version: 0.1.6(alumina@0.1.14)
+        version: 19.2.3(@types/react@19.2.17)
 
 packages:
 
@@ -927,9 +1002,6 @@ packages:
     peerDependencies:
       '@types/react': ^19.2.0
 
-  '@types/react@19.2.15':
-    resolution: {integrity: sha512-eRwcGNHve+E8qtEQSSRl6urh+rFop4v8gm6O8rGv25CodbvFdLjA1vVQ1KkiFE0w0UPOnb8tDiFKL5lp0rtY5Q==}
-
   '@types/react@19.2.17':
     resolution: {integrity: sha512-MXfmqaVPEVgkBT/aY0aGCkRWWtByiYQXo3xdQ8r5RzuFrPiRn8Gar2tQdXSUQ2GKV3bkXckek89V8wQBY2Q/Aw==}
 
@@ -1163,9 +1235,6 @@ packages:
 
   html-entities@2.3.3:
     resolution: {integrity: sha512-DV5Ln36z34NNTDgnz0EWGBLZENelNAtkiFA4kyNOG2tDI6Mz1uSWiq1wAKdyjnJwyDiDO7Fa2SO1CTxPXL8VxA==}
-
-  immer@11.1.8:
-    resolution: {integrity: sha512-/tbkHMW7y10Lx6i1crLjD4/OhNkRG+Fo7byZHtah0547nIeXYcpIXaUh0IAQY6gO5459qpGGYapcEOHtFXkIuA==}
 
   import-fresh@3.3.1:
     resolution: {integrity: sha512-TR3KfrTZTYLPB6jUjfx6MF9WcWrHL9su5TObK4ZkYgBdWKPOFoSoQIdEuTuR82pmtxH2spWG9h6etwfr1pLBqQ==}
@@ -1465,12 +1534,6 @@ packages:
         optional: true
       react:
         optional: true
-
-  snap-store@0.1.7:
-    resolution: {integrity: sha512-mOVfteA204VB/IbithfboUv+1gge08HeUun27cdhTYwH9VNxaIKfdE3d8H4E+0QPRGtOsQDd7BThsKMspPfneg==}
-    engines: {node: '>=16.0.0'}
-    peerDependencies:
-      react: '>=18.0.0'
 
   solid-icons@1.2.0:
     resolution: {integrity: sha512-yjQxWQMi9l19P5Af9vjsvalTMDFPDL4XD6etrUdNxNVhFp1bMYF0SFwUa5VYDfJ7u0SF3Qkz/F7BZxqcLUwklw==}
@@ -2108,13 +2171,9 @@ snapshots:
 
   '@types/parse-json@4.0.2': {}
 
-  '@types/react-dom@19.2.3(@types/react@19.2.15)':
+  '@types/react-dom@19.2.3(@types/react@19.2.17)':
     dependencies:
-      '@types/react': 19.2.15
-
-  '@types/react@19.2.15':
-    dependencies:
-      csstype: 3.2.3
+      '@types/react': 19.2.17
 
   '@types/react@19.2.17':
     dependencies:
@@ -2325,8 +2384,6 @@ snapshots:
       react-is: 16.13.1
 
   html-entities@2.3.3: {}
-
-  immer@11.1.8: {}
 
   import-fresh@3.3.1:
     dependencies:
@@ -2573,11 +2630,6 @@ snapshots:
   snap-store@0.1.12(preact@10.29.2)(react@19.2.6):
     optionalDependencies:
       preact: 10.29.2
-      react: 19.2.6
-
-  snap-store@0.1.7(react@19.2.6):
-    dependencies:
-      immer: 11.1.8
       react: 19.2.6
 
   solid-icons@1.2.0(solid-js@1.9.13):
