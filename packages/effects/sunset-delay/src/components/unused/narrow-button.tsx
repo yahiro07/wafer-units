@@ -1,4 +1,4 @@
-import { Children } from "@/common/jsx-types";
+import { Children } from "@/utils/jsx-types";
 import { cx, qu } from "@/utils/qstyle-goober";
 
 export const NarrowButton = ({

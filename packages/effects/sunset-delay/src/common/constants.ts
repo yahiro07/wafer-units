@@ -1,5 +1,5 @@
-import { createPlainSelectorOptions } from "@/common/selector-option";
 import { DelayTime, EffectParameters } from "@/common/types";
+import { createPlainSelectorOptions } from "@/utils/selector-option";
 
 export const delayTimeValues: DelayTime[] = [
   0.333, 0.5, 0.666, 0.75, 1, 1.5, 2, 2.5, 3,

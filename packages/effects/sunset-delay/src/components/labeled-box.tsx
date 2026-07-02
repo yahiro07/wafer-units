@@ -1,5 +1,5 @@
 import { npx } from "mofur/ax-ui";
-import { Children } from "@/common/jsx-types";
+import { Children } from "@/utils/jsx-types";
 import { qu } from "@/utils/qstyle-goober";
 
 export const LabeledBox = ({
