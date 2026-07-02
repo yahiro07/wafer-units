@@ -1,5 +1,4 @@
-import { clampValue } from "mofur/ax";
-import { startDragSession } from "mofur/ax-ui";
+import { startDragSession } from "@/utils/drag-session";
 import { Children } from "@/utils/jsx-types";
 
 export function KnobFrame(props: {
@@ -33,7 +32,7 @@ export function KnobFrame(props: {
         if (step > 0) {
           newValue = Math.round(newValue / step) * step;
         }
-        newValue = clampValue(newValue, min, max);
+        newValue = Math.min(Math.max(newValue, min), max);
         props.onChange(newValue);
         totalDist += Math.abs(e.position.y - e.originalPosition.y);
         if (totalDist > 4) {

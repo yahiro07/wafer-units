@@ -12,9 +12,8 @@
     "@preact-icons/fa": "npm:@jsr/preact-icons__fa@^1.0.13",
     "clsx": "^2.1.1",
     "goober": "^2.1.19",
-    "mofur": "link:../../../../beam/mofur",
     "preact": "^10.29.2",
-    "snap-store": "link:../../../../snap-store"
+    "snap-store": "^0.1.12"
   },
   "devDependencies": {
     "@preact/preset-vite": "^2.10.5",

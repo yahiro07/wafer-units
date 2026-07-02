@@ -64,7 +64,7 @@ importers:
         specifier: ^19.2.17
         version: 19.2.17
 
-  packages/effects/channe-strip:
+  packages/effects/channel-strip:
     dependencies:
       '@preact-icons/fa':
         specifier: npm:@jsr/preact-icons__fa@^1.0.13
@@ -103,15 +103,12 @@ importers:
       goober:
         specifier: ^2.1.19
         version: 2.1.19(csstype@3.2.3)
-      mofur:
-        specifier: link:../../../../beam/mofur
-        version: link:../../../../beam/mofur
       preact:
         specifier: ^10.29.2
         version: 10.29.2
       snap-store:
-        specifier: link:../../../../snap-store
-        version: link:../../../../snap-store
+        specifier: ^0.1.12
+        version: 0.1.12(preact@10.29.2)(react@19.2.6)
     devDependencies:
       '@preact/preset-vite':
         specifier: ^2.10.5

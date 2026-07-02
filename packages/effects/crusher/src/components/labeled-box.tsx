@@ -1,4 +1,4 @@
-import { npx } from "mofur/ax-ui";
+import { npx } from "@/utils/helpers";
 import { Children } from "@/utils/jsx-types";
 import { qu } from "@/utils/qstyle-goober";
 

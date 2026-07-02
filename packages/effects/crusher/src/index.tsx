@@ -1,6 +1,6 @@
-import "mofur/ax-ui/utility-classes.css";
 import { render } from "preact";
-import "./page.css";
+import "./ui/page.css";
+import "./ui/utility-classes.css";
 import { App } from "@/root/app";
 
 render(
