@@ -100,9 +100,6 @@ importers:
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
-      goober:
-        specifier: ^2.1.19
-        version: 2.1.19(csstype@3.2.3)
       preact:
         specifier: ^10.29.2
         version: 10.29.2

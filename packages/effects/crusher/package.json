@@ -11,7 +11,6 @@
   "dependencies": {
     "@preact-icons/fa": "npm:@jsr/preact-icons__fa@^1.0.13",
     "clsx": "^2.1.1",
-    "goober": "^2.1.19",
     "preact": "^10.29.2",
     "snap-store": "^0.1.12"
   },

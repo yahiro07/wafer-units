@@ -7,7 +7,6 @@ import {
 } from "@/components";
 
 import { store } from "@/root/store";
-import { qlsx, qu } from "@/utils/qstyle-goober";
 
 const ControlsPart = () => {
   const { parameters } = store.useSnapshot();
@@ -17,38 +16,37 @@ const ControlsPart = () => {
   ) => {
     store.setParameters({ ...parameters, [key]: value });
   };
-  const cellW = 48;
 
   return (
-    <div class={qu.flexVC().gap(5)}>
-      <div class={qu.flexHA().gap(2)}>
-        <LabeledBox label="ON" width={cellW}>
+    <div class="flex-vc gap-3">
+      <div class="flex-ha gap-2">
+        <LabeledBox label="ON" className="w-12">
           <ButtonWithIndicator
             active={parameters.isOn}
             onClick={() => setParameter("isOn", !parameters.isOn)}
           />
         </LabeledBox>
-        <LabeledBox label="Age" width={cellW}>
+        <LabeledBox label="Age" className="w-12">
           <Knob
             value={parameters.age}
             onChange={(value) => setParameter("age", value)}
           />
         </LabeledBox>
-        <LabeledBox label="Grit" width={cellW}>
+        <LabeledBox label="Grit" className="w-12">
           <Knob
             value={parameters.grit}
             onChange={(value) => setParameter("grit", value)}
           />
         </LabeledBox>
-        <LabeledBox label="Degrade" width={cellW}>
+        <LabeledBox label="Degrade" className="w-12">
           <Knob
             value={parameters.degrade}
             onChange={(value) => setParameter("degrade", value)}
           />
         </LabeledBox>
       </div>
-      <div class={qu.flexHA().gap(2)}>
-        <LabeledBox label="Saturation Mode" width={cellW}>
+      <div class="flex-ha gap-2">
+        <LabeledBox label="Saturation Mode" className="w-12">
           <Knob
             value={parameters.saturationMode}
             min={0}
@@ -57,7 +55,7 @@ const ControlsPart = () => {
             onChange={(value) => setParameter("saturationMode", value)}
           />
         </LabeledBox>
-        <LabeledBox label="Tone Color" width={cellW}>
+        <LabeledBox label="Tone Color" className="w-12">
           <Knob
             value={parameters.toneColor}
             onChange={(value) => setParameter("toneColor", value)}
@@ -70,13 +68,10 @@ const ControlsPart = () => {
 
 export const PageRoot = () => {
   return (
-    <div class={qu.flexC()}>
-      <EffectorBody className={qlsx(qu.wh(320, 210), qu.flexVC())}>
-        <div class={qu.flexV().gap(3)}>
-          <div class={qu.flexHA().gap(2).justify("between")}>
-            <div class={qu.fontSize(18).weight("bold")}>LoFi Crusher</div>
-            {/* <SafetyPart /> */}
-          </div>
+    <div class="flex-c">
+      <EffectorBody className="flex-vc w-[320px] h-[210px]">
+        <div class="flex-v gap-1">
+          <div class="text-lg font-bold">LoFi Crusher</div>
           <ControlsPart />
         </div>
       </EffectorBody>

@@ -1,7 +1,7 @@
+import clsx from "clsx";
 import { ComponentChildren } from "preact";
 import { KnobFrame } from "@/components/konb-frame";
-import { linearInterpolate, npx } from "@/utils/helpers";
-import { qlsx, qu } from "@/utils/qstyle-goober";
+import { linearInterpolate } from "@/utils/helpers";
 
 export const EffectorBody = ({
   children,
@@ -12,9 +12,8 @@ export const EffectorBody = ({
 }) => {
   return (
     <div
-      class={qlsx(
-        qu.bg("#87bec5").p(4).color("#333").rounded(2),
-        qu.css({ border: `inset 1px #0004` }),
+      class={clsx(
+        "rounded-sm border border-slate-600 bg-[#acd] p-4 text-slate-800",
         className,
       )}
     >
@@ -38,16 +37,13 @@ export const LabeledBox = ({
 }) => {
   return (
     <div
-      class={qu.flexV().addClass(className)}
-      style={width ? { width: npx(width) } : undefined}
+      class={clsx("flex-v", className)}
+      style={width ? { width: `${width}px` } : undefined}
     >
-      <div
-        class={qu.fontSize(11).weight("bold")}
-        style={{ textAlign: labelAlign }}
-      >
+      <div class="text-xs font-bold" style={{ textAlign: labelAlign }}>
         {label}
       </div>
-      <div class={qu.flexC().h(40)}>{children}</div>
+      <div class="flex-c h-10">{children}</div>
     </div>
   );
 };
@@ -81,14 +77,14 @@ export const Knob = ({
       dragDisabled={disabled}
     >
       <div
-        class={qu.wh(34, 34).rounded("100%").relative().bg("#777").bd("#444")}
+        class="relative size-8 rounded-full border border-neutral-700 bg-neutral-500"
         style={{ opacity: disabled ? 0.5 : 1 }}
       >
         <div
-          class={qu.full().flexVA()}
+          class="flex-va h-full w-full"
           style={{ transform: `rotate(${tickAngle}deg)` }}
         >
-          <div class={qu.wh(2, 10).bg("#fff")} />
+          <div class="h-2.5 w-0.5 bg-white" />
         </div>
       </div>
     </KnobFrame>
@@ -104,16 +100,15 @@ export const ButtonWithIndicator = ({
 }) => {
   return (
     <div
-      class={qlsx(
-        qu.wh(36, 36).bg("#999").bd("#555").rounded(8).p(0.75).cp(),
-        qu.flexHA(),
+      class={clsx(
+        "flex-ha size-9 cursor-pointer rounded-lg border border-neutral-600 bg-neutral-400 p-1",
       )}
       onClick={onClick}
     >
       <div
-        class={qlsx(
-          qu.wh(10, 10).rounded("full").bd("#444"),
-          qu.bg(active ? "#0f0" : "#666"),
+        class={clsx(
+          "size-2.5 rounded-full border border-neutral-700",
+          active ? "bg-green-400" : "bg-neutral-500",
         )}
       />
     </div>
