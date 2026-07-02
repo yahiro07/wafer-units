@@ -20,7 +20,7 @@ export default defineConfig({
       formats: ["es"],
       fileName: "index",
     },
-    outDir: "../../dist/rtfr",
+    outDir: "../../../dist/rtfr",
     emptyOutDir: true,
   },
 });

@@ -14,7 +14,7 @@ export default defineConfig({
       formats: ["es"],
       fileName: "index",
     },
-    outDir: "../../dist/specbar",
+    outDir: "../../../dist/specbar",
     emptyOutDir: true,
   },
 });

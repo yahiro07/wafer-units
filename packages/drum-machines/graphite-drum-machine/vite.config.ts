@@ -45,7 +45,7 @@ const configProd: UserConfig = {
       formats: ["es"],
       fileName: "index",
     },
-    outDir: "../../dist/graphite-drum-machine",
+    outDir: "../../../dist/graphite-drum-machine",
     emptyOutDir: true,
   },
 };

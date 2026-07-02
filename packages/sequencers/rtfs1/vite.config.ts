@@ -20,7 +20,7 @@ export default defineConfig({
       formats: ["es"],
       fileName: "index",
     },
-    outDir: "../../dist/rtfs1",
+    outDir: "../../../dist/rtfs1",
     emptyOutDir: true,
   },
 });

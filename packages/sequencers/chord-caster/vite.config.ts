@@ -20,7 +20,7 @@ export default defineConfig({
       formats: ["es"],
       fileName: "index",
     },
-    outDir: "../../dist/chord-caster",
+    outDir: "../../../dist/chord-caster",
     emptyOutDir: true,
   },
 });

@@ -9,6 +9,6 @@ export default defineConfig({
   optimizeDeps: {
     exclude: ["wafer-host", "mofur", "snap-store"],
   },
-  build: { outDir: "../../dist/multi-lfo", emptyOutDir: true },
+  build: { outDir: "../../../dist/multi-lfo", emptyOutDir: true },
   server: { port: 3000 },
 });
