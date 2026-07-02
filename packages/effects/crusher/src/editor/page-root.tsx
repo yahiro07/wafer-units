@@ -32,7 +32,7 @@ const ControlsPart = () => {
           />
         </LabeledBox>
 
-        <LabeledBox label="Crush" className="w-12">
+        <LabeledBox label="Degrade" className="w-12">
           <Knob
             value={parameters.degrade}
             onChange={(value) => setParameter("degrade", value)}
@@ -69,9 +69,9 @@ const ControlsPart = () => {
 export const PageRoot = () => {
   return (
     <div class="flex-c">
-      <EffectorBody className="flex-vc w-[320px] h-[210px]">
+      <EffectorBody className="flex-vc w-[320px] h-[180px]">
         <div class="flex-v gap-1">
-          <div class="text-lg font-bold">LoFi Crusher</div>
+          <div class="text-lg font-bold ml-2">LoFi Crusher</div>
           <ControlsPart />
         </div>
       </EffectorBody>
