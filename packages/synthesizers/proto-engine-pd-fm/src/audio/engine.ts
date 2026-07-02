@@ -76,6 +76,23 @@ export function createSynthEngine(): EngineApi {
     }
   }
 
+  function scheduleVoiceCleanup(voice: ActiveVoice, targetTime: number) {
+    if (!audioCtx) return;
+
+    const releaseTimeConstant = Math.max(0.01, synthParameters.release);
+    const releaseTailSeconds = releaseTimeConstant * 10 + 0.1;
+    const delaySeconds =
+      Math.max(0, targetTime - audioCtx.currentTime) + releaseTailSeconds;
+
+    window.setTimeout(() => {
+      try {
+        voice.workletNode.disconnect();
+      } finally {
+        voice.workletNode.port.close();
+      }
+    }, delaySeconds * 1000);
+  }
+
   return {
     async init() {
       await init();
@@ -179,6 +196,7 @@ export function createSynthEngine(): EngineApi {
           ? time
           : audioCtx?.currentTime || 0;
       voice.gateParam.setValueAtTime(0.0, targetTime);
+      scheduleVoiceCleanup(voice, targetTime);
 
       activeVoices.delete(noteNumber);
     },
