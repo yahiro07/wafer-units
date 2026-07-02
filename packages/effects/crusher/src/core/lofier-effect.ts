@@ -4,9 +4,8 @@ import workletUrl from "./lofier-processor?worker&url";
 
 // サチュレーションの歪み曲線を生成するヘルパー関数
 function makeDistortionCurve(mode: number, grit: number) {
-  const n_samples = 44100;
+  const n_samples = 2048;
   const curve = new Float32Array(n_samples);
-  const deg = Math.PI / 180;
 
   for (let i = 0; i < n_samples; ++i) {
     const x = (i * 2) / n_samples - 1;
@@ -21,8 +20,8 @@ function makeDistortionCurve(mode: number, grit: number) {
       curve[i] = ((Math.PI + k) * x) / (Math.PI + k * Math.abs(x));
     } else {
       // Transistor: 奇数次中心のパキッとした硬い歪み
-      const k = grit * 10;
-      curve[i] = ((Math.PI + k) * x * deg) / (Math.PI + k * Math.abs(x));
+      const k = grit * 14;
+      curve[i] = ((1 + k) * x) / (1 + k * Math.abs(x));
     }
   }
   return curve;
@@ -154,9 +153,13 @@ export function createLofierEffect(
     // 2. Grit (サチュレーション) & ToneColor
     // Gritが上がるほど前段のゲインを上げて歪ませ、後段のWaveShaperで受ける
     const preGainValue = 1 + p.grit * 5; // 最大6倍の入力突っ込み
+    const postGainCompensation = 1 / Math.sqrt(preGainValue);
     saturatorPreGain.gain.linearRampToValueAtTime(preGainValue, t + rampTime);
     waveShaperDryGain.gain.linearRampToValueAtTime(1 - p.grit, t + rampTime);
-    waveShaperWetGain.gain.linearRampToValueAtTime(p.grit, t + rampTime);
+    waveShaperWetGain.gain.linearRampToValueAtTime(
+      p.grit * postGainCompensation,
+      t + rampTime,
+    );
     waveShaper.curve = makeDistortionCurve(p.saturationMode, p.grit);
 
     // 3. Age (ワウフラッターの深さ)
