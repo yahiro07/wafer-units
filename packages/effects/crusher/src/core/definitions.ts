@@ -10,7 +10,7 @@ export type EffectParameters = {
 export const defaultEffectParameters: EffectParameters = {
   isOn: true,
   age: 0,
-  grit: 0.25,
+  grit: 0,
   degrade: 0,
   saturationMode: 0,
   toneColor: 0.5,

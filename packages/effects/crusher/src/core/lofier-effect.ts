@@ -66,11 +66,12 @@ export function createLofierEffect(
   hpFilter.type = "highpass";
   const lpFilter = audioContext.createBiquadFilter();
   lpFilter.type = "lowpass";
-
-  // 4. アンビエントノイズ
-  // const noiseGain = audioContext.createGain();
-  // let noiseSource: AudioBufferSourceNode | null = null;
-  // let cachedNoiseBuffer: AudioBuffer | null = null;
+  const toneLowShelf = audioContext.createBiquadFilter();
+  toneLowShelf.type = "lowshelf";
+  toneLowShelf.frequency.setValueAtTime(1000, audioContext.currentTime);
+  const toneHighShelf = audioContext.createBiquadFilter();
+  toneHighShelf.type = "highshelf";
+  toneHighShelf.frequency.setValueAtTime(2000, audioContext.currentTime);
 
   // --- Workletのプレースホルダーノード ---
   let workletNode: AudioWorkletNode | null = null;
@@ -91,7 +92,9 @@ export function createLofierEffect(
   // (注: Workletノードはロード完了後に delayNode と hpFilter の間に動的に挿入します)
   delayNode.connect(hpFilter);
   hpFilter.connect(lpFilter);
-  lpFilter.connect(wetGain);
+  lpFilter.connect(toneLowShelf);
+  toneLowShelf.connect(toneHighShelf);
+  toneHighShelf.connect(wetGain);
   wetGain.connect(outputNode);
 
   // LFOからディレイタイムへの変調結線
@@ -141,22 +144,20 @@ export function createLofierEffect(
     }
 
     const p = {
-      // grit: pr.grit ** 2,
-      age: pr.age ** 2,
+      grit: pr.grit,
+      age: pr.age ** 3,
       toneColor: pr.toneColor,
-      degrade: pr.degrade ** 2,
+      degrade: pr.degrade,
+      saturationMode: pr.saturationMode,
     };
 
     // 2. Grit (サチュレーション) & ToneColor
     // Gritが上がるほど前段のゲインを上げて歪ませ、後段のWaveShaperで受ける
-    const preGainValue = 1 + pr.grit * 5; // 最大6倍の入力突っ込み
+    const preGainValue = 1 + p.grit * 5; // 最大6倍の入力突っ込み
     saturatorPreGain.gain.linearRampToValueAtTime(preGainValue, t + rampTime);
-    waveShaperDryGain.gain.linearRampToValueAtTime(
-      1 - pr.grit,
-      t + rampTime,
-    );
-    waveShaperWetGain.gain.linearRampToValueAtTime(pr.grit, t + rampTime);
-    waveShaper.curve = makeDistortionCurve(pr.saturationMode, pr.grit);
+    waveShaperDryGain.gain.linearRampToValueAtTime(1 - p.grit, t + rampTime);
+    waveShaperWetGain.gain.linearRampToValueAtTime(p.grit, t + rampTime);
+    waveShaper.curve = makeDistortionCurve(p.saturationMode, p.grit);
 
     // 3. Age (ワウフラッターの深さ)
     // 基準ディレイを0.02s(20ms)とし、Ageに応じて最大±5ms揺らす
@@ -164,17 +165,18 @@ export function createLofierEffect(
     lfoGain.gain.linearRampToValueAtTime(p.age * 0.005, t + rampTime);
 
     // 4. De-Qualifier (EQフィルター)
-    // toneColorが0に近づくほどモコモコ(Dark)、1に近づくほどシャリシャリ(Bright)
     // ageが上がるほど自動でフィルター幅が狭まりLo-Fi感が増す
     const baseHp = 40 + p.age * 250; // 40Hz ~ 290Hz
     const baseLp = 18000 - p.age * 14000; // 18kHz ~ 4kHz
 
-    // toneColorによるチルト補正
-    const hpFreq = Math.max(20, baseHp * (2.0 - p.toneColor));
-    const lpFreq = Math.min(20000, baseLp * (0.3 + p.toneColor * 0.7));
+    hpFilter.frequency.exponentialRampToValueAtTime(baseHp, t + rampTime);
+    lpFilter.frequency.exponentialRampToValueAtTime(baseLp, t + rampTime);
 
-    hpFilter.frequency.exponentialRampToValueAtTime(hpFreq, t + rampTime);
-    lpFilter.frequency.exponentialRampToValueAtTime(lpFreq, t + rampTime);
+    // toneColorによるチルト補正。ageには依存させず、0=Dark / 1=Bright として扱う。
+    const tilt = (p.toneColor - 0.5) * 2;
+    const tiltGain = tilt * 9;
+    toneLowShelf.gain.linearRampToValueAtTime(-tiltGain, t + rampTime);
+    toneHighShelf.gain.linearRampToValueAtTime(tiltGain, t + rampTime);
 
     // 5. Degrade (Workletへのパラメータ追従)
     if (state.isWorkletLoaded && workletNode) {

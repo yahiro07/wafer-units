@@ -25,7 +25,7 @@ const ControlsPart = () => {
             onClick={() => setParameter("isOn", !parameters.isOn)}
           />
         </LabeledBox>
-        <LabeledBox label="Wow" className="w-12">
+        <LabeledBox label="Age" className="w-12">
           <Knob
             value={parameters.age}
             onChange={(value) => setParameter("age", value)}
@@ -49,7 +49,7 @@ const ControlsPart = () => {
             onChange={(value) => setParameter("saturationMode", value)}
           />
         </LabeledBox>
-        <LabeledBox label="Drive" className="w-12">
+        <LabeledBox label="Grit" className="w-12">
           <Knob
             value={parameters.grit}
             onChange={(value) => setParameter("grit", value)}
