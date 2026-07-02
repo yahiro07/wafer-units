@@ -1,5 +1,5 @@
 import { AutomationPort } from "wafer-host/unit-types";
-import { store } from "@/root/store";
+import { store } from "@/editor/store";
 
 type AutomationParameterId =
   | "age"

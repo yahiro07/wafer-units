@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import { ComponentChildren } from "preact";
-import { KnobFrame } from "@/components/konb-frame";
-import { linearInterpolate } from "@/utils/helpers";
+import { linearInterpolate } from "@/common/helpers";
+import { KnobFrame } from "@/common/konb-frame";
 
 export const EffectorBody = ({
   children,

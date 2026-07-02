@@ -23,3 +23,11 @@ export function linearInterpolate(
 export function npx(value: number) {
   return `${value}px`;
 }
+
+export function unaryToByte(value: number): number {
+  return (value * 255) >>> 0;
+}
+
+export function unaryFromByte(byte: number): number {
+  return byte / 255;
+}

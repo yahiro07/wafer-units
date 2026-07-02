@@ -1,8 +1,8 @@
 import { queryUnitInterface } from "wafer-host/unit-types";
-import { automationInput } from "@/root/automation";
-import { createEngine } from "@/root/engine";
-import { persistence } from "@/root/persistence";
-import { store } from "@/root/store";
+import { automationInput } from "@/editor/automation";
+import { persistence } from "@/editor/persistence";
+import { store } from "@/editor/store";
+import { createEngine } from "./engine";
 
 const unitInterface = queryUnitInterface("wafer-v01");
 
@@ -10,14 +10,14 @@ const engine = createEngine(unitInterface);
 engine.setParameters(store.state.parameters);
 
 export function setupSynchronization() {
-  engine.setup();
+  engine.connects();
   const unsubscribeStore = store.subscribe(({ parameters }) => {
     if (parameters) {
       engine.setParameters(parameters);
     }
   });
   return () => {
-    engine.teardown();
+    engine.disconnects();
     unsubscribeStore();
   };
 }

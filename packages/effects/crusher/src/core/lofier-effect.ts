@@ -1,5 +1,5 @@
 // lofier-effect.ts (メイン側)
-import { EffectParameters } from "@/common/definitions";
+import { EffectParameters } from "./definitions";
 import workletUrl from "./lofier-processor?worker&url";
 
 // サチュレーションの歪み曲線を生成するヘルパー関数

@@ -1,12 +1,11 @@
-import { EffectParameters } from "@/common/definitions";
 import {
   ButtonWithIndicator,
   EffectorBody,
   Knob,
   LabeledBox,
-} from "@/components";
-
-import { store } from "@/root/store";
+} from "@/common/components";
+import { EffectParameters } from "@/core/definitions";
+import { store } from "@/editor/store";
 
 const ControlsPart = () => {
   const { parameters } = store.useSnapshot();
