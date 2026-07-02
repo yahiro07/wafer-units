@@ -1,15 +1,6 @@
 // lofier-effect.ts (メイン側)
-import { EffectParameters, noiseStuffUrls } from "@/common/definitions";
+import { EffectParameters } from "@/common/definitions";
 import workletUrl from "./lofier-processor?worker&url";
-
-// ユーザー定義の通信メソッド（モック、または実際の実装に差し替え）
-async function fetchNoiseStuff(index: number): Promise<ArrayBuffer> {
-  const url = noiseStuffUrls[index % noiseStuffUrls.length];
-  const response = await fetch(url);
-  if (!response.ok)
-    throw new Error(`Failed to fetch noise stuff: ${response.statusText}`);
-  return response.arrayBuffer();
-}
 
 // サチュレーションの歪み曲線を生成するヘルパー関数
 function makeDistortionCurve(mode: number, grit: number) {
@@ -74,9 +65,9 @@ export function createLofierEffect(
   lpFilter.type = "lowpass";
 
   // 4. アンビエントノイズ
-  const noiseGain = audioContext.createGain();
-  let noiseSource: AudioBufferSourceNode | null = null;
-  let cachedNoiseBuffer: AudioBuffer | null = null;
+  // const noiseGain = audioContext.createGain();
+  // let noiseSource: AudioBufferSourceNode | null = null;
+  // let cachedNoiseBuffer: AudioBuffer | null = null;
 
   // --- Workletのプレースホルダーノード ---
   let workletNode: AudioWorkletNode | null = null;
@@ -100,8 +91,8 @@ export function createLofierEffect(
   lfo.connect(lfoGain);
   lfoGain.connect(delayNode.delayTime);
 
-  // ノイズは最終フィルターの後段(wetGainの直前)にミックス
-  noiseGain.connect(wetGain);
+  // // ノイズは最終フィルターの後段(wetGainの直前)にミックス
+  // noiseGain.connect(wetGain);
 
   // --- Workletの非同期ロード処理 ---
   audioContext.audioWorklet
@@ -126,80 +117,34 @@ export function createLofierEffect(
     })
     .catch((err) => console.error("Failed to load Lofier AudioWorklet:", err));
 
-  // --- ノイズファイルの非同期読み込み・ループ再生処理 ---
-  async function setupNoise(index: number) {
-    if (state.currentNoiseIndex === index && cachedNoiseBuffer) return;
-
-    if (noiseSource) {
-      try {
-        noiseSource.stop();
-      } catch (e) {}
-      noiseSource.disconnect();
-    }
-
-    state.currentNoiseIndex = index;
-    cachedNoiseBuffer = null;
-
-    try {
-      // ユーザーの雛形関数をここで利用
-      const arrayBuffer = await fetchNoiseStuff(index);
-      const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
-      cachedNoiseBuffer = audioBuffer;
-
-      // パラメーターが変更されていなければ再生を開始
-      if (state.currentNoiseIndex === index && state.parameters.isOn) {
-        startNoiseLoop(audioBuffer);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  function startNoiseLoop(buffer: AudioBuffer) {
-    if (noiseSource) {
-      try {
-        noiseSource.stop();
-      } catch (e) {}
-      noiseSource.disconnect();
-    }
-    noiseSource = audioContext.createBufferSource();
-    noiseSource.buffer = buffer;
-    noiseSource.loop = true;
-    noiseSource.connect(noiseGain);
-    noiseSource.start();
-  }
-
   // --- パラメーターの動的適用 ---
   function applyParameters() {
-    const p = state.parameters;
+    const pr = state.parameters;
     const t = audioContext.currentTime;
     const rampTime = 0.05; // 50msのスムースな移行でプチノイズを防ぐ
 
     // 1. On / Off (ドライ・ウェットの比率切り替え)
-    if (p.isOn) {
+    if (pr.isOn) {
       dryGain.gain.linearRampToValueAtTime(0, t + rampTime);
       wetGain.gain.linearRampToValueAtTime(1, t + rampTime);
-      if (cachedNoiseBuffer && !noiseSource) {
-        startNoiseLoop(cachedNoiseBuffer);
-      }
     } else {
       dryGain.gain.linearRampToValueAtTime(1, t + rampTime);
       wetGain.gain.linearRampToValueAtTime(0, t + rampTime);
-      if (noiseSource) {
-        try {
-          noiseSource.stop();
-        } catch (e) {}
-        noiseSource.disconnect();
-        noiseSource = null;
-      }
       return; // Offの場合は以降の内部パラメータ更新をスキップして負荷軽減
     }
 
+    const p = {
+      // grit: pr.grit ** 2,
+      age: pr.age ** 2,
+      toneColor: pr.toneColor,
+      degrade: pr.degrade ** 2,
+    };
+
     // 2. Grit (サチュレーション) & ToneColor
     // Gritが上がるほど前段のゲインを上げて歪ませ、後段のWaveShaperで受ける
-    const preGainValue = 1 + p.grit * 5; // 最大6倍の入力突っ込み
+    const preGainValue = 1 + pr.grit * 5; // 最大6倍の入力突っ込み
     saturatorPreGain.gain.linearRampToValueAtTime(preGainValue, t + rampTime);
-    waveShaper.curve = makeDistortionCurve(p.saturationMode, p.grit);
+    waveShaper.curve = makeDistortionCurve(pr.saturationMode, pr.grit);
 
     // 3. Age (ワウフラッターの深さ)
     // 基準ディレイを0.02s(20ms)とし、Ageに応じて最大±5ms揺らす
@@ -224,12 +169,6 @@ export function createLofierEffect(
       const degradeParam = workletNode.parameters.get("degrade");
       degradeParam?.linearRampToValueAtTime(p.degrade, t + rampTime);
     }
-
-    // 6. Dust (ノイズの音量)
-    noiseGain.gain.linearRampToValueAtTime(p.dust * 0.15, t + rampTime); // 爆音防止のマックス0.15掛け
-
-    // 7. NoiseStuffIndex (ノイズ素材の切り替え)
-    setupNoise(p.noiseStuffIndex);
   }
 
   // 初回実行

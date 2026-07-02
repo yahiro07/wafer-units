@@ -25,16 +25,6 @@ const ControlsPart = () => {
             onClick={() => setParameter("isOn", !parameters.isOn)}
           />
         </LabeledBox>
-        {/* <LabeledBox label="Time" width={cellW} className={qu.relative()}>
-          <div
-            class={qlsx(
-              qu.absolute().bottom(-14).left(0).fontSize(12).w(cellW),
-              qu.flexC(),
-            )}
-          >
-            {parameters.time.toString()}
-          </div>
-        </LabeledBox> */}
         <LabeledBox label="Age" width={cellW}>
           <Knob
             value={parameters.age}
@@ -70,78 +60,10 @@ const ControlsPart = () => {
             onChange={(value) => setParameter("toneColor", value)}
           />
         </LabeledBox>
-        <LabeledBox label="Dust" width={cellW}>
-          <Knob
-            value={parameters.dust}
-            onChange={(value) => setParameter("dust", value)}
-          />
-        </LabeledBox>
-        <LabeledBox label="Noise Stuff" width={cellW}>
-          <Knob
-            value={parameters.noiseStuffIndex}
-            min={0}
-            max={1}
-            step={1}
-            onChange={(value) => setParameter("noiseStuffIndex", value)}
-          />
-        </LabeledBox>
       </div>
-      {/* <div class={qu.flexHA().gap(2)}>
-        <LabeledBox label="LFO" width={cellW}>
-          <ButtonWithIndicator
-            active={parameters.lfoOn}
-            onClick={() => setParameter("lfoOn", !parameters.lfoOn)}
-          />
-        </LabeledBox>
-        <LabeledBox label="Rate" width={cellW}>
-          <Knob
-            value={parameters.lfoRate}
-            onChange={(value) => setParameter("lfoRate", value)}
-          />
-        </LabeledBox>
-        <LabeledBox label="Depth" width={cellW}>
-          <Knob
-            value={parameters.lfoDepth}
-            onChange={(value) => setParameter("lfoDepth", value)}
-          />
-        </LabeledBox>
-      </div> */}
-      {/* {false && (
-        <div class={qu.flexVC().gap(2.5).pt(4)}>
-          <LedIndicator active={parameters.isOn} />
-          <StompButton onClick={() => setParameter("isOn", !parameters.isOn)} />
-        </div>
-      )} */}
     </div>
   );
 };
-
-// const SafetyPart = () => {
-//   const { parameters } = store.useSnapshot();
-//   const setParameter = <K extends keyof EffectParameters>(
-//     key: K,
-//     value: EffectParameters[K],
-//   ) => {
-//     store.setParameters({ ...parameters, [key]: value });
-//   };
-//   return (
-//     <div>
-//       <label class={qu.flexH().gap(1)}>
-//         <input
-//           type="checkbox"
-//           checked={parameters.safety}
-//           onChange={(e) =>
-//             setParameter(
-//               "safety",
-//               (e.currentTarget as HTMLInputElement).checked,
-//             )
-//           }
-//         />
-//         safety
-//       </label>
-//     </div>
-//   );
-// };
 
 export const PageRoot = () => {
   return (
