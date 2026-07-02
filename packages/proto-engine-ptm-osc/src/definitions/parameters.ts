@@ -16,8 +16,8 @@ export enum OscWave {
   count,
 }
 export type SynthParameters = {
-  oscWave: number;
-  oscOctave: number;
+  oscWave: number; //0~13
+  oscOctave: number; //-2~2
   oscShape: number;
   ampAttack: number;
   ampDecay: number;
@@ -32,10 +32,16 @@ export type SynthParameters = {
   filterCutoff: number;
   filterPeak: number;
   foldingShaperOn: boolean;
-  foldingShaperWave: number;
+  foldingShaperWave: number; //0~4
   foldingShaperLevel: number;
   densityShaperLevel: number;
   masterVolume: number;
+};
+
+export const integerParametersRanges = {
+  oscWave: { min: 0, max: 13 },
+  oscOctave: { min: -2, max: 2 },
+  foldingShaperWave: { min: 0, max: 4 },
 };
 
 export function createSynthParameters(): SynthParameters {
@@ -49,13 +55,13 @@ export function createSynthParameters(): SynthParameters {
     ampRelease: 0,
     chorusLevel: 0,
     reverbLevel: 0,
-    hpfOn: false,
+    hpfOn: true,
     hpfCutoff: 0,
     hpfPeak: 0,
-    filterOn: false,
+    filterOn: true,
     filterCutoff: 1,
     filterPeak: 0,
-    foldingShaperOn: false,
+    foldingShaperOn: true,
     foldingShaperWave: 0,
     foldingShaperLevel: 0,
     densityShaperLevel: 0,

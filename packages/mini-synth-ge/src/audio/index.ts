@@ -63,6 +63,9 @@ function createAudioEngine() {
       chorus.updateNodeParameters(params);
       reverb.updateNodeParameters(params);
       masterGain.gain.value = params.masterVolume;
+      for (const voice of activeVoices.values()) {
+        voice.updateNodeParameters(params);
+      }
     },
   };
 }
@@ -71,7 +74,34 @@ export function getAudioEngine() {
   if (!engineInstance) {
     engineInstance = createAudioEngine();
     createEffect(() => {
-      engineInstance!.updateNodeParameters(appState.parameters);
+      const {
+        oscWave,
+        oscDetune,
+        oscSub,
+        oscDrift,
+        filterCutoff,
+        filterPeak,
+        filterEnvMod,
+        ampDecay,
+        ampRelease,
+        masterVolume,
+        fxChorus,
+        fxReverb,
+      } = appState.parameters;
+      engineInstance!.updateNodeParameters({
+        oscWave,
+        oscDetune,
+        oscSub,
+        oscDrift,
+        filterCutoff,
+        filterPeak,
+        filterEnvMod,
+        ampDecay,
+        ampRelease,
+        masterVolume,
+        fxChorus,
+        fxReverb,
+      });
     });
   }
   return engineInstance;

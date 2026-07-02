@@ -38,6 +38,7 @@ export function createVoice(
   params: SynthParameters,
   time?: number,
 ) {
+  let currentParams = params;
   const outputNode = context.createGain();
   outputNode.gain.value = 1; // fix output node gain so sound passes through
 
@@ -84,21 +85,13 @@ export function createVoice(
   lfoGain.connect(osc2.detune);
 
   const mainOscGain = context.createGain();
-  mainOscGain.gain.value =
-    params.oscDetune > 0
-      ? 0.5
-      : // if detuned, mix 50/50
-        params.oscDetune === 0
-        ? 1
-        : 0.5; // wait, if detune=0, two oscs in phase but half volume is same as 1 osc full volume
+  mainOscGain.gain.value = 0.5;
 
   const subOscGain = context.createGain();
   subOscGain.gain.value = params.oscSub;
 
   osc1.connect(mainOscGain);
-  if (params.oscDetune > 0) {
-    osc2.connect(mainOscGain);
-  }
+  osc2.connect(mainOscGain);
   sub.connect(subOscGain);
 
   const filter = context.createBiquadFilter();
@@ -148,8 +141,33 @@ export function createVoice(
 
   let released = false;
 
+  function updateNodeParameters(nextParams: SynthParameters) {
+    currentParams = nextParams;
+    const updateTime = context.currentTime;
+
+    const nextWave = getWave(context, nextParams.oscWave);
+    if (typeof nextWave === "string") {
+      osc1.type = nextWave as OscillatorType;
+      osc2.type = nextWave as OscillatorType;
+    } else {
+      osc1.setPeriodicWave(nextWave);
+      osc2.setPeriodicWave(nextWave);
+    }
+
+    const nextDetuneCents = nextParams.oscDetune * 50;
+    osc1.detune.setTargetAtTime(nextDetuneCents, updateTime, 0.01);
+    osc2.detune.setTargetAtTime(-nextDetuneCents, updateTime, 0.01);
+    lfoGain.gain.setTargetAtTime(nextParams.oscDrift * 30, updateTime, 0.01);
+    subOscGain.gain.setTargetAtTime(nextParams.oscSub, updateTime, 0.01);
+
+    const nextBaseFreq = 40 * Math.pow(10000 / 40, nextParams.filterCutoff);
+    filter.frequency.setTargetAtTime(nextBaseFreq, updateTime, 0.01);
+    filter.Q.setTargetAtTime(nextParams.filterPeak * 20, updateTime, 0.01);
+  }
+
   return {
     outputNode,
+    updateNodeParameters,
     noteOff(offTime?: number) {
       if (released) return;
       released = true;
@@ -157,7 +175,7 @@ export function createVoice(
         offTime && offTime > context.currentTime
           ? offTime
           : context.currentTime;
-      const releaseTime = Math.max(0.01, params.ampRelease * 3);
+      const releaseTime = Math.max(0.01, currentParams.ampRelease * 3);
 
       ampGain.gain.cancelScheduledValues(tOff);
       ampGain.gain.setValueAtTime(ampGain.gain.value, tOff);
@@ -170,9 +188,12 @@ export function createVoice(
       sub.stop(stopTime);
 
       const delayMs = (tOff - context.currentTime + releaseTime + 0.2) * 1000;
-      setTimeout(() => {
-        outputNode.disconnect();
-      }, Math.max(0, delayMs));
+      setTimeout(
+        () => {
+          outputNode.disconnect();
+        },
+        Math.max(0, delayMs),
+      );
     },
   };
 }

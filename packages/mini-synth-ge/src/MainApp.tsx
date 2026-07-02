@@ -4,6 +4,8 @@ import { Header } from "@/sections/Header";
 import { LeftColumn } from "@/sections/LeftColumn";
 import { RightColumn } from "@/sections/RightColumn";
 import { persistence } from "@/store/persistence";
+import { appState, SynthParameters } from "@/store/store";
+import { uiActions } from "@/store/ui-actions";
 import { setupMidiKeyboardInput } from "@/utils/midi-keyboard-input";
 
 export const MainApp = () => {
@@ -18,7 +20,7 @@ export const MainApp = () => {
         unitType: "instrument",
         categoryHint: "synthesizer",
         outputs: ["audio"],
-        inputs: ["note"],
+        inputs: ["note", "automation"],
       },
       noteInput: {
         async noteOn(note, time) {
@@ -26,6 +28,38 @@ export const MainApp = () => {
         },
         noteOff(note, time) {
           engine.noteOff(note, time);
+        },
+      },
+      automationInput: {
+        getParameterSpecs() {
+          return [
+            { id: "oscWave", step: 2 },
+            { id: "oscDetune" },
+            { id: "oscSub" },
+            { id: "oscDrift" },
+            { id: "fxChorus" },
+            { id: "fxReverb" },
+            { id: "filterCutoff" },
+            { id: "filterPeak" },
+            { id: "filterEnvMod" },
+            { id: "ampDecay" },
+            { id: "ampRelease" },
+            { id: "masterVolume" },
+          ];
+        },
+        getParameter(id) {
+          if (id === "oscWave") {
+            return appState.parameters.oscWave / 2;
+          } else {
+            return appState.parameters[id as keyof SynthParameters];
+          }
+        },
+        setParameter(id, value) {
+          if (id === "oscWave") {
+            uiActions.setParameter("oscWave", value * 2);
+          } else {
+            uiActions.setParameter(id as keyof SynthParameters, value);
+          }
         },
       },
       persistence,
