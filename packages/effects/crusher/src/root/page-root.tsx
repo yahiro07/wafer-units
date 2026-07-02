@@ -1,8 +1,11 @@
 import { EffectParameters } from "@/common/definitions";
-import { ButtonWithIndicator } from "@/components/button-with-indicator";
-import { EffectorBody } from "@/components/effector-body";
-import { Knob } from "@/components/knob";
-import { LabeledBox } from "@/components/labeled-box";
+import {
+  ButtonWithIndicator,
+  EffectorBody,
+  Knob,
+  LabeledBox,
+} from "@/components";
+
 import { store } from "@/root/store";
 import { qlsx, qu } from "@/utils/qstyle-goober";
 
