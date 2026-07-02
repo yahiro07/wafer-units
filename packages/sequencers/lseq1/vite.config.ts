@@ -14,7 +14,7 @@ export default defineConfig({
       formats: ["es"],
       fileName: "index",
     },
-    outDir: `../../dist/lseq1`,
+    outDir: `../../../dist/lseq1`,
     emptyOutDir: true,
   },
 });

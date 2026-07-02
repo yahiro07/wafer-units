@@ -13,7 +13,7 @@ export default defineConfig({
       formats: ["es"],
       fileName: "index",
     },
-    outDir: `../../dist/proto-engine-ptm-osc`,
+    outDir: `../../../dist/proto-engine-ptm-osc`,
     emptyOutDir: true,
   },
 });

@@ -13,7 +13,7 @@ export default defineConfig({
       formats: ["es"],
       fileName: "index",
     },
-    outDir: `../../dist/mini-synth-ge`,
+    outDir: `../../../dist/mini-synth-ge`,
     emptyOutDir: true,
   },
 });

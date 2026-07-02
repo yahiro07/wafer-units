@@ -13,7 +13,7 @@ export default defineConfig({
       formats: ["es"],
       fileName: "index",
     },
-    outDir: `../../dist/mini-synth-gp`,
+    outDir: `../../../dist/mini-synth-gp`,
     emptyOutDir: true,
   },
 });

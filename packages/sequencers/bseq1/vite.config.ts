@@ -19,7 +19,7 @@ export default defineConfig({
       formats: ["es"],
       fileName: "index",
     },
-    outDir: `../../dist/bseq1`,
+    outDir: `../../../dist/bseq1`,
     emptyOutDir: true,
   },
 });
