@@ -8,12 +8,14 @@ export const LabeledBox = ({
   children,
   labelAlign = "center",
   width,
+  contentHeight = 40,
 }: {
   className?: string;
   label?: string;
   labelAlign?: "left" | "center" | "right";
   children?: Children;
   width?: number;
+  contentHeight?: number;
 }) => {
   return (
     <div
@@ -26,7 +28,7 @@ export const LabeledBox = ({
       >
         {label}
       </div>
-      <div class={qu.flexC().h(40)}>{children}</div>
+      <div class={qu.flexC().h(contentHeight)}>{children}</div>
     </div>
   );
 };

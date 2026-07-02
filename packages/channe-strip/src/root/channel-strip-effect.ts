@@ -76,7 +76,7 @@ export function createChannelStripEffect(
     const p = state.parameters;
 
     // --- ON/OFF (Bypass) control ---
-    if (p.isOn) {
+    if (p.effectOn) {
       effectBranch.gain.setValueAtTime(1, audioContext.currentTime);
       bypassBranch.gain.setValueAtTime(0, audioContext.currentTime);
     } else {
@@ -138,6 +138,9 @@ export function createChannelStripEffect(
       volumeGain = p.volume / 0.5; // 0.0 ~ 1.0 (linear)
     } else {
       volumeGain = 1.0 + (p.volume - 0.5) / 0.5; // 1.0 ~ 2.0
+    }
+    if (!p.outputOn) {
+      volumeGain = 0;
     }
     volumeGainNode.gain.setValueAtTime(volumeGain, audioContext.currentTime);
   }

@@ -1,5 +1,6 @@
 export type EffectParameters = {
-  isOn: boolean;
+  outputOn: boolean;
+  effectOn: boolean;
   volume: number; // 0~1, center(0.5) is unity(1) gain
   pan: number; // -1~1
   haas: number; // 0~1
@@ -11,7 +12,8 @@ export type EffectParameters = {
 };
 
 export const defaultEffectParameters: EffectParameters = {
-  isOn: true,
+  outputOn: true,
+  effectOn: true,
   volume: 0.5,
   pan: 0,
   haas: 0,

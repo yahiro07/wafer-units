@@ -18,12 +18,22 @@ const ControlsPart = () => {
 
   return (
     <div class={qu.flexV().gap(1.5)}>
-      <div class={qu.flexHA().justify("between").pl(1.5).pr(2.5)}>
+      <div class={qu.flexHA().justify("between").pl(1.5).pr(1)}>
         <div class={qu.fontSize(17).weight("bold")}>Channel Strip</div>
-        <ButtonWithIndicator
-          active={parameters.isOn}
-          onClick={() => setParameter("isOn", !parameters.isOn)}
-        />
+        <div class={qu.flexHA().gap(4)}>
+          <LabeledBox label="effect" width={36} contentHeight={24}>
+            <ButtonWithIndicator
+              active={parameters.effectOn}
+              onClick={() => setParameter("effectOn", !parameters.effectOn)}
+            />
+          </LabeledBox>
+          <LabeledBox label="output" width={36} contentHeight={24}>
+            <ButtonWithIndicator
+              active={parameters.outputOn}
+              onClick={() => setParameter("outputOn", !parameters.outputOn)}
+            />
+          </LabeledBox>
+        </div>
       </div>
       <div class={qu.flexV().gap(0)}>
         <div class={qu.flexHA().gap(3)}>
@@ -33,24 +43,23 @@ const ControlsPart = () => {
               onChange={(value) => setParameter("lowCut", value)}
             />
           </LabeledBox>
-          <LabeledBox label="volume" width={cellW}>
+          <LabeledBox label="comp" width={cellW}>
             <Knob
-              value={parameters.volume}
-              onChange={(value) => setParameter("volume", value)}
-            />
-          </LabeledBox>
-          <LabeledBox label="pan" width={cellW}>
-            <Knob
-              value={parameters.pan}
-              min={-1}
-              max={1}
-              onChange={(value) => setParameter("pan", value)}
+              value={parameters.compress}
+              onChange={(value) => setParameter("compress", value)}
             />
           </LabeledBox>
           <LabeledBox label="haas" width={cellW}>
             <Knob
               value={parameters.haas}
               onChange={(value) => setParameter("haas", value)}
+            />
+          </LabeledBox>
+
+          <LabeledBox label="volume" width={cellW}>
+            <Knob
+              value={parameters.volume}
+              onChange={(value) => setParameter("volume", value)}
             />
           </LabeledBox>
         </div>
@@ -73,10 +82,12 @@ const ControlsPart = () => {
               onChange={(value) => setParameter("eqHigh", value)}
             />
           </LabeledBox>
-          <LabeledBox label="comp" width={cellW}>
+          <LabeledBox label="pan" width={cellW}>
             <Knob
-              value={parameters.compress}
-              onChange={(value) => setParameter("compress", value)}
+              value={parameters.pan}
+              min={-1}
+              max={1}
+              onChange={(value) => setParameter("pan", value)}
             />
           </LabeledBox>
         </div>
