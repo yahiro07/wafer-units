@@ -7,14 +7,14 @@ export function createChorus2(context: AudioContext): IChorusEffect {
   const dryGain = context.createGain();
   const wetGain = context.createGain();
 
-  const delay = context.createDelay();
-  delay.delayTime.value = 0.02; // 20ms base
+  const delay = context.createDelay(0.05);
+  delay.delayTime.value = 0.016; // 16ms base
 
   const lfo = context.createOscillator();
   lfo.type = "sine";
-  lfo.frequency.value = 1.5; // 1.5 Hz
+  lfo.frequency.value = 0.8; // Keep the movement close to the other chorus variants.
   const lfoGain = context.createGain();
-  lfoGain.gain.value = 0.005; // 5ms deviation
+  lfoGain.gain.value = 0;
 
   lfo.connect(lfoGain);
   lfoGain.connect(delay.delayTime);
@@ -31,8 +31,10 @@ export function createChorus2(context: AudioContext): IChorusEffect {
     inputNode,
     outputNode,
     setLevel(level: number): void {
-      wetGain.gain.value = level;
-      dryGain.gain.value = 1 - level * 0.5;
+      const now = context.currentTime;
+      wetGain.gain.setTargetAtTime(level * 0.65, now, 0.02);
+      dryGain.gain.setTargetAtTime(1 - level * 0.35, now, 0.02);
+      lfoGain.gain.setTargetAtTime(level * 0.003, now, 0.02);
     },
     cleanupNodes() {
       lfo.stop();
