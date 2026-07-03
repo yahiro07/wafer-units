@@ -12,7 +12,11 @@ function mapExponential(value: number, min: number, max: number) {
 
 function createWhiteNoiseBuffer(audioContext: AudioContext) {
   const bufferLength = audioContext.sampleRate * 4;
-  const buffer = audioContext.createBuffer(1, bufferLength, audioContext.sampleRate);
+  const buffer = audioContext.createBuffer(
+    1,
+    bufferLength,
+    audioContext.sampleRate,
+  );
   const samples = buffer.getChannelData(0);
 
   for (let i = 0; i < samples.length; i++) {
@@ -103,7 +107,7 @@ export function createEffect(
     const noiseBHpfCutoff = mapExponential(
       parameters.noiseBHpfCutoff,
       400,
-      12000,
+      16000,
     );
     const noiseAGainValue = parameters.noiseAOn
       ? clamp01(parameters.noiseAGain) ** 2 * 0.45
@@ -132,9 +136,6 @@ export function createEffect(
         audioContext.currentTime,
         0.015,
       );
-    controlNode?.parameters
-      .get("noiseBAbs")
-      ?.setValueAtTime(parameters.noiseBAbs ? 1 : 0, audioContext.currentTime);
   }
 
   applyParameters();

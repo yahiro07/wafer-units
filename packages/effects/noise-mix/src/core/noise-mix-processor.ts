@@ -15,13 +15,6 @@ class NoiseMixProcessor extends AudioWorkletProcessor {
         maxValue: 1,
         automationRate: "k-rate",
       },
-      {
-        name: "noiseBAbs",
-        defaultValue: 0,
-        minValue: 0,
-        maxValue: 1,
-        automationRate: "k-rate",
-      },
     ];
   }
 
@@ -38,11 +31,10 @@ class NoiseMixProcessor extends AudioWorkletProcessor {
 
     if (!envelopeOutput || !modulatorOutput) return true;
 
-    const attack = mapExponential(parameters.envAttack[0], 0.002, 0.12);
-    const release = mapExponential(parameters.envRelease[0], 0.025, 1.2);
+    const attack = mapLinear(parameters.envAttack[0], 0.002, 0.8);
+    const release = mapLinear(parameters.envRelease[0], 0.025, 1.2);
     const attackCoefficient = Math.exp(-1 / (attack * sampleRate));
     const releaseCoefficient = Math.exp(-1 / (release * sampleRate));
-    const useAbsModulator = parameters.noiseBAbs[0] >= 0.5;
 
     for (let i = 0; i < envelopeOutput.length; i++) {
       let mixedInput = 0;
@@ -65,13 +57,16 @@ class NoiseMixProcessor extends AudioWorkletProcessor {
       this.envelope = peakInput + coefficient * (this.envelope - peakInput);
 
       envelopeOutput[i] = this.envelope;
-      modulatorOutput[i] = useAbsModulator ? Math.abs(mixedInput) : mixedInput;
+      modulatorOutput[i] = mixedInput * this.envelope;
     }
 
     return true;
   }
 }
 
+function mapLinear(value: number, min: number, max: number) {
+  return min + (max - min) * value;
+}
 function mapExponential(value: number, min: number, max: number) {
   const normalized = Math.min(1, Math.max(0, value));
   return min * (max / min) ** normalized;

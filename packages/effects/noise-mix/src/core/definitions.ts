@@ -5,7 +5,6 @@ export type EffectParameters = {
   noiseBOn: boolean;
   noiseBHpfCutoff: number;
   noiseBGain: number;
-  noiseBAbs: boolean;
   envAttack: number;
   envRelease: number;
 };
@@ -16,8 +15,7 @@ envelope = envelopeFollower(input, envAttack, envRelease)
 output =
 input
 + noiseA * envelope * noiseAGain
-+ noiseB * input * noiseBGain
-(noiseB * abs(input) * noiseBGain when noiseBAbs is on)
++ noiseB * input * envelope * noiseBGain
 */
 
 export const defaultEffectParameters: EffectParameters = {
@@ -27,7 +25,6 @@ export const defaultEffectParameters: EffectParameters = {
   noiseBHpfCutoff: 0.5,
   noiseAGain: 0.5,
   noiseBGain: 0.5,
-  noiseBAbs: false,
   envAttack: 0.5,
   envRelease: 0.5,
 };
