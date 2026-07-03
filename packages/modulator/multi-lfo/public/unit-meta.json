@@ -5,7 +5,7 @@
   "inputSignalTypes": "note",
   "protocol": "wafer-v01",
   "unitTypesVersion": "0.1.5",
-  "integrationFormat": "webComponents",
+  "integrationFormat": "iframe",
   "repositoryUrl": "https://github.com/yahiro07/wus-units",
   "author": "yahiro",
   "license": "MIT"
