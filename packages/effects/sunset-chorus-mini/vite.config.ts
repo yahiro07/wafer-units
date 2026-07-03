@@ -22,6 +22,6 @@ export default defineConfig({
   optimizeDeps: {
     exclude: ["wafer-host", "mofur", "snap-store"],
   },
-  build: { outDir: "../../../dist/sunset-chorus", emptyOutDir: true },
+  build: { outDir: "../../../dist/sunset-chorus-mini", emptyOutDir: true },
   server: { port: 3000 },
 });

@@ -18,7 +18,7 @@ const ControlsPart = () => {
 
   return (
     <div class="flex-vc gap-1">
-      <div class="text-md font-bold ml-2">Sunset Chorus Lite</div>
+      <div class="text-md font-bold ml-2">Sunset Chorus Mini</div>
       <div class="flex-ha gap-2">
         <LabeledBox label="On" className="w-12">
           <ButtonWithIndicator
