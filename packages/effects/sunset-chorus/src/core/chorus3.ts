@@ -55,5 +55,13 @@ export function createChorus3(audioContext: AudioContext): IChorusEffect {
     inputNode,
     outputNode,
     setLevel,
+    cleanupNodes() {
+      lfoA.stop();
+      lfoB.stop();
+      lfoA.disconnect();
+      lfoB.disconnect();
+      lfoGainA.disconnect();
+      lfoGainB.disconnect();
+    },
   };
 }

@@ -86,6 +86,7 @@ export function createChorus5(audioContext: AudioContext): IChorusEffect {
     cleanupNodes() {
       for (const lfo of lfos) {
         lfo.stop();
+        lfo.disconnect();
       }
     },
   };

@@ -52,7 +52,7 @@ const ControlsPart = () => {
 export const PageRoot = () => {
   return (
     <div class="flex-c">
-      <EffectorBody className="flex-vc w-[240px] h-[140px]">
+      <EffectorBody className="flex-vc w-[200px] h-[120px]">
         <ControlsPart />
       </EffectorBody>
     </div>

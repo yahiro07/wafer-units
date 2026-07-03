@@ -40,5 +40,10 @@ export function createChorus4(audioContext: AudioContext): IChorusEffect {
     inputNode,
     outputNode,
     setLevel,
+    cleanupNodes() {
+      lfo.stop();
+      lfo.disconnect();
+      lfoGain.disconnect();
+    },
   };
 }

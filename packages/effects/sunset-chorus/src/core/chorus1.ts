@@ -52,5 +52,13 @@ export function createChorus1(ctx: AudioContext): IChorusEffect {
       lfoGainL.gain.value = level * 0.005;
       lfoGainR.gain.value = level * 0.005;
     },
+    cleanupNodes() {
+      lfoL.stop();
+      lfoR.stop();
+      lfoL.disconnect();
+      lfoR.disconnect();
+      lfoGainL.disconnect();
+      lfoGainR.disconnect();
+    },
   };
 }

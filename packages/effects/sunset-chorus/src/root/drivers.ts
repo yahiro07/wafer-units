@@ -26,7 +26,7 @@ export function setupUnit() {
       unitType: "effect",
       outputs: ["audio"],
       inputs: ["audio"],
-      viewSize: [240, 140],
+      viewSize: [200, 120],
     },
   });
 }

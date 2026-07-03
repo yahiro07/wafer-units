@@ -34,5 +34,10 @@ export function createChorus2(context: AudioContext): IChorusEffect {
       wetGain.gain.value = level;
       dryGain.gain.value = 1 - level * 0.5;
     },
+    cleanupNodes() {
+      lfo.stop();
+      lfo.disconnect();
+      lfoGain.disconnect();
+    },
   };
 }
