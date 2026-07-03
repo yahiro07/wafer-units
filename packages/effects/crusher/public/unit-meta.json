@@ -1,7 +1,6 @@
 {
   "name": "crusher",
   "unitType": "effect",
-  "preferredSize": "320,180",
   "outputSignalTypes": "audio",
   "inputSignalTypes": "audio,automation",
   "protocol": "wafer-v01",

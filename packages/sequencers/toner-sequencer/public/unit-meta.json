@@ -1,7 +1,6 @@
 {
   "name": "toner-sequencer",
   "unitType": "sequencer",
-  "preferredSize": "480,330",
   "outputSignalTypes": "note",
   "inputSignalTypes": "automation",
   "protocol": "wafer-v01",

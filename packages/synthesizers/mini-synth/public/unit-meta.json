@@ -2,7 +2,6 @@
   "name": "mini-synth",
   "unitType": "instrument",
   "categoryHint": "synthesizer",
-  "preferredSize": "640,320",
   "outputSignalTypes": "audio",
   "inputSignalTypes": "note",
   "protocol": "wafer-v01",

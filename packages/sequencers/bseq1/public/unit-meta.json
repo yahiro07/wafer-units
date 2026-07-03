@@ -2,7 +2,6 @@
   "name": "bseq1",
   "unitType": "sequencer",
   "categoryHint": "stepSequencer",
-  "preferredSize": "390,230",
   "outputSignalTypes": "note",
   "inputSignalTypes": "",
   "protocol": "wafer-v01",

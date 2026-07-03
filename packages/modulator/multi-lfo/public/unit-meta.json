@@ -1,7 +1,6 @@
 {
   "name": "multi-lfo",
   "unitType": "sequencer",
-  "preferredSize": "600,350",
   "outputSignalTypes": "note",
   "inputSignalTypes": "note",
   "protocol": "wafer-v01",

@@ -1,7 +1,6 @@
 {
   "name": "channel-strip",
   "unitType": "effect",
-  "preferredSize": "300,160",
   "outputSignalTypes": "audio",
   "inputSignalTypes": "audio,automation",
   "protocol": "wafer-v01",

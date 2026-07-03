@@ -1,7 +1,6 @@
 {
   "name": "graphite-drum-machine",
   "unitType": "instrument",
-  "preferredSize": "840,380",
   "outputSignalTypes": "note",
   "inputSignalTypes": "automation",
   "protocol": "wafer-v01",

@@ -2,7 +2,6 @@
   "name": "mini-synth-gp",
   "unitType": "instrument",
   "categoryHint": "synthesizer",
-  "preferredSize": "640,380",
   "outputSignalTypes": "audio",
   "inputSignalTypes": "note",
   "protocol": "wafer-v01",

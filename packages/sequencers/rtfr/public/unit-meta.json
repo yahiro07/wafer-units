@@ -1,7 +1,6 @@
 {
   "name": "RTFR",
   "unitType": "sequencer",
-  "preferredSize": "600,300",
   "outputSignalTypes": "note",
   "inputSignalTypes": "note",
   "protocol": "wafer-v01",

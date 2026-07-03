@@ -1,7 +1,6 @@
 {
   "name": "bseq2",
   "unitType": "sequencer",
-  "preferredSize": "480,330",
   "outputSignalTypes": "note",
   "inputSignalTypes": "note,automation",
   "protocol": "wafer-v01",
