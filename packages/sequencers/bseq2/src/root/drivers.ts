@@ -39,6 +39,7 @@ export function setupUnit() {
       unitType: "sequencer",
       outputs: ["note"],
       inputs: ["note", "automation"],
+      viewSize: [480, 200],
     },
     noteInput: {
       noteOn: engine.inputNoteOn,

@@ -28,6 +28,7 @@ export function setupUnit() {
       unitType: "effect",
       outputs: ["audio"],
       inputs: ["audio", "automation"],
+      viewSize: [320, 180],
     },
     persistence: persistence,
     automationInput: automationInput,

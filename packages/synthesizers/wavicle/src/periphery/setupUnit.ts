@@ -11,6 +11,7 @@ export function setupUnit() {
       categoryHint: "synthesizer",
       outputs: ["audio"],
       inputs: ["note"],
+      viewSize: [700, 394],
     },
     noteInput: {
       noteOn(noteNumber) {
