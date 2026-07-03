@@ -17,8 +17,9 @@ const ControlsPart = () => {
   };
 
   return (
-    <div class="flex-c gap-3">
-      <div class="flex-v gap-3">
+    <div class="flex-v">
+      <div class="text-lg font-bold ml-2">Lofi2</div>
+      <div class="flex-v gap-2">
         <div class="flex-ha gap-2">
           <LabeledBox label="on" className="w-12">
             <ButtonWithIndicator
@@ -45,6 +46,32 @@ const ControlsPart = () => {
             />
           </LabeledBox>
         </div>
+        <div class="flex-ha gap-2">
+          <LabeledBox label="drive" className="w-12">
+            <Knob
+              value={parameters.drive}
+              onChange={(value) => setParameter("drive", value)}
+            />
+          </LabeledBox>
+          <LabeledBox label="noise" className="w-12">
+            <Knob
+              value={parameters.noise}
+              onChange={(value) => setParameter("noise", value)}
+            />
+          </LabeledBox>
+          <LabeledBox label="wobble" className="w-12">
+            <Knob
+              value={parameters.wobble}
+              onChange={(value) => setParameter("wobble", value)}
+            />
+          </LabeledBox>
+          <LabeledBox label="mix" className="w-12">
+            <Knob
+              value={parameters.mix}
+              onChange={(value) => setParameter("mix", value)}
+            />
+          </LabeledBox>
+        </div>
       </div>
     </div>
   );
@@ -54,10 +81,7 @@ export const PageRoot = () => {
   return (
     <div class="flex-c">
       <EffectorBody className="flex-vc w-[320px] h-[180px]">
-        <div class="flex-v gap-1">
-          <div class="text-lg font-bold ml-2">Noise Mix</div>
-          <ControlsPart />
-        </div>
+        <ControlsPart />
       </EffectorBody>
     </div>
   );
