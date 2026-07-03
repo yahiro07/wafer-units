@@ -20,10 +20,11 @@ export function setupUnit() {
     unitAspects: {
       unitType: "sequencer",
       outputs: ["automation"],
+      viewSize: [600, 350],
     },
     clockHandlers: sequencer.clockHandlers,
     unitCallbacks: {
-      onConnectedTo(linkedPortSubtypes) {
+      onConnectedTo(_, linkedPortSubtypes) {
         if (linkedPortSubtypes.includes("automation")) {
           const parameterSpecs =
             unitInterface?.automationOutputPort?.getParameterSpecs();
