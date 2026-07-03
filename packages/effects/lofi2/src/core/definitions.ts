@@ -18,5 +18,5 @@ export const defaultEffectParameters: EffectParameters = {
   drive: 0,
   noise: 0,
   wobble: 0,
-  mix: 0,
+  mix: 0.5,
 };
