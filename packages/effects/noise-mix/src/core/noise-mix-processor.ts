@@ -67,7 +67,7 @@ class NoiseMixProcessor extends AudioWorkletProcessor {
 function mapLinear(value: number, min: number, max: number) {
   return min + (max - min) * value;
 }
-function mapExponential(value: number, min: number, max: number) {
+function _mapExponential(value: number, min: number, max: number) {
   const normalized = Math.min(1, Math.max(0, value));
   return min * (max / min) ** normalized;
 }
