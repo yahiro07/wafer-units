@@ -5,28 +5,12 @@ import { persistence } from "@/root/persistence";
 import { store } from "@/root/store";
 
 const unitInterface = queryUnitInterface("wafer-v01");
-
 const engine = createEngine(unitInterface);
-engine.setParameters(store.state.parameters);
-
-let cleanupFn: (() => void) | undefined;
-
-export function setupSynchronization() {
-  engine.setup();
-  const unsubscribeStore = store.subscribe(({ parameters }) => {
-    if (parameters) {
-      engine.setParameters(parameters);
-    }
-  });
-  cleanupFn = () => {
-    engine.teardown();
-    unsubscribeStore();
-    cleanupFn = undefined;
-  };
-  return cleanupFn;
-}
 
 export function setupUnit() {
+  engine.setup();
+  engine.setParameters(store.state.parameters);
+
   unitInterface?.completeSetup({
     unitAspects: {
       unitType: "effect",
@@ -37,8 +21,16 @@ export function setupUnit() {
     hostCallbacks: {
       setBpm: engine.setBpm,
     },
-    cleanup: () => cleanupFn?.(),
     persistence,
     automationInput,
+    cleanup: () => engine.teardown(),
+  });
+}
+
+export function setupStoreSynchronization() {
+  return store.subscribe(({ parameters }) => {
+    if (parameters) {
+      engine.setParameters(parameters);
+    }
   });
 }
