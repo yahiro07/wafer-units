@@ -2,7 +2,7 @@ import { queryUnitInterface } from "wafer-host/unit-types";
 import { createSequencer } from "@/root/sequencer";
 import { store } from "@/root/store";
 
-export const unitInterface = queryUnitInterface("wafer-v01");
+const unitInterface = queryUnitInterface("wafer-v01");
 
 const sequencer = createSequencer(unitInterface);
 sequencer.setLfoSlots(store.state.slots);

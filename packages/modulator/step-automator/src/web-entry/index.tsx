@@ -1,18 +1,16 @@
 import "mofur/ax-ui/utility-classes.css";
-import { render } from "preact";
+import { h, render } from "preact";
 import "./page.css";
+import { setup } from "goober";
+import { onIframeUnitUnloading } from "wafer-host/unit-types";
 import { App } from "@/root/app";
-import { unitInterface } from "@/root/drivers";
+
+setup(h);
 
 const rootElement = document.getElementById("app")!;
 
-render(
-  <div className="w-dvw h-dvh bg-white flex-vc">
-    <App />
-  </div>,
-  rootElement,
-);
+render(<App />, rootElement);
 
-unitInterface?.onIframeUnloading(() => {
+onIframeUnitUnloading(() => {
   render(null, rootElement);
 });
