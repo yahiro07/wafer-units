@@ -304,13 +304,35 @@ class SynthProcessor extends AudioWorkletProcessor {
     ];
   }
   private synthesizerCore = createSynthesizerCore();
+  private shouldStop = false;
+
+  constructor() {
+    super();
+
+    this.port.onmessage = (event: MessageEvent) => {
+      if (event.data?.type === "stop") {
+        this.shouldStop = true;
+      }
+    };
+  }
 
   process(
     _inputs: Float32Array[][],
     outputs: Float32Array[][],
     parameters: Record<string, Float32Array>,
   ): boolean {
-    return this.synthesizerCore.process(_inputs, outputs, parameters);
+    if (this.shouldStop) {
+      const output = outputs[0];
+      output[0]?.fill(0.0);
+      output[1]?.fill(0.0);
+      return false;
+    }
+
+    return this.synthesizerCore.process(
+      _inputs,
+      outputs,
+      parameters,
+    );
   }
 }
 

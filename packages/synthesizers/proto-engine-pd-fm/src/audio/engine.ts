@@ -11,9 +11,16 @@ export const unitInterface = queryUnitInterfaceForModule(
 const midiNoteNumberToFrequency = (note: number): number =>
   440.0 * Math.pow(2.0, (note - 69) / 12.0);
 
+const MAX_WORKLET_VOICES = 8;
+const WORKLET_CLOSE_DELAY_MS = 100;
+
 interface ActiveVoice {
+  noteNumber: number;
   workletNode: AudioWorkletNode;
   gateParam: AudioParam;
+  startedAt: number;
+  cleanupTimerId?: number;
+  closeTimerId?: number;
 }
 
 type EngineApi = {
@@ -35,6 +42,7 @@ export function createSynthEngine(): EngineApi {
   let effectChain: ReturnType<typeof createEffectChain> | undefined;
 
   const activeVoices = new Map<number, ActiveVoice>();
+  const liveVoices = new Set<ActiveVoice>();
   const synthParameters: SynthParameters = { ...defaultParams };
 
   async function init(): Promise<void> {
@@ -62,7 +70,7 @@ export function createSynthEngine(): EngineApi {
 
   function updateVoiceParameter(key: keyof SynthParameters, value: number) {
     const now = audioCtx?.currentTime || 0;
-    activeVoices.forEach((voice) => {
+    liveVoices.forEach((voice) => {
       const param = voice.workletNode.parameters.get(key);
       if (param) {
         param.setTargetAtTime(value, now, 0.005);
@@ -76,6 +84,31 @@ export function createSynthEngine(): EngineApi {
     }
   }
 
+  function forgetVoice(voice: ActiveVoice) {
+    liveVoices.delete(voice);
+    if (activeVoices.get(voice.noteNumber) === voice) {
+      activeVoices.delete(voice.noteNumber);
+    }
+  }
+
+  function stopVoice(voice: ActiveVoice) {
+    if (voice.cleanupTimerId !== undefined) {
+      window.clearTimeout(voice.cleanupTimerId);
+      voice.cleanupTimerId = undefined;
+    }
+    if (voice.closeTimerId !== undefined) return;
+
+    forgetVoice(voice);
+    voice.workletNode.port.postMessage({ type: "stop" });
+    voice.closeTimerId = window.setTimeout(() => {
+      try {
+        voice.workletNode.disconnect();
+      } finally {
+        voice.workletNode.port.close();
+      }
+    }, WORKLET_CLOSE_DELAY_MS);
+  }
+
   function scheduleVoiceCleanup(voice: ActiveVoice, targetTime: number) {
     if (!audioCtx) return;
 
@@ -84,13 +117,27 @@ export function createSynthEngine(): EngineApi {
     const delaySeconds =
       Math.max(0, targetTime - audioCtx.currentTime) + releaseTailSeconds;
 
-    window.setTimeout(() => {
-      try {
-        voice.workletNode.disconnect();
-      } finally {
-        voice.workletNode.port.close();
-      }
+    voice.cleanupTimerId = window.setTimeout(() => {
+      stopVoice(voice);
     }, delaySeconds * 1000);
+  }
+
+  function findOldestLiveVoice(): ActiveVoice | undefined {
+    let oldestVoice: ActiveVoice | undefined;
+    liveVoices.forEach((voice) => {
+      if (!oldestVoice || voice.startedAt < oldestVoice.startedAt) {
+        oldestVoice = voice;
+      }
+    });
+    return oldestVoice;
+  }
+
+  function reserveVoiceSlot() {
+    while (liveVoices.size >= MAX_WORKLET_VOICES) {
+      const oldestVoice = findOldestLiveVoice();
+      if (!oldestVoice) return;
+      stopVoice(oldestVoice);
+    }
   }
 
   return {
@@ -150,9 +197,12 @@ export function createSynthEngine(): EngineApi {
 
       this.resumeIfNeeded();
 
-      if (activeVoices.has(noteNumber)) {
-        this.noteOff(noteNumber, time);
+      const existingVoice = activeVoices.get(noteNumber);
+      if (existingVoice) {
+        stopVoice(existingVoice);
       }
+
+      reserveVoiceSlot();
 
       const workletNode = new AudioWorkletNode(audioCtx, "synth-processor", {
         numberOfInputs: 0,
@@ -185,7 +235,14 @@ export function createSynthEngine(): EngineApi {
 
       workletNode.connect(mainOutputNode);
 
-      activeVoices.set(noteNumber, { workletNode, gateParam });
+      const voice: ActiveVoice = {
+        noteNumber,
+        workletNode,
+        gateParam,
+        startedAt: targetTime,
+      };
+      activeVoices.set(noteNumber, voice);
+      liveVoices.add(voice);
     },
     noteOff(noteNumber, time) {
       const voice = activeVoices.get(noteNumber);
