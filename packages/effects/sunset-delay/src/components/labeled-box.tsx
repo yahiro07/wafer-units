@@ -1,6 +1,6 @@
 import { ComponentChildren } from "preact";
+import { qu } from "@/common/css-realm";
 import { npx } from "@/utils/helpers";
-import { qu } from "@/utils/qulex-goober";
 
 export const LabeledBox = ({
   className,

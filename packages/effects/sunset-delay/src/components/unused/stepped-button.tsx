@@ -1,4 +1,4 @@
-import { qu } from "@/utils/qulex-goober";
+import { qu } from "@/common/css-realm";
 
 export function reteToStepText(rate: number) {
   const steps = ["16", "8", "4", "2", "1", "/2", "/4", "/8", "/16"];

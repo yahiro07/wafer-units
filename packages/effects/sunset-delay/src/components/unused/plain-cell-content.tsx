@@ -1,4 +1,4 @@
-import { qu } from "@/utils/qulex-goober";
+import { qu } from "@/common/css-realm";
 
 export const PlainCellContent = ({
   text,

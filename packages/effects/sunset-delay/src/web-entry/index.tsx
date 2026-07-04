@@ -1,12 +1,12 @@
 import "./page.css";
-import { setup } from "goober";
-import { h, render } from "preact";
+import { render } from "preact";
 import { onIframeUnitUnloading } from "wafer-host/unit-types";
+import { cssRealm } from "@/common/css-realm";
 import { App } from "@/root/app";
 
-setup(h);
-
 const rootElement = document.getElementById("app")!;
+
+document.adoptedStyleSheets = [cssRealm.sheet];
 
 render(<App />, rootElement);
 

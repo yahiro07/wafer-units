@@ -1,4 +1,3 @@
-import { css } from "goober";
 import { CSSProperties } from "preact";
 
 function npx(value: number) {
@@ -119,28 +118,26 @@ type QCursor = {
   it: string;
 };
 
-type QCursorInternal = QCursor & {
-  __isQCursor: true;
-  getStylesObject: () => Record<string, any>;
-};
+type CssFn = (obj: Record<string, any>) => string;
 
-function createQCursor(initialObj?: Record<string, any>): QCursor {
-  const obj: any = initialObj ?? {};
+function createQCursor(
+  cssFn: CssFn,
+  initialObj?: Record<string, any>,
+): QCursor {
+  const obj: Record<string, any> = initialObj ? { ...initialObj } : {};
   const additionalClasses: string[] = [];
-
   let cachedClassName: string | undefined;
 
-  const flush = () => {
-    let className = css(obj);
+  const toClassName = () => {
+    if (cachedClassName !== undefined) {
+      return cachedClassName;
+    }
+    let className = cssFn(obj);
     if (additionalClasses.length > 0) {
       className += " " + additionalClasses.join(" ");
     }
+    cachedClassName = className;
     return className;
-  };
-
-  const toClassName = () => {
-    cachedClassName ??= flush();
-    return cachedClassName;
   };
 
   let self: QCursor;
@@ -151,13 +148,12 @@ function createQCursor(initialObj?: Record<string, any>): QCursor {
       if (typeof style === "string") {
         additionalClasses.push(style);
       } else if (typeof style === "object") {
-        if ((style as unknown as QCursorInternal).__isQCursor) {
-          Object.assign(
-            obj,
-            (style as unknown as QCursorInternal).getStylesObject(),
-          );
+        if ((style as any).__isQCursor) {
+          Object.assign(obj, (style as any).getStylesObject());
         } else {
-          Object.assign(obj, style);
+          for (const key in style) {
+            obj[key] = (style as any)[key];
+          }
         }
       }
       cachedClassName = undefined;
@@ -166,23 +162,78 @@ function createQCursor(initialObj?: Record<string, any>): QCursor {
   );
 
   self = {
-    __isQCursor: true,
-    getStylesObject() {
-      return obj;
-    },
     get it() {
       return toClassName();
     },
     ...coreAdapted,
-  } as QCursor;
+  };
 
   return self;
 }
 
-export const qu = makeAdapter(core, (style) =>
-  createQCursor(style as Record<string, any>),
-);
+const toKebab = (str: string) =>
+  str.replace(/[A-Z]/g, (m) => `-${m.toLowerCase()}`);
 
-export function cz(...items: (false | string | undefined)[]): string {
+function makeCssText(obj: Record<string, any>): string {
+  let cssText = "";
+  for (const key in obj) {
+    cssText += `${toKebab(key)}:${obj[key]};`;
+  }
+  return cssText;
+}
+
+//crc32 function based on https://stackoverflow.com/a/18639999
+const makeCRCTable = () => {
+  let c: number;
+  const crcTable: number[] = [];
+  for (let n = 0; n < 256; n++) {
+    c = n;
+    for (let k = 0; k < 8; k++) {
+      c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1;
+    }
+    crcTable[n] = c;
+  }
+  return crcTable;
+};
+const crcTable = makeCRCTable();
+
+export const crc32 = (str: string): string => {
+  let crc = 0 ^ -1;
+  for (let i = 0; i < str.length; i++) {
+    crc = (crc >>> 8) ^ crcTable[(crc ^ str.charCodeAt(i)) & 0xff];
+  }
+  const value = (crc ^ -1) >>> 0;
+  return value.toString(16).padStart(8, "0");
+};
+
+function cz(...items: (false | string | undefined)[]): string {
   return items.filter(Boolean).join(" ");
+}
+
+export function createCssRealm() {
+  const sheet = new CSSStyleSheet();
+  const cache = new Set<string>();
+
+  const cssFn: CssFn = (obj) => {
+    const cssText = makeCssText(obj);
+    if (cssText === "") return "";
+
+    const hash = crc32(cssText);
+    const className = `cs-${hash}`;
+    if (!cache.has(className)) {
+      cache.add(className);
+      const rule = `.${className}{${cssText}}`;
+      try {
+        sheet.insertRule(rule, sheet.cssRules.length);
+      } catch (e) {
+        console.error(`Failed to insert rule: ${rule}`, e);
+      }
+    }
+    return className;
+  };
+
+  const qu = makeAdapter(core, (style) =>
+    createQCursor(cssFn, style as Record<string, any>),
+  );
+  return { qu, cz, cssRealm: { sheet } };
 }
