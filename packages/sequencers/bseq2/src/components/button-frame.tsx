@@ -1,10 +1,10 @@
-import { Children } from "@/utils/jsx-types";
+import { ComponentChildren } from "preact";
 
 export const ButtonFrame = ({
   children,
   onClick,
 }: {
-  children: Children;
+  children: ComponentChildren;
   onClick: () => void;
 }) => {
   return (

@@ -2,7 +2,6 @@ import { linearInterpolate } from "mofur/ax";
 import { npx } from "mofur/ax-ui";
 import { ComponentChildren } from "preact";
 import { cz, qu } from "@/base/css-realm";
-import { Children } from "@/base/jsx-types";
 import { LfoWave, XStep, YStep } from "@/base/types";
 import { KnobFrame } from "@/components/knob-frame";
 
@@ -195,7 +194,7 @@ export const NarrowButton = ({
   onClick,
 }: {
   text?: string;
-  children?: Children;
+  children?: ComponentChildren;
   active?: boolean;
   onClick?: () => void;
 }) => {

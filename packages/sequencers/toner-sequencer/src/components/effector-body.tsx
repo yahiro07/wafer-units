@@ -1,11 +1,11 @@
+import { ComponentChildren } from "preact";
 import { cz, qu } from "@/common/css-realm";
-import { Children } from "@/utils/jsx-types";
 
 export const EffectorBody = ({
   children,
   className,
 }: {
-  children: Children;
+  children: ComponentChildren;
   className?: string;
 }) => {
   return (
