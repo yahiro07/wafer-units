@@ -15,6 +15,7 @@ export function createEngine(unitInterface: UnitInterface | undefined) {
     disconnects() {
       unitInterface?.audioInputNode.disconnect(effect.inputNode);
       effect.outputNode.disconnect(destinationNode);
+      effect.dispose();
     },
     setParameters: effect.setParameters,
   };
