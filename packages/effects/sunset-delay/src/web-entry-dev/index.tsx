@@ -1,14 +1,19 @@
 import "./page.css";
 import { render } from "preact";
 import { onIframeUnitUnloading } from "wafer-host/unit-types";
-import { cssRealm } from "@/common/css-realm";
+import { cssRealm, qu } from "@/common/css-realm";
 import { App } from "@/root/app";
 
 const rootElement = document.getElementById("app")!;
 
 document.adoptedStyleSheets = [cssRealm.sheet];
 
-render(<App />, rootElement);
+render(
+  <div class={qu.css({ height: "100dvh" }).flexC().it}>
+    <App />
+  </div>,
+  rootElement,
+);
 
 onIframeUnitUnloading(() => {
   render(null, rootElement);
