@@ -25,6 +25,13 @@ function ensureEngine(): AudioEngine {
   return audioEngine;
 }
 
+export function cleanupAudioEngine(): void {
+  if (audioEngine) {
+    audioEngine.cleanup();
+    audioEngine = null;
+  }
+}
+
 export { appState };
 
 export const uiActions = {

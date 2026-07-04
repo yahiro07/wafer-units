@@ -22,6 +22,7 @@ export interface AudioEngine {
   noteOn(note: number, time: number, velocity: number): void;
   noteOff(note: number, time: number): void;
   updateParams(params: SynthParams): void;
+  cleanup(): void;
 }
 
 const voiceCount = 6;
@@ -123,5 +124,13 @@ export function createAudioEngine(): AudioEngine {
     }
   }
 
-  return { noteOn, noteOff, updateParams };
+  return {
+    noteOn,
+    noteOff,
+    updateParams,
+    cleanup() {
+      effects.outputNode.disconnect();
+      effects.cleanup();
+    },
+  };
 }
