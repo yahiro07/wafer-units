@@ -36,8 +36,6 @@ export function setupUnit() {
     },
     persistence: persistence,
     automationInput: automationInput,
-    unitCallbacks: {
-      cleanup: () => cleanupFn?.(),
-    },
+    cleanup: () => cleanupFn?.(),
   });
 }

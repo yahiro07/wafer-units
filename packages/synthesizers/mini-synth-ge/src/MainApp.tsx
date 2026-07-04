@@ -63,9 +63,7 @@ export const MainApp = () => {
         },
       },
       persistence,
-      unitCallbacks: {
-        cleanup: engine.cleanup,
-      },
+      cleanup: engine.cleanup,
     });
   } else {
     const closeMidiIn = setupMidiKeyboardInput({

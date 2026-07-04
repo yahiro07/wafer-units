@@ -37,11 +37,7 @@ export function setupUnit() {
     hostCallbacks: {
       setBpm: engine.setBpm,
     },
-    unitCallbacks: {
-      cleanup() {
-        cleanupFn?.();
-      },
-    },
+    cleanup: () => cleanupFn?.(),
     persistence,
     automationInput,
   });

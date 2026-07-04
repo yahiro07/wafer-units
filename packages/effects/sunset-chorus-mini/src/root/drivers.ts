@@ -32,8 +32,6 @@ export function setupUnit() {
       inputs: ["audio"],
       viewSize: [200, 120],
     },
-    unitCallbacks: {
-      cleanup: () => cleanupFn?.(),
-    },
+    cleanup: () => cleanupFn?.(),
   });
 }
