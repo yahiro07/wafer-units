@@ -113,13 +113,15 @@ function makeAdapter<T extends Record<string, (...args: any[]) => any>, R>(
   ) as { [K in keyof T]: (...args: Parameters<T[K]>) => R };
 }
 
-type QCursor = string & {
+type QCursor = {
   [K in keyof typeof core]: (...args: Parameters<(typeof core)[K]>) => QCursor;
 } & {
+  it: string;
+};
+
+type QCursorInternal = QCursor & {
   __isQCursor: true;
   getStylesObject: () => Record<string, any>;
-  toString: () => string;
-  [Symbol.toPrimitive]: () => string;
 };
 
 function createQCursor(initialObj?: Record<string, any>): QCursor {
@@ -149,8 +151,11 @@ function createQCursor(initialObj?: Record<string, any>): QCursor {
       if (typeof style === "string") {
         additionalClasses.push(style);
       } else if (typeof style === "object") {
-        if ((style as unknown as QCursor).__isQCursor) {
-          Object.assign(obj, (style as unknown as QCursor).getStylesObject());
+        if ((style as unknown as QCursorInternal).__isQCursor) {
+          Object.assign(
+            obj,
+            (style as unknown as QCursorInternal).getStylesObject(),
+          );
         } else {
           Object.assign(obj, style);
         }
@@ -165,8 +170,9 @@ function createQCursor(initialObj?: Record<string, any>): QCursor {
     getStylesObject() {
       return obj;
     },
-    toString: toClassName,
-    [Symbol.toPrimitive]: toClassName,
+    get it() {
+      return toClassName();
+    },
     ...coreAdapted,
   } as QCursor;
 
@@ -177,11 +183,6 @@ export const qu = makeAdapter(core, (style) =>
   createQCursor(style as Record<string, any>),
 );
 
-export function cx(...items: (QCursor | false | string | undefined)[]): string {
-  return items
-    .filter(Boolean)
-    .map((cursor) => cursor!.toString())
-    .join(" ");
+export function cz(...items: (false | string | undefined)[]): string {
+  return items.filter(Boolean).join(" ");
 }
-
-export const qlsx = cx;

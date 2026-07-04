@@ -8,7 +8,7 @@ import { OptionMappedKnob } from "@/components/option-mapped-knob";
 import { LedIndicator } from "@/components/unused/led-indicator";
 import { StompButton } from "@/components/unused/stomp-button";
 import { store } from "@/root/store";
-import { qlsx, qu } from "@/utils/qstyle-goober";
+import { cz, qu } from "@/utils/qulex-goober";
 
 const ControlsPart = () => {
   const { parameters } = store.useSnapshot();
@@ -21,24 +21,24 @@ const ControlsPart = () => {
   const cellW = 48;
 
   return (
-    <div class={qu.flexVC().gap(5)}>
-      <div class={qu.flexHA().gap(2)}>
+    <div class={qu.flexVC().gap(5).it}>
+      <div class={qu.flexHA().gap(2).it}>
         <LabeledBox label="ON" width={cellW}>
           <ButtonWithIndicator
             active={parameters.isOn}
             onClick={() => setParameter("isOn", !parameters.isOn)}
           />
         </LabeledBox>
-        <LabeledBox label="Time" width={cellW} className={qu.relative()}>
+        <LabeledBox label="Time" width={cellW} className={qu.relative().it}>
           <OptionMappedKnob<DelayTime>
             options={delayTimeOptions}
             value={parameters.time}
             onChange={(value) => setParameter("time", value)}
           />
           <div
-            class={qlsx(
-              qu.absolute().bottom(-14).left(0).fontSize(12).w(cellW),
-              qu.flexC(),
+            class={cz(
+              qu.absolute().bottom(-14).left(0).fontSize(12).w(cellW).it,
+              qu.flexC().it,
             )}
           >
             {parameters.time.toString()}
@@ -63,7 +63,7 @@ const ControlsPart = () => {
           />
         </LabeledBox>
       </div>
-      <div class={qu.flexHA().gap(2)}>
+      <div class={qu.flexHA().gap(2).it}>
         <LabeledBox label="LFO" width={cellW}>
           <ButtonWithIndicator
             active={parameters.lfoOn}
@@ -84,7 +84,7 @@ const ControlsPart = () => {
         </LabeledBox>
       </div>
       {false && (
-        <div class={qu.flexVC().gap(2.5).pt(4)}>
+        <div class={qu.flexVC().gap(2.5).pt(4).it}>
           <LedIndicator active={parameters.isOn} />
           <StompButton onClick={() => setParameter("isOn", !parameters.isOn)} />
         </div>
@@ -103,7 +103,7 @@ const SafetyPart = () => {
   };
   return (
     <div>
-      <label class={qu.flexH().gap(1)}>
+      <label class={qu.flexH().gap(1).it}>
         <input
           type="checkbox"
           checked={parameters.safety}
@@ -122,11 +122,11 @@ const SafetyPart = () => {
 
 export const PageRoot = () => {
   return (
-    <div class={qu.flexC()}>
-      <EffectorBody className={qlsx(qu.wh(320, 210), qu.flexVC())}>
-        <div class={qu.flexV().gap(3)}>
-          <div class={qu.flexHA().gap(2).justify("between")}>
-            <div class={qu.fontSize(18).weight("bold")}>Sunset Delay</div>
+    <div class={qu.flexC().it}>
+      <EffectorBody className={cz(qu.wh(320, 210).it, qu.flexVC().it)}>
+        <div class={qu.flexV().gap(3).it}>
+          <div class={qu.flexHA().gap(2).justify("between").it}>
+            <div class={qu.fontSize(18).weight("bold").it}>Sunset Delay</div>
             <SafetyPart />
           </div>
           <ControlsPart />

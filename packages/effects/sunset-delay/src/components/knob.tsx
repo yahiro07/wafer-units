@@ -1,6 +1,6 @@
 import { linearInterpolate } from "mofur/ax";
 import { KnobFrame } from "@/components/headless/knob-frame";
-import { qu } from "@/utils/qstyle-goober";
+import { qu } from "@/utils/qulex-goober";
 
 export const Knob = ({
   value,
@@ -31,14 +31,16 @@ export const Knob = ({
       dragDisabled={disabled}
     >
       <div
-        class={qu.wh(34, 34).rounded("100%").relative().bg("#777").bd("#444")}
+        class={
+          qu.wh(34, 34).rounded("100%").relative().bg("#777").bd("#444").it
+        }
         style={{ opacity: disabled ? 0.5 : 1 }}
       >
         <div
-          class={qu.full().flexVA()}
+          class={qu.full().flexVA().it}
           style={{ transform: `rotate(${tickAngle}deg)` }}
         >
-          <div class={qu.wh(2, 10).bg("#fff")} />
+          <div class={qu.wh(2, 10).bg("#fff").it} />
         </div>
       </div>
     </KnobFrame>
