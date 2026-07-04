@@ -1,7 +1,3 @@
-export function mapUnaryToArray(value: number, array: number[]) {
-  return array[Math.min(Math.floor(value * array.length), array.length - 1)];
-}
-
 export function linearInterpolate(
   value: number,
   s0: number,
