@@ -1,4 +1,4 @@
-import { qlsx, qu } from "@/utils/qstyle-goober";
+import { cz, qu } from "@/common/css-realm";
 
 export const ButtonWithIndicator = ({
   active,
@@ -9,16 +9,16 @@ export const ButtonWithIndicator = ({
 }) => {
   return (
     <div
-      class={qlsx(
-        qu.wh(36, 36).bg("#999").bd("#555").rounded(8).p(0.75).cp(),
-        qu.flexHA(),
+      class={cz(
+        qu.wh(36, 36).bg("#999").bd("#555").rounded(8).p(0.75).cp().it,
+        qu.flexHA().it,
       )}
       onClick={onClick}
     >
       <div
-        class={qlsx(
-          qu.wh(10, 10).rounded("full").bd("#444"),
-          qu.bg(active ? "#0f0" : "#666"),
+        class={cz(
+          qu.wh(10, 10).rounded("full").bd("#444").it,
+          qu.bg(active ? "#0f0" : "#666").it,
         )}
       />
     </div>

@@ -1,4 +1,4 @@
-import { qu } from "@/utils/qstyle-goober";
+import { qu } from "@/common/css-realm";
 
 export const PlainCellContent = ({
   text,
@@ -7,5 +7,5 @@ export const PlainCellContent = ({
   text: string;
   width: number;
 }) => {
-  return <div class={qu.flexC().w(width)}>{text}</div>;
+  return <div class={qu.flexC().w(width).it}>{text}</div>;
 };

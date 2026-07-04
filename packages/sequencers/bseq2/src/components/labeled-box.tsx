@@ -1,6 +1,6 @@
 import { npx } from "mofur/ax-ui";
+import { qu } from "@/common/css-realm";
 import { Children } from "@/utils/jsx-types";
-import { qu } from "@/utils/qstyle-goober";
 
 export const LabeledBox = ({
   className,
@@ -17,16 +17,16 @@ export const LabeledBox = ({
 }) => {
   return (
     <div
-      class={qu.flexV().addClass(className)}
+      class={qu.flexV().addClass(className).it}
       style={width ? { width: npx(width) } : undefined}
     >
       <div
-        class={qu.fontSize(11).weight("bold").h(12)}
+        class={qu.fontSize(11).weight("bold").h(12).it}
         style={{ textAlign: labelAlign }}
       >
         {label}
       </div>
-      <div class={qu.flexC().h(40)}>{children}</div>
+      <div class={qu.flexC().h(40).it}>{children}</div>
     </div>
   );
 };

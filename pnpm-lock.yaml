@@ -69,15 +69,12 @@ importers:
       '@preact-icons/fa':
         specifier: npm:@jsr/preact-icons__fa@^1.0.13
         version: '@jsr/preact-icons__fa@1.0.13'
-      clsx:
-        specifier: ^2.1.1
-        version: 2.1.1
-      goober:
-        specifier: ^2.1.19
-        version: 2.1.19(csstype@3.2.3)
       preact:
         specifier: ^10.29.2
         version: 10.29.2
+      qulex:
+        specifier: link:../../../../qulex
+        version: link:../../../../qulex
       snap-store:
         specifier: ^0.1.12
         version: 0.1.12(preact@10.29.2)(react@19.2.6)
@@ -94,15 +91,15 @@ importers:
       '@preact-icons/fa':
         specifier: npm:@jsr/preact-icons__fa@^1.0.13
         version: '@jsr/preact-icons__fa@1.0.13'
-      clsx:
-        specifier: ^2.1.1
-        version: 2.1.1
       preact:
         specifier: ^10.29.2
         version: 10.29.2
       snap-store:
         specifier: ^0.1.12
         version: 0.1.12(preact@10.29.2)(react@19.2.6)
+      tailwindcss:
+        specifier: ^4.3.0
+        version: 4.3.0
     devDependencies:
       '@preact/preset-vite':
         specifier: ^2.10.5
@@ -116,15 +113,15 @@ importers:
       '@preact-icons/fa':
         specifier: npm:@jsr/preact-icons__fa@^1.0.13
         version: '@jsr/preact-icons__fa@1.0.13'
-      clsx:
-        specifier: ^2.1.1
-        version: 2.1.1
       preact:
         specifier: ^10.29.2
         version: 10.29.2
       snap-store:
         specifier: ^0.1.12
         version: 0.1.12(preact@10.29.2)(react@19.2.6)
+      tailwindcss:
+        specifier: ^4.3.0
+        version: 4.3.0
     devDependencies:
       '@preact/preset-vite':
         specifier: ^2.10.5
@@ -138,15 +135,15 @@ importers:
       '@preact-icons/fa':
         specifier: npm:@jsr/preact-icons__fa@^1.0.13
         version: '@jsr/preact-icons__fa@1.0.13'
-      clsx:
-        specifier: ^2.1.1
-        version: 2.1.1
       preact:
         specifier: ^10.29.2
         version: 10.29.2
       snap-store:
         specifier: ^0.1.12
         version: 0.1.12(preact@10.29.2)(react@19.2.6)
+      tailwindcss:
+        specifier: ^4.3.0
+        version: 4.3.0
     devDependencies:
       '@preact/preset-vite':
         specifier: ^2.10.5
@@ -160,15 +157,15 @@ importers:
       '@preact-icons/fa':
         specifier: npm:@jsr/preact-icons__fa@^1.0.13
         version: '@jsr/preact-icons__fa@1.0.13'
-      clsx:
-        specifier: ^2.1.1
-        version: 2.1.1
       preact:
         specifier: ^10.29.2
         version: 10.29.2
       snap-store:
         specifier: ^0.1.12
         version: 0.1.12(preact@10.29.2)(react@19.2.6)
+      tailwindcss:
+        specifier: ^4.3.0
+        version: 4.3.0
     devDependencies:
       '@preact/preset-vite':
         specifier: ^2.10.5
@@ -198,21 +195,12 @@ importers:
 
   packages/modulator/lfo:
     dependencies:
-      clsx:
-        specifier: ^2.1.1
-        version: 2.1.1
-      goober:
-        specifier: ^2.1.19
-        version: 2.1.19(csstype@3.2.3)
       mofur:
         specifier: link:../../../../beam/mofur
         version: link:../../../../beam/mofur
       preact:
         specifier: ^10.29.2
         version: 10.29.2
-      snap-store:
-        specifier: link:../../../../snap-store
-        version: link:../../../../snap-store
     devDependencies:
       '@preact/preset-vite':
         specifier: ^2.10.5
@@ -220,21 +208,18 @@ importers:
 
   packages/modulator/multi-lfo:
     dependencies:
-      clsx:
-        specifier: ^2.1.1
-        version: 2.1.1
-      goober:
-        specifier: ^2.1.19
-        version: 2.1.19(csstype@3.2.3)
       mofur:
         specifier: link:../../../../beam/mofur
         version: link:../../../../beam/mofur
       preact:
         specifier: ^10.29.2
         version: 10.29.2
+      qulex:
+        specifier: link:../../../../qulex
+        version: link:../../../../qulex
       snap-store:
-        specifier: link:../../../../snap-store
-        version: link:../../../../snap-store
+        specifier: ^0.1.12
+        version: 0.1.12(preact@10.29.2)(react@19.2.6)
     devDependencies:
       '@preact/preset-vite':
         specifier: ^2.10.5
@@ -245,21 +230,18 @@ importers:
       '@preact-icons/fa':
         specifier: npm:@jsr/preact-icons__fa@^1.0.13
         version: '@jsr/preact-icons__fa@1.0.13'
-      clsx:
-        specifier: ^2.1.1
-        version: 2.1.1
-      goober:
-        specifier: ^2.1.19
-        version: 2.1.19(csstype@3.2.3)
       mofur:
         specifier: link:../../../../beam/mofur
         version: link:../../../../beam/mofur
       preact:
         specifier: ^10.29.2
         version: 10.29.2
+      qulex:
+        specifier: link:../../../../qulex
+        version: link:../../../../qulex
       snap-store:
-        specifier: link:../../../../snap-store
-        version: link:../../../../snap-store
+        specifier: ^0.1.12
+        version: 0.1.12(preact@10.29.2)(react@19.2.6)
     devDependencies:
       '@preact/preset-vite':
         specifier: ^2.10.5
@@ -282,15 +264,15 @@ importers:
       '@preact-icons/fa':
         specifier: npm:@jsr/preact-icons__fa@^1.0.13
         version: '@jsr/preact-icons__fa@1.0.13'
-      goober:
-        specifier: ^2.1.19
-        version: 2.1.19(csstype@3.2.3)
       mofur:
         specifier: link:../../../../beam/mofur
         version: link:../../../../beam/mofur
       preact:
         specifier: ^10.29.2
         version: 10.29.2
+      qulex:
+        specifier: link:../../../../qulex
+        version: link:../../../../qulex
       snap-store:
         specifier: ^0.1.12
         version: 0.1.12(preact@10.29.2)(react@19.2.6)
@@ -357,9 +339,6 @@ importers:
       '@emotion/styled':
         specifier: ^11.14.1
         version: 11.14.1(@emotion/react@11.14.0(@types/react@19.2.17)(react@19.2.6))(@types/react@19.2.17)(react@19.2.6)
-      clsx:
-        specifier: ^2.1.1
-        version: 2.1.1
       mofur:
         specifier: link:../../../../beam/mofur
         version: link:../../../../beam/mofur
@@ -491,15 +470,15 @@ importers:
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
-      goober:
-        specifier: ^2.1.19
-        version: 2.1.19(csstype@3.2.3)
       mofur:
         specifier: link:../../../../beam/mofur
         version: link:../../../../beam/mofur
       preact:
         specifier: ^10.29.2
         version: 10.29.2
+      qulex:
+        specifier: link:../../../../qulex
+        version: link:../../../../qulex
       snap-store:
         specifier: ^0.1.12
         version: 0.1.12(preact@10.29.2)(react@19.2.6)
@@ -1264,11 +1243,6 @@ packages:
   glob-parent@5.1.2:
     resolution: {integrity: sha512-AOIgSQCepiJYwP3ARnGx+5VnTu2HBYdzbGP45eLw1vr3zB3vZLeyed1sC9hnbcOc9/SrMyM5RPQrkGz4aS9Zow==}
     engines: {node: '>= 6'}
-
-  goober@2.1.19:
-    resolution: {integrity: sha512-U7veizMqxyKlM58+Z5j2ngJBH/r9siDmxpvNxSw0PylF6WQvrASJEZrxh1hidRBJc2jqoBVSyOban5u8m+6Rxg==}
-    peerDependencies:
-      csstype: ^3.0.10
 
   graceful-fs@4.2.11:
     resolution: {integrity: sha512-RbJ5/jmFcNNCcDV5o9eTnBLJ/HszWV0P73bc+Ff4nS/rJj+YaS6IGyiOL0VoBYX+l1Wrl3k63h/KrH+nhJ0XvQ==}
@@ -2417,10 +2391,6 @@ snapshots:
   glob-parent@5.1.2:
     dependencies:
       is-glob: 4.0.3
-
-  goober@2.1.19(csstype@3.2.3):
-    dependencies:
-      csstype: 3.2.3
 
   graceful-fs@4.2.11: {}
 

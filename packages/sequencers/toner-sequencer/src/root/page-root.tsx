@@ -1,12 +1,12 @@
 import { isBitSet, seqNumbers, toggleBit } from "mofur/ax";
+import { cz, qu } from "@/common/css-realm";
 import { EffectorBody } from "@/components/effector-body";
 import { Knob } from "@/components/knob";
 import { LabeledBox } from "@/components/labeled-box";
 import { store } from "@/root/store";
-import { qlsx, qu } from "@/utils/qstyle-goober";
 
 const TitleLabel = ({ title }: { title: string }) => {
-  return <div class={qu.fontSize(18).weight("bold")}>{title}</div>;
+  return <div class={qu.fontSize(18).weight("bold").it}>{title}</div>;
 };
 
 const MatrixPart = () => {
@@ -19,11 +19,11 @@ const MatrixPart = () => {
   };
 
   return (
-    <div class={qu.flexV().gap(1)}>
+    <div class={qu.flexV().gap(1).it}>
       {seqNumbers(10).map((i) => {
         const yi = 9 - i;
         return (
-          <div class={qu.flexHA().gap(1)}>
+          <div class={qu.flexHA().gap(1).it}>
             {seqNumbers(16).map((xi) => {
               const isStepActive = isBitSet(stepBits[yi], xi);
               const isHalfActive = playPos === xi;
@@ -35,7 +35,7 @@ const MatrixPart = () => {
               }
               return (
                 <div
-                  class={qu.wh(20, 20).cp()}
+                  class={qu.wh(20, 20).cp().it}
                   style={{ background: color }}
                   onPointerDown={() => toggleStep(yi, xi)}
                 />
@@ -51,9 +51,9 @@ const MatrixPart = () => {
 const ControlsPart = () => {
   const { octave, duty } = store.useSnapshot();
   return (
-    <div class={qu.wFull().flexHA().gap(2).justify("between")}>
+    <div class={qu.wFull().flexHA().gap(2).justify("between").it}>
       <TitleLabel title="Toner Sequencer" />
-      <div class={qu.flexHA().gap(6)}>
+      <div class={qu.flexHA().gap(6).it}>
         <LabeledBox label="Octave">
           <Knob
             value={octave}
@@ -73,9 +73,9 @@ const ControlsPart = () => {
 
 export const PageRoot = () => {
   return (
-    <div class={qu.flexC()}>
-      <EffectorBody className={qlsx(qu.wh(480, 330), qu.flexVC())}>
-        <div class={qu.flexV().gap(1)}>
+    <div class={qu.flexC().it}>
+      <EffectorBody className={cz(qu.wh(480, 330).it, qu.flexVC().it)}>
+        <div class={qu.flexV().gap(1).it}>
           <ControlsPart />
           <MatrixPart />
         </div>

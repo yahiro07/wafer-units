@@ -1,10 +1,10 @@
 import { linearInterpolate } from "mofur/ax";
 import { npx } from "mofur/ax-ui";
 import { ComponentChildren } from "preact";
+import { cz, qu } from "@/base/css-realm";
 import { Children } from "@/base/jsx-types";
 import { LfoWave, XStep, YStep } from "@/base/types";
 import { KnobFrame } from "@/components/knob-frame";
-import { cx, qu } from "@/utils/qstyle-goober";
 
 export const Knob = ({
   value,
@@ -35,14 +35,14 @@ export const Knob = ({
       dragDisabled={disabled}
     >
       <div
-        class={qu.wh(28, 28).rounded(14).relative().bd("#444")}
+        class={qu.wh(28, 28).rounded(14).relative().bd("#444").it}
         style={{ opacity: disabled ? 0.5 : 1 }}
       >
         <div
-          class={qu.full().flexVA()}
+          class={qu.full().flexVA().it}
           style={{ transform: `rotate(${tickAngle}deg)` }}
         >
-          <div class={qu.wh(2, 10).bg("#fff")} />
+          <div class={qu.wh(2, 10).bg("#fff").it} />
         </div>
       </div>
     </KnobFrame>
@@ -58,7 +58,7 @@ export const IndicatorButton = ({
 }) => {
   return (
     <div
-      class={qu.flexC().wh(20, 20)}
+      class={qu.flexC().wh(20, 20).it}
       style={{
         background: active ? "#59e" : "#ddd",
         cursor: "pointer",
@@ -75,7 +75,7 @@ export const PlainCellContent = ({
   text: string;
   width: number;
 }) => {
-  return <div class={qu.flexC().w(width)}>{text}</div>;
+  return <div class={qu.flexC().w(width).it}>{text}</div>;
 };
 
 export const WaveButton = ({
@@ -93,7 +93,7 @@ export const WaveButton = ({
     [LfoWave.SampleHold]: "◉",
   }[wave];
   return (
-    <div class={qu.flexC().wh(40, 40).bg("#ddd")} onClick={onClick}>
+    <div class={qu.flexC().wh(40, 40).bg("#ddd").it} onClick={onClick}>
       {text}
     </div>
   );
@@ -113,7 +113,7 @@ export const XStepButton = ({
     [XStep.div4]: "/4",
   }[xStep];
   return (
-    <div class={qu.flexC().wh(40, 40).bg("#ddd")} onClick={onClick}>
+    <div class={qu.flexC().wh(40, 40).bg("#ddd").it} onClick={onClick}>
       {text}
     </div>
   );
@@ -133,7 +133,7 @@ export const YStepButton = ({
     [YStep.step8]: "8",
   }[yStep];
   return (
-    <div class={qu.flexC().wh(40, 40).bg("#ddd")} onClick={onClick}>
+    <div class={qu.flexC().wh(40, 40).bg("#ddd").it} onClick={onClick}>
       {text}
     </div>
   );
@@ -155,7 +155,7 @@ export const SteppedButton = ({
   onClick?: () => void;
 }) => {
   return (
-    <div class={qu.flexC().wh(40, 40).bg("#ddd")} onClick={onClick}>
+    <div class={qu.flexC().wh(40, 40).bg("#ddd").it} onClick={onClick}>
       {active ? reteToStepText(rate) : "--"}
     </div>
   );
@@ -173,14 +173,17 @@ export const LabeledBox = ({
   width?: number;
 }) => {
   return (
-    <div class={qu.flexV()} style={width ? { width: npx(width) } : undefined}>
+    <div
+      class={qu.flexV().it}
+      style={width ? { width: npx(width) } : undefined}
+    >
       <div
-        class={qu.fontSize(10).weight("bold").h(15)}
+        class={qu.fontSize(10).weight("bold").h(15).it}
         style={{ textAlign: labelAlign }}
       >
         {label}
       </div>
-      <div class={qu.flexC().h(40)}>{children}</div>
+      <div class={qu.flexC().h(40).it}>{children}</div>
     </div>
   );
 };
@@ -198,13 +201,13 @@ export const NarrowButton = ({
 }) => {
   return (
     <div
-      class={cx(
-        qu.flexC().wh(40, 20).bg("#ddd").weight("bold").cp(),
-        active && qu.bg("#48c").color("#fff"),
+      class={cz(
+        qu.flexC().wh(40, 20).bg("#ddd").weight("bold").cp().it,
+        active && qu.bg("#48c").color("#fff").it,
       )}
       onClick={onClick}
     >
-      {text && <div class={qu.fontSize(9)}>{text}</div>}
+      {text && <div class={qu.fontSize(9).it}>{text}</div>}
       {children}
     </div>
   );

@@ -1,4 +1,5 @@
 import { iife } from "mofur/ax";
+import { qu } from "@/base/css-realm";
 import { LfoSlot } from "@/base/types";
 import {
   IndicatorButton,
@@ -11,7 +12,6 @@ import {
 import { ButtonFrame } from "@/components/button-frame";
 import { UnitWaveView } from "@/components/unit-wave-view";
 import { store } from "@/root/store";
-import { qu } from "@/utils/qstyle-goober";
 
 export const LfoLane = ({ slot }: { slot: LfoSlot }) => {
   const patchSlot = (attrs: Partial<LfoSlot>) => {
@@ -36,7 +36,7 @@ export const LfoLane = ({ slot }: { slot: LfoSlot }) => {
     }
   };
   return (
-    <div class={qu.flexHA().gap(3)}>
+    <div class={qu.flexHA().gap(3).it}>
       <LabeledBox label={`slot ${slot.id + 1}`} width={30}>
         <IndicatorButton
           active={slot.enabled}
@@ -45,7 +45,7 @@ export const LfoLane = ({ slot }: { slot: LfoSlot }) => {
       </LabeledBox>
       <LabeledBox label="Target Parameter" labelAlign="left">
         <div
-          class={qu.flexC().wh(100, 40).bg("#ddd").fontSize(12)}
+          class={qu.flexC().wh(100, 40).bg("#ddd").fontSize(12).it}
           onClick={handleClickParamId}
         >
           {slot.targetParameterId ?? "--"}
@@ -67,7 +67,7 @@ export const LfoLane = ({ slot }: { slot: LfoSlot }) => {
         </ButtonFrame>
       </LabeledBox>
       <LabeledBox>
-        <div class={qu.flexV().gap(1)}>
+        <div class={qu.flexV().gap(1).it}>
           <NarrowButton
             text="INV"
             active={slot.inverted}

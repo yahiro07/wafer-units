@@ -1,7 +1,7 @@
+import { cz, qu } from "@/base/css-realm";
 import { Icons } from "@/base/icons";
 import { Children } from "@/base/jsx-types";
 import { SelectorOption } from "@/base/selector-option";
-import { qlsx, qu } from "@/utils/qstyle-goober";
 
 export const ShifterFrame = ({
   children,
@@ -45,19 +45,19 @@ export const ShiftSelector = <T extends string | number>({
   return (
     <ShifterFrame onShift={handleShift}>
       <div
-        class={qlsx(
-          qu.flexHA().justify("between").minW(60).h(30).fontSize(14).cp(),
-          qu.bg("#ddd"),
+        class={cz(
+          qu.flexHA().justify("between").minW(60).h(30).fontSize(14).cp().it,
+          qu.bg("#ddd").it,
         )}
       >
         <Icons.CaretLeft
           size={13}
-          class={qlsx(qu.ml(-0.75), !canShiftLeft && qu.invisible())}
+          class={cz(qu.ml(-0.75).it, !canShiftLeft && qu.invisible().it)}
         />
         <div>{currentOption?.label}</div>
         <Icons.CaretRight
           size={13}
-          class={qlsx(qu.mr(-0.75), !canShiftRight && qu.invisible())}
+          class={cz(qu.mr(-0.75).it, !canShiftRight && qu.invisible().it)}
         />
       </div>
     </ShifterFrame>

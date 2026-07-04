@@ -1,4 +1,4 @@
-import { qlsx, qu } from "@/utils/qstyle-goober";
+import { cz, qu } from "@/common/css-realm";
 
 export const IndicatorButton = ({
   active,
@@ -9,7 +9,7 @@ export const IndicatorButton = ({
 }) => {
   return (
     <div
-      class={qlsx(qu.flexC().wh(22, 16).rounded(1).bd("#555").cp())}
+      class={cz(qu.flexC().wh(22, 16).rounded(1).bd("#555").cp().it)}
       style={{
         background: active ? "#0f0" : "#999",
         cursor: "pointer",

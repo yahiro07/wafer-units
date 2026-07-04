@@ -4,13 +4,13 @@ import {
   gaugeReferenceIndexMap,
   patternRangeOptions,
 } from "@/base/constants";
+import { qu } from "@/base/css-realm";
 import { AutomationLaneItem } from "@/base/types";
 import { IndicatorButton, LabeledBox } from "@/components";
 import { StepIndicatorLed } from "@/components/led";
 import { ParameterGauge } from "@/components/parameter-gauge";
 import { ShiftSelector } from "@/components/shift-selector";
 import { store } from "@/root/store";
-import { qu } from "@/utils/qstyle-goober";
 
 export const AutomationLane = ({
   lane,
@@ -46,9 +46,9 @@ export const AutomationLane = ({
     });
   };
   return (
-    <div class={qu.flexV().gap(4)}>
-      <div class={qu.flexHA().justify("between")}>
-        <div class={qu.flexHA().gap(2)}>
+    <div class={qu.flexV().gap(4).it}>
+      <div class={qu.flexHA().justify("between").it}>
+        <div class={qu.flexHA().gap(2).it}>
           <LabeledBox width={30}>
             <IndicatorButton
               active={lane.enabled}
@@ -57,14 +57,14 @@ export const AutomationLane = ({
           </LabeledBox>
           <LabeledBox label="target parameter" labelAlign="left">
             <div
-              class={qu.flexC().wh(100, 30).bg("#ddd").fontSize(12)}
+              class={qu.flexC().wh(100, 30).bg("#ddd").fontSize(12).it}
               onClick={handleClickParamId}
             >
               {lane.targetParameterId ?? "--"}
             </div>
           </LabeledBox>
         </div>
-        <div class={qu.flexHA().gap(3)}>
+        <div class={qu.flexHA().gap(3).it}>
           <LabeledBox label="clock-div">
             <ShiftSelector
               options={clockDivisionOptions}
@@ -81,12 +81,12 @@ export const AutomationLane = ({
           </LabeledBox>
         </div>
       </div>
-      <div class={qu.flexH().gap(2)}>
+      <div class={qu.flexH().gap(2).it}>
         {lane.stepValues.map((_, index) => {
           const destIndex = gaugeReferenceIndexMap[lane.patternRange][index];
           const value = lane.stepValues[destIndex];
           return (
-            <div class={qu.flexVC().gap(3)}>
+            <div class={qu.flexVC().gap(3).it}>
               <StepIndicatorLed active={playbackStepIndex === index} />
               <ParameterGauge
                 key={index}

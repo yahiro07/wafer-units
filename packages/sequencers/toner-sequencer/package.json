@@ -11,10 +11,10 @@
   "dependencies": {
     "@preact-icons/fa": "npm:@jsr/preact-icons__fa@^1.0.13",
     "clsx": "^2.1.1",
-    "goober": "^2.1.19",
     "mofur": "link:../../../../beam/mofur",
     "preact": "^10.29.2",
-    "snap-store": "^0.1.12"
+    "snap-store": "^0.1.12",
+    "qulex": "link:../../../../qulex"
   },
   "devDependencies": {
     "@preact/preset-vite": "^2.10.5"

@@ -1,4 +1,5 @@
 import { seqNumbers } from "mofur/ax";
+import { cz, qu } from "@/common/css-realm";
 import { PatterRangeOptions, stepReferenceIndexMap } from "@/common/defs";
 import { getStep, setStep } from "@/common/step-bits-helper";
 import { EffectorBody } from "@/components/effector-body";
@@ -7,10 +8,9 @@ import { LabeledBox } from "@/components/labeled-box";
 import { LedIndicator } from "@/components/led-indicator";
 import { OptionMappedKnob } from "@/components/unused/option-mapped-knob";
 import { store } from "@/root/store";
-import { qlsx, qu } from "@/utils/qstyle-goober";
 
 const TitleLabel = ({ title }: { title: string }) => {
-  return <div class={qu.fontSize(18).weight("bold")}>{title}</div>;
+  return <div class={qu.fontSize(18).weight("bold").it}>{title}</div>;
 };
 
 const MatrixPart = () => {
@@ -31,7 +31,7 @@ const MatrixPart = () => {
   };
 
   return (
-    <div class={qu.flexH().gap(1)}>
+    <div class={qu.flexH().gap(1).it}>
       {seqNumbers(16).map((xIndex) => {
         const si = stepReferenceIndexMap[patternRange][xIndex];
         const stepValue = getStep(stepBits, si);
@@ -45,18 +45,18 @@ const MatrixPart = () => {
           color = "#666";
         }
         return (
-          <div class={qu.flexVC().gap(1.5)}>
+          <div class={qu.flexVC().gap(1.5).it}>
             <LedIndicator active={playPos === xIndex} />
             <div
-              class={qu.wh(24, 30).cp().relative()}
+              class={qu.wh(24, 30).cp().relative().it}
               style={{ background: color }}
               onPointerDown={() => toggleStep(si)}
             >
               {isTie && (
                 <div
-                  class={qlsx(
-                    qu.absolute().top(0).left(-6).wh(6, 30),
-                    qu.bg("#cf0"),
+                  class={cz(
+                    qu.absolute().top(0).left(-6).wh(6, 30).it,
+                    qu.bg("#cf0").it,
                   )}
                 />
               )}
@@ -71,9 +71,9 @@ const MatrixPart = () => {
 const ControlsPart = () => {
   const { octave, duty, patternRange } = store.useSnapshot();
   return (
-    <div class={qu.wFull().flexHA().gap(2).justify("between")}>
+    <div class={qu.full().flexHA().gap(2).justify("between").it}>
       <TitleLabel title="bseq2" />
-      <div class={qu.flexHA().gap(6)}>
+      <div class={qu.flexHA().gap(6).it}>
         <LabeledBox label="Octave">
           <Knob
             value={octave}
@@ -100,10 +100,10 @@ const ControlsPart = () => {
 
 export const PageRoot = () => {
   return (
-    <div class={qu.css({ width: "100dvw", height: "100dvh" }).flexC()}>
-      <div class={qu.flexC()}>
-        <EffectorBody className={qlsx(qu.wh(480, 200), qu.flexVC())}>
-          <div class={qu.flexV().gap(5)}>
+    <div class={cz(qu.css({ width: "100dvw", height: "100dvh" }).flexC().it)}>
+      <div class={qu.flexC().it}>
+        <EffectorBody className={cz(qu.wh(480, 200).it, qu.flexVC().it)}>
+          <div class={qu.flexV().gap(5).it}>
             <ControlsPart />
             <MatrixPart />
           </div>

@@ -1,6 +1,6 @@
 import { ComponentChildren } from "preact";
+import { qu } from "@/common/css-realm";
 import { npx } from "@/utils/helpers";
-import { qu } from "@/utils/qstyle-goober";
 
 export const LabeledBox = ({
   className,
@@ -19,16 +19,16 @@ export const LabeledBox = ({
 }) => {
   return (
     <div
-      class={qu.flexV().addClass(className)}
+      class={qu.flexV().addClass(className).it}
       style={width ? { width: npx(width) } : undefined}
     >
       <div
-        class={qu.fontSize(11).weight("bold").h(13)}
+        class={qu.fontSize(11).weight("bold").h(13).it}
         style={{ textAlign: labelAlign }}
       >
         {label}
       </div>
-      <div class={qu.flexC().h(contentHeight)}>{children}</div>
+      <div class={qu.flexC().h(contentHeight).it}>{children}</div>
     </div>
   );
 };

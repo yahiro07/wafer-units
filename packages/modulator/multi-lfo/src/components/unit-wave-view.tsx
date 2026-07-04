@@ -1,7 +1,7 @@
 import { seqNumbers } from "mofur/ax";
 import { useMemo } from "preact/hooks";
+import { qu } from "@/base/css-realm";
 import { LfoWave } from "@/base/types";
-import { qu } from "@/utils/qstyle-goober";
 
 const waveFns = {
   [LfoWave.Sine]: (pp) => -Math.cos(2 * Math.PI * pp) * 0.5 + 0.5,
@@ -62,7 +62,7 @@ export const UnitWaveView = ({
     [wave, inverted, shifted],
   );
   return (
-    <div class={qu.wh(40, 40).bg("#ddd")}>
+    <div class={qu.wh(40, 40).bg("#ddd").it}>
       <svg viewBox="0 0 16 16">
         <path d={svgPathData} stroke="#48c" fill="#48c4" />
       </svg>

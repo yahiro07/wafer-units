@@ -10,9 +10,9 @@
   },
   "dependencies": {
     "@preact-icons/fa": "npm:@jsr/preact-icons__fa@^1.0.13",
-    "clsx": "^2.1.1",
     "preact": "^10.29.2",
-    "snap-store": "^0.1.12"
+    "snap-store": "^0.1.12",
+    "tailwindcss": "^4.3.0"
   },
   "devDependencies": {
     "@preact/preset-vite": "^2.10.5",

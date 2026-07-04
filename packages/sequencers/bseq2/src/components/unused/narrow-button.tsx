@@ -1,5 +1,5 @@
+import { cz, qu } from "@/common/css-realm";
 import { Children } from "@/utils/jsx-types";
-import { cx, qu } from "@/utils/qstyle-goober";
 
 export const NarrowButton = ({
   text,
@@ -14,7 +14,7 @@ export const NarrowButton = ({
 }) => {
   return (
     <div
-      class={cx(
+      class={cz(
         qu.flexC().wh(40, 20).bg("#ddd").weight("bold").cp(),
         active && qu.bg("#48c").color("#fff"),
       )}
