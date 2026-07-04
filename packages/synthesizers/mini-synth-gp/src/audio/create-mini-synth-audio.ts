@@ -335,5 +335,11 @@ export function createMiniSynthAudio() {
     noteOff,
     allNotesOff,
     resumeIfNeeded,
+    cleanup() {
+      chorusModule.cleanup();
+      reverbModule.cleanup();
+      outputNode.disconnect();
+      voiceBusNode.disconnect();
+    },
   };
 }

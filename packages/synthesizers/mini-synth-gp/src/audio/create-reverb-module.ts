@@ -53,5 +53,11 @@ export function createReverbModule(audioContext: AudioContext) {
     inputNode,
     outputNode,
     updateNodeParameters,
+    cleanup() {
+      convolverNode.disconnect();
+      dryGainNode.disconnect();
+      wetGainNode.disconnect();
+      inputNode.disconnect();
+    },
   };
 }

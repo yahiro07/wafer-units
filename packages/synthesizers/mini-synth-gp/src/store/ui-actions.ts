@@ -35,6 +35,7 @@ export const uiActions = {
           },
         },
         persistence,
+        cleanup: synthAudio.cleanup,
       });
     } else {
       return setupMidiKeyboardInput({
