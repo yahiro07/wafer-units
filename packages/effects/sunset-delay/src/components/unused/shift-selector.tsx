@@ -1,6 +1,6 @@
 import { ComponentChildren } from "preact";
+import { cz, qu } from "@/common/css-realm";
 import { Icons } from "@/common/icons";
-import { cz, qu } from "@/utils/qulex-goober";
 import { SelectorOption } from "@/utils/selector-option";
 
 export const ShifterFrame = ({

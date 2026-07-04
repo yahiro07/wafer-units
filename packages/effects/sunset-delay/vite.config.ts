@@ -1,27 +1,26 @@
 import preact from "@preact/preset-vite";
-import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "vite";
 
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   base: "./",
-  plugins: [preact(), tailwindcss()],
+  plugins: [preact()],
   resolve: {
     tsconfigPaths: true,
     dedupe: ["preact"],
-    alias: [
-      {
-        find: /^npm:preact@\^?[\d.]+$/,
-        replacement: "preact",
-      },
-      {
-        find: /^npm:preact@\^?[\d.]+\/jsx-runtime$/,
-        replacement: "preact/jsx-runtime",
-      },
-    ],
   },
   optimizeDeps: {
-    exclude: ["wafer-host", "mofur", "snap-store"],
+    exclude: ["wafer-host", "snap-store"],
   },
-  build: { outDir: "../../../dist/sunset-delay", emptyOutDir: true },
+  build: {
+    ...(mode === "production" && {
+      lib: {
+        entry: "./src/wc-entry/index.tsx",
+        formats: ["es"],
+        fileName: "index",
+      },
+    }),
+    outDir: "../../../dist/sunset-delay",
+    emptyOutDir: true,
+  },
   server: { port: 3000 },
-});
+}));

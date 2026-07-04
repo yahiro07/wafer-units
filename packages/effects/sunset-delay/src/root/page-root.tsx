@@ -1,4 +1,5 @@
 import { delayTimeOptions } from "@/common/constants";
+import { cz, qu } from "@/common/css-realm";
 import { DelayTime, EffectParameters } from "@/common/types";
 import { ButtonWithIndicator } from "@/components/button-with-indicator";
 import { EffectorBody } from "@/components/effector-body";
@@ -8,7 +9,6 @@ import { OptionMappedKnob } from "@/components/option-mapped-knob";
 import { LedIndicator } from "@/components/unused/led-indicator";
 import { StompButton } from "@/components/unused/stomp-button";
 import { store } from "@/root/store";
-import { cz, qu } from "@/utils/qulex-goober";
 
 const ControlsPart = () => {
   const { parameters } = store.useSnapshot();
@@ -23,7 +23,7 @@ const ControlsPart = () => {
   return (
     <div class={qu.flexVC().gap(5).it}>
       <div class={qu.flexHA().gap(2).it}>
-        <LabeledBox label="ON" width={cellW}>
+        <LabeledBox label="On" width={cellW}>
           <ButtonWithIndicator
             active={parameters.isOn}
             onClick={() => setParameter("isOn", !parameters.isOn)}

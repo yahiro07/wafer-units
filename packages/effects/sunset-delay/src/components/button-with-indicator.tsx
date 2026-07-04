@@ -1,4 +1,4 @@
-import { cz, qu } from "@/utils/qulex-goober";
+import { cz, qu } from "@/common/css-realm";
 
 export const ButtonWithIndicator = ({
   active,

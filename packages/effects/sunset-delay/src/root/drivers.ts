@@ -1,10 +1,10 @@
-import { queryUnitInterface } from "wafer-host/unit-types";
+import { queryUnitInterfaceForModule } from "wafer-host/unit-types";
 import { automationInput } from "@/root/automation";
 import { createEngine } from "@/root/engine";
 import { persistence } from "@/root/persistence";
 import { store } from "@/root/store";
 
-const unitInterface = queryUnitInterface("wafer-v01");
+const unitInterface = queryUnitInterfaceForModule("wafer-v01", import.meta.url);
 const engine = createEngine(unitInterface);
 
 export function setupSynchronization() {

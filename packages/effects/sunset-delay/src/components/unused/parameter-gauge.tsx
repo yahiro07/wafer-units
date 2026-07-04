@@ -1,5 +1,5 @@
+import { cz, qu } from "@/common/css-realm";
 import { KnobFrame } from "@/components/headless/knob-frame";
-import { cz, qu } from "@/utils/qulex-goober";
 
 export const ParameterGauge = ({
   value,
