@@ -35,5 +35,15 @@ export function createChorus(context: AudioContext) {
       wetGain.gain.value = amount;
       dryGain.gain.value = 1 - amount * 0.5;
     },
+    cleanup() {
+      lfo.stop();
+      lfo.disconnect();
+      lfoGain.disconnect();
+      delay.disconnect();
+      wetGain.disconnect();
+      dryGain.disconnect();
+      inputNode.disconnect();
+      outputNode.disconnect();
+    },
   };
 }
