@@ -18,6 +18,7 @@ export function createEngine(unitInterface: UnitInterface | undefined) {
     teardown() {
       unitInterface?.audioInputNode.disconnect(effect.inputNode);
       effect.outputNode.disconnect(destinationNode);
+      effect.cleanup();
     },
     setParameters: effect.setParameters,
   };
