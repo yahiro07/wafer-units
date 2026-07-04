@@ -11,12 +11,14 @@ export type EffectChain = {
   inputNode: AudioNode;
   outputNode: AudioNode;
   updateParameters(params: Partial<EffectParameters>): void;
+  cleanup(): void;
 };
 
 type SubEffect = {
   inputNode: AudioNode;
   outputNode: AudioNode;
   setLevel(level: number): void;
+  cleanup(): void;
 };
 
 function _createChorus(audioContext: AudioContext): SubEffect {
@@ -77,6 +79,14 @@ function _createChorus(audioContext: AudioContext): SubEffect {
       setTarget(chorusWetR.gain, level * 0.8);
       setTarget(chorusDry.gain, 1.0 - level * 0.2);
     },
+    cleanup() {
+      chorusLFO.stop();
+      chorusLFO.disconnect();
+      lfoGainL.disconnect();
+      lfoGainR.disconnect();
+      delayL.disconnect();
+      delayR.disconnect();
+    },
   };
 }
 
@@ -113,6 +123,14 @@ function createDelay(audioContext: AudioContext): SubEffect {
     setLevel(level: number): void {
       setTarget(delayWet.gain, level * 0.5);
       setTarget(delayFeedback.gain, level * 0.65);
+    },
+    cleanup() {
+      delayNode.disconnect();
+      delayFeedback.disconnect();
+      delayWet.disconnect();
+      delayDry.disconnect();
+      inputNode.disconnect();
+      outputNode.disconnect();
     },
   };
 }
@@ -154,6 +172,16 @@ function _createReverb(audioContext: AudioContext): SubEffect {
     setLevel(level: number): void {
       setTarget(reverbWet.gain, level * 0.45);
     },
+    cleanup() {
+      reverbWet.disconnect();
+      reverbDry.disconnect();
+      inputNode.disconnect();
+      outputNode.disconnect();
+      revDelays.forEach((item) => {
+        item.delay.disconnect();
+        item.feedback.disconnect();
+      });
+    },
   };
 }
 
@@ -186,6 +214,13 @@ export function createEffectChain(audioContext: AudioContext): EffectChain {
       if (params.reverb !== undefined) {
         reverb.setLevel(params.reverb);
       }
+    },
+    cleanup() {
+      chorus.cleanup();
+      delay.cleanup();
+      reverb.cleanup();
+      inputNode.disconnect();
+      outputNode.disconnect();
     },
   };
 }

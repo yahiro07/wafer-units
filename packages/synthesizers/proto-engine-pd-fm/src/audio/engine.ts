@@ -34,6 +34,7 @@ type EngineApi = {
   noteOn(noteNumber: number, time?: number): void;
   noteOff(noteNumber: number, time?: number): void;
   getNumActiveNotes(): number;
+  cleanup(): void;
 };
 
 export function createSynthEngine(): EngineApi {
@@ -259,6 +260,10 @@ export function createSynthEngine(): EngineApi {
     },
     getNumActiveNotes() {
       return activeVoices.size;
+    },
+    cleanup() {
+      effectChain?.cleanup();
+      mainOutputNode?.disconnect();
     },
   };
 }
