@@ -5,26 +5,10 @@ import { createEngine } from "./engine";
 const unitInterface = queryUnitInterface("wafer-v01");
 
 const engine = createEngine(unitInterface);
-engine.setParameters(store.state.parameters);
-
-let cleanupFn: (() => void) | undefined;
-
-export function setupSynchronization() {
-  engine.connects();
-  const unsubscribeStore = store.subscribe(({ parameters }) => {
-    if (parameters) {
-      engine.setParameters(parameters);
-    }
-  });
-  cleanupFn = () => {
-    engine.disconnects();
-    unsubscribeStore();
-    cleanupFn = undefined;
-  };
-  return cleanupFn;
-}
 
 export function setupUnit() {
+  engine.setParameters(store.state.parameters);
+  engine.connects();
   unitInterface?.completeSetup({
     unitAspects: {
       unitType: "effect",
@@ -32,6 +16,14 @@ export function setupUnit() {
       inputs: ["audio"],
       viewSize: [200, 120],
     },
-    cleanup: () => cleanupFn?.(),
+    cleanup: engine.disconnects,
+  });
+}
+
+export function setupSynchronization() {
+  return store.subscribe(({ parameters }) => {
+    if (parameters) {
+      engine.setParameters(parameters);
+    }
   });
 }
