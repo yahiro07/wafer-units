@@ -11,15 +11,15 @@ export function createEngine(unitInterface: UnitInterface | undefined) {
   const destinationNode =
     unitInterface?.audioOutputNode ?? audioContext.destination;
   return {
-    setup() {
+    setParameters: effect.setParameters,
+    connects() {
       unitInterface?.audioInputNode.connect(effect.inputNode);
       effect.outputNode.connect(destinationNode);
     },
-    teardown() {
+    disconnects() {
       unitInterface?.audioInputNode.disconnect(effect.inputNode);
       effect.outputNode.disconnect(destinationNode);
       effect.cleanup();
     },
-    setParameters: effect.setParameters,
   };
 }
