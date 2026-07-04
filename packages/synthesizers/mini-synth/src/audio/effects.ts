@@ -70,6 +70,19 @@ function createChorus(ctx: AudioContext) {
       lfoGainL.gain.value = amount * 0.005;
       lfoGainR.gain.value = amount * 0.005;
     },
+    cleanup() {
+      lfoL.stop();
+      lfoR.stop();
+      lfoL.disconnect();
+      lfoR.disconnect();
+      lfoGainL.disconnect();
+      lfoGainR.disconnect();
+      delayL.disconnect();
+      delayR.disconnect();
+      dryGain.disconnect();
+      wetGain.disconnect();
+      inputNode.disconnect();
+    },
   };
 }
 
@@ -97,6 +110,12 @@ function createReverb(ctx: AudioContext) {
     updateWet(amount: number): void {
       wetGain.gain.value = amount * 0.8;
     },
+    cleanup() {
+      convolver.disconnect();
+      dryGain.disconnect();
+      wetGain.disconnect();
+      inputNode.disconnect();
+    },
   };
 }
 
@@ -116,13 +135,20 @@ function createSoftClipper(ctx: AudioContext) {
   waveShaper.oversample = "4x";
   inputNode.connect(waveShaper);
 
-  return { inputNode, outputNode: waveShaper as AudioNode };
+  return {
+    inputNode,
+    outputNode: waveShaper as AudioNode,
+    cleanup() {
+      waveShaper.disconnect();
+    },
+  };
 }
 
 export interface EffectsChain {
   inputNode: GainNode;
   outputNode: GainNode;
   updateParams(params: SynthParams): void;
+  cleanup(): void;
 }
 
 export function createEffectsChain(ctx: AudioContext): EffectsChain {
@@ -147,6 +173,15 @@ export function createEffectsChain(ctx: AudioContext): EffectsChain {
       chorus.updateWet(params.chorus);
       reverb.updateWet(params.reverb);
       masterGain.gain.setValueAtTime(params.masterVolume, ctx.currentTime);
+    },
+    cleanup() {
+      chorus.outputNode.disconnect();
+      reverb.outputNode.disconnect();
+      softClipper.outputNode.disconnect();
+      chorus.cleanup();
+      reverb.cleanup();
+      softClipper.cleanup();
+      inputNode.disconnect();
     },
   };
 }

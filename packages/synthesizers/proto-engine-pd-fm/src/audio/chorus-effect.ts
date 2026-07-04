@@ -38,5 +38,15 @@ export function createChorusEffect(audioContext: AudioContext) {
     inputNode,
     outputNode,
     setLevel,
+    cleanup() {
+      lfo.stop();
+      lfo.disconnect();
+      lfoGain.disconnect();
+      delayNode.disconnect();
+      wetNode.disconnect();
+      dryNode.disconnect();
+      inputNode.disconnect();
+      outputNode.disconnect();
+    },
   };
 }

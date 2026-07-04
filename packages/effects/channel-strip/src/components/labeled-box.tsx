@@ -1,5 +1,5 @@
-import { npx } from "mofur/ax-ui";
-import { Children } from "@/utils/jsx-types";
+import { ComponentChildren } from "preact";
+import { npx } from "@/utils/helpers";
 import { qu } from "@/utils/qstyle-goober";
 
 export const LabeledBox = ({
@@ -13,7 +13,7 @@ export const LabeledBox = ({
   className?: string;
   label?: string;
   labelAlign?: "left" | "center" | "right";
-  children?: Children;
+  children?: ComponentChildren;
   width?: number;
   contentHeight?: number;
 }) => {

@@ -5,35 +5,11 @@ import { persistence } from "@/root/persistence";
 import { store } from "@/root/store";
 
 const unitInterface = queryUnitInterface("wafer-v01");
-
 const engine = createEngine(unitInterface);
-engine.setState(store.state);
-
-export function setupSynchronization() {
-  engine.setup();
-  const unsubscribeStore = store.subscribe(
-    ({ octave, duty, patternRange, stepBits }) => {
-      if (octave !== undefined) {
-        engine.setState({ octave });
-      }
-      if (duty !== undefined) {
-        engine.setState({ duty });
-      }
-      if (patternRange !== undefined) {
-        engine.setState({ patternRange });
-      }
-      if (stepBits !== undefined) {
-        engine.setState({ stepBits });
-      }
-    },
-  );
-  return () => {
-    engine.teardown();
-    unsubscribeStore();
-  };
-}
 
 export function setupUnit() {
+  engine.setState(store.state);
+
   unitInterface?.completeSetup({
     unitAspects: {
       unitType: "sequencer",
@@ -61,5 +37,22 @@ export function setupUnit() {
     },
     persistence: persistence,
     automationInput: automationInput,
+  });
+}
+
+export function setupSynchronization() {
+  return store.subscribe(({ octave, duty, patternRange, stepBits }) => {
+    if (octave !== undefined) {
+      engine.setState({ octave });
+    }
+    if (duty !== undefined) {
+      engine.setState({ duty });
+    }
+    if (patternRange !== undefined) {
+      engine.setState({ patternRange });
+    }
+    if (stepBits !== undefined) {
+      engine.setState({ stepBits });
+    }
   });
 }

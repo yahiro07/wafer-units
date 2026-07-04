@@ -1,5 +1,5 @@
 import { ComponentChildren } from "preact";
-import { startDragSession } from "@/common/drag-session";
+import { startDragSession } from "@/utils/drag-session";
 
 export function KnobFrame(props: {
   value: number;

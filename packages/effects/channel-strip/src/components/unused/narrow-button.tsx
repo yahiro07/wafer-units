@@ -1,4 +1,4 @@
-import { Children } from "@/utils/jsx-types";
+import { ComponentChildren } from "preact";
 import { cx, qu } from "@/utils/qstyle-goober";
 
 export const NarrowButton = ({
@@ -8,7 +8,7 @@ export const NarrowButton = ({
   onClick,
 }: {
   text?: string;
-  children?: Children;
+  children?: ComponentChildren;
   active?: boolean;
   onClick?: () => void;
 }) => {

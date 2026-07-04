@@ -63,6 +63,7 @@ export const MainApp = () => {
         },
       },
       persistence,
+      cleanup: engine.cleanup,
     });
   } else {
     const closeMidiIn = setupMidiKeyboardInput({
@@ -78,15 +79,17 @@ export const MainApp = () => {
   }
 
   onMount(() => {
-    // Simple click to start audio
-    const onClick = async () => {
-      await engine.resumeIfNeed();
-      console.log("resumed");
-    };
-    containerRef.addEventListener("mousedown", onClick, {
-      capture: true,
-      once: true,
-    });
+    if (!unitInterface) {
+      // Simple click to start audio
+      const onClick = async () => {
+        await engine.resumeIfNeed();
+        console.log("resumed");
+      };
+      containerRef.addEventListener("mousedown", onClick, {
+        capture: true,
+        once: true,
+      });
+    }
   });
 
   return (

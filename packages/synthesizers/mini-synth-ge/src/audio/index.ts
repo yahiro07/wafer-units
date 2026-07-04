@@ -67,6 +67,12 @@ function createAudioEngine() {
         voice.updateNodeParameters(params);
       }
     },
+    cleanup() {
+      chorus.cleanup();
+      reverb.cleanup();
+      masterGain.disconnect();
+      voicesGain.disconnect();
+    },
   };
 }
 

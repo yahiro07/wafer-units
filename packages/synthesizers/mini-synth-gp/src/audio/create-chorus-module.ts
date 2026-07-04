@@ -56,5 +56,18 @@ export function createChorusModule(audioContext: AudioContext) {
     inputNode,
     outputNode,
     updateNodeParameters,
+    cleanup() {
+      lfoA.stop();
+      lfoB.stop();
+      lfoA.disconnect();
+      lfoB.disconnect();
+      lfoGainA.disconnect();
+      lfoGainB.disconnect();
+      delayNodeA.disconnect();
+      delayNodeB.disconnect();
+      dryGainNode.disconnect();
+      wetGainNode.disconnect();
+      inputNode.disconnect();
+    },
   };
 }

@@ -10,8 +10,7 @@ export function createSequencer(unitInterface: UnitInterface | undefined) {
 
   const clockHandlers: ClockHandlers = {
     start() {},
-    // processScheduling(timeFrom, barFrom, barTo, bpm) {},
-    processStep(stepIndexInput, time, unitDuration) {
+    processStep(stepIndexInput) {
       for (const lane of state.lanes) {
         if (lane.enabled && lane.targetParameterId) {
           const stepIndex = (stepIndexInput / lane.clockDivision) >>> 0;

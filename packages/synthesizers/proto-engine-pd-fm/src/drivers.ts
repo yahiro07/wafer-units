@@ -18,6 +18,7 @@ export function setupDrivers() {
         noteOff: uiActions.noteOff,
       },
       persistence,
+      cleanup: synthEngine.cleanup,
     });
   } else {
     const closeMidiIn = setupMidiKeyboardInput({

@@ -1,11 +1,11 @@
-import { Children } from "@/utils/jsx-types";
+import { ComponentChildren } from "preact";
 import { qlsx, qu } from "@/utils/qstyle-goober";
 
 export const EffectorBody = ({
   children,
   className,
 }: {
-  children: Children;
+  children: ComponentChildren;
   className?: string;
 }) => {
   return (

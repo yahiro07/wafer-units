@@ -155,5 +155,21 @@ export function createChannelStripEffect(
       state.parameters = parameters;
       applyParameters();
     },
+    cleanup() {
+      inputNode.disconnect();
+      outputNode.disconnect();
+      effectBranch.disconnect();
+      bypassBranch.disconnect();
+      lowCutNode.disconnect();
+      eqLowNode.disconnect();
+      eqMidNode.disconnect();
+      eqHighNode.disconnect();
+      compressorNode.disconnect();
+      splitter.disconnect();
+      delayNode.disconnect();
+      merger.disconnect();
+      pannerNode.disconnect();
+      volumeGainNode.disconnect();
+    },
   };
 }

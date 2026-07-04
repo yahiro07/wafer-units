@@ -1,5 +1,5 @@
-import { linearInterpolate } from "mofur/ax";
 import { KnobFrame } from "@/components/headless/knob-frame";
+import { linearInterpolate } from "@/utils/helpers";
 import { qu } from "@/utils/qulex-goober";
 
 export const Knob = ({

@@ -1,5 +1,5 @@
+import { ComponentChildren } from "preact";
 import { Icons } from "@/common/icons";
-import { Children } from "@/utils/jsx-types";
 import { qlsx, qu } from "@/utils/qstyle-goober";
 import { SelectorOption } from "@/utils/selector-option";
 
@@ -7,7 +7,7 @@ export const ShifterFrame = ({
   children,
   onShift,
 }: {
-  children: Children;
+  children: ComponentChildren;
   onShift(dir: -1 | 1): void;
 }) => {
   const handleClick = (e: MouseEvent) => {

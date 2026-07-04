@@ -2,7 +2,7 @@ import { onCleanup, onMount } from "solid-js";
 import { unitInterface } from "@/audio/audio-engine";
 import { MainSection } from "@/sections/main-section";
 import { TopSection } from "@/sections/top-section";
-import { uiActions } from "@/store/app-store";
+import { cleanupAudioEngine, uiActions } from "@/store/app-store";
 import { persistence } from "@/store/persistence";
 import { setupMidiKeyboardInput } from "@/utils/midi-keyboard-input";
 
@@ -25,6 +25,7 @@ export function App() {
           },
         },
         persistence,
+        cleanup: cleanupAudioEngine,
       });
     } else {
       const cleanup = setupMidiKeyboardInput({

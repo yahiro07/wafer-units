@@ -51,6 +51,11 @@ export function createReverberator(audioContext: AudioContext) {
     inputNode,
     outputNode,
     setupNodes() {},
-    cleanupNodes() {},
+    cleanupNodes() {
+      convolver.disconnect();
+      dryGain.disconnect();
+      wetGain.disconnect();
+      inputNode.disconnect();
+    },
   };
 }
