@@ -20,6 +20,7 @@ export function setupDrivers() {
       },
       automationInput: createAutomationInput(),
       persistence,
+      cleanup: synthEngine.cleanup,
     });
   } else {
     const closeMidiIn = setupMidiKeyboardInput({

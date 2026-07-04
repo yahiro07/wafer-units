@@ -275,5 +275,8 @@ export function createSynthesizerEngine() {
     noteOff(noteNumber: number, time?: number) {
       internal.removeNote(noteNumber, time);
     },
+    cleanup() {
+      effects.cleanupNodes();
+    },
   };
 }

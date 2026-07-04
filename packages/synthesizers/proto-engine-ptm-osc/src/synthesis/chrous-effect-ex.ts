@@ -85,7 +85,11 @@ export function createChorusEffectEx(audioContext: AudioContext) {
     cleanupNodes() {
       for (const lfo of lfos) {
         lfo.stop();
+        lfo.disconnect();
       }
+      wetMasterNode.disconnect();
+      dryNode.disconnect();
+      inputNode.disconnect();
     },
   };
 }
