@@ -146,5 +146,21 @@ export function createPingPongDelayEffect(audioContext: AudioContext) {
       state.bpm = bpm;
       applyParameters();
     },
+    cleanup() {
+      lfoNode.stop();
+      lfoNode.disconnect();
+      lfoGainL.disconnect();
+      lfoGainR.disconnect();
+      delayL.disconnect();
+      delayR.disconnect();
+      feedbackGain.disconnect();
+      filterNode.disconnect();
+      dryGain.disconnect();
+      wetGain.disconnect();
+      inputNode.disconnect();
+      outputNode.disconnect();
+      splitter.disconnect();
+      merger.disconnect();
+    },
   };
 }

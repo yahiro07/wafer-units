@@ -9,6 +9,8 @@ const unitInterface = queryUnitInterface("wafer-v01");
 const engine = createEngine(unitInterface);
 engine.setParameters(store.state.parameters);
 
+let cleanupFn: (() => void) | undefined;
+
 export function setupSynchronization() {
   engine.setup();
   const unsubscribeStore = store.subscribe(({ parameters }) => {
@@ -16,10 +18,12 @@ export function setupSynchronization() {
       engine.setParameters(parameters);
     }
   });
-  return () => {
+  cleanupFn = () => {
     engine.teardown();
     unsubscribeStore();
+    cleanupFn = undefined;
   };
+  return cleanupFn;
 }
 
 export function setupUnit() {
@@ -32,6 +36,11 @@ export function setupUnit() {
     },
     hostCallbacks: {
       setBpm: engine.setBpm,
+    },
+    unitCallbacks: {
+      cleanup() {
+        cleanupFn?.();
+      },
     },
     persistence,
     automationInput,
