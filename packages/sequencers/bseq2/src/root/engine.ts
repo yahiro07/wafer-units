@@ -54,18 +54,13 @@ export function createEngine(unitInterface: UnitInterface | undefined) {
   };
 
   return {
-    setup() {},
-    teardown() {},
     setState: (attrs: Partial<SequencerEditState>) => {
       Object.assign(state.editState, attrs);
     },
     clockHandlers,
     inputNoteOn(noteNumber: number) {
       state.rootNoteNumber = noteNumber;
-      // unitInterface?.noteOutputPort.noteOn(noteNumber);
     },
-    inputNoteOff(noteNumber: number) {
-      // unitInterface?.noteOutputPort.noteOff(noteNumber);
-    },
+    inputNoteOff(_noteNumber: number) {},
   };
 }
