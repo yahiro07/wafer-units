@@ -82,8 +82,8 @@ importers:
         specifier: ^10.29.2
         version: 10.29.2
       snap-store:
-        specifier: link:../../../../snap-store
-        version: link:../../../../snap-store
+        specifier: ^0.1.12
+        version: 0.1.12(preact@10.29.2)(react@19.2.6)
     devDependencies:
       '@preact/preset-vite':
         specifier: ^2.10.5
