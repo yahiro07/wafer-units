@@ -4,10 +4,7 @@ import { defineConfig } from "vite";
 export default defineConfig(({ mode }) => ({
   base: "./",
   plugins: [preact()],
-  resolve: {
-    tsconfigPaths: true,
-    dedupe: ["preact"],
-  },
+  resolve: { tsconfigPaths: true, dedupe: ["preact"] },
   optimizeDeps: {
     exclude: ["wafer-host", "snap-store"],
   },

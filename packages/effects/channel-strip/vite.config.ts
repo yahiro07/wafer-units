@@ -1,10 +1,9 @@
 import preact from "@preact/preset-vite";
-import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "vite";
 
 export default defineConfig({
   base: "./",
-  plugins: [preact(), tailwindcss()],
+  plugins: [preact()],
   resolve: {
     tsconfigPaths: true,
     dedupe: ["preact"],
