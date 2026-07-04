@@ -1,13 +1,13 @@
+import { ClockHandlers, UnitInterface } from "wafer-host/unit-types";
+import { LfoSlot, LfoWave } from "@/base/types";
 import {
   clampValue,
   highClip,
   lowClip,
   mapUnaryTo,
+  mapUnaryToArray,
   seqNumbers,
-} from "mofur/ax";
-import { ClockHandlers, UnitInterface } from "wafer-host/unit-types";
-import { LfoSlot, LfoWave } from "@/base/types";
-import { mapUnaryToArray } from "@/utils/helpers";
+} from "@/utils/helpers";
 
 const randomSequence = seqNumbers(100).map(() => Math.random());
 

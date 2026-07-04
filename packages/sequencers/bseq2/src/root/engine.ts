@@ -1,4 +1,3 @@
-import { clampValue, mapUnaryTo } from "mofur/ax";
 import { ClockHandlers, UnitInterface } from "wafer-host/unit-types";
 import {
   defaultSequencerEditState,
@@ -7,6 +6,7 @@ import {
   stepReferenceIndexMap,
 } from "@/common/defs";
 import { getStep } from "@/common/step-bits-helper";
+import { clampValue, mapUnaryTo } from "@/utils/helpers";
 
 function resolveDuration(
   stepBits: number,

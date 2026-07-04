@@ -1,6 +1,6 @@
-import { seqNumbers } from "mofur/ax";
 import { Persistence } from "wafer-host/unit-types";
 import { store } from "@/root/store";
+import { seqNumbers } from "@/utils/helpers";
 
 export const persistence: Persistence = {
   emitStateBytes(): Uint8Array {

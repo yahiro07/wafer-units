@@ -1,13 +1,13 @@
-import { clampValue } from "mofur/ax";
-import { startDragSession } from "mofur/ax-ui";
-import { Children } from "@/utils/jsx-types";
+import { ComponentChildren } from "preact";
+import { startDragSession } from "@/utils/drag-session";
+import { clampValue } from "@/utils/helpers";
 
 export function KnobFrame(props: {
   value: number;
   min: number;
   max: number;
   step: number;
-  children: Children;
+  children: ComponentChildren;
   onChange: (value: number) => void;
   dragRange?: number;
   onClick?: () => void;

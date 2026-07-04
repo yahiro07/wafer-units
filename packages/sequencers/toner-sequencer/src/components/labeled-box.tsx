@@ -1,6 +1,6 @@
-import { npx } from "mofur/ax-ui";
 import { ComponentChildren } from "preact";
 import { cz, qu } from "@/common/css-realm";
+import { npx } from "@/utils/helpers";
 
 export const LabeledBox = ({
   className,

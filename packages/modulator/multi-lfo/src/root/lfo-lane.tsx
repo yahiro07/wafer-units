@@ -1,4 +1,3 @@
-import { iife } from "mofur/ax";
 import { qu } from "@/base/css-realm";
 import { LfoSlot } from "@/base/types";
 import {
@@ -12,6 +11,7 @@ import {
 import { ButtonFrame } from "@/components/button-frame";
 import { UnitWaveView } from "@/components/unit-wave-view";
 import { store } from "@/root/store";
+import { iife } from "@/utils/helpers";
 
 export const LfoLane = ({ slot }: { slot: LfoSlot }) => {
   const patchSlot = (attrs: Partial<LfoSlot>) => {

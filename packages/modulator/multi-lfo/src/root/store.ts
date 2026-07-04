@@ -1,6 +1,6 @@
-import { seqNumbers } from "mofur/ax";
 import { createStore } from "snap-store";
 import { LfoSlot, LfoWave, XStep, YStep } from "@/base/types";
+import { seqNumbers } from "@/utils/helpers";
 
 export const store = createStore<{
   count: number;

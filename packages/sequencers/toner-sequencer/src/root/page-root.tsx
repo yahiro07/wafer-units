@@ -1,9 +1,9 @@
-import { isBitSet, seqNumbers, toggleBit } from "mofur/ax";
 import { cz, qu } from "@/common/css-realm";
 import { EffectorBody } from "@/components/effector-body";
 import { Knob } from "@/components/knob";
 import { LabeledBox } from "@/components/labeled-box";
 import { store } from "@/root/store";
+import { isBitSet, seqNumbers, toggleBit } from "@/utils/helpers";
 
 const TitleLabel = ({ title }: { title: string }) => {
   return <div class={qu.fontSize(18).weight("bold").it}>{title}</div>;

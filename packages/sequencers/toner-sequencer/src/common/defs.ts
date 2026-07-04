@@ -1,4 +1,4 @@
-import { seqNumbers } from "mofur/ax";
+import { seqNumbers } from "@/utils/helpers";
 
 export type SequencerEditState = {
   octave: number;

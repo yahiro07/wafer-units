@@ -7,7 +7,7 @@ export default defineConfig({
   plugins: [preact(), tailwindcss()],
   resolve: { tsconfigPaths: true, dedupe: ["preact"] },
   optimizeDeps: {
-    exclude: ["wafer-host", "mofur", "snap-store"],
+    exclude: ["wafer-host", "snap-store"],
   },
   build: { outDir: "../../../dist/multi-lfo", emptyOutDir: true },
   server: { port: 3000 },

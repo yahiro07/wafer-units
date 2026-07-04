@@ -1,6 +1,6 @@
-import { linearInterpolate } from "mofur/ax";
 import { qu } from "@/common/css-realm";
 import { KnobFrame } from "@/components/knob-frame";
+import { linearInterpolate } from "@/utils/helpers";
 
 export const Knob = ({
   value,

@@ -1,4 +1,3 @@
-import "mofur/ax-ui/utility-classes.css";
 import { render } from "preact";
 import "./page.css";
 import { onIframeUnitUnloading } from "wafer-host/unit-types";

@@ -20,7 +20,7 @@ export default defineConfig({
     ],
   },
   optimizeDeps: {
-    exclude: ["wafer-host", "mofur", "snap-store"],
+    exclude: ["wafer-host", "snap-store"],
   },
   build: { outDir: "../../../dist/toner-sequencer", emptyOutDir: true },
   server: { port: 3000 },

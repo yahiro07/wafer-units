@@ -1,6 +1,6 @@
-import { mapUnaryFrom, mapUnaryTo } from "mofur/ax";
 import { AutomationPort } from "wafer-host/unit-types";
 import { store } from "@/root/store";
+import { mapUnaryFrom, mapUnaryTo } from "@/utils/helpers";
 
 type AutomationParameterId = "octave" | "duty";
 

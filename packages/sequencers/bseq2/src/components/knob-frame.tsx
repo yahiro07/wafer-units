@@ -1,6 +1,6 @@
-import { clampValue } from "mofur/ax";
-import { startDragSession } from "mofur/ax-ui";
 import { ComponentChildren } from "preact";
+import { startDragSession } from "@/utils/drag-session";
+import { clampValue } from "@/utils/helpers";
 
 export function KnobFrame(props: {
   value: number;

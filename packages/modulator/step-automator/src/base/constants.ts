@@ -1,6 +1,6 @@
-import { seqNumbers } from "mofur/ax";
 import { createSelectorOptions } from "@/base/selector-option";
 import { ClockDivision, PatternRange } from "@/base/types";
+import { seqNumbers } from "@/utils/helpers";
 
 export const clockDivisionOptions = createSelectorOptions<ClockDivision>([
   [4, "div4"],

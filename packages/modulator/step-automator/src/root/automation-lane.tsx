@@ -1,4 +1,3 @@
-import { iife } from "mofur/ax";
 import {
   clockDivisionOptions,
   gaugeReferenceIndexMap,
@@ -11,6 +10,7 @@ import { StepIndicatorLed } from "@/components/led";
 import { ParameterGauge } from "@/components/parameter-gauge";
 import { ShiftSelector } from "@/components/shift-selector";
 import { store } from "@/root/store";
+import { iife } from "@/utils/helpers";
 
 export const AutomationLane = ({
   lane,

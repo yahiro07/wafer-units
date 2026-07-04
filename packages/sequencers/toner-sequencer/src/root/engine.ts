@@ -1,6 +1,6 @@
-import { clampValue, isBitSet, linearInterpolate } from "mofur/ax";
 import { ClockHandlers, UnitInterface } from "wafer-host/unit-types";
 import { defaultSequencerEditState, SequencerEditState } from "@/common/defs";
+import { clampValue, isBitSet, linearInterpolate } from "@/utils/helpers";
 
 function mapDutyToDuration(paramDuty: number): number {
   if (paramDuty < 0.5) {

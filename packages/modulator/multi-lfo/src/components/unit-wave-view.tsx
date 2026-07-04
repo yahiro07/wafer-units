@@ -1,7 +1,7 @@
-import { seqNumbers } from "mofur/ax";
 import { useMemo } from "preact/hooks";
 import { qu } from "@/base/css-realm";
 import { LfoWave } from "@/base/types";
+import { seqNumbers } from "@/utils/helpers";
 
 const waveFns = {
   [LfoWave.Sine]: (pp) => -Math.cos(2 * Math.PI * pp) * 0.5 + 0.5,

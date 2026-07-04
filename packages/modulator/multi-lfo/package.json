@@ -9,7 +9,6 @@
     "typecheck": "tsc"
   },
   "dependencies": {
-    "mofur": "link:../../../../beam/mofur",
     "preact": "^10.29.2",
     "snap-store": "^0.1.12",
     "qulex": "link:../../../../qulex"

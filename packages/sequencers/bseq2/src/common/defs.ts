@@ -1,4 +1,4 @@
-import { seqNumbers } from "mofur/ax";
+import { seqNumbers } from "@/utils/helpers";
 import { createPlainSelectorOptions } from "@/utils/selector-option";
 
 export type PatternRange = 4 | 8 | 16;

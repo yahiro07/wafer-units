@@ -1,4 +1,3 @@
-import { seqNumbers } from "mofur/ax";
 import { cz, qu } from "@/common/css-realm";
 import { PatterRangeOptions, stepReferenceIndexMap } from "@/common/defs";
 import { getStep, setStep } from "@/common/step-bits-helper";
@@ -8,6 +7,7 @@ import { LabeledBox } from "@/components/labeled-box";
 import { LedIndicator } from "@/components/led-indicator";
 import { OptionMappedKnob } from "@/components/unused/option-mapped-knob";
 import { store } from "@/root/store";
+import { seqNumbers } from "@/utils/helpers";
 
 const TitleLabel = ({ title }: { title: string }) => {
   return <div class={qu.fontSize(18).weight("bold").it}>{title}</div>;
