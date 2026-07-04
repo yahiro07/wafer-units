@@ -1,13 +1,6 @@
 import { Persistence } from "wafer-host/unit-types";
 import { store } from "@/root/store";
-
-function unaryToByte(value: number): number {
-  return (value * 255) >>> 0;
-}
-
-function unaryFromByte(byte: number): number {
-  return byte / 255;
-}
+import { unaryFromByte, unaryToByte } from "@/utils/helpers";
 
 export const persistence: Persistence = {
   emitStateBytes(): Uint8Array {

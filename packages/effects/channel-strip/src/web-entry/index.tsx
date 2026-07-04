@@ -1,10 +1,10 @@
-import "mofur/ax-ui/utility-classes.css";
 import { render } from "preact";
 import "./page.css";
 import { App } from "@/root/app";
+import { qu } from "@/utils/qstyle-goober";
 
 render(
-  <div className="w-dvw h-dvh flex-vc">
+  <div class={qu.css({ width: "100dvw", height: "100dvh" }).flexVC()}>
     <App />
   </div>,
   document.getElementById("app")!,

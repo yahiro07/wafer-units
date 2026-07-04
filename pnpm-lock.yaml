@@ -75,9 +75,6 @@ importers:
       goober:
         specifier: ^2.1.19
         version: 2.1.19(csstype@3.2.3)
-      mofur:
-        specifier: link:../../../../beam/mofur
-        version: link:../../../../beam/mofur
       preact:
         specifier: ^10.29.2
         version: 10.29.2
@@ -191,9 +188,6 @@ importers:
       goober:
         specifier: ^2.1.19
         version: 2.1.19(csstype@3.2.3)
-      mofur:
-        specifier: link:../../../../beam/mofur
-        version: link:../../../../beam/mofur
       preact:
         specifier: ^10.29.2
         version: 10.29.2
