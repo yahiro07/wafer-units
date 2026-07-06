@@ -48,7 +48,7 @@ export function createDrumSequencer(
         if (piece.active && isBitSet(piece.patternBits, step)) {
           const uri = pieceSampleUrls[piece.id][piece.variationIndex];
           if (uri) {
-            tonePlayer.playTone(uri, time, piece.pitch, piece.volume);
+            tonePlayer.playTone(uri, time, piece.pitch, piece.volume, piece.id);
           }
         }
       }
@@ -60,7 +60,7 @@ export function createDrumSequencer(
           pieceSampleUrls[piece.id][piece.variationIndex],
         );
         const uri = pieceSampleUrls[piece.id][piece.variationIndex];
-        tonePlayer.playTone(uri, 0, piece.pitch, piece.volume);
+        tonePlayer.playTone(uri, 0, piece.pitch, piece.volume, piece.id);
       }
     },
     setMasterVolume(value: number) {

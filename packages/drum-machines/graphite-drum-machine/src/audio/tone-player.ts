@@ -1,4 +1,5 @@
 import { UnitInterface } from "wafer-host/unit-types";
+import { PieceId } from "@/base/type";
 import { mapVolumeControlCurveCenterUnity } from "@/utils/curve";
 import { getUriQueryValue } from "@/utils/get-uri-query-value";
 
@@ -20,6 +21,10 @@ export function createTonePlayer(unitInterface: UnitInterface | undefined) {
   const masterGainNode = audioContext.createGain();
   masterGainNode.gain.value = 0.5;
   masterGainNode.connect(destinationNode);
+
+  const kickOutputNode =
+    unitInterface?.createAdditionalAudioOutputNode("kick") ??
+    audioContext.createGain();
 
   const toneCache = new Map<string, ToneItem | null>();
 
@@ -47,7 +52,13 @@ export function createTonePlayer(unitInterface: UnitInterface | undefined) {
 
       // console.log("preloaded", uri);
     },
-    playTone(uri: string, time: number, pitch: number, volume: number) {
+    playTone(
+      uri: string,
+      time: number,
+      pitch: number,
+      volume: number,
+      pieceId: PieceId,
+    ) {
       const toneItem = toneCache.get(uri);
       if (!toneItem) return;
       // console.log("playing", uri, time, pitch, volume);
@@ -61,6 +72,9 @@ export function createTonePlayer(unitInterface: UnitInterface | undefined) {
       gainNode.gain.value = gainValue;
       sourceNode.connect(gainNode);
       gainNode.connect(masterGainNode);
+      if (pieceId === "kick") {
+        sourceNode.connect(kickOutputNode);
+      }
       sourceNode.start(time);
     },
     setMasterVolume(value: number) {
