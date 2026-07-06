@@ -23,9 +23,7 @@ export function createTonePlayer(unitInterface: UnitInterface | undefined) {
   masterGainNode.connect(destinationNode);
 
   const kickOutputNode =
-    unitInterface?.createAdditionalAudioOutputNode("kick") ??
-    audioContext.createGain();
-
+    false && unitInterface?.createAdditionalAudioOutputNode("kick");
   const toneCache = new Map<string, ToneItem | null>();
 
   return {
@@ -72,7 +70,7 @@ export function createTonePlayer(unitInterface: UnitInterface | undefined) {
       gainNode.gain.value = gainValue;
       sourceNode.connect(gainNode);
       gainNode.connect(masterGainNode);
-      if (pieceId === "kick") {
+      if (kickOutputNode && pieceId === "kick") {
         sourceNode.connect(kickOutputNode);
       }
       sourceNode.start(time);
