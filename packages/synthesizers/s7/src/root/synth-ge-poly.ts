@@ -103,7 +103,7 @@ export function createSynthesizerGePoly(
         // --- デチューンの設定 ---
         // JP-8000の最大デチューン幅を考慮し、セント単位にスケーリング (最大で約100セント強のズレ)
         // unisonDetune (0~1) を乗算
-        const detuneCents = DETUNE_RATIOS[i] * p.unisonDetune * 1200;
+        const detuneCents = DETUNE_RATIOS[i] * p.unisonDetune ** 2 * 1200;
         osc.detune.setValueAtTime(detuneCents, startTime);
 
         // --- 位相のランダム化 (PeriodicWaveによるエミュレーション) ---

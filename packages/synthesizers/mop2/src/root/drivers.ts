@@ -17,8 +17,9 @@ export function setupUnit() {
         unitType: "effect",
         outputs: ["audio"],
         inputs: ["note"],
-        viewSize: [300, 160],
+        viewSize: [380, 220],
       },
+      cleanup: engine.disconnects,
       noteInput: {
         noteOn(noteNumber, time) {
           engine.noteOn(noteNumber, time ?? 0);
@@ -27,7 +28,6 @@ export function setupUnit() {
           engine.noteOff(noteNumber, time ?? 0);
         },
       },
-      cleanup: engine.disconnects,
     });
   } else {
     setupMidiKeyboardInput({

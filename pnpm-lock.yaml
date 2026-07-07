@@ -432,6 +432,21 @@ importers:
         specifier: ^1.9.12
         version: 1.9.13
 
+  packages/synthesizers/mop2:
+    dependencies:
+      '@preact-icons/fa':
+        specifier: npm:@jsr/preact-icons__fa@^1.0.13
+        version: '@jsr/preact-icons__fa@1.0.13'
+      preact:
+        specifier: ^10.29.2
+        version: 10.29.2
+      qulex:
+        specifier: link:../../../../qulex
+        version: link:../../../../qulex
+      snap-store:
+        specifier: ^0.1.12
+        version: 0.1.12(preact@10.29.2)(react@19.2.6)
+
   packages/synthesizers/proto-engine-pd-fm:
     dependencies:
       solid-icons:
