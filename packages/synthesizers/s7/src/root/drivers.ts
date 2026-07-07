@@ -19,6 +19,14 @@ export function setupUnit() {
         inputs: ["note"],
         viewSize: [300, 160],
       },
+      noteInput: {
+        noteOn(noteNumber, time) {
+          engine.noteOn(noteNumber, time ?? 0);
+        },
+        noteOff(noteNumber, time) {
+          engine.noteOff(noteNumber, time ?? 0);
+        },
+      },
       cleanup: engine.disconnects,
     });
   } else {
