@@ -1,10 +1,10 @@
 import { UnitInterface } from "wafer-host/unit-types";
-import { defaultSynthParameters } from "@/root/definitions";
-import { createSynthesizer } from "@/root/synthesizer";
+import { defaultSynthParameters } from "@/root/synth-common";
+import { createSynthesizerGePoly } from "@/root/synth-ge-poly";
 
 export function createEngine(unitInterface: UnitInterface | undefined) {
   const audioContext = unitInterface?.audioContext ?? new AudioContext();
-  const synth = createSynthesizer(audioContext, defaultSynthParameters);
+  const synth = createSynthesizerGePoly(audioContext, defaultSynthParameters);
   const destinationNode =
     unitInterface?.audioOutputNode ?? audioContext.destination;
   return {
@@ -16,5 +16,7 @@ export function createEngine(unitInterface: UnitInterface | undefined) {
       synth.outputNode.disconnect(destinationNode);
       synth.cleanup();
     },
+    noteOn: synth.noteOn,
+    noteOff: synth.noteOff,
   };
 }

@@ -32,7 +32,7 @@ export const Knob = ({
     >
       <div
         class={
-          qu.wh(28, 28).rounded("100%").relative().bg("#888").bd("#444").it
+          qu.wh(32, 32).rounded("100%").relative().bg("#888").bd("#444").it
         }
         style={{ opacity: disabled ? 0.5 : 1 }}
       >
