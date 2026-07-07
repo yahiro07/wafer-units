@@ -4,7 +4,7 @@ type SynthParameters = {
   unisonSpread: number; // 0~1
   unisonMix: number; // 0~1
   phaseRandom: boolean;
-  ampRelease: number; // 0~1 (秒数へのマッピング)
+  ampRelease: number; // 0~1 (mapped to seconds)
   volume: number; // 0~1
 };
 
@@ -18,41 +18,41 @@ export function createSynthesizerGePoly(
     parameters: initialParameters,
   };
 
-  // 最終出力をまとめるメインゲイン
+  // Main gain node that sums the final output
   const outputNode = audioContext.createGain();
 
-  // アクティブなノートを管理するマップ (MIDIノート番号 -> ノートオブジェクト)
+  // Map of active notes (MIDI note number -> note object)
   type ActiveNote = {
     oscillators: OscillatorNode[];
     gains: GainNode[];
-    gateGain: GainNode; // エンベロープ用
+    gateGain: GainNode; // For envelope
   };
   const activeNotes = new Map<number, ActiveNote>();
 
-  // JP-8000のSuperSawデチューン相対比率 (中央を0とした時の各レイヤーの比率)
-  // 7本の構成: 中央(0), 右3本(+), 左3本(-)
+  // JP-8000 SuperSaw detune ratios relative to center (0)
+  // 7 voices: center (0), 3 right (+), 3 left (-)
   const DETUNE_RATIOS = [
     0.0, 0.0146, 0.0381, 0.0883, -0.0146, -0.0381, -0.0883,
   ];
 
-  // パンの配置 (中央, 右に分散, 左に分散)
+  // Pan positions (center, spread right, spread left)
   const PAN_DIRECTIONS = [0.0, 0.5, 0.75, 1.0, -0.5, -0.75, -1.0];
 
-  // パラメータの適用
+  // Apply parameters
   function applyParameters() {
     const p = state.parameters;
-    // メインボリュームの更新 (即座に反映)
+    // Update main volume (applied immediately)
     outputNode.gain.setValueAtTime(p.volume, audioContext.currentTime);
 
-    // 鳴らしている最中のノートのデチューンやパン、ミックスも動的に変更したい場合は
-    // ここで activeNotes をループしてリアルタイム反映させることも可能ですが、
-    // 負荷と複雑さを考慮し、今回は次の noteOn から確実に反映される形にしています。
+    // To dynamically update detune, pan, and mix on notes already playing,
+    // you could loop over activeNotes here and apply changes in real time.
+    // For load and complexity reasons, changes take effect on the next noteOn.
   }
 
-  // 初期パラメータの適用
+  // Apply initial parameters
   applyParameters();
 
-  // 周波数変換ヘルパー
+  // Frequency conversion helper
   function midiNoteToFrequency(note: number): number {
     return 440 * Math.pow(2, (note - 69) / 12);
   }
@@ -66,7 +66,7 @@ export function createSynthesizerGePoly(
     },
 
     noteOn(noteNumber: number, time: number) {
-      // 既に同じノートが鳴っていたら一度消去 (ボイスリトリーガー)
+      // If the same note is already playing, stop it first (voice retrigger)
       if (activeNotes.has(noteNumber)) {
         this.noteOff(noteNumber, time);
       }
@@ -74,22 +74,22 @@ export function createSynthesizerGePoly(
       const p = state.parameters;
       const startTime = Math.max(time, audioContext.currentTime);
 
-      // オクターブ補正を加算
+      // Apply octave offset
       const finalNote = noteNumber + p.octave * 12;
       const baseFrequency = midiNoteToFrequency(finalNote);
 
-      // ノート全体のエンベロープを担当するゲインノード
+      // Gain node for the note envelope
       const gateGain = audioContext.createGain();
 
-      // Attack = 0, Sustain = 1 固定の処理
+      // Attack = 0, Sustain = 1 (fixed)
       gateGain.gain.setValueAtTime(0, startTime);
-      gateGain.gain.setValueAtTime(1, startTime); // Attack 0 なので即座に1へ
+      gateGain.gain.setValueAtTime(1, startTime); // Attack 0, so jump to 1 immediately
       gateGain.connect(outputNode);
 
       const oscillators: OscillatorNode[] = [];
       const gains: GainNode[] = [];
 
-      // 7つの鋸波を生成
+      // Generate 7 sawtooth oscillators
       for (let i = 0; i < 7; i++) {
         const osc = audioContext.createOscillator();
         const gainNode = audioContext.createGain();
@@ -100,27 +100,26 @@ export function createSynthesizerGePoly(
         osc.type = "sawtooth";
         osc.frequency.setValueAtTime(baseFrequency, startTime);
 
-        // --- デチューンの設定 ---
-        // JP-8000の最大デチューン幅を考慮し、セント単位にスケーリング (最大で約100セント強のズレ)
-        // unisonDetune (0~1) を乗算
+        // --- Detune ---
+        // Scale to cents based on JP-8000 max detune width (~100 cents at max)
+        // Multiply by unisonDetune (0~1)
         const detuneCents = DETUNE_RATIOS[i] * p.unisonDetune ** 2 * 1200;
         osc.detune.setValueAtTime(detuneCents, startTime);
 
-        // --- 位相のランダム化 (PeriodicWaveによるエミュレーション) ---
-        // Web Audioの標準Oscillatorは通常位相0からスタートするため、
-        // 完全に揃うとアタックが非常に鋭く（悪く言えばクリックノイズに）なります。
-        // phaseRandomがtrueの場合は、僅かなタイムディレイを仕込むか、
-        // もしくは実用的なハックとして、数ミリ秒のランダムなディレイを oscillator のスタートに与えることで位相をずらします。
-        const startDelay = p.phaseRandom ? Math.random() * 0.02 : 0; // 最大20msのズレ
+        // --- Phase randomization (PeriodicWave emulation) ---
+        // Web Audio oscillators normally start at phase 0.
+        // When perfectly aligned, the attack is very sharp (effectively click noise).
+        // When phaseRandom is true, a small random start delay shifts each oscillator's phase.
+        const startDelay = p.phaseRandom ? Math.random() * 0.02 : 0; // Up to 20ms offset
 
-        // --- 音量(Mix)の設定 ---
-        // 中央(i=0)は1固定、それ以外は unisonMix (0~1) を適用
+        // --- Mix (gain) ---
+        // Center voice (i=0) is fixed at 1; others use unisonMix (0~1)
         const gainVal = i === 0 ? 1.0 : p.unisonMix;
-        // 7本重なると音が割れる（クリッピングする）のを防ぐため、全体のスケールを調整
+        // Scale down to avoid clipping when all 7 voices stack
         const normalizedGain = gainVal / (1.0 + p.unisonMix * 6);
         gainNode.gain.setValueAtTime(normalizedGain, startTime);
 
-        // --- ステレオ定位(Spread)の設定 ---
+        // --- Stereo spread ---
         if (panner) {
           const panVal = PAN_DIRECTIONS[i] * p.unisonSpread;
           panner.pan.setValueAtTime(panVal, startTime);
@@ -129,7 +128,7 @@ export function createSynthesizerGePoly(
           gainNode.connect(panner);
           panner.connect(gateGain);
         } else {
-          // StereoPannerNode が未対応の環境用フォールバック
+          // Fallback when StereoPannerNode is unavailable
           osc.connect(gainNode);
           gainNode.connect(gateGain);
         }
@@ -140,7 +139,7 @@ export function createSynthesizerGePoly(
         gains.push(gainNode);
       }
 
-      // アクティブノートに保存
+      // Store active note
       activeNotes.set(noteNumber, { oscillators, gains, gateGain });
     },
 
@@ -151,32 +150,32 @@ export function createSynthesizerGePoly(
       const p = state.parameters;
       const stopTime = Math.max(time, audioContext.currentTime);
 
-      // ampRelease (0~1) を実際の秒数にマッピング (例: 最大5秒のリリース)
+      // Map ampRelease (0~1) to seconds (e.g. up to ~3s release)
       const releaseTimeSeconds = p.ampRelease ** 2 * 3.0;
       const finishTime = stopTime + releaseTimeSeconds;
 
-      // 音量が1から0へ指数関数的、または線形に減衰
+      // Ramp gain from current value to 0 (linear release)
       note.gateGain.gain.cancelScheduledValues(stopTime);
       note.gateGain.gain.setValueAtTime(note.gateGain.gain.value, stopTime);
       note.gateGain.gain.linearRampToValueAtTime(0, finishTime);
 
-      // リリース終了後にオシレーターを完全に停止してリソースを解放
+      // Stop oscillators after release and free resources
       note.oscillators.forEach((osc) => {
         osc.stop(finishTime);
       });
 
-      // マップから削除
+      // Remove from map
       activeNotes.delete(noteNumber);
     },
 
     cleanup() {
-      // すべての進行中の音を即座に停止してクリア
+      // Stop all sounding notes immediately and clear
       activeNotes.forEach((note) => {
         note.oscillators.forEach((osc) => {
           try {
             osc.stop();
           } catch (_e) {
-            // すでに停止している場合の例外をハンドリング
+            // Ignore exception if already stopped
           }
         });
         note.gateGain.disconnect();

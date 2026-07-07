@@ -4,7 +4,7 @@ export type SynthParameters = {
   unisonSpread: number; // 0~1
   unisonMix: number; // 0~1
   phaseRandom: boolean;
-  ampRelease: number; // 0~1 (秒数へのマッピング)
+  ampRelease: number; // 0~1
   volume: number; // 0~1
 };
 
