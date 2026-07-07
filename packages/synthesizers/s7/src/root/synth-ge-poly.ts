@@ -175,7 +175,7 @@ export function createSynthesizerGePoly(
         note.oscillators.forEach((osc) => {
           try {
             osc.stop();
-          } catch (e) {
+          } catch (_e) {
             // すでに停止している場合の例外をハンドリング
           }
         });
