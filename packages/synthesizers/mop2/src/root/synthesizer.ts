@@ -8,6 +8,8 @@ const RELEASE_IDLE_MARGIN_SECONDS = 0.1;
 const MAX_ATTACK_SECONDS = 4.0;
 const MAX_DECAY_SECONDS = 10.0;
 const MAX_RELEASE_SECONDS = 4.0;
+const VOICE_SUM_GAIN = 1.0 / Math.sqrt(MAX_VOICES * 2);
+const SOFT_CLIP_CURVE_SIZE = 2048;
 
 type WorkletParameterName =
   | "frequency"
@@ -68,6 +70,19 @@ function midiNoteNumberToFrequency(noteNumber: number): number {
   return 440.0 * Math.pow(2.0, (noteNumber - 69) / 12.0);
 }
 
+function createSoftClipCurve(): Float32Array<ArrayBuffer> {
+  const curve = new Float32Array(
+    new ArrayBuffer(SOFT_CLIP_CURVE_SIZE * Float32Array.BYTES_PER_ELEMENT),
+  );
+
+  for (let i = 0; i < curve.length; i++) {
+    const x = (i / (curve.length - 1)) * 4.0 - 2.0;
+    curve[i] = Math.tanh(x);
+  }
+
+  return curve;
+}
+
 function mapParameters(parameters: SynthParameters): MappedWorkletParameters {
   const sustain = parameters.egDecay >= 1.0 ? 1.0 : 0.0;
 
@@ -123,6 +138,17 @@ export function createSynthesizer(
   };
 
   const outputNode = audioContext.createGain();
+  const voiceSumGainNode = audioContext.createGain();
+  const softClipperNode = audioContext.createWaveShaper();
+
+  voiceSumGainNode.gain.setValueAtTime(
+    VOICE_SUM_GAIN,
+    audioContext.currentTime,
+  );
+  softClipperNode.curve = createSoftClipCurve();
+  softClipperNode.oversample = "2x";
+  voiceSumGainNode.connect(softClipperNode);
+  softClipperNode.connect(outputNode);
 
   function applyParametersToVoice(
     voice: Voice,
@@ -175,7 +201,7 @@ export function createSynthesizer(
     const now = audioContext.currentTime;
     gateParam.setValueAtTime(0.0, now);
     setParamAtTime(workletNode, "frequency", 440.0, now, false);
-    workletNode.connect(outputNode);
+    workletNode.connect(voiceSumGainNode);
 
     const voice: Voice = {
       workletNode,
@@ -302,6 +328,8 @@ export function createSynthesizer(
         voice.workletNode.port.close();
       });
       state.voices = [];
+      voiceSumGainNode.disconnect();
+      softClipperNode.disconnect();
     },
   };
 }

@@ -47,6 +47,7 @@ const TWO_PI = Math.PI * 2.0;
 const SQRT2 = Math.sqrt(2.0);
 const MIX_GAIN = 1.0 / SQRT2;
 const MOD_AMOUNT_SCALE = 8.0;
+const MIN_AMP_FADE_SECONDS = 0.005;
 
 function clamp(value: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, value));
@@ -54,11 +55,6 @@ function clamp(value: number, min: number, max: number): number {
 
 function wrapPhase(phase: number): number {
   return phase - Math.floor(phase);
-}
-
-function softClip(value: number): number {
-  const x = clamp(value, -SQRT2, SQRT2);
-  return x - (x * x * x) / 6.0;
 }
 
 function computeAdsrValue(
@@ -184,9 +180,13 @@ function createSynthesizerCore() {
             noteOnTime = 0.0;
           }
           isReleased = false;
+          const effectiveAmpEgAttack = Math.max(
+            ampEgAttack,
+            MIN_AMP_FADE_SECONDS,
+          );
           ampEgValue = computeAdsrValue(
             noteOnTime,
-            ampEgAttack,
+            effectiveAmpEgAttack,
             ampEgDecay,
             ampEgSustain,
           );
@@ -211,8 +211,16 @@ function createSynthesizerCore() {
             // Modulation EGs intentionally hold their note-off values.
           }
 
-          if (ampEgRelease > 0.0) {
-            const releaseProgress = clamp(releaseTime / ampEgRelease, 0.0, 1.0);
+          const effectiveAmpEgRelease = Math.max(
+            ampEgRelease,
+            MIN_AMP_FADE_SECONDS,
+          );
+          if (effectiveAmpEgRelease > 0.0) {
+            const releaseProgress = clamp(
+              releaseTime / effectiveAmpEgRelease,
+              0.0,
+              1.0,
+            );
             ampEgValue = ampReleaseStartValue * (1.0 - releaseProgress);
           } else {
             ampEgValue = 0.0;
@@ -231,7 +239,7 @@ function createSynthesizerCore() {
         const op1Out = Math.sin(TWO_PI * phase1 + prevRaw2 * op1ModDepth);
         const op2Out = Math.sin(TWO_PI * phase2 + prevRaw1 * op2ModDepth);
         const mixed = (op1Out * op1Volume + op2Out * op2Volume) * MIX_GAIN;
-        const finalSample = softClip(mixed) * ampEgValue;
+        const finalSample = mixed * ampEgValue;
 
         outputChannel[i] = finalSample;
         if (output.length > 1) {

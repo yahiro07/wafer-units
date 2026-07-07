@@ -24,7 +24,7 @@ const ControlsPart = () => {
   ) => {
     store.patchParameters({ [key]: value });
   };
-  const cellW = 48;
+  const cellW = 55;
 
   return (
     <div class={qu.flexC().gap(6).it}>
@@ -42,9 +42,9 @@ const ControlsPart = () => {
         <div class={qu.h(40).it} />
       </div>
       <div class={qu.flexV().gap(3).it}>
-        <div class={qu.flexHA().gap(3).it}>
+        <div class={qu.flexHA().gap(2).it}>
           <ModuleHeader label="OP1" />
-          <LabeledBox label="ratio" width={cellW}>
+          <LabeledBox label={`ratio: ${parameters.op1Ratio}`} width={cellW}>
             <OptionMappedKnob
               value={parameters.op1Ratio}
               options={ratioOptions}
@@ -70,9 +70,9 @@ const ControlsPart = () => {
             />
           </LabeledBox>
         </div>
-        <div class={qu.flexHA().gap(3).it}>
+        <div class={qu.flexHA().gap(2).it}>
           <ModuleHeader label="OP2" />
-          <LabeledBox label="ratio" width={cellW}>
+          <LabeledBox label={`ratio: ${parameters.op2Ratio}`} width={cellW}>
             <OptionMappedKnob
               value={parameters.op2Ratio}
               options={ratioOptions}
@@ -98,7 +98,7 @@ const ControlsPart = () => {
             />
           </LabeledBox>
         </div>
-        <div class={qu.flexHA().gap(3).it}>
+        <div class={qu.flexHA().gap(2).it}>
           <ModuleHeader label="AMP" />
           <LabeledBox label="attack" width={cellW}>
             <Knob
@@ -127,7 +127,7 @@ const ControlsPart = () => {
 export const PageRoot = () => {
   return (
     <div class={qu.css({ height: "100dvh" }).flexC().it}>
-      <EffectorBody className={cz(qu.wh(380, 200).it, qu.flexVC().it)}>
+      <EffectorBody className={cz(qu.wh(380, 220).it, qu.flexVC().it)}>
         <ControlsPart />
       </EffectorBody>
     </div>
