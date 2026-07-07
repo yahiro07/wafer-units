@@ -11,6 +11,21 @@ type WorkletParameterName =
 
 type VoiceState = "idle" | "active" | "releasing";
 
+type AmpEnvelopeState =
+  | {
+      type: "attackDecay";
+      startedAt: number;
+      attackSeconds: number;
+      decaySeconds: number;
+      sustain: number;
+    }
+  | {
+      type: "release";
+      startedAt: number;
+      releaseSeconds: number;
+      startGain: number;
+    };
+
 type Voice = {
   workletNode: AudioWorkletNode;
   gateParam: AudioParam;
@@ -22,14 +37,19 @@ type Voice = {
   state: VoiceState;
   startedAt: number;
   releasedAt: number;
+  ampEnvelope: AmpEnvelopeState | undefined;
   idleTimerId: number | undefined;
 };
 
 const MAX_VOICES = 6;
 const PARAM_SMOOTHING_SECONDS = 0.005;
+const ATTACK_DECLICK_SECONDS = 0.005;
+const RELEASE_DECLICK_SECONDS = 0.015;
+const VOICE_STEAL_DECLICK_SECONDS = 0.005;
+const GATE_CLOSE_MARGIN_SECONDS = 0.005;
 const ACTIVE_STEAL_RESET_SECONDS = 0.001;
 const RELEASE_IDLE_MARGIN_SECONDS = 0.1;
-const MIN_GAIN = 0.0001;
+const SILENCE_GAIN = 0.0;
 const MAX_ATTACK_SECONDS = 4.0;
 const MAX_DECAY_SECONDS = 8.0;
 const MAX_RELEASE_SECONDS = 4.0;
@@ -82,6 +102,31 @@ function setParamAtTime(
 function setGateAtTime(param: AudioParam, value: number, time: number) {
   param.cancelScheduledValues(time);
   param.setValueAtTime(value, time);
+}
+
+function getAmpEnvelopeValueAtTime(
+  envelope: AmpEnvelopeState | undefined,
+  time: number,
+): number {
+  if (!envelope) return SILENCE_GAIN;
+
+  const elapsed = Math.max(0.0, time - envelope.startedAt);
+  if (envelope.type === "release") {
+    if (elapsed >= envelope.releaseSeconds) return SILENCE_GAIN;
+    return envelope.startGain * (1.0 - elapsed / envelope.releaseSeconds);
+  }
+
+  if (elapsed < envelope.attackSeconds) {
+    return elapsed / envelope.attackSeconds;
+  }
+
+  const decayElapsed = elapsed - envelope.attackSeconds;
+  if (decayElapsed < envelope.decaySeconds) {
+    const decayProgress = decayElapsed / envelope.decaySeconds;
+    return 1.0 + (envelope.sustain - 1.0) * decayProgress;
+  }
+
+  return envelope.sustain;
 }
 
 function getOscillatorType(value: number): OscillatorType {
@@ -259,23 +304,26 @@ export function createSynthesizer(
     parameters: SynthParameters,
     time: number,
   ) {
-    const attackSeconds = mapEnvelopeTime(
-      parameters.ampAttack,
-      MAX_ATTACK_SECONDS,
+    const attackSeconds = Math.max(
+      mapEnvelopeTime(parameters.ampAttack, MAX_ATTACK_SECONDS),
+      ATTACK_DECLICK_SECONDS,
     );
     const decaySeconds = mapDecayTime(parameters.ampDecay, MAX_DECAY_SECONDS);
     const sustain = clamp01(parameters.ampSustain);
     const attackEndTime = time + attackSeconds;
 
+    voice.ampEnvelope = {
+      type: "attackDecay",
+      startedAt: time,
+      attackSeconds,
+      decaySeconds,
+      sustain,
+    };
     voice.ampGainNode.gain.cancelScheduledValues(time);
-    voice.ampGainNode.gain.setValueAtTime(MIN_GAIN, time);
-    if (attackSeconds > 0.0) {
-      voice.ampGainNode.gain.linearRampToValueAtTime(1.0, attackEndTime);
-    } else {
-      voice.ampGainNode.gain.setValueAtTime(1.0, time);
-    }
+    voice.ampGainNode.gain.setValueAtTime(SILENCE_GAIN, time);
+    voice.ampGainNode.gain.linearRampToValueAtTime(1.0, attackEndTime);
     voice.ampGainNode.gain.linearRampToValueAtTime(
-      Math.max(sustain, MIN_GAIN),
+      sustain,
       attackEndTime + decaySeconds,
     );
   }
@@ -306,6 +354,7 @@ export function createSynthesizer(
       if (voice.state === "releasing") {
         voice.state = "idle";
         voice.noteNumber = null;
+        voice.ampEnvelope = undefined;
       }
       voice.idleTimerId = undefined;
     }, delaySeconds * 1000);
@@ -328,7 +377,7 @@ export function createSynthesizer(
     const now = audioContext.currentTime;
 
     gateParam.setValueAtTime(0.0, now);
-    ampGainNode.gain.setValueAtTime(MIN_GAIN, now);
+    ampGainNode.gain.setValueAtTime(SILENCE_GAIN, now);
     subGainNode.gain.setValueAtTime(0.0, now);
     workletNode.connect(ampGainNode);
     subGainNode.connect(ampGainNode);
@@ -345,6 +394,7 @@ export function createSynthesizer(
       state: "idle",
       startedAt: 0.0,
       releasedAt: 0.0,
+      ampEnvelope: undefined,
       idleTimerId: undefined,
     };
     applyWorkletParameters(voice, state.parameters, now, false);
@@ -382,27 +432,35 @@ export function createSynthesizer(
 
   function releaseVoice(voice: Voice, time: number) {
     const targetTime = Math.max(time, audioContext.currentTime);
-    const releaseSeconds = getReleaseSeconds(state.parameters);
+    const releaseSeconds = Math.max(
+      getReleaseSeconds(state.parameters),
+      RELEASE_DECLICK_SECONDS,
+    );
     const finishTime = targetTime + releaseSeconds;
+    const gateCloseTime = finishTime + GATE_CLOSE_MARGIN_SECONDS;
+    const startGain = getAmpEnvelopeValueAtTime(voice.ampEnvelope, targetTime);
 
     voice.gateParam.cancelScheduledValues(targetTime);
     voice.gateParam.setValueAtTime(1.0, targetTime);
-    voice.gateParam.setValueAtTime(0.0, finishTime);
+    voice.gateParam.setValueAtTime(0.0, gateCloseTime);
     voice.ampGainNode.gain.cancelScheduledValues(targetTime);
-    voice.ampGainNode.gain.setValueAtTime(
-      Math.max(voice.ampGainNode.gain.value, MIN_GAIN),
-      targetTime,
-    );
-    voice.ampGainNode.gain.linearRampToValueAtTime(MIN_GAIN, finishTime);
+    voice.ampGainNode.gain.setValueAtTime(startGain, targetTime);
+    voice.ampGainNode.gain.linearRampToValueAtTime(SILENCE_GAIN, finishTime);
     if (voice.subOscillator) {
       const subOscillator = voice.subOscillator;
-      subOscillator.stop(finishTime + 0.02);
+      subOscillator.stop(gateCloseTime + 0.02);
       subOscillator.onended = () => subOscillator.disconnect();
       voice.subOscillator = undefined;
     }
 
     voice.state = "releasing";
     voice.releasedAt = targetTime;
+    voice.ampEnvelope = {
+      type: "release",
+      startedAt: targetTime,
+      releaseSeconds,
+      startGain,
+    };
     scheduleIdle(voice, targetTime);
 
     if (
@@ -411,6 +469,49 @@ export function createSynthesizer(
     ) {
       state.activeVoices.delete(voice.noteNumber);
     }
+  }
+
+  function prepareVoiceForNoteOn(voice: Voice, time: number): number {
+    const targetTime = Math.max(time, audioContext.currentTime);
+
+    if (voice.state === "idle") {
+      if (voice.subOscillator) {
+        stopSubOscillator(voice, targetTime);
+      }
+      setGateAtTime(voice.gateParam, 0.0, targetTime);
+      voice.ampGainNode.gain.cancelScheduledValues(targetTime);
+      voice.ampGainNode.gain.setValueAtTime(SILENCE_GAIN, targetTime);
+      voice.ampEnvelope = undefined;
+      return targetTime;
+    }
+
+    const fadeEndTime = targetTime + VOICE_STEAL_DECLICK_SECONDS;
+    const gateCloseTime = fadeEndTime + GATE_CLOSE_MARGIN_SECONDS;
+    const startTime = gateCloseTime + ACTIVE_STEAL_RESET_SECONDS;
+    const startGain = getAmpEnvelopeValueAtTime(voice.ampEnvelope, targetTime);
+
+    voice.gateParam.cancelScheduledValues(targetTime);
+    voice.gateParam.setValueAtTime(1.0, targetTime);
+    voice.gateParam.setValueAtTime(0.0, gateCloseTime);
+    voice.ampGainNode.gain.cancelScheduledValues(targetTime);
+    voice.ampGainNode.gain.setValueAtTime(startGain, targetTime);
+    voice.ampGainNode.gain.linearRampToValueAtTime(SILENCE_GAIN, fadeEndTime);
+    voice.ampGainNode.gain.setValueAtTime(SILENCE_GAIN, startTime);
+    voice.ampEnvelope = {
+      type: "release",
+      startedAt: targetTime,
+      releaseSeconds: VOICE_STEAL_DECLICK_SECONDS,
+      startGain,
+    };
+
+    if (voice.subOscillator) {
+      const subOscillator = voice.subOscillator;
+      subOscillator.stop(gateCloseTime);
+      subOscillator.onended = () => subOscillator.disconnect();
+      voice.subOscillator = undefined;
+    }
+
+    return startTime;
   }
 
   applyGlobalParameters(state.parameters, audioContext.currentTime);
@@ -456,15 +557,7 @@ export function createSynthesizer(
       if (voice.noteNumber !== null) {
         state.activeVoices.delete(voice.noteNumber);
       }
-      if (voice.subOscillator) {
-        stopSubOscillator(voice, Math.max(time, audioContext.currentTime));
-      }
-
-      let targetTime = Math.max(time, audioContext.currentTime);
-      if (voice.state === "active" || voice === existingVoice) {
-        setGateAtTime(voice.gateParam, 0.0, targetTime);
-        targetTime += ACTIVE_STEAL_RESET_SECONDS;
-      }
+      const targetTime = prepareVoiceForNoteOn(voice, time);
 
       const parameters = state.parameters;
       const octaveNoteNumber = noteNumber + parameters.octave * 12;

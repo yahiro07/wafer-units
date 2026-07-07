@@ -72,7 +72,11 @@ function pdFoldPhase(phase: number, shape: number): number {
   return wrapPhase(skewed + fold);
 }
 
-function phaseDistortionSample(phase: number, wave: number, shape: number): number {
+function phaseDistortionSample(
+  phase: number,
+  wave: number,
+  shape: number,
+): number {
   const safeShape = clamp01(shape);
   const pdPhase = pdFoldPhase(phase, safeShape);
   const radians = TWO_PI * pdPhase;
@@ -86,15 +90,26 @@ function phaseDistortionSample(phase: number, wave: number, shape: number): numb
     case 2:
       return Math.sin(radians) * 0.62 + Math.sin(radians * 3.0) * 0.28;
     case 3:
-      return Math.sin(radians) * 0.56 + Math.sin(radians * 2.0) * 0.34 + Math.sin(radians * 4.0) * 0.1;
+      return (
+        Math.sin(radians) * 0.56 +
+        Math.sin(radians * 2.0) * 0.34 +
+        Math.sin(radians * 4.0) * 0.1
+      );
     case 4:
-      return Math.tanh((Math.sin(radians) + Math.sin(radians * 3.0) * safeShape) * 1.7);
+      return Math.tanh(
+        (Math.sin(radians) + Math.sin(radians * 3.0) * safeShape) * 1.7,
+      );
     case 5:
       return Math.sin(radians + Math.sin(radians) * safeShape * Math.PI);
     case 6:
-      return Math.sin(radians) * Math.cos(HALF_PI * safeShape * Math.sin(radians));
+      return (
+        Math.sin(radians) * Math.cos(HALF_PI * safeShape * Math.sin(radians))
+      );
     case 7:
-      return Math.sin(radians) * (1.0 - safeShape * 0.45) + Math.sign(Math.sin(radians)) * safeShape * 0.45;
+      return (
+        Math.sin(radians) * (1.0 - safeShape * 0.45) +
+        Math.sign(Math.sin(radians)) * safeShape * 0.45
+      );
     default:
       return Math.sin(radians);
   }
