@@ -10,29 +10,17 @@ function mapDutyToDuration(paramDuty: number): number {
   }
 }
 
-type KeyType = "major" | "minor";
-
-const subNotes = {
-  major: [0, 2, 4, 7, 9], //do re mi so la for C
-  minor: [0, 2, 3, 7, 10], //la si do mi so for Am
-};
-function yIndexToSubNote(yIndex: number, keyType: KeyType) {
-  return subNotes[keyType][yIndex % subNotes[keyType].length];
-}
-
-const keyTypeMap: Record<number, KeyType> = {
-  [0]: "major",
-  [2]: "minor",
-  [4]: "minor",
-  [5]: "major",
-  [7]: "major",
-  [9]: "minor",
-  [11]: "minor",
-};
-
-function getKeyType(rootNoteNumber: number): KeyType {
-  const idx = rootNoteNumber % 12;
-  return keyTypeMap[idx as keyof typeof keyTypeMap] ?? ("major" as KeyType);
+const cMajorNotes = [0, 2, 4, 5, 7, 9, 11];
+const degreePattern = [0, 2, 4, 6];
+function yIndexToSubNote(yIndex: number, rootNoteNumber: number) {
+  const rootPitch = rootNoteNumber % 12;
+  const rootDegree = cMajorNotes.indexOf(rootPitch);
+  if (rootDegree === -1) return 0;
+  const patternDegree = degreePattern[yIndex % degreePattern.length];
+  const targetDegree = rootDegree + patternDegree;
+  const octaveOffset = Math.floor(targetDegree / cMajorNotes.length) * 12;
+  const targetPitch = cMajorNotes[targetDegree % cMajorNotes.length];
+  return targetPitch + octaveOffset - rootPitch;
 }
 
 export function createEngine(unitInterface: UnitInterface | undefined) {
@@ -49,9 +37,8 @@ export function createEngine(unitInterface: UnitInterface | undefined) {
       for (let i = 0; i < 10; i++) {
         const isStepActive = isBitSet(stepBits[i], stepIndex);
         if (isStepActive) {
-          const keyType = getKeyType(state.rootNoteNumber);
-          const octave = (i / 5) >>> 0;
-          const subNote = yIndexToSubNote(i, keyType);
+          const octave = (i / 4) >>> 0;
+          const subNote = yIndexToSubNote(i, state.rootNoteNumber);
           const noteNumber = clampValue(
             state.rootNoteNumber + (octave + octaveShift) * 12 + subNote,
             0,
