@@ -4,7 +4,7 @@ import { GridBackground } from "@/components/grid-background";
 import { ShiftSelector } from "@/components/shift-selector";
 import { KeyLabelMode, LoopBars } from "@/root/parameters";
 import { store } from "@/root/store";
-import { npx, seqNumbers } from "@/utils/helpers";
+import { seqNumbers } from "@/utils/helpers";
 import { createSelectorOptions } from "@/utils/selector-option";
 
 const keyLabelModeOptions = createSelectorOptions<KeyLabelMode>([
@@ -17,6 +17,7 @@ const LoopBarsOptions = createSelectorOptions<LoopBars>([
   [1, "1"],
   [2, "2"],
   [4, "4"],
+  [8, "8"],
 ]);
 
 const ControlsPart = () => {
@@ -52,12 +53,50 @@ const pitchLablesSource: Record<KeyLabelMode, string[]> = {
   degreeMinor: ["iii", "iv", "v", "vi", "vii", "i", "ii", "iii", "iv"],
 };
 
+const BeatDot = () => {
+  return <div class={qu.wh(3, 3).bg("#888").rounded("50%").it} />;
+};
+
+const BeatDotCellContent = ({ bars, i }: { bars: LoopBars; i: number }) => {
+  if (bars === 8) {
+    return (
+      <div class={qu.flexC().gap(1.5).it}>
+        <BeatDot />
+        <BeatDot />
+      </div>
+    );
+  } else {
+    const show =
+      bars === 4 || (bars === 2 && i % 2 === 0) || (bars === 1 && i % 4 === 0);
+    return show ? <BeatDot /> : null;
+  }
+};
+const BeatDotsRow = ({ w, bars }: { w: number; bars: LoopBars }) => {
+  return (
+    <div class={qu.flexH().it}>
+      {seqNumbers(16).map((i) => (
+        <div
+          key={i}
+          class={cz(
+            qu.wh((w + 1) / 16, 16).flexC().it,
+            // qu.bg("#fff").bd("#ccc").it,
+            qu.color("#888").fontSize(16).it,
+          )}
+        >
+          <BeatDotCellContent bars={bars} i={i} />
+        </div>
+      ))}
+    </div>
+  );
+};
+
 const Editor = () => {
   const w = 300;
   const h = 160;
   const st = store.useSnapshot();
   const pitchLabels = pitchLablesSource[st.keyLabelMode];
-  const scaleX = 4 / st.loopBars;
+
+  const bgAltStrideX = st.loopBars === 8 ? 2 : 4;
 
   return (
     <div class={qu.flexH().gap(2).it}>
@@ -76,44 +115,17 @@ const Editor = () => {
           );
         })}
       </div>
-      <div
-        style={{
-          width: npx(w),
-          overflow: "hidden",
-        }}
-      >
-        <div
-          className={qu.flexV().gap(2).it}
-          style={{
-            width: npx(w),
-            transform: `scaleX(${scaleX})`,
-            transformOrigin: "top left",
-          }}
-        >
-          <div class={qu.relative().wh(w, h).it}>
-            <GridBackground
-              nx={16}
-              ny={9}
-              width={w}
-              height={h}
-              bgAlterStrideX={4}
-            />
-          </div>
-          <div class={qu.flexH().it}>
-            {seqNumbers(16).map((i) => (
-              <div
-                key={i}
-                class={cz(
-                  qu.wh((w + 1) / 16, 16).flexC().it,
-                  // qu.bg("#fff").bd("#ccc").it,
-                  qu.color("#888").fontSize(16).it,
-                )}
-              >
-                ・
-              </div>
-            ))}
-          </div>
+      <div className={qu.flexV().gap(2).it}>
+        <div class={qu.relative().wh(w, h).it}>
+          <GridBackground
+            nx={16}
+            ny={9}
+            width={w}
+            height={h}
+            bgAlterStrideX={bgAltStrideX}
+          />
         </div>
+        <BeatDotsRow w={w} bars={st.loopBars} />
       </div>
     </div>
   );

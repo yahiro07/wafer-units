@@ -1,5 +1,5 @@
 export type KeyLabelMode = "doremi" | "degreeMajor" | "degreeMinor";
-export type LoopBars = 1 | 2 | 4;
+export type LoopBars = 1 | 2 | 4 | 8;
 
 export type SequencerParameters = {
   loopBars: LoopBars;
