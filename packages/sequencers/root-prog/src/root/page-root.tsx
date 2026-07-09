@@ -4,7 +4,7 @@ import { GridBackground } from "@/components/grid-background";
 import { ShiftSelector } from "@/components/shift-selector";
 import { KeyLabelMode, LoopBars } from "@/root/parameters";
 import { store } from "@/root/store";
-import { seqNumbers } from "@/utils/helpers";
+import { npx, seqNumbers } from "@/utils/helpers";
 import { createSelectorOptions } from "@/utils/selector-option";
 
 const keyLabelModeOptions = createSelectorOptions<KeyLabelMode>([
@@ -47,7 +47,7 @@ const ControlsPart = () => {
   );
 };
 
-const pitchLablesSource: Record<KeyLabelMode, string[]> = {
+const pitchLabelsSource: Record<KeyLabelMode, string[]> = {
   doremi: ["do", "re", "mi", "fa", "so", "la", "si", "do", "re"],
   degreeMajor: ["i", "ii", "iii", "iv", "v", "vi", "vii", "i", "ii"],
   degreeMinor: ["iii", "iv", "v", "vi", "vii", "i", "ii", "iii", "iv"],
@@ -71,6 +71,7 @@ const BeatDotCellContent = ({ bars, i }: { bars: LoopBars; i: number }) => {
     return show ? <BeatDot /> : null;
   }
 };
+
 const BeatDotsRow = ({ w, bars }: { w: number; bars: LoopBars }) => {
   return (
     <div class={qu.flexH().it}>
@@ -90,31 +91,142 @@ const BeatDotsRow = ({ w, bars }: { w: number; bars: LoopBars }) => {
   );
 };
 
+const PitchLabelsColumn = ({
+  pitchLabels,
+  h,
+}: {
+  pitchLabels: string[];
+  h: number;
+}) => {
+  return (
+    <div>
+      {seqNumbers(9).map((i) => {
+        const yi = 8 - i;
+        return (
+          <div
+            class={cz(
+              qu.wh(36, (h + 1) / 9).flexC().it,
+              qu.bg("#fff").bd("#ccc").fontSize(12).it,
+            )}
+          >
+            {pitchLabels[yi]}
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
+function mapPointerPositionToCell(
+  el: HTMLElement,
+  x: number,
+  y: number,
+): { step: number; yi: number } {
+  const rect = el.getBoundingClientRect();
+  const step = Math.floor(((x - rect.left) / rect.width) * 16);
+  let yi = Math.floor(((y - rect.top) / rect.height) * 9);
+  yi = 8 - yi;
+  return { step, yi };
+}
+
+const actions = {
+  setNote(step: number, yi: number) {
+    store.setNotes((prev) => prev.map((note, i) => (i === step ? yi : note)));
+  },
+};
+
+const EditInputLayer = ({ notes }: { notes: number[] }) => {
+  const handlePointerDown = (e: PointerEvent) => {
+    const { step, yi } = mapPointerPositionToCell(
+      e.target as HTMLElement,
+      e.clientX,
+      e.clientY,
+    );
+    const hasNote = notes[step] === yi;
+    if (!hasNote) {
+      actions.setNote(step, yi);
+    } else {
+      actions.setNote(step, -1);
+    }
+  };
+  return (
+    <div
+      class={qu.relative().wFull().hFull().it}
+      onPointerDown={handlePointerDown}
+    />
+  );
+};
+
+function getNoteDuration(notes: number[], stepFrom: number) {
+  let dur = 1;
+  for (let i = stepFrom + 1; i < notes.length; i++) {
+    if (notes[i] === -1) {
+      dur++;
+    } else {
+      break;
+    }
+  }
+  return dur;
+}
+
+const NotesDisplayLayer = ({
+  notes,
+  w,
+  h,
+}: {
+  notes: number[];
+  w: number;
+  h: number;
+}) => {
+  const cellW = w / 16;
+  const cellH = h / 9;
+  return (
+    <div>
+      {notes.map((note, xi) => {
+        const yi = note;
+        if (note === -1) return null;
+        const dur = getNoteDuration(notes, xi);
+        return (
+          <div key={xi}>
+            <div
+              class={qu.absolute().flexC().it}
+              style={{
+                left: npx(xi * cellW),
+                bottom: npx(yi * cellH),
+                width: npx(cellW),
+                height: npx(cellH),
+              }}
+            >
+              <div class={qu.bg("#0cf").rounded("50%").wh(16, 16).it} />
+            </div>
+            <div
+              class={qu.absolute().flexC().it}
+              style={{
+                left: npx(xi * cellW),
+                bottom: npx(yi * cellH),
+                width: npx(cellW * dur),
+                height: npx(cellH),
+              }}
+            >
+              <div class={qu.bg("#0cf").wFull().h(8).it} />
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
 const Editor = () => {
   const w = 300;
   const h = 160;
   const st = store.useSnapshot();
-  const pitchLabels = pitchLablesSource[st.keyLabelMode];
-
+  const pitchLabels = pitchLabelsSource[st.keyLabelMode];
   const bgAltStrideX = st.loopBars === 8 ? 2 : 4;
 
   return (
     <div class={qu.flexH().gap(2).it}>
-      <div>
-        {seqNumbers(9).map((i) => {
-          const yi = 8 - i;
-          return (
-            <div
-              class={cz(
-                qu.wh(36, (h + 1) / 9).flexC().it,
-                qu.bg("#fff").bd("#ccc").fontSize(12).it,
-              )}
-            >
-              {pitchLabels[yi]}
-            </div>
-          );
-        })}
-      </div>
+      <PitchLabelsColumn pitchLabels={pitchLabels} h={h} />
       <div className={qu.flexV().gap(2).it}>
         <div class={qu.relative().wh(w, h).it}>
           <GridBackground
@@ -124,6 +236,12 @@ const Editor = () => {
             height={h}
             bgAlterStrideX={bgAltStrideX}
           />
+          <div class={qu.absolute().top(0).left(0).wh(w, h).it}>
+            <NotesDisplayLayer notes={st.notes} w={w} h={h} />
+          </div>
+          <div class={qu.absolute().top(0).left(0).wh(w, h).it}>
+            <EditInputLayer notes={st.notes} />
+          </div>
         </div>
         <BeatDotsRow w={w} bars={st.loopBars} />
       </div>
