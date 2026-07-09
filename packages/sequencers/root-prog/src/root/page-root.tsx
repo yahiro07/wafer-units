@@ -42,6 +42,7 @@ const ControlsPart = () => {
             onChange={store.setLoopBars}
           />
         </div>
+        <div onClick={actions.clearNotes}>x</div>
       </div>
     </div>
   );
@@ -132,6 +133,9 @@ function mapPointerPositionToCell(
 const actions = {
   setNote(step: number, yi: number) {
     store.setNotes((prev) => prev.map((note, i) => (i === step ? yi : note)));
+  },
+  clearNotes() {
+    store.setNotes((prev) => prev.map(() => -1));
   },
 };
 
