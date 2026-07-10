@@ -72,13 +72,13 @@ function createVoice(bus: SynthesisBus) {
       const pr = bus.parameters;
       const osc1Freq = calcOscFreq(
         state.noteNumber,
-        pr.octave,
+        pr.octave + pr.osc1Octave,
         pr.osc1Coarse,
         pr.osc1Fine,
       );
       const osc2Freq = calcOscFreq(
         state.noteNumber,
-        pr.octave,
+        pr.octave + pr.osc2Octave,
         pr.osc2Coarse,
         pr.osc2Fine,
       );

@@ -81,6 +81,16 @@ const ControlsPart = () => {
               step={1}
               onChange={(value) => setParameter("osc1Wave", value)}
             />
+            {false && (
+              <LabeledKnob
+                label="octave"
+                value={parameters.osc1Octave}
+                min={-1}
+                max={1}
+                step={1}
+                onChange={(value) => setParameter("osc1Octave", value)}
+              />
+            )}
             <LabeledKnob
               label={`semi ${parameters.osc1Coarse}`}
               value={parameters.osc1Coarse}
@@ -107,6 +117,16 @@ const ControlsPart = () => {
               step={1}
               onChange={(value) => setParameter("osc2Wave", value)}
             />
+            {false && (
+              <LabeledKnob
+                label="octave"
+                value={parameters.osc2Octave}
+                min={-1}
+                max={1}
+                step={1}
+                onChange={(value) => setParameter("osc2Octave", value)}
+              />
+            )}
             <LabeledKnob
               label={`semi ${parameters.osc2Coarse}`}
               value={parameters.osc2Coarse}
