@@ -17,6 +17,30 @@ const ModuleHeader = ({
   );
 };
 
+const LabeledKnob = ({
+  label,
+  value,
+  onChange,
+  cellW = 60,
+  min = 0,
+  max = 1,
+  step = 0.01,
+}: {
+  label: string;
+  value: number;
+  onChange: (value: number) => void;
+  cellW?: number;
+  min?: number;
+  max?: number;
+  step?: number;
+}) => {
+  return (
+    <LabeledBox label={label} width={cellW}>
+      <Knob value={value} min={min} max={max} step={step} onChange={onChange} />
+    </LabeledBox>
+  );
+};
+
 const ControlsPart = () => {
   const { parameters } = store.useSnapshot();
   const setParameter = <K extends keyof SynthParameters>(
@@ -25,7 +49,6 @@ const ControlsPart = () => {
   ) => {
     store.patchParameters({ [key]: value });
   };
-  const cellW = 60;
   const gapX = 1;
 
   return (
@@ -34,100 +57,94 @@ const ControlsPart = () => {
       <div class={qu.flexHA().gap(4).it}>
         <div class={qu.flexV().gap(3).it}>
           <div class={qu.flexHA().gap(gapX).it}>
-            <LabeledBox label="octave" width={cellW}>
-              <Knob
-                value={parameters.octave}
-                min={-2}
-                max={2}
-                step={1}
-                onChange={(value) => setParameter("octave", value)}
-              />
-            </LabeledBox>
-            <LabeledBox label="osc mix" width={cellW}>
-              <Knob
-                value={parameters.oscMix}
-                onChange={(value) => setParameter("oscMix", value)}
-              />
-            </LabeledBox>
+            <LabeledKnob
+              label="octave"
+              value={parameters.octave}
+              min={-2}
+              max={2}
+              step={1}
+              onChange={(value) => setParameter("octave", value)}
+            />
+            <LabeledKnob
+              label="osc mix"
+              value={parameters.oscMix}
+              onChange={(value) => setParameter("oscMix", value)}
+            />
           </div>
           <div class={qu.flexHA().gap(gapX).it}>
             <ModuleHeader label="OSC1" />
-            <LabeledBox label="wave" width={cellW}>
-              <Knob
-                value={parameters.osc1Wave}
-                min={0}
-                max={3}
-                step={1}
-                onChange={(value) => setParameter("osc1Wave", value)}
-              />
-            </LabeledBox>
-            <LabeledBox label={`coarse ${parameters.osc1Coarse}`} width={cellW}>
-              <Knob
-                value={parameters.osc1Coarse}
-                min={-12}
-                max={12}
-                step={1}
-                onChange={(value) => setParameter("osc1Coarse", value)}
-              />
-            </LabeledBox>
-            <LabeledBox label="fine" width={cellW}>
-              <Knob
-                value={parameters.osc1Fine}
-                min={-1}
-                max={1}
-                onChange={(value) => setParameter("osc1Fine", value)}
-              />
-            </LabeledBox>
+            <LabeledKnob
+              label="wave"
+              value={parameters.osc1Wave}
+              min={0}
+              max={3}
+              step={1}
+              onChange={(value) => setParameter("osc1Wave", value)}
+            />
+            <LabeledKnob
+              label={`semi ${parameters.osc1Coarse}`}
+              value={parameters.osc1Coarse}
+              min={-12}
+              max={12}
+              step={1}
+              onChange={(value) => setParameter("osc1Coarse", value)}
+            />
+            <LabeledKnob
+              label="fine"
+              value={parameters.osc1Fine}
+              min={-1}
+              max={1}
+              onChange={(value) => setParameter("osc1Fine", value)}
+            />
           </div>
           <div class={qu.flexHA().gap(gapX).it}>
             <ModuleHeader label="OSC2" />
-            <LabeledBox label="wave" width={cellW}>
-              <Knob
-                value={parameters.osc2Wave}
-                min={0}
-                max={3}
-                step={1}
-                onChange={(value) => setParameter("osc2Wave", value)}
-              />
-            </LabeledBox>
-            <LabeledBox label={`coarse ${parameters.osc2Coarse}`} width={cellW}>
-              <Knob
-                value={parameters.osc2Coarse}
-                min={-12}
-                max={12}
-                step={1}
-                onChange={(value) => setParameter("osc2Coarse", value)}
-              />
-            </LabeledBox>
-            <LabeledBox label="fine" width={cellW}>
-              <Knob
-                value={parameters.osc2Fine}
-                min={-1}
-                max={1}
-                onChange={(value) => setParameter("osc2Fine", value)}
-              />
-            </LabeledBox>
+            <LabeledKnob
+              label="wave"
+              value={parameters.osc2Wave}
+              min={0}
+              max={3}
+              step={1}
+              onChange={(value) => setParameter("osc2Wave", value)}
+            />
+            <LabeledKnob
+              label={`semi ${parameters.osc2Coarse}`}
+              value={parameters.osc2Coarse}
+              min={-12}
+              max={12}
+              step={1}
+              onChange={(value) => setParameter("osc2Coarse", value)}
+            />
+            <LabeledKnob
+              label="fine"
+              value={parameters.osc2Fine}
+              min={-1}
+              max={1}
+              onChange={(value) => setParameter("osc2Fine", value)}
+            />
           </div>
           <div class={qu.flexHA().gap(gapX).it}>
             <ModuleHeader label="AMP" />
-            <LabeledBox label="decay" width={cellW}>
-              <Knob
-                value={parameters.ampDecay}
-                onChange={(value) => setParameter("ampDecay", value)}
-              />
-            </LabeledBox>
-            <LabeledBox label="release" width={cellW}>
-              <Knob
-                value={parameters.ampRelease}
-                onChange={(value) => setParameter("ampRelease", value)}
-              />
-            </LabeledBox>
-            <LabeledBox label="volume" width={cellW}>
-              <Knob
-                value={parameters.outputVolume}
-                onChange={(value) => setParameter("outputVolume", value)}
-              />
-            </LabeledBox>
+            <LabeledKnob
+              label="decay"
+              value={parameters.ampDecay}
+              onChange={(value) => setParameter("ampDecay", value)}
+            />
+            <LabeledKnob
+              label="sustain"
+              value={parameters.ampSustain}
+              onChange={(value) => setParameter("ampSustain", value)}
+            />
+            <LabeledKnob
+              label="release"
+              value={parameters.ampRelease}
+              onChange={(value) => setParameter("ampRelease", value)}
+            />
+            <LabeledKnob
+              label="volume"
+              value={parameters.outputVolume}
+              onChange={(value) => setParameter("outputVolume", value)}
+            />
           </div>
         </div>
       </div>
