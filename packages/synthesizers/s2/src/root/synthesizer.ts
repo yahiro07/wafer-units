@@ -13,7 +13,7 @@ function calcOscFreq(
   oscCoarse: number,
   oscFine: number,
 ) {
-  const relNote = octave * 12 + oscCoarse * 24 + oscFine;
+  const relNote = octave * 12 + oscCoarse + oscFine;
   return midiNoteToFrequency(noteNumber + relNote);
 }
 
@@ -25,13 +25,18 @@ export function createSynthesizer(
     parameters: { ...initialParameters },
   };
   const outputNode = audioContext.createGain();
-  outputNode.gain.value = 0.5;
+
+  function affectParameters() {
+    const pr = state.parameters;
+    outputNode.gain.value = power2(pr.outputVolume);
+  }
+  affectParameters();
 
   return {
     outputNode,
     setParameters(parameters: SynthParameters) {
       state.parameters = parameters;
-      outputNode.gain.value = parameters.outputVolume;
+      affectParameters();
     },
     noteOn(noteNumber: number, _time: number) {
       const time = Math.max(_time, audioContext.currentTime);
@@ -48,7 +53,7 @@ export function createSynthesizer(
         pr.osc2Coarse,
         pr.osc2Fine,
       );
-      const decayTime = mapUnaryTo(power2(pr.ampDecay), 0.01, 1);
+      const decayTime = mapUnaryTo(power2(pr.ampDecay), 0.01, 2);
       const ampGain = audioContext.createGain();
 
       const osc1 = audioContext.createOscillator();
@@ -65,12 +70,15 @@ export function createSynthesizer(
 
       ampGain.gain.setValueAtTime(1, time);
       const endTime = time + decayTime;
-      console.log({ decayTime, endTime });
-      ampGain.gain.linearRampToValueAtTime(0, endTime);
+      ampGain.gain.exponentialRampToValueAtTime(0.6, endTime);
       ampGain.connect(outputNode);
 
-      osc1.stop(time + decayTime + 0.1);
-      osc2.stop(time + decayTime + 0.1);
+      setTimeout(() => {
+        const now = audioContext.currentTime;
+        ampGain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+        osc1.stop(now + 0.1);
+        osc2.stop(now + 0.1);
+      }, decayTime * 1000);
     },
     noteOff(noteNumber: number, time: number) {},
     cleanup() {},

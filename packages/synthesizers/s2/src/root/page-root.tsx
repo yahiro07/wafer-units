@@ -25,7 +25,7 @@ const ControlsPart = () => {
   ) => {
     store.patchParameters({ [key]: value });
   };
-  const cellW = 55;
+  const cellW = 60;
   const gapX = 1;
 
   return (
@@ -55,11 +55,12 @@ const ControlsPart = () => {
                 onChange={(value) => setParameter("osc1Wave", value)}
               />
             </LabeledBox>
-            <LabeledBox label="coarse" width={cellW}>
+            <LabeledBox label={`coarse ${parameters.osc1Coarse}`} width={cellW}>
               <Knob
                 value={parameters.osc1Coarse}
-                min={-1}
-                max={1}
+                min={-24}
+                max={24}
+                step={1}
                 onChange={(value) => setParameter("osc1Coarse", value)}
               />
             </LabeledBox>
@@ -83,11 +84,12 @@ const ControlsPart = () => {
                 onChange={(value) => setParameter("osc2Wave", value)}
               />
             </LabeledBox>
-            <LabeledBox label="coarse" width={cellW}>
+            <LabeledBox label={`coarse ${parameters.osc2Coarse}`} width={cellW}>
               <Knob
                 value={parameters.osc2Coarse}
-                min={-1}
-                max={1}
+                min={-24}
+                max={24}
+                step={1}
                 onChange={(value) => setParameter("osc2Coarse", value)}
               />
             </LabeledBox>

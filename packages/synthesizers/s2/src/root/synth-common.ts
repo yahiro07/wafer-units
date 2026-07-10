@@ -1,7 +1,7 @@
 export type SynthParameters = {
   octave: number; //-2,-1,0,1,2
   osc1Wave: number; //0,1,2,3 for saw, square, tri, sine
-  osc1Coarse: number; //-1~1
+  osc1Coarse: number; //-24~24
   osc1Fine: number; //-1~1
   osc2Wave: number;
   osc2Coarse: number;
