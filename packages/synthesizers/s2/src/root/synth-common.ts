@@ -28,8 +28,8 @@ export const defaultSynthParameters: SynthParameters = {
   osc2Fine: 0,
   oscMix: 0.5,
   ampAttack: 0,
-  ampDecay: 0.75,
+  ampDecay: 0.5,
   ampSustain: 0,
   ampRelease: 0.5,
-  outputVolume: 0.5,
+  outputVolume: 0.75,
 };

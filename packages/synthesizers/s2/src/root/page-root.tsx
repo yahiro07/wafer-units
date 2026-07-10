@@ -99,6 +99,7 @@ const ControlsPart = () => {
                 max={1}
                 step={1}
                 onChange={(value) => setParameter("osc1Octave", value)}
+                onClick={() => setParameter("osc1Octave", 0)}
               />
             )}
             <LabeledKnob
@@ -137,6 +138,7 @@ const ControlsPart = () => {
                 max={1}
                 step={1}
                 onChange={(value) => setParameter("osc2Octave", value)}
+                onClick={() => setParameter("osc2Octave", 0)}
               />
             )}
             <LabeledKnob

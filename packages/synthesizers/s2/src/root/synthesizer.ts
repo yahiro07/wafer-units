@@ -57,8 +57,8 @@ function createVoice(bus: SynthesisBus) {
   ampGain.gain.value = 0;
 
   const ampEg = createEnvelopeGenerator(ampGain.gain, {
-    attackSec: 1.5,
-    decaySec: 3,
+    attackSec: 2,
+    decaySec: 4,
     releaseSec: 3,
   });
 
