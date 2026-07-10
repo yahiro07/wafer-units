@@ -126,6 +126,11 @@ const ControlsPart = () => {
           <div class={qu.flexHA().gap(gapX).it}>
             <ModuleHeader label="AMP" />
             <LabeledKnob
+              label="attack"
+              value={parameters.ampAttack}
+              onChange={(value) => setParameter("ampAttack", value)}
+            />
+            <LabeledKnob
               label="decay"
               value={parameters.ampDecay}
               onChange={(value) => setParameter("ampDecay", value)}
