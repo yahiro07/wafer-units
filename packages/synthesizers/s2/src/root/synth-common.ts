@@ -8,6 +8,7 @@ export type SynthParameters = {
   osc2Octave: number;
   osc2Coarse: number;
   osc2Fine: number;
+  oscCrossDetune: number; //0~1
   oscMix: number;
   ampAttack: number;
   ampDecay: number;
@@ -26,10 +27,11 @@ export const defaultSynthParameters: SynthParameters = {
   osc2Octave: 0,
   osc2Coarse: 0,
   osc2Fine: 0,
+  oscCrossDetune: 0,
   oscMix: 0.5,
   ampAttack: 0,
   ampDecay: 0.5,
   ampSustain: 0,
   ampRelease: 0.5,
-  outputVolume: 0.75,
+  outputVolume: 1,
 };

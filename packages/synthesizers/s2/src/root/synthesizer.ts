@@ -70,17 +70,18 @@ function createVoice(bus: SynthesisBus) {
     applyParameters() {
       if (state.noteNumber === -1) return;
       const pr = bus.parameters;
+      const detuneX = power2(pr.oscCrossDetune) * 0.5;
       const osc1Freq = calcOscFreq(
         state.noteNumber,
         pr.octave + pr.osc1Octave,
         pr.osc1Coarse,
-        pr.osc1Fine,
+        pr.osc1Fine - detuneX,
       );
       const osc2Freq = calcOscFreq(
         state.noteNumber,
         pr.octave + pr.osc2Octave,
         pr.osc2Coarse,
-        pr.osc2Fine,
+        pr.osc2Fine + detuneX,
       );
       osc1.type = getOscWaveType(pr.osc1Wave);
       osc2.type = getOscWaveType(pr.osc2Wave);
