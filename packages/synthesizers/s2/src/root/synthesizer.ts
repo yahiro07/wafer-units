@@ -76,21 +76,28 @@ function createVoice(bus: SynthesisBus) {
     },
     triggerAttack(time: number) {
       ampGain.gain.cancelScheduledValues(time);
-      ampGain.gain.setValueAtTime(1, time);
-
       const pr = bus.parameters;
-      if (pr.ampSustain < 1) {
-        const decayTime = 0.01 + power2(pr.ampDecay) * 4;
-        const sustainLevel = Math.max(power2(pr.ampSustain), 1e-3);
+
+      let prDecay = pr.ampDecay;
+      const prSustain = pr.ampSustain;
+      if (prDecay === 0 && prSustain === 0) {
+        prDecay = 0.01;
+      }
+      if (prDecay > 0) {
+        const sustainLevel = Math.max(prSustain, 1e-3);
+        const decayTime = prDecay * 3;
+        ampGain.gain.setValueAtTime(1, time);
         ampGain.gain.exponentialRampToValueAtTime(
           sustainLevel,
           time + decayTime,
         );
+      } else {
+        ampGain.gain.setValueAtTime(prSustain, time);
       }
     },
     triggerRelease(time: number) {
       const pr = bus.parameters;
-      const releaseTime = 0.01 + power2(pr.ampRelease) * 4;
+      const releaseTime = 0.01 + pr.ampRelease * 3;
       ampGain.gain.cancelScheduledValues(time);
       ampGain.gain.setValueAtTime(ampGain.gain.value, time);
       ampGain.gain.exponentialRampToValueAtTime(1e-3, time + releaseTime);
