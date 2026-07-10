@@ -42,7 +42,7 @@ export function createEnvelopeGenerator(
         time += jumpTime;
       }
 
-      const jumpTime = egParams.hasNaiveWave ? 0.02 : 0.005;
+      const jumpTime = egParams.hasNaiveWave ? 0.02 : 0.002;
       const attackTime = jumpTime + prAttack * configs.attackSec;
       destParam.setValueAtTime(0, time);
       destParam.linearRampToValueAtTime(topLevel, time + attackTime);

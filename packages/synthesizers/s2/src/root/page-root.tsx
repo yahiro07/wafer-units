@@ -1,4 +1,5 @@
 import { cz, qu } from "@/common/css-realm";
+import { ButtonWithIndicator } from "@/components/button-with-indicator";
 import { EffectorBody } from "@/components/effector-body";
 import { Knob } from "@/components/knob";
 import { LabeledBox } from "@/components/labeled-box";
@@ -86,6 +87,14 @@ const ControlsPart = () => {
               onChange={(value) => setParameter("oscCrossDetune", value)}
               onClick={() => setParameter("oscCrossDetune", 0)}
             />
+            <LabeledBox label="ph-rnd" width={60}>
+              <ButtonWithIndicator
+                active={parameters.osc2PhaseRandom}
+                onClick={() =>
+                  setParameter("osc2PhaseRandom", !parameters.osc2PhaseRandom)
+                }
+              />
+            </LabeledBox>
           </div>
           <div class={qu.flexHA().gap(gapX).it}>
             <ModuleHeader label="OSC1" />

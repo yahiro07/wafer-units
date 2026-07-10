@@ -1,5 +1,6 @@
 import { createEnvelopeGenerator } from "@/root/envelope-generator";
 import { SynthParameters } from "@/root/synth-common";
+import { mapUnaryTo } from "@/utils/helpers";
 
 function midiNoteToFrequency(noteNumber: number) {
   return 440 * Math.pow(2, (noteNumber - 69) / 12);
@@ -109,11 +110,12 @@ function createVoice(bus: SynthesisBus) {
     triggerRelease(time: number) {
       ampEg.triggerRelease(time);
     },
-    controlPhaseShift(time: number) {
-      if (1) {
+    triggerPhaseRandom(time: number) {
+      if (bus.parameters.osc2PhaseRandom) {
         const { osc2Freq } = internal.calcOscFrequencies();
         const period = 1 / osc2Freq;
-        const delayTime = Math.random() * period;
+        const rr = Math.random();
+        const delayTime = mapUnaryTo(rr, 0.15, 0.45) * period;
         osc2PhaseDelay.delayTime.setValueAtTime(delayTime, time);
       } else {
         osc2PhaseDelay.delayTime.setValueAtTime(0, time);
@@ -148,7 +150,7 @@ function createVoice(bus: SynthesisBus) {
       state.noteNumber = noteNumber;
       internal.applyParameters();
       internal.triggerAttack(time);
-      internal.controlPhaseShift(time);
+      internal.triggerPhaseRandom(time);
     },
     noteOff(_time: number) {
       const time = Math.max(_time, audioContext.currentTime);
