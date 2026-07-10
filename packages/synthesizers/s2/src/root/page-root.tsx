@@ -25,6 +25,7 @@ const LabeledKnob = ({
   min = 0,
   max = 1,
   step = 0.01,
+  onClick,
 }: {
   label: string;
   value: number;
@@ -33,10 +34,18 @@ const LabeledKnob = ({
   min?: number;
   max?: number;
   step?: number;
+  onClick?: () => void;
 }) => {
   return (
     <LabeledBox label={label} width={cellW}>
-      <Knob value={value} min={min} max={max} step={step} onChange={onChange} />
+      <Knob
+        value={value}
+        min={min}
+        max={max}
+        step={step}
+        onChange={onChange}
+        onClick={onClick}
+      />
     </LabeledBox>
   );
 };
@@ -69,6 +78,7 @@ const ControlsPart = () => {
               label="osc mix"
               value={parameters.oscMix}
               onChange={(value) => setParameter("oscMix", value)}
+              onClick={() => setParameter("oscMix", 0.5)}
             />
           </div>
           <div class={qu.flexHA().gap(gapX).it}>
@@ -98,6 +108,7 @@ const ControlsPart = () => {
               max={12}
               step={1}
               onChange={(value) => setParameter("osc1Coarse", value)}
+              onClick={() => setParameter("osc1Coarse", 0)}
             />
             <LabeledKnob
               label="fine"
@@ -105,6 +116,7 @@ const ControlsPart = () => {
               min={-1}
               max={1}
               onChange={(value) => setParameter("osc1Fine", value)}
+              onClick={() => setParameter("osc1Fine", 0)}
             />
           </div>
           <div class={qu.flexHA().gap(gapX).it}>
@@ -134,6 +146,7 @@ const ControlsPart = () => {
               max={12}
               step={1}
               onChange={(value) => setParameter("osc2Coarse", value)}
+              onClick={() => setParameter("osc2Coarse", 0)}
             />
             <LabeledKnob
               label="fine"
@@ -141,6 +154,7 @@ const ControlsPart = () => {
               min={-1}
               max={1}
               onChange={(value) => setParameter("osc2Fine", value)}
+              onClick={() => setParameter("osc2Fine", 0)}
             />
           </div>
           <div class={qu.flexHA().gap(gapX).it}>
