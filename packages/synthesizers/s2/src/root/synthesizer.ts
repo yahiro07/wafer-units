@@ -49,6 +49,7 @@ function createVoice(bus: SynthesisBus) {
   const { audioContext } = bus;
   const osc1 = audioContext.createOscillator();
   const osc2 = audioContext.createOscillator();
+  const osc2PhaseDelay = audioContext.createDelay(0.05);
   const osc1Gain = audioContext.createGain();
   const osc2Gain = audioContext.createGain();
   osc1Gain.gain.value = 0.5;
@@ -67,8 +68,7 @@ function createVoice(bus: SynthesisBus) {
   };
 
   const internal = {
-    applyParameters() {
-      if (state.noteNumber === -1) return;
+    calcOscFrequencies() {
       const pr = bus.parameters;
       const detuneX = power2(pr.oscCrossDetune) * 0.5;
       const osc1Freq = calcOscFreq(
@@ -83,6 +83,12 @@ function createVoice(bus: SynthesisBus) {
         pr.osc2Coarse,
         pr.osc2Fine + detuneX,
       );
+      return { osc1Freq, osc2Freq };
+    },
+    applyParameters() {
+      if (state.noteNumber === -1) return;
+      const pr = bus.parameters;
+      const { osc1Freq, osc2Freq } = internal.calcOscFrequencies();
       osc1.type = getOscWaveType(pr.osc1Wave);
       osc2.type = getOscWaveType(pr.osc2Wave);
       osc1.frequency.value = osc1Freq;
@@ -105,20 +111,12 @@ function createVoice(bus: SynthesisBus) {
     },
     controlPhaseShift(time: number) {
       if (1) {
-        const pr = bus.parameters;
-        const detuneX = power2(pr.oscCrossDetune) * 0.5;
-        const osc2Volume = pr.oscMix;
-        const osc2Freq = calcOscFreq(
-          state.noteNumber,
-          pr.octave + pr.osc2Octave,
-          pr.osc2Coarse,
-          pr.osc2Fine + detuneX,
-        );
-        const tt = 0.01;
-        osc2Gain.gain.setValueAtTime(0, time);
-        osc2.frequency.setValueAtTime(10000 + Math.random() * 10000, time);
-        osc2Gain.gain.setValueAtTime(osc2Volume, time + tt);
-        osc2.frequency.linearRampToValueAtTime(osc2Freq, time + tt);
+        const { osc2Freq } = internal.calcOscFrequencies();
+        const period = 1 / osc2Freq;
+        const delayTime = Math.random() * period;
+        osc2PhaseDelay.delayTime.setValueAtTime(delayTime, time);
+      } else {
+        osc2PhaseDelay.delayTime.setValueAtTime(0, time);
       }
     },
   };
@@ -126,8 +124,9 @@ function createVoice(bus: SynthesisBus) {
   return {
     connects() {
       osc1.connect(osc1Gain);
-      osc2.connect(osc2Gain);
       osc1Gain.connect(ampGain);
+      osc2.connect(osc2PhaseDelay);
+      osc2PhaseDelay.connect(osc2Gain);
       osc2Gain.connect(ampGain);
       ampGain.connect(bus.voiceDestinationNode);
       osc1.start();
@@ -137,8 +136,9 @@ function createVoice(bus: SynthesisBus) {
       osc1.stop();
       osc2.stop();
       osc1.disconnect();
-      osc2.disconnect();
       osc1Gain.disconnect();
+      osc2.disconnect();
+      osc2PhaseDelay.disconnect();
       osc2Gain.disconnect();
       ampGain.disconnect();
     },
