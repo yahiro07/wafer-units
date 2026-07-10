@@ -103,6 +103,24 @@ function createVoice(bus: SynthesisBus) {
     triggerRelease(time: number) {
       ampEg.triggerRelease(time);
     },
+    controlPhaseShift(time: number) {
+      if (1) {
+        const pr = bus.parameters;
+        const detuneX = power2(pr.oscCrossDetune) * 0.5;
+        const osc2Volume = pr.oscMix;
+        const osc2Freq = calcOscFreq(
+          state.noteNumber,
+          pr.octave + pr.osc2Octave,
+          pr.osc2Coarse,
+          pr.osc2Fine + detuneX,
+        );
+        const tt = 0.01;
+        osc2Gain.gain.setValueAtTime(0, time);
+        osc2.frequency.setValueAtTime(10000 + Math.random() * 10000, time);
+        osc2Gain.gain.setValueAtTime(osc2Volume, time + tt);
+        osc2.frequency.linearRampToValueAtTime(osc2Freq, time + tt);
+      }
+    },
   };
 
   return {
@@ -130,6 +148,7 @@ function createVoice(bus: SynthesisBus) {
       state.noteNumber = noteNumber;
       internal.applyParameters();
       internal.triggerAttack(time);
+      internal.controlPhaseShift(time);
     },
     noteOff(_time: number) {
       const time = Math.max(_time, audioContext.currentTime);
