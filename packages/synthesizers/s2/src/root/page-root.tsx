@@ -43,6 +43,12 @@ const ControlsPart = () => {
                 onChange={(value) => setParameter("octave", value)}
               />
             </LabeledBox>
+            <LabeledBox label="osc mix" width={cellW}>
+              <Knob
+                value={parameters.oscMix}
+                onChange={(value) => setParameter("oscMix", value)}
+              />
+            </LabeledBox>
           </div>
           <div class={qu.flexHA().gap(gapX).it}>
             <ModuleHeader label="OSC1" />
@@ -58,8 +64,8 @@ const ControlsPart = () => {
             <LabeledBox label={`coarse ${parameters.osc1Coarse}`} width={cellW}>
               <Knob
                 value={parameters.osc1Coarse}
-                min={-24}
-                max={24}
+                min={-12}
+                max={12}
                 step={1}
                 onChange={(value) => setParameter("osc1Coarse", value)}
               />
@@ -87,8 +93,8 @@ const ControlsPart = () => {
             <LabeledBox label={`coarse ${parameters.osc2Coarse}`} width={cellW}>
               <Knob
                 value={parameters.osc2Coarse}
-                min={-24}
-                max={24}
+                min={-12}
+                max={12}
                 step={1}
                 onChange={(value) => setParameter("osc2Coarse", value)}
               />
@@ -108,6 +114,12 @@ const ControlsPart = () => {
               <Knob
                 value={parameters.ampDecay}
                 onChange={(value) => setParameter("ampDecay", value)}
+              />
+            </LabeledBox>
+            <LabeledBox label="release" width={cellW}>
+              <Knob
+                value={parameters.ampRelease}
+                onChange={(value) => setParameter("ampRelease", value)}
               />
             </LabeledBox>
             <LabeledBox label="volume" width={cellW}>

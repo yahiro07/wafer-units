@@ -14,12 +14,13 @@ export function createEngine(unitInterface: UnitInterface | undefined) {
       }
     },
     setParameters: synth.setParameters,
-    connects() {
+    wakeUp() {
+      synth.wakeUp();
       synth.outputNode.connect(destinationNode);
     },
-    disconnects() {
+    teardown() {
       synth.outputNode.disconnect(destinationNode);
-      synth.cleanup();
+      synth.teardown();
     },
     noteOn: synth.noteOn,
     noteOff: synth.noteOff,

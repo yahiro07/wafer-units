@@ -10,7 +10,7 @@ const engine = createEngine(unitInterface);
 
 export function setupUnit() {
   engine.setParameters(store.state.parameters);
-  engine.connects();
+  engine.wakeUp();
 
   unitInterface?.completeSetup({
     unitAspects: {
@@ -19,7 +19,7 @@ export function setupUnit() {
       inputs: ["note"],
       viewSize: [480, 300],
     },
-    cleanup: engine.disconnects,
+    cleanup: engine.teardown,
     noteInput: {
       noteOn(noteNumber, time) {
         engine.noteOn(noteNumber, time ?? 0);
