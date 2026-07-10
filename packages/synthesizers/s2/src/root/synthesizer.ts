@@ -57,6 +57,7 @@ function createEnvelopeGenerator(
     decay: 0,
     sustain: 1,
     release: 0,
+    hasNaiveWave: false,
   };
 
   return {
@@ -65,12 +66,11 @@ function createEnvelopeGenerator(
       decay: number;
       sustain: number;
       release: number;
+      hasNaiveWave: boolean;
     }) {
       Object.assign(egParams, params);
     },
     triggerAttack(time: number) {
-      destParam.cancelScheduledValues(time);
-
       const prAttack = egParams.attack;
       let prDecay = egParams.decay;
       const prSustain = egParams.sustain;
@@ -78,12 +78,21 @@ function createEnvelopeGenerator(
         prDecay = 0.01;
       }
       const topLevel = prDecay > 0 ? 1 : egParams.sustain;
-      if (prAttack > 0) {
-        const attackTime = prAttack * configs.attackSec;
-        destParam.setValueAtTime(0, time);
-        destParam.linearRampToValueAtTime(topLevel, time + attackTime);
-        time += attackTime;
+
+      destParam.cancelScheduledValues(time);
+
+      if (destParam.value > 0) {
+        const jumpTime = egParams.hasNaiveWave ? 0.03 : 0.005;
+        destParam.setValueAtTime(destParam.value, time);
+        destParam.linearRampToValueAtTime(0, time + jumpTime);
+        time += jumpTime;
       }
+
+      const jumpTime = egParams.hasNaiveWave ? 0.02 : 0.005;
+      const attackTime = jumpTime + prAttack * configs.attackSec;
+      destParam.setValueAtTime(0, time);
+      destParam.linearRampToValueAtTime(topLevel, time + attackTime);
+      time += attackTime;
       const decayTime = prDecay * configs.decaySec;
       destParam.setValueAtTime(topLevel, time);
       destParam.exponentialRampToValueAtTime(
@@ -92,11 +101,16 @@ function createEnvelopeGenerator(
       );
     },
     triggerRelease(time: number) {
-      const releaseTime = 0.01 + egParams.release * configs.releaseSec;
+      const jumpTime = egParams.hasNaiveWave ? 0.02 : 0.005;
+      const releaseTime = jumpTime + egParams.release * configs.releaseSec;
       destParam.cancelScheduledValues(time);
       destParam.setValueAtTime(destParam.value, time);
-      destParam.exponentialRampToValueAtTime(1e-3, time + releaseTime);
-      destParam.setTargetAtTime(0, time + releaseTime + 0.01, 0);
+      if (releaseTime === jumpTime) {
+        destParam.linearRampToValueAtTime(0, time + releaseTime);
+      } else {
+        destParam.exponentialRampToValueAtTime(1e-4, time + releaseTime);
+        destParam.setValueAtTime(0, time + releaseTime);
+      }
     },
   };
 }
@@ -149,6 +163,7 @@ function createVoice(bus: SynthesisBus) {
         decay: pr.ampDecay,
         sustain: pr.ampSustain,
         release: pr.ampRelease,
+        hasNaiveWave: pr.osc1Wave === 3 || pr.osc2Wave === 3,
       });
     },
     triggerAttack(time: number) {
