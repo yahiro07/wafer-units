@@ -1,8 +1,10 @@
+import { useEffect } from "preact/hooks";
+import { setupSynchronization, setupUnit } from "@/root/drivers";
 import { PageRoot } from "@/root/page-root";
 
-// setupUnit();
+setupUnit();
 
 export const App = () => {
-  // useEffect(setupSynchronization, []);
+  useEffect(setupSynchronization, []);
   return <PageRoot />;
 };

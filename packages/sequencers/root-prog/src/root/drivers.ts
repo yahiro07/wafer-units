@@ -1,41 +1,30 @@
 import { queryUnitInterface } from "wafer-host/unit-types";
-import { createEngine } from "@/root/engine";
+import { createSequencerEngine } from "@/root/sequencer";
 import { store } from "@/root/store";
 
 const unitInterface = queryUnitInterface("wafer-v01");
-
-const engine = createEngine(unitInterface);
+const engine = createSequencerEngine(unitInterface);
 
 export function setupUnit() {
-  engine.setParameters(store.state.parameters);
-  engine.connects();
+  engine.setState(store.state);
 
   unitInterface?.completeSetup({
     unitAspects: {
-      unitType: "effect",
-      outputs: ["audio"],
-      inputs: ["note"],
-      viewSize: [300, 160],
+      unitType: "sequencer",
+      outputs: ["note"],
+      viewSize: [460, 280],
     },
-    noteInput: {
-      noteOn(noteNumber, time) {
-        engine.noteOn(noteNumber, time ?? 0);
-      },
-      noteOff(noteNumber, time) {
-        engine.noteOff(noteNumber, time ?? 0);
-      },
-    },
-    hostCallbacks: {
-      setBpm: engine.setBpm,
-    },
-    cleanup: engine.disconnects,
+    clockHandlers: engine.clockHandlers,
   });
 }
 
 export function setupSynchronization() {
-  return store.subscribe(({ parameters }) => {
-    if (parameters) {
-      engine.setParameters(parameters);
+  return store.subscribe(({ loopBars, notes }) => {
+    if (loopBars !== undefined) {
+      engine.setState({ loopBars });
+    }
+    if (notes !== undefined) {
+      engine.setState({ notes });
     }
   });
 }

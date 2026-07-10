@@ -258,7 +258,7 @@ export const PageRoot = () => {
     <div class={qu.css({ height: "100dvh" }).flexC().it}>
       <EffectorBody className={cz(qu.wh(460, 280).it, qu.flexC().it)}>
         <div class={qu.flexV().gap(2).it}>
-          <h2>root-prog</h2>
+          <div>root-prog</div>
           <ControlsPart />
           <Editor />
         </div>
