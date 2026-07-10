@@ -35,6 +35,62 @@ function createSynthesisBus(
   };
 }
 
+function createEnvelopeGenerator(
+  destParam: AudioParam,
+  configs: {
+    attackSec: number;
+    decaySec: number;
+    releaseSec: number;
+  },
+) {
+  const egParams = {
+    attack: 0,
+    decay: 0,
+    sustain: 1,
+    release: 0,
+  };
+
+  return {
+    setParameters(params: {
+      attack: number;
+      decay: number;
+      sustain: number;
+      release: number;
+    }) {
+      Object.assign(egParams, params);
+    },
+    triggerAttack(time: number) {
+      destParam.cancelScheduledValues(time);
+
+      const prAttack = egParams.attack;
+      let prDecay = egParams.decay;
+      const prSustain = egParams.sustain;
+      if (prDecay === 0 && prSustain === 0) {
+        prDecay = 0.01;
+      }
+      const topLevel = prDecay > 0 ? 1 : egParams.sustain;
+      if (prAttack > 0) {
+        const attackTime = prAttack * configs.attackSec;
+        destParam.setValueAtTime(0, time);
+        destParam.linearRampToValueAtTime(topLevel, time + attackTime);
+        time += attackTime;
+      }
+      const decayTime = prDecay * configs.decaySec;
+      destParam.setValueAtTime(topLevel, time);
+      destParam.exponentialRampToValueAtTime(
+        Math.max(prSustain, 1e-3),
+        time + decayTime,
+      );
+    },
+    triggerRelease(time: number) {
+      const releaseTime = 0.01 + egParams.release * configs.releaseSec;
+      destParam.cancelScheduledValues(time);
+      destParam.setValueAtTime(destParam.value, time);
+      destParam.exponentialRampToValueAtTime(1e-3, time + releaseTime);
+    },
+  };
+}
+
 function createVoice(bus: SynthesisBus) {
   const { audioContext } = bus;
   const osc1 = audioContext.createOscillator();
@@ -45,6 +101,12 @@ function createVoice(bus: SynthesisBus) {
   osc2Gain.gain.value = 0.5;
   const ampGain = audioContext.createGain();
   ampGain.gain.value = 0;
+
+  const ampEg = createEnvelopeGenerator(ampGain.gain, {
+    attackSec: 1.5,
+    decaySec: 3,
+    releaseSec: 3,
+  });
 
   const state = {
     noteNumber: -1,
@@ -68,42 +130,22 @@ function createVoice(bus: SynthesisBus) {
       );
       osc1.type = "sawtooth";
       osc2.type = "sawtooth";
-      // const tt = audioContext.currentTime + 0.01;
       osc1.frequency.value = osc1Freq;
       osc2.frequency.value = osc2Freq;
       osc1Gain.gain.value = pr.oscMix;
       osc2Gain.gain.value = 1 - pr.oscMix;
+      ampEg.setParameters({
+        attack: pr.ampAttack,
+        decay: pr.ampDecay,
+        sustain: pr.ampSustain,
+        release: pr.ampRelease,
+      });
     },
     triggerAttack(time: number) {
-      ampGain.gain.cancelScheduledValues(time);
-      const pr = bus.parameters;
-
-      const prAttack = pr.ampAttack;
-      let prDecay = pr.ampDecay;
-      const prSustain = pr.ampSustain;
-      if (prDecay === 0 && prSustain === 0) {
-        prDecay = 0.01;
-      }
-      const topLevel = prDecay > 0 ? 1 : prSustain;
-      if (prAttack > 0) {
-        const attackTime = prAttack * 1.5;
-        ampGain.gain.setValueAtTime(0, time);
-        ampGain.gain.linearRampToValueAtTime(topLevel, time + attackTime);
-        time += attackTime;
-      }
-      const decayTime = prDecay * 3;
-      ampGain.gain.setValueAtTime(topLevel, time);
-      ampGain.gain.exponentialRampToValueAtTime(
-        Math.max(prSustain, 1e-3),
-        time + decayTime,
-      );
+      ampEg.triggerAttack(time);
     },
     triggerRelease(time: number) {
-      const pr = bus.parameters;
-      const releaseTime = 0.01 + pr.ampRelease * 3;
-      ampGain.gain.cancelScheduledValues(time);
-      ampGain.gain.setValueAtTime(ampGain.gain.value, time);
-      ampGain.gain.exponentialRampToValueAtTime(1e-3, time + releaseTime);
+      ampEg.triggerRelease(time);
     },
   };
 
