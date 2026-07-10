@@ -35,6 +35,15 @@ function createSynthesisBus(
   };
 }
 
+function getOscWaveType(wave: number): OscillatorType {
+  return {
+    [0]: "sawtooth",
+    [1]: "square",
+    [2]: "triangle",
+    [3]: "sine",
+  }[wave as 0 | 1 | 2 | 3] as OscillatorType;
+}
+
 function createEnvelopeGenerator(
   destParam: AudioParam,
   configs: {
@@ -129,12 +138,12 @@ function createVoice(bus: SynthesisBus) {
         pr.osc2Coarse,
         pr.osc2Fine,
       );
-      osc1.type = "sawtooth";
-      osc2.type = "sawtooth";
+      osc1.type = getOscWaveType(pr.osc1Wave);
+      osc2.type = getOscWaveType(pr.osc2Wave);
       osc1.frequency.value = osc1Freq;
       osc2.frequency.value = osc2Freq;
-      osc1Gain.gain.value = pr.oscMix;
-      osc2Gain.gain.value = 1 - pr.oscMix;
+      osc1Gain.gain.value = 1 - pr.oscMix;
+      osc2Gain.gain.value = pr.oscMix;
       ampEg.setParameters({
         attack: pr.ampAttack,
         decay: pr.ampDecay,
