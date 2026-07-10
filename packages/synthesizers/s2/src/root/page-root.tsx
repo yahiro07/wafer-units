@@ -96,87 +96,103 @@ const ControlsPart = () => {
               />
             </LabeledBox>
           </div>
-          <div class={qu.flexHA().gap(gapX).it}>
-            <ModuleHeader label="OSC1" />
-            <LabeledKnob
-              label="wave"
-              value={parameters.osc1Wave}
-              min={0}
-              max={3}
-              step={1}
-              onChange={(value) => setParameter("osc1Wave", value)}
-            />
-            {false && (
+          <div class={qu.flexHA().gap(6).it}>
+            <div class={qu.flexHA().gap(gapX).it}>
+              <ModuleHeader label="OSC1" />
               <LabeledKnob
-                label="octave"
-                value={parameters.osc1Octave}
-                min={-1}
-                max={1}
+                label="wave"
+                value={parameters.osc1Wave}
+                min={0}
+                max={3}
                 step={1}
-                onChange={(value) => setParameter("osc1Octave", value)}
-                onClick={() => setParameter("osc1Octave", 0)}
+                onChange={(value) => setParameter("osc1Wave", value)}
               />
-            )}
-            <LabeledKnob
-              label={`semi ${parameters.osc1Coarse}`}
-              value={parameters.osc1Coarse}
-              min={-12}
-              max={12}
-              step={1}
-              onChange={(value) => setParameter("osc1Coarse", value)}
-              onClick={() => setParameter("osc1Coarse", 0)}
-            />
-            {false && (
+              {false && (
+                <LabeledKnob
+                  label="octave"
+                  value={parameters.osc1Octave}
+                  min={-1}
+                  max={1}
+                  step={1}
+                  onChange={(value) => setParameter("osc1Octave", value)}
+                  onClick={() => setParameter("osc1Octave", 0)}
+                />
+              )}
               <LabeledKnob
-                label="fine"
-                value={parameters.osc1Fine}
-                min={-1}
-                max={1}
-                onChange={(value) => setParameter("osc1Fine", value)}
-                onClick={() => setParameter("osc1Fine", 0)}
+                label={`semi ${parameters.osc1Coarse}`}
+                value={parameters.osc1Coarse}
+                min={-12}
+                max={12}
+                step={1}
+                onChange={(value) => setParameter("osc1Coarse", value)}
+                onClick={() => setParameter("osc1Coarse", 0)}
               />
-            )}
+              {false && (
+                <LabeledKnob
+                  label="fine"
+                  value={parameters.osc1Fine}
+                  min={-1}
+                  max={1}
+                  onChange={(value) => setParameter("osc1Fine", value)}
+                  onClick={() => setParameter("osc1Fine", 0)}
+                />
+              )}
+            </div>
+            <div class={qu.flexHA().gap(gapX).it}>
+              <ModuleHeader label="OSC2" />
+              <LabeledKnob
+                label="wave"
+                value={parameters.osc2Wave}
+                min={0}
+                max={3}
+                step={1}
+                onChange={(value) => setParameter("osc2Wave", value)}
+              />
+              {false && (
+                <LabeledKnob
+                  label="octave"
+                  value={parameters.osc2Octave}
+                  min={-1}
+                  max={1}
+                  step={1}
+                  onChange={(value) => setParameter("osc2Octave", value)}
+                  onClick={() => setParameter("osc2Octave", 0)}
+                />
+              )}
+              <LabeledKnob
+                label={`semi ${parameters.osc2Coarse}`}
+                value={parameters.osc2Coarse}
+                min={-12}
+                max={12}
+                step={1}
+                onChange={(value) => setParameter("osc2Coarse", value)}
+                onClick={() => setParameter("osc2Coarse", 0)}
+              />
+              {false && (
+                <LabeledKnob
+                  label="fine"
+                  value={parameters.osc2Fine}
+                  min={-1}
+                  max={1}
+                  onChange={(value) => setParameter("osc2Fine", value)}
+                  onClick={() => setParameter("osc2Fine", 0)}
+                />
+              )}
+            </div>
           </div>
+
           <div class={qu.flexHA().gap(gapX).it}>
-            <ModuleHeader label="OSC2" />
+            <ModuleHeader label="FILTER" />
             <LabeledKnob
-              label="wave"
-              value={parameters.osc2Wave}
-              min={0}
-              max={3}
-              step={1}
-              onChange={(value) => setParameter("osc2Wave", value)}
+              label="cutoff"
+              value={parameters.filterCutoff}
+              onChange={(value) => setParameter("filterCutoff", value)}
             />
-            {false && (
-              <LabeledKnob
-                label="octave"
-                value={parameters.osc2Octave}
-                min={-1}
-                max={1}
-                step={1}
-                onChange={(value) => setParameter("osc2Octave", value)}
-                onClick={() => setParameter("osc2Octave", 0)}
-              />
-            )}
             <LabeledKnob
-              label={`semi ${parameters.osc2Coarse}`}
-              value={parameters.osc2Coarse}
-              min={-12}
-              max={12}
-              step={1}
-              onChange={(value) => setParameter("osc2Coarse", value)}
-              onClick={() => setParameter("osc2Coarse", 0)}
+              label="peak"
+              value={parameters.filterPeak}
+              onChange={(value) => setParameter("filterPeak", value)}
             />
-            {false && (
-              <LabeledKnob
-                label="fine"
-                value={parameters.osc2Fine}
-                min={-1}
-                max={1}
-                onChange={(value) => setParameter("osc2Fine", value)}
-                onClick={() => setParameter("osc2Fine", 0)}
-              />
-            )}
           </div>
           <div class={qu.flexHA().gap(gapX).it}>
             <ModuleHeader label="AMP" />
