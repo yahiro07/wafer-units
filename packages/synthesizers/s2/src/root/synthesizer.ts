@@ -87,6 +87,7 @@ function createEnvelopeGenerator(
       destParam.cancelScheduledValues(time);
       destParam.setValueAtTime(destParam.value, time);
       destParam.exponentialRampToValueAtTime(1e-3, time + releaseTime);
+      destParam.setTargetAtTime(0, time + releaseTime + 0.01, 0);
     },
   };
 }
