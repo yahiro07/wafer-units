@@ -20,8 +20,8 @@ const MatrixPart = () => {
 
   return (
     <div class={qu.flexV().gap(1).it}>
-      {seqNumbers(10).map((i) => {
-        const yi = 9 - i;
+      {seqNumbers(8).map((i) => {
+        const yi = 7 - i;
         return (
           <div class={qu.flexHA().gap(1).it}>
             {seqNumbers(16).map((xi) => {
@@ -52,7 +52,7 @@ const ControlsPart = () => {
   const { octave, duty } = store.useSnapshot();
   return (
     <div class={qu.wFull().flexHA().gap(2).justify("between").it}>
-      <TitleLabel title="Toner Sequencer" />
+      <TitleLabel title="Tonerio Sequencer" />
       <div class={qu.flexHA().gap(6).it}>
         <LabeledBox label="Octave">
           <Knob
@@ -74,7 +74,7 @@ const ControlsPart = () => {
 export const PageRoot = () => {
   return (
     <div class={qu.flexC().it}>
-      <EffectorBody className={cz(qu.wh(480, 330).it, qu.flexVC().it)}>
+      <EffectorBody className={cz(qu.wh(480, 280).pt(2).it, qu.flexVC().it)}>
         <div class={qu.flexV().gap(1).it}>
           <ControlsPart />
           <MatrixPart />

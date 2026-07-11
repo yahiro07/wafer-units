@@ -34,7 +34,7 @@ export function setupUnit() {
       unitType: "sequencer",
       outputs: ["note"],
       inputs: ["note", "automation"],
-      viewSize: [480, 330],
+      viewSize: [480, 280],
     },
     clockHandlers: {
       start() {
