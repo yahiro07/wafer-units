@@ -11,7 +11,6 @@ export function setupUnit() {
   unitInterface?.completeSetup({
     unitAspects: {
       unitType: "sequencer",
-      outputs: ["note"],
       viewSize: [460, 280],
     },
     clockHandlers: engine.clockHandlers,

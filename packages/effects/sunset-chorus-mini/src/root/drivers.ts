@@ -12,8 +12,6 @@ export function setupUnit() {
   unitInterface?.completeSetup({
     unitAspects: {
       unitType: "effect",
-      outputs: ["audio"],
-      inputs: ["audio"],
       viewSize: [200, 120],
     },
     cleanup: engine.disconnects,

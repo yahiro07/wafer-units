@@ -27,8 +27,6 @@ function setupSynchronization() {
   unitInterface?.completeSetup({
     unitAspects: {
       unitType: "sequencer",
-      outputs: ["note"],
-      inputs: ["note"],
     },
     noteInput: {
       noteOn: sequencer.inputNoteOn,

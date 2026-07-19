@@ -9,8 +9,6 @@ export function setupUnit() {
     unitAspects: {
       unitType: "instrument",
       categoryHint: "synthesizer",
-      outputs: ["audio"],
-      inputs: ["note"],
       viewSize: [700, 394],
     },
     noteInput: {

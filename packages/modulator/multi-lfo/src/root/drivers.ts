@@ -20,7 +20,6 @@ export function setupUnit() {
   unitInterface?.completeSetup({
     unitAspects: {
       unitType: "sequencer",
-      outputs: ["automation"],
       viewSize: [600, 350],
     },
     clockHandlers: sequencer.clockHandlers,

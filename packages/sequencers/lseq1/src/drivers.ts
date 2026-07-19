@@ -29,8 +29,6 @@ export const drivers = {
       unitAspects: {
         unitType: "sequencer",
         categoryHint: "stepSequencer",
-        outputs: ["note"],
-        inputs: ["note"],
       },
       noteInput: {
         noteOn: actions.inputNoteOn,

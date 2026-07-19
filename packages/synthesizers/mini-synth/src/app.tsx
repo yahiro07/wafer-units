@@ -13,8 +13,6 @@ export function App() {
         unitAspects: {
           unitType: "instrument",
           categoryHint: "synthesizer",
-          outputs: ["audio"],
-          inputs: ["note"],
         },
         noteInput: {
           noteOn(note, time) {

@@ -47,7 +47,6 @@ export const createChordProgressionUnit = (unitInterface: UnitInterface) => {
   unitInterface.completeSetup({
     unitAspects: {
       unitType: "sequencer",
-      outputs: ["note"],
     },
     clockHandlers: core.clockInput,
     persistence: {

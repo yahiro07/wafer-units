@@ -24,8 +24,6 @@ export function setupUnit() {
   unitInterface?.completeSetup({
     unitAspects: {
       unitType: "effect",
-      outputs: ["audio"],
-      inputs: ["audio"],
       viewSize: [320, 180],
     },
   });

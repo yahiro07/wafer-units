@@ -71,8 +71,6 @@ export function createApp(unitInterface: UnitInterface) {
       unitAspects: {
         unitType: "effect",
         categoryHint: "effect",
-        outputs: ["audio"],
-        inputs: ["audio"],
       },
       persistence: {
         emitStateBytes() {

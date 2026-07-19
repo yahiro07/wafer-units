@@ -21,7 +21,6 @@ export const drivers = {
       unitAspects: {
         unitType: "sequencer",
         categoryHint: "stepSequencer",
-        outputs: ["note"],
       },
       clockHandlers: {
         start() {

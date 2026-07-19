@@ -19,8 +19,6 @@ export const MainApp = () => {
       unitAspects: {
         unitType: "instrument",
         categoryHint: "synthesizer",
-        outputs: ["audio"],
-        inputs: ["note", "automation"],
       },
       noteInput: {
         async noteOn(note, time) {

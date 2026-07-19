@@ -23,8 +23,6 @@ export const uiActions = {
         unitAspects: {
           unitType: "instrument",
           categoryHint: "synthesizer",
-          outputs: ["audio"],
-          inputs: ["note"],
         },
         noteInput: {
           noteOn(noteNumber, time) {

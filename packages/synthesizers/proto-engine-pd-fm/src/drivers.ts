@@ -10,8 +10,6 @@ export function setupDrivers() {
       unitAspects: {
         unitType: "instrument",
         categoryHint: "synthesizer",
-        outputs: ["audio"],
-        inputs: ["note"],
       },
       noteInput: {
         noteOn: uiActions.noteOn,

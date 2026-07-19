@@ -27,8 +27,6 @@ export function createApp(unitInterface: UnitInterface | undefined) {
     unitAspects: {
       unitType: "instrument",
       categoryHint: "drumMachine",
-      outputs: ["audio"],
-      inputs: ["automation"],
     },
     clockHandlers: {
       start: actions.start,
