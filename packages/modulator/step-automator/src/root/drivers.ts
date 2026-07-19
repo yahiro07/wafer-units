@@ -3,8 +3,9 @@ import { createSequencer } from "@/root/sequencer";
 import { store } from "@/root/store";
 
 const unitInterface = queryUnitInterface("wafer-v01");
+const automationOutputPort = unitInterface?.createAutomationOutputPort();
 
-const sequencer = createSequencer(unitInterface);
+const sequencer = createSequencer(unitInterface, automationOutputPort);
 sequencer.setAutomationLanes(store.state.lanes);
 
 export function setupSynchronization() {
@@ -40,8 +41,7 @@ export function setupUnit() {
     unitCallbacks: {
       onConnectedTo(_, linkedPortSubtypes) {
         if (linkedPortSubtypes.includes("automation")) {
-          const parameterSpecs =
-            unitInterface?.automationOutputPort?.getParameterSpecs();
+          const parameterSpecs = automationOutputPort?.getParameterSpecs();
           if (parameterSpecs) {
             store.setParameterIds(parameterSpecs.map((spec) => spec.id));
           }
