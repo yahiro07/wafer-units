@@ -11,14 +11,14 @@ export function createAppSynthTarget(
   unitInterface: UnitInterface | undefined,
 ): AppSynthTarget {
   if (unitInterface) {
-    const noteOutput = unitInterface.noteOutputPort;
+    const noteOutputPort = unitInterface.createNoteOutputPort();
     return {
       resumeIfNeed() {},
       noteOn(noteNumber: number, time: number) {
-        noteOutput.noteOn(noteNumber, time);
+        noteOutputPort.noteOn(noteNumber, time);
       },
       noteOff(noteNumber: number, time: number) {
-        noteOutput.noteOff(noteNumber, time);
+        noteOutputPort.noteOff(noteNumber, time);
       },
     };
   } else {

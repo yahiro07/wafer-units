@@ -30,6 +30,7 @@ export function createEngine(unitInterface: UnitInterface | undefined) {
     editState: { ...defaultSequencerEditState },
     rootNoteNumber: 60,
   };
+  const noteOutputPort = unitInterface?.createNoteOutputPort();
 
   const clockHandlers: ClockHandlers = {
     processStep(inputStepIndex, time, unitDuration) {
@@ -47,8 +48,8 @@ export function createEngine(unitInterface: UnitInterface | undefined) {
           0,
           127,
         );
-        unitInterface?.noteOutputPort.noteOn(noteNumber, time, 1);
-        unitInterface?.noteOutputPort.noteOff(noteNumber, time + durationSec);
+        noteOutputPort?.noteOn(noteNumber, time, 1);
+        noteOutputPort?.noteOff(noteNumber, time + durationSec);
       }
     },
   };

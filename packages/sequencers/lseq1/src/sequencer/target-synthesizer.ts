@@ -8,14 +8,14 @@ export const unitInterface = queryUnitInterfaceForModule(
 
 export function createTargetSynthesizer() {
   if (unitInterface) {
-    const noteOutput = unitInterface.noteOutputPort;
+    const noteOutputPort = unitInterface.createNoteOutputPort();
     return {
       async resumeIfNeed() {},
       noteOn(noteNumber: number) {
-        noteOutput.noteOn(noteNumber);
+        noteOutputPort.noteOn(noteNumber);
       },
       noteOff(noteNumber: number) {
-        noteOutput.noteOff(noteNumber);
+        noteOutputPort.noteOff(noteNumber);
       },
     };
   } else {

@@ -13,6 +13,8 @@ export function createProgressionCore(
   };
   let currentNote: number | null = null;
 
+  const noteOutputPort = unitInterface.createNoteOutputPort();
+
   const core = {
     emitSongKey() {
       unitInterface.emitMetaAttributes({ key: state.songKey });
@@ -20,12 +22,12 @@ export function createProgressionCore(
     playNote(note: number, _time: number) {
       //Since we need to transmit the root note of the chord before scheduling
       //other units, we do not specify a time here and output the note immediately.
-      unitInterface.noteOutputPort.noteOn(note, 0);
+      noteOutputPort.noteOn(note, 0);
       currentNote = note;
     },
     stopCurrentNote(_time: number) {
       if (currentNote !== null) {
-        unitInterface.noteOutputPort.noteOff(currentNote, 0);
+        noteOutputPort.noteOff(currentNote, 0);
         currentNote = null;
       }
     },

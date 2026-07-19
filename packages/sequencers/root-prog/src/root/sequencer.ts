@@ -28,6 +28,8 @@ export function createSequencerEngine(
   };
   const rootNoteNumber = 48;
 
+  const noteOutputPort = unitInterface?.createNoteOutputPort();
+
   const clockHandlers: ClockHandlers = {
     processStep(stepIndex, time, unitDuration) {
       const shift = {
@@ -41,8 +43,8 @@ export function createSequencerEngine(
       if (relNote !== -1 && relNote !== local.lastEmitNote) {
         const note = getNotePitch(relNote, rootNoteNumber);
         console.log("noteOn", note, time);
-        unitInterface?.noteOutputPort.noteOn(note, time);
-        unitInterface?.noteOutputPort.noteOff(note, time + unitDuration);
+        noteOutputPort?.noteOn(note, time);
+        noteOutputPort?.noteOff(note, time + unitDuration);
         local.lastEmitNote = relNote;
       }
     },

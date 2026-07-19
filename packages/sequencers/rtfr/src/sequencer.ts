@@ -70,7 +70,7 @@ export function createSequencer(unitInterface: UnitInterface) {
     isInternalTickRunning: false,
   };
 
-  const { noteOutputPort } = unitInterface;
+  const noteOutputPort = unitInterface.createNoteOutputPort();
 
   const sequencerTickDriver = createSequencerTickDriver(
     unitInterface.audioContext,
@@ -101,7 +101,7 @@ export function createSequencer(unitInterface: UnitInterface) {
 
   return {
     inputNoteOn(note: number, _timeAt: number, _velocity: number) {
-      // noteOutput.noteOn(note, timeAt, velocity);
+      // noteOutputPort.noteOn(note, timeAt, velocity);
       state.chordRootNote = note;
       if (!state.isClockInputActive) {
         sequencerTickDriver.setBpm(state.bpm);
@@ -114,7 +114,7 @@ export function createSequencer(unitInterface: UnitInterface) {
     inputNoteOff(_note: number, _timeAt: number) {
       state.chordRootNote = undefined;
       if (state.isInternalTickRunning) {
-        // noteOutput.noteOff(note, timeAt);
+        // noteOutputPort.noteOff(note, timeAt);
         sequencerTickDriver.stop();
         state.isInternalTickRunning = false;
       }

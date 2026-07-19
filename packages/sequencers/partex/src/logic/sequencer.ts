@@ -24,7 +24,7 @@ function createSequencer() {
     loopBars: 2,
   };
 
-  const { noteOutputPort } = unitInterface;
+  const noteOutputPort = unitInterface.createNoteOutputPort();
 
   const core = {
     processStep(stepIndex: number, time: number, unitDuration: number) {
