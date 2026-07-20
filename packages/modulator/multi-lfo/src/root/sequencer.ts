@@ -36,7 +36,7 @@ function getLfoValue(wave: LfoWave, phase: number, shifted: boolean) {
 }
 
 export function createSequencer(
-  unitInterface: UnitInterface | undefined,
+  _unitInterface: UnitInterface | undefined,
   automationOutputPort: AutomationPort | undefined,
 ) {
   const state = {
@@ -72,7 +72,6 @@ export function createSequencer(
     stop() {},
   };
   return {
-    automationOutputPort,
     setLfoSlots(lfoSlots: LfoSlot[]) {
       state.lfoSlots = lfoSlots;
     },

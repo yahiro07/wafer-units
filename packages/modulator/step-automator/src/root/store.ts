@@ -3,13 +3,11 @@ import { AutomationLaneItem } from "@/base/types";
 import { seqNumbers } from "@/utils/helpers";
 
 export const store = createStore<{
-  count: number;
   connected: boolean;
   parameterIds: string[];
   lanes: AutomationLaneItem[];
   playbackStepIndex: number;
 }>({
-  count: 0,
   connected: false,
   parameterIds: [],
   lanes: [
@@ -25,6 +23,6 @@ export const store = createStore<{
   playbackStepIndex: -1,
 });
 
-if (1) {
+if (0) {
   store.setParameterIds(["param1", "param2", "param3", "param4", "param5"]);
 }

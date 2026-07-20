@@ -7,7 +7,7 @@ import { gaugeReferenceIndexMap } from "@/base/constants";
 import { AutomationLaneItem } from "@/base/types";
 
 export function createSequencer(
-  unitInterface: UnitInterface | undefined,
+  _unitInterface: UnitInterface | undefined,
   automationOutputPort: AutomationPort | undefined,
 ) {
   const state = {

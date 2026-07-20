@@ -3,12 +3,10 @@ import { LfoSlot, LfoWave, XStep, YStep } from "@/base/types";
 import { seqNumbers } from "@/utils/helpers";
 
 export const store = createStore<{
-  count: number;
   connected: boolean;
   parameterIds: string[];
   slots: LfoSlot[];
 }>({
-  count: 0,
   connected: false,
   parameterIds: [],
   slots: seqNumbers(4).map((i) => ({
@@ -27,6 +25,6 @@ export const store = createStore<{
   })),
 });
 
-if (1) {
+if (0) {
   store.setParameterIds(["param1", "param2", "param3", "param4", "param5"]);
 }

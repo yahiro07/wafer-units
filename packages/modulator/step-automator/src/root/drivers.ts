@@ -52,5 +52,13 @@ export function setupUnit() {
         store.setConnected(false);
       },
     },
+    persistence: {
+      emitState() {
+        return { lanes: store.state.lanes };
+      },
+      applyState(data) {
+        store.setLanes(data.lanes);
+      },
+    },
   });
 }

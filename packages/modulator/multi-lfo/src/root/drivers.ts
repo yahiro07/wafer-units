@@ -38,5 +38,13 @@ export function setupUnit() {
         store.setConnected(false);
       },
     },
+    persistence: {
+      emitState() {
+        return { slots: store.state.slots };
+      },
+      applyState(data) {
+        store.setSlots(data.slots);
+      },
+    },
   });
 }
