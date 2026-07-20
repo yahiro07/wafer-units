@@ -52,6 +52,9 @@ export function setupUnit() {
       noteOn: engine.inputNoteOn,
       noteOff: engine.inputNoteOff,
     },
+    hostCallbacks: {
+      setKey: engine.setKey,
+    },
     persistence: persistence,
     automationInput: automationInput,
   });

@@ -11,41 +11,66 @@ function mapDutyToDuration(paramDuty: number): number {
 }
 
 const cMajorNotes = [0, 2, 4, 5, 7, 9, 11];
-const degreePattern = [0, 2, 4, 6];
-function yIndexToSubNote(yIndex: number, rootNoteNumber: number) {
-  const rootPitch = rootNoteNumber % 12;
-  const rootDegree = cMajorNotes.indexOf(rootPitch);
-  if (rootDegree === -1) return 0;
-  const patternDegree = degreePattern[yIndex % degreePattern.length];
-  const targetDegree = rootDegree + patternDegree;
-  const octaveOffset = Math.floor(targetDegree / cMajorNotes.length) * 12;
-  const targetPitch = cMajorNotes[targetDegree % cMajorNotes.length];
-  return targetPitch + octaveOffset - rootPitch;
+
+function createScaleNoteShifter() {
+  let originalNoteNumber = 0;
+  let indexInScale = 0;
+  let octaveShift = 0;
+  const self = {
+    fromAbsolute(noteNumber: number) {
+      originalNoteNumber = noteNumber;
+      indexInScale = cMajorNotes.indexOf(noteNumber % 12);
+      if (indexInScale === -1) {
+        indexInScale = 0;
+      }
+      return self;
+    },
+    shiftInScale(amount: number) {
+      indexInScale += amount;
+      return self;
+    },
+    shiftOctave(amount: number) {
+      octaveShift += amount;
+      return self;
+    },
+    toAbsolute() {
+      return clampValue(
+        Math.floor(originalNoteNumber / 12) * 12 +
+          Math.floor(indexInScale / 7) * 12 +
+          cMajorNotes[indexInScale % 7] +
+          octaveShift * 12,
+        0,
+        127,
+      );
+    },
+  };
+  return self;
 }
 
 export function createEngine(unitInterface: UnitInterface | undefined) {
   const state = {
     editState: { ...defaultSequencerEditState },
     rootNoteNumber: 48,
+    key: "C",
   };
 
   const noteOutputPort = unitInterface?.createNoteOutputPort();
+
+  const shiftAmountsInScale = [0, 2, 4, 6, 7, 9, 11, 13];
 
   const clockHandlers: ClockHandlers = {
     processStep(inputStepIndex, time, unitDuration) {
       const stepIndex = inputStepIndex % 16;
       const { octave: octaveShift, duty, stepBits } = state.editState;
       const durationSec = unitDuration * mapDutyToDuration(duty);
-      for (let i = 0; i < 10; i++) {
+      for (let i = 0; i < 8; i++) {
         const isStepActive = isBitSet(stepBits[i], stepIndex);
         if (isStepActive) {
-          const octave = (i / 4) >>> 0;
-          const subNote = yIndexToSubNote(i, state.rootNoteNumber);
-          const noteNumber = clampValue(
-            state.rootNoteNumber + (octave + octaveShift) * 12 + subNote,
-            0,
-            127,
-          );
+          const noteNumber = createScaleNoteShifter()
+            .fromAbsolute(state.rootNoteNumber)
+            .shiftInScale(shiftAmountsInScale[i])
+            .shiftOctave(octaveShift)
+            .toAbsolute();
           noteOutputPort?.noteOn(noteNumber, time, 1);
           noteOutputPort?.noteOff(noteNumber, time + durationSec);
         }
@@ -64,5 +89,8 @@ export function createEngine(unitInterface: UnitInterface | undefined) {
       state.rootNoteNumber = noteNumber;
     },
     inputNoteOff(_noteNumber: number) {},
+    setKey(key: string) {
+      state.key = key;
+    },
   };
 }
