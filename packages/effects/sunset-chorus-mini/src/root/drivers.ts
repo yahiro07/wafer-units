@@ -1,4 +1,5 @@
 import { queryUnitInterface } from "wafer-host/unit-types";
+import { persistence } from "@/editor/persistence";
 import { store } from "@/editor/store";
 import { createEngine } from "./engine";
 
@@ -14,6 +15,7 @@ export function setupUnit() {
       unitType: "effect",
       viewSize: [200, 120],
     },
+    persistence,
     cleanup: engine.disconnects,
   });
 }
