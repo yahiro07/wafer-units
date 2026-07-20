@@ -42,7 +42,6 @@ export function createSequencerEngine(
       const relNote = editState.notes[pos];
       if (relNote !== -1 && relNote !== local.lastEmitNote) {
         const note = getNotePitch(relNote, rootNoteNumber);
-        console.log("noteOn", note, time);
         noteOutputPort?.noteOn(note, time);
         noteOutputPort?.noteOff(note, time + unitDuration);
         local.lastEmitNote = relNote;

@@ -1,4 +1,5 @@
 import { queryUnitInterface } from "wafer-host/unit-types";
+import { persistence } from "@/root/persistence";
 import { createSequencerEngine } from "@/root/sequencer";
 import { store } from "@/root/store";
 
@@ -14,6 +15,7 @@ export function setupUnit() {
       viewSize: [460, 280],
     },
     clockHandlers: engine.clockHandlers,
+    persistence,
   });
 }
 
