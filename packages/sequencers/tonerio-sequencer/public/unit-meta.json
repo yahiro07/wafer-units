@@ -1,5 +1,5 @@
 {
-  "name": "toner-sequencer",
+  "name": "tonerio-sequencer",
   "unitType": "sequencer",
   "outputSignalTypes": "note",
   "inputSignalTypes": "automation",

@@ -11,6 +11,6 @@ export default defineConfig({
   optimizeDeps: {
     exclude: ["wafer-host", "snap-store"],
   },
-  build: { outDir: "../../../dist/toner-sequencer", emptyOutDir: true },
+  build: { outDir: "../../../dist/tonerio-sequencer", emptyOutDir: true },
   server: { port: 3000 },
 });
