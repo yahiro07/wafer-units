@@ -38,30 +38,36 @@ function parseKey(key: string): { root: number; isMinor: boolean } {
   return { root, isMinor: minor === "m" };
 }
 
+function getScaleIntervals(isMinor: boolean): number[] {
+  return isMinor ? minorScaleIntervals : majorScaleIntervals;
+}
+
+/** Scale degree index including octave: octave * 7 + degree (0–6). */
+function absoluteToScaleIndex(noteNumber: number, key: string): number {
+  const { root, isMinor } = parseKey(key);
+  const scaleIntervals = getScaleIntervals(isMinor);
+  const relativePc = (((noteNumber % 12) - root) % 12 + 12) % 12;
+  let degree = scaleIntervals.indexOf(relativePc);
+  if (degree === -1) {
+    degree = 0;
+  }
+  return Math.floor((noteNumber - root) / 12) * 7 + degree;
+}
+
 function createScaleNoteShifter() {
   let keyRoot = 0;
   let scaleIntervals = majorScaleIntervals;
-  let tonicMidi = 0;
   let indexInScale = 0;
   let octaveShift = 0;
   const self = {
     setKey(key: string) {
       const parsed = parseKey(key);
       keyRoot = parsed.root;
-      scaleIntervals = parsed.isMinor
-        ? minorScaleIntervals
-        : majorScaleIntervals;
+      scaleIntervals = getScaleIntervals(parsed.isMinor);
       return self;
     },
-    fromAbsolute(noteNumber: number) {
-      const relativePc = (((noteNumber % 12) - keyRoot) % 12 + 12) % 12;
-      indexInScale = scaleIntervals.indexOf(relativePc);
-      if (indexInScale === -1) {
-        indexInScale = 0;
-      }
-      const snappedPc = (keyRoot + scaleIntervals[indexInScale]) % 12;
-      const snappedNote = Math.floor(noteNumber / 12) * 12 + snappedPc;
-      tonicMidi = snappedNote - scaleIntervals[indexInScale];
+    fromScaleIndex(scaleIndex: number) {
+      indexInScale = scaleIndex;
       return self;
     },
     shiftInScale(amount: number) {
@@ -76,9 +82,9 @@ function createScaleNoteShifter() {
       const degree = ((indexInScale % 7) + 7) % 7;
       const scaleOctaves = Math.floor(indexInScale / 7);
       return clampValue(
-        tonicMidi +
+        scaleOctaves * 12 +
+          keyRoot +
           scaleIntervals[degree] +
-          scaleOctaves * 12 +
           octaveShift * 12,
         0,
         127,
@@ -91,7 +97,8 @@ function createScaleNoteShifter() {
 export function createEngine(unitInterface: UnitInterface | undefined) {
   const state = {
     editState: { ...defaultSequencerEditState },
-    rootNoteNumber: 48,
+    // C3 tonic under C major (absolute 48) → scale index 28
+    rootScaleIndex: 28,
     key: "C",
   };
 
@@ -109,7 +116,7 @@ export function createEngine(unitInterface: UnitInterface | undefined) {
         if (isStepActive) {
           const noteNumber = createScaleNoteShifter()
             .setKey(state.key)
-            .fromAbsolute(state.rootNoteNumber)
+            .fromScaleIndex(state.rootScaleIndex)
             .shiftInScale(shiftAmountsInScale[i])
             .shiftOctave(octaveShift)
             .toAbsolute();
@@ -128,7 +135,7 @@ export function createEngine(unitInterface: UnitInterface | undefined) {
     },
     clockHandlers,
     inputNoteOn(noteNumber: number) {
-      state.rootNoteNumber = noteNumber;
+      state.rootScaleIndex = absoluteToScaleIndex(noteNumber, state.key);
     },
     inputNoteOff(_noteNumber: number) {},
     setKey(key: string) {
