@@ -8,16 +8,17 @@ export function createEngine(unitInterface: UnitInterface | undefined) {
     audioContext,
     defaultEffectParameters,
   );
+  const sourceNode = unitInterface?.audioInputNode;
   const destinationNode =
     unitInterface?.audioOutputNode ?? audioContext.destination;
   return {
     setParameters: effect.setParameters,
     connects() {
-      unitInterface?.audioInputNode.connect(effect.inputNode);
+      sourceNode?.connect(effect.inputNode);
       effect.outputNode.connect(destinationNode);
     },
     disconnects() {
-      unitInterface?.audioInputNode.disconnect(effect.inputNode);
+      sourceNode?.disconnect(effect.inputNode);
       effect.outputNode.disconnect(destinationNode);
       effect.cleanup();
     },
