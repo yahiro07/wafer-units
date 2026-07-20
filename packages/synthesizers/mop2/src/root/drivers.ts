@@ -1,5 +1,6 @@
 import { queryUnitInterface } from "wafer-host/unit-types";
 import { createEngine } from "@/root/engine";
+import { persistence } from "@/root/persistence";
 import { store } from "@/root/store";
 import { setupMidiKeyboardInput } from "@/utils/midi-keyboard-input";
 
@@ -17,6 +18,7 @@ export function setupUnit() {
         unitType: "effect",
         viewSize: [380, 220],
       },
+      persistence,
       cleanup: engine.disconnects,
       noteInput: {
         noteOn(noteNumber, time) {
