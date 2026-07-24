@@ -5,6 +5,26 @@ import { Knob } from "@/components/knob";
 import { LabeledBox } from "@/components/labeled-box";
 import { seqNumbers } from "@/utils/helpers";
 
+const presets = [
+  { degrees: "R", pattern: "_ooo", hint: "bass 16th x3" },
+  { degrees: "R", pattern: "__oo", hint: "bass 16th x2" },
+  { degrees: "R", pattern: "__o>", hint: "bass 8th" },
+  //if pattern includes p,q,r (other than o)
+  //it's an arpeggio and number of degree selection should be fixed
+  { degrees: "R8", pattern: "o>p>", hint: "bass 8th octave altering" },
+  { degrees: "R5", pattern: "o>p>", hint: "bass 8th(dur) 5th(pitch) altering" },
+  { degrees: "R35", pattern: "o>p>q>p>", hint: "arp" },
+  { degrees: "R358", pattern: "opqr", hint: "arp" },
+  //various arp patterns could be added here
+  { degrees: "R", pattern: "o16", hint: "whole note" },
+  { degrees: "R358", pattern: "o16", hint: "whole note" },
+  { degrees: "R", pattern: "o32", hint: "2 bars note" },
+  { degrees: "R358", pattern: "o32", hint: "2 bars note" },
+  { degrees: "R", pattern: "ooo>", hint: "trans gate" },
+  { degrees: "R8", pattern: "ooo>", hint: "trans gate" },
+  { degrees: "R", pattern: "o>_o>_o>", hint: "trans gate" },
+];
+
 const LabeledSection = ({
   label,
   children,
@@ -24,7 +44,7 @@ const DegreesSelector = () => {
   const labels = ["R", "3", "5", "7", "8"];
   return (
     <div class={qu.flexHA().gap(1).it}>
-      {seqNumbers(5).map((i) => (
+      {seqNumbers(labels.length).map((i) => (
         <div class={qu.bd("#888").wh(36, 36).flexC().it}>{labels[i]}</div>
       ))}
     </div>
