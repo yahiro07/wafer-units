@@ -11,6 +11,6 @@
   "devDependencies": {
     "preact": "^10.29.2",
     "snap-store": "^0.1.12",
-    "qulex": "link:../../../../qulex"
+    "qulex": "npm:@yahiro07/qulex@^0.1.3"
   }
 }

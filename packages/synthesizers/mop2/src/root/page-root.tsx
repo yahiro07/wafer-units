@@ -28,7 +28,7 @@ const ControlsPart = () => {
 
   return (
     <div class={qu.flexC().gap(4).it}>
-      <div class={qu.hFull().flexV().justify("between").pt(4).it}>
+      <div class={qu.h("full").flexV().justify("between").pt(4).it}>
         <div class={qu.fontSize(17).weight("bold").it}>mop2</div>
         <LabeledBox label="octave" width={cellW}>
           <Knob

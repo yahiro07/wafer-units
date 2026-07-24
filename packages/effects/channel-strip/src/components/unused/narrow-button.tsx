@@ -1,5 +1,5 @@
 import { ComponentChildren } from "preact";
-import { cx, qu } from "@/utils/qstyle-goober";
+import { cz, qu } from "@/common/css-realm";
 
 export const NarrowButton = ({
   text,
@@ -14,13 +14,13 @@ export const NarrowButton = ({
 }) => {
   return (
     <div
-      class={cx(
-        qu.flexC().wh(40, 20).bg("#ddd").weight("bold").cp(),
-        active && qu.bg("#48c").color("#fff"),
+      class={cz(
+        qu.flexC().wh(40, 20).bg("#ddd").weight("bold").cp().it,
+        active && qu.bg("#48c").color("#fff").it,
       )}
       onClick={onClick}
     >
-      {text && <div class={qu.fontSize(9)}>{text}</div>}
+      {text && <div class={qu.fontSize(9).it}>{text}</div>}
       {children}
     </div>
   );

@@ -51,7 +51,7 @@ const MatrixPart = () => {
 const ControlsPart = () => {
   const { octave, duty } = store.useSnapshot();
   return (
-    <div class={qu.wFull().flexHA().gap(2).justify("between").it}>
+    <div class={qu.w("full").flexHA().gap(2).justify("between").it}>
       <TitleLabel title="Tonerio Sequencer" />
       <div class={qu.flexHA().gap(6).it}>
         <LabeledBox label="Octave">

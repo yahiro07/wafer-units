@@ -155,7 +155,7 @@ const EditInputLayer = ({ notes }: { notes: number[] }) => {
   };
   return (
     <div
-      class={qu.relative().wFull().hFull().it}
+      class={qu.relative().w("full").h("full").it}
       onPointerDown={handlePointerDown}
     />
   );
@@ -212,7 +212,7 @@ const NotesDisplayLayer = ({
                 height: npx(cellH),
               }}
             >
-              <div class={qu.bg("#0cf").wFull().h(8).it} />
+              <div class={qu.bg("#0cf").w("full").h(8).it} />
             </div>
           </div>
         );

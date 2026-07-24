@@ -69,8 +69,8 @@ importers:
         specifier: ^10.29.2
         version: 10.29.2
       qulex:
-        specifier: link:../../../../qulex
-        version: link:../../../../qulex
+        specifier: npm:@yahiro07/qulex@^0.1.3
+        version: '@yahiro07/qulex@0.1.3'
       snap-store:
         specifier: ^0.1.12
         version: 0.1.12(preact@10.29.2)(react@19.2.6)
@@ -153,8 +153,8 @@ importers:
         specifier: ^10.29.2
         version: 10.29.2
       qulex:
-        specifier: link:../../../../qulex
-        version: link:../../../../qulex
+        specifier: npm:@yahiro07/qulex@^0.1.3
+        version: '@yahiro07/qulex@0.1.3'
       snap-store:
         specifier: ^0.1.12
         version: 0.1.12(preact@10.29.2)(react@19.2.6)
@@ -165,8 +165,8 @@ importers:
         specifier: ^10.29.2
         version: 10.29.2
       qulex:
-        specifier: link:../../../../qulex
-        version: link:../../../../qulex
+        specifier: npm:@yahiro07/qulex@^0.1.3
+        version: '@yahiro07/qulex@0.1.3'
       snap-store:
         specifier: ^0.1.12
         version: 0.1.12(preact@10.29.2)(react@19.2.6)
@@ -180,8 +180,8 @@ importers:
         specifier: ^10.29.2
         version: 10.29.2
       qulex:
-        specifier: link:../../../../qulex
-        version: link:../../../../qulex
+        specifier: npm:@yahiro07/qulex@^0.1.3
+        version: '@yahiro07/qulex@0.1.3'
       snap-store:
         specifier: ^0.1.12
         version: 0.1.12(preact@10.29.2)(react@19.2.6)
@@ -207,8 +207,8 @@ importers:
         specifier: ^10.29.2
         version: 10.29.2
       qulex:
-        specifier: link:../../../../qulex
-        version: link:../../../../qulex
+        specifier: npm:@yahiro07/qulex@^0.1.3
+        version: '@yahiro07/qulex@0.1.3'
       snap-store:
         specifier: ^0.1.12
         version: 0.1.12(preact@10.29.2)(react@19.2.6)
@@ -333,8 +333,8 @@ importers:
         specifier: ^10.29.2
         version: 10.29.2
       qulex:
-        specifier: link:../../../../qulex
-        version: link:../../../../qulex
+        specifier: npm:@yahiro07/qulex@^0.1.3
+        version: '@yahiro07/qulex@0.1.3'
       snap-store:
         specifier: ^0.1.12
         version: 0.1.12(preact@10.29.2)(react@19.2.6)
@@ -414,8 +414,8 @@ importers:
         specifier: ^10.29.2
         version: 10.29.2
       qulex:
-        specifier: link:../../../../qulex
-        version: link:../../../../qulex
+        specifier: npm:@yahiro07/qulex@^0.1.3
+        version: '@yahiro07/qulex@0.1.3'
       snap-store:
         specifier: ^0.1.12
         version: 0.1.12(preact@10.29.2)(react@19.2.6)
@@ -429,8 +429,8 @@ importers:
         specifier: ^10.29.2
         version: 10.29.2
       qulex:
-        specifier: link:../../../../qulex
-        version: link:../../../../qulex
+        specifier: npm:@yahiro07/qulex@^0.1.3
+        version: '@yahiro07/qulex@0.1.3'
       snap-store:
         specifier: ^0.1.12
         version: 0.1.12(preact@10.29.2)(react@19.2.6)
@@ -471,8 +471,8 @@ importers:
         specifier: ^10.29.2
         version: 10.29.2
       qulex:
-        specifier: link:../../../../qulex
-        version: link:../../../../qulex
+        specifier: npm:@yahiro07/qulex@^0.1.3
+        version: '@yahiro07/qulex@0.1.3'
       snap-store:
         specifier: ^0.1.12
         version: 0.1.12(preact@10.29.2)(react@19.2.6)
@@ -486,8 +486,8 @@ importers:
         specifier: ^10.29.2
         version: 10.29.2
       qulex:
-        specifier: link:../../../../qulex
-        version: link:../../../../qulex
+        specifier: npm:@yahiro07/qulex@^0.1.3
+        version: '@yahiro07/qulex@0.1.3'
       snap-store:
         specifier: ^0.1.12
         version: 0.1.12(preact@10.29.2)(react@19.2.6)
@@ -522,8 +522,8 @@ importers:
         specifier: ^10.29.2
         version: 10.29.2
       qulex:
-        specifier: link:../../../../qulex
-        version: link:../../../../qulex
+        specifier: npm:@yahiro07/qulex@^0.1.3
+        version: '@yahiro07/qulex@0.1.3'
       snap-store:
         specifier: ^0.1.12
         version: 0.1.12(preact@10.29.2)(react@19.2.6)
@@ -1040,6 +1040,9 @@ packages:
         optional: true
       babel-plugin-react-compiler:
         optional: true
+
+  '@yahiro07/qulex@0.1.3':
+    resolution: {integrity: sha512-4rNlNkDVbF7itpeT85/ubT5IiMYRGBdxVk6ALqeaFRGNSSeghP6FIdj4qBiqWYyWPQttIxjIrAz4xGpnfPO3eQ==}
 
   alumina-visor@0.1.6:
     resolution: {integrity: sha512-teCRvUD5m+pE/apudTPAwgAH67mXBof6C2b5nnRbbtiYGE1bitO56p5CHRiMN9cOx6GqqVDDP0XFVYuqgMuQHA==}
@@ -2201,6 +2204,8 @@ snapshots:
     dependencies:
       '@rolldown/pluginutils': 1.0.1
       vite: 8.0.14(@types/node@25.9.1)(jiti@2.7.0)
+
+  '@yahiro07/qulex@0.1.3': {}
 
   alumina-visor@0.1.6(alumina@0.1.14):
     dependencies:
