@@ -16,6 +16,8 @@ import { seqNumbers } from "@/utils/helpers";
 const store = createStore({
   presetIndex: 0,
   degreeFlags: presets[0].degreeFlags,
+  octave: 0,
+  duty: 0.5,
 });
 
 const actions = {
@@ -76,12 +78,31 @@ const DegreesSelector = ({
   );
 };
 
-const OctaveSelector = () => {
+const OctaveSelector = ({
+  octave,
+  setOctave,
+}: {
+  octave: number;
+  setOctave: (octave: number) => void;
+}) => {
   return (
     <div class={qu.flexHA().gap(1).it}>
-      {seqNumbers(5).map((i) => (
-        <div class={qu.bd("#888").wh(36, 36).flexC().it}>{i - 2}</div>
-      ))}
+      {seqNumbers(5).map((i) => {
+        const oct = i - 2;
+        const active = oct === octave;
+        return (
+          <div
+            class={cz(
+              qu.bg("#fff").bd("#888").wh(36, 36).flexC().it,
+              qu.cursor("pointer").it,
+            )}
+            style={active ? { background: "#48f8", color: "#fff" } : undefined}
+            onClick={() => setOctave(oct)}
+          >
+            {oct}
+          </div>
+        );
+      })}
     </div>
   );
 };
@@ -243,19 +264,29 @@ const DegreeSelectorContainer = () => {
   );
 };
 
+const OctaveSelectorContainer = () => {
+  const st = store.useSnapshot();
+  return <OctaveSelector octave={st.octave} setOctave={store.setOctave} />;
+};
+
+const DutyKnobContainer = () => {
+  const st = store.useSnapshot();
+  return <Knob value={st.duty} onChange={store.setDuty} />;
+};
+
 export const PageRoot = () => {
   return (
     <div class={qu.css({ height: "100dvh" }).flexC().it}>
-      <EffectorBody className={cz(qu.wh(800, 500).it, qu.flexC().it)}>
+      <EffectorBody className={cz(qu.wh(750, 450).it, qu.flexC().it)}>
         <div class={qu.flexV().gap(4).it}>
           <div class={qu.flexHA().justify("between").it}>
             <div>RTFS-P</div>
             <div class={qu.flexHA().gap(4).it}>
               <LabeledSection label="octave">
-                <OctaveSelector />
+                <OctaveSelectorContainer />
               </LabeledSection>
               <LabeledBox label="duty">
-                <Knob value={0.5} onChange={() => {}} />
+                <DutyKnobContainer />
               </LabeledBox>
             </div>
           </div>
