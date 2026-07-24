@@ -1,29 +1,17 @@
 import { ComponentChildren } from "preact";
+import { useMemo } from "preact/hooks";
+import { createStore } from "snap-store";
 import { cz, qu } from "@/common/css-realm";
 import { EffectorBody } from "@/components/effector-body";
 import { Knob } from "@/components/knob";
 import { LabeledBox } from "@/components/labeled-box";
+import { buildPresetNotes, Preset, presets } from "@/root/model";
 import { seqNumbers } from "@/utils/helpers";
 
-const presets = [
-  { degrees: "R", pattern: "_ooo", hint: "bass 16th x3" },
-  { degrees: "R", pattern: "__oo", hint: "bass 16th x2" },
-  { degrees: "R", pattern: "__o>", hint: "bass 8th" },
-  //if pattern includes p,q,r (other than o)
-  //it's an arpeggio and number of degree selection should be fixed
-  { degrees: "R8", pattern: "o>p>", hint: "bass 8th octave altering" },
-  { degrees: "R5", pattern: "o>p>", hint: "bass 8th(dur) 5th(pitch) altering" },
-  { degrees: "R35", pattern: "o>p>q>p>", hint: "arp" },
-  { degrees: "R358", pattern: "opqr", hint: "arp" },
-  //various arp patterns could be added here
-  { degrees: "R", pattern: "o16", hint: "whole note" },
-  { degrees: "R358", pattern: "o16", hint: "whole note" },
-  { degrees: "R", pattern: "o32", hint: "2 bars note" },
-  { degrees: "R358", pattern: "o32", hint: "2 bars note" },
-  { degrees: "R", pattern: "ooo>", hint: "trans gate" },
-  { degrees: "R8", pattern: "ooo>", hint: "trans gate" },
-  { degrees: "R", pattern: "o>_o>_o>", hint: "trans gate" },
-];
+const store = createStore({
+  presetIndex: 0,
+  degreeFlags: presets[0].degreeFlags,
+});
 
 const LabeledSection = ({
   label,
@@ -61,8 +49,57 @@ const OctaveSelector = () => {
   );
 };
 
+const PresetNotesView = ({ preset }: { preset: Preset }) => {
+  const notes = useMemo(() => buildPresetNotes(preset), [preset]);
+  const sz = 8;
+  return (
+    <div class={qu.relative().h("full").it}>
+      {notes.map((note, i) => (
+        <div
+          key={i}
+          class={qu.absolute().it}
+          style={{
+            left: note.position * sz,
+            bottom: (note.degreeIndex * sz) / 2,
+            width: Math.min(note.duration, 8) * sz,
+            height: sz,
+            border: "solid 1px #48f",
+            background: "#48f6",
+          }}
+        />
+      ))}
+    </div>
+  );
+};
+
 const PatternCard = ({ index }: { index?: number }) => {
-  return <div class={qu.bd("#888").w(100).h(40).it}>{index}</div>;
+  const preset = index !== undefined ? presets[index] : undefined;
+  const displayBarLength = preset?.pattern.includes("!")
+    ? preset.stepLength / 16
+    : undefined;
+  return (
+    <div class={qu.bg("#fff").bd("#888").relative().wh(100, 40).it}>
+      {preset && <PresetNotesView preset={preset} />}
+      <div
+        class={cz(
+          qu.absolute().top(0).right(0).mr(0.25).it,
+          qu.fontSize(11).color("#444").it,
+        )}
+      >
+        {index}
+      </div>
+      {displayBarLength && (
+        <div
+          class={cz(
+            qu.absolute().bottom(0).right(0).mr(0.25).it,
+            qu.fontSize(11).color("#444").it,
+          )}
+        >
+          {displayBarLength === 1 ? "1bar" : `${displayBarLength}bars`}
+        </div>
+      )}
+    </div>
+  );
 };
 
 const PatternList = () => {
