@@ -1,6 +1,5 @@
 import { ComponentChildren } from "preact";
 import { useMemo } from "preact/hooks";
-import { createStore } from "snap-store";
 import { cz, qu } from "@/common/css-realm";
 import { EffectorBody } from "@/components/effector-body";
 import { Knob } from "@/components/knob";
@@ -11,30 +10,8 @@ import {
   Preset,
   presets,
 } from "@/root/model";
+import { actions, store } from "@/root/store";
 import { seqNumbers } from "@/utils/helpers";
-
-const store = createStore<{
-  presetIndex: number;
-  degreeFlags: number;
-  octave: number;
-  duty: number;
-  playPos: number | null;
-}>({
-  presetIndex: 0,
-  degreeFlags: presets[0].degreeFlags,
-  octave: 0,
-  duty: 0.5,
-  playPos: null,
-});
-
-const actions = {
-  selectPreset(index: number) {
-    store.assign({
-      presetIndex: index,
-      degreeFlags: presets[index].degreeFlags,
-    });
-  },
-};
 
 const LabeledSection = ({
   label,

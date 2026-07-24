@@ -40,7 +40,6 @@ const bitPosMap = {
 } as const;
 
 function mapDegreeStringsToFlags(degrees: string) {
-  //R:bit0, 3:bit1, 5:bit2, 7:bit3, 8:bit4
   const chars = degrees.split("");
   let flags = 0;
   for (const char of chars) {

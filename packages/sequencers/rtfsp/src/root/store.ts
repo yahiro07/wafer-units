@@ -1,15 +1,25 @@
 import { createStore } from "snap-store";
-import { KeyLabelMode, LoopBars } from "@/root/parameters";
-import { seqNumbers } from "@/utils/helpers";
+import { presets } from "@/root/model";
 
-type StoreState = {
-  keyLabelMode: KeyLabelMode;
-  loopBars: LoopBars;
-  notes: number[];
-};
-
-export const store = createStore<StoreState>({
-  keyLabelMode: "doremi",
-  loopBars: 4,
-  notes: seqNumbers(16).map(() => -1),
+export const store = createStore<{
+  presetIndex: number;
+  degreeFlags: number;
+  octave: number;
+  duty: number;
+  playPos: number | null;
+}>({
+  presetIndex: 0,
+  degreeFlags: presets[0].degreeFlags,
+  octave: 0,
+  duty: 0.5,
+  playPos: null,
 });
+
+export const actions = {
+  selectPreset(index: number) {
+    store.assign({
+      presetIndex: index,
+      degreeFlags: presets[index].degreeFlags,
+    });
+  },
+};
