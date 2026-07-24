@@ -414,8 +414,8 @@ importers:
         specifier: ^10.29.2
         version: 10.29.2
       qulex:
-        specifier: npm:@yahiro07/qulex@^0.1.4
-        version: '@yahiro07/qulex@0.1.4'
+        specifier: link:../../../../qulex
+        version: link:../../../../qulex
       snap-store:
         specifier: ^0.1.12
         version: 0.1.12(preact@10.29.2)(react@19.2.6)
@@ -1058,9 +1058,6 @@ packages:
 
   '@yahiro07/qulex@0.1.3':
     resolution: {integrity: sha512-4rNlNkDVbF7itpeT85/ubT5IiMYRGBdxVk6ALqeaFRGNSSeghP6FIdj4qBiqWYyWPQttIxjIrAz4xGpnfPO3eQ==}
-
-  '@yahiro07/qulex@0.1.4':
-    resolution: {integrity: sha512-jodnChu1D5/pAeg77qX9tXsw+aOPplLRutenkZJw0DYmldUdlwEKlW7CrfNIDfk53k2hZBeT0WYLMdKpt1DS+g==}
 
   alumina-visor@0.1.6:
     resolution: {integrity: sha512-teCRvUD5m+pE/apudTPAwgAH67mXBof6C2b5nnRbbtiYGE1bitO56p5CHRiMN9cOx6GqqVDDP0XFVYuqgMuQHA==}
@@ -2224,8 +2221,6 @@ snapshots:
       vite: 8.0.14(@types/node@25.9.1)(jiti@2.7.0)
 
   '@yahiro07/qulex@0.1.3': {}
-
-  '@yahiro07/qulex@0.1.4': {}
 
   alumina-visor@0.1.6(alumina@0.1.14):
     dependencies:

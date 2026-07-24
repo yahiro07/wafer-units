@@ -86,9 +86,14 @@ function mapDegreeFlagToIndices(degreeFlags: number): number[] {
   return indices;
 }
 
-export function buildPresetNotes(preset: Preset): Note[] {
+export function buildPresetNotes(
+  preset: Preset,
+  degreeFlagsOverride?: number,
+): Note[] {
   const pt = preset.pattern;
-  const degreeIndices = mapDegreeFlagToIndices(preset.degreeFlags);
+  const degreeIndices = mapDegreeFlagToIndices(
+    degreeFlagsOverride ?? preset.degreeFlags,
+  );
   if (pt.includes("!")) {
     return degreeIndices.map((degreeIndex) => ({
       degreeIndex,

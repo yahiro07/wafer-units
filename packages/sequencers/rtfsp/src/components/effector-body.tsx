@@ -11,7 +11,7 @@ export const EffectorBody = ({
   return (
     <div
       class={cz(
-        qu.bg("#ddd").p(4).color("#333").rounded(2).it,
+        qu.bg("#ddd").p(4).color("#555").rounded(2).it,
         qu.css({ border: `inset 1px #0004` }).it,
         className,
       )}
