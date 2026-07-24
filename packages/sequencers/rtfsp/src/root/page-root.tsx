@@ -13,11 +13,18 @@ import {
 } from "@/root/model";
 import { seqNumbers } from "@/utils/helpers";
 
-const store = createStore({
+const store = createStore<{
+  presetIndex: number;
+  degreeFlags: number;
+  octave: number;
+  duty: number;
+  playPos: number | null;
+}>({
   presetIndex: 0,
   degreeFlags: presets[0].degreeFlags,
   octave: 0,
   duty: 0.5,
+  playPos: null,
 });
 
 const actions = {
@@ -225,21 +232,40 @@ const Timeline = () => {
   const sz = 10;
   const szx = 16;
   return (
-    <div class={qu.wh(540, 60).relative().bg("#fff").bd("#888").it}>
-      {notes.map((note, i) => (
-        <div
-          key={i}
-          class={qu.absolute().it}
-          style={{
-            left: note.position * szx,
-            bottom: (note.degreeIndex * sz) / 2,
-            width: note.duration * szx,
-            height: sz,
-            background: "#48f6",
-            border: "solid 1px #48f",
-          }}
-        />
-      ))}
+    <div class={qu.flexV().it}>
+      <div class={qu.wh(514, 60).relative().bg("#fff").bd("#888").it}>
+        {notes.map((note, i) => (
+          <div
+            key={i}
+            class={qu.absolute().it}
+            style={{
+              left: note.position * szx,
+              bottom: (note.degreeIndex * sz) / 2,
+              width: note.duration * szx,
+              height: sz,
+              background: "#48f6",
+              border: "solid 1px #48f",
+            }}
+          />
+        ))}
+      </div>
+      <div class={qu.wh(540, 20).flexHA().it}>
+        {seqNumbers(32).map((i) => {
+          const altColor = i % 4 === 0;
+          const active = i === st.playPos;
+          return (
+            <div key={i} class={qu.wh(szx, 10).flexC().it}>
+              <div
+                class={cz(
+                  qu.wh(7, 7).rounded("full").bg("#ccc").it,
+                  altColor && qu.bg("#aaa").it,
+                  active && qu.bg("#4cf").it,
+                )}
+              />
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 };
