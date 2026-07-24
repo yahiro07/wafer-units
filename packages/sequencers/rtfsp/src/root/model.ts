@@ -132,3 +132,20 @@ export function buildPresetNotes(
   }
   return notes;
 }
+
+export function buildPresetNotesForLoop(
+  preset: Preset,
+  totalSteps: number,
+  degreeFlagsOverride?: number,
+): Note[] {
+  const nx = (totalSteps / preset.stepLength) >>> 0;
+  const allNotes: Note[] = [];
+  for (let i = 0; i < nx; i++) {
+    const offset = i * preset.stepLength;
+    const notes = buildPresetNotes(preset, degreeFlagsOverride);
+    allNotes.push(
+      ...notes.map((note) => ({ ...note, position: note.position + offset })),
+    );
+  }
+  return allNotes;
+}

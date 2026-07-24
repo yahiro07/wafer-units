@@ -5,7 +5,12 @@ import { cz, qu } from "@/common/css-realm";
 import { EffectorBody } from "@/components/effector-body";
 import { Knob } from "@/components/knob";
 import { LabeledBox } from "@/components/labeled-box";
-import { buildPresetNotes, Preset, presets } from "@/root/model";
+import {
+  buildPresetNotes,
+  buildPresetNotesForLoop,
+  Preset,
+  presets,
+} from "@/root/model";
 import { seqNumbers } from "@/utils/helpers";
 
 const store = createStore({
@@ -191,7 +196,31 @@ const PageList = () => {
 };
 
 const Timeline = () => {
-  return <div class={qu.w(540).h(60).bd("#888").it}>timeline</div>;
+  const st = store.useSnapshot();
+  const notes = useMemo(
+    () => buildPresetNotesForLoop(presets[st.presetIndex], 32, st.degreeFlags),
+    [st.presetIndex, st.degreeFlags],
+  );
+  const sz = 10;
+  const szx = 16;
+  return (
+    <div class={qu.wh(540, 60).relative().bg("#fff").bd("#888").it}>
+      {notes.map((note, i) => (
+        <div
+          key={i}
+          class={qu.absolute().it}
+          style={{
+            left: note.position * szx,
+            bottom: (note.degreeIndex * sz) / 2,
+            width: note.duration * szx,
+            height: sz,
+            background: "#48f6",
+            border: "solid 1px #48f",
+          }}
+        />
+      ))}
+    </div>
+  );
 };
 
 const CurrentPatternContainer = () => {
