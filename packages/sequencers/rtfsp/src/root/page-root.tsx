@@ -233,8 +233,17 @@ const CurrentPatternContainer = () => {
   );
 };
 
-export const PageRoot = () => {
+const DegreeSelectorContainer = () => {
   const st = store.useSnapshot();
+  return (
+    <DegreesSelector
+      degreeFlags={st.degreeFlags}
+      setDegreeFlags={store.setDegreeFlags}
+    />
+  );
+};
+
+export const PageRoot = () => {
   return (
     <div class={qu.css({ height: "100dvh" }).flexC().it}>
       <EffectorBody className={cz(qu.wh(800, 500).it, qu.flexC().it)}>
@@ -255,10 +264,7 @@ export const PageRoot = () => {
               <CurrentPatternContainer />
             </LabeledSection>
             <LabeledSection label="degrees">
-              <DegreesSelector
-                degreeFlags={st.degreeFlags}
-                setDegreeFlags={store.setDegreeFlags}
-              />
+              <DegreeSelectorContainer />
             </LabeledSection>
           </div>
           <div class={qu.flexHA().gap(4).it}>
