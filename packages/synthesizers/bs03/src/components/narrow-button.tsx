@@ -15,7 +15,13 @@ export const NarrowButton = ({
   return (
     <div
       class={cz(
-        qu.flexC().wh(36, 16).bg("#888").bd("#444c").weight("bold").cp().it,
+        qu
+          .flexC()
+          .wh(36, 16)
+          .bg("#888")
+          .bd("#444c")
+          .weight("bold")
+          .cursor("pointer").it,
         qu.color("#fff").rounded(1).it,
       )}
       style={active ? { background: "#48c" } : undefined}

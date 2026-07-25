@@ -18,7 +18,7 @@ const ControlsPart = () => {
 
   return (
     <div class={qu.flexV().gap(1.5).it}>
-      <div class={qu.flexHA().justify("between").pl(1.5).pr(1).it}>
+      <div class={qu.flexHA().fJustify("between").pl(1.5).pr(1).it}>
         <div class={qu.fontSize(17).weight("bold").it}>Channel Strip</div>
         <div class={qu.flexHA().gap(4).it}>
           <LabeledBox label="effect" width={36} contentHeight={24}>

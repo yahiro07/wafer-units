@@ -18,7 +18,7 @@ const ControlsPart = () => {
 
   return (
     <div class={qu.flexV().gap(1.5).it}>
-      <div class={qu.flexHA().justify("between").pl(1.5).pr(1).it}>
+      <div class={qu.flexHA().fJustify("between").pl(1.5).pr(1).it}>
         <div class={qu.fontSize(17).weight("bold").it}>S7 Synthesizer</div>
       </div>
       <div class={qu.flexV().gap(0).it}>
@@ -80,7 +80,7 @@ const ControlsPart = () => {
 
 export const PageRoot = () => {
   return (
-    <div class={qu.css({ height: "100dvh" }).flexC().it}>
+    <div class={qu.h("dvh").flexC().it}>
       <EffectorBody className={cz(qu.wh(300, 160).it, qu.flexVC().it)}>
         <ControlsPart />
       </EffectorBody>

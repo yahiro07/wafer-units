@@ -15,7 +15,7 @@ export const NarrowButton = ({
   return (
     <div
       class={cz(
-        qu.flexC().wh(40, 20).bg("#ddd").weight("bold").cp().it,
+        qu.flexC().wh(40, 20).bg("#ddd").weight("bold").cursor("pointer").it,
         active && qu.bg("#48c").color("#fff").it,
       )}
       onClick={onClick}

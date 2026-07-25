@@ -24,7 +24,7 @@ const ControlsPart = () => {
   const st = store.useSnapshot();
   return (
     <div>
-      <div class={qu.flexHA().gap(2).justify("between").it}>
+      <div class={qu.flexHA().gap(2).fJustify("between").it}>
         <div class={qu.flexHA().gap(2).it}>
           <div class={qu.fontSize(14).weight("500").it}>Key/Label</div>
           <ShiftSelector
@@ -255,7 +255,7 @@ const Editor = () => {
 
 export const PageRoot = () => {
   return (
-    <div class={qu.css({ height: "100dvh" }).flexC().it}>
+    <div class={qu.h("dvh").flexC().it}>
       <EffectorBody className={cz(qu.wh(460, 280).it, qu.flexC().it)}>
         <div class={qu.flexV().gap(2).it}>
           <div>root-prog</div>

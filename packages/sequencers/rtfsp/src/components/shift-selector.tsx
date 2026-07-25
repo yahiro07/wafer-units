@@ -48,8 +48,13 @@ export const ShiftSelector = <T extends string | number>({
     <ShifterFrame onShift={handleShift}>
       <div
         class={cz(
-          qu.flexHA().justify("between").minW(winWidth).h(30).fontSize(14).cp()
-            .it,
+          qu
+            .flexHA()
+            .fJustify("between")
+            .minW(winWidth)
+            .h(30)
+            .fontSize(14)
+            .cursor("pointer").it,
           qu.bg("#ddd").it,
         )}
       >

@@ -279,10 +279,10 @@ const DutyKnobContainer = () => {
 
 export const PageRoot = () => {
   return (
-    <div class={qu.css({ height: "100dvh" }).flexC().it}>
+    <div class={qu.h("dvh").flexC().it}>
       <EffectorBody className={cz(qu.wh(750, 450).it, qu.flexC().it)}>
         <div class={qu.flexV().gap(4).it}>
-          <div class={qu.flexHA().justify("between").it}>
+          <div class={qu.flexHA().fJustify("between").it}>
             <div>RTFS-P</div>
             <div class={qu.flexHA().gap(4).it}>
               <LabeledSection label="octave">

@@ -28,7 +28,7 @@ const ControlsPart = () => {
 
   return (
     <div class={qu.flexC().gap(4).it}>
-      <div class={qu.h("full").flexV().justify("between").pt(4).it}>
+      <div class={qu.h("full").flexV().fJustify("between").pt(4).it}>
         <div class={qu.fontSize(17).weight("bold").it}>mop2</div>
         <LabeledBox label="octave" width={cellW}>
           <Knob
@@ -126,7 +126,7 @@ const ControlsPart = () => {
 
 export const PageRoot = () => {
   return (
-    <div class={qu.css({ height: "100dvh" }).flexC().it}>
+    <div class={qu.h("dvh").flexC().it}>
       <EffectorBody className={cz(qu.wh(380, 220).it, qu.flexVC().it)}>
         <ControlsPart />
       </EffectorBody>

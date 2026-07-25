@@ -172,7 +172,7 @@ const ControlsPart = () => {
 
 export const PageRoot = () => {
   return (
-    <div class={qu.css({ height: "100dvh" }).flexC().it}>
+    <div class={qu.h("dvh").flexC().it}>
       <EffectorBody className={cz(qu.wh(480, 260).it, qu.flexVC().it)}>
         <ControlsPart />
       </EffectorBody>

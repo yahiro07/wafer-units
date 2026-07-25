@@ -10,7 +10,6 @@ import {
 import { useState } from "react";
 import { LabeledRow } from "@/components";
 import { GridBackground } from "@/components/grid-background";
-import { sequencer } from "@/sequencer";
 import { store } from "@/store";
 import { SynthPatternNote } from "@/types";
 
@@ -231,9 +230,12 @@ function useSynthPatternEditorViewPresenter() {
     // const relNote
     const noteNumber = 48 + index;
 
-    const noteOn = () => sequencer.setPreviewNote(noteNumber);
-    const noteOff = () => sequencer.setPreviewNote(null);
-
+    const noteOn = () => {
+      // sequencer.setPreviewNote(noteNumber);
+    };
+    const noteOff = () => {
+      // sequencer.setPreviewNote(null);
+    };
     noteOn();
 
     startDragSession(e.nativeEvent, {

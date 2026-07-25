@@ -48,7 +48,7 @@ const MatrixPart = () => {
           <div class={qu.flexVC().gap(1.5).it}>
             <LedIndicator active={playPos === xIndex} />
             <div
-              class={qu.wh(24, 30).cp().relative().it}
+              class={qu.wh(24, 30).cursor("pointer").relative().it}
               style={{ background: color }}
               onPointerDown={() => toggleStep(si)}
             >
@@ -71,7 +71,7 @@ const MatrixPart = () => {
 const ControlsPart = () => {
   const { octave, duty, patternRange } = store.useSnapshot();
   return (
-    <div class={qu.full().flexHA().gap(2).justify("between").it}>
+    <div class={qu.full().flexHA().gap(2).fJustify("between").it}>
       <TitleLabel title="bseq2" />
       <div class={qu.flexHA().gap(6).it}>
         <LabeledBox label="Octave">
@@ -100,7 +100,7 @@ const ControlsPart = () => {
 
 export const PageRoot = () => {
   return (
-    <div class={cz(qu.css({ width: "100dvw", height: "100dvh" }).flexC().it)}>
+    <div class={cz(qu.wh("dvw", "dvh").flexC().it)}>
       <div class={qu.flexC().it}>
         <EffectorBody className={cz(qu.wh(480, 200).it, qu.flexVC().it)}>
           <div class={qu.flexV().gap(5).it}>

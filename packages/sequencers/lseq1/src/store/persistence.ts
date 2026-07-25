@@ -24,7 +24,7 @@ const persistenceCore = {
     ]);
   },
   loadPersistState(state: PersistState) {
-    store.assigns(state);
+    store.assign(state);
   },
 };
 

@@ -13,13 +13,9 @@ function createEngine() {
     audioContext,
     audioOutputNode: audioContext.destination,
     audioInputNode: audioSourceNode,
-    noteOutputPort: {
-      noteOn() {},
-      noteOff() {},
-    },
     emitMetaAttributes() {},
     completeSetup() {},
-  };
+  } as any;
   (window as any).unitInterface = unitInterface;
 
   let noiseSource: AudioBufferSourceNode | null = null;

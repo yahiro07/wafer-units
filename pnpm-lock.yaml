@@ -4,6 +4,12 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+catalogs:
+  default:
+    qulex:
+      specifier: npm:@yahiro07/qulex@^0.1.5
+      version: 0.1.5
+
 importers:
 
   .:
@@ -69,8 +75,8 @@ importers:
         specifier: ^10.29.2
         version: 10.29.2
       qulex:
-        specifier: npm:@yahiro07/qulex@^0.1.3
-        version: '@yahiro07/qulex@0.1.3'
+        specifier: 'catalog:'
+        version: '@yahiro07/qulex@0.1.5'
       snap-store:
         specifier: ^0.1.12
         version: 0.1.12(preact@10.29.2)(react@19.2.6)
@@ -153,8 +159,8 @@ importers:
         specifier: ^10.29.2
         version: 10.29.2
       qulex:
-        specifier: npm:@yahiro07/qulex@^0.1.3
-        version: '@yahiro07/qulex@0.1.3'
+        specifier: 'catalog:'
+        version: '@yahiro07/qulex@0.1.5'
       snap-store:
         specifier: ^0.1.12
         version: 0.1.12(preact@10.29.2)(react@19.2.6)
@@ -165,8 +171,8 @@ importers:
         specifier: ^10.29.2
         version: 10.29.2
       qulex:
-        specifier: npm:@yahiro07/qulex@^0.1.3
-        version: '@yahiro07/qulex@0.1.3'
+        specifier: 'catalog:'
+        version: '@yahiro07/qulex@0.1.5'
       snap-store:
         specifier: ^0.1.12
         version: 0.1.12(preact@10.29.2)(react@19.2.6)
@@ -180,8 +186,8 @@ importers:
         specifier: ^10.29.2
         version: 10.29.2
       qulex:
-        specifier: npm:@yahiro07/qulex@^0.1.3
-        version: '@yahiro07/qulex@0.1.3'
+        specifier: 'catalog:'
+        version: '@yahiro07/qulex@0.1.5'
       snap-store:
         specifier: ^0.1.12
         version: 0.1.12(preact@10.29.2)(react@19.2.6)
@@ -207,8 +213,8 @@ importers:
         specifier: ^10.29.2
         version: 10.29.2
       qulex:
-        specifier: npm:@yahiro07/qulex@^0.1.3
-        version: '@yahiro07/qulex@0.1.3'
+        specifier: 'catalog:'
+        version: '@yahiro07/qulex@0.1.5'
       snap-store:
         specifier: ^0.1.12
         version: 0.1.12(preact@10.29.2)(react@19.2.6)
@@ -333,8 +339,8 @@ importers:
         specifier: ^10.29.2
         version: 10.29.2
       qulex:
-        specifier: npm:@yahiro07/qulex@^0.1.3
-        version: '@yahiro07/qulex@0.1.3'
+        specifier: 'catalog:'
+        version: '@yahiro07/qulex@0.1.5'
       snap-store:
         specifier: ^0.1.12
         version: 0.1.12(preact@10.29.2)(react@19.2.6)
@@ -429,8 +435,8 @@ importers:
         specifier: ^10.29.2
         version: 10.29.2
       qulex:
-        specifier: npm:@yahiro07/qulex@^0.1.3
-        version: '@yahiro07/qulex@0.1.3'
+        specifier: 'catalog:'
+        version: '@yahiro07/qulex@0.1.5'
       snap-store:
         specifier: ^0.1.12
         version: 0.1.12(preact@10.29.2)(react@19.2.6)
@@ -444,8 +450,8 @@ importers:
         specifier: ^10.29.2
         version: 10.29.2
       qulex:
-        specifier: npm:@yahiro07/qulex@^0.1.3
-        version: '@yahiro07/qulex@0.1.3'
+        specifier: 'catalog:'
+        version: '@yahiro07/qulex@0.1.5'
       snap-store:
         specifier: ^0.1.12
         version: 0.1.12(preact@10.29.2)(react@19.2.6)
@@ -486,8 +492,8 @@ importers:
         specifier: ^10.29.2
         version: 10.29.2
       qulex:
-        specifier: npm:@yahiro07/qulex@^0.1.3
-        version: '@yahiro07/qulex@0.1.3'
+        specifier: 'catalog:'
+        version: '@yahiro07/qulex@0.1.5'
       snap-store:
         specifier: ^0.1.12
         version: 0.1.12(preact@10.29.2)(react@19.2.6)
@@ -501,8 +507,8 @@ importers:
         specifier: ^10.29.2
         version: 10.29.2
       qulex:
-        specifier: npm:@yahiro07/qulex@^0.1.3
-        version: '@yahiro07/qulex@0.1.3'
+        specifier: 'catalog:'
+        version: '@yahiro07/qulex@0.1.5'
       snap-store:
         specifier: ^0.1.12
         version: 0.1.12(preact@10.29.2)(react@19.2.6)
@@ -537,8 +543,8 @@ importers:
         specifier: ^10.29.2
         version: 10.29.2
       qulex:
-        specifier: npm:@yahiro07/qulex@^0.1.3
-        version: '@yahiro07/qulex@0.1.3'
+        specifier: 'catalog:'
+        version: '@yahiro07/qulex@0.1.5'
       snap-store:
         specifier: ^0.1.12
         version: 0.1.12(preact@10.29.2)(react@19.2.6)
@@ -1056,8 +1062,8 @@ packages:
       babel-plugin-react-compiler:
         optional: true
 
-  '@yahiro07/qulex@0.1.3':
-    resolution: {integrity: sha512-4rNlNkDVbF7itpeT85/ubT5IiMYRGBdxVk6ALqeaFRGNSSeghP6FIdj4qBiqWYyWPQttIxjIrAz4xGpnfPO3eQ==}
+  '@yahiro07/qulex@0.1.5':
+    resolution: {integrity: sha512-ro7FdOKIyYNZ76UO7xmoKECOfbhDLSRMgRQhpCs4nevvxTCu7j9fpedzhdPBX3mvxd5Dk5PC4iiS1MmRl3gNCA==}
 
   alumina-visor@0.1.6:
     resolution: {integrity: sha512-teCRvUD5m+pE/apudTPAwgAH67mXBof6C2b5nnRbbtiYGE1bitO56p5CHRiMN9cOx6GqqVDDP0XFVYuqgMuQHA==}
@@ -2220,7 +2226,7 @@ snapshots:
       '@rolldown/pluginutils': 1.0.1
       vite: 8.0.14(@types/node@25.9.1)(jiti@2.7.0)
 
-  '@yahiro07/qulex@0.1.3': {}
+  '@yahiro07/qulex@0.1.5': {}
 
   alumina-visor@0.1.6(alumina@0.1.14):
     dependencies:

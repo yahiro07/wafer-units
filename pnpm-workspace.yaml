@@ -4,3 +4,5 @@ allowBuilds:
   esbuild: true
 minimumReleaseAgeExclude:
   - "@yahiro07/qulex"
+catalog:
+  qulex: npm:@yahiro07/qulex@^0.1.5

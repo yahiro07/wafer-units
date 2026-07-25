@@ -4,7 +4,13 @@ export const StompButton = ({ onClick }: { onClick: () => void }) => {
   return (
     <div
       class={
-        qu.wh(36, 36).bg("#999").bd("#777").rounded("100%").flexC().cp().it
+        qu
+          .wh(36, 36)
+          .bg("#999")
+          .bd("#777")
+          .rounded("100%")
+          .flexC()
+          .cursor("pointer").it
       }
       onClick={onClick}
     >

@@ -2,7 +2,8 @@
   "name": "wus-units",
   "private": true,
   "scripts": {
-    "build": "pnpm -r --if-present --filter './packages/**/*' build"
+    "build": "pnpm -r --if-present --filter './packages/**/*' build",
+    "typecheck": "for f in $(find packages -name tsconfig.json | sort); do tsc -p \"$f\" || exit 1; done"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.3.0",

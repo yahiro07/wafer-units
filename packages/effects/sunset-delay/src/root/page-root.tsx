@@ -125,7 +125,7 @@ export const PageRoot = () => {
     <div class={qu.flexC().it}>
       <EffectorBody className={cz(qu.wh(320, 210).it, qu.flexVC().it)}>
         <div class={qu.flexV().gap(3).it}>
-          <div class={qu.flexHA().gap(2).justify("between").it}>
+          <div class={qu.flexHA().gap(2).fJustify("between").it}>
             <div class={qu.fontSize(18).weight("bold").it}>Sunset Delay</div>
             <SafetyPart />
           </div>

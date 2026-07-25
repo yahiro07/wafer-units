@@ -9,7 +9,9 @@ export const IndicatorButton = ({
 }) => {
   return (
     <div
-      class={cz(qu.flexC().wh(22, 16).rounded(1).bd("#555").cp().it)}
+      class={cz(
+        qu.flexC().wh(22, 16).rounded(1).bd("#555").cursor("pointer").it,
+      )}
       style={{
         background: active ? "#0f0" : "#999",
         cursor: "pointer",

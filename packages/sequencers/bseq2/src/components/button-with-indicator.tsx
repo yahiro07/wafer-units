@@ -10,7 +10,8 @@ export const ButtonWithIndicator = ({
   return (
     <div
       class={cz(
-        qu.wh(36, 36).bg("#999").bd("#555").rounded(8).p(0.75).cp().it,
+        qu.wh(36, 36).bg("#999").bd("#555").rounded(8).p(0.75).cursor("pointer")
+          .it,
         qu.flexHA().it,
       )}
       onClick={onClick}

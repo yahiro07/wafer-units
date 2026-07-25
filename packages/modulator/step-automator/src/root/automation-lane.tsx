@@ -47,7 +47,7 @@ export const AutomationLane = ({
   };
   return (
     <div class={qu.flexV().gap(4).it}>
-      <div class={qu.flexHA().justify("between").it}>
+      <div class={qu.flexHA().fJustify("between").it}>
         <div class={qu.flexHA().gap(2).it}>
           <LabeledBox width={30}>
             <IndicatorButton

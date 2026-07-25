@@ -35,7 +35,7 @@ const MatrixPart = () => {
               }
               return (
                 <div
-                  class={qu.wh(20, 20).cp().it}
+                  class={qu.wh(20, 20).cursor("pointer").it}
                   style={{ background: color }}
                   onPointerDown={() => toggleStep(yi, xi)}
                 />
@@ -51,7 +51,7 @@ const MatrixPart = () => {
 const ControlsPart = () => {
   const { octave, duty } = store.useSnapshot();
   return (
-    <div class={qu.w("full").flexHA().gap(2).justify("between").it}>
+    <div class={qu.w("full").flexHA().gap(2).fJustify("between").it}>
       <TitleLabel title="Tonerio Sequencer" />
       <div class={qu.flexHA().gap(6).it}>
         <LabeledBox label="Octave">
