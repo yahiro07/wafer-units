@@ -20,7 +20,7 @@ export const Button = ({
         qu.flexC().wh(40, 30).bg("#888").weight("bold").it,
         qu.color("#fff").cursor("pointer").it,
         active && qu.bg("#48c").it,
-        disabled && qu.css({ opacity: 0.4 }).css({ pointerEvents: "none" }).it,
+        disabled && qu.opacity(0.4).pointerEvents("none").it,
       )}
       onClick={onClick}
     >

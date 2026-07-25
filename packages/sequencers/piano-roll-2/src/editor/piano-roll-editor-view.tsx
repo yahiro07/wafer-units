@@ -310,7 +310,7 @@ const NoteLayerStrip = ({
       class={cz(
         qu.relative().wh(editorW, editorH).it,
         // qu.bd("blue").it,
-        qu.css({ overflow: "hidden" }).it,
+        qu.overflow("hidden").it,
       )}
     >
       <NotesDisplayLayer notes={notes} sectionRange={sectionRange} />
@@ -362,7 +362,7 @@ export const PianoRollEditorView = () => {
       ref={baseDivRef}
       class={cz(
         qu.flexH().gap(0.5).h(340).it,
-        qu.css({ overflowX: "hidden", overflowY: "scroll" }).it,
+        qu.overflowXY("hidden", "scroll").it,
       )}
     >
       <SideKeyboardColumn />

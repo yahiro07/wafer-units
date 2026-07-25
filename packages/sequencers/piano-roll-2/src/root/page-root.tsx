@@ -70,11 +70,11 @@ const PagerContainer = () => {
   };
   return (
     <LabeledBox label="">
-      <div class={qu.flexHA().gap(5).it}>
+      <div class={qu.flexHA().gap(2).it}>
         <Button disabled={!canShiftLeft} onClick={() => shiftPage(-1)}>
           <Icons.CaretLeft />
         </Button>
-        <div class={qu.w(40).flexC().it}>
+        <div class={qu.w(50).flexC().it}>
           {st.pageIndex + 1} / {totalPages}
         </div>
         <Button disabled={!canShiftRight} onClick={() => shiftPage(1)}>
@@ -90,7 +90,7 @@ const TopBar = () => {
     <div class={qu.w("full").flexV().gap(4).it}>
       <div class={qu.flexHA().fJustify("between").it}>
         <div class={qu.weight("bold").fontSize(22).it}>Fluorite Piano Roll</div>
-        <div class={qu.flexHA().gap(8).it}>
+        <div class={qu.flexHA().gap(7).it}>
           <div class={qu.flexHA().gap(6).it}>
             <OctaveKnobContainer />
             <DutyKnobContainer />
@@ -105,7 +105,7 @@ const TopBar = () => {
 
 export const PageRoot = () => {
   return (
-    <div class={qu.css({ height: "100dvh" }).flexC().it}>
+    <div class={qu.h("dvh").flexC().it}>
       <EffectorBody className={cz(qu.wh(800, 450).flexC().it)}>
         <div class={qu.flexV().gap(2).it}>
           <TopBar />

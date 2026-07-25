@@ -80,7 +80,7 @@ const KeyboardKey = ({ yi }: { yi: number }) => {
       <div
         class={cz(
           qu.absolute().it,
-          qu.css({ pointerEvents: "auto" }).cursor("pointer").it,
+          qu.pointerEvents("auto").cursor("pointer").it,
           pressed && qu.bg("#4dd!important").it,
         )}
         style={keyStyle}
