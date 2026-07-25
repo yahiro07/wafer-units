@@ -1,4 +1,4 @@
-import { useMemo, useState } from "preact/hooks";
+import { useEffect, useMemo, useRef, useState } from "preact/hooks";
 import { cz, qu } from "@/common/css-realm";
 import { LoopBarLength, Note } from "@/definitions/model";
 import { GridBackground } from "@/editor/grid-background";
@@ -348,8 +348,18 @@ export const PianoRollEditorView = () => {
   const { cellW, cellH, numKeys } = uiConfig;
   const editorW = cellW * 32;
   const editorH = cellH * numKeys;
+  const baseDivRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = baseDivRef.current;
+    if (el) {
+      el.scrollTop = el.scrollHeight / 2 - el.clientHeight / 2;
+    }
+  }, []);
+
   return (
     <div
+      ref={baseDivRef}
       class={cz(
         qu.flexH().gap(0.5).h(340).it,
         qu.css({ overflowX: "hidden", overflowY: "scroll" }).it,

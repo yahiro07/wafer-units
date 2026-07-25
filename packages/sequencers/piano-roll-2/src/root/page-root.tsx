@@ -69,32 +69,34 @@ const PagerContainer = () => {
     store.setPageIndex(st.pageIndex + dir);
   };
   return (
-    <div class={qu.flexHA().gap(6).it}>
-      <Button disabled={!canShiftLeft} onClick={() => shiftPage(-1)}>
-        <Icons.CaretLeft />
-      </Button>
-      <div>
-        {st.pageIndex + 1} / {totalPages}
+    <LabeledBox label="">
+      <div class={qu.flexHA().gap(5).it}>
+        <Button disabled={!canShiftLeft} onClick={() => shiftPage(-1)}>
+          <Icons.CaretLeft />
+        </Button>
+        <div class={qu.w(40).flexC().it}>
+          {st.pageIndex + 1} / {totalPages}
+        </div>
+        <Button disabled={!canShiftRight} onClick={() => shiftPage(1)}>
+          <Icons.CaretRight />
+        </Button>
       </div>
-      <Button disabled={!canShiftRight} onClick={() => shiftPage(1)}>
-        <Icons.CaretRight />
-      </Button>
-    </div>
+    </LabeledBox>
   );
 };
 
 const TopBar = () => {
   return (
     <div class={qu.w("full").flexV().gap(4).it}>
-      <div class={qu.flexHA().justify("between").it}>
-        <div class={qu.weight("bold").w(220).fontSize(22).it}>
-          Fluorite Piano Roll
-        </div>
-        <PagerContainer />
-        <div class={qu.flexHA().justify("end").w(220).gap(6).it}>
-          <LoopBarsSelectorContainer />
-          <OctaveKnobContainer />
-          <DutyKnobContainer />
+      <div class={qu.flexHA().fJustify("between").it}>
+        <div class={qu.weight("bold").fontSize(22).it}>Fluorite Piano Roll</div>
+        <div class={qu.flexHA().gap(8).it}>
+          <div class={qu.flexHA().gap(6).it}>
+            <OctaveKnobContainer />
+            <DutyKnobContainer />
+            <LoopBarsSelectorContainer />
+          </div>
+          <PagerContainer />
         </div>
       </div>
     </div>
