@@ -232,9 +232,9 @@ const NoteView = ({
       <div
         class={qu.absolute().flexC().cursor("pointer").it}
         style={{
-          left: npx(pos * cellW),
-          bottom: npx(yi * cellH),
-          width: npx(cellW * dur),
+          left: npx(pos * cellW - 1),
+          bottom: npx(yi * cellH - 1),
+          width: npx(cellW * dur - 1),
           height: npx(cellH),
         }}
       >
