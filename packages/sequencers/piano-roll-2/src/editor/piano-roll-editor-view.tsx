@@ -79,8 +79,8 @@ const noteEditActions = {
     }
     return note;
   },
-  clearNotes() {
-    // store.setNotes((prev) => prev.map(() => -1));
+  removeNote(noteId: number) {
+    store.setNotes((prev) => prev.filter((note) => note.id !== noteId));
   },
   startInsertNewNote(e0: PointerEvent, sectionRange: SectionRange) {
     const { xi, yi } = mapPointerPositionToCell(
@@ -127,6 +127,40 @@ const noteEditActions = {
       { coordinate: "page" },
     );
   },
+  startAdjustDuration(e0: PointerEvent, note: Note) {
+    const baseEl = e0.currentTarget as HTMLElement;
+    const originalCoord = mapPointerPositionToCell(
+      baseEl,
+      e0.clientX,
+      e0.clientY,
+    );
+    let latestDuration = note.duration;
+
+    startDragSession(
+      e0,
+      {
+        onMove(e) {
+          const movedCoord = mapPointerPositionToCell(
+            baseEl,
+            e.position.x,
+            e.position.y,
+          );
+          const deltaXiFloat = movedCoord.xiFloat - originalCoord.xiFloat;
+          const dur = Math.floor(note.duration + deltaXiFloat);
+          if (dur !== latestDuration) {
+            noteEditActions.setNoteAttrs(note.id, { duration: latestDuration });
+            latestDuration = dur;
+          }
+        },
+        onUp() {
+          if (latestDuration <= 0) {
+            noteEditActions.removeNote(note.id);
+          }
+        },
+      },
+      { coordinate: "page" },
+    );
+  },
 };
 
 const EditInputLayer = ({
@@ -157,6 +191,7 @@ const EditInputLayer = ({
 
   const handlePointerDown = (e: PointerEvent) => {
     if (hitNoteInfo?.part === "tail") {
+      noteEditActions.startAdjustDuration(e, hitNoteInfo.note);
     } else if (hitNoteInfo?.part === "body") {
       noteEditActions.startMoveNote(e, hitNoteInfo.note);
     } else {
