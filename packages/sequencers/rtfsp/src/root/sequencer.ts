@@ -12,7 +12,7 @@ type SequencerEditState = {
 const majorSubDegrees = [0, 2, 4, 5, 7, 9, 11];
 
 function createScaleNoteNumbers() {
-  return seqNumbers(70).map((i) => {
+  return seqNumbers(84).map((i) => {
     const oct = (i / 7) >>> 0;
     const sub = i % 7;
     return oct * 12 + majorSubDegrees[sub];
@@ -27,9 +27,9 @@ function getNoteShifted(
 ) {
   const shiftAmount = [0, 2, 4, 6, 7][degreeIndex];
   const scaleNodeIndex = clampValue(
-    28 + rootShift + octave * 7 + shiftAmount,
+    35 + rootShift + octave * 7 + shiftAmount - 7,
     0,
-    69,
+    83,
   );
   return scaleNoteNumbers[scaleNodeIndex];
 }
@@ -89,10 +89,9 @@ export function createSequencerEngine(
       editState.duty = duty;
     },
     setRootNoteNumber(rootNoteNumber: number) {
-      if (rootNoteNumber === 48) {
-        rootShift = 0; //for C
-      } else if (rootNoteNumber === 45) {
-        rootShift = -2; //for Am
+      const scaleNoteIndex = scaleNoteNumbers.indexOf(rootNoteNumber);
+      if (scaleNoteIndex !== -1) {
+        rootShift = scaleNoteIndex - 35;
       }
     },
     start: core.start,

@@ -19,6 +19,8 @@ const affectNotesToSequencer = () => {
 
 export function setupUnit() {
   affectNotesToSequencer();
+  engine.setOctave(store.state.octave);
+  engine.setDuty(store.state.duty);
 
   unitInterface?.completeSetup({
     unitAspects: {
@@ -37,6 +39,12 @@ export function setupUnit() {
         engine.processStep(stepIndex, time, unitDuration);
         store.setPlayPos(stepIndex % 32);
       },
+    },
+    noteInput: {
+      noteOn(noteNumber) {
+        engine.setRootNoteNumber(noteNumber);
+      },
+      noteOff() {},
     },
     // persistence,
   });
