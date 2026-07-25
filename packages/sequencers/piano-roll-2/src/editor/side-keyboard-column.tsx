@@ -1,5 +1,7 @@
+import { useState } from "preact/hooks";
 import { cz, qu } from "@/common/css-realm";
 import { noteNameLabels, uiConfig } from "@/editor/ui-config";
+import { startDragSession } from "@/utils/drag-session";
 import { seqNumbers } from "@/utils/helpers";
 
 const keyTypes = [
@@ -20,6 +22,8 @@ const keyTypes = [
 function getKeyStyle(subIndex: number, cellH: number) {
   const keyType = keyTypes[subIndex];
   const keyStyle: Record<string, any> = {
+    width: "100%",
+    background: "#fff",
     height: cellH,
     left: 0,
   };
@@ -52,30 +56,58 @@ function getKeyStyle(subIndex: number, cellH: number) {
   return keyStyle;
 }
 
+const KeyboardKey = ({ yi }: { yi: number }) => {
+  const { cellH } = uiConfig;
+  const subIndex = yi % 12;
+  const label = subIndex === 0 && noteNameLabels[yi];
+  const [pressed, setPressed] = useState(false);
+
+  const keyStyle = getKeyStyle(subIndex, cellH);
+
+  const handlePointerDown = (e: PointerEvent) => {
+    setPressed(true);
+    startDragSession(e, {
+      onUpOrCancel() {
+        setPressed(false);
+      },
+    });
+  };
+
+  return (
+    <div
+      class={cz(qu.wh(80, cellH).css({ pointerEvents: "none" }).relative().it)}
+    >
+      <div
+        class={cz(
+          qu.absolute().it,
+          qu.css({ pointerEvents: "auto" }).cursor("pointer").it,
+          pressed && qu.bg("#4dd!important").it,
+        )}
+        style={keyStyle}
+        onPointerDown={handlePointerDown}
+      >
+        {label && (
+          <div
+            class={cz(
+              qu.flexHA().h("full").justify("end").p(1).it,
+              qu.color("#666").fontSize(11).it,
+            )}
+          >
+            {label}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
 export const SideKeyboardColumn = () => {
-  const { numKeys, cellH } = uiConfig;
+  const { numKeys } = uiConfig;
   return (
     <div>
-      {seqNumbers(numKeys).map((i) => {
-        const yi = numKeys - i - 1;
-        const subIndex = yi % 12;
-        const label = subIndex === 0 && noteNameLabels[i];
-        const keyStyle = getKeyStyle(subIndex, cellH);
-        return (
-          <div class={cz(qu.wh(80, cellH).relative().it)}>
-            <div
-              class={cz(
-                qu.absolute().bg("#fff").w("full").it,
-                qu.flexHA().justify("end").p(1).it,
-                qu.color("#666").fontSize(11).cursor("pointer").it,
-              )}
-              style={keyStyle}
-            >
-              {label}
-            </div>
-          </div>
-        );
-      })}
+      {seqNumbers(numKeys).map((i) => (
+        <KeyboardKey key={i} yi={numKeys - i - 1} />
+      ))}
     </div>
   );
 };
