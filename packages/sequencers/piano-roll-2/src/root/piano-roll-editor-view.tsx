@@ -206,6 +206,7 @@ const NotesDisplayLayer = ({ notes }: { notes: Note[] }) => {
                   qu.bg(colors.noteBg).w("full").flexHA().it,
                   qu.h(noteH).rounded(2).pl(0.5).it,
                   qu.color("#0008").fontSize(10).it,
+                  "font-monospace",
                 )}
               >
                 {noteNameLabels[note.pitch]}
