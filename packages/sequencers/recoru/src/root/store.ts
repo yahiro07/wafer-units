@@ -10,6 +10,7 @@ export const store = createStore<{
   notes: Note[];
   previewNotePitch: number | null;
   keyboardNumKeys: number;
+  channel: number;
 }>({
   octave: 0,
   duty: 1,
@@ -19,6 +20,7 @@ export const store = createStore<{
   notes: [],
   previewNotePitch: null,
   keyboardNumKeys: 32,
+  channel: 0,
 });
 
 if (0) {

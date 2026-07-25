@@ -12,7 +12,7 @@ export const ButtonsSelector = <T extends string | number>({
   onChange: (value: T) => void;
 }) => {
   return (
-    <div class={qu.flexHA().gap(2).it}>
+    <div class={qu.flexHA().gap(1.5).it}>
       {options.map((option) => (
         <Button
           key={option.value}

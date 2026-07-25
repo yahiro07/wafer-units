@@ -36,6 +36,23 @@ import { createSelectorOptions } from "@/utils/selector-option";
 //   );
 // };
 
+const ChannelOptions = createSelectorOptions<number>(
+  [0, 1, 2, 3].map((v) => [v, `${v + 1}`]),
+);
+
+const ChannelSelectorContainer = () => {
+  const { channel } = store.useSnapshot();
+  return (
+    <LabeledBox label="channel" labelAlign="left">
+      <ButtonsSelector
+        value={channel}
+        options={ChannelOptions}
+        onChange={store.setChannel}
+      />
+    </LabeledBox>
+  );
+};
+
 const keyCountOptions = createSelectorOptions<number>(
   [25, 32, 37, 49].map((v) => [v, `${v}`]),
 );
@@ -138,7 +155,7 @@ const TrashButtonContainer = () => {
 
 const ControlSection = () => {
   return (
-    <div class={qu.w("full").it}>
+    <div class={qu.w("full").flexV().gap(2).it}>
       <div class={qu.flexHA().gap(4).it}>
         <div class={qu.flexHA().gap(2).it}>
           <Button style={{ width: 60, height: 40, fontSize: 17 }}>rec</Button>
@@ -171,7 +188,8 @@ const ControlSection = () => {
         </div>
       </div>
       <div class={qu.flexHA().gap(4).it}>
-        <div class={qu.fontSize(22).it}>recoru</div>
+        {/* <div class={qu.fontSize(22).it}>recoru</div> */}
+        <ChannelSelectorContainer />
         <div class={qu.grow().it} />
         <RecordingBarsSelectorContainer />
       </div>
@@ -181,7 +199,7 @@ const ControlSection = () => {
 
 export const PageRoot = () => {
   return (
-    <EffectorBody className={cz(qu.wh(800, 450).flexC().it)}>
+    <EffectorBody className={cz(qu.wh(800, 500).flexC().it)}>
       <div class={qu.flexVC().gap(2).it}>
         <ControlSection />
         <div class={qu.w("full").h(240).bd("blue").mb(1).it}></div>
