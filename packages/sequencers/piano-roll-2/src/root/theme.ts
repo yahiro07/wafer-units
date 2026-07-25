@@ -8,4 +8,5 @@ export const colors = {
   gridWeak: "#0004",
   gridStrong: "#0006",
   gridStrong2: "#000a",
+  noteBg: "#6cc",
 };

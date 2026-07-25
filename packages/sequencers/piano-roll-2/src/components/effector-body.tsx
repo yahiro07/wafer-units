@@ -1,6 +1,6 @@
 import { ComponentChildren } from "preact";
 import { cz, qu } from "@/common/css-realm";
-import { colors } from "@/common/theme";
+import { colors } from "@/root/theme";
 
 export const EffectorBody = ({
   children,

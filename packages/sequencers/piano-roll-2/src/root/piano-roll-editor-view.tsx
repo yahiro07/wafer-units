@@ -1,7 +1,7 @@
 import { cz, qu } from "@/common/css-realm";
-import { colors } from "@/common/theme";
 import { Note } from "@/root/model";
 import { store } from "@/root/store";
+import { colors } from "@/root/theme";
 import { iife, npx, seqNumbers } from "@/utils/helpers";
 
 const configs = iife(() => {
@@ -33,9 +33,6 @@ const GridBackground = ({
   return (
     <div
       style={{
-        position: "absolute",
-        left: npx(0),
-        top: npx(0),
         width: npx(width),
         height: npx(height),
         border: "solid 0.5px #222",
@@ -58,9 +55,6 @@ const GridBackground = ({
         }
         if (xi === 15) {
           borderColor = colors.gridStrong2;
-        }
-        if (xi % 2 === 0) {
-          // borderColor = "#0002";
         }
         const hasBottomBorder = subNoteIndex === 0 || subNoteIndex === 5;
         return (
@@ -85,6 +79,28 @@ const GridBackground = ({
   );
 };
 
+const subNoteNames = [
+  "C",
+  "C#",
+  "D",
+  "D#",
+  "E",
+  "F",
+  "F#",
+  "G",
+  "G#",
+  "A",
+  "A#",
+  "B",
+];
+
+const noteNameLabels = seqNumbers(configs.numKeys).map((i) => {
+  const yi = configs.numKeys - i - 1;
+  const octave = ((yi / 12) >>> 0) + 2;
+  const subIndex = yi % 12;
+  return `${subNoteNames[subIndex]}${octave}`;
+});
+
 const PitchLabelsColumn = () => {
   const { numKeys, cellH } = configs;
 
@@ -92,9 +108,8 @@ const PitchLabelsColumn = () => {
     <div>
       {seqNumbers(numKeys).map((i) => {
         const yi = numKeys - i - 1;
-        const octave = ((yi / 12) >>> 0) + 2;
         const subIndex = yi % 12;
-        const label = subIndex === 0 && `C${octave}`;
+        const label = subIndex === 0 && noteNameLabels[i];
         return (
           <div class={cz(qu.wh(60, cellH).p(0.125).it)}>
             <div
@@ -168,25 +183,15 @@ const EditInputLayer = ({ notes }: { notes: Note[] }) => {
 // }
 
 const NotesDisplayLayer = ({ notes }: { notes: Note[] }) => {
-  const { cellW, cellH } = configs;
+  const { cellW, cellH, numKeys } = configs;
+  const noteH = cellH - 2;
   return (
     <div>
       {notes.map((note, xi) => {
-        const yi = note.pitch;
+        const yi = numKeys - note.pitch - 1;
         const dur = note.duration;
         return (
           <div key={xi}>
-            <div
-              class={qu.absolute().flexC().it}
-              style={{
-                left: npx(xi * cellW),
-                bottom: npx(yi * cellH),
-                width: npx(cellW),
-                height: npx(cellH),
-              }}
-            >
-              <div class={qu.bg("#0cf").rounded("50%").wh(16, 16).it} />
-            </div>
             <div
               class={qu.absolute().flexC().it}
               style={{
@@ -196,7 +201,15 @@ const NotesDisplayLayer = ({ notes }: { notes: Note[] }) => {
                 height: npx(cellH),
               }}
             >
-              <div class={qu.bg("#0cf").w("full").h(8).it} />
+              <div
+                class={cz(
+                  qu.bg(colors.noteBg).w("full").flexHA().it,
+                  qu.h(noteH).rounded(2).pl(0.5).it,
+                  qu.color("#0008").fontSize(10).it,
+                )}
+              >
+                {noteNameLabels[note.pitch]}
+              </div>
             </div>
           </div>
         );
@@ -210,18 +223,13 @@ const Editor = () => {
   const editorW = cellW * 32;
   const editorH = cellH * numKeys;
   const st = store.useSnapshot();
-  // const pitchLabels = pitchLabelsSource[st.keyLabelMode];
-  const bgAltStrideX = st.loopBars === 8 ? 2 : 4;
 
   return (
     <div
-      class={
-        qu
-          .flexH()
-          .gap(2)
-          .h(340)
-          .css({ overflowX: "hidden", overflowY: "scroll" }).it
-      }
+      class={cz(
+        qu.flexH().gap(2).h(340).it,
+        qu.css({ overflowX: "hidden", overflowY: "scroll" }).it,
+      )}
     >
       <PitchLabelsColumn />
       <div className={qu.flexV().gap(2).it}>
@@ -232,10 +240,10 @@ const Editor = () => {
             width={editorW}
             height={editorH}
           />
-          <div class={qu.absolute().top(0).left(0).wh(editorW, editorH).it}>
+          <div class={qu.absoluteFull().it}>
             <NotesDisplayLayer notes={st.notes} />
           </div>
-          <div class={qu.absolute().top(0).left(0).wh(editorW, editorH).it}>
+          <div class={qu.absoluteFull().it}>
             <EditInputLayer notes={st.notes} />
           </div>
         </div>

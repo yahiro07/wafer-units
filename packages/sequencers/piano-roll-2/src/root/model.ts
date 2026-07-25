@@ -3,5 +3,5 @@ export type Note = {
   pitch: number;
   position: number;
   duration: number;
-  isGhost: boolean;
+  isGhost?: boolean;
 };
