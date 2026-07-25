@@ -25,9 +25,13 @@ export function setupUnit() {
         engine.stop();
         store.setPlayPos(null);
       },
+      processScheduling(timeFrom, barFrom, barTo, bpm) {
+        const stepPos = barFrom * 16;
+        const playPosTotalSteps = Math.max(st.loopBars * 16, 32);
+        store.setPlayPos(stepPos % playPosTotalSteps);
+      },
       processStep(stepIndex, time, unitDuration) {
         engine.processStep(stepIndex, time, unitDuration);
-        store.setPlayPos(stepIndex % (st.loopBars * 16));
       },
     },
     // persistence,

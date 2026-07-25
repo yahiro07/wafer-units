@@ -352,6 +352,25 @@ const RepeatingNoteLayers = () => {
   );
 };
 
+const PlayPositionLineLayer = () => {
+  const { cellW } = uiConfig;
+  const { playPos } = store.useSnapshot();
+  if (playPos === null) return;
+  const barW = cellW * 1.5;
+  return (
+    <div
+      class={cz(
+        qu.absolute().top(0).wh(barW, "full").pointerEvents("none").it,
+        qu.css({ borderRight: "solid 1px #0ff4" }).it,
+        qu.bg("linear-gradient(to right, #0cc0, #0ff3)").it,
+      )}
+      style={{
+        left: npx(playPos * cellW - barW),
+      }}
+    />
+  );
+};
+
 export const PianoRollEditorView = () => {
   const { cellW, cellH, numKeys } = uiConfig;
   const editorW = cellW * 32;
@@ -377,6 +396,7 @@ export const PianoRollEditorView = () => {
       <div class={qu.relative().wh(editorW, editorH).flexH().it}>
         <GridBackground nx={32} ny={numKeys} width={editorW} height={editorH} />
         <RepeatingNoteLayers />
+        <PlayPositionLineLayer />
       </div>
     </div>
   );

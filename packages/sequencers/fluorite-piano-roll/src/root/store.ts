@@ -20,6 +20,7 @@ export const store = createStore<{
 });
 
 if (0) {
+  //debug
   const base = 21;
   store.setNotes([
     { id: 0, position: 0, duration: 2, pitch: base + 14 },
@@ -31,5 +32,3 @@ if (0) {
     { id: 6, position: 32, duration: 16, pitch: base + 14 },
   ]);
 }
-
-export const actions = {};
