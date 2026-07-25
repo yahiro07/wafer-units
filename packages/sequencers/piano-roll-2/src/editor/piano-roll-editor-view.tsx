@@ -6,6 +6,7 @@ import { SideKeyboardColumn } from "@/editor/side-keyboard-column";
 import { colors } from "@/editor/theme";
 import { noteNameLabels, uiConfig } from "@/editor/ui-config";
 import { store } from "@/root/store";
+import { startDragSession } from "@/utils/drag-session";
 import { npx, seqNumbers } from "@/utils/helpers";
 
 type SectionRange = {
@@ -23,36 +24,24 @@ function mapPointerPositionToCell(
   el: HTMLElement,
   x: number,
   y: number,
-): { xi: number; xiFloat: number; yi: number } {
+): { xi: number; xiFloat: number; yi: number; yiFloat: number } {
   const { sectionStride } = getSectionStride(store.state.loopBars);
   const rect = el.getBoundingClientRect();
   const xiFloat = ((x - rect.left) / rect.width) * sectionStride;
   const xi = Math.floor(xiFloat);
-  const i = Math.floor(((y - rect.top) / rect.height) * uiConfig.numKeys);
-  const yi = uiConfig.numKeys - i - 1;
-  return { xi, xiFloat, yi };
+  const yiFloat = (1 - (y - rect.top) / rect.height) * uiConfig.numKeys;
+  const yi = Math.floor(yiFloat);
+  return { xi, xiFloat, yi, yiFloat };
 }
 
-const actions = {
-  addNote(position: number, yi: number) {
-    const nextId =
-      store.state.notes.length > 0
-        ? Math.max(...store.state.notes.map((note) => note.id)) + 1
-        : 0;
-    const newNote: Note = { id: nextId, position, duration: 1, pitch: yi };
-    store.setNotes((prev) => [...prev, newNote]);
-  },
-  clearNotes() {
-    // store.setNotes((prev) => prev.map(() => -1));
-  },
-};
+type HitNoteInfo = { note: Note; part: "body" | "tail" };
 
 function hitTestNote(
   notes: Note[],
   sectionRange: SectionRange,
   xiFloat: number,
   yi: number,
-): { note: Note; part: "body" | "tail" } | undefined {
+): HitNoteInfo | undefined {
   const xi = Math.floor(xiFloat);
   for (const note of notes) {
     if (note.pitch === yi) {
@@ -68,6 +57,78 @@ function hitTestNote(
   }
 }
 
+const noteEditActions = {
+  addNote(position: number, yi: number) {
+    const nextId =
+      store.state.notes.length > 0
+        ? Math.max(...store.state.notes.map((note) => note.id)) + 1
+        : 0;
+    const newNote: Note = { id: nextId, position, duration: 1, pitch: yi };
+    store.setNotes((prev) => [...prev, newNote]);
+    return newNote;
+  },
+  setNoteAttrs(noteId: number, attrs: Partial<Note>) {
+    store.setNotes((prev) =>
+      prev.map((note) => (note.id === noteId ? { ...note, ...attrs } : note)),
+    );
+  },
+  updateNoteXY(note: Note, position: number, pitch: number) {
+    if (!(note.position === position && note.pitch === pitch)) {
+      noteEditActions.setNoteAttrs(note.id, { position, pitch });
+      return { ...note, position, pitch };
+    }
+    return note;
+  },
+  clearNotes() {
+    // store.setNotes((prev) => prev.map(() => -1));
+  },
+  startInsertNewNote(e0: PointerEvent, sectionRange: SectionRange) {
+    const { xi, yi } = mapPointerPositionToCell(
+      e0.currentTarget as HTMLElement,
+      e0.clientX,
+      e0.clientY,
+    );
+    const position = sectionRange.offset + xi;
+    const note = noteEditActions.addNote(position, yi);
+    noteEditActions.startMoveNote(e0, note);
+  },
+  startMoveNote(e0: PointerEvent, note: Note) {
+    const originalNote = note;
+    let noteLatest = note;
+    const baseEl = e0.currentTarget as HTMLElement;
+    const originalCoord = mapPointerPositionToCell(
+      baseEl,
+      e0.clientX,
+      e0.clientY,
+    );
+
+    startDragSession(
+      e0,
+      {
+        onMove(e) {
+          const movedCoord = mapPointerPositionToCell(
+            baseEl,
+            e.position.x,
+            e.position.y,
+          );
+          const deltaXiFloat = movedCoord.xiFloat - originalCoord.xiFloat;
+          const deltaYiFloat = movedCoord.yiFloat - originalCoord.yiFloat;
+
+          const position = Math.floor(originalNote.position + deltaXiFloat);
+          const pitch = Math.floor(originalNote.pitch + deltaYiFloat);
+
+          noteLatest = noteEditActions.updateNoteXY(
+            noteLatest,
+            position,
+            pitch,
+          );
+        },
+      },
+      { coordinate: "page" },
+    );
+  },
+};
+
 const EditInputLayer = ({
   notes,
   sectionRange,
@@ -75,9 +136,7 @@ const EditInputLayer = ({
   notes: Note[];
   sectionRange: SectionRange;
 }) => {
-  const [pointingPart, setPointingPart] = useState<"body" | "tail" | null>(
-    null,
-  );
+  const [hitNoteInfo, setHitNoteInfo] = useState<HitNoteInfo | null>(null);
 
   const handlePointerMove = (e: PointerEvent) => {
     const { xiFloat, yi } = mapPointerPositionToCell(
@@ -87,34 +146,28 @@ const EditInputLayer = ({
     );
     // console.log(xiFloat, yi);
     const res = hitTestNote(notes, sectionRange, xiFloat, yi);
-    if (res?.part === "body" && pointingPart !== "body") {
-      setPointingPart("body");
-    } else if (res?.part === "tail" && pointingPart !== "tail") {
-      setPointingPart("tail");
-    } else if (pointingPart && !res) {
-      setPointingPart(null);
+    if (res?.part === "body" && hitNoteInfo?.part !== "body") {
+      setHitNoteInfo(res);
+    } else if (res?.part === "tail" && hitNoteInfo?.part !== "tail") {
+      setHitNoteInfo(res);
+    } else if (hitNoteInfo && !res) {
+      setHitNoteInfo(null);
     }
   };
 
   const handlePointerDown = (e: PointerEvent) => {
-    const { xiFloat, yi } = mapPointerPositionToCell(
-      e.currentTarget as HTMLElement,
-      e.clientX,
-      e.clientY,
-    );
-
-    if (pointingPart === "tail") {
-    } else if (pointingPart === "body") {
+    if (hitNoteInfo?.part === "tail") {
+    } else if (hitNoteInfo?.part === "body") {
+      noteEditActions.startMoveNote(e, hitNoteInfo.note);
     } else {
-      const position = (sectionRange.offset + xiFloat) >>> 0;
-      actions.addNote(position, yi);
+      noteEditActions.startInsertNewNote(e, sectionRange);
     }
   };
 
   let cursor = "auto";
-  if (pointingPart === "body") {
+  if (hitNoteInfo?.part === "body") {
     cursor = "move";
-  } else if (pointingPart === "tail") {
+  } else if (hitNoteInfo?.part === "tail") {
     cursor = "e-resize";
   }
   return (
