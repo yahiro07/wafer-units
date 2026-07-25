@@ -53,7 +53,7 @@ export const GridBackground = ({
               height: npx(cellH),
               borderRight: `solid 0.5px ${borderColor}`,
               borderBottom: hasBottomBorder
-                ? `solid 0.5px ${colors.gridWeak}`
+                ? `solid 0.5px ${colors.gridStrong}`
                 : "none",
               backgroundColor: bgColor,
             }}

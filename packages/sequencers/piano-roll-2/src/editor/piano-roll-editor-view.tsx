@@ -14,10 +14,17 @@ type SectionRange = {
   duration: number;
 };
 
-function getSectionStride(loopBars: LoopBarLength) {
-  const nx = loopBars < 2 ? 2 / loopBars : 1;
-  const sectionStride = 32 / nx;
-  return { nx, sectionStride };
+function getSectionStride(loopBars: LoopBarLength, pageIndex: number) {
+  if (loopBars < 2) {
+    const nx = 2 / loopBars;
+    const sectionStride = 32 / nx;
+    return { nx, sectionOffset: 0, sectionStride };
+  } else {
+    const nx = 1;
+    const sectionStride = 32;
+    const sectionOffset = pageIndex * sectionStride;
+    return { nx, sectionOffset, sectionStride };
+  }
 }
 
 function mapPointerPositionToCell(
@@ -25,7 +32,8 @@ function mapPointerPositionToCell(
   x: number,
   y: number,
 ): { xi: number; xiFloat: number; yi: number; yiFloat: number } {
-  const { sectionStride } = getSectionStride(store.state.loopBars);
+  const st = store.state;
+  const { sectionStride } = getSectionStride(st.loopBars, st.pageIndex);
   const rect = el.getBoundingClientRect();
   const xiFloat = ((x - rect.left) / rect.width) * sectionStride;
   const xi = Math.floor(xiFloat);
@@ -232,9 +240,9 @@ const NoteView = ({
       <div
         class={qu.absolute().flexC().cursor("pointer").it}
         style={{
-          left: npx(pos * cellW - 1),
-          bottom: npx(yi * cellH - 1),
-          width: npx(cellW * dur - 1),
+          left: npx(pos * cellW),
+          bottom: npx(yi * cellH),
+          width: npx(cellW * dur - 0.5),
           height: npx(cellH),
         }}
       >
@@ -290,7 +298,7 @@ const NoteLayerStrip = ({
     <div
       class={cz(
         qu.relative().wh(editorW, editorH).it,
-        qu.bd("blue").it,
+        // qu.bd("blue").it,
         qu.css({ overflow: "hidden" }).it,
       )}
     >
@@ -302,10 +310,13 @@ const NoteLayerStrip = ({
 
 const RepeatingNoteLayers = () => {
   const st = store.useSnapshot();
-  const { nx, sectionStride } = getSectionStride(st.loopBars);
+  const { nx, sectionOffset, sectionStride } = getSectionStride(
+    st.loopBars,
+    st.pageIndex,
+  );
   const sectionRange = useMemo(
-    () => ({ offset: 0, duration: sectionStride }),
-    [sectionStride],
+    () => ({ offset: sectionOffset, duration: sectionStride }),
+    [sectionOffset, sectionStride],
   );
   return (
     <div class={qu.absoluteFull().flexH().it}>
