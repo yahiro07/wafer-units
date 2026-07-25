@@ -72,6 +72,10 @@ export function createSequencerEngine(
       core.clearSentNotes();
     },
     previewNoteOn(pitch: number) {
+      if (previewNoteNumber !== null) {
+        noteOutputPort?.noteOff(previewNoteNumber);
+        previewNoteNumber = null;
+      }
       const noteNumber = getNoteShifted(pitch, editState.octave);
       noteOutputPort?.noteOn(noteNumber);
       previewNoteNumber = noteNumber;

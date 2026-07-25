@@ -115,6 +115,7 @@ const noteEditActions = {
       e0.clientX,
       e0.clientY,
     );
+    store.setPreviewNotePitch(originalNote.pitch);
 
     startDragSession(
       e0,
@@ -131,11 +132,18 @@ const noteEditActions = {
           const position = originalNote.position + deltaXi;
           const pitch = originalNote.pitch + deltaYi;
 
+          if (store.state.previewNotePitch !== pitch) {
+            store.setPreviewNotePitch(pitch);
+          }
+
           noteLatest = noteEditActions.updateNoteXY(
             noteLatest,
             position,
             pitch,
           );
+        },
+        onUpOrCancel() {
+          store.setPreviewNotePitch(null);
         },
       },
       { coordinate: "page" },
