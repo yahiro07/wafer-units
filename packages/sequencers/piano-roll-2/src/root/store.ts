@@ -5,11 +5,13 @@ export const store = createStore<{
   duty: number;
   playPos: number | null;
   loopBars: number;
+  pageIndex: number;
 }>({
   octave: 0,
   duty: 0.5,
   playPos: null,
   loopBars: 1,
+  pageIndex: 0,
 });
 
 export const actions = {};

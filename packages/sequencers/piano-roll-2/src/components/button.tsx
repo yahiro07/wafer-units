@@ -1,30 +1,27 @@
 import { ComponentChildren } from "preact";
 import { cz, qu } from "@/common/css-realm";
 
-export const NarrowButton = ({
+export const Button = ({
   text,
   children,
   active,
+  disabled,
   onClick,
 }: {
   text?: string;
   children?: ComponentChildren;
   active?: boolean;
+  disabled?: boolean;
   onClick?: () => void;
 }) => {
   return (
     <div
       class={cz(
-        qu
-          .flexC()
-          .wh(36, 16)
-          .bg("#888")
-          .bd("#444c")
-          .weight("bold")
-          .cursor("pointer").it,
-        qu.color("#fff").rounded(1).it,
+        qu.flexC().wh(40, 30).bg("#888").weight("bold").it,
+        qu.color("#fff").cursor("pointer").it,
+        active && qu.bg("#48c").it,
+        disabled && qu.css({ opacity: 0.4 }).css({ pointerEvents: "none" }).it,
       )}
-      style={active ? { background: "#48c" } : undefined}
       onClick={onClick}
     >
       {text && <div class={qu.fontSize(9).it}>{text}</div>}

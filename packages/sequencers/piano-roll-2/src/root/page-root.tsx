@@ -1,4 +1,6 @@
 import { cz, qu } from "@/common/css-realm";
+import { Icons } from "@/common/icons";
+import { Button } from "@/components/button";
 import { EffectorBody } from "@/components/effector-body";
 import { Knob } from "@/components/knob";
 import { LabeledBox } from "@/components/labeled-box";
@@ -52,12 +54,37 @@ const PianoRollEditorView = () => {
   return <div class={qu.wh(700, 340).bd("#888").it}></div>;
 };
 
+const PagerContainer = () => {
+  const st = store.useSnapshot();
+  const totalPages = Math.max(1, st.loopBars / 2);
+  const canShiftLeft = st.pageIndex > 0;
+  const canShiftRight = st.pageIndex < totalPages - 1;
+
+  const shiftPage = (dir: -1 | 1) => {
+    store.setPageIndex(st.pageIndex + dir);
+  };
+  return (
+    <div class={qu.flexHA().gap(4).it}>
+      <Button disabled={!canShiftLeft} onClick={() => shiftPage(-1)}>
+        <Icons.CaretLeft />
+      </Button>
+      <div>
+        {st.pageIndex + 1} / {totalPages}
+      </div>
+      <Button disabled={!canShiftRight} onClick={() => shiftPage(1)}>
+        <Icons.CaretRight />
+      </Button>
+    </div>
+  );
+};
+
 const TopBar = () => {
   return (
     <div class={qu.w("full").flexV().gap(4).it}>
       <div class={qu.flexHA().justify("between").it}>
-        <div class={qu.weight("bold").it}>Piano Roll 2</div>
-        <div class={qu.flexHA().gap(4).it}>
+        <div class={qu.weight("bold").w(160).it}>Piano Roll 2</div>
+        <PagerContainer />
+        <div class={qu.flexHA().justify("end").w(160).gap(4).it}>
           <LoopBarsSelectorContainer />
           <OctaveKnobContainer />
           <DutyKnobContainer />
