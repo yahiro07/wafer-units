@@ -47,10 +47,24 @@ const loopBarsOptions = createSelectorOptions<LoopBarLength>(
   ]),
 );
 
+const LoopBarsSelectorContainer = () => {
+  const { loopBars } = store.useSnapshot();
+  return (
+    <LabeledBox label="loop bars" labelAlign="left">
+      <ShiftSelector
+        minWidth={45}
+        value={loopBars}
+        options={loopBarsOptions}
+        onChange={store.setLoopBars}
+      />
+    </LabeledBox>
+  );
+};
+
 const RecordingBarsSelectorContainer = () => {
   const { loopBars } = store.useSnapshot();
   return (
-    <LabeledBox label="recording loop bars" labelAlign="left">
+    <LabeledBox label="recordings bars" labelAlign="left">
       <ButtonsSelector
         value={loopBars}
         options={loopBarsOptions}
@@ -65,7 +79,7 @@ const KeyboardNumKeysSelectorContainer = () => {
   return (
     <LabeledBox label="keys">
       <ShiftSelector
-        minWidth={50}
+        minWidth={45}
         value={keyboardNumKeys}
         options={keyCountOptions}
         onChange={store.setKeyboardNumKeys}
@@ -147,7 +161,7 @@ const ControlSection = () => {
         <div class={qu.css({ flexGrow: 1 }).it} />
         <div class={qu.flexHA().gap(3).mt(-2).it}>
           <KeyboardNumKeysSelectorContainer />
-          {/* <LoopBarsSelectorContainer /> */}
+          <LoopBarsSelectorContainer />
           <LabeledBox label="speed">
             <Button>1/2</Button>
           </LabeledBox>
