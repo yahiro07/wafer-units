@@ -357,6 +357,8 @@ const PlayPositionLineLayer = () => {
   const { playPos } = store.useSnapshot();
   if (playPos === null) return;
   const barW = cellW * 1.5;
+  const localPos = playPos % 32;
+
   return (
     <div
       class={cz(
@@ -364,9 +366,7 @@ const PlayPositionLineLayer = () => {
         qu.css({ borderRight: "solid 1px #0ff4" }).it,
         qu.bg("linear-gradient(to right, #0cc0, #0ff3)").it,
       )}
-      style={{
-        left: npx(playPos * cellW - barW),
-      }}
+      style={{ left: npx(localPos * cellW - barW) }}
     />
   );
 };
