@@ -11,11 +11,11 @@ type SequencerEditState = {
 
 const majorSubDegrees = [0, 2, 4, 5, 7, 9, 11];
 
-function createScaleNoteNumbers() {
+function createScaleNoteNumbers(keyTranspose: number) {
   return seqNumbers(84).map((i) => {
     const oct = (i / 7) >>> 0;
     const sub = i % 7;
-    return oct * 12 + majorSubDegrees[sub];
+    return oct * 12 + majorSubDegrees[sub] + keyTranspose;
   });
 }
 
@@ -31,7 +31,7 @@ function getNoteShifted(
     0,
     83,
   );
-  return scaleNoteNumbers[scaleNodeIndex];
+  return clampValue(scaleNoteNumbers[scaleNodeIndex], 0, 127);
 }
 
 export function createSequencerEngine(
@@ -43,7 +43,7 @@ export function createSequencerEngine(
     octave: 0,
     duty: 0.5,
   };
-  const scaleNoteNumbers = createScaleNoteNumbers();
+  let scaleNoteNumbers = createScaleNoteNumbers(0);
   const noteOutputPort = unitInterface?.createNoteOutputPort();
   const sentNoteNUmbers: Set<number> = new Set();
   let rootShift = 0;
@@ -93,6 +93,9 @@ export function createSequencerEngine(
       if (scaleNoteIndex !== -1) {
         rootShift = scaleNoteIndex - 35;
       }
+    },
+    setKeyTranspose(inputKeyTranspose: number) {
+      scaleNoteNumbers = createScaleNoteNumbers(inputKeyTranspose);
     },
     start: core.start,
     processStep: core.processStep,

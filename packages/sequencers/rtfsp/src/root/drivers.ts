@@ -46,6 +46,11 @@ export function setupUnit() {
       },
       noteOff() {},
     },
+    hostCallbacks: {
+      setKeyTranspose(keyTranspose) {
+        engine.setKeyTranspose(keyTranspose);
+      },
+    },
     // persistence,
   });
 }
