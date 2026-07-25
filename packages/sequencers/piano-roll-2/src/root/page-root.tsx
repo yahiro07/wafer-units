@@ -5,6 +5,7 @@ import { EffectorBody } from "@/components/effector-body";
 import { Knob } from "@/components/knob";
 import { LabeledBox } from "@/components/labeled-box";
 import { ShiftSelector } from "@/components/shift-selector";
+import { PianoRollEditorView } from "@/root/piano-roll-editor-view";
 import { store } from "@/root/store";
 import { createSelectorOptions } from "@/utils/selector-option";
 
@@ -50,8 +51,12 @@ const LoopBarsSelectorContainer = () => {
   );
 };
 
-const PianoRollEditorView = () => {
-  return <div class={qu.wh(700, 340).bd("#888").it}></div>;
+const PianoRollEditorViewContainer = () => {
+  return (
+    <div class={qu.wh(700, 340).bd("#222").it}>
+      <PianoRollEditorView />
+    </div>
+  );
 };
 
 const PagerContainer = () => {
@@ -100,7 +105,7 @@ export const PageRoot = () => {
       <EffectorBody className={cz(qu.wh(750, 450).flexC().it)}>
         <div class={qu.flexV().gap(2).it}>
           <TopBar />
-          <PianoRollEditorView />
+          <PianoRollEditorViewContainer />
         </div>
       </EffectorBody>
     </div>

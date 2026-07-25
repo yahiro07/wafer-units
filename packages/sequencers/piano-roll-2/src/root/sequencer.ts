@@ -54,7 +54,7 @@ export function createSequencerEngine(
       for (const note of editState.notes) {
         if (note.position === pos) {
           const outNoteNumber = getNoteShifted(
-            note.degreeIndex,
+            note.pitch,
             editState.octave,
             scaleNoteNumbers,
             rootShift,
