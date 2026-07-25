@@ -116,13 +116,11 @@ const TopBar = () => {
 
 export const PageRoot = () => {
   return (
-    <div class={qu.h("dvh").flexC().it}>
-      <EffectorBody className={cz(qu.wh(800, 450).flexC().it)}>
-        <div class={qu.flexV().gap(2).it}>
-          <TopBar />
-          <PianoRollEditorViewContainer />
-        </div>
-      </EffectorBody>
-    </div>
+    <EffectorBody className={cz(qu.wh(800, 450).flexC().it)}>
+      <div class={qu.flexV().gap(2).it}>
+        <TopBar />
+        <PianoRollEditorViewContainer />
+      </div>
+    </EffectorBody>
   );
 };

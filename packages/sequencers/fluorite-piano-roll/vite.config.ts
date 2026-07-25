@@ -19,6 +19,14 @@ export default defineConfig({
   optimizeDeps: {
     exclude: ["wafer-host", "snap-store"],
   },
-  build: { outDir: "../../../dist/fluorite-piano-roll", emptyOutDir: true },
+  build: {
+    lib: {
+      entry: "src/wc-entry/index.tsx",
+      formats: ["es"],
+      fileName: "index",
+    },
+    outDir: "../../../dist/fluorite-piano-roll",
+    emptyOutDir: true,
+  },
   server: { port: 3000 },
 });

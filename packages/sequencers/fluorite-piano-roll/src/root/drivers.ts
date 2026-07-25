@@ -1,8 +1,8 @@
-import { queryUnitInterface } from "wafer-host/unit-types";
+import { queryUnitInterfaceForModule } from "wafer-host/unit-types";
 import { createSequencerEngine } from "@/root/sequencer";
 import { store } from "@/root/store";
 
-const unitInterface = queryUnitInterface("wafer-v01");
+const unitInterface = queryUnitInterfaceForModule("wafer-v01", import.meta.url);
 const engine = createSequencerEngine(unitInterface);
 
 export function setupUnit() {
@@ -15,7 +15,7 @@ export function setupUnit() {
   unitInterface?.completeSetup({
     unitAspects: {
       unitType: "sequencer",
-      viewSize: [800, 450],
+      // viewSize: [800, 450],
     },
     clockHandlers: {
       start() {
@@ -25,7 +25,7 @@ export function setupUnit() {
         engine.stop();
         store.setPlayPos(null);
       },
-      processScheduling(timeFrom, barFrom, barTo, bpm) {
+      processScheduling(_timeFrom, barFrom, _barTo, _bpm) {
         const stepPos = barFrom * 16;
         const playPosTotalSteps = Math.max(st.loopBars * 16, 32);
         store.setPlayPos(stepPos % playPosTotalSteps);

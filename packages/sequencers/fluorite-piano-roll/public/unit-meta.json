@@ -2,7 +2,7 @@
   "name": "fluorite-piano-roll",
   "unitType": "sequencer",
   "protocol": "wafer-v01",
-  "integrationFormat": "iframe",
+  "integrationFormat": "webComponents",
   "repositoryUrl": "https://github.com/yahiro07/wus-units",
   "author": "yahiro",
   "license": "MIT"
