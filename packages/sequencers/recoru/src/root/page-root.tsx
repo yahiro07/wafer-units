@@ -1,6 +1,7 @@
 import { cz, qu } from "@/common/css-realm";
 import { Icons } from "@/common/icons";
 import { Button } from "@/components/button";
+import { ButtonsSelector } from "@/components/buttons-selector";
 import { EffectorBody } from "@/components/effector-body";
 import { IconButton } from "@/components/icon-button";
 import { LabeledBox } from "@/components/labeled-box";
@@ -46,12 +47,11 @@ const loopBarsOptions = createSelectorOptions<LoopBarLength>(
   ]),
 );
 
-const LoopBarsSelectorContainer = () => {
+const RecordingBarsSelectorContainer = () => {
   const { loopBars } = store.useSnapshot();
   return (
-    <LabeledBox label="bars">
-      <ShiftSelector
-        minWidth={50}
+    <LabeledBox label="recording loop bars" labelAlign="left">
+      <ButtonsSelector
         value={loopBars}
         options={loopBarsOptions}
         onChange={store.setLoopBars}
@@ -124,35 +124,42 @@ const TrashButtonContainer = () => {
 
 const ControlSection = () => {
   return (
-    <div class={qu.flexHA().gap(4).it}>
-      <div class={qu.flexHA().gap(2).it}>
-        <Button style={{ width: 60, height: 40, fontSize: 17 }}>rec</Button>
-        <div class={qu.flexV().gap(0.5).it}>
-          <NarrowButton text="toggle" active />
-          <NarrowButton text="hold" />
+    <div class={qu.w("full").it}>
+      <div class={qu.flexHA().gap(4).it}>
+        <div class={qu.flexHA().gap(2).it}>
+          <Button style={{ width: 60, height: 40, fontSize: 17 }}>rec</Button>
+          <div class={qu.flexV().gap(0.5).it}>
+            <NarrowButton text="toggle" active />
+            <NarrowButton text="hold" />
+          </div>
+        </div>
+        <NarrowButton text="assign" />
+        <div class={qu.flexHA().gap(2).it}>
+          <Button className={qu.fontSize(16).it}>
+            <Icons.Undo />
+          </Button>
+          <div>0 notes</div>
+          <Button className={qu.fontSize(16).it}>
+            <Icons.Redo />
+          </Button>
+        </div>
+        <TrashButtonContainer />
+        <div class={qu.css({ flexGrow: 1 }).it} />
+        <div class={qu.flexHA().gap(3).mt(-2).it}>
+          <KeyboardNumKeysSelectorContainer />
+          {/* <LoopBarsSelectorContainer /> */}
+          <LabeledBox label="speed">
+            <Button>1/2</Button>
+          </LabeledBox>
+          <LabeledBox label="quantize">
+            <Button>Q</Button>
+          </LabeledBox>
         </div>
       </div>
-      <NarrowButton text="assign" />
-      <div class={qu.flexHA().gap(2).it}>
-        <Button className={qu.fontSize(16).it}>
-          <Icons.Undo />
-        </Button>
-        <div>0 notes</div>
-        <Button className={qu.fontSize(16).it}>
-          <Icons.Redo />
-        </Button>
-      </div>
-      <TrashButtonContainer />
-      <div class={qu.grow().it} />
-      <div class={qu.flexHA().gap(3).mt(-2).it}>
-        <KeyboardNumKeysSelectorContainer />
-        <LoopBarsSelectorContainer />
-        <LabeledBox label="speed">
-          <Button>1/2</Button>
-        </LabeledBox>
-        <LabeledBox label="quantize">
-          <Button>Q</Button>
-        </LabeledBox>
+      <div class={qu.flexHA().gap(4).it}>
+        <div class={qu.fontSize(22).it}>recoru</div>
+        <div class={qu.grow().it} />
+        <RecordingBarsSelectorContainer />
       </div>
     </div>
   );
@@ -162,9 +169,7 @@ export const PageRoot = () => {
   return (
     <EffectorBody className={cz(qu.wh(800, 450).flexC().it)}>
       <div class={qu.flexVC().gap(2).it}>
-        <div class={qu.flexHA().it}>
-          <ControlSection />
-        </div>
+        <ControlSection />
         <div class={qu.w("full").h(240).bd("blue").mb(1).it}></div>
         <KeyboardView />
       </div>

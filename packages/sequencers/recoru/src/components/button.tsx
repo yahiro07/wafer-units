@@ -30,7 +30,7 @@ export const Button = ({
       onClick={onClick}
       style={style}
     >
-      {text && <div class={qu.fontSize(9).it}>{text}</div>}
+      {text && <div>{text}</div>}
       {children}
     </div>
   );
