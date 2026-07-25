@@ -92,9 +92,8 @@ const noteEditActions = {
     const note = noteEditActions.addNote(position, yi);
     noteEditActions.startMoveNote(e0, note);
   },
-  startMoveNote(e0: PointerEvent, note: Note) {
-    const originalNote = note;
-    let noteLatest = note;
+  startMoveNote(e0: PointerEvent, originalNote: Note) {
+    let noteLatest = originalNote;
     const baseEl = e0.currentTarget as HTMLElement;
     const originalCoord = mapPointerPositionToCell(
       baseEl,
@@ -111,11 +110,11 @@ const noteEditActions = {
             e.position.x,
             e.position.y,
           );
-          const deltaXiFloat = movedCoord.xiFloat - originalCoord.xiFloat;
-          const deltaYiFloat = movedCoord.yiFloat - originalCoord.yiFloat;
+          const deltaXi = movedCoord.xi - originalCoord.xi;
+          const deltaYi = movedCoord.yi - originalCoord.yi;
 
-          const position = Math.floor(originalNote.position + deltaXiFloat);
-          const pitch = Math.floor(originalNote.pitch + deltaYiFloat);
+          const position = originalNote.position + deltaXi;
+          const pitch = originalNote.pitch + deltaYi;
 
           noteLatest = noteEditActions.updateNoteXY(
             noteLatest,
@@ -127,14 +126,15 @@ const noteEditActions = {
       { coordinate: "page" },
     );
   },
-  startAdjustDuration(e0: PointerEvent, note: Note) {
+  startAdjustDuration(e0: PointerEvent, originalNote: Note) {
     const baseEl = e0.currentTarget as HTMLElement;
     const originalCoord = mapPointerPositionToCell(
       baseEl,
       e0.clientX,
       e0.clientY,
     );
-    let latestDuration = note.duration;
+    const noteId = originalNote.id;
+    let latestDuration = originalNote.duration;
 
     startDragSession(
       e0,
@@ -145,16 +145,16 @@ const noteEditActions = {
             e.position.x,
             e.position.y,
           );
-          const deltaXiFloat = movedCoord.xiFloat - originalCoord.xiFloat;
-          const dur = Math.floor(note.duration + deltaXiFloat);
+          const deltaXi = movedCoord.xi - originalCoord.xi;
+          const dur = originalNote.duration + deltaXi;
           if (dur !== latestDuration) {
-            noteEditActions.setNoteAttrs(note.id, { duration: latestDuration });
+            noteEditActions.setNoteAttrs(noteId, { duration: dur });
             latestDuration = dur;
           }
         },
         onUp() {
           if (latestDuration <= 0) {
-            noteEditActions.removeNote(note.id);
+            noteEditActions.removeNote(noteId);
           }
         },
       },
