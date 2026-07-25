@@ -65,13 +65,20 @@ function hitTestNote(
   }
 }
 
+let gLastNoteDuration = 1;
+
 const noteEditActions = {
   addNote(position: number, yi: number) {
     const nextId =
       store.state.notes.length > 0
         ? Math.max(...store.state.notes.map((note) => note.id)) + 1
         : 0;
-    const newNote: Note = { id: nextId, position, duration: 1, pitch: yi };
+    const newNote: Note = {
+      id: nextId,
+      position,
+      duration: gLastNoteDuration,
+      pitch: yi,
+    };
     store.setNotes((prev) => [...prev, newNote]);
     return newNote;
   },
@@ -143,6 +150,7 @@ const noteEditActions = {
     );
     const noteId = originalNote.id;
     let latestDuration = originalNote.duration;
+    let changed = false;
 
     startDragSession(
       e0,
@@ -158,11 +166,14 @@ const noteEditActions = {
           if (dur !== latestDuration) {
             noteEditActions.setNoteAttrs(noteId, { duration: dur });
             latestDuration = dur;
+            changed = true;
           }
         },
         onUp() {
           if (latestDuration <= 0) {
             noteEditActions.removeNote(noteId);
+          } else if (changed) {
+            gLastNoteDuration = latestDuration;
           }
         },
       },
