@@ -1,4 +1,5 @@
 import { queryUnitInterfaceForModule } from "wafer-host/unit-types";
+import { persistence } from "@/root/persistence";
 import { createSequencerEngine } from "@/root/sequencer";
 import { store } from "@/root/store";
 
@@ -39,7 +40,7 @@ export function setupUnit() {
         engine.processStep(stepIndex, time, unitDuration);
       },
     },
-    // persistence: persistence,
+    persistence: persistence,
   });
 }
 
