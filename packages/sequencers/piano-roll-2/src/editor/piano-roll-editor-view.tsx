@@ -1,5 +1,6 @@
+import { useMemo, useState } from "preact/hooks";
 import { cz, qu } from "@/common/css-realm";
-import { Note } from "@/definitions/model";
+import { LoopBarLength, Note } from "@/definitions/model";
 import { GridBackground } from "@/editor/grid-background";
 import { SideKeyboardColumn } from "@/editor/side-keyboard-column";
 import { colors } from "@/editor/theme";
@@ -7,121 +8,196 @@ import { noteNameLabels, uiConfig } from "@/editor/ui-config";
 import { store } from "@/root/store";
 import { npx, seqNumbers } from "@/utils/helpers";
 
+type SectionRange = {
+  offset: number;
+  duration: number;
+};
+
+function getSectionStride(loopBars: LoopBarLength) {
+  const nx = loopBars < 2 ? 2 / loopBars : 1;
+  const sectionStride = 32 / nx;
+  return { nx, sectionStride };
+}
+
 function mapPointerPositionToCell(
   el: HTMLElement,
   x: number,
   y: number,
-): { step: number; yi: number } {
+): { xi: number; xiFloat: number; yi: number } {
+  const { sectionStride } = getSectionStride(store.state.loopBars);
   const rect = el.getBoundingClientRect();
-  const step = Math.floor(((x - rect.left) / rect.width) * 16);
-  let yi = Math.floor(((y - rect.top) / rect.height) * 9);
-  yi = 8 - yi;
-  return { step, yi };
+  const xiFloat = ((x - rect.left) / rect.width) * sectionStride;
+  const xi = Math.floor(xiFloat);
+  const i = Math.floor(((y - rect.top) / rect.height) * uiConfig.numKeys);
+  const yi = uiConfig.numKeys - i - 1;
+  return { xi, xiFloat, yi };
 }
 
 const actions = {
-  setNote(step: number, yi: number) {
-    // store.setNotes((prev) => prev.map((note, i) => (i === step ? yi : note)));
+  addNote(position: number, yi: number) {
+    const nextId =
+      store.state.notes.length > 0
+        ? Math.max(...store.state.notes.map((note) => note.id)) + 1
+        : 0;
+    const newNote: Note = { id: nextId, position, duration: 1, pitch: yi };
+    store.setNotes((prev) => [...prev, newNote]);
   },
   clearNotes() {
     // store.setNotes((prev) => prev.map(() => -1));
   },
 };
 
-const EditInputLayer = ({ notes }: { notes: Note[] }) => {
-  const handlePointerDown = (e: PointerEvent) => {
-    const { step, yi } = mapPointerPositionToCell(
-      e.target as HTMLElement,
+function hitTestNote(
+  notes: Note[],
+  sectionRange: SectionRange,
+  xiFloat: number,
+  yi: number,
+): { note: Note; part: "body" | "tail" } | undefined {
+  const xi = Math.floor(xiFloat);
+  for (const note of notes) {
+    if (note.pitch === yi) {
+      const relPos = note.position - sectionRange.offset;
+      const dur = note.duration;
+      const noteTailPos = relPos + dur;
+      if (xiFloat - 0.3 <= noteTailPos && noteTailPos <= xiFloat + 0.3) {
+        return { note, part: "tail" };
+      } else if (relPos <= xi && xi < relPos + dur) {
+        return { note, part: "body" };
+      }
+    }
+  }
+}
+
+const EditInputLayer = ({
+  notes,
+  sectionRange,
+}: {
+  notes: Note[];
+  sectionRange: SectionRange;
+}) => {
+  const [pointingPart, setPointingPart] = useState<"body" | "tail" | null>(
+    null,
+  );
+
+  const handlePointerMove = (e: PointerEvent) => {
+    const { xiFloat, yi } = mapPointerPositionToCell(
+      e.currentTarget as HTMLElement,
       e.clientX,
       e.clientY,
     );
-    // const hasNote = notes[step] === yi;
-    // if (!hasNote) {
-    //   actions.setNote(step, yi);
-    // } else {
-    //   actions.setNote(step, -1);
-    // }
+    // console.log(xiFloat, yi);
+    const res = hitTestNote(notes, sectionRange, xiFloat, yi);
+    if (res?.part === "body" && pointingPart !== "body") {
+      setPointingPart("body");
+    } else if (res?.part === "tail" && pointingPart !== "tail") {
+      setPointingPart("tail");
+    } else if (pointingPart && !res) {
+      setPointingPart(null);
+    }
   };
-  return <div class={qu.absoluteFull().it} onPointerDown={handlePointerDown} />;
+
+  const handlePointerDown = (e: PointerEvent) => {
+    const { xiFloat, yi } = mapPointerPositionToCell(
+      e.currentTarget as HTMLElement,
+      e.clientX,
+      e.clientY,
+    );
+
+    if (pointingPart === "tail") {
+    } else if (pointingPart === "body") {
+    } else {
+      const position = (sectionRange.offset + xiFloat) >>> 0;
+      actions.addNote(position, yi);
+    }
+  };
+
+  let cursor = "auto";
+  if (pointingPart === "body") {
+    cursor = "move";
+  } else if (pointingPart === "tail") {
+    cursor = "e-resize";
+  }
+  return (
+    <div
+      class={qu.absoluteFull().it}
+      onPointerDown={handlePointerDown}
+      onPointerMove={handlePointerMove}
+      style={{ cursor }}
+    />
+  );
 };
 
-// function getNoteDuration(notes: Note[], stepFrom: number) {
-//   let dur = 1;
-//   for (let i = stepFrom + 1; i < notes.length; i++) {
-//     if (notes[i] === -1) {
-//       dur++;
-//     } else {
-//       break;
-//     }
-//   }
-//   return dur;
-// }
-
-const NotesDisplayLayer = ({
-  notes,
-  sectionOffset,
-  sectionDuration,
+const NoteView = ({
+  note,
+  sectionRange,
 }: {
-  notes: Note[];
-  sectionOffset: number;
-  sectionDuration: number;
+  note: Note;
+  sectionRange: SectionRange;
 }) => {
   const { cellW, cellH } = uiConfig;
   const noteH = cellH - 2;
+  const pos = note.position - sectionRange.offset;
+  const yi = note.pitch;
+  const dur = note.duration;
+  return (
+    <div key={note.id}>
+      <div
+        class={qu.absolute().flexC().cursor("pointer").it}
+        style={{
+          left: npx(pos * cellW),
+          bottom: npx(yi * cellH),
+          width: npx(cellW * dur),
+          height: npx(cellH),
+        }}
+      >
+        <div
+          class={cz(
+            qu.bg(colors.noteBg).w("full").flexHA().it,
+            qu.h(noteH).css({ border: "solid 0.5px #0004" }).it,
+            qu.rounded(2).pl(0.5).it,
+            qu.color("#0008").fontSize(10).it,
+            "font-monospace",
+          )}
+        >
+          {noteNameLabels[yi]}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const NotesDisplayLayer = ({
+  notes,
+  sectionRange,
+}: {
+  notes: Note[];
+  sectionRange: SectionRange;
+}) => {
   return (
     <div class={qu.absoluteFull().it}>
       {notes
         .filter(
           (note) =>
-            sectionOffset <= note.position &&
-            note.position < sectionOffset + sectionDuration,
+            sectionRange.offset <= note.position &&
+            note.position < sectionRange.offset + sectionRange.duration,
         )
-        .map((note) => {
-          const pos = note.position - sectionOffset;
-          const yi = note.pitch;
-          const dur = note.duration;
-          return (
-            <div key={note.id}>
-              <div
-                class={qu.absolute().flexC().it}
-                style={{
-                  left: npx(pos * cellW),
-                  bottom: npx(yi * cellH),
-                  width: npx(cellW * dur),
-                  height: npx(cellH),
-                }}
-              >
-                <div
-                  class={cz(
-                    qu.bg(colors.noteBg).w("full").flexHA().it,
-                    qu.h(noteH).css({ border: "solid 0.5px #0004" }).it,
-                    qu.rounded(2).pl(0.5).it,
-                    qu.color("#0008").fontSize(10).it,
-                    "font-monospace",
-                  )}
-                >
-                  {noteNameLabels[yi]}
-                </div>
-              </div>
-            </div>
-          );
-        })}
+        .map((note) => (
+          <NoteView key={note.id} note={note} sectionRange={sectionRange} />
+        ))}
     </div>
   );
 };
 
 const NoteLayerStrip = ({
   notes,
-  sectionOffset,
-  sectionDuration,
+  sectionRange,
 }: {
   notes: Note[];
-  sectionOffset: number;
-  sectionDuration: number;
+  sectionRange: SectionRange;
 }) => {
   const { cellW, cellH, numKeys } = uiConfig;
   const editorH = cellH * numKeys;
-  const editorW = cellW * sectionDuration;
+  const editorW = cellW * sectionRange.duration;
   return (
     <div
       class={cz(
@@ -130,20 +206,19 @@ const NoteLayerStrip = ({
         qu.css({ overflow: "hidden" }).it,
       )}
     >
-      <NotesDisplayLayer
-        notes={notes}
-        sectionOffset={sectionOffset}
-        sectionDuration={sectionDuration}
-      />
-      <EditInputLayer notes={notes} />
+      <NotesDisplayLayer notes={notes} sectionRange={sectionRange} />
+      <EditInputLayer notes={notes} sectionRange={sectionRange} />
     </div>
   );
 };
 
 const RepeatingNoteLayers = () => {
   const st = store.useSnapshot();
-  const nx = st.loopBars < 2 ? 2 / st.loopBars : 1;
-  const stepStride = 32 / nx;
+  const { nx, sectionStride } = getSectionStride(st.loopBars);
+  const sectionRange = useMemo(
+    () => ({ offset: 0, duration: sectionStride }),
+    [sectionStride],
+  );
   return (
     <div class={qu.absoluteFull().flexH().it}>
       {seqNumbers(nx).map((i) => {
@@ -151,8 +226,7 @@ const RepeatingNoteLayers = () => {
           <NoteLayerStrip
             key={i}
             notes={st.notes}
-            sectionOffset={0}
-            sectionDuration={stepStride}
+            sectionRange={sectionRange}
           />
         );
       })}
