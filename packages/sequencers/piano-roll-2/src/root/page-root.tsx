@@ -53,9 +53,9 @@ const LoopBarsSelectorContainer = () => {
 
 const PianoRollEditorViewContainer = () => {
   return (
-    <div class={qu.wh(700, 340).bd("#222").it}>
-      <PianoRollEditorView />
-    </div>
+    // <div class={qu.wh(700, 340).bd("#222").it}>
+    <PianoRollEditorView />
+    // </div>
   );
 };
 
@@ -102,7 +102,7 @@ const TopBar = () => {
 export const PageRoot = () => {
   return (
     <div class={qu.css({ height: "100dvh" }).flexC().it}>
-      <EffectorBody className={cz(qu.wh(750, 450).flexC().it)}>
+      <EffectorBody className={cz(qu.wh(800, 450).flexC().it)}>
         <div class={qu.flexV().gap(2).it}>
           <TopBar />
           <PianoRollEditorViewContainer />

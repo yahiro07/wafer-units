@@ -1,36 +1,89 @@
 import { cz, qu } from "@/common/css-realm";
-import { GridBackground } from "@/components/grid-background";
+import { colors } from "@/common/theme";
 import { Note } from "@/root/model";
 import { store } from "@/root/store";
 import { iife, npx, seqNumbers } from "@/utils/helpers";
 
 const configs = iife(() => {
-  const octaveStart = 3;
-  const octaveCount = 4;
+  const octaveStart = 2;
+  const octaveCount = 5;
   const numKeys = octaveCount * 12 + 1;
   return {
     octaveStart,
     octaveCount,
     cellW: 20,
-    cellH: 14,
+    cellH: 20,
     numKeys,
   };
 });
 
-const noteNames = [
-  "C",
-  "C#",
-  "D",
-  "D#",
-  "E",
-  "F",
-  "F#",
-  "G",
-  "G#",
-  "A",
-  "A#",
-  "B",
-];
+const GridBackground = ({
+  nx,
+  ny,
+  width,
+  height,
+}: {
+  nx: number;
+  ny: number;
+  width: number;
+  height: number;
+}) => {
+  const { cellW, cellH } = configs;
+
+  return (
+    <div
+      style={{
+        position: "absolute",
+        left: npx(0),
+        top: npx(0),
+        width: npx(width),
+        height: npx(height),
+        border: "solid 0.5px #222",
+      }}
+    >
+      {Array.from({ length: nx * ny }).map((_, i) => {
+        const xi = i % nx;
+        const yi = Math.floor(i / nx);
+        const x = xi * cellW;
+        const y = yi * cellH;
+        const subNoteIndex = (ny - yi - 1) % 12;
+        let bgColor = colors.pianoRollBg;
+        let borderColor = colors.gridWeak2;
+        const isBlackKey = [1, 3, 6, 8, 10].includes(subNoteIndex);
+        if (isBlackKey) {
+          bgColor = colors.pianoRollBgBlackKey;
+        }
+        if (xi % 4 === 3) {
+          borderColor = colors.gridStrong;
+        }
+        if (xi === 15) {
+          borderColor = colors.gridStrong2;
+        }
+        if (xi % 2 === 0) {
+          // borderColor = "#0002";
+        }
+        const hasBottomBorder = subNoteIndex === 0 || subNoteIndex === 5;
+        return (
+          <div
+            key={`${xi}-${yi}`}
+            style={{
+              position: "absolute",
+              left: npx(x),
+              top: npx(y),
+              width: npx(cellW),
+              height: npx(cellH),
+              borderRight: `solid 0.5px ${borderColor}`,
+              borderBottom: hasBottomBorder
+                ? `solid 0.5px ${colors.gridWeak}`
+                : "none",
+              backgroundColor: bgColor,
+            }}
+          />
+        );
+      })}
+    </div>
+  );
+};
 
 const PitchLabelsColumn = () => {
   const { numKeys, cellH } = configs;
@@ -39,15 +92,15 @@ const PitchLabelsColumn = () => {
     <div>
       {seqNumbers(numKeys).map((i) => {
         const yi = numKeys - i - 1;
-        const octave = ((yi / 12) >>> 0) + 3;
+        const octave = ((yi / 12) >>> 0) + 2;
         const subIndex = yi % 12;
-        const label = `${noteNames[subIndex]}${octave}`;
+        const label = subIndex === 0 && `C${octave}`;
         return (
-          <div class={cz(qu.wh(36, cellH).p(0.125).it)}>
+          <div class={cz(qu.wh(60, cellH).p(0.125).it)}>
             <div
               class={cz(
-                qu.flexHA().it,
-                qu.bd("#0000").bg("#222").fontSize(8).it,
+                qu.flexHA().h("full").it,
+                qu.bg("#fff").color("#444").fontSize(8).it,
               )}
             >
               {label}
@@ -178,7 +231,6 @@ const Editor = () => {
             ny={numKeys}
             width={editorW}
             height={editorH}
-            bgAlterStrideX={bgAltStrideX}
           />
           <div class={qu.absolute().top(0).left(0).wh(editorW, editorH).it}>
             <NotesDisplayLayer notes={st.notes} />
