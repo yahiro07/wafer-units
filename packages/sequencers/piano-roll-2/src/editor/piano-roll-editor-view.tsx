@@ -5,7 +5,7 @@ import { SideKeyboardColumn } from "@/editor/side-keyboard-column";
 import { colors } from "@/editor/theme";
 import { noteNameLabels, uiConfig } from "@/editor/ui-config";
 import { store } from "@/root/store";
-import { npx } from "@/utils/helpers";
+import { npx, seqNumbers } from "@/utils/helpers";
 
 function mapPointerPositionToCell(
   el: HTMLElement,
@@ -42,12 +42,7 @@ const EditInputLayer = ({ notes }: { notes: Note[] }) => {
     //   actions.setNote(step, -1);
     // }
   };
-  return (
-    <div
-      class={qu.relative().w("full").h("full").it}
-      onPointerDown={handlePointerDown}
-    />
-  );
+  return <div class={qu.absoluteFull().it} onPointerDown={handlePointerDown} />;
 };
 
 // function getNoteDuration(notes: Note[], stepFrom: number) {
@@ -66,7 +61,7 @@ const NotesDisplayLayer = ({ notes }: { notes: Note[] }) => {
   const { cellW, cellH } = uiConfig;
   const noteH = cellH - 2;
   return (
-    <div>
+    <div class={qu.absoluteFull().it}>
       {notes.map((note) => {
         const yi = note.pitch;
         const dur = note.duration;
@@ -100,12 +95,37 @@ const NotesDisplayLayer = ({ notes }: { notes: Note[] }) => {
   );
 };
 
+const NoteLayers = () => {
+  const { cellW, cellH, numKeys } = uiConfig;
+  const editorH = cellH * numKeys;
+  const st = store.useSnapshot();
+  const nx = st.loopBars < 2 ? 2 / st.loopBars : 1;
+  const editorW = (cellW * 32) / nx;
+  return (
+    <div class={qu.absoluteFull().flexH().it}>
+      {seqNumbers(nx).map((i) => {
+        return (
+          <div
+            key={i}
+            class={cz(
+              qu.relative().wh(editorW, editorH).it,
+              // qu.bd("blue").it,
+              qu.css({ overflow: "hidden" }).it,
+            )}
+          >
+            <NotesDisplayLayer notes={st.notes} />
+            <EditInputLayer notes={st.notes} />
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
 export const PianoRollEditorView = () => {
   const { cellW, cellH, numKeys } = uiConfig;
   const editorW = cellW * 32;
   const editorH = cellH * numKeys;
-  const st = store.useSnapshot();
-
   return (
     <div
       class={cz(
@@ -114,21 +134,9 @@ export const PianoRollEditorView = () => {
       )}
     >
       <SideKeyboardColumn />
-      <div className={qu.flexV().gap(2).it}>
-        <div class={qu.relative().wh(editorW, editorH).it}>
-          <GridBackground
-            nx={32}
-            ny={numKeys}
-            width={editorW}
-            height={editorH}
-          />
-          <div class={qu.absoluteFull().it}>
-            <NotesDisplayLayer notes={st.notes} />
-          </div>
-          <div class={qu.absoluteFull().it}>
-            <EditInputLayer notes={st.notes} />
-          </div>
-        </div>
+      <div class={qu.relative().wh(editorW, editorH).flexH().it}>
+        <GridBackground nx={32} ny={numKeys} width={editorW} height={editorH} />
+        <NoteLayers />
       </div>
     </div>
   );
