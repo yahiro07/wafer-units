@@ -11,7 +11,7 @@ export const store = createStore<{
   previewNotePitch: number | null;
 }>({
   octave: 0,
-  duty: 0.5,
+  duty: 1,
   playPos: null,
   loopBars: 1,
   pageIndex: 0,

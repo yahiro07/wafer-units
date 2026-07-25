@@ -19,7 +19,7 @@ export function createSequencerEngine(
   const editState: SequencerEditState = {
     notes: [],
     octave: 0,
-    duty: 0.5,
+    duty: 1,
     loopBars: 1,
   };
   const noteOutputPort = unitInterface?.createNoteOutputPort();
