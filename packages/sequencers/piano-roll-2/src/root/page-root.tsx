@@ -2,6 +2,7 @@ import { cz, qu } from "@/common/css-realm";
 import { Icons } from "@/common/icons";
 import { Button } from "@/components/button";
 import { EffectorBody } from "@/components/effector-body";
+import { IconButton } from "@/components/icon-button";
 import { Knob } from "@/components/knob";
 import { LabeledBox } from "@/components/labeled-box";
 import { ShiftSelector } from "@/components/shift-selector";
@@ -85,6 +86,15 @@ const PagerContainer = () => {
   );
 };
 
+const TrashButtonContainer = () => {
+  const hasNote = store.useSnapshot().notes.length > 0;
+  return (
+    <IconButton disabled={!hasNote} onClick={() => store.setNotes([])}>
+      <Icons.Trash />
+    </IconButton>
+  );
+};
+
 const TopBar = () => {
   return (
     <div class={qu.w("full").flexV().gap(4).it}>
@@ -92,6 +102,7 @@ const TopBar = () => {
         <div class={qu.weight("bold").fontSize(22).it}>Fluorite Piano Roll</div>
         <div class={qu.flexHA().gap(7).it}>
           <div class={qu.flexHA().gap(6).it}>
+            <TrashButtonContainer />
             <OctaveKnobContainer />
             <DutyKnobContainer />
             <LoopBarsSelectorContainer />
