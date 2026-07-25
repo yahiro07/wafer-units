@@ -10,13 +10,7 @@ export const EffectorBody = ({
   className?: string;
 }) => {
   return (
-    <div
-      class={cz(
-        qu.bg(colors.panelBody).p(4).color("#fff").it,
-        qu.css({ border: `inset 1px #0004` }).it,
-        className,
-      )}
-    >
+    <div class={cz(qu.bg(colors.panelBody).p(4).color("#fff").it, className)}>
       {children}
     </div>
   );
