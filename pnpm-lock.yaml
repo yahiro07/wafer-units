@@ -360,6 +360,21 @@ importers:
         specifier: ^19.2.17
         version: 19.2.17
 
+  packages/sequencers/recoru:
+    dependencies:
+      '@preact-icons/fa':
+        specifier: npm:@jsr/preact-icons__fa@^1.0.13
+        version: '@jsr/preact-icons__fa@1.0.13'
+      preact:
+        specifier: ^10.29.2
+        version: 10.29.2
+      qulex:
+        specifier: 'catalog:'
+        version: '@yahiro07/qulex@0.1.5'
+      snap-store:
+        specifier: ^0.1.12
+        version: 0.1.12(preact@10.29.2)(react@19.2.6)
+
   packages/sequencers/root-prog:
     dependencies:
       '@preact-icons/fa':
