@@ -14,7 +14,7 @@ const affectNotesToSequencer = () => {
     preset.stepLength,
     st.degreeFlags,
   );
-  engine.setNotes(notes);
+  engine.setNotes(notes, preset.stepLength);
 };
 
 export function setupUnit() {
@@ -27,14 +27,14 @@ export function setupUnit() {
     },
     clockHandlers: {
       start() {
-        engine.clockHandlers.start?.();
+        engine.start();
       },
       stop() {
-        engine.clockHandlers.stop?.();
+        engine.stop();
         store.setPlayPos(null);
       },
       processStep(stepIndex, time, unitDuration) {
-        engine.clockHandlers.processStep?.(stepIndex, time, unitDuration);
+        engine.processStep(stepIndex, time, unitDuration);
         store.setPlayPos(stepIndex % 32);
       },
     },

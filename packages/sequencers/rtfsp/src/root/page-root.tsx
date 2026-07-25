@@ -111,7 +111,7 @@ const PresetNotesView = ({
           class={qu.absolute().it}
           style={{
             left: note.position * sz,
-            bottom: (note.degreeIndex * sz) / 2,
+            bottom: note.degreeIndex * sz,
             width: Math.min(note.duration, 8) * sz,
             height: sz,
             border: "solid 1px #48f",
@@ -139,7 +139,7 @@ const PatternCard = ({
     : undefined;
   return (
     <div
-      class={qu.bg("#fff").bd("#888").relative().wh(100, 40).it}
+      class={qu.bg("#fff").bd("#888").relative().wh(100, 44).it}
       onClick={onClick}
       style={onClick && { cursor: "pointer" }}
     >
@@ -217,7 +217,7 @@ const Timeline = () => {
             class={qu.absolute().it}
             style={{
               left: note.position * szx,
-              bottom: (note.degreeIndex * sz) / 2,
+              bottom: note.degreeIndex * sz,
               width: note.duration * szx,
               height: sz,
               background: "#48f6",
@@ -236,7 +236,7 @@ const Timeline = () => {
                 class={cz(
                   qu.wh(7, 7).rounded("full").bg("#ccc").it,
                   altColor && qu.bg("#aaa").it,
-                  active && qu.bg("#4cf").it,
+                  active && qu.bg("#4f0").it,
                 )}
               />
             </div>

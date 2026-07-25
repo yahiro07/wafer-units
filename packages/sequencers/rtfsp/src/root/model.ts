@@ -67,7 +67,7 @@ export const presets: Preset[] = presetSources.map((source) => {
 });
 
 export type Note = {
-  degreeIndex: number; //0,2,4,6,7 for R,3,5,7,8
+  degreeIndex: number; //0,1,2,3,4 for R,3,5,7,8
   position: number;
   duration: number;
 };
@@ -76,7 +76,7 @@ function mapDegreeFlagToIndices(degreeFlags: number): number[] {
   const indices: number[] = [];
   for (let i = 0; i < 5; i++) {
     if (degreeFlags & (1 << i)) {
-      const degreeIndex = { 0: 0, 1: 2, 2: 4, 3: 6, 4: 7 }[i];
+      const degreeIndex = i;
       if (degreeIndex !== undefined) {
         indices.push(degreeIndex);
       }
