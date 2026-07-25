@@ -19,6 +19,6 @@ export default defineConfig({
   optimizeDeps: {
     exclude: ["wafer-host", "snap-store"],
   },
-  build: { outDir: "../../../dist/piano-roll-2", emptyOutDir: true },
+  build: { outDir: "../../../dist/fluorite-piano-roll", emptyOutDir: true },
   server: { port: 3000 },
 });
