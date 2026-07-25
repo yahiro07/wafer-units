@@ -90,7 +90,8 @@ const KeyboardKey = ({ yi }: { yi: number }) => {
           <div
             class={cz(
               qu.flexHA().h("full").justify("end").p(1).it,
-              qu.color("#666").fontSize(11).it,
+              qu.color("#666").fontSize(12).it,
+              "font-monospace",
             )}
           >
             {label}

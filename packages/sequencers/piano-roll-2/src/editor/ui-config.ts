@@ -27,8 +27,7 @@ const subNoteNames = [
   "B",
 ];
 
-export const noteNameLabels = seqNumbers(uiConfig.numKeys).map((i) => {
-  const yi = uiConfig.numKeys - i - 1;
+export const noteNameLabels = seqNumbers(uiConfig.numKeys).map((yi) => {
   const octave = ((yi / 12) >>> 0) + 2;
   const subIndex = yi % 12;
   return `${subNoteNames[subIndex]}${octave}`;

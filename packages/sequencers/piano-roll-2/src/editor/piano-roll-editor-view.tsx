@@ -63,19 +63,19 @@ const EditInputLayer = ({ notes }: { notes: Note[] }) => {
 // }
 
 const NotesDisplayLayer = ({ notes }: { notes: Note[] }) => {
-  const { cellW, cellH, numKeys } = uiConfig;
+  const { cellW, cellH } = uiConfig;
   const noteH = cellH - 2;
   return (
     <div>
-      {notes.map((note, xi) => {
-        const yi = numKeys - note.pitch - 1;
+      {notes.map((note) => {
+        const yi = note.pitch;
         const dur = note.duration;
         return (
-          <div key={xi}>
+          <div key={note.id}>
             <div
               class={qu.absolute().flexC().it}
               style={{
-                left: npx(xi * cellW),
+                left: npx(note.position * cellW),
                 bottom: npx(yi * cellH),
                 width: npx(cellW * dur),
                 height: npx(cellH),
@@ -84,12 +84,13 @@ const NotesDisplayLayer = ({ notes }: { notes: Note[] }) => {
               <div
                 class={cz(
                   qu.bg(colors.noteBg).w("full").flexHA().it,
-                  qu.h(noteH).rounded(2).pl(0.5).it,
+                  qu.h(noteH).css({ border: "solid 0.5px #0004" }).it,
+                  qu.rounded(2).pl(0.5).it,
                   qu.color("#0008").fontSize(10).it,
                   "font-monospace",
                 )}
               >
-                {noteNameLabels[note.pitch]}
+                {noteNameLabels[yi]}
               </div>
             </div>
           </div>
@@ -99,7 +100,7 @@ const NotesDisplayLayer = ({ notes }: { notes: Note[] }) => {
   );
 };
 
-const Editor = () => {
+export const PianoRollEditorView = () => {
   const { cellW, cellH, numKeys } = uiConfig;
   const editorW = cellW * 32;
   const editorH = cellH * numKeys;
@@ -131,8 +132,4 @@ const Editor = () => {
       </div>
     </div>
   );
-};
-
-export const PianoRollEditorView = () => {
-  return <Editor />;
 };
