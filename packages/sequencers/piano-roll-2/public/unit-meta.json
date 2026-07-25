@@ -1,0 +1,9 @@
+{
+  "name": "piano-roll-2",
+  "unitType": "sequencer",
+  "protocol": "wafer-v01",
+  "integrationFormat": "iframe",
+  "repositoryUrl": "https://github.com/yahiro07/wus-units",
+  "author": "yahiro",
+  "license": "MIT"
+}
