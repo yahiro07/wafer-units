@@ -69,7 +69,7 @@ const PagerContainer = () => {
     store.setPageIndex(st.pageIndex + dir);
   };
   return (
-    <div class={qu.flexHA().gap(4).it}>
+    <div class={qu.flexHA().gap(6).it}>
       <Button disabled={!canShiftLeft} onClick={() => shiftPage(-1)}>
         <Icons.CaretLeft />
       </Button>
@@ -87,9 +87,9 @@ const TopBar = () => {
   return (
     <div class={qu.w("full").flexV().gap(4).it}>
       <div class={qu.flexHA().justify("between").it}>
-        <div class={qu.weight("bold").w(160).it}>Piano Roll 2</div>
+        <div class={qu.weight("bold").w(180).it}>Piano Roll 2</div>
         <PagerContainer />
-        <div class={qu.flexHA().justify("end").w(160).gap(4).it}>
+        <div class={qu.flexHA().justify("end").w(180).gap(6).it}>
           <LoopBarsSelectorContainer />
           <OctaveKnobContainer />
           <DutyKnobContainer />
