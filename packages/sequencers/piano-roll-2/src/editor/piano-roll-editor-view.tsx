@@ -1,0 +1,138 @@
+import { cz, qu } from "@/common/css-realm";
+import { GridBackground } from "@/editor/grid-background";
+import { SideKeyboardColumn } from "@/editor/side-keyboard-column";
+import { colors } from "@/editor/theme";
+import { noteNameLabels, uiConfig } from "@/editor/ui-config";
+import { Note } from "@/root/model";
+import { store } from "@/root/store";
+import { npx } from "@/utils/helpers";
+
+function mapPointerPositionToCell(
+  el: HTMLElement,
+  x: number,
+  y: number,
+): { step: number; yi: number } {
+  const rect = el.getBoundingClientRect();
+  const step = Math.floor(((x - rect.left) / rect.width) * 16);
+  let yi = Math.floor(((y - rect.top) / rect.height) * 9);
+  yi = 8 - yi;
+  return { step, yi };
+}
+
+const actions = {
+  setNote(step: number, yi: number) {
+    // store.setNotes((prev) => prev.map((note, i) => (i === step ? yi : note)));
+  },
+  clearNotes() {
+    // store.setNotes((prev) => prev.map(() => -1));
+  },
+};
+
+const EditInputLayer = ({ notes }: { notes: Note[] }) => {
+  const handlePointerDown = (e: PointerEvent) => {
+    const { step, yi } = mapPointerPositionToCell(
+      e.target as HTMLElement,
+      e.clientX,
+      e.clientY,
+    );
+    // const hasNote = notes[step] === yi;
+    // if (!hasNote) {
+    //   actions.setNote(step, yi);
+    // } else {
+    //   actions.setNote(step, -1);
+    // }
+  };
+  return (
+    <div
+      class={qu.relative().w("full").h("full").it}
+      onPointerDown={handlePointerDown}
+    />
+  );
+};
+
+// function getNoteDuration(notes: Note[], stepFrom: number) {
+//   let dur = 1;
+//   for (let i = stepFrom + 1; i < notes.length; i++) {
+//     if (notes[i] === -1) {
+//       dur++;
+//     } else {
+//       break;
+//     }
+//   }
+//   return dur;
+// }
+
+const NotesDisplayLayer = ({ notes }: { notes: Note[] }) => {
+  const { cellW, cellH, numKeys } = uiConfig;
+  const noteH = cellH - 2;
+  return (
+    <div>
+      {notes.map((note, xi) => {
+        const yi = numKeys - note.pitch - 1;
+        const dur = note.duration;
+        return (
+          <div key={xi}>
+            <div
+              class={qu.absolute().flexC().it}
+              style={{
+                left: npx(xi * cellW),
+                bottom: npx(yi * cellH),
+                width: npx(cellW * dur),
+                height: npx(cellH),
+              }}
+            >
+              <div
+                class={cz(
+                  qu.bg(colors.noteBg).w("full").flexHA().it,
+                  qu.h(noteH).rounded(2).pl(0.5).it,
+                  qu.color("#0008").fontSize(10).it,
+                  "font-monospace",
+                )}
+              >
+                {noteNameLabels[note.pitch]}
+              </div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
+const Editor = () => {
+  const { cellW, cellH, numKeys } = uiConfig;
+  const editorW = cellW * 32;
+  const editorH = cellH * numKeys;
+  const st = store.useSnapshot();
+
+  return (
+    <div
+      class={cz(
+        qu.flexH().gap(0.5).h(340).it,
+        qu.css({ overflowX: "hidden", overflowY: "scroll" }).it,
+      )}
+    >
+      <SideKeyboardColumn />
+      <div className={qu.flexV().gap(2).it}>
+        <div class={qu.relative().wh(editorW, editorH).it}>
+          <GridBackground
+            nx={32}
+            ny={numKeys}
+            width={editorW}
+            height={editorH}
+          />
+          <div class={qu.absoluteFull().it}>
+            <NotesDisplayLayer notes={st.notes} />
+          </div>
+          <div class={qu.absoluteFull().it}>
+            <EditInputLayer notes={st.notes} />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export const PianoRollEditorView = () => {
+  return <Editor />;
+};

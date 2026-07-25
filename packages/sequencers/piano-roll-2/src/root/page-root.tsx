@@ -5,7 +5,7 @@ import { EffectorBody } from "@/components/effector-body";
 import { Knob } from "@/components/knob";
 import { LabeledBox } from "@/components/labeled-box";
 import { ShiftSelector } from "@/components/shift-selector";
-import { PianoRollEditorView } from "@/root/piano-roll-editor-view";
+import { PianoRollEditorView } from "@/editor/piano-roll-editor-view";
 import { store } from "@/root/store";
 import { createSelectorOptions } from "@/utils/selector-option";
 

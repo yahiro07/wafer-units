@@ -1,3 +1,5 @@
+import { colors } from "@/editor/theme";
+import { uiConfig } from "@/editor/ui-config";
 import { npx } from "@/utils/helpers";
 
 export const GridBackground = ({
@@ -5,25 +7,17 @@ export const GridBackground = ({
   ny,
   width,
   height,
-  bgAlterStrideX,
 }: {
   nx: number;
   ny: number;
   width: number;
   height: number;
-  bgAlterStrideX?: number;
 }) => {
-  const cellW = width / nx;
-  const cellH = height / ny;
-
-  const bgAlterStride = bgAlterStrideX ?? 0;
+  const { cellW, cellH } = uiConfig;
 
   return (
     <div
       style={{
-        position: "absolute",
-        left: npx(0),
-        top: npx(0),
         width: npx(width),
         height: npx(height),
         border: "solid 0.5px #222",
@@ -34,16 +28,20 @@ export const GridBackground = ({
         const yi = Math.floor(i / nx);
         const x = xi * cellW;
         const y = yi * cellH;
-        const bgAlter = xi % (bgAlterStride * 2) < bgAlterStride;
         const subNoteIndex = (ny - yi - 1) % 12;
-        let bgColor = "#222";
-        if (bgAlter) {
-          bgColor = "#181818";
-        }
+        let bgColor = colors.pianoRollBg;
+        let borderColor = colors.gridWeak2;
         const isBlackKey = [1, 3, 6, 8, 10].includes(subNoteIndex);
         if (isBlackKey) {
-          bgColor = "#111";
+          bgColor = colors.pianoRollBgBlackKey;
         }
+        if (xi % 4 === 3) {
+          borderColor = colors.gridStrong;
+        }
+        if (xi === 15) {
+          borderColor = colors.gridStrong2;
+        }
+        const hasBottomBorder = subNoteIndex === 0 || subNoteIndex === 5;
         return (
           <div
             key={`${xi}-${yi}`}
@@ -53,7 +51,10 @@ export const GridBackground = ({
               top: npx(y),
               width: npx(cellW),
               height: npx(cellH),
-              border: "solid 0.5px #000",
+              borderRight: `solid 0.5px ${borderColor}`,
+              borderBottom: hasBottomBorder
+                ? `solid 0.5px ${colors.gridWeak}`
+                : "none",
               backgroundColor: bgColor,
             }}
           />
