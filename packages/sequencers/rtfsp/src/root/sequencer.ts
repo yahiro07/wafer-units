@@ -45,11 +45,10 @@ export function createSequencerEngine(
   };
   let scaleNoteNumbers = createScaleNoteNumbers(0);
   const noteOutputPort = unitInterface?.createNoteOutputPort();
-  const sentNoteNUmbers: Set<number> = new Set();
+  const sentNoteNumbers: Set<number> = new Set();
   let rootShift = 0;
 
   const core = {
-    start() {},
     processStep(stepIndex: number, time: number, unitDuration: number) {
       const pos = stepIndex % editState.notesStepLength;
       for (const note of editState.notes) {
@@ -66,14 +65,15 @@ export function createSequencerEngine(
             outNoteNumber,
             time + note.duration * unitDuration * dutyRate,
           );
-          sentNoteNUmbers.add(outNoteNumber);
+          sentNoteNumbers.add(outNoteNumber);
         }
       }
     },
-    stop() {
-      for (const noteNumber of sentNoteNUmbers) {
+    clearSentNotes() {
+      for (const noteNumber of sentNoteNumbers) {
         noteOutputPort?.noteOff(noteNumber);
       }
+      sentNoteNumbers.clear();
     },
   };
 
@@ -91,14 +91,19 @@ export function createSequencerEngine(
     setRootNoteNumber(rootNoteNumber: number) {
       const scaleNoteIndex = scaleNoteNumbers.indexOf(rootNoteNumber);
       if (scaleNoteIndex !== -1) {
+        core.clearSentNotes();
         rootShift = scaleNoteIndex - 35;
       }
     },
     setKeyTranspose(inputKeyTranspose: number) {
       scaleNoteNumbers = createScaleNoteNumbers(inputKeyTranspose);
     },
-    start: core.start,
-    processStep: core.processStep,
-    stop: core.stop,
+    start() {},
+    processStep(stepIndex: number, time: number, unitDuration: number) {
+      core.processStep(stepIndex, time, unitDuration);
+    },
+    stop() {
+      core.clearSentNotes();
+    },
   };
 }
