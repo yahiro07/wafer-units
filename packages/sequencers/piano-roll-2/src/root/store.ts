@@ -1,11 +1,11 @@
 import { createStore } from "snap-store";
-import { Note } from "@/root/model";
+import { LoopBarLength, Note } from "@/definitions/model";
 
 export const store = createStore<{
   octave: number;
   duty: number;
   playPos: number | null;
-  loopBars: number;
+  loopBars: LoopBarLength;
   pageIndex: number;
   notes: Note[];
 }>({

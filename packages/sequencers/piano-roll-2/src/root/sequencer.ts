@@ -1,5 +1,5 @@
 import { UnitInterface } from "wafer-host/unit-types";
-import { Note } from "@/root/model";
+import { Note } from "@/definitions/model";
 import { clampValue, linearInterpolate, seqNumbers } from "@/utils/helpers";
 
 type SequencerEditState = {

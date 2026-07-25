@@ -1,9 +1,9 @@
 import { cz, qu } from "@/common/css-realm";
+import { Note } from "@/definitions/model";
 import { GridBackground } from "@/editor/grid-background";
 import { SideKeyboardColumn } from "@/editor/side-keyboard-column";
 import { colors } from "@/editor/theme";
 import { noteNameLabels, uiConfig } from "@/editor/ui-config";
-import { Note } from "@/root/model";
 import { store } from "@/root/store";
 import { npx } from "@/utils/helpers";
 

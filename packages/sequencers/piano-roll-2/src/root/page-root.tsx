@@ -5,6 +5,7 @@ import { EffectorBody } from "@/components/effector-body";
 import { Knob } from "@/components/knob";
 import { LabeledBox } from "@/components/labeled-box";
 import { ShiftSelector } from "@/components/shift-selector";
+import { LoopBarLength } from "@/definitions/model";
 import { PianoRollEditorView } from "@/editor/piano-roll-editor-view";
 import { store } from "@/root/store";
 import { createSelectorOptions } from "@/utils/selector-option";
@@ -33,8 +34,11 @@ const OctaveKnobContainer = () => {
   );
 };
 
-export const loopBarsOptions = createSelectorOptions(
-  [0.5, 1, 2, 4, 8, 16].map((v) => [v, `${v === 0.5 ? "1/2" : v}`]),
+export const loopBarsOptions = createSelectorOptions<LoopBarLength>(
+  ([0.25, 0.5, 1, 2, 4, 8, 16] satisfies LoopBarLength[]).map((v) => [
+    v,
+    `${v < 1 ? `1/${1 / v}` : v}`,
+  ]),
 );
 
 const LoopBarsSelectorContainer = () => {
@@ -52,11 +56,7 @@ const LoopBarsSelectorContainer = () => {
 };
 
 const PianoRollEditorViewContainer = () => {
-  return (
-    // <div class={qu.wh(700, 340).bd("#222").it}>
-    <PianoRollEditorView />
-    // </div>
-  );
+  return <PianoRollEditorView />;
 };
 
 const PagerContainer = () => {
