@@ -1,6 +1,7 @@
 import { useState } from "preact/hooks";
 import { cz, qu } from "@/common/css-realm";
 import { noteNameLabels, uiConfig } from "@/editor/ui-config";
+import { store } from "@/root/store";
 import { startDragSession } from "@/utils/drag-session";
 import { seqNumbers } from "@/utils/helpers";
 
@@ -66,9 +67,11 @@ const KeyboardKey = ({ yi }: { yi: number }) => {
 
   const handlePointerDown = (e: PointerEvent) => {
     setPressed(true);
+    store.setPreviewNotePitch(yi);
     startDragSession(e, {
       onUpOrCancel() {
         setPressed(false);
+        store.setPreviewNotePitch(null);
       },
     });
   };

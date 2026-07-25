@@ -8,6 +8,7 @@ export const store = createStore<{
   loopBars: LoopBarLength;
   pageIndex: number;
   notes: Note[];
+  previewNotePitch: number | null;
 }>({
   octave: 0,
   duty: 0.5,
@@ -15,9 +16,10 @@ export const store = createStore<{
   loopBars: 1,
   pageIndex: 0,
   notes: [],
+  previewNotePitch: null,
 });
 
-if (1) {
+if (0) {
   const base = 21;
   store.setNotes([
     { id: 0, position: 0, duration: 2, pitch: base + 14 },

@@ -99,7 +99,7 @@ const TopBar = () => {
   return (
     <div class={qu.w("full").flexV().gap(4).it}>
       <div class={qu.flexHA().fJustify("between").it}>
-        <div class={qu.weight("bold").fontSize(22).it}>Fluorite Piano Roll</div>
+        <div class={qu.weight("bold").fontSize(24).it}>Fluorite Piano Roll</div>
         <div class={qu.flexHA().gap(7).it}>
           <div class={qu.flexHA().gap(6).it}>
             <TrashButtonContainer />

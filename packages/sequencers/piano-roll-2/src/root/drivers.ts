@@ -6,8 +6,11 @@ const unitInterface = queryUnitInterface("wafer-v01");
 const engine = createSequencerEngine(unitInterface);
 
 export function setupUnit() {
-  engine.setOctave(store.state.octave);
-  engine.setDuty(store.state.duty);
+  const st = store.state;
+  engine.setOctave(st.octave);
+  engine.setDuty(st.duty);
+  engine.setLoopBars(st.loopBars);
+  engine.setNotes(st.notes);
 
   unitInterface?.completeSetup({
     unitAspects: {
@@ -24,18 +27,7 @@ export function setupUnit() {
       },
       processStep(stepIndex, time, unitDuration) {
         engine.processStep(stepIndex, time, unitDuration);
-        store.setPlayPos(stepIndex % 32);
-      },
-    },
-    noteInput: {
-      noteOn(noteNumber) {
-        engine.setRootNoteNumber(noteNumber);
-      },
-      noteOff() {},
-    },
-    hostCallbacks: {
-      setKeyTranspose(keyTranspose) {
-        engine.setKeyTranspose(keyTranspose);
+        store.setPlayPos(stepIndex % (st.loopBars * 16));
       },
     },
     // persistence,
@@ -43,15 +35,27 @@ export function setupUnit() {
 }
 
 export function setupSynchronization() {
-  return store.subscribe(({ octave, duty }) => {
-    // if (presetIndex !== undefined || degreeFlags !== undefined) {
-    //   affectNotesToSequencer();
-    // }
-    if (octave !== undefined) {
-      engine.setOctave(octave);
-    }
-    if (duty !== undefined) {
-      engine.setDuty(duty);
-    }
-  });
+  return store.subscribe(
+    ({ notes, previewNotePitch, octave, duty, loopBars }) => {
+      if (notes !== undefined) {
+        engine.setNotes(notes);
+      }
+      if (loopBars !== undefined) {
+        engine.setLoopBars(loopBars);
+      }
+      if (previewNotePitch !== undefined) {
+        if (previewNotePitch !== null) {
+          engine.previewNoteOn(previewNotePitch);
+        } else {
+          engine.previewNoteOff();
+        }
+      }
+      if (octave !== undefined) {
+        engine.setOctave(octave);
+      }
+      if (duty !== undefined) {
+        engine.setDuty(duty);
+      }
+    },
+  );
 }

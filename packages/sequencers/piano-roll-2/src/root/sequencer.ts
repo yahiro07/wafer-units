@@ -1,37 +1,16 @@
 import { UnitInterface } from "wafer-host/unit-types";
-import { Note } from "@/definitions/model";
-import { clampValue, linearInterpolate, seqNumbers } from "@/utils/helpers";
+import { LoopBarLength, Note } from "@/definitions/model";
+import { clampValue, linearInterpolate } from "@/utils/helpers";
 
 type SequencerEditState = {
   notes: Note[];
   octave: number;
   duty: number;
-  notesStepLength: number;
+  loopBars: LoopBarLength;
 };
 
-const majorSubDegrees = [0, 2, 4, 5, 7, 9, 11];
-
-function createScaleNoteNumbers(keyTranspose: number) {
-  return seqNumbers(84).map((i) => {
-    const oct = (i / 7) >>> 0;
-    const sub = i % 7;
-    return oct * 12 + majorSubDegrees[sub] + keyTranspose;
-  });
-}
-
-function getNoteShifted(
-  degreeIndex: number,
-  octave: number,
-  scaleNoteNumbers: number[],
-  rootShift: number,
-) {
-  const shiftAmount = [0, 2, 4, 6, 7][degreeIndex];
-  const scaleNodeIndex = clampValue(
-    35 + rootShift + octave * 7 + shiftAmount - 7,
-    0,
-    83,
-  );
-  return clampValue(scaleNoteNumbers[scaleNodeIndex], 0, 127);
+function getNoteShifted(pitch: number, octave: number) {
+  return clampValue(24 + octave * 12 + pitch, 0, 127);
 }
 
 export function createSequencerEngine(
@@ -39,33 +18,28 @@ export function createSequencerEngine(
 ) {
   const editState: SequencerEditState = {
     notes: [],
-    notesStepLength: 1,
     octave: 0,
     duty: 0.5,
+    loopBars: 1,
   };
-  let scaleNoteNumbers = createScaleNoteNumbers(0);
   const noteOutputPort = unitInterface?.createNoteOutputPort();
   const sentNoteNumbers: Set<number> = new Set();
-  let rootShift = 0;
+  let previewNoteNumber: number | null = null;
 
   const core = {
     processStep(stepIndex: number, time: number, unitDuration: number) {
-      const pos = stepIndex % editState.notesStepLength;
+      const totalSteps = editState.loopBars * 16;
+      const pos = stepIndex % totalSteps;
       for (const note of editState.notes) {
         if (note.position === pos) {
-          const outNoteNumber = getNoteShifted(
-            note.pitch,
-            editState.octave,
-            scaleNoteNumbers,
-            rootShift,
-          );
           const dutyRate = linearInterpolate(editState.duty, 0, 1, 0.2, 1);
-          noteOutputPort?.noteOn(outNoteNumber, time);
+          const noteNumber = getNoteShifted(note.pitch, editState.octave);
+          noteOutputPort?.noteOn(noteNumber, time);
           noteOutputPort?.noteOff(
-            outNoteNumber,
+            noteNumber,
             time + note.duration * unitDuration * dutyRate,
           );
-          sentNoteNumbers.add(outNoteNumber);
+          sentNoteNumbers.add(noteNumber);
         }
       }
     },
@@ -78,9 +52,8 @@ export function createSequencerEngine(
   };
 
   return {
-    setNotes(notes: Note[], notesStepLength: number) {
+    setNotes(notes: Note[]) {
       editState.notes = notes;
-      editState.notesStepLength = notesStepLength;
     },
     setOctave(octave: number) {
       editState.octave = octave;
@@ -88,15 +61,8 @@ export function createSequencerEngine(
     setDuty(duty: number) {
       editState.duty = duty;
     },
-    setRootNoteNumber(rootNoteNumber: number) {
-      const scaleNoteIndex = scaleNoteNumbers.indexOf(rootNoteNumber);
-      if (scaleNoteIndex !== -1) {
-        core.clearSentNotes();
-        rootShift = scaleNoteIndex - 35;
-      }
-    },
-    setKeyTranspose(inputKeyTranspose: number) {
-      scaleNoteNumbers = createScaleNoteNumbers(inputKeyTranspose);
+    setLoopBars(loopBars: LoopBarLength) {
+      editState.loopBars = loopBars;
     },
     start() {},
     processStep(stepIndex: number, time: number, unitDuration: number) {
@@ -104,6 +70,17 @@ export function createSequencerEngine(
     },
     stop() {
       core.clearSentNotes();
+    },
+    previewNoteOn(pitch: number) {
+      const noteNumber = getNoteShifted(pitch, editState.octave);
+      noteOutputPort?.noteOn(noteNumber);
+      previewNoteNumber = noteNumber;
+    },
+    previewNoteOff() {
+      if (previewNoteNumber) {
+        noteOutputPort?.noteOff(previewNoteNumber);
+        previewNoteNumber = null;
+      }
     },
   };
 }
