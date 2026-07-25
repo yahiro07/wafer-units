@@ -57,65 +57,103 @@ const EditInputLayer = ({ notes }: { notes: Note[] }) => {
 //   return dur;
 // }
 
-const NotesDisplayLayer = ({ notes }: { notes: Note[] }) => {
+const NotesDisplayLayer = ({
+  notes,
+  sectionOffset,
+  sectionDuration,
+}: {
+  notes: Note[];
+  sectionOffset: number;
+  sectionDuration: number;
+}) => {
   const { cellW, cellH } = uiConfig;
   const noteH = cellH - 2;
   return (
     <div class={qu.absoluteFull().it}>
-      {notes.map((note) => {
-        const yi = note.pitch;
-        const dur = note.duration;
-        return (
-          <div key={note.id}>
-            <div
-              class={qu.absolute().flexC().it}
-              style={{
-                left: npx(note.position * cellW),
-                bottom: npx(yi * cellH),
-                width: npx(cellW * dur),
-                height: npx(cellH),
-              }}
-            >
+      {notes
+        .filter(
+          (note) =>
+            sectionOffset <= note.position &&
+            note.position < sectionOffset + sectionDuration,
+        )
+        .map((note) => {
+          const pos = note.position - sectionOffset;
+          const yi = note.pitch;
+          const dur = note.duration;
+          return (
+            <div key={note.id}>
               <div
-                class={cz(
-                  qu.bg(colors.noteBg).w("full").flexHA().it,
-                  qu.h(noteH).css({ border: "solid 0.5px #0004" }).it,
-                  qu.rounded(2).pl(0.5).it,
-                  qu.color("#0008").fontSize(10).it,
-                  "font-monospace",
-                )}
+                class={qu.absolute().flexC().it}
+                style={{
+                  left: npx(pos * cellW),
+                  bottom: npx(yi * cellH),
+                  width: npx(cellW * dur),
+                  height: npx(cellH),
+                }}
               >
-                {noteNameLabels[yi]}
+                <div
+                  class={cz(
+                    qu.bg(colors.noteBg).w("full").flexHA().it,
+                    qu.h(noteH).css({ border: "solid 0.5px #0004" }).it,
+                    qu.rounded(2).pl(0.5).it,
+                    qu.color("#0008").fontSize(10).it,
+                    "font-monospace",
+                  )}
+                >
+                  {noteNameLabels[yi]}
+                </div>
               </div>
             </div>
-          </div>
-        );
-      })}
+          );
+        })}
     </div>
   );
 };
 
-const NoteLayers = () => {
+const NoteLayerStrip = ({
+  notes,
+  sectionOffset,
+  sectionDuration,
+}: {
+  notes: Note[];
+  sectionOffset: number;
+  sectionDuration: number;
+}) => {
   const { cellW, cellH, numKeys } = uiConfig;
   const editorH = cellH * numKeys;
+  const editorW = cellW * sectionDuration;
+  return (
+    <div
+      class={cz(
+        qu.relative().wh(editorW, editorH).it,
+        qu.bd("blue").it,
+        qu.css({ overflow: "hidden" }).it,
+      )}
+    >
+      <NotesDisplayLayer
+        notes={notes}
+        sectionOffset={sectionOffset}
+        sectionDuration={sectionDuration}
+      />
+      <EditInputLayer notes={notes} />
+    </div>
+  );
+};
+
+const RepeatingNoteLayers = () => {
   const st = store.useSnapshot();
   const nx = st.loopBars < 2 ? 2 / st.loopBars : 1;
-  const editorW = (cellW * 32) / nx;
+  const stepStride = 32 / nx;
   return (
     <div class={qu.absoluteFull().flexH().it}>
       {seqNumbers(nx).map((i) => {
         return (
-          <div
+          <NoteLayerStrip
             key={i}
-            class={cz(
-              qu.relative().wh(editorW, editorH).it,
-              // qu.bd("blue").it,
-              qu.css({ overflow: "hidden" }).it,
-            )}
-          >
-            <NotesDisplayLayer notes={st.notes} />
-            <EditInputLayer notes={st.notes} />
-          </div>
+            notes={st.notes}
+            sectionOffset={0}
+            sectionDuration={stepStride}
+          />
         );
       })}
     </div>
@@ -136,7 +174,7 @@ export const PianoRollEditorView = () => {
       <SideKeyboardColumn />
       <div class={qu.relative().wh(editorW, editorH).flexH().it}>
         <GridBackground nx={32} ny={numKeys} width={editorW} height={editorH} />
-        <NoteLayers />
+        <RepeatingNoteLayers />
       </div>
     </div>
   );
