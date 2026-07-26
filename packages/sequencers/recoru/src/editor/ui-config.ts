@@ -1,7 +1,7 @@
 import { seqNumbers } from "@/utils/helpers";
 
 const octaveStart = 2;
-const octaveCount = 5;
+const octaveCount = 4;
 const numKeys = octaveCount * 12 + 1;
 
 export const uiConfig = {

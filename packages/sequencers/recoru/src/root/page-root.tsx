@@ -8,8 +8,9 @@ import { LabeledBox } from "@/components/labeled-box";
 import { NarrowButton } from "@/components/narrow-button";
 import { ShiftSelector } from "@/components/shift-selector";
 import { LoopBarLength } from "@/definitions/model";
-import { KeyboardView } from "@/editor/keyboard-view";
+import { KeyboardView } from "@/root/keyboard-view";
 import { store } from "@/root/store";
+import { TimelineView } from "@/root/timeline-view";
 import { seqNumbers } from "@/utils/helpers";
 import { createSelectorOptions } from "@/utils/selector-option";
 
@@ -37,6 +38,12 @@ import { createSelectorOptions } from "@/utils/selector-option";
 //   );
 // };
 
+const BeatCell = ({ active }: { active: boolean }) => {
+  return (
+    <div class={cz(qu.w(12).h(12).bg("#bbb").it, active && qu.bg("#08f").it)} />
+  );
+};
+
 const BeatIndicator = () => {
   return (
     <LabeledBox label="beat position" labelAlign="left">
@@ -44,24 +51,24 @@ const BeatIndicator = () => {
         <div class={qu.flexH().gap(1).it}>
           <div class={qu.flexH().gap(0.5).it}>
             {seqNumbers(4).map((i) => (
-              <div key={i} class={qu.w(12).h(12).bg("#ccc").it} />
+              <BeatCell key={i} active={i === 0} />
             ))}
           </div>
           <div class={qu.flexH().gap(0.5).it}>
             {seqNumbers(4).map((i) => (
-              <div key={i} class={qu.w(12).h(12).bg("#ccc").it} />
+              <BeatCell key={i} active={false} />
             ))}
           </div>
         </div>
         <div class={qu.flexH().gap(1).it}>
           <div class={qu.flexH().gap(0.5).it}>
             {seqNumbers(4).map((i) => (
-              <div key={i} class={qu.w(12).h(12).bg("#ccc").it} />
+              <BeatCell key={i} active={false} />
             ))}
           </div>
           <div class={qu.flexH().gap(0.5).it}>
             {seqNumbers(4).map((i) => (
-              <div key={i} class={qu.w(12).h(12).bg("#ccc").it} />
+              <BeatCell key={i} active={false} />
             ))}
           </div>
         </div>
@@ -77,7 +84,7 @@ const ChannelOptions = createSelectorOptions<number>(
 const ChannelSelectorContainer = () => {
   const { channel } = store.useSnapshot();
   return (
-    <LabeledBox label="channel" labelAlign="left">
+    <LabeledBox label="part" labelAlign="left">
       <ButtonsSelector
         value={channel}
         options={ChannelOptions}
@@ -138,31 +145,39 @@ const KeyboardNumKeysSelectorContainer = () => {
     </LabeledBox>
   );
 };
-// const PagerContainer = () => {
-//   const st = store.useSnapshot();
-//   const totalPages = Math.max(1, st.loopBars / 2);
-//   const canShiftLeft = st.pageIndex > 0;
-//   const canShiftRight = st.pageIndex < totalPages - 1;
+const PagerContainer = () => {
+  const st = store.useSnapshot();
+  const totalPages = Math.max(1, st.loopBars / 4);
+  const canShiftLeft = st.pageIndex > 0;
+  const canShiftRight = st.pageIndex < totalPages - 1;
 
-//   const shiftPage = (dir: -1 | 1) => {
-//     store.setPageIndex(st.pageIndex + dir);
-//   };
-//   return (
-//     <LabeledBox label="">
-//       <div class={qu.flexHA().gap(2).it}>
-//         <Button disabled={!canShiftLeft} onClick={() => shiftPage(-1)}>
-//           <Icons.CaretLeft />
-//         </Button>
-//         <div class={qu.w(50).flexC().it}>
-//           {st.pageIndex + 1} / {totalPages}
-//         </div>
-//         <Button disabled={!canShiftRight} onClick={() => shiftPage(1)}>
-//           <Icons.CaretRight />
-//         </Button>
-//       </div>
-//     </LabeledBox>
-//   );
-// };
+  const shiftPage = (dir: -1 | 1) => {
+    store.setPageIndex(st.pageIndex + dir);
+  };
+  return (
+    <LabeledBox label="">
+      <div class={qu.flexHA().gap(1).it}>
+        <Button
+          width={30}
+          disabled={!canShiftLeft}
+          onClick={() => shiftPage(-1)}
+        >
+          <Icons.CaretLeft />
+        </Button>
+        <div class={qu.w(45).flexC().it}>
+          {st.pageIndex + 1} / {totalPages}
+        </div>
+        <Button
+          width={30}
+          disabled={!canShiftRight}
+          onClick={() => shiftPage(1)}
+        >
+          <Icons.CaretRight />
+        </Button>
+      </div>
+    </LabeledBox>
+  );
+};
 
 const TrashButtonContainer = () => {
   const hasNote = store.useSnapshot().notes.length > 0;
@@ -225,6 +240,7 @@ const ControlSection = () => {
         {/* <div class={qu.fontSize(22).it}>recoru</div> */}
         <ChannelSelectorContainer />
         <BeatIndicator />
+        {/* <PagerContainer /> */}
         <div class={qu.grow().it} />
         <RecordingBarsSelectorContainer />
       </div>
@@ -232,12 +248,17 @@ const ControlSection = () => {
   );
 };
 
+const TimelineContainer = () => {
+  // return <PianoRollEditorView />;
+  return <TimelineView />;
+};
+
 export const PageRoot = () => {
   return (
     <EffectorBody className={cz(qu.wh(800, 500).flexC().it)}>
       <div class={qu.flexVC().gap(2).it}>
         <ControlSection />
-        <div class={qu.w("full").h(240).bd("blue").mb(1).it}></div>
+        <TimelineContainer />
         <KeyboardView />
       </div>
     </EffectorBody>

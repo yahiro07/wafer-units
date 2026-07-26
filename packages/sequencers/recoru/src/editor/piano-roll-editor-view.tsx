@@ -1,10 +1,10 @@
-import { useEffect, useMemo, useRef, useState } from "preact/hooks";
+import { useMemo, useRef, useState } from "preact/hooks";
 import { cz, qu } from "@/common/css-realm";
 import { LoopBarLength, Note } from "@/definitions/model";
-import { GridBackground } from "@/editor/grid-background";
-import { KeyboardView } from "@/editor/keyboard-view";
 import { colors } from "@/editor/theme";
-import { noteNameLabels, uiConfig } from "@/editor/ui-config";
+import { uiConfig } from "@/editor/ui-config";
+import { GridBackground } from "@/root/grid-background";
+import { getNoteNameLabel } from "@/root/note-label-helper";
 import { store } from "@/root/store";
 import { startDragSession } from "@/utils/drag-session";
 import { npx, seqNumbers } from "@/utils/helpers";
@@ -42,6 +42,13 @@ function mapPointerPositionToCell(
   return { xi, xiFloat, yi, yiFloat };
 }
 
+function mapPitchToNoteY(pitch: number) {
+  return pitch - 24;
+}
+function mapPitchFromNoteY(noteY: number) {
+  return noteY + 24;
+}
+
 type HitNoteInfo = { note: Note; part: "body" | "tail" };
 
 function hitTestNote(
@@ -52,7 +59,8 @@ function hitTestNote(
 ): HitNoteInfo | undefined {
   const xi = Math.floor(xiFloat);
   for (const note of notes) {
-    if (note.pitch === yi) {
+    const noteY = mapPitchToNoteY(note.pitch);
+    if (noteY === yi) {
       const relPos = note.position - sectionRange.offset;
       const dur = note.duration;
       const noteTailPos = relPos + dur;
@@ -75,9 +83,10 @@ const noteEditActions = {
         : 0;
     const newNote: Note = {
       id: nextId,
+      channel: store.state.channel,
       position,
       duration: gLastNoteDuration,
-      pitch: yi,
+      pitch: mapPitchFromNoteY(yi),
     };
     store.setNotes((prev) => [...prev, newNote]);
     return newNote;
@@ -252,15 +261,15 @@ const NoteView = ({
   const { cellW, cellH } = uiConfig;
   const noteH = cellH - 2;
   const pos = note.position - sectionRange.offset;
-  const yi = note.pitch;
   const dur = note.duration;
+  const noteY = mapPitchToNoteY(note.pitch);
   return (
     <div key={note.id}>
       <div
         class={qu.absolute().flexC().cursor("pointer").it}
         style={{
           left: npx(pos * cellW),
-          bottom: npx(yi * cellH),
+          bottom: npx(noteY * cellH),
           width: npx(cellW * dur - 0.5),
           height: npx(cellH),
         }}
@@ -274,7 +283,7 @@ const NoteView = ({
             "font-monospace",
           )}
         >
-          {noteNameLabels[yi]}
+          {getNoteNameLabel(note.pitch)}
         </div>
       </div>
     </div>
@@ -377,22 +386,8 @@ export const PianoRollEditorView = () => {
   const editorH = cellH * numKeys;
   const baseDivRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const el = baseDivRef.current;
-    if (el) {
-      el.scrollTop = el.scrollHeight / 2 - el.clientHeight / 2;
-    }
-  }, []);
-
   return (
-    <div
-      ref={baseDivRef}
-      class={cz(
-        qu.flexH().gap(0.5).h(340).it,
-        qu.overflowXY("hidden", "scroll").it,
-      )}
-    >
-      <KeyboardView />
+    <div ref={baseDivRef} class={cz(qu.flexH().gap(0.5).h(260).it)}>
       <div class={qu.relative().wh(editorW, editorH).flexH().it}>
         <GridBackground nx={32} ny={numKeys} width={editorW} height={editorH} />
         <RepeatingNoteLayers />

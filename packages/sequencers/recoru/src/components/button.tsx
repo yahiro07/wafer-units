@@ -9,6 +9,7 @@ export const Button = ({
   disabled,
   onClick,
   style,
+  width = 40,
 }: {
   className?: string;
   text?: string;
@@ -17,11 +18,12 @@ export const Button = ({
   disabled?: boolean;
   onClick?: () => void;
   style?: CSSProperties;
+  width?: number;
 }) => {
   return (
     <div
       class={cz(
-        qu.flexC().wh(40, 30).bg("#aaa").fontSize(14).it,
+        qu.flexC().wh(width, 30).bg("#aaa").fontSize(14).it,
         qu.color("#fff").cursor("pointer").it,
         active && qu.bg("#48c").it,
         disabled && qu.opacity(0.4).pointerEvents("none").it,

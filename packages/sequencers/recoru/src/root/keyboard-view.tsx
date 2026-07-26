@@ -50,7 +50,7 @@ const KeyboardKey = ({ xi, cellW }: { xi: number; cellW: number }) => {
       {!isBlack && (
         <div
           class={cz(
-            qu.w(cellW).bd("#bbb").h("100%").it,
+            qu.w(cellW).bd("#bbb").bg("#fff").h("100%").it,
             qu.pointerEvents("auto").cursor("pointer").it,
             qu.flexVA().fJustify("end").fAlign("center").pb(1).it,
             pressed && qu.bg(activeColor).it,
@@ -83,7 +83,7 @@ const KeyboardKey = ({ xi, cellW }: { xi: number; cellW: number }) => {
 export const KeyboardView = () => {
   const { keyboardNumKeys } = store.useSnapshot();
   const numKeysWhite = (keyboardNumKeys / 12) * 7;
-  const cellW = 600 / numKeysWhite;
+  const cellW = 624 / numKeysWhite;
   return (
     <div class={qu.flexH().it}>
       {seqNumbers(keyboardNumKeys).map((i) => (
