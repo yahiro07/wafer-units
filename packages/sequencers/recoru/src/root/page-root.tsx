@@ -10,6 +10,7 @@ import { ShiftSelector } from "@/components/shift-selector";
 import { LoopBarLength } from "@/definitions/model";
 import { KeyboardView } from "@/editor/keyboard-view";
 import { store } from "@/root/store";
+import { seqNumbers } from "@/utils/helpers";
 import { createSelectorOptions } from "@/utils/selector-option";
 
 // const DutyKnobContainer = () => {
@@ -35,6 +36,39 @@ import { createSelectorOptions } from "@/utils/selector-option";
 //     </LabeledBox>
 //   );
 // };
+
+const BeatIndicator = () => {
+  return (
+    <LabeledBox label="beat position" labelAlign="left">
+      <div class={qu.flexV().gap(1).it}>
+        <div class={qu.flexH().gap(1).it}>
+          <div class={qu.flexH().gap(0.5).it}>
+            {seqNumbers(4).map((i) => (
+              <div key={i} class={qu.w(12).h(12).bg("#ccc").it} />
+            ))}
+          </div>
+          <div class={qu.flexH().gap(0.5).it}>
+            {seqNumbers(4).map((i) => (
+              <div key={i} class={qu.w(12).h(12).bg("#ccc").it} />
+            ))}
+          </div>
+        </div>
+        <div class={qu.flexH().gap(1).it}>
+          <div class={qu.flexH().gap(0.5).it}>
+            {seqNumbers(4).map((i) => (
+              <div key={i} class={qu.w(12).h(12).bg("#ccc").it} />
+            ))}
+          </div>
+          <div class={qu.flexH().gap(0.5).it}>
+            {seqNumbers(4).map((i) => (
+              <div key={i} class={qu.w(12).h(12).bg("#ccc").it} />
+            ))}
+          </div>
+        </div>
+      </div>
+    </LabeledBox>
+  );
+};
 
 const ChannelOptions = createSelectorOptions<number>(
   [0, 1, 2, 3].map((v) => [v, `${v + 1}`]),
@@ -79,13 +113,13 @@ const LoopBarsSelectorContainer = () => {
 };
 
 const RecordingBarsSelectorContainer = () => {
-  const { loopBars } = store.useSnapshot();
+  const { recordingBars } = store.useSnapshot();
   return (
     <LabeledBox label="recordings bars" labelAlign="left">
       <ButtonsSelector
-        value={loopBars}
+        value={recordingBars}
         options={loopBarsOptions}
-        onChange={store.setLoopBars}
+        onChange={store.setRecordingBars}
       />
     </LabeledBox>
   );
@@ -190,6 +224,7 @@ const ControlSection = () => {
       <div class={qu.flexHA().gap(4).it}>
         {/* <div class={qu.fontSize(22).it}>recoru</div> */}
         <ChannelSelectorContainer />
+        <BeatIndicator />
         <div class={qu.grow().it} />
         <RecordingBarsSelectorContainer />
       </div>

@@ -6,6 +6,7 @@ export const store = createStore<{
   duty: number;
   playPos: number | null;
   loopBars: LoopBarLength;
+  recordingBars: number;
   pageIndex: number;
   notes: Note[];
   previewNotePitch: number | null;
@@ -16,6 +17,7 @@ export const store = createStore<{
   duty: 1,
   playPos: null,
   loopBars: 1,
+  recordingBars: 1,
   pageIndex: 0,
   notes: [],
   previewNotePitch: null,
