@@ -1,15 +1,106 @@
 import { queryUnitInterfaceForModule } from "wafer-host/unit-types";
+import { Note } from "@/root/model";
 import { createSequencerEngine } from "@/root/sequencer";
 import { store } from "@/root/store";
 
 const unitInterface = queryUnitInterfaceForModule("wafer-v01", import.meta.url);
 const engine = createSequencerEngine(unitInterface);
 
+const recordingActions = {
+  addNote(note: Note) {
+    store.setNotes((prev) => [...prev, note]);
+  },
+  patchNote(noteId: number, attrs: Partial<Note>) {
+    store.setNotes((prev) =>
+      prev.map((note) => (note.id === noteId ? { ...note, ...attrs } : note)),
+    );
+  },
+  removeNote(noteId: number) {
+    store.setNotes((prev) => prev.filter((note) => note.id !== noteId));
+  },
+};
+
+function createNote(noteNumber: number, position: number): Note {
+  const nextId = Math.max(0, ...store.state.notes.map((note) => note.id)) + 1;
+  return {
+    id: nextId,
+    channel: 0,
+    pitch: noteNumber,
+    position,
+    duration: 1,
+  };
+}
+
 type ClockAnchor = {
   timeFrom: number;
   barFrom: number;
   bpm: number;
 };
+
+type TemporalNoteInfo = {
+  noteId: number;
+  noteOnRawStepPos: number;
+};
+
+function createRecorderEngine() {
+  const noteOutputPort = unitInterface?.createNoteOutputPort();
+  let clockAnchor: ClockAnchor | null = null;
+  const tempNoteMap: Map<number, TemporalNoteInfo> = new Map();
+
+  const internal = {
+    getFloatStepPositionFromTime(time: number) {
+      const ac = unitInterface?.audioContext;
+      if (!ac || !clockAnchor) return undefined;
+      if (time <= 0) {
+        time = ac.currentTime;
+      }
+      const unitDuration = 60 / clockAnchor.bpm / 4;
+      return (
+        clockAnchor.barFrom * 16 + (time - clockAnchor.timeFrom) / unitDuration
+      );
+    },
+  };
+
+  return {
+    setClockAnchor(_clockAnchor: ClockAnchor | null) {
+      clockAnchor = _clockAnchor;
+    },
+    noteOn(noteNumber: number, time: number, velocity: number) {
+      console.log("noteOn", noteNumber, time, velocity);
+      const stepPos = internal.getFloatStepPositionFromTime(time ?? 0);
+      console.log("stepPos", stepPos);
+      if (stepPos !== undefined) {
+        const loopSteps = store.state.loopBars * 16;
+        const si = Math.round(stepPos) % loopSteps;
+        console.log("si", si);
+        const note = createNote(noteNumber, si);
+        recordingActions.addNote(note);
+        tempNoteMap.set(noteNumber, {
+          noteId: note.id,
+          noteOnRawStepPos: stepPos,
+        });
+      }
+
+      noteOutputPort?.noteOn(noteNumber);
+    },
+    noteOff(noteNumber: number, time: number) {
+      noteOutputPort?.noteOff(noteNumber);
+      const noteInfo = tempNoteMap.get(noteNumber);
+      if (noteInfo) {
+        const stepPos = internal.getFloatStepPositionFromTime(time ?? 0);
+        if (stepPos !== undefined) {
+          const duration = Math.round(stepPos - noteInfo.noteOnRawStepPos);
+          if (duration >= 1) {
+            recordingActions.patchNote(noteInfo.noteId, { duration });
+          } else {
+            recordingActions.removeNote(noteInfo.noteId);
+          }
+        }
+        tempNoteMap.delete(noteNumber);
+      }
+    },
+  };
+}
 
 export function setupUnit() {
   const st = store.state;
@@ -18,21 +109,7 @@ export function setupUnit() {
   engine.setLoopBars(st.loopBars);
   engine.setNotes(st.notes);
 
-  let clockAnchor: ClockAnchor | null = null;
-
-  const noteOutputPort = unitInterface?.createNoteOutputPort();
-
-  function getFloatStepPositionFromTime(time: number) {
-    const ac = unitInterface?.audioContext;
-    if (!ac || !clockAnchor) return undefined;
-    if (time <= 0) {
-      time = ac.currentTime;
-    }
-    const unitDuration = 60 / clockAnchor.bpm / 4;
-    return (
-      clockAnchor.barFrom * 16 + (time - clockAnchor.timeFrom) / unitDuration
-    );
-  }
+  const recorder = createRecorderEngine();
 
   unitInterface?.completeSetup({
     unitAspects: {
@@ -41,41 +118,28 @@ export function setupUnit() {
     },
     clockHandlers: {
       start() {
-        clockAnchor = null;
+        recorder.setClockAnchor(null);
         engine.start();
       },
       stop() {
         engine.stop();
         store.setPlayPos(null);
-        clockAnchor = null;
+        recorder.setClockAnchor(null);
       },
       processScheduling(timeFrom, barFrom, _barTo, bpm) {
         const stepPos = barFrom * 16;
         const playPosTotalSteps = Math.max(st.loopBars * 16, 32);
         const playPos = stepPos % playPosTotalSteps;
         store.setPlayPos(playPos);
-        clockAnchor = { timeFrom, barFrom, bpm };
+        recorder.setClockAnchor({ timeFrom, barFrom, bpm });
       },
       processStep(stepIndex, time, unitDuration) {
         engine.processStep(stepIndex, time, unitDuration);
       },
     },
     noteInput: {
-      noteOn(noteNumber, time, velocity) {
-        console.log("noteOn", noteNumber, time, velocity);
-        const stepPos = getFloatStepPositionFromTime(time ?? 0);
-        console.log("stepPos", stepPos);
-        if (stepPos !== undefined) {
-          const loopSteps = store.state.loopBars * 16;
-          const si = Math.round(stepPos) % loopSteps;
-          console.log("si", si);
-        }
-
-        noteOutputPort?.noteOn(noteNumber);
-      },
-      noteOff(noteNumber) {
-        noteOutputPort?.noteOff(noteNumber);
-      },
+      noteOn: recorder.noteOn,
+      noteOff: recorder.noteOff,
     },
     // persistence: persistence,
   });
