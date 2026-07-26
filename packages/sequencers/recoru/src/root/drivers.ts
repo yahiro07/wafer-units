@@ -128,7 +128,7 @@ export function setupUnit() {
       },
       processScheduling(timeFrom, barFrom, _barTo, bpm) {
         const stepPos = barFrom * 16;
-        const playPosTotalSteps = Math.max(st.loopBars * 16, 32);
+        const playPosTotalSteps = Math.max(st.loopBars * 16, 64);
         const playPos = stepPos % playPosTotalSteps;
         store.setPlayPos(playPos);
         recorder.setClockAnchor({ timeFrom, barFrom, bpm });

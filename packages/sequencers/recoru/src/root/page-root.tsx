@@ -213,7 +213,10 @@ const ControlSection = () => {
             <NarrowButton text="hold" />
           </div>
         </div>
-        <NarrowButton text="assign" />
+        <div class={qu.flexV().gap(0.5).it}>
+          <NarrowButton text="fill in" />
+          <NarrowButton text="assign" />
+        </div>
         <div class={qu.flexHA().gap(2).it}>
           <Button className={qu.fontSize(16).it}>
             <Icons.Undo />

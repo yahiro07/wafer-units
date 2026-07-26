@@ -15,9 +15,22 @@ type SectionRange = {
   duration: number;
 };
 
-const PlayPositionLineLayer = ({ cellW }: { cellW: number }) => {
+const PlayPositionLineLayer = ({
+  cellW,
+  sectionRange,
+}: {
+  cellW: number;
+  sectionRange: SectionRange;
+}) => {
   const { playPos } = store.useSnapshot();
   if (playPos === null) return;
+  if (
+    !(
+      sectionRange.offset <= playPos &&
+      playPos < sectionRange.offset + sectionRange.duration
+    )
+  )
+    return;
   const barW = cellW * 1.5;
   const localPos = playPos % 64;
 
@@ -101,7 +114,7 @@ const PartLane = ({
         bgAlterStrideX={4}
       />
       <NotesLayer notes={notes} sectionRange={sectionRange} />
-      <PlayPositionLineLayer cellW={cellW} />
+      <PlayPositionLineLayer cellW={cellW} sectionRange={sectionRange} />
     </div>
   );
 };
