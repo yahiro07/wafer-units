@@ -4,7 +4,8 @@ import { createSequencerEngine } from "@/root/sequencer";
 import { store } from "@/root/store";
 
 const unitInterface = queryUnitInterfaceForModule("wafer-v01", import.meta.url);
-const engine = createSequencerEngine(unitInterface);
+const noteOutputPort = unitInterface?.createNoteOutputPort();
+const sequencer = createSequencerEngine(noteOutputPort);
 
 const recordingActions = {
   addNote(note: Note) {
@@ -43,7 +44,6 @@ type TemporalNoteInfo = {
 };
 
 function createRecorderEngine() {
-  const noteOutputPort = unitInterface?.createNoteOutputPort();
   let clockAnchor: ClockAnchor | null = null;
   const tempNoteMap: Map<number, TemporalNoteInfo> = new Map();
 
@@ -66,13 +66,10 @@ function createRecorderEngine() {
       clockAnchor = _clockAnchor;
     },
     noteOn(noteNumber: number, time: number, velocity: number) {
-      console.log("noteOn", noteNumber, time, velocity);
       const stepPos = internal.getFloatStepPositionFromTime(time ?? 0);
-      console.log("stepPos", stepPos);
       if (stepPos !== undefined) {
         const loopSteps = store.state.loopBars * 16;
         const si = Math.round(stepPos) % loopSteps;
-        console.log("si", si);
         const note = createNote(noteNumber, si);
         recordingActions.addNote(note);
         tempNoteMap.set(noteNumber, {
@@ -104,10 +101,10 @@ function createRecorderEngine() {
 
 export function setupUnit() {
   const st = store.state;
-  engine.setOctave(st.octave);
-  engine.setDuty(st.duty);
-  engine.setLoopBars(st.loopBars);
-  engine.setNotes(st.notes);
+  sequencer.setOctave(st.octave);
+  sequencer.setDuty(st.duty);
+  sequencer.setLoopBars(st.loopBars);
+  sequencer.setNotes(st.notes);
 
   const recorder = createRecorderEngine();
 
@@ -119,10 +116,10 @@ export function setupUnit() {
     clockHandlers: {
       start() {
         recorder.setClockAnchor(null);
-        engine.start();
+        sequencer.start();
       },
       stop() {
-        engine.stop();
+        sequencer.stop();
         store.setPlayPos(null);
         recorder.setClockAnchor(null);
       },
@@ -134,7 +131,7 @@ export function setupUnit() {
         recorder.setClockAnchor({ timeFrom, barFrom, bpm });
       },
       processStep(stepIndex, time, unitDuration) {
-        engine.processStep(stepIndex, time, unitDuration);
+        sequencer.processStep(stepIndex, time, unitDuration);
       },
     },
     noteInput: {
@@ -149,23 +146,23 @@ export function setupSynchronization() {
   return store.subscribe(
     ({ notes, previewNotePitch, octave, duty, loopBars }) => {
       if (notes !== undefined) {
-        engine.setNotes(notes);
+        sequencer.setNotes(notes);
       }
       if (loopBars !== undefined) {
-        engine.setLoopBars(loopBars);
+        sequencer.setLoopBars(loopBars);
       }
       if (previewNotePitch !== undefined) {
         if (previewNotePitch !== null) {
-          engine.previewNoteOn(previewNotePitch);
+          sequencer.previewNoteOn(previewNotePitch);
         } else {
-          engine.previewNoteOff();
+          sequencer.previewNoteOff();
         }
       }
       if (octave !== undefined) {
-        engine.setOctave(octave);
+        sequencer.setOctave(octave);
       }
       if (duty !== undefined) {
-        engine.setDuty(duty);
+        sequencer.setDuty(duty);
       }
     },
   );

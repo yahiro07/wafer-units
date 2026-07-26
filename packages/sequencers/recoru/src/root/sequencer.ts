@@ -1,4 +1,4 @@
-import { UnitInterface } from "wafer-host/unit-types";
+import { NotePort } from "wafer-host/unit-types";
 import { LoopBarLength, Note } from "@/root/model";
 import { clampValue, linearInterpolate } from "@/utils/helpers";
 
@@ -10,19 +10,16 @@ type SequencerEditState = {
 };
 
 function getNoteShifted(pitch: number, octave: number) {
-  return clampValue(24 + octave * 12 + pitch, 0, 127);
+  return clampValue(octave * 12 + pitch, 0, 127);
 }
 
-export function createSequencerEngine(
-  unitInterface: UnitInterface | undefined,
-) {
+export function createSequencerEngine(noteOutputPort: NotePort | undefined) {
   const editState: SequencerEditState = {
     notes: [],
     octave: 0,
     duty: 1,
     loopBars: 1,
   };
-  const noteOutputPort = unitInterface?.createNoteOutputPort();
   const sentNoteNumbers: Set<number> = new Set();
   let previewNoteNumber: number | null = null;
 
