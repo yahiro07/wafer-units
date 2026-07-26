@@ -1,6 +1,6 @@
 import { qu } from "@/common/css-realm";
-import { Note } from "@/definitions/model";
 import { GridBackground } from "@/root/grid-background";
+import { Note } from "@/root/model";
 import { getNoteNameLabel } from "@/root/note-label-helper";
 import { store } from "@/root/store";
 import { npx } from "@/utils/helpers";

@@ -1,5 +1,5 @@
 import { Persistence } from "wafer-host/unit-types";
-import { LoopBarLength } from "@/definitions/model";
+import { LoopBarLength } from "@/root/model";
 import { store } from "@/root/store";
 import { unaryFromByte, unaryToByte } from "@/utils/helpers";
 

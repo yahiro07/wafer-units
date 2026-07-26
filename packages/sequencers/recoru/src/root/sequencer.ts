@@ -1,5 +1,5 @@
 import { UnitInterface } from "wafer-host/unit-types";
-import { LoopBarLength, Note } from "@/definitions/model";
+import { LoopBarLength, Note } from "@/root/model";
 import { clampValue, linearInterpolate } from "@/utils/helpers";
 
 type SequencerEditState = {
