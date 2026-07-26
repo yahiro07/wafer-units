@@ -1,4 +1,4 @@
-import { qu } from "@/common/css-realm";
+import { cz, qu } from "@/common/css-realm";
 import { GridBackground } from "@/root/grid-background";
 import { Note } from "@/root/model";
 import { getNoteNameLabel } from "@/root/note-label-helper";
@@ -15,6 +15,73 @@ type SectionRange = {
   duration: number;
 };
 
+const PlayPositionLineLayer = ({ cellW }: { cellW: number }) => {
+  const { playPos } = store.useSnapshot();
+  if (playPos === null) return;
+  const barW = cellW * 1.5;
+  const localPos = playPos % 64;
+
+  return (
+    <div
+      class={cz(
+        qu.absolute().top(0).wh(barW, "full").pointerEvents("none").it,
+        qu.css({ borderRight: "solid 1px #0cf4" }).it,
+        qu.bg("linear-gradient(to right, #0cc0, #0cf3)").it,
+      )}
+      style={{ left: npx(localPos * cellW - barW) }}
+    />
+  );
+};
+
+const NotesLayer = ({
+  notes,
+  sectionRange,
+}: {
+  notes: Note[];
+  sectionRange: SectionRange;
+}) => {
+  const { baseW } = configs;
+  const pitches = notes.map((note) => note.pitch);
+  const topNote = Math.max(...pitches);
+  const bottomNote = Math.min(...pitches);
+  const centerNote = (topNote + bottomNote) / 2;
+
+  const cellW = baseW / sectionRange.duration;
+  const noteH = 10;
+  return (
+    <div>
+      {notes
+        .filter(
+          (note) =>
+            note.position >= sectionRange.offset &&
+            note.position < sectionRange.offset + sectionRange.duration,
+        )
+        .map((note) => {
+          const relativePos = note.position - sectionRange.offset;
+          const relativePitch = note.pitch - centerNote;
+          return (
+            <div
+              key={note.id}
+              class={
+                qu.absolute().bd("#4c48").bg("#4c43").flexHA().pl(1).rounded(4)
+                  .it
+              }
+              style={{
+                left: npx(relativePos * cellW),
+                top: `calc(50% - ${npx(relativePitch * noteH)})`,
+                width: npx(note.duration * cellW),
+                height: npx(noteH * 2),
+                fontSize: npx(10),
+              }}
+            >
+              {getNoteNameLabel(note.pitch)}
+            </div>
+          );
+        })}
+    </div>
+  );
+};
+
 const PartLane = ({
   notes,
   sectionRange,
@@ -23,13 +90,7 @@ const PartLane = ({
   sectionRange: SectionRange;
 }) => {
   const { baseW, baseH } = configs;
-  const pitches = notes.map((note) => note.pitch);
-  const topNote = Math.max(...pitches);
-  const bottomNote = Math.min(...pitches);
-  const centerNote = (topNote + bottomNote) / 2;
-
   const cellW = baseW / sectionRange.duration;
-  const noteH = 10;
   return (
     <div class={qu.wh(baseW, baseH).relative().overflow("hidden").it}>
       <GridBackground
@@ -39,41 +100,8 @@ const PartLane = ({
         ny={6}
         bgAlterStrideX={4}
       />
-      <div>
-        {notes
-          .filter(
-            (note) =>
-              note.position >= sectionRange.offset &&
-              note.position < sectionRange.offset + sectionRange.duration,
-          )
-          .map((note) => {
-            const relativePos = note.position - sectionRange.offset;
-            const relativePitch = note.pitch - centerNote;
-            return (
-              <div
-                key={note.id}
-                class={
-                  qu
-                    .absolute()
-                    .bd("#4c48")
-                    .bg("#4c43")
-                    .flexHA()
-                    .pl(1)
-                    .rounded(4).it
-                }
-                style={{
-                  left: npx(relativePos * cellW),
-                  top: `calc(50% - ${npx(relativePitch * noteH)})`,
-                  width: npx(note.duration * cellW),
-                  height: npx(noteH * 2),
-                  fontSize: npx(10),
-                }}
-              >
-                {getNoteNameLabel(note.pitch)}
-              </div>
-            );
-          })}
-      </div>
+      <NotesLayer notes={notes} sectionRange={sectionRange} />
+      <PlayPositionLineLayer cellW={cellW} />
     </div>
   );
 };
