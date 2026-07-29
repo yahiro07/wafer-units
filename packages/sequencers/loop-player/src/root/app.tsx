@@ -1,72 +1,34 @@
 import { useEffect, useRef } from "preact/hooks";
+import { appConfig } from "@/common/app-config";
 import { css } from "@/common/css-realm";
 import { flexH, flexV } from "@/common/utility-styles";
+import { LoopKey, loopSourceItems } from "@/root/definitions";
+import { pregeneratePreviewData } from "@/root/pregenerate-preview-data";
+import { previewData } from "@/root/preview-data";
+import { previewDataConverter } from "@/root/preview-data-converter";
 import { seqNumbers } from "@/utils/helpers";
-
-async function loadAudioWaveform(uri: string) {
-  const response = await fetch(uri);
-  if (!response.ok) throw new Error(`fetch failed: ${uri}`);
-  const arrayBuffer = await response.arrayBuffer();
-  const audioContext = new AudioContext();
-  const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
-  const left = audioBuffer.getChannelData(0);
-  const right =
-    audioBuffer.numberOfChannels > 1 ? audioBuffer.getChannelData(1) : left;
-  const mono = new Float32Array(audioBuffer.length);
-  for (let i = 0; i < mono.length; i++) {
-    mono[i] = (left[i] + right[i]) * 0.5;
-  }
-  return {
-    sampleRate: audioBuffer.sampleRate,
-    duration: audioBuffer.duration,
-    length: audioBuffer.length,
-    mono,
-  };
-}
-
-function downsampleForWaveform(
-  samples: Float32Array,
-  width: number,
-): Float32Array {
-  const result = new Float32Array(width);
-  const blockSize = samples.length / width;
-  for (let i = 0; i < width; i++) {
-    let min = 1;
-    let max = -1;
-    const start = Math.floor(i * blockSize);
-    const end = Math.floor((i + 1) * blockSize);
-    for (let j = start; j < end; j++) {
-      const v = samples[j];
-      if (v < min) min = v;
-      if (v > max) max = v;
-    }
-    result[i] = Math.max(Math.abs(min), Math.abs(max));
-  }
-  return result;
-}
 
 async function renderLoopWaveformToCanvas(
   canvas: HTMLCanvasElement,
-  uri: string,
+  loopKey: LoopKey,
 ) {
-  const { mono } = await loadAudioWaveform(uri);
-  console.log(mono);
+  const base64 = previewData[loopKey];
+  const peaks = previewDataConverter.floatArrayFromBase64(base64);
   const ctx = canvas.getContext("2d")!;
-  const width = (canvas.width = canvas.clientWidth || 200);
-  const height = (canvas.height = canvas.clientHeight || 50);
-  const peaks = downsampleForWaveform(mono, width);
+  const width = canvas.width;
+  const height = canvas.height;
   const midY = height / 2;
   ctx.clearRect(0, 0, width, height);
   ctx.fillStyle = "#888";
   for (let x = 0; x < width; x++) {
     if (x % 2 === 1) continue;
-    const amp = peaks[x] * midY;
+    const si = Math.floor((x / width) * peaks.length);
+    const amp = peaks[si] * midY;
     ctx.fillRect(x, midY - amp, 1, amp * 2);
   }
 }
 
-const WaveformViewDev = () => {
-  const uri = "./loops/xkicks-the-jokers-kick.m4a";
+const WaveformViewDev = ({ loopKey }: { loopKey: string }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -76,14 +38,14 @@ const WaveformViewDev = () => {
     if (!bounds) return;
     canvas.width = bounds.width;
     canvas.height = bounds.height;
-    renderLoopWaveformToCanvas(canvas, uri);
+    renderLoopWaveformToCanvas(canvas, loopKey);
   }, []);
 
   return <canvas ref={canvasRef} style={{ width: "100%", height: "100%" }} />;
 };
 
-const LoopCard = () => {
-  const loopKey = "xkicks-the-jokers-kick";
+const LoopCard = ({ loopKey }: { loopKey: LoopKey }) => {
+  if (!loopKey) return null;
   return (
     <div
       class={css({
@@ -93,7 +55,7 @@ const LoopCard = () => {
         position: "relative",
       })}
     >
-      <WaveformViewDev />
+      <WaveformViewDev loopKey={loopKey} />
       <div
         class={css({
           position: "absolute",
@@ -103,23 +65,45 @@ const LoopCard = () => {
           color: "#888",
         })}
       >
-        {loopKey}
+        {loopKey.split(".")[0]}
       </div>
+    </div>
+  );
+};
+
+const PregeneratePreviewDataButton = () => {
+  return (
+    <div
+      class={css({
+        position: "absolute",
+        top: 0,
+        right: 0,
+        fontSize: "12px",
+        color: "#888",
+        "&>button": {
+          padding: "4px",
+        },
+      })}
+    >
+      <button onClick={pregeneratePreviewData}>pregenerate preview data</button>
     </div>
   );
 };
 
 export const App = () => {
   return (
-    <div class={css(flexH(4))}>
-      {seqNumbers(4).map((i) => (
-        <div key={i} class={css(flexV(4))}>
-          <LoopCard />
-          <LoopCard />
-          <LoopCard />
-          <LoopCard />
-        </div>
-      ))}
-    </div>
+    <>
+      <div class={css(flexH(4))}>
+        {seqNumbers(4).map((i) => (
+          <div key={i} class={css(flexV(4))}>
+            <LoopCard loopKey={loopSourceItems[i * 4 + 0]?.fileName} />
+            <LoopCard loopKey={loopSourceItems[i * 4 + 1]?.fileName} />
+            <LoopCard loopKey={loopSourceItems[i * 4 + 2]?.fileName} />
+            <LoopCard loopKey={loopSourceItems[i * 4 + 3]?.fileName} />
+          </div>
+        ))}
+      </div>
+      {appConfig.isDevelopment && <PregeneratePreviewDataButton />}
+    </>
   );
 };

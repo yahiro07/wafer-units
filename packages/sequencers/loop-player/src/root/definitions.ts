@@ -11,3 +11,5 @@ export const loopSourceItems = [
   { fileName: "wrd-006.m4a", bars: 2 },
   { fileName: "ec-digi-014.m4a", bars: 2 },
 ];
+
+export type LoopKey = (typeof loopSourceItems)[number]["fileName"];
