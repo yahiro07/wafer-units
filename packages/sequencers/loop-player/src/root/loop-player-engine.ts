@@ -145,13 +145,13 @@ function createBeatActor(
               audioContext.currentTime,
             )
           : 0;
-        console.log({
-          hb: bus.hostBpm,
-          ob: audioItem.originalBpm,
-          dur: audioItem.duration,
-          pr: playbackRate,
-          st: startTimePosition,
-        });
+        // console.log({
+        //   hb: bus.hostBpm,
+        //   ob: audioItem.originalBpm,
+        //   dur: audioItem.duration,
+        //   pr: playbackRate,
+        //   st: startTimePosition,
+        // });
         audio.currentTime = startTimePosition;
         audio.loop = loop;
         audio.playbackRate = playbackRate;
