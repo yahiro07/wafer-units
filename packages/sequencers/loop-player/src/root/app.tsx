@@ -3,12 +3,14 @@ import { appConfig } from "@/common/app-config";
 import { css } from "@/common/css-realm";
 import { flexH, flexV } from "@/common/utility-styles";
 import { LoopKey, loopSourceItems } from "@/root/definitions";
+import { setupUnit, useAffectStoreToEngine } from "@/root/drivers";
 import { pregeneratePreviewData } from "@/root/pregenerate-preview-data";
 import { previewData } from "@/root/preview-data";
 import { previewDataConverter } from "@/root/preview-data-converter";
+import { store } from "@/root/store";
 import { seqNumbers } from "@/utils/helpers";
 
-async function renderLoopWaveformToCanvas(
+function renderLoopWaveformToCanvas(
   canvas: HTMLCanvasElement,
   loopKey: LoopKey,
 ) {
@@ -28,7 +30,7 @@ async function renderLoopWaveformToCanvas(
   }
 }
 
-const WaveformViewDev = ({ loopKey }: { loopKey: string }) => {
+const WaveformViewDev = ({ loopKey }: { loopKey: LoopKey }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -45,15 +47,25 @@ const WaveformViewDev = ({ loopKey }: { loopKey: string }) => {
 };
 
 const LoopCard = ({ loopKey }: { loopKey: LoopKey }) => {
+  const { selectedLoopKey } = store.useSnapshot();
   if (!loopKey) return null;
+  const active = loopKey === selectedLoopKey;
+  const onClick = () => {
+    store.setSelectedLoopKey(loopKey);
+  };
   return (
     <div
-      class={css({
-        width: "200px",
-        height: "50px",
-        border: "solid 1px #888",
-        position: "relative",
-      })}
+      class={css(
+        {
+          width: "200px",
+          height: "50px",
+          border: "solid 1px #888",
+          position: "relative",
+          cursor: "pointer",
+        },
+        active && { background: "#8f8" },
+      )}
+      onClick={onClick}
     >
       <WaveformViewDev loopKey={loopKey} />
       <div
@@ -91,6 +103,9 @@ const PregeneratePreviewDataButton = () => {
 };
 
 export const App = () => {
+  useEffect(setupUnit, []);
+  // useEffect(setupSynchronization, []);
+  useAffectStoreToEngine();
   return (
     <>
       <div class={css(flexH(4))}>

@@ -20,11 +20,6 @@ export default defineConfig({
     exclude: ["wafer-host", "snap-store"],
   },
   build: {
-    lib: {
-      entry: "src/wc-entry/index.tsx",
-      formats: ["es"],
-      fileName: "index",
-    },
     outDir: "../../../dist/loop-player",
     emptyOutDir: true,
   },

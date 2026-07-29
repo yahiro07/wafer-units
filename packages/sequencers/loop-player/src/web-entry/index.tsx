@@ -10,7 +10,7 @@ const root = document.getElementById("app")!;
 document.adoptedStyleSheets = [cssRealm.sheet];
 
 render(
-  <div class={css(flexC(), { height: "100dvh" })}>
+  <div class={css(flexC(), { height: "100dvh", background: "#fff" })}>
     <App />
   </div>,
   root,

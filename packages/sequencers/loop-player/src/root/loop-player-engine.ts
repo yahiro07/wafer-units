@@ -9,7 +9,7 @@ const audioContext = unitInterface?.audioContext ?? new AudioContext();
 const audioDestinationNode =
   unitInterface?.audioOutputNode ?? audioContext.destination;
 
-type BeatSourceItem = {
+export type BeatSourceItem = {
   id: string;
   uri: string;
   barLength: number;
@@ -145,6 +145,13 @@ function createBeatActor(
               audioContext.currentTime,
             )
           : 0;
+        console.log({
+          hb: bus.hostBpm,
+          ob: audioItem.originalBpm,
+          dur: audioItem.duration,
+          pr: playbackRate,
+          st: startTimePosition,
+        });
         audio.currentTime = startTimePosition;
         audio.loop = loop;
         audio.playbackRate = playbackRate;
@@ -184,7 +191,7 @@ function createBeatActor(
     },
     onHostStart() {
       if (active) {
-        void internal.play(true, true);
+        void internal.play(false, true);
       }
     },
     onHostStop() {
