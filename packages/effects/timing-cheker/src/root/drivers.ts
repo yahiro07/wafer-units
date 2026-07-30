@@ -1,8 +1,8 @@
+import { useLayoutEffect } from "preact/hooks";
+import { queryUnitInterface } from "wafer-host/unit-types";
 import { createSchedulingPlotter } from "@/root/scheduling-plotter";
 import { store } from "@/root/store";
 import { createWavePlotter } from "@/root/wave-plotter";
-import { useLayoutEffect } from "preact/hooks";
-import { queryUnitInterface } from "wafer-host/unit-types";
 
 console.log("timing-checker 1212");
 
@@ -32,11 +32,13 @@ function setupUnit() {
 
   function updateAnalyser() {
     analyser.getFloatTimeDomainData(timeDomainData);
-    let time = audioContext.currentTime - startTime;
-    const sampleRate = audioContext.sampleRate;
-    const timeDelta = 1 / sampleRate;
+    const { currentTime, sampleRate } = audioContext;
+    const dt = 1 / sampleRate;
+    const spanDuration = timeDomainData.length * dt;
+    let time = currentTime - startTime - spanDuration;
     for (let i = 0; i < timeDomainData.length; i++) {
-      time += timeDelta;
+      time += dt;
+      if (time < 0) continue;
       const barPosition = mapTimeToBarPosition(time);
       const value = timeDomainData[i];
       wavePlotter.putWaveValue(barPosition, value);
