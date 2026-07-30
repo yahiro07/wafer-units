@@ -43,7 +43,6 @@ function setupUnit() {
     },
     hostCallbacks: {
       setBpm(bpm: number) {
-        console.log("aa setBpm", bpm);
         store.setHostBpm(bpm);
       },
     },
@@ -56,9 +55,14 @@ function setupUnit() {
         if (bpm !== store.state.hostBpm) {
           store.setHostBpm(bpm);
         }
-        const timePositionFromStart = audioContext.currentTime - startTime;
-        const barScheduledAt = mapTimeToBarPosition(timePositionFromStart);
+        const timeFromStart = audioContext.currentTime - startTime;
+        const barScheduledAt = mapTimeToBarPosition(timeFromStart);
         schedulingPlotter.hostScheduled(barScheduledAt, barFrom, barTo);
+      },
+      processStep(stepIndex, time) {
+        const timeFromStart = time - startTime;
+        const barPosition = mapTimeToBarPosition(timeFromStart);
+        schedulingPlotter.addScheduleStepPoint(stepIndex, barPosition);
       },
     },
   });

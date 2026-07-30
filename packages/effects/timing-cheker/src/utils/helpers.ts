@@ -35,3 +35,16 @@ export function unaryToByte(value: number): number {
 export function unaryFromByte(byte: number): number {
   return byte / 255;
 }
+
+export function getSortOrder<T>(
+  fn: (item: T) => number,
+  order: "asc" | "desc" = "asc",
+) {
+  return (a: T, b: T) => {
+    const va = fn(a);
+    const vb = fn(b);
+    if (va < vb) return order === "asc" ? -1 : 1;
+    if (va > vb) return order === "asc" ? 1 : -1;
+    return 0;
+  };
+}
