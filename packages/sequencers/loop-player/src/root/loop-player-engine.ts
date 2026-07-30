@@ -48,19 +48,6 @@ async function createAudioItem(uri: string): Promise<AudioItem> {
   );
   const audio = new Audio(audioBlobObjectURL);
   const mediaElementSource = audioContext.createMediaElementSource(audio);
-  let duration = 0;
-  if (audio.readyState >= HTMLMediaElement.HAVE_METADATA) {
-    duration = audio.duration;
-  } else {
-    await new Promise((resolve, reject) => {
-      audio.addEventListener("loadedmetadata", resolve, { once: true });
-      audio.addEventListener("error", reject, { once: true });
-    });
-    duration = audio.duration;
-  }
-  if (!(Number.isFinite(duration) && duration > 0)) {
-    throw new Error(`Invalid duration for ${uri}`);
-  }
   return {
     audio,
     audioBlobObjectURL,
