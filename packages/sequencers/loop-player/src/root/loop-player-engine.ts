@@ -102,6 +102,7 @@ type BeatActor = {
   preload(): void;
   setBeatState(active: boolean): void;
   onHostStart(): void;
+  onHostStep(stepIndex: number, time: number): void;
   onHostStop(): void;
   playInstant(loop?: boolean): void;
   stopInstant(): void;
@@ -117,45 +118,34 @@ function createBeatActor(
   let audioItem: AudioItem | undefined;
   let active = false;
 
+  const calcPlaybackRate = () => bus.hostBpm / beatSource.originalBpm;
+
   const internal = {
     async ensureLoaded() {
       if (audioItem) return;
       createAudioPromise ??= createAudioItem(beatSource);
       audioItem = await createAudioPromise;
+      console.log(`loaded ${beatSource.id}`);
     },
-    async play(syncToHost: boolean, loop: boolean) {
+    async play(startTimePosition?: number) {
       await internal.ensureLoaded();
       if (!audioItem) return;
-      if (syncToHost && (!active || !bus.hostPlaying)) return;
+      if (startTimePosition !== undefined && (!active || !bus.hostPlaying)) {
+        return;
+      }
+      const { audio, mediaElementSource } = audioItem;
       if (!audioItem.playing) {
-        const { audio, mediaElementSource } = audioItem;
+        //initial start
         mediaElementSource.connect(audioDestinationNode);
-        const playbackRate = bus.hostBpm / beatSource.originalBpm;
-        const startTimePosition = syncToHost
-          ? calculateStartTimePosition(
-              bus.hostTimeAnchor,
-              bus.hostBpm,
-              beatSource.originalBpm,
-              beatSource.barLength,
-              playbackRate,
-              audioContext.currentTime,
-            )
-          : 0;
-        // console.log({
-        //   hb: bus.hostBpm,
-        //   ob: audioItem.originalBpm,
-        //   dur: audioItem.duration,
-        //   pr: playbackRate,
-        //   st: startTimePosition,
-        // });
-        audio.currentTime = startTimePosition;
-        audio.loop = loop;
+        const playbackRate = calcPlaybackRate();
         audio.playbackRate = playbackRate;
+        audio.currentTime = startTimePosition ?? 0;
         audio.play();
         audioItem.playing = true;
-        if (!loop) {
-          audio.addEventListener("ended", internal.stop, { once: true });
-        }
+      } else {
+        //restart from the beginning
+        audio.currentTime = 0;
+        audio.play();
       }
     },
     stop() {
@@ -177,7 +167,16 @@ function createBeatActor(
       active = _active;
       if (bus.hostPlaying) {
         if (active) {
-          void internal.play(true, true);
+          const playbackRate = calcPlaybackRate();
+          const startTimePosition = calculateStartTimePosition(
+            bus.hostTimeAnchor,
+            bus.hostBpm,
+            beatSource.originalBpm,
+            beatSource.barLength,
+            playbackRate,
+            audioContext.currentTime,
+          );
+          void internal.play(startTimePosition);
         } else {
           internal.stop();
         }
@@ -186,8 +185,23 @@ function createBeatActor(
       }
     },
     onHostStart() {
-      if (active) {
-        void internal.play(false, true);
+      // if (active) {
+      //   void internal.play(false);
+      // }
+    },
+    onHostStep(stepIndex: number, time: number) {
+      const loopSteps = beatSource.barLength * 16;
+      if (active && stepIndex % loopSteps === 0) {
+        const delay = (time - audioContext.currentTime) * 1000;
+        const forwardLeadingMs = 10;
+        if (delay > forwardLeadingMs) {
+          setTimeout(() => {
+            if (!active || !bus.hostPlaying) return;
+            void internal.play();
+          }, delay - forwardLeadingMs);
+        } else {
+          void internal.play();
+        }
       }
     },
     onHostStop() {
@@ -195,17 +209,16 @@ function createBeatActor(
         internal.stop();
       }
     },
-    playInstant(loop?: boolean) {
-      void internal.play(false, loop ?? false);
+    playInstant() {
+      void internal.play();
     },
     stopInstant() {
       internal.stop();
     },
     updatePlaybackRate() {
       if (audioItem) {
-        const playbackRate = bus.hostBpm / beatSource.originalBpm;
+        const playbackRate = calcPlaybackRate();
         audioItem.audio.playbackRate = playbackRate;
-        return playbackRate;
       }
     },
     cleanup() {
@@ -273,6 +286,11 @@ export function createLoopPlayerEngine(): LoopPlayerEngine {
           self.setBpm(bpm);
         }
         bus.hostTimeAnchor = { time: timeFrom, transportBarPosition: barFrom };
+      },
+      processStep(stepIndex: number, time: number) {
+        for (const beatActor of beatActors) {
+          beatActor.onHostStep(stepIndex, time);
+        }
       },
       stop() {
         bus.hostPlaying = false;
