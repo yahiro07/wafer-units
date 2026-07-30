@@ -1,6 +1,6 @@
 import { ComponentChildren } from "preact";
 import { useEffect, useRef } from "preact/hooks";
-import { css } from "@/common/css-realm";
+import { css, styled } from "@/common/css-realm";
 import { GeneralSelector } from "@/components/general-selector";
 import { GridBackground } from "@/components/grid-background";
 import { LayeredLayout } from "@/components/layered-layout";
@@ -50,7 +50,11 @@ const HostBpmContainer = () => {
   return <div class={css(flexH(1))}>hostBpm: {hostBpm || "--"}</div>;
 };
 
-const SchedulerGraphCanvas = () => {
+const GraphCanvas = ({
+  canvasSetterFn,
+}: {
+  canvasSetterFn: (canvas: HTMLCanvasElement | null) => void;
+}) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -58,8 +62,8 @@ const SchedulerGraphCanvas = () => {
       const bounds = canvas.getBoundingClientRect();
       canvas.width = Math.round(bounds.width);
       canvas.height = Math.round(bounds.height);
-      store.setSchedulingPlotterCanvas(canvas);
-      return () => store.setSchedulingPlotterCanvas(null);
+      canvasSetterFn(canvas);
+      return () => canvasSetterFn(null);
     }
   }, []);
   return (
@@ -67,28 +71,41 @@ const SchedulerGraphCanvas = () => {
   );
 };
 
+const GraphBorderFrame = styled.div({
+  width: "100%",
+  height: "100%",
+  border: "solid 1px #aaa",
+});
+
 const SchedulerLaneContainer = () => {
   return (
     <LaneBox label="scheduler">
       <LayeredLayout>
         <GridBackground nx={4} ny={1} />
-        <div
-          class={css({
-            width: "100%",
-            height: "100%",
-            border: "solid 1px #aaa",
-          })}
-        />
-        <SchedulerGraphCanvas />
+        <GraphBorderFrame />
+        <GraphCanvas canvasSetterFn={store.setSchedulingPlotterCanvas} />
       </LayeredLayout>
     </LaneBox>
   );
 };
 
-const ChannelLaneContainer = ({ label }: { label: string }) => {
+const ChannelLaneContainer = ({
+  channelId,
+}: {
+  channelId: "ch1" | "ch2" | "ch3";
+}) => {
+  const canvasSetterFn = {
+    ch1: store.setWavePlotterCanvasCh1,
+    ch2: store.setWavePlotterCanvasCh1, //todo
+    ch3: store.setWavePlotterCanvasCh1, //todo
+  }[channelId];
   return (
-    <LaneBox label={label}>
-      <GridBackground nx={4} ny={1} />
+    <LaneBox label={channelId}>
+      <LayeredLayout>
+        <GridBackground nx={4} ny={1} />
+        <GraphBorderFrame />
+        <GraphCanvas canvasSetterFn={canvasSetterFn} />
+      </LayeredLayout>
     </LaneBox>
   );
 };
@@ -109,9 +126,9 @@ export const App = () => {
         </div>
       </div>
       <SchedulerLaneContainer />
-      <ChannelLaneContainer label="ch1" />
-      <ChannelLaneContainer label="ch2" />
-      <ChannelLaneContainer label="ch3" />
+      <ChannelLaneContainer channelId="ch1" />
+      {/* <ChannelLaneContainer channelId="ch2" /> */}
+      {/* <ChannelLaneContainer channelId="ch3" /> */}
     </div>
   );
 };

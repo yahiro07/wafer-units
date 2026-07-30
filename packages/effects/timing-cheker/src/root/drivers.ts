@@ -1,5 +1,6 @@
 import { createSchedulingPlotter } from "@/root/scheduling-plotter";
 import { store } from "@/root/store";
+import { createWavePlotter } from "@/root/wave-plotter";
 import { useLayoutEffect } from "preact/hooks";
 import { queryUnitInterface } from "wafer-host/unit-types";
 
@@ -14,15 +15,42 @@ function mapTimeToBarPosition(time: number) {
 }
 
 const schedulingPlotter = createSchedulingPlotter();
+const wavePlotter = createWavePlotter();
 
 function setupUnit() {
   let startTime = 0;
 
   if (!unitInterface) {
     store.setHostBpm(120);
+    return;
   }
 
-  unitInterface?.completeSetup({
+  const analyser = audioContext.createAnalyser();
+  unitInterface.audioInputNode.connect(analyser);
+
+  const timeDomainData = new Float32Array(1024);
+
+  function updateAnalyser() {
+    analyser.getFloatTimeDomainData(timeDomainData);
+    let time = audioContext.currentTime - startTime;
+    const sampleRate = audioContext.sampleRate;
+    const timeDelta = 1 / sampleRate;
+    for (let i = 0; i < timeDomainData.length; i++) {
+      time += timeDelta;
+      const barPosition = mapTimeToBarPosition(time);
+      const value = timeDomainData[i];
+      wavePlotter.putWaveValue(barPosition, value);
+    }
+  }
+
+  const timerId = setInterval(updateAnalyser, 20);
+
+  const cleanup = () => {
+    unitInterface.audioInputNode.disconnect();
+    clearInterval(timerId);
+  };
+
+  unitInterface.completeSetup({
     unitAspects: {
       unitType: "effect",
       viewSize: [940, 540],
@@ -51,17 +79,21 @@ function setupUnit() {
         schedulingPlotter.addScheduleStepPoint(stepIndex, barPosition);
       },
     },
+    cleanup,
   });
 }
 
 function setupSynchronization() {
   return store.subscribe((attrs) => {
-    const { barLength, schedulingPlotterCanvas } = attrs;
+    const { barLength, schedulingPlotterCanvas, wavePlotterCanvasCh1 } = attrs;
     if (barLength !== undefined) {
       schedulingPlotter.setBarLength(barLength);
     }
     if (schedulingPlotterCanvas !== undefined) {
       schedulingPlotter.setCanvas(schedulingPlotterCanvas);
+    }
+    if (wavePlotterCanvasCh1 !== undefined) {
+      wavePlotter.setCanvas(wavePlotterCanvasCh1);
     }
   });
 }

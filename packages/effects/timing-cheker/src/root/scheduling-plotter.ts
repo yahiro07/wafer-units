@@ -1,15 +1,11 @@
 import { getSortOrder } from "@/utils/helpers";
 
 type SchedulingPlotter = {
-  setCanvas: (canvas: HTMLCanvasElement | null) => void;
-  hostStarted: () => void;
-  hostScheduled: (
-    barScheduledAt: number,
-    barFrom: number,
-    barTo: number,
-  ) => void;
-  addScheduleStepPoint: (stepIndex: number, barPosition: number) => void;
-  setBarLength: (length: number) => void;
+  setCanvas(canvas: HTMLCanvasElement | null): void;
+  hostStarted(): void;
+  hostScheduled(barScheduledAt: number, barFrom: number, barTo: number): void;
+  addScheduleStepPoint(stepIndex: number, barPosition: number): void;
+  setBarLength(length: number): void;
 };
 
 type SchedulingPoint = {
