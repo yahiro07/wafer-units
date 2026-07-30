@@ -102,7 +102,7 @@ const ChannelLaneContainer = ({
     ch3: store.setWavePlotterCanvasCh1, //todo
   }[channelId];
   return (
-    <LaneBox label={label}>
+    <LaneBox label={label} height={200}>
       <LayeredLayout>
         <GridBackground nx={4} ny={1} />
         <GraphBorderFrame />
