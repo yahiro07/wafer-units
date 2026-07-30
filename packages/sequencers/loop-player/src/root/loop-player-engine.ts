@@ -3,6 +3,7 @@ import {
   queryUnitInterface,
   UnitInterface,
 } from "wafer-host/unit-types";
+import { loadLoopMaterialDurationAdjusted } from "@/root/loop-source-adjuster";
 
 export const unitInterface = queryUnitInterface("wafer-v01");
 const audioContext = unitInterface?.audioContext ?? new AudioContext();
@@ -40,12 +41,23 @@ type AudioItem = {
   playing: boolean;
 };
 
-async function createAudioItem(uri: string): Promise<AudioItem> {
+async function loadLoopMaterialBlob(beatSource: BeatSourceItem): Promise<Blob> {
+  const { uri } = beatSource;
   const ext = uri.split(".").pop();
   const buf = await fetch(uri).then((r) => r.arrayBuffer());
-  const audioBlobObjectURL = URL.createObjectURL(
-    new Blob([buf], { type: `audio/${ext}` }),
-  );
+  return new Blob([buf], { type: `audio/${ext}` });
+}
+
+async function createAudioItem(beatSource: BeatSourceItem): Promise<AudioItem> {
+  const audioBlob = 0
+    ? await loadLoopMaterialDurationAdjusted(
+        audioContext,
+        beatSource.uri,
+        beatSource.barLength,
+        beatSource.originalBpm,
+      )
+    : await loadLoopMaterialBlob(beatSource);
+  const audioBlobObjectURL = URL.createObjectURL(audioBlob);
   const audio = new Audio(audioBlobObjectURL);
   const mediaElementSource = audioContext.createMediaElementSource(audio);
   return {
@@ -108,7 +120,7 @@ function createBeatActor(
   const internal = {
     async ensureLoaded() {
       if (audioItem) return;
-      createAudioPromise ??= createAudioItem(beatSource.uri);
+      createAudioPromise ??= createAudioItem(beatSource);
       audioItem = await createAudioPromise;
     },
     async play(syncToHost: boolean, loop: boolean) {
