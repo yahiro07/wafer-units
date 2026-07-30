@@ -1,4 +1,8 @@
-import { ClockHandlers, UnitInterface } from "wafer-host/unit-types";
+import {
+  ClockHandlers,
+  SongKeySpec,
+  UnitInterface,
+} from "wafer-host/unit-types";
 import { defaultSequencerEditState, SequencerEditState } from "@/common/defs";
 import { clampValue, isBitSet, linearInterpolate } from "@/utils/helpers";
 
@@ -46,7 +50,7 @@ function getScaleIntervals(isMinor: boolean): number[] {
 function absoluteToScaleIndex(noteNumber: number, key: string): number {
   const { root, isMinor } = parseKey(key);
   const scaleIntervals = getScaleIntervals(isMinor);
-  const relativePc = (((noteNumber % 12) - root) % 12 + 12) % 12;
+  const relativePc = ((((noteNumber % 12) - root) % 12) + 12) % 12;
   let degree = scaleIntervals.indexOf(relativePc);
   if (degree === -1) {
     degree = 0;
@@ -82,10 +86,7 @@ function createScaleNoteShifter() {
       const degree = ((indexInScale % 7) + 7) % 7;
       const scaleOctaves = Math.floor(indexInScale / 7);
       return clampValue(
-        scaleOctaves * 12 +
-          keyRoot +
-          scaleIntervals[degree] +
-          octaveShift * 12,
+        scaleOctaves * 12 + keyRoot + scaleIntervals[degree] + octaveShift * 12,
         0,
         127,
       );
@@ -138,8 +139,11 @@ export function createEngine(unitInterface: UnitInterface | undefined) {
       state.rootScaleIndex = absoluteToScaleIndex(noteNumber, state.key);
     },
     inputNoteOff(_noteNumber: number) {},
-    setKey(key: string) {
-      state.key = key;
+    setKey(keySpec: SongKeySpec) {
+      state.key =
+        ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"][
+          (keySpec.root + 120) % 12
+        ] + (keySpec.mode === "minor" ? "m" : "");
     },
   };
 }
