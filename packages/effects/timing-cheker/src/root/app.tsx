@@ -1,80 +1,13 @@
 import { ComponentChildren } from "preact";
 import { useEffect, useRef } from "preact/hooks";
-import { createStore } from "snap-store";
-import { queryUnitInterface } from "wafer-host/unit-types";
 import { css } from "@/common/css-realm";
 import { GeneralSelector } from "@/components/general-selector";
 import { GridBackground } from "@/components/grid-background";
 import { LayeredLayout } from "@/components/layered-layout";
 import { createSelectorOptions } from "@/utils/selector-option";
 import { flexC, flexH, flexV, npx } from "@/utils/utility-styles";
-import { createSchedulingPlotter } from "@/root/scheduling-plotter";
-
-console.log("timing-checker 1212");
-
-const unitInterface = queryUnitInterface("wafer-v01");
-const audioContext = unitInterface?.audioContext ?? new AudioContext();
-
-const store = createStore<{
-  barLength: number;
-  hostBpm: number;
-}>({
-  barLength: 1,
-  hostBpm: 0,
-});
-
-function mapTimeToBarPosition(time: number) {
-  const barSeconds = 240 / store.state.hostBpm;
-  return time / barSeconds;
-}
-
-if (!unitInterface) {
-  store.setHostBpm(120);
-}
-
-const schedulingPlotter = createSchedulingPlotter();
-
-function setupUnit() {
-  let startTime = 0;
-  unitInterface?.completeSetup({
-    unitAspects: {
-      unitType: "effect",
-      viewSize: [940, 540],
-    },
-    hostCallbacks: {
-      setBpm(bpm: number) {
-        store.setHostBpm(bpm);
-      },
-    },
-    clockHandlers: {
-      start() {
-        startTime = audioContext.currentTime;
-        schedulingPlotter.hostStarted();
-      },
-      processScheduling(_timeFrom, barFrom, barTo, bpm) {
-        if (bpm !== store.state.hostBpm) {
-          store.setHostBpm(bpm);
-        }
-        const timeFromStart = audioContext.currentTime - startTime;
-        const barScheduledAt = mapTimeToBarPosition(timeFromStart);
-        schedulingPlotter.hostScheduled(barScheduledAt, barFrom, barTo);
-      },
-      processStep(stepIndex, time) {
-        const timeFromStart = time - startTime;
-        const barPosition = mapTimeToBarPosition(timeFromStart);
-        schedulingPlotter.addScheduleStepPoint(stepIndex, barPosition);
-      },
-    },
-  });
-}
-
-function useSetupDrivers() {
-  useEffect(setupUnit, []);
-  const { barLength } = store.useSnapshot();
-  useEffect(() => {
-    schedulingPlotter.setBarLength(barLength);
-  }, [barLength]);
-}
+import { useSetupDrivers } from "@/root/drivers";
+import { store } from "@/root/store";
 
 const barLengthOptions = createSelectorOptions([
   [0.0625, "1/16"],
@@ -125,7 +58,8 @@ const SchedulerGraphCanvas = () => {
       const bounds = canvas.getBoundingClientRect();
       canvas.width = Math.round(bounds.width);
       canvas.height = Math.round(bounds.height);
-      schedulingPlotter.setCanvas(canvas);
+      store.setSchedulingPlotterCanvas(canvas);
+      return () => store.setSchedulingPlotterCanvas(null);
     }
   }, []);
   return (

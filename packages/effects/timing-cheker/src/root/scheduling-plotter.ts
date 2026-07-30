@@ -16,7 +16,7 @@ type RenderingItem =
   | { type: "stepPoint"; point: StepPoint };
 
 export function createSchedulingPlotter() {
-  let canvas: HTMLCanvasElement | undefined;
+  let canvas: HTMLCanvasElement | null = null;
   let barLength = 1;
 
   let renderIndex = 0;
@@ -107,7 +107,7 @@ export function createSchedulingPlotter() {
   };
 
   return {
-    setCanvas(_canvas: HTMLCanvasElement) {
+    setCanvas(_canvas: HTMLCanvasElement | null) {
       canvas = _canvas;
     },
     hostStarted() {
