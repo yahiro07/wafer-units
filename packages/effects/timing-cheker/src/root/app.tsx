@@ -4,10 +4,10 @@ import { css, styled } from "@/common/css-realm";
 import { GeneralSelector } from "@/components/general-selector";
 import { GridBackground } from "@/components/grid-background";
 import { LayeredLayout } from "@/components/layered-layout";
-import { createSelectorOptions } from "@/utils/selector-option";
-import { flexC, flexH, flexV, npx } from "@/utils/utility-styles";
 import { useSetupDrivers } from "@/root/drivers";
 import { store } from "@/root/store";
+import { createSelectorOptions } from "@/utils/selector-option";
+import { flexC, flexH, flexV, npx } from "@/utils/utility-styles";
 
 const barLengthOptions = createSelectorOptions([
   [0.0625, "1/16"],
@@ -91,8 +91,10 @@ const SchedulerLaneContainer = () => {
 
 const ChannelLaneContainer = ({
   channelId,
+  label,
 }: {
   channelId: "ch1" | "ch2" | "ch3";
+  label: string;
 }) => {
   const canvasSetterFn = {
     ch1: store.setWavePlotterCanvasCh1,
@@ -100,7 +102,7 @@ const ChannelLaneContainer = ({
     ch3: store.setWavePlotterCanvasCh1, //todo
   }[channelId];
   return (
-    <LaneBox label={channelId}>
+    <LaneBox label={label}>
       <LayeredLayout>
         <GridBackground nx={4} ny={1} />
         <GraphBorderFrame />
@@ -126,7 +128,7 @@ export const App = () => {
         </div>
       </div>
       <SchedulerLaneContainer />
-      <ChannelLaneContainer channelId="ch1" />
+      <ChannelLaneContainer channelId="ch1" label="audio" />
       {/* <ChannelLaneContainer channelId="ch2" /> */}
       {/* <ChannelLaneContainer channelId="ch3" /> */}
     </div>
