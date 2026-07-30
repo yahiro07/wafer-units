@@ -165,6 +165,21 @@ importers:
         specifier: ^0.1.12
         version: 0.1.12(preact@10.29.2)(react@19.2.6)
 
+  packages/effects/timing-cheker:
+    dependencies:
+      '@preact-icons/fa':
+        specifier: npm:@jsr/preact-icons__fa@^1.0.13
+        version: '@jsr/preact-icons__fa@1.0.13'
+      mini-css:
+        specifier: ../../../../mini-css
+        version: link:../../../../mini-css
+      preact:
+        specifier: ^10.29.2
+        version: 10.29.2
+      snap-store:
+        specifier: ^0.1.12
+        version: 0.1.12(preact@10.29.2)(react@19.2.6)
+
   packages/modulator/multi-lfo:
     devDependencies:
       preact:
