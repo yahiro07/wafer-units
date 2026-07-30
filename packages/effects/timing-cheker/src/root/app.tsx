@@ -85,7 +85,7 @@ const SchedulerLaneContainer = () => {
   );
 };
 
-const ChnLaneContainer = ({ label }: { label: string }) => {
+const ChannelLaneContainer = ({ label }: { label: string }) => {
   return (
     <LaneBox label={label}>
       <GridBackground nx={4} ny={1} />
@@ -109,9 +109,9 @@ export const App = () => {
         </div>
       </div>
       <SchedulerLaneContainer />
-      <ChnLaneContainer label="ch1" />
-      <ChnLaneContainer label="ch2" />
-      <ChnLaneContainer label="ch3" />
+      <ChannelLaneContainer label="ch1" />
+      <ChannelLaneContainer label="ch2" />
+      <ChannelLaneContainer label="ch3" />
     </div>
   );
 };
