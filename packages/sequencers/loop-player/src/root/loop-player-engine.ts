@@ -13,6 +13,7 @@ export type BeatSourceItem = {
   id: string;
   uri: string;
   barLength: number;
+  originalBpm: number;
   //advanced feature
   //pitch remapping will be applied if specified
   //originalKey?: string; //C, Am, ...etc
@@ -36,13 +37,10 @@ type AudioItem = {
   audio: HTMLAudioElement;
   audioBlobObjectURL: string;
   mediaElementSource: MediaElementAudioSourceNode;
-  duration: number;
   playing: boolean;
-  originalBpm: number; //calculated from barLength and duration
 };
 
-async function createAudioItem(beatSource: BeatSourceItem): Promise<AudioItem> {
-  const { uri, barLength } = beatSource;
+async function createAudioItem(uri: string): Promise<AudioItem> {
   const ext = uri.split(".").pop();
   const buf = await fetch(uri).then((r) => r.arrayBuffer());
   const audioBlobObjectURL = URL.createObjectURL(
@@ -63,14 +61,11 @@ async function createAudioItem(beatSource: BeatSourceItem): Promise<AudioItem> {
   if (!(Number.isFinite(duration) && duration > 0)) {
     throw new Error(`Invalid duration for ${uri}`);
   }
-  const originalBpm = (barLength * 240) / duration;
   return {
     audio,
     audioBlobObjectURL,
     mediaElementSource,
-    duration,
     playing: false,
-    originalBpm,
   };
 }
 
@@ -81,15 +76,16 @@ type HostTimeAnchor = {
 
 function calculateStartTimePosition(
   timeAnchor: HostTimeAnchor | undefined,
-  bpm: number,
-  audioDuration: number,
+  destinationBpm: number,
+  sourceBpm: number,
+  sourceBarLength: number,
   playbackRate: number,
   audioContextCurrentTime: number,
 ): number {
   if (!timeAnchor) return 0;
-  if (!(Number.isFinite(audioDuration) && audioDuration > 0)) return 0;
+  const audioDuration = (sourceBarLength * 240) / sourceBpm;
   const { time, transportBarPosition } = timeAnchor;
-  const secondsPerBar = 240 / bpm;
+  const secondsPerBar = 240 / destinationBpm;
   const hostTimePosition =
     transportBarPosition * secondsPerBar + (audioContextCurrentTime - time);
   const mediaTimelinePosition = hostTimePosition * playbackRate;
@@ -125,7 +121,7 @@ function createBeatActor(
   const internal = {
     async ensureLoaded() {
       if (audioItem) return;
-      createAudioPromise ??= createAudioItem(beatSource);
+      createAudioPromise ??= createAudioItem(beatSource.uri);
       audioItem = await createAudioPromise;
     },
     async play(syncToHost: boolean, loop: boolean) {
@@ -135,12 +131,13 @@ function createBeatActor(
       if (!audioItem.playing) {
         const { audio, mediaElementSource } = audioItem;
         mediaElementSource.connect(audioDestinationNode);
-        const playbackRate = bus.hostBpm / audioItem.originalBpm;
+        const playbackRate = bus.hostBpm / beatSource.originalBpm;
         const startTimePosition = syncToHost
           ? calculateStartTimePosition(
               bus.hostTimeAnchor,
               bus.hostBpm,
-              audioItem.duration,
+              beatSource.originalBpm,
+              beatSource.barLength,
               playbackRate,
               audioContext.currentTime,
             )
@@ -207,7 +204,7 @@ function createBeatActor(
     },
     updatePlaybackRate() {
       if (audioItem) {
-        const playbackRate = bus.hostBpm / audioItem.originalBpm;
+        const playbackRate = bus.hostBpm / beatSource.originalBpm;
         audioItem.audio.playbackRate = playbackRate;
         return playbackRate;
       }

@@ -56,12 +56,12 @@ export async function pregeneratePreviewData() {
       const base64 = previewDataConverter.floatArrayToBase64(peaks);
       return {
         fileName: item.fileName,
-        base64: base64,
+        levelsBase64: base64,
       };
     }),
   );
   const data = Object.fromEntries(
-    mappedItems.map((item) => [item.fileName, item.base64]),
+    mappedItems.map((item) => [item.fileName, item.levelsBase64]),
   );
   const text = JSON.stringify(data);
   console.log(text);
