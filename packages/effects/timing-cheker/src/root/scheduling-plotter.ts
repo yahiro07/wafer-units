@@ -1,5 +1,17 @@
 import { getSortOrder } from "@/utils/helpers";
 
+type SchedulingPlotter = {
+  setCanvas: (canvas: HTMLCanvasElement | null) => void;
+  hostStarted: () => void;
+  hostScheduled: (
+    barScheduledAt: number,
+    barFrom: number,
+    barTo: number,
+  ) => void;
+  addScheduleStepPoint: (stepIndex: number, barPosition: number) => void;
+  setBarLength: (length: number) => void;
+};
+
 type SchedulingPoint = {
   barScheduledAt: number;
   barFrom: number;
@@ -15,7 +27,7 @@ type RenderingItem =
   | { type: "schedulingPoint"; point: SchedulingPoint }
   | { type: "stepPoint"; point: StepPoint };
 
-export function createSchedulingPlotter() {
+export function createSchedulingPlotter(): SchedulingPlotter {
   let canvas: HTMLCanvasElement | null = null;
   let barLength = 1;
 
@@ -107,13 +119,13 @@ export function createSchedulingPlotter() {
   };
 
   return {
-    setCanvas(_canvas: HTMLCanvasElement | null) {
+    setCanvas(_canvas) {
       canvas = _canvas;
     },
     hostStarted() {
       internal.clear();
     },
-    hostScheduled(barScheduledAt: number, barFrom: number, barTo: number) {
+    hostScheduled(barScheduledAt, barFrom, barTo) {
       const schedulingPoint: SchedulingPoint = {
         barScheduledAt,
         barFrom,
@@ -124,13 +136,13 @@ export function createSchedulingPlotter() {
         point: schedulingPoint,
       });
     },
-    addScheduleStepPoint(stepIndex: number, barPosition: number) {
+    addScheduleStepPoint(stepIndex, barPosition) {
       internal.pushRenderingItem({
         type: "stepPoint",
         point: { stepIndex, barPosition },
       });
     },
-    setBarLength(length: number) {
+    setBarLength(length) {
       barLength = length;
     },
   };
