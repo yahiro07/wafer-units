@@ -39,7 +39,7 @@ function setupUnit() {
   unitInterface?.completeSetup({
     unitAspects: {
       unitType: "effect",
-      viewSize: [1000, 700],
+      viewSize: [940, 540],
     },
     hostCallbacks: {
       setBpm(bpm: number) {
