@@ -28,6 +28,7 @@ function setupUnit() {
   const analyser = audioContext.createAnalyser();
   unitInterface.audioInputNode.connect(analyser);
 
+  analyser.fftSize = 1024;
   const timeDomainData = new Float32Array(1024);
 
   function updateAnalyser() {
@@ -90,6 +91,7 @@ function setupSynchronization() {
     const { barLength, schedulingPlotterCanvas, wavePlotterCanvasCh1 } = attrs;
     if (barLength !== undefined) {
       schedulingPlotter.setBarLength(barLength);
+      wavePlotter.setBarLength(barLength);
     }
     if (schedulingPlotterCanvas !== undefined) {
       schedulingPlotter.setCanvas(schedulingPlotterCanvas);
