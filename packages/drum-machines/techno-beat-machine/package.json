@@ -1,0 +1,18 @@
+{
+  "name": "techno-beat-machine",
+  "type": "module",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "dev": "vite dev",
+    "build": "vite build",
+    "watch": "vite build --watch",
+    "typecheck": "tsc"
+  },
+  "devDependencies": {
+    "@preact-icons/fa": "npm:@jsr/preact-icons__fa@^1.0.13",
+    "preact": "^10.29.2",
+    "qulex": "catalog:",
+    "snap-store": "^0.1.12"
+  }
+}
