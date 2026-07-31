@@ -39,6 +39,9 @@ function parseKey(key: string): { root: number; isMinor: boolean } {
   } else if (accidental === "b") {
     root = (root + 11) % 12;
   }
+  if (root >= 6) {
+    root -= 12;
+  }
   return { root, isMinor: minor === "m" };
 }
 
