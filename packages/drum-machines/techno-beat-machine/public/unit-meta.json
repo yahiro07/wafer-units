@@ -1,0 +1,9 @@
+{
+  "name": "techno-beat-machine",
+  "unitType": "instrument",
+  "protocol": "wafer-v01",
+  "integrationFormat": "iframe",
+  "repositoryUrl": "https://github.com/yahiro07/wus-units",
+  "author": "yahiro",
+  "license": "MIT"
+}
