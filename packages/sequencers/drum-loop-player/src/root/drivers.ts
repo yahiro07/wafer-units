@@ -13,6 +13,9 @@ export function setupUnit() {
       viewSize: [880, 480],
     },
     hostCallbacks: {
+      setPlayState(playing) {
+        store.setHostPlaying(playing);
+      },
       setBpm: player.setBpm,
     },
     clockHandlers: player.clockHandlers,
@@ -21,11 +24,20 @@ export function setupUnit() {
 }
 
 export function useAffectStoreToEngine() {
-  const { selectedLoopKey } = store.useSnapshot();
+  const { selectedLoopKey, previewLoopKey } = store.useSnapshot();
   useEffect(() => {
     if (selectedLoopKey) {
       player.setBeatState(selectedLoopKey, true);
       return () => player.setBeatState(selectedLoopKey, false);
     }
   }, [selectedLoopKey]);
+
+  useEffect(() => {
+    if (previewLoopKey) {
+      player.playInstantBeat(previewLoopKey, () => {
+        store.setPreviewLoopKey(null);
+      });
+      return () => player.stopInstantBeat(previewLoopKey);
+    }
+  }, [previewLoopKey]);
 }

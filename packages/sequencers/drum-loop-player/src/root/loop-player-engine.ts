@@ -17,12 +17,14 @@ export type BeatSourceItem = {
   gainFix?: number;
 };
 
+type EndedCallbackFn = () => void;
+
 export type LoopPlayerEngine = {
   unitInterface: UnitInterface | undefined;
   registerBeatSourceItems(items: BeatSourceItem[]): void;
   preloadBeat(id: string): void;
   setBeatState(id: string, enabled: boolean): void;
-  playInstantBeat(id: string, loop?: boolean): void;
+  playInstantBeat(id: string, endedCallback?: EndedCallbackFn): void;
   stopInstantBeat(id: string): void;
   setBpm(bpm: number): void;
   clockHandlers: ClockHandlers;
@@ -95,7 +97,7 @@ type BeatActor = {
   onHostStart(): void;
   onHostStep(stepIndex: number, time: number): void;
   onHostStop(): void;
-  playInstant(loop?: boolean): void;
+  playInstant(endedCallback?: EndedCallbackFn): void;
   stopInstant(): void;
   updatePlaybackRate(): void;
   cleanup(): void;
@@ -118,7 +120,7 @@ function createBeatActor(
       audioItem = await createAudioPromise;
       console.log(`loaded ${beatSource.id}`);
     },
-    async play(startTimePosition?: number) {
+    async play(startTimePosition?: number, endedCallback?: EndedCallbackFn) {
       await internal.ensureLoaded();
       if (!audioItem) return;
       if (startTimePosition !== undefined && (!active || !bus.hostPlaying)) {
@@ -135,6 +137,16 @@ function createBeatActor(
         gainNode.gain.value = beatSource.gainFix ?? 1;
         audio.play();
         audioItem.playing = true;
+        if (endedCallback) {
+          audio.addEventListener(
+            "ended",
+            () => {
+              internal.stop();
+              endedCallback();
+            },
+            { once: true },
+          );
+        }
       } else {
         //restart from the beginning
         audio.currentTime = 0;
@@ -203,8 +215,8 @@ function createBeatActor(
         internal.stop();
       }
     },
-    playInstant() {
-      void internal.play();
+    playInstant(endedCallback) {
+      void internal.play(undefined, endedCallback);
     },
     stopInstant() {
       internal.stop();
@@ -254,9 +266,9 @@ export function createLoopPlayerEngine(): LoopPlayerEngine {
       const beatActor = getBeatActor(id);
       beatActor?.setBeatState(enabled);
     },
-    playInstantBeat(id, loop) {
+    playInstantBeat(id, endedCallback) {
       const beatActor = getBeatActor(id);
-      beatActor?.playInstant(loop ?? false);
+      beatActor?.playInstant(endedCallback);
     },
     stopInstantBeat(id) {
       const beatActor = getBeatActor(id);

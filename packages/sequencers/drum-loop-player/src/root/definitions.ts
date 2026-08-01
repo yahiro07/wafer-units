@@ -31,7 +31,7 @@ export const loopSourceItems: LoopSourceItem[] = [
   //
   { fileName: "b-beat009.m4a", bars: 2, bpm: 144 },
   { fileName: "b-beat010.m4a", bars: 4, bpm: 144 },
-  { fileName: "b-beat015.m4a", bars: 2, bpm: 144 },
+  { fileName: "b-beat015.m4a", bars: 2, bpm: 144, gainFix: 2 },
   { fileName: "b-beat016.m4a", bars: 2, bpm: 144 },
   //
   {
@@ -79,7 +79,12 @@ export const loopSourceItems: LoopSourceItem[] = [
     bars: 2,
     bpm: 70,
   },
-  { fileName: "drumloop-free-try-1-90-bpm.m4a", bars: 2, bpm: 90 },
+  {
+    fileName: "drumloop-free-try-1-90-bpm.m4a",
+    bars: 2,
+    bpm: 90,
+    gainFix: 1.4,
+  },
   { fileName: "ec-digi-014.m4a", bars: 2, bpm: 120, gainFix: 2 },
 ] as const;
 

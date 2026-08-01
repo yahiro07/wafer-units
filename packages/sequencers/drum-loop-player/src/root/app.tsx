@@ -24,7 +24,7 @@ function renderLoopWaveformToCanvas(
   const height = canvas.height;
   const midY = height / 2;
   ctx.clearRect(0, 0, width, height);
-  ctx.fillStyle = "#48f";
+  ctx.fillStyle = "#37e";
   for (let x = 0; x < width; x++) {
     if (x % 2 === 1) continue;
     const si = Math.floor((x / width) * peaks.length);
@@ -53,8 +53,15 @@ const LoopCard = ({ loopKey }: { loopKey: LoopKey }) => {
   const { selectedLoopKey } = store.useSnapshot();
   if (!loopKey) return null;
   const active = loopKey === selectedLoopKey;
-  const onClick = () => {
+  const onPointerDown = () => {
     store.setSelectedLoopKey(loopKey);
+    if (!store.state.hostPlaying) {
+      if (store.state.previewLoopKey !== loopKey) {
+        store.setPreviewLoopKey(loopKey);
+      } else {
+        store.setPreviewLoopKey(null);
+      }
+    }
   };
   return (
     <div
@@ -66,9 +73,9 @@ const LoopCard = ({ loopKey }: { loopKey: LoopKey }) => {
           position: "relative",
           cursor: "pointer",
         },
-        active && { background: "#adf" },
+        active && { background: "#8df" },
       )}
-      onClick={onClick}
+      onPointerDown={onPointerDown}
     >
       <WaveformViewDev loopKey={loopKey} />
       <div
