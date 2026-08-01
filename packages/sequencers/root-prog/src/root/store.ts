@@ -7,6 +7,7 @@ type StoreState = {
   loopBars: LoopBars;
   notes: number[];
   keysName: string;
+  playStepIndex: number;
 };
 
 export const store = createStore<StoreState>({
@@ -14,4 +15,5 @@ export const store = createStore<StoreState>({
   loopBars: 4,
   notes: seqNumbers(16).map(() => -1),
   keysName: "C/Am",
+  playStepIndex: -1,
 });

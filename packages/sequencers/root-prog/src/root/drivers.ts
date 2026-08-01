@@ -13,7 +13,7 @@ export function setupUnit() {
   unitInterface?.completeSetup({
     unitAspects: {
       unitType: "sequencer",
-      viewSize: [460, 280],
+      viewSize: [420, 260],
     },
     hostCallbacks: {
       setKey(keySpec) {
@@ -23,7 +23,20 @@ export function setupUnit() {
         store.setKeysName(keysName);
       },
     },
-    clockHandlers: engine.clockHandlers,
+    clockHandlers: {
+      start() {
+        engine.clockHandlers.start?.();
+      },
+      stop() {
+        engine.clockHandlers.stop?.();
+        store.setPlayStepIndex(-1);
+      },
+      processStep(stepIndex, time, unitDuration) {
+        engine.clockHandlers.processStep?.(stepIndex, time, unitDuration);
+        const totalSteps = store.state.loopBars * 16;
+        store.setPlayStepIndex(stepIndex % totalSteps);
+      },
+    },
     persistence,
   });
 }

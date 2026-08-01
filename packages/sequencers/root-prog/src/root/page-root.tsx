@@ -62,26 +62,49 @@ const pitchLabelsSource: Record<KeyLabelMode, string[]> = {
   degreeMinor: ["iii", "iv", "v", "vi", "vii", "i", "ii", "iii", "iv"],
 };
 
-const BeatDot = () => {
-  return <div class={qu.wh(3, 3).bg("#888").rounded("50%").it} />;
+const BeatDot = ({ active }: { active: boolean }) => {
+  return (
+    <div
+      class={cz(
+        qu.wh(4, 4).bg("#888").rounded("50%").it,
+        active && qu.bg("#0f0").it,
+      )}
+    />
+  );
 };
 
-const BeatDotCellContent = ({ bars, i }: { bars: LoopBars; i: number }) => {
+const BeatDotCellContent = ({
+  bars,
+  i,
+  playStepIndex,
+}: {
+  bars: LoopBars;
+  i: number;
+  playStepIndex: number;
+}) => {
   if (bars === 8) {
+    const stepIndex = i * bars;
+    const active1 = playStepIndex >= 0 && stepIndex >> 2 === playStepIndex >> 2;
+    const active2 =
+      playStepIndex >= 0 && (stepIndex + 4) >> 2 === playStepIndex >> 2;
     return (
       <div class={qu.flexC().gap(1.5).it}>
-        <BeatDot />
-        <BeatDot />
+        <BeatDot active={active1} />
+        <BeatDot active={active2} />
       </div>
     );
   } else {
     const show =
       bars === 4 || (bars === 2 && i % 2 === 0) || (bars === 1 && i % 4 === 0);
-    return show ? <BeatDot /> : null;
+
+    const stepIndex = i * bars;
+    const active = playStepIndex >= 0 && stepIndex >> 2 === playStepIndex >> 2;
+    return show ? <BeatDot active={active} /> : null;
   }
 };
 
 const BeatDotsRow = ({ w, bars }: { w: number; bars: LoopBars }) => {
+  const { playStepIndex } = store.useSnapshot();
   return (
     <div class={qu.flexH().it}>
       {seqNumbers(16).map((i) => (
@@ -90,10 +113,10 @@ const BeatDotsRow = ({ w, bars }: { w: number; bars: LoopBars }) => {
           class={cz(
             qu.wh((w + 1) / 16, 16).flexC().it,
             // qu.bg("#fff").bd("#ccc").it,
-            qu.color("#888").fontSize(16).it,
+            qu.color("#888").it,
           )}
         >
-          <BeatDotCellContent bars={bars} i={i} />
+          <BeatDotCellContent bars={bars} i={i} playStepIndex={playStepIndex} />
         </div>
       ))}
     </div>
@@ -237,9 +260,10 @@ const Editor = () => {
   const bgAltStrideX = st.loopBars === 8 ? 2 : 4;
 
   return (
-    <div class={qu.flexH().gap(2).it}>
+    <div class={qu.flexH().fAlign("end").gap(2).it}>
       <PitchLabelsColumn pitchLabels={pitchLabels} h={h} />
       <div className={qu.flexV().gap(2).it}>
+        <BeatDotsRow w={w} bars={st.loopBars} />
         <div class={qu.relative().wh(w, h).it}>
           <GridBackground
             nx={16}
@@ -255,7 +279,6 @@ const Editor = () => {
             <EditInputLayer notes={st.notes} />
           </div>
         </div>
-        <BeatDotsRow w={w} bars={st.loopBars} />
       </div>
     </div>
   );
@@ -264,9 +287,9 @@ const Editor = () => {
 export const PageRoot = () => {
   return (
     <div class={qu.h("dvh").flexC().it}>
-      <EffectorBody className={cz(qu.wh(460, 280).it, qu.flexC().it)}>
+      <EffectorBody className={cz(qu.wh(420, 260).it, qu.flexC().it)}>
         <div class={qu.flexV().gap(2).it}>
-          <div>root-prog</div>
+          {/* <div>root-prog</div> */}
           <ControlsPart />
           <Editor />
         </div>
