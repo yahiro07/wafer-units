@@ -3,7 +3,6 @@ import {
   queryUnitInterface,
   UnitInterface,
 } from "wafer-host/unit-types";
-import { loadLoopMaterialDurationAdjusted } from "@/root/loop-source-adjuster";
 
 export const unitInterface = queryUnitInterface("wafer-v01");
 const audioContext = unitInterface?.audioContext ?? new AudioContext();
@@ -16,10 +15,6 @@ export type BeatSourceItem = {
   barLength: number;
   originalBpm: number;
   gainFix?: number;
-  //advanced feature
-  //pitch remapping will be applied if specified
-  //originalKey?: string; //C, Am, ...etc
-  //preferredPitchShiftAlgorithm?: 'SOLA' | 'PhaseVocoder';
 };
 
 export type LoopPlayerEngine = {
@@ -30,7 +25,6 @@ export type LoopPlayerEngine = {
   playInstantBeat(id: string, loop?: boolean): void;
   stopInstantBeat(id: string): void;
   setBpm(bpm: number): void;
-  // setKey(camelot: string): void;
   clockHandlers: ClockHandlers;
   cleanup: () => void;
 };
@@ -51,14 +45,7 @@ async function loadLoopMaterialBlob(beatSource: BeatSourceItem): Promise<Blob> {
 }
 
 async function createAudioItem(beatSource: BeatSourceItem): Promise<AudioItem> {
-  const audioBlob = 0
-    ? await loadLoopMaterialDurationAdjusted(
-        audioContext,
-        beatSource.uri,
-        beatSource.barLength,
-        beatSource.originalBpm,
-      )
-    : await loadLoopMaterialBlob(beatSource);
+  const audioBlob = await loadLoopMaterialBlob(beatSource);
   const audioBlobObjectURL = URL.createObjectURL(audioBlob);
   const audio = new Audio(audioBlobObjectURL);
   const mediaElementSource = audioContext.createMediaElementSource(audio);
