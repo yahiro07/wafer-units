@@ -1,4 +1,5 @@
 import { queryUnitInterface } from "wafer-host/unit-types";
+import { mapKeySpecToKeysName } from "@/root/keys-name-helper";
 import { persistence } from "@/root/persistence";
 import { createSequencerEngine } from "@/root/sequencer";
 import { store } from "@/root/store";
@@ -13,6 +14,14 @@ export function setupUnit() {
     unitAspects: {
       unitType: "sequencer",
       viewSize: [460, 280],
+    },
+    hostCallbacks: {
+      setKey(keySpec) {
+        const keyTranspose = keySpec.root + (keySpec.mode === "minor" ? 3 : 0);
+        engine.setKeyTranspose(keyTranspose);
+        const keysName = mapKeySpecToKeysName(keySpec);
+        store.setKeysName(keysName);
+      },
     },
     clockHandlers: engine.clockHandlers,
     persistence,

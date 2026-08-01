@@ -1,3 +1,4 @@
+import { useMemo } from "preact/hooks";
 import { cz, qu } from "@/common/css-realm";
 import { EffectorBody } from "@/components/effector-body";
 import { GridBackground } from "@/components/grid-background";
@@ -7,12 +8,6 @@ import { store } from "@/root/store";
 import { npx, seqNumbers } from "@/utils/helpers";
 import { createSelectorOptions } from "@/utils/selector-option";
 
-const keyLabelModeOptions = createSelectorOptions<KeyLabelMode>([
-  ["doremi", "C/Am (doremi)"],
-  ["degreeMajor", "C (degree)"],
-  ["degreeMinor", "Am (degree) "],
-]);
-
 const LoopBarsOptions = createSelectorOptions<LoopBars>([
   [1, "1"],
   [2, "2"],
@@ -20,8 +15,21 @@ const LoopBarsOptions = createSelectorOptions<LoopBars>([
   [8, "8"],
 ]);
 
+function useKeyLabelModeOptions() {
+  const { keysName } = store.useSnapshot();
+  return useMemo(() => {
+    const [majorKey, minorKey] = keysName.split("/");
+    return createSelectorOptions<KeyLabelMode>([
+      ["doremi", `${keysName} (doremi)`],
+      ["degreeMajor", `${majorKey} (degree)`],
+      ["degreeMinor", `${minorKey} (degree) `],
+    ]);
+  }, [keysName]);
+}
+
 const ControlsPart = () => {
   const st = store.useSnapshot();
+  const keyLabelModeOptions = useKeyLabelModeOptions();
   return (
     <div>
       <div class={qu.flexHA().gap(2).fJustify("between").it}>

@@ -1,6 +1,6 @@
 import { ClockHandlers, UnitInterface } from "wafer-host/unit-types";
 import { LoopBars } from "@/root/parameters";
-import { seqNumbers } from "@/utils/helpers";
+import { clampValue, seqNumbers } from "@/utils/helpers";
 
 type SequencerEditState = {
   loopBars: LoopBars;
@@ -9,10 +9,14 @@ type SequencerEditState = {
 
 const cMajorScaleNotes = [0, 2, 4, 5, 7, 9, 11];
 
-function getNotePitch(relNote: number, rootNote: number) {
+function getNotePitch(relNote: number, rootNote: number, keyTranspose: number) {
   const octave = (relNote / 7) >>> 0;
   const subIndex = relNote % 7;
-  return rootNote + octave * 12 + cMajorScaleNotes[subIndex];
+  return clampValue(
+    rootNote + octave * 12 + cMajorScaleNotes[subIndex] + keyTranspose,
+    0,
+    127,
+  );
 }
 
 export function createSequencerEngine(
@@ -25,6 +29,7 @@ export function createSequencerEngine(
 
   const local = {
     lastEmitNote: -1,
+    keyTranspose: 0,
   };
   const rootNoteNumber = 48;
 
@@ -41,7 +46,7 @@ export function createSequencerEngine(
       const pos = (stepIndex >> shift) % 16;
       const relNote = editState.notes[pos];
       if (relNote !== -1 && relNote !== local.lastEmitNote) {
-        const note = getNotePitch(relNote, rootNoteNumber);
+        const note = getNotePitch(relNote, rootNoteNumber, local.keyTranspose);
         noteOutputPort?.noteOn(note, time);
         noteOutputPort?.noteOff(note, time + unitDuration);
         local.lastEmitNote = relNote;
@@ -55,6 +60,9 @@ export function createSequencerEngine(
   return {
     setState(attrs: Partial<SequencerEditState>) {
       Object.assign(editState, attrs);
+    },
+    setKeyTranspose(keyTranspose: number) {
+      local.keyTranspose = keyTranspose;
     },
     clockHandlers,
   };

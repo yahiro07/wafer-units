@@ -6,10 +6,12 @@ type StoreState = {
   keyLabelMode: KeyLabelMode;
   loopBars: LoopBars;
   notes: number[];
+  keysName: string;
 };
 
 export const store = createStore<StoreState>({
   keyLabelMode: "doremi",
   loopBars: 4,
   notes: seqNumbers(16).map(() => -1),
+  keysName: "C/Am",
 });
