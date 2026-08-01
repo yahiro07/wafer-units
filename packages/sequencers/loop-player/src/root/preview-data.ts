@@ -1,14 +1,6 @@
 import { LoopKey } from "@/root/definitions";
 
 export const previewData: Record<LoopKey, string> = {
-  "xkicks-the-jokers-kick.m4a":
-    "XBkCC/fsAPv0Av7+APbo4N3h3NjW0s3LNSERCwno+foAAv/9/u7p6Ojs4uHd3NXPzDojEyv56PT/DP/9/Pjv6OPm6+bi3NvWz8c5Eg8Q+u70AAD+Af337+jh5url4tzb0s7HiQ==",
-  "xkicks-lumberjack.m4a":
-    "UEUuBgUjKiAbCRQiQSEqKCwXERUiJxgSGx0kGggXIQIxFRclIhAoLBcbGx0cMx0jDzohJhQELA8TLQ0jMDMeEC0WHiERGiEnEBokFSMJCwUYEBoOJycbPCYlEBwSHA8VJQ8byg==",
-  "xkicks-focus-beam.m4a":
-    "RS4TFwcNCQ0CCvUB8OjX3OPo6OHh2/LhMREYGhQMCgwGAQL//+rXytrs6tbX38/x4DwKCxILBAgO/QAC/vzq1tDc6+rO4Nbf8+I1FgkXAQsPDwECAgP56Nnc2erp0uDV9N7Gyg==",
-  "xkicks-world-expo-of-destruction.m4a":
-    "MBMD9v0EBQAH//v/0tvw2Or++ejc2/XeEQnv6fb6+QMNCgL5/t/V49b/AQDS4OHvyhEI7QAB/QD8DgT+/fTW0fHi5Nrv3+HZ6tQR8vzx//T9AQoA+v/41dbu3uLw4N7f1u7NtA==",
   "125-puredance03.m4a":
     "6+zo7du96q2Zlo6D6erm5ePJ/8ek3tit3f3v6vvVp+zQxsjHxerm5fHp0vnKq7bR6Pfz7Ory27P2s52dk4Pu6ejm5MEX1qTg2bD18+zm+86l59XVA/HL8Ojl6OXT/u7u8NKpkA==",
   "125-puredance04.m4a":

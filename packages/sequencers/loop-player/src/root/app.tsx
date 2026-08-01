@@ -14,6 +14,9 @@ function renderLoopWaveformToCanvas(
   canvas: HTMLCanvasElement,
   loopKey: LoopKey,
 ) {
+  const loop = loopSourceItems.find((item) => item.fileName === loopKey);
+  if (!loop) return;
+  const gainFix = loop.gainFix ?? 1;
   const base64 = previewData[loopKey];
   const peaks = previewDataConverter.floatArrayFromBase64(base64);
   const ctx = canvas.getContext("2d")!;
@@ -25,7 +28,7 @@ function renderLoopWaveformToCanvas(
   for (let x = 0; x < width; x++) {
     if (x % 2 === 1) continue;
     const si = Math.floor((x / width) * peaks.length);
-    const amp = peaks[si] * midY;
+    const amp = peaks[si] * midY * gainFix;
     ctx.fillRect(x, midY - amp, 1, amp * 2);
   }
 }

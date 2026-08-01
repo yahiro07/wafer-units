@@ -15,6 +15,7 @@ export type BeatSourceItem = {
   uri: string;
   barLength: number;
   originalBpm: number;
+  gainFix?: number;
   //advanced feature
   //pitch remapping will be applied if specified
   //originalKey?: string; //C, Am, ...etc
@@ -38,6 +39,7 @@ type AudioItem = {
   audio: HTMLAudioElement;
   audioBlobObjectURL: string;
   mediaElementSource: MediaElementAudioSourceNode;
+  gainNode: GainNode;
   playing: boolean;
 };
 
@@ -60,10 +62,12 @@ async function createAudioItem(beatSource: BeatSourceItem): Promise<AudioItem> {
   const audioBlobObjectURL = URL.createObjectURL(audioBlob);
   const audio = new Audio(audioBlobObjectURL);
   const mediaElementSource = audioContext.createMediaElementSource(audio);
+  const gainNode = audioContext.createGain();
   return {
     audio,
     audioBlobObjectURL,
     mediaElementSource,
+    gainNode,
     playing: false,
   };
 }
@@ -133,13 +137,15 @@ function createBeatActor(
       if (startTimePosition !== undefined && (!active || !bus.hostPlaying)) {
         return;
       }
-      const { audio, mediaElementSource } = audioItem;
+      const { audio, mediaElementSource, gainNode } = audioItem;
       if (!audioItem.playing) {
         //initial start
-        mediaElementSource.connect(audioDestinationNode);
+        mediaElementSource.connect(gainNode);
+        gainNode.connect(audioDestinationNode);
         const playbackRate = calcPlaybackRate();
         audio.playbackRate = playbackRate;
         audio.currentTime = startTimePosition ?? 0;
+        gainNode.gain.value = beatSource.gainFix ?? 1;
         audio.play();
         audioItem.playing = true;
       } else {
@@ -150,8 +156,9 @@ function createBeatActor(
     },
     stop() {
       if (audioItem?.playing) {
-        const { audio, mediaElementSource } = audioItem;
+        const { audio, mediaElementSource, gainNode } = audioItem;
         audio.pause();
+        gainNode.disconnect();
         mediaElementSource.disconnect();
         audioItem.playing = false;
       }
