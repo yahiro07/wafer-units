@@ -17,8 +17,7 @@ export function setupUnit() {
     },
     hostCallbacks: {
       setKey(keySpec) {
-        const keyTranspose = keySpec.root + (keySpec.mode === "minor" ? 3 : 0);
-        engine.setKeyTranspose(keyTranspose);
+        engine.setKeyTranspose(keySpec.keyTranspose);
         const keysName = mapKeySpecToKeysName(keySpec);
         store.setKeysName(keysName);
       },
