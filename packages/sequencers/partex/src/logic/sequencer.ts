@@ -23,6 +23,7 @@ function createSequencer() {
     noteDuty: 1,
     loopBars: 2,
   };
+  let keyTranspose = 0;
 
   const noteOutputPort = unitInterface.createNoteOutputPort();
 
@@ -40,7 +41,11 @@ function createSequencer() {
         (note) => note.position === stepIndex && note.duration > 0,
       );
       for (const note of targetNotes) {
-        const shiftedNote = resolveNotePitch(note.pitch, state.octaveShift);
+        const shiftedNote = resolveNotePitch(
+          note.pitch,
+          state.octaveShift,
+          keyTranspose,
+        );
         const originalDuration = unitDuration * note.duration;
 
         const minDuration =
@@ -84,6 +89,9 @@ function createSequencer() {
       if (attrs.loopBars !== undefined) {
         state.loopBars = attrs.loopBars;
       }
+    },
+    setKeyTranspose(value: number) {
+      keyTranspose = value;
     },
     setPreviewNote(_note: number | null) {},
   };

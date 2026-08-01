@@ -7,6 +7,7 @@ import {
 import { PanelFrame } from "@/components/mono3";
 import { CssVariablesFrame } from "@/components/ui-theme";
 import { generateMappedNotes } from "@/logic/ghost-engine";
+import { mapKeySpecToKeysName } from "@/logic/keys-name-helper";
 import { sequencer, unitInterface } from "@/logic/sequencer";
 import { store } from "@/store/store";
 import { ControlsSection } from "./controls-section";
@@ -54,6 +55,13 @@ function setupSynchronization() {
         sequencer.processStep(stepIndex, time, unitDurationSec);
       },
     },
+    hostCallbacks: {
+      setKey(keySpec) {
+        sequencer.setKeyTranspose(keySpec.keyTranspose);
+        const keysName = mapKeySpecToKeysName(keySpec);
+        store.setCurrentKeysName(keysName);
+      },
+    },
     persistence: {
       emitStateBytes() {
         const state = pickObjectMembers(store.state, {
@@ -65,7 +73,7 @@ function setupSynchronization() {
           patternMode: 1,
           ghostEnabled: 1,
           realized: 1,
-          songKey: 1,
+          keysMode: 1,
         });
         return serializePersistState(state);
       },

@@ -1,5 +1,5 @@
 import { createStore } from "snap-store";
-import { Note, PatternMode, SongKey } from "@/store/types";
+import { KeysMode, Note, PatternMode } from "@/store/types";
 
 function getDefaultNotes() {
   if (0) {
@@ -34,12 +34,13 @@ type StoreState = {
   patternMode: PatternMode;
   ghostEnabled: boolean;
   realized: boolean;
-  songKey: SongKey;
+  keysMode: "major" | "minor";
   //temporal
   currentPageIndex: number;
   draftNote: Note | null;
   mappedNotes: Note[];
   backupInputNotes: Note[] | null;
+  currentKeysName: string;
 };
 
 export type PersistState = {
@@ -51,7 +52,7 @@ export type PersistState = {
   patternMode: PatternMode;
   ghostEnabled: boolean;
   realized: boolean;
-  songKey: SongKey;
+  keysMode: KeysMode;
 };
 
 export const store = createStore<StoreState>({
@@ -63,10 +64,11 @@ export const store = createStore<StoreState>({
   patternMode: "shift",
   ghostEnabled: true,
   realized: false,
-  songKey: "Am",
+  keysMode: "minor",
   //
   currentPageIndex: 0,
   draftNote: null,
   mappedNotes: [],
   backupInputNotes: null,
+  currentKeysName: "C/Am",
 });
