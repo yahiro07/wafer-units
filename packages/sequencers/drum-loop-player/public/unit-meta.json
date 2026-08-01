@@ -1,5 +1,5 @@
 {
-  "name": "loop-player",
+  "name": "drum-loop-player",
   "unitType": "instrument",
   "protocol": "wafer-v01",
   "integrationFormat": "iframe",

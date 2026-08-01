@@ -20,7 +20,7 @@ export default defineConfig({
     exclude: ["wafer-host", "snap-store"],
   },
   build: {
-    outDir: "../../../dist/loop-player",
+    outDir: "../../../dist/drum-loop-player",
     emptyOutDir: true,
   },
   server: { port: 3000 },

@@ -1,5 +1,5 @@
 {
-  "name": "loop-player",
+  "name": "drum-loop-player",
   "type": "module",
   "private": true,
   "scripts": {
