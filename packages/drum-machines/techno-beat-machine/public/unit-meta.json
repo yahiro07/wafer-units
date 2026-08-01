@@ -3,7 +3,9 @@
   "unitType": "instrument",
   "protocol": "wafer-v01",
   "integrationFormat": "iframe",
-  "repositoryUrl": "https://github.com/yahiro07/wus-units",
-  "author": "yahiro",
+  "originalRepositoryUrl": "https://github.com/apvilkko/techno-generator",
+  "originalAuthor": "Antti Pekka Vilkko",
+  "forkedRepositoryUrl": "https://github.com/yahiro07/wus-units",
+  "forkedAuthor": "yahiro",
   "license": "MIT"
 }
