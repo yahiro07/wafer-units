@@ -5,12 +5,22 @@ const configs = {
   numPoints: 100,
 };
 
+async function fetchAudioData(uri: string): Promise<AudioBuffer> {
+  try {
+    const response = await fetch(uri);
+    if (!response.ok) throw new Error(`fetch failed: ${uri}`);
+    const arrayBuffer = await response.arrayBuffer();
+    const audioContext = new AudioContext();
+    console.log({ uri, arrayBuffer });
+    return await audioContext.decodeAudioData(arrayBuffer);
+  } catch (error) {
+    console.error(`fetchAudioData failed: ${uri}`, error);
+    throw error;
+  }
+}
+
 async function loadAudioWaveform(uri: string) {
-  const response = await fetch(uri);
-  if (!response.ok) throw new Error(`fetch failed: ${uri}`);
-  const arrayBuffer = await response.arrayBuffer();
-  const audioContext = new AudioContext();
-  const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+  const audioBuffer = await fetchAudioData(uri);
   const left = audioBuffer.getChannelData(0);
   const right =
     audioBuffer.numberOfChannels > 1 ? audioBuffer.getChannelData(1) : left;

@@ -5,14 +5,64 @@ export const previewData: Record<LoopKey, string> = {
     "6+zo7du96q2Zlo6D6erm5ePJ/8ek3tit3f3v6vvVp+zQxsjHxerm5fHp0vnKq7bR6Pfz7Ory27P2s52dk4Pu6ejm5MEX1qTg2bD18+zm+86l59XVA/HL8Ojl6OXT/u7u8NKpkA==",
   "125-puredance04.m4a":
     "++fp9eW46b2UiISC/vj59e3By8mWvZ2IzPXf4+fcsuyxmIiDggL29u3nxPLRssj17/3z4vXz3K7wvqeWj40A+P3r6MfSupa7i4fu8OLh5NTE4b+onJaZDf/17+K72c2jn5+Nhg==",
+  "125-puredance01.m4a":
+    "+vT//aOs8//9A6eY+P77/MqvBwD+7ufltPD/2eihsf/++9qml/z+/fyzqwQA/vbd0tgF9gP1paz0/PoBppYC//oCy637A/8B6RDq+v/s66ap7gD71KaT9//99LCp9QL99OCglA==",
+  "125-puredance02.m4a":
+    "+Pamwd/f/P2z28PI9vq40qTU/vz50dvEs/r5p9vL1vz+r9fGxvb7t8ik1/oA99/kyPP39qbD2tr8/a/Zycfz/LjBn9P3/vvO1cf4/Pamz9LV/v6t1cLI+vinzbPh9wDz1MjEuA==",
+  "120-hydrosampler1.m4a":
+    "/synytjNCMSP0I+J9dbI/u3rCsyy7ODQ6urOp+/lywLN1Oapsu3Rwtin6AbrwrGy8vj516nSuMQMyY3NiIr62NL55OEFyqzo3Mn269aq9t22BMvS9KevBs3V363k/920tbnwsQ==",
+  "120-hydrosampler2.m4a":
+    "3uHI6MatALea3Z2Zqo2817C18vWku7mmvuTgyObIq/KuobyfnbeHuuetrfT6pcazntTe4cXswqX1o5fVnZu3qrjXn7D29KjAraTF5ODH58Wl+qqbvJ+Xqbqv2aKm+e+iyqehgg==",
+  "127-hydrosampler1.m4a":
+    "CuDT/LOcCq+W/dD0/8X49O30BvLC+eH7+A29r+DCtv/W1wHH7u+cvMC/4QrJoNjV+v8JxML6rZoIspP31PX9ufX88vAG1sz04+wFAsi14MGvAdba/cXq5Zi9wr7x/9DA0M3q/w==",
+  "125-hydrosampler1.m4a":
+    "9N6HyZCX99+zrpW779nIx5+W9vnOy7Txr/fch9egl/jhtbGUufzZyMiZmdvbzKjWmMf16Y3Cpp32x6XLlbzr1NjOp5f1/MbE2PPJ7uGIxJaY+dujrZW77tbbx5yY+PrDu7HzqQ==",
+  "120-funka.m4a":
+    "7dbJ27Gc7I+KvZ+M0NKn7tqOvoyBjMaS7/jUw/C6ncCRisahjNrOnvK6jvTEu94CyeLmzLbkq5fp1sTWsZ3ruqGkoqTOn4qyrIvr3six17br2MG1Cq2Y7bmf2JmJu5yK++nEtg==",
+  "120-funku.m4a":
+    "8b+9sKKWAs6Fq/7887vB8L3d/d2TqZiJq/XEu7GilwHLha74+vnHwfHK4/3djdKulbgAy7yurpT9x4Wo+fXrvb/uvPT71o6llYPX8L25r7+XAcyBm/r67cO+8MXh+tuNxaOSiA==",
   "120-funkb.m4a":
     "BdTHxKeN8s3C2bad0K+jycGPsqeHp8Od/vnZyd2fj66LiNm5iOXtrvnxzNXIjJfFjALszMLUmYmvnpDa1sb+4qGflJjKn4mjqoygn4aIzsbE+9XH8qeN2s2a8tPH3cWRq6mKgw==",
+  "135-funkless.m4a":
+    "AeLZ9OC77+rc8PTB/QHBwse25tOko5aM2/Da0/HcsvCoi4OAgezTua+wosi1mbbTov3479/z2rUB8uP18sL94MDGwa7fwZ6njYr+/eLX89fkz56IgoC22c+3wKunxK6ZzbelqQ==",
+  "125-puredance05.m4a":
+    "APrr/P77Ac+g4t6i/Pv67fn5Afq/tOCc/v36+/359wq/mq3Kk/v779z8+w8CvNTzrPf5/fj+9vX9v6bkrqT8+ejj+/oNAr6rvbn7+uvb/P33C8Gg6ruV/f78+AD/GhWpyeKqrw==",
   "90-breakbeat.m4a":
     "CeHR9+fL37CeuJ+SAvrA382byLWTrvLCxvvPxOShlNWvn7+ejf/wwNPAmfrxz7DftPkB5dbj5cjdrZ67nI0E88vaxZ3Et5Kw8cH29M3E2qCR1KydupuLAPq918CV9O7Lr92rlg==",
+  "120-zzbeatz.m4a":
+    "6t3ksdXl+er26cG15dDV7ukA/efd4NDK1eno16zZ1fvm8uXCuuHL1Ovn7fri2eLRxdzp4tys2NPz6/DswMTlztPv6fX75ODaysXi6d/NsN7M8+/148S34cLS7tzz9uLc3sfNsA==",
   "tech-005.m4a":
     "q5iLhoSCm5OOiIWDw6+bi4eEmJuNioiEgruZi4iDg5eUi4eFg8O1lYuGg5aajoiHhYKyl4uGhIKWlouIhYO3s5eKhoSYlJCLiISFuJeLh4OCm5OMh4aDuqKTi4aEm5aNiYaDgw==",
-  "wrd-006.m4a":
-    "EAoE/Nepz7iYn5aPAwDu1sy0zbqgnZqP7QYE+OK9s8mml5mUjAH/7trNoZvBop6VkAUFBfbQx7XZo5mdlI0A+/DNt6zVuZuZlo/5BwHy28+nyqiYnpOOAfvp1cKyyreTnJiPmA==",
+  "b-beat009.m4a":
+    "7LKaspWZ/MGnwZ25rpq3+ridCO+3ws+y1uqsla+YleuxpryTtbCauPayoAT0tMjT1+jqsKiympT1rqbCnbOzmrj7rKEC+K/E0a7s3K6trJrJ8rCmwMPStZu49KyjA9+22crQqw==",
+  "b-beat010.m4a":
+    "zbeX5Lqwle+3wpuZ2Jm7AZXVq5T2w62Vq8+4l+S6r5b0t8Oamdeau/2U1aWr1dKlysfNuY7kvK+V7bjFmZbVtbr/ldSklPPEpJXHz7iO5bqulvG4wJmX1bO7/5TUy5Hpk9e5zw==",
+  "b-beat015.m4a":
+    "nIuHhYWFqJ+RjYeEqZ6Njo2Ho6KNk5WGnZ+Lh4aFhqqfko2GhKKhi4+LhqOikJaVhY+eioiGh4amlJKOhoSlmYuQiYajp4yVk4WgmYqHh4aIqJmSjYaEopeMkImFoqiMlIyFgw==",
+  "b-beat016.m4a":
+    "4LijopSUlIuHiYOB/MKUjYWDk5CGiomCjZeLh4iCgtzEo6SUlPizmImFg56Ti4iJgs/itKaZkZCVjIeJgoH6t5CJhYPkzrGompSRl4iHiYKC5buonpmU+6ONh4WCko6I+bKWjQ==",
+  "drumloop-90-fd-more-1-bar-90-bpm-no-swing.m4a":
+    "6gD8///83L/Bwr658N3c8Lq3rOzy4sKwwwUE2sSom5eRjImKibTw59zMprrNwZePi5SVk4aFg4PivqaPiIa79NTNyre+v7eUi4iJCAPGp5iSyPHZ5rGmv8elj4yJraekkI2GhQ==",
+  "drumloop-the-bigbeat-a-100-one-1-bar-100-bpm-no-swing.m4a":
+    "3enn28KoppKJh4eH0a6uzZCNiZOIhoeG2/kB2byXk42OiomIhsvY3sLCpJuno46LiaSblYaDg4P/39bEupmzsqCmo5zGy9LFvaD/+uu4npeLpqKXmo6M39XJxbebpaCIhYWRjw==",
+  "drumloop-a-basic-one-1-bar-98-bpm-no-swing.m4a":
+    "9uKgqa2alY+BgICA5vSxpaymsaWJhIKBgeLEr56PhoOBgYCAgKuMhIOCgcTtuaOtqrj2y6SsqpWUh4CAgIDv9p6prKWVj4GAgIDj0sCsl46Fg4GBgICAq4yEgoKB3e2up6yllg==",
+  "drumloop-basic-variation-8-bars-90-bpm.m4a":
+    "54+A47Op5pOA5Z6I5sCP5J2059qP1a67uuePgOS0qeaRgOWeh+a8j+SdtObZrwEBr+znj4DltKnmj4DlnofmrY/lnbTm1o/Vrv+754+A5bSp54+A5Z6G5a2P5Z2059b3AQCv7A==",
+  "drumloop-classic-breakbeat-3-funky-drummer-90-bpm.m4a":
+    "t6m0tpSUmoyJiYeHy62uzZCNiZKKh4eGh+DZ07CbjoyOiomHhoiWoY+GhIWkpZCKiJSVk4aFg4PKsJeJhoWhrqGmn6OLo5OLiYiJ2MWlm42KjaWXmpSNp6COioiHhqGij4iEhQ==",
+  "drumloop-classic-breakbeat-6-jungle-variant-100-bpm.m4a":
+    "zsS8wLWzpJKdm5eQnqmZlpaTkY+Qk4yMleLov6STjYmKiIeHhpmdm42FhYSTpp6Lho+bno+GhIaFl5iJhYSWrKCTiY6KioiHh4e44eOyk46JioiGh4aYnZuMhoWEi56jioiEjw==",
+  "drumloop-classic-breakbeat-5-jungle-tambourine.m4a":
+    "AgEGAwTcvLOzr6uhl7S5rayakrW0samSqgv/07WlnZWnpZ+Yjqa4p5aUjpPixLaalpLkt6ihoJTc5rmekvcBAtTiz6qfvr2rmI8LDALSraiiq7WwnJWQyf3t18e6rsS7sp2EgA==",
+  "drumloop-classic-breakbeat-2.m4a":
+    "0N26tJ2bnpiboZaWrbKhlY+TlsLLuaiZpebq2dWyqJ6fmqClmrHKnJqSkJWtqpWSj9XDqJeRjZS02b6ckbbS2cOmlpygnZublp7oAOXeuKCin6Sanp674NOsqZ2ZoJuZjpSdgQ==",
+  "drumloop-jungle-thought-2-bar-100-bpm-swing.m4a":
+    "AwDHu7m24bWtqqOe/O6plo+O0aqKh6iOyr+NhpaZhsmdjoqIiOXhmo2Ih8nQvaGljMnn28iagIDGiYCAgIDo4JqNiIfKpYiEpYzJvIyGl5eHyJuOioiH6+OTjcbA07aGhOPilA==",
+  "drumloop-lo-fi-base-1-2-bar-70-bpm-swing.m4a":
+    "/8y3raOdl5OPjImEtYyBgICAhYGAgNvX/93Mt62jnODMu66mnsaakY2KhYWBgIDd1//dxbero5yXko+MiIS1iYGAgICFgYCA29f/3cW3q6Kc4My71tvM57KknZeTkI2JhNvTwA==",
+  "drumloop-free-try-1-90-bpm.m4a":
+    "voaBgICAvpWBgZOD4rmKg7OTmZuDgL6xq76HgYOYg5qBgIC7jOKzioOAgJiag4C/p63DhoGAgIC+lYGBm4LguIiDuJebnYGAv7KtwIiAipmDvpKBgZSF4LGIg5SI4sKMg5qHgA==",
   "ec-digi-014.m4a":
     "tbOxlYiFiIaCgYGBtLSumZCHh4iDgYGBsbOyoIyEg4eGgoKDgbWzqZmPh4eHhIKCgbOysZmLhoKHhoKBgYCzsqiXjYeHiIOBgYGys7GYiIaGh4WCg4KBs7Kvk4yIh4eCgYOBgQ==",
 };

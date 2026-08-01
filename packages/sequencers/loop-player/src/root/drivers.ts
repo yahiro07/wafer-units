@@ -10,7 +10,7 @@ export function setupUnit() {
   player.unitInterface?.completeSetup({
     unitAspects: {
       unitType: "instrument",
-      viewSize: [800, 600],
+      viewSize: [900, 500],
     },
     hostCallbacks: {
       setBpm: player.setBpm,

@@ -111,15 +111,27 @@ export const App = () => {
   useAffectStoreToEngine();
   return (
     <>
-      <div class={css(flexH(4))}>
-        {seqNumbers(4).map((i) => (
-          <div key={i} class={css(flexV(4))}>
-            <LoopCard loopKey={loopSourceItems[i * 4 + 0]?.fileName} />
-            <LoopCard loopKey={loopSourceItems[i * 4 + 1]?.fileName} />
-            <LoopCard loopKey={loopSourceItems[i * 4 + 2]?.fileName} />
-            <LoopCard loopKey={loopSourceItems[i * 4 + 3]?.fileName} />
-          </div>
-        ))}
+      <div className={css(flexV(12))}>
+        <div class={css(flexH(12))}>
+          {seqNumbers(4).map((i) => (
+            <div key={i} class={css(flexV(4))}>
+              <LoopCard loopKey={loopSourceItems[i * 4 + 0]?.fileName} />
+              <LoopCard loopKey={loopSourceItems[i * 4 + 1]?.fileName} />
+              <LoopCard loopKey={loopSourceItems[i * 4 + 2]?.fileName} />
+              <LoopCard loopKey={loopSourceItems[i * 4 + 3]?.fileName} />
+            </div>
+          ))}
+        </div>
+        <div class={css(flexH(12))}>
+          {seqNumbers(4).map((i) => (
+            <div key={i} class={css(flexV(4))}>
+              <LoopCard loopKey={loopSourceItems[16 + i * 4 + 0]?.fileName} />
+              <LoopCard loopKey={loopSourceItems[16 + i * 4 + 1]?.fileName} />
+              <LoopCard loopKey={loopSourceItems[16 + i * 4 + 2]?.fileName} />
+              <LoopCard loopKey={loopSourceItems[16 + i * 4 + 3]?.fileName} />
+            </div>
+          ))}
+        </div>
       </div>
       {appConfig.isDevelopment && <PregeneratePreviewDataButton />}
     </>
