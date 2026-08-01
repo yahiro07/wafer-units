@@ -24,7 +24,7 @@ function renderLoopWaveformToCanvas(
   const height = canvas.height;
   const midY = height / 2;
   ctx.clearRect(0, 0, width, height);
-  ctx.fillStyle = "#888";
+  ctx.fillStyle = "#48f";
   for (let x = 0; x < width; x++) {
     if (x % 2 === 1) continue;
     const si = Math.floor((x / width) * peaks.length);
@@ -62,11 +62,11 @@ const LoopCard = ({ loopKey }: { loopKey: LoopKey }) => {
         {
           width: "200px",
           height: "50px",
-          border: "solid 1px #888",
+          background: "#333",
           position: "relative",
           cursor: "pointer",
         },
-        active && { background: "#8f8" },
+        active && { background: "#adf" },
       )}
       onClick={onClick}
     >
@@ -76,8 +76,8 @@ const LoopCard = ({ loopKey }: { loopKey: LoopKey }) => {
           position: "absolute",
           top: 0,
           left: 0,
-          fontSize: "12px",
-          color: "#888",
+          fontSize: "10px",
+          color: "#fff",
         })}
       >
         {loopKey.split(".")[0]}
@@ -111,8 +111,8 @@ export const App = () => {
   useAffectStoreToEngine();
   return (
     <>
-      <div className={css(flexV(12))}>
-        <div class={css(flexH(12))}>
+      <div className={css(flexV(16))}>
+        <div class={css(flexH(16))}>
           {seqNumbers(4).map((i) => (
             <div key={i} class={css(flexV(4))}>
               <LoopCard loopKey={loopSourceItems[i * 4 + 0]?.fileName} />
@@ -122,7 +122,7 @@ export const App = () => {
             </div>
           ))}
         </div>
-        <div class={css(flexH(12))}>
+        <div class={css(flexH(16))}>
           {seqNumbers(4).map((i) => (
             <div key={i} class={css(flexV(4))}>
               <LoopCard loopKey={loopSourceItems[16 + i * 4 + 0]?.fileName} />
