@@ -5,7 +5,7 @@ export type ClockDivision = 1 | 2 | 4;
 export type AutomationLaneItem = {
   id: number;
   enabled: boolean;
-  targetParameterId: string | null;
+  targetParameterId: string;
   stepValues: number[];
   patternRange: PatternRange;
   clockDivision: ClockDivision;

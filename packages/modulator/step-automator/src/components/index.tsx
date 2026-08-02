@@ -2,6 +2,8 @@ import { ComponentChildren } from "preact";
 import { cz, qu } from "@/base/css-realm";
 import { KnobFrame } from "@/components/knob-frame";
 import { linearInterpolate, npx } from "@/utils/helpers";
+import { SelectorOption } from "@/base/selector-option";
+import { GeneralSelector } from "@/components/general-selector";
 
 export const Knob = ({
   value,
@@ -75,67 +77,6 @@ export const PlainCellContent = ({
   return <div class={qu.flexC().w(width).it}>{text}</div>;
 };
 
-// export const WaveButton = ({
-//   wave,
-//   onClick,
-// }: {
-//   wave: LfoWave;
-//   onClick: () => void;
-// }) => {
-//   const text = {
-//     [LfoWave.Sine]: "◯",
-//     [LfoWave.Triangle]: "△",
-//     [LfoWave.Saw]: "⊿",
-//     [LfoWave.Rect]: "□",
-//     [LfoWave.SampleHold]: "◉",
-//   }[wave];
-//   return (
-//     <div class={qu.flexC().wh(40, 40).bg("#ddd")} onClick={onClick}>
-//       {text}
-//     </div>
-//   );
-// };
-
-// export const XStepButton = ({
-//   xStep,
-//   onClick,
-// }: {
-//   xStep: XStep;
-//   onClick: () => void;
-// }) => {
-//   const text = {
-//     [XStep.None]: "--",
-//     [XStep.div16]: "/16",
-//     [XStep.div8]: "/8",
-//     [XStep.div4]: "/4",
-//   }[xStep];
-//   return (
-//     <div class={qu.flexC().wh(40, 40).bg("#ddd")} onClick={onClick}>
-//       {text}
-//     </div>
-//   );
-// };
-
-// export const YStepButton = ({
-//   yStep,
-//   onClick,
-// }: {
-//   yStep: YStep;
-//   onClick: () => void;
-// }) => {
-//   const text = {
-//     [YStep.None]: "--",
-//     [YStep.step3]: "3",
-//     [YStep.step4]: "4",
-//     [YStep.step8]: "8",
-//   }[yStep];
-//   return (
-//     <div class={qu.flexC().wh(40, 40).bg("#ddd")} onClick={onClick}>
-//       {text}
-//     </div>
-//   );
-// };
-
 export function reteToStepText(rate: number) {
   const steps = ["16", "8", "4", "2", "1", "/2", "/4", "/8", "/16"];
   const index = Math.min(Math.floor(rate * steps.length), steps.length - 1);
@@ -207,5 +148,24 @@ export const NarrowButton = ({
       {text && <div class={qu.fontSize(9).it}>{text}</div>}
       {children}
     </div>
+  );
+};
+
+export const ParameterSelector = <T extends string | number>({
+  value,
+  onChange,
+  options,
+}: {
+  value: T;
+  onChange: (value: T) => void;
+  options: SelectorOption<T>[];
+}) => {
+  return (
+    <GeneralSelector
+      className={qu.flexC().wh(100, 40).bg("#ddd").pl(1).fontSize(12).it}
+      options={options}
+      value={value}
+      onChange={onChange}
+    />
   );
 };

@@ -6,10 +6,10 @@ export const PageRoot = () => {
   const { parameterIds, connected, lanes, playbackStepIndex } =
     store.useSnapshot();
   return (
-    <div class={qu.flexC().it}>
-      <div class={qu.wh(600, 350).bg("#aaa").p(4).color("#333").it}>
-        <div class={qu.flexV().gap(2).it}>
-          <div class={qu.flexH().gap(2).it}>
+    <div class={qu.h("dvh").flexC().it}>
+      <div class={qu.wh(560, 300).bg("#aaa").p(4).color("#333").flexVC().it}>
+        <div class={qu.flexV().gap(4).it}>
+          <div class={qu.flexH().gap(2).px(1).it}>
             <div>Step Automator</div>
             <div class={qu.grow().it} />
             <div class={qu.fontSize(12).it}>

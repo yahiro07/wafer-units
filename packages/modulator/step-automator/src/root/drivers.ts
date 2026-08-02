@@ -20,7 +20,8 @@ export function setupUnit() {
   unitInterface?.completeSetup({
     unitAspects: {
       unitType: "sequencer",
-      viewSize: [600, 350],
+      viewSize: [560, 300],
+      preferJustSize: true,
     },
     clockHandlers: {
       processStep(stepIndexInput, time, unitDuration) {

@@ -4,13 +4,24 @@ import {
   patternRangeOptions,
 } from "@/base/constants";
 import { qu } from "@/base/css-realm";
+import { createSelectorOptions } from "@/base/selector-option";
 import { AutomationLaneItem } from "@/base/types";
-import { IndicatorButton, LabeledBox } from "@/components";
+import { IndicatorButton, LabeledBox, ParameterSelector } from "@/components";
 import { StepIndicatorLed } from "@/components/led";
 import { ParameterGauge } from "@/components/parameter-gauge";
 import { ShiftSelector } from "@/components/shift-selector";
 import { store } from "@/root/store";
-import { iife } from "@/utils/helpers";
+import { useMemo } from "preact/hooks";
+
+function useParameterSelectorOptions() {
+  const { parameterIds } = store.useSnapshot();
+  return useMemo(() => {
+    return createSelectorOptions([
+      ["", "--"],
+      ...(parameterIds.map((id) => [id, id]) as [string, string][]),
+    ]);
+  }, [parameterIds]);
+}
 
 export const AutomationLane = ({
   lane,
@@ -19,26 +30,12 @@ export const AutomationLane = ({
   lane: AutomationLaneItem;
   playbackStepIndex: number;
 }) => {
+  const parameterSelectorOptions = useParameterSelectorOptions();
+
   const patchLane = (attrs: Partial<AutomationLaneItem>) => {
     store.setLanes((prev) =>
       prev.map((s) => (s.id === lane.id ? { ...s, ...attrs } : s)),
     );
-  };
-  const handleClickParamId = () => {
-    const { parameterIds } = store.state;
-    if (parameterIds.length > 0) {
-      const index = parameterIds.indexOf(lane.targetParameterId ?? "");
-      const nextIndex = iife(() => {
-        if (index === -1) {
-          return 0;
-        } else if (index === parameterIds.length - 1) {
-          return -1;
-        } else {
-          return index + 1;
-        }
-      });
-      patchLane({ targetParameterId: parameterIds[nextIndex] ?? null });
-    }
   };
   const setStepValue = (index: number, value: number) => {
     patchLane({
@@ -46,7 +43,7 @@ export const AutomationLane = ({
     });
   };
   return (
-    <div class={qu.flexV().gap(4).it}>
+    <div class={qu.flexV().gap(5).it}>
       <div class={qu.flexHA().fJustify("between").it}>
         <div class={qu.flexHA().gap(2).it}>
           <LabeledBox width={30}>
@@ -56,12 +53,11 @@ export const AutomationLane = ({
             />
           </LabeledBox>
           <LabeledBox label="target parameter" labelAlign="left">
-            <div
-              class={qu.flexC().wh(100, 30).bg("#ddd").fontSize(12).it}
-              onClick={handleClickParamId}
-            >
-              {lane.targetParameterId ?? "--"}
-            </div>
+            <ParameterSelector
+              value={lane.targetParameterId}
+              onChange={(value) => patchLane({ targetParameterId: value })}
+              options={parameterSelectorOptions}
+            />
           </LabeledBox>
         </div>
         <div class={qu.flexHA().gap(3).it}>
