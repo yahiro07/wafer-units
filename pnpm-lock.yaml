@@ -69,8 +69,8 @@ importers:
         specifier: ^2.1.1
         version: 2.1.1
       mofur:
-        specifier: link:../../../../beam/mofur
-        version: link:../../../../beam/mofur
+        specifier: ^0.1.1
+        version: 0.1.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       preact:
         specifier: 'catalog:'
         version: 10.29.2
@@ -312,8 +312,8 @@ importers:
         specifier: ^4.3.3
         version: 4.3.3(vite@8.0.14(@types/node@25.9.1)(jiti@2.7.0))
       mofur:
-        specifier: ^0.1.0
-        version: 0.1.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+        specifier: ^0.1.1
+        version: 0.1.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       mofur-components:
         specifier: file:../../../../beam/mofur-components
         version: file:../beam/mofur-components(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
@@ -375,8 +375,8 @@ importers:
         specifier: ^6.0.1
         version: 6.0.5(vite@8.0.14(@types/node@25.9.1)(jiti@2.7.0))
       mofur:
-        specifier: ^0.1.0
-        version: 0.1.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+        specifier: ^0.1.1
+        version: 0.1.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       react:
         specifier: ^19.2.6
         version: 19.2.6
@@ -417,8 +417,8 @@ importers:
         specifier: ^2.1.1
         version: 2.1.1
       mofur:
-        specifier: link:../../../../beam/mofur
-        version: link:../../../../beam/mofur
+        specifier: ^0.1.1
+        version: 0.1.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       preact:
         specifier: ^10.29.2
         version: 10.29.2
@@ -453,8 +453,8 @@ importers:
         specifier: ^19.2.17
         version: 19.2.17
       mofur:
-        specifier: link:../../../../beam/mofur
-        version: link:../../../../beam/mofur
+        specifier: ^0.1.1
+        version: 0.1.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       mofur-components:
         specifier: link:../../../../beam/mofur-components
         version: link:../../../../beam/mofur-components
@@ -501,8 +501,8 @@ importers:
         specifier: ^2.1.1
         version: 2.1.1
       mofur:
-        specifier: file:../../../../beam/mofur
-        version: file:../beam/mofur(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+        specifier: ^0.1.1
+        version: 0.1.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       mofur-components:
         specifier: file:../../../../beam/mofur-components
         version: file:../beam/mofur-components(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
@@ -528,8 +528,8 @@ importers:
         specifier: ^2.1.1
         version: 2.1.1
       mofur:
-        specifier: file:../../../../beam/mofur
-        version: file:../beam/mofur(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+        specifier: ^0.1.1
+        version: 0.1.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       mofur-components:
         specifier: file:../../../../beam/mofur-components
         version: file:../beam/mofur-components(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
@@ -555,8 +555,8 @@ importers:
         specifier: ^2.1.1
         version: 2.1.1
       mofur:
-        specifier: link:../../../../beam/mofur
-        version: link:../../../../beam/mofur
+        specifier: ^0.1.1
+        version: 0.1.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       mofur-components:
         specifier: link:../../../../beam/mofur-components
         version: link:../../../../beam/mofur-components
@@ -783,8 +783,8 @@ importers:
         specifier: ^2.1.1
         version: 2.1.1
       mofur:
-        specifier: ^0.1.0
-        version: 0.1.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+        specifier: ^0.1.1
+        version: 0.1.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       react:
         specifier: ^19.2.6
         version: 19.2.6
@@ -1923,8 +1923,8 @@ packages:
       react: ^19.0.0
       react-dom: ^19.0.0
 
-  mofur@0.1.0:
-    resolution: {integrity: sha512-JATwm1btgZ3Jl1O5GZXHYkDpJZtf1Xzw/4wydg3MnUsAfb12eZe+1VAcufv/I0jK/omgKjI7WqNIfOtxHcsjWQ==}
+  mofur@0.1.1:
+    resolution: {integrity: sha512-1UY19uM+9OUvzDJLt6/JVf7qlDWK1sUmPTfMfhUm3oqJVPV+Oq6KPqbHiFHjerm7YkPPVntNqGIMXbt9tGIbqA==}
     peerDependencies:
       react: ^19.0.0
       react-dom: ^19.0.0
@@ -3220,7 +3220,7 @@ snapshots:
       react: 19.2.6
       react-dom: 19.2.6(react@19.2.6)
 
-  mofur@0.1.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6):
+  mofur@0.1.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6):
     dependencies:
       react: 19.2.6
       react-dom: 19.2.6(react@19.2.6)

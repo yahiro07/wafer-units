@@ -7,10 +7,10 @@
   },
   "devDependencies": {
     "@preact/preset-vite": "^2.9.4",
-    "mofur": "^0.1.0",
+    "@tailwindcss/vite": "^4.3.3",
+    "mofur": "^0.1.1",
     "mofur-components": "file:../../../../beam/mofur-components",
     "preact": "^10.26.0",
-    "snap-store": "^0.1.12",
-    "@tailwindcss/vite": "^4.3.3"
+    "snap-store": "^0.1.12"
   }
 }
