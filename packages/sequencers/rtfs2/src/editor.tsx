@@ -6,8 +6,8 @@ import {
   createSelectorOptions,
   GeneralSelector,
   Knob,
-} from "mofur-components/mono2";
-import { useState } from "react";
+} from "@/components-mono2";
+import { useState } from "preact/hooks";
 import { LabeledRow } from "@/components";
 import { GridBackground } from "@/components/grid-background";
 import { store } from "@/store";
@@ -180,7 +180,7 @@ function useSynthPatternEditorViewPresenter() {
     });
   };
 
-  const handlePointerDown = (e0: React.PointerEvent) => {
+  const handlePointerDown = (e0: PointerEvent) => {
     const metrics = getGridPointerMetrics(e0.currentTarget as HTMLElement);
     const startStep = getStepIndexFromClientX(e0.clientX, metrics);
     const relativeNoteNumber = getRelativeNoteNumberFromClientY(
@@ -193,9 +193,9 @@ function useSynthPatternEditorViewPresenter() {
       relativeNoteNumber,
       stepDuration: 1,
     });
-    e0.currentTarget.setPointerCapture(e0.pointerId);
+    (e0.currentTarget as HTMLElement).setPointerCapture(e0.pointerId);
 
-    startDragSession(e0.nativeEvent, {
+    startDragSession(e0, {
       onMove({ position }) {
         updateDraftDuration(e0.pointerId, position.x, metrics);
       },
@@ -219,10 +219,7 @@ function useSynthPatternEditorViewPresenter() {
     });
   };
 
-  const handleKeysColumnPointerDown = (
-    e: React.PointerEvent,
-    _index: number,
-  ) => {
+  const handleKeysColumnPointerDown = (e: PointerEvent, _index: number) => {
     e.preventDefault();
     e.stopPropagation();
 
@@ -237,7 +234,7 @@ function useSynthPatternEditorViewPresenter() {
     };
     noteOn();
 
-    startDragSession(e.nativeEvent, {
+    startDragSession(e, {
       onUp() {
         noteOff();
       },

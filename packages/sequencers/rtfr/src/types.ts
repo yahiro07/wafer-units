@@ -1,8 +1,8 @@
-import { seqNumbers } from "mofur/ax";
 import {
   createPlainSelectorOptions,
   createSelectorOptions,
-} from "mofur-components/mono2";
+} from "@/components-mono2";
+import { seqNumbers } from "mofur/ax";
 
 export type SongKeyMetaAttrs = {
   songKey?: string; //"C", "Am", etc.

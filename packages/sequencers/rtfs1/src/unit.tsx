@@ -1,5 +1,5 @@
 import { pickObjectMembers } from "mofur/ax";
-import { useEffect } from "react";
+import { useEffect } from "preact/hooks";
 import { SequenceEditorView } from "@/editor";
 import { sequencer, unitInterface } from "@/sequencer";
 import { store } from "@/store";

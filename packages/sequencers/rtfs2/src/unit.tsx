@@ -1,5 +1,5 @@
 import { pickObjectMembers } from "mofur/ax";
-import { useEffect } from "react";
+import { useEffect } from "preact/hooks";
 import { EditorView } from "@/editor";
 import { sequencer, unitInterface } from "@/sequencer";
 import { store } from "@/store";
@@ -28,6 +28,7 @@ function setupSynchronization() {
     unitAspects: {
       unitType: "sequencer",
       viewSize: [392, 240],
+      preferJustSize: true,
     },
     noteInput: {
       noteOn: sequencer.inputNoteOn,

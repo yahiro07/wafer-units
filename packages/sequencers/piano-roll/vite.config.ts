@@ -28,7 +28,7 @@ const configCommon: UserConfig = {
     ],
   },
   optimizeDeps: {
-    exclude: ["wafer-host", "mofur", "mofur-components", "snap-store"],
+    exclude: ["wafer-host", "mofur", "snap-store"],
   },
 };
 

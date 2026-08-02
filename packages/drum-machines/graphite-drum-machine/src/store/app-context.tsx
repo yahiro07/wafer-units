@@ -1,6 +1,7 @@
-import { createContext, ReactNode, useContext } from "react";
+import { createContext, ComponentChildren } from "preact";
 import { Actions } from "@/store/actions";
 import { AppStore } from "@/store/store";
+import { useContext } from "preact/hooks";
 
 export const AppContext = createContext<{
   store: AppStore;
@@ -12,7 +13,7 @@ export const AppProvider = ({
   store,
   actions,
 }: {
-  children: ReactNode;
+  children: ComponentChildren;
   store: AppStore;
   actions: Actions;
 }) => {

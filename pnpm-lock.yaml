@@ -56,15 +56,15 @@ importers:
 
   packages/drum-machines/graphite-drum-machine:
     devDependencies:
+      '@preact-icons/fa':
+        specifier: npm:@jsr/preact-icons__fa@^1.0.13
+        version: '@jsr/preact-icons__fa@1.0.13'
       '@preact/preset-vite':
-        specifier: 'catalog:'
+        specifier: 2.10.6
         version: 2.10.6(@babel/core@7.29.7)(preact@10.29.2)(vite@8.0.14(@types/node@25.9.1)(jiti@2.7.0))
       '@tailwindcss/vite':
         specifier: ^4.3.3
         version: 4.3.3(vite@8.0.14(@types/node@25.9.1)(jiti@2.7.0))
-      '@types/react':
-        specifier: ^19.2.17
-        version: 19.2.17
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -72,13 +72,10 @@ importers:
         specifier: ^0.1.1
         version: 0.1.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       preact:
-        specifier: 'catalog:'
+        specifier: ^10.29.2
         version: 10.29.2
-      react-icons:
-        specifier: ^5.6.0
-        version: 5.6.0(react@19.2.6)
       snap-store:
-        specifier: 'catalog:'
+        specifier: ^0.1.12
         version: 0.1.12(preact@10.29.2)(react@19.2.6)
 
   packages/drum-machines/techno-beat-machine:
@@ -311,12 +308,12 @@ importers:
       '@tailwindcss/vite':
         specifier: ^4.3.3
         version: 4.3.3(vite@8.0.14(@types/node@25.9.1)(jiti@2.7.0))
+      clsx:
+        specifier: ^2.1.1
+        version: 2.1.1
       mofur:
         specifier: ^0.1.1
         version: 0.1.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
-      mofur-components:
-        specifier: file:../../../../beam/mofur-components
-        version: file:../beam/mofur-components(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       preact:
         specifier: ^10.26.0
         version: 10.29.2
@@ -452,12 +449,12 @@ importers:
       '@types/react':
         specifier: ^19.2.17
         version: 19.2.17
+      clsx:
+        specifier: ^2.1.1
+        version: 2.1.1
       mofur:
         specifier: ^0.1.1
         version: 0.1.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
-      mofur-components:
-        specifier: link:../../../../beam/mofur-components
-        version: link:../../../../beam/mofur-components
       preact:
         specifier: ^10.29.2
         version: 10.29.2
@@ -494,18 +491,12 @@ importers:
       '@tailwindcss/vite':
         specifier: ^4.3.3
         version: 4.3.3(vite@8.0.14(@types/node@25.9.1)(jiti@2.7.0))
-      '@types/react':
-        specifier: ^19.2.14
-        version: 19.2.17
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
       mofur:
         specifier: ^0.1.1
         version: 0.1.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
-      mofur-components:
-        specifier: file:../../../../beam/mofur-components
-        version: file:../beam/mofur-components(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       preact:
         specifier: ^10.26.0
         version: 10.29.2
@@ -521,18 +512,12 @@ importers:
       '@tailwindcss/vite':
         specifier: ^4.3.3
         version: 4.3.3(vite@8.0.14(@types/node@25.9.1)(jiti@2.7.0))
-      '@types/react':
-        specifier: ^19.2.14
-        version: 19.2.17
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
       mofur:
         specifier: ^0.1.1
         version: 0.1.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
-      mofur-components:
-        specifier: file:../../../../beam/mofur-components
-        version: file:../beam/mofur-components(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       preact:
         specifier: ^10.26.0
         version: 10.29.2
@@ -548,18 +533,12 @@ importers:
       '@tailwindcss/vite':
         specifier: ^4.3.3
         version: 4.3.3(vite@8.0.14(@types/node@25.9.1)(jiti@2.7.0))
-      '@types/react':
-        specifier: ^19.2.14
-        version: 19.2.17
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
       mofur:
         specifier: ^0.1.1
         version: 0.1.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
-      mofur-components:
-        specifier: link:../../../../beam/mofur-components
-        version: link:../../../../beam/mofur-components
       preact:
         specifier: ^10.26.0
         version: 10.29.2
@@ -1917,20 +1896,8 @@ packages:
     resolution: {integrity: sha512-eRtbOb1N5iyH0tkQDAoQ4Ipsp/5qSR79Dzrz8hEPxRX10RWWR/iQXdoKmBSRCThY1Fh5EhISDtpSc93fpxUniQ==}
     engines: {node: '>=12.13'}
 
-  mofur-components@file:../beam/mofur-components:
-    resolution: {directory: ../beam/mofur-components, type: directory}
-    peerDependencies:
-      react: ^19.0.0
-      react-dom: ^19.0.0
-
   mofur@0.1.1:
     resolution: {integrity: sha512-1UY19uM+9OUvzDJLt6/JVf7qlDWK1sUmPTfMfhUm3oqJVPV+Oq6KPqbHiFHjerm7YkPPVntNqGIMXbt9tGIbqA==}
-    peerDependencies:
-      react: ^19.0.0
-      react-dom: ^19.0.0
-
-  mofur@file:../beam/mofur:
-    resolution: {directory: ../beam/mofur, type: directory}
     peerDependencies:
       react: ^19.0.0
       react-dom: ^19.0.0
@@ -3213,19 +3180,7 @@ snapshots:
     dependencies:
       is-what: 4.1.16
 
-  mofur-components@file:../beam/mofur-components(react-dom@19.2.6(react@19.2.6))(react@19.2.6):
-    dependencies:
-      clsx: 2.1.1
-      mofur: file:../beam/mofur(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
-      react: 19.2.6
-      react-dom: 19.2.6(react@19.2.6)
-
   mofur@0.1.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6):
-    dependencies:
-      react: 19.2.6
-      react-dom: 19.2.6(react@19.2.6)
-
-  mofur@file:../beam/mofur(react-dom@19.2.6(react@19.2.6))(react@19.2.6):
     dependencies:
       react: 19.2.6
       react-dom: 19.2.6(react@19.2.6)

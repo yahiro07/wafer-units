@@ -1,5 +1,4 @@
 import cssText2 from "mofur/ax-ui/utility-classes.css?inline";
-import cssText3 from "mofur-components/style.css?inline";
 import { render } from "preact";
 import { createCustomElementClass } from "wafer-host/unit-helper";
 import { queryUnitInterfaceForModule } from "wafer-host/unit-types";
@@ -26,7 +25,7 @@ function createEntryClass() {
         render(null, shadowRoot);
       };
     },
-    { cssTexts: [cssText, cssText2, cssText3], stylesheetUrls: [webFontUrl] },
+    { cssTexts: [cssText, cssText2], stylesheetUrls: [webFontUrl] },
   );
 }
 

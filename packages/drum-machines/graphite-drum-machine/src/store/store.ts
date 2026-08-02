@@ -1,4 +1,4 @@
-import { createStore, Store } from "snap-store";
+import { createStore, Store } from "snap-store/preact";
 import { PieceItem } from "@/base/type";
 
 type StoreState = {

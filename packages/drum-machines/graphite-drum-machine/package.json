@@ -8,13 +8,12 @@
     "watch": "vite build --watch"
   },
   "devDependencies": {
-    "@preact/preset-vite": "catalog:",
+    "@preact-icons/fa": "npm:@jsr/preact-icons__fa@^1.0.13",
+    "@preact/preset-vite": "2.10.6",
     "@tailwindcss/vite": "^4.3.3",
-    "@types/react": "^19.2.17",
     "clsx": "^2.1.1",
     "mofur": "^0.1.1",
-    "preact": "catalog:",
-    "react-icons": "^5.6.0",
-    "snap-store": "catalog:"
+    "preact": "^10.29.2",
+    "snap-store": "^0.1.12"
   }
 }

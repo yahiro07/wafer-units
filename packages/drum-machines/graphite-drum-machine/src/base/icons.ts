@@ -1,10 +1,13 @@
-import { AiOutlineSwap } from "react-icons/ai";
-import { BsPlayFill } from "react-icons/bs";
-import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
+import {
+  FaAngleLeft,
+  FaAngleRight,
+  FaExchangeAlt,
+  FaPlay,
+} from "@preact-icons/fa";
 
 export const Icons = {
-  Play: BsPlayFill,
+  Play: FaPlay,
   ChevronLeft: FaAngleLeft,
   ChevronRight: FaAngleRight,
-  Swap: AiOutlineSwap,
+  Swap: FaExchangeAlt,
 };

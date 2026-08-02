@@ -1,2 +1,2 @@
-export * from "mofur-components/mono2";
 export * from "./labeled-row";
+export * from "./grid-background";

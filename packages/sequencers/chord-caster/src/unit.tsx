@@ -3,7 +3,7 @@ import {
   createSelectorOptions,
   GeneralSelector,
   SelectorOption,
-} from "mofur-components/mono2";
+} from "@/components-mono2";
 import { useMemo } from "preact/hooks";
 import { createStore } from "snap-store";
 import { UnitInterface } from "wafer-host/unit-types";

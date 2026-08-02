@@ -78,7 +78,7 @@ export const App = () => {
   useEffect(setupSynchronization, []);
   // return <Dev2PianoRollEditorView />;
   return (
-    <div className="bg-white">
+    <div className="bg-white flex-c">
       <div className="w-[420px] h-[240px] border border-cyan-600 bg-blue-100/20 flex-c">
         <div className="flex-v gap-2">
           <ControlsSection />

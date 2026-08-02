@@ -5,7 +5,7 @@ import {
   createSelectorOptions,
   GeneralSelector,
   Knob,
-} from "mofur-components/mono2";
+} from "@/components-mono2";
 import { LabeledRow } from "@/components";
 import { store } from "@/store/store";
 

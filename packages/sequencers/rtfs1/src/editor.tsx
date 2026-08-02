@@ -7,11 +7,12 @@ import {
   createSelectorOptions,
   GeneralSelector,
   Knob,
-} from "mofur-components/mono2";
-import { CSSProperties, useState } from "react";
+} from "@/components-mono2";
+import { useState } from "preact/hooks";
 import { LabeledRow } from "@/components";
 import { store } from "@/store";
 import { DraftNote, Note } from "@/types";
+import { CSSProperties } from "preact";
 
 const sortNotes = (notes: Note[]) =>
   [...notes].sort((a, b) => {
@@ -196,11 +197,11 @@ const LaneCellWithSelector = ({ note }: { note: Note }) => {
 const LaneCellByDragPitch = ({ note }: { note: Note }) => {
   const [dragging, setDragging] = useState(false);
 
-  const handlePointerDown = (e0: React.PointerEvent) => {
+  const handlePointerDown = (e0: PointerEvent) => {
     const dragState = {
       startPitch: note.relNoteNumber,
     };
-    startDragSession(e0.nativeEvent, {
+    startDragSession(e0, {
       onMove({ position, originalPosition }) {
         const deltaY = originalPosition.y - position.y;
         const pitchOffset = Math.round(deltaY / configs.pitchDragStepPx);
@@ -251,7 +252,7 @@ const DummyLaneCell = ({
   const { notes } = store.useSnapshot();
   const [dragging, setDragging] = useState(false);
 
-  const handlePointerDown = (e0: React.PointerEvent) => {
+  const handlePointerDown = (e0: PointerEvent) => {
     const cellLeft = e0.currentTarget.getBoundingClientRect().left;
     const maxDuration = getMaxDurationForPosition(notes, lane, position);
     const draftNoteId = crypto.randomUUID();
@@ -265,7 +266,7 @@ const DummyLaneCell = ({
       relNoteNumber: configs.defaultInsertedPitch,
     });
 
-    startDragSession(e0.nativeEvent, {
+    startDragSession(e0, {
       onMove({ position: currentPosition }) {
         const localX = currentPosition.x - cellLeft;
         const duration = clampValue(

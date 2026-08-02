@@ -1,8 +1,8 @@
 import clsx from "clsx";
 import { seqNumbers } from "mofur/ax";
 import { npx } from "mofur/ax-ui";
-import { GeneralSelector, Knob } from "mofur-components/mono2";
-import { useEffect, useMemo } from "react";
+import { GeneralSelector, Knob } from "@/components-mono2";
+import { useEffect, useMemo } from "preact/hooks";
 import { createStore } from "snap-store";
 import { UnitInterface } from "wafer-host/unit-types";
 import { LabeledRow } from "@/components";
@@ -142,6 +142,7 @@ export const createRtfrUnit = (unitInterface: UnitInterface) => {
     unitAspects: {
       unitType: "sequencer",
       viewSize: [400, 240],
+      preferJustSize: true,
     },
     noteInput: {
       noteOn: sequencer.inputNoteOn,

@@ -1,9 +1,9 @@
 import clsx from "clsx";
 import { linearInterpolate } from "mofur/ax";
-import { KnobFrame } from "mofur/mo-react";
-import { ReactNode } from "react";
 import { camelToKebab } from "@/utils/casing-helper";
 import { colorMod } from "@/utils/color-mod";
+import { ComponentChild, ComponentChildren } from "preact";
+import { KnobFrame } from "@/components/knob-frame";
 
 const colors = {
   clPanelBg: colorMod("#445060", "v-3 s-5"),
@@ -28,9 +28,13 @@ const cssVariablesCss = Object.fromEntries(
   ]),
 );
 
-export const CssVariablesFrame = ({ children }: { children: ReactNode }) => {
+export const CssVariablesFrame = ({
+  children,
+}: {
+  children: ComponentChildren;
+}) => {
   return (
-    <div style={cssVariablesCss} className="h-full">
+    <div style={cssVariablesCss} className="w-full h-full">
       {children}
     </div>
   );
@@ -156,8 +160,8 @@ export const PieceOperationButton = ({
   coverContent,
   onClick,
 }: {
-  children: ReactNode;
-  coverContent?: ReactNode;
+  children: ComponentChildren;
+  coverContent?: ComponentChild;
   onClick?: () => void;
 }) => {
   return (
@@ -243,8 +247,8 @@ export const PieceRowFrame = ({
   headPart,
   bodyPart,
 }: {
-  headPart: ReactNode;
-  bodyPart: ReactNode;
+  headPart: ComponentChild;
+  bodyPart: ComponentChild;
 }) => {
   return (
     <div className={clsx("flex-h")}>
@@ -254,7 +258,7 @@ export const PieceRowFrame = ({
   );
 };
 
-export const PanelFrame = ({ children }: { children: ReactNode }) => {
+export const PanelFrame = ({ children }: { children: ComponentChildren }) => {
   return (
     <div className={clsx("flex-c", "w-[840px] h-[380px]", uiClasses.bgPanel)}>
       {children}
@@ -267,7 +271,7 @@ export const PresetButton = ({
   text,
   onClick,
 }: {
-  children?: ReactNode;
+  children?: ComponentChildren;
   text?: string;
   onClick?: () => void;
 }) => {

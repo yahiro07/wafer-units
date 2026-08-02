@@ -1,5 +1,4 @@
 import { isBitSet, seqNumbers, toggleBit } from "mofur/ax";
-import { ReactNode } from "react";
 import { pieceDisplayNames } from "@/base/constants";
 import { Icons } from "@/base/icons";
 import { pieceSampleUrls } from "@/base/piece-sample-urls";
@@ -17,13 +16,14 @@ import {
   StepButton,
 } from "@/components";
 import { useAppContext } from "@/store/app-context";
+import { ComponentChild } from "preact";
 
 const PieceHeadPart = ({
   piece,
   stepIndicatorContent,
 }: {
   piece: PieceItem;
-  stepIndicatorContent: ReactNode;
+  stepIndicatorContent: ComponentChild;
 }) => {
   const { actions } = useAppContext();
 
@@ -153,7 +153,7 @@ export const MainPanelUi = () => {
   const { store, actions } = useAppContext();
   const { pieces, stepPosition, masterVolume } = store.useSnapshot();
   return (
-    <div className="h-full flex-c bg-(--cl-panel-bg)">
+    <div className="w-full h-full flex-c bg-(--cl-panel-bg)">
       <PanelFrame>
         <div className="flex-v gap-2">
           <div className="flex-ha justify-between">
