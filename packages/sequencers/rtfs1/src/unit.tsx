@@ -27,6 +27,7 @@ function setupSynchronization() {
   unitInterface?.completeSetup({
     unitAspects: {
       unitType: "sequencer",
+      viewSize: [240, 130],
     },
     noteInput: {
       noteOn: sequencer.inputNoteOn,

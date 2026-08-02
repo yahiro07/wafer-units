@@ -1,7 +1,7 @@
 {
   "name": "rtfs1",
-  "type": "module",
   "private": true,
+  "type": "module",
   "scripts": {
     "build": "vite build",
     "watch": "vite build --watch"

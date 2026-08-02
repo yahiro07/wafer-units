@@ -29,6 +29,7 @@ export const drivers = {
       unitAspects: {
         unitType: "sequencer",
         categoryHint: "stepSequencer",
+        viewSize: [494, 308],
       },
       noteInput: {
         noteOn: actions.inputNoteOn,

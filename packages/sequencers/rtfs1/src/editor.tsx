@@ -367,7 +367,7 @@ const ControlsSection = () => {
 
 export const SequenceEditorView = () => {
   return (
-    <div className="flex-v gap-2 bg-white p-2">
+    <div className="flex-v h-full gap-2 bg-white p-2">
       <ControlsSection />
       <div>
         <SequenceLane lane={0} />
