@@ -9,7 +9,7 @@ const PlayButton = () => {
   const [playing, setPlaying] = useState(false);
   useEffect(() => {
     if (playing) {
-      debugGlobal.gAudioContext?.resume();
+      void debugGlobal.gAudioContext?.resume();
       actions.start();
       let stepIndex = 0;
       const timerId = setInterval(() => {

@@ -1,3 +1,4 @@
+// oxlint-disable unicorn/no-empty-file
 // const keyLabelModes: KeyLabelMode[] = [
 //   "doremi",
 //   "degreeMajor",

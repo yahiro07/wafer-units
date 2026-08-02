@@ -66,7 +66,7 @@ export function setupMidiKeyboardInput(
   let core: MidiKeyboardInputCore | undefined;
   let disposed = false;
 
-  (async () => {
+  void (async () => {
     const midiInput = await getFirstMidiInput();
     if (disposed) return;
     if (midiInput) {

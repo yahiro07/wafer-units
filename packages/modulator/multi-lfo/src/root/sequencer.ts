@@ -50,7 +50,7 @@ export function createSequencer(
   const clockHandlers: ClockHandlers = {
     start() {},
     // processScheduling(timeFrom, barFrom, barTo, bpm) {},
-    processStep(stepIndex, time, unitDuration) {
+    processStep(stepIndex, _time, _unitDuration) {
       for (const slot of state.lfoSlots) {
         if (slot.enabled && slot.targetParameterId) {
           const speedRate = mapUnaryToArray(slot.rate, speedRates);

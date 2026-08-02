@@ -43,7 +43,7 @@ export function createTonePlayer(unitInterface: UnitInterface | undefined) {
         const arrayBuffer = await response.arrayBuffer();
         const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
         toneCache.set(uri, { audioBuffer, volume });
-      } catch (_) {
+      } catch {
         console.error("failed to decode", uri);
         toneCache.set(uri, null);
       }

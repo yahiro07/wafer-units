@@ -1,3 +1,5 @@
+// oxlint-disable no-unused-vars no-empty-pattern
+
 import { css, domStyled, FC, jsx } from "alumina";
 
 type Props = {};

@@ -9,6 +9,7 @@ import { uiActions } from "@/store/ui-actions";
 import { setupMidiKeyboardInput } from "@/utils/midi-keyboard-input";
 
 export const MainApp = () => {
+  // oxlint-disable-next-line no-unassigned-vars
   let containerRef!: HTMLDivElement;
 
   // User interaction needed to start AudioContext, but we can setup listeners

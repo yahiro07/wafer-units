@@ -73,7 +73,7 @@ export const KeysBlock: FC<Props> = ({
   const stopTone = () => {
     if (local.playingNoteNumber) {
       onKeyHoldEvent?.({ noteNumber: local.playingNoteNumber, hold: false });
-      local.playingNoteNumber === undefined;
+      local.playingNoteNumber = undefined;
     }
   };
 
@@ -170,7 +170,7 @@ export const KeysBlock: FC<Props> = ({
 
         &.--black {
           background-color: #000;
-          background-image: url('./images/black_key_texture.svg');
+          background-image: url("./images/black_key_texture.svg");
           background-size: cover;
           background-position: center bottom;
 
