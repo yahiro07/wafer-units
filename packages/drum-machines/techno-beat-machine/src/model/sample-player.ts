@@ -42,7 +42,7 @@ function createAudioActor(
         try {
           audioBufferPromise ??= fetchAudioBuffer(uri, audioContext);
           audioBuffer = await audioBufferPromise;
-        } catch (_) {
+        } catch {
           //do not retry loading if it failed once
           audioBuffer = null;
         }

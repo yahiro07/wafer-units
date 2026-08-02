@@ -53,12 +53,12 @@ export function createActions(
       const pieceItems = presets[presetKey].pieceItems;
       store.setPieces((prev) => {
         return prev.map((piece, index) => {
-          const { variationIndex, ...attrs } = pieceItems[index];
+          const { variationIndex: _, ...attrs } = pieceItems[index];
           return { ...piece, ...attrs };
         });
       });
       for (const piece of pieceItems) {
-        const { variationIndex, ...attrs } = piece;
+        const { variationIndex: _, ...attrs } = piece;
         sequencer.patchPiece(piece.id, attrs);
       }
     },

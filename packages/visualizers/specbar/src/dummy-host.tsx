@@ -56,7 +56,7 @@ function createEngine() {
     },
     setPlayState(playing: boolean) {
       if (playing) {
-        this.resumeIfNeed();
+        void this.resumeIfNeed();
         startNoise();
       } else {
         stopNoise();

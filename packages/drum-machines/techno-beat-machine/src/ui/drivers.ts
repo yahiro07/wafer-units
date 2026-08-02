@@ -35,7 +35,11 @@ function useSetupSynchronization() {
     const { localPlaying, partItems, masterVolume, currentPartKey, soloMode } =
       attrs;
     if (localPlaying !== undefined) {
-      localPlaying ? sequencer.play() : sequencer.stop();
+      if (localPlaying) {
+        sequencer.play();
+      } else {
+        sequencer.stop();
+      }
     }
     if (partItems !== undefined) {
       sequencer.setPartItems(partItems);

@@ -49,7 +49,7 @@ export const appReaders = {
 };
 
 export const uiActions = {
-  async noteOn(noteNumber: number, time: number) {
+  noteOn(noteNumber: number, time: number) {
     appSynthTarget.resumeIfNeed();
     appSynthTarget.noteOn(noteNumber, time);
     sequencerEngine.setNoteNumber(noteNumber);

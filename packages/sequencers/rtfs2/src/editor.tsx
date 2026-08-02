@@ -221,14 +221,13 @@ function useSynthPatternEditorViewPresenter() {
 
   const handleKeysColumnPointerDown = (
     e: React.PointerEvent,
-    index: number,
+    _index: number,
   ) => {
     e.preventDefault();
     e.stopPropagation();
 
     // const relNote = 8 - index;
-    // const relNote
-    const noteNumber = 48 + index;
+    // const noteNumber = 48 + index;
 
     const noteOn = () => {
       // sequencer.setPreviewNote(noteNumber);

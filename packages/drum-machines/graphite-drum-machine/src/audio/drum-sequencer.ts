@@ -27,7 +27,7 @@ export function createDrumSequencer(
     preloadFirst() {
       for (const piece of state.pieces) {
         if (piece.active && piece.patternBits > 0) {
-          tonePlayer.preloadTone(
+          void tonePlayer.preloadTone(
             pieceSampleUrls[piece.id][piece.variationIndex],
           );
         }
@@ -37,7 +37,9 @@ export function createDrumSequencer(
       const piece = state.pieces.find((piece) => piece.id === id);
       if (piece) {
         Object.assign(piece, attrs);
-        tonePlayer.preloadTone(pieceSampleUrls[piece.id][piece.variationIndex]);
+        void tonePlayer.preloadTone(
+          pieceSampleUrls[piece.id][piece.variationIndex],
+        );
       }
     },
     start() {},

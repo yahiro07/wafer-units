@@ -5,7 +5,7 @@ import { setAppState } from "@/store";
 void synthEngine.init();
 
 export const uiActions = {
-  async noteOn(noteNumber: number, time = 0, _velocity = 1) {
+  noteOn(noteNumber: number, time = 0) {
     synthEngine.noteOn(noteNumber, time);
     setAppState("numActiveNotes", synthEngine.getNumActiveNotes());
   },

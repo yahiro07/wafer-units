@@ -196,7 +196,7 @@ export function createSynthEngine(): EngineApi {
         return;
       }
 
-      this.resumeIfNeeded();
+      void this.resumeIfNeeded();
 
       const existingVoice = activeVoices.get(noteNumber);
       if (existingVoice) {

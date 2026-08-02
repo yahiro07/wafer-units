@@ -135,7 +135,7 @@ function createBeatActor(
         audio.playbackRate = playbackRate;
         audio.currentTime = startTimePosition ?? 0;
         gainNode.gain.value = beatSource.gainFix ?? 1;
-        audio.play();
+        void audio.play();
         audioItem.playing = true;
         if (endedCallback) {
           audio.addEventListener(
@@ -150,7 +150,7 @@ function createBeatActor(
       } else {
         //restart from the beginning
         audio.currentTime = 0;
-        audio.play();
+        void audio.play();
       }
     },
     stop() {
