@@ -5,7 +5,6 @@
   "outputSignalTypes": "audio",
   "inputSignalTypes": "note",
   "protocol": "wafer-v01",
-  "unitTypesVersion": "0.1.5",
   "integrationFormat": "webComponents",
   "repositoryUrl": "https://github.com/yahiro07/wafer-units",
   "author": "yahiro",
