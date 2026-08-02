@@ -1,13 +1,15 @@
 {
   "name": "mini-synth",
-  "type": "module",
   "private": true,
   "license": "MIT",
+  "type": "module",
   "scripts": {
     "build": "vite build"
   },
   "dependencies": {
     "solid-icons": "^1.2.0",
-    "solid-js": "^1.9.12"
+    "solid-js": "^1.9.12",
+    "vite-plugin-solid": "^2.11.12",
+    "@tailwindcss/vite": "^4.3.3"
   }
 }

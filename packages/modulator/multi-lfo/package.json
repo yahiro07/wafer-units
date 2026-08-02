@@ -1,7 +1,7 @@
 {
   "name": "multi-lfo",
-  "type": "module",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "vite dev",
     "build": "vite build",
@@ -9,8 +9,9 @@
     "typecheck": "tsc"
   },
   "devDependencies": {
-    "preact": "^10.29.2",
-    "snap-store": "^0.1.12",
-    "qulex": "catalog:"
+    "@preact/preset-vite": "catalog:",
+    "preact": "catalog:",
+    "qulex": "catalog:",
+    "snap-store": "catalog:"
   }
 }

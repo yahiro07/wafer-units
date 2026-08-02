@@ -15,6 +15,7 @@
     "partex",
     "qstyle",
     "qulex",
-    "oxlint"
+    "oxlint",
+    "preact"
   ]
 }

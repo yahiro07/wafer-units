@@ -6,8 +6,10 @@
     "build": "vite build",
     "preview": "vite preview"
   },
-  "dependencies": {
-    "preact": "^10.29.2",
-    "snap-store": "^0.1.12"
+  "devDependencies": {
+    "preact": "catalog:",
+    "snap-store": "catalog:",
+    "@preact/preset-vite": "catalog:",
+    "@tailwindcss/vite": "^4.3.3"
   }
 }

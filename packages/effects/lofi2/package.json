@@ -1,7 +1,7 @@
 {
   "name": "lofi2",
-  "type": "module",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "vite dev",
     "build": "vite build",
@@ -9,10 +9,11 @@
     "typecheck": "tsc"
   },
   "devDependencies": {
-    "@preact-icons/fa": "npm:@jsr/preact-icons__fa@^1.0.13",
-    "preact": "^10.29.2",
-    "snap-store": "^0.1.12",
-    "tailwindcss": "^4.3.0",
-    "@types/audioworklet": "^0.0.100"
+    "@preact/preset-vite": "catalog:",
+    "@tailwindcss/vite": "^4.3.3",
+    "@types/audioworklet": "catalog:",
+    "clsx": "^2.1.1",
+    "preact": "catalog:",
+    "snap-store": "catalog:"
   }
 }

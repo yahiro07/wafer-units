@@ -1,19 +1,19 @@
 {
   "name": "rtfs2",
-  "type": "module",
   "private": true,
+  "type": "module",
   "scripts": {
     "build": "vite build",
     "watch": "vite build --watch"
   },
-  "dependencies": {
+  "devDependencies": {
+    "@preact/preset-vite": "^2.9.4",
+    "@tailwindcss/vite": "^4.3.3",
+    "@types/react": "^19.2.14",
+    "clsx": "^2.1.1",
     "mofur": "link:../../../../beam/mofur",
     "mofur-components": "link:../../../../beam/mofur-components",
     "preact": "^10.26.0",
     "snap-store": "^0.1.12"
-  },
-  "devDependencies": {
-    "@preact/preset-vite": "^2.9.4",
-    "@types/react": "^19.2.14"
   }
 }

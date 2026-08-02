@@ -1,17 +1,16 @@
 {
   "name": "chord-caster",
-  "type": "module",
   "private": true,
+  "type": "module",
   "scripts": {
     "build": "vite build"
   },
-  "dependencies": {
+  "devDependencies": {
+    "@preact/preset-vite": "^2.9.4",
     "mofur": "^0.1.0",
     "mofur-components": "file:../../../../beam/mofur-components",
     "preact": "^10.26.0",
-    "snap-store": "^0.1.12"
-  },
-  "devDependencies": {
-    "@preact/preset-vite": "^2.9.4"
+    "snap-store": "^0.1.12",
+    "@tailwindcss/vite": "^4.3.3"
   }
 }

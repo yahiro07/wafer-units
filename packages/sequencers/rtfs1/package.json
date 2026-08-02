@@ -6,14 +6,14 @@
     "build": "vite build",
     "watch": "vite build --watch"
   },
-  "dependencies": {
+  "devDependencies": {
+    "@preact/preset-vite": "^2.9.4",
+    "@tailwindcss/vite": "^4.3.3",
+    "@types/react": "^19.2.14",
+    "clsx": "^2.1.1",
     "mofur": "file:../../../../beam/mofur",
     "mofur-components": "file:../../../../beam/mofur-components",
     "preact": "^10.26.0",
     "snap-store": "^0.1.7"
-  },
-  "devDependencies": {
-    "@preact/preset-vite": "^2.9.4",
-    "@types/react": "^19.2.14"
   }
 }
