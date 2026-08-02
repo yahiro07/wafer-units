@@ -29,7 +29,11 @@ const cssVariablesCss = Object.fromEntries(
 );
 
 export const CssVariablesFrame = ({ children }: { children: ReactNode }) => {
-  return <div style={cssVariablesCss}>{children}</div>;
+  return (
+    <div style={cssVariablesCss} className="h-full">
+      {children}
+    </div>
+  );
 };
 
 const uiClasses = {

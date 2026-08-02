@@ -10,5 +10,8 @@ export function createUnitInterfaceDebugDummy(): UnitInterface {
     audioInputNode: audioSourceNode,
     emitMetaAttributes() {},
     completeSetup() {},
+    createNoteOutputPort() {
+      return {};
+    },
   } as any;
 }

@@ -11,6 +11,7 @@ import { sequencer, unitInterface } from "@/logic/sequencer";
 import { store } from "@/store/store";
 import { ControlsSection } from "./controls-section";
 import { PianoRollEditorView } from "./piano-roll-editor-view";
+import clsx from "clsx";
 
 function setupSynchronization() {
   sequencer.setAttrs({
@@ -108,14 +109,16 @@ function useGenerateMappedNotes() {
 
 export function PageRoot() {
   return (
-    <PanelFrame className="w-[620px] h-[380px]">
-      <div className="flex-v gap-2 pt-3">
-        <ControlsSection />
-        <div className="pt-1">
-          <PianoRollEditorView />
+    <div className={clsx("h-full flex-c bg-(--cl-panel-bg)")}>
+      <PanelFrame className="w-[620px] h-[380px]">
+        <div className="flex-v gap-2 pt-3">
+          <ControlsSection />
+          <div className="pt-1">
+            <PianoRollEditorView />
+          </div>
         </div>
-      </div>
-    </PanelFrame>
+      </PanelFrame>
+    </div>
   );
 }
 
