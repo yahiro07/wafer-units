@@ -3,6 +3,8 @@ import { cz, qu } from "@/base/css-realm";
 import { LfoWave, XStep, YStep } from "@/base/types";
 import { KnobFrame } from "@/components/knob-frame";
 import { linearInterpolate, npx } from "@/utils/helpers";
+import { SelectorOption } from "@/utils/selector-option";
+import { GeneralSelector } from "@/components/general-selector";
 
 export const Knob = ({
   value,
@@ -208,5 +210,24 @@ export const NarrowButton = ({
       {text && <div class={qu.fontSize(9).it}>{text}</div>}
       {children}
     </div>
+  );
+};
+
+export const ParameterSelector = <T extends string | number>({
+  value,
+  onChange,
+  options,
+}: {
+  value: T;
+  onChange: (value: T) => void;
+  options: SelectorOption<T>[];
+}) => {
+  return (
+    <GeneralSelector
+      className={qu.flexC().wh(100, 40).bg("#ddd").pl(1).fontSize(12).it}
+      options={options}
+      value={value}
+      onChange={onChange}
+    />
   );
 };

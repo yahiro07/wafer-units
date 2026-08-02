@@ -5,9 +5,9 @@ import { store } from "@/root/store";
 export const PageRoot = () => {
   const { parameterIds, connected, slots } = store.useSnapshot();
   return (
-    <div class={qu.flexC().it}>
-      <div class={qu.wh(600, 350).bg("#aaa").p(4).color("#333").it}>
-        <div class={qu.flexV().gap(2).it}>
+    <div class={qu.h("dvh").flexC().it}>
+      <div class={qu.wh(500, 310).bg("#aaa").p(4).color("#333").it}>
+        <div class={qu.flexV().gap(3).px(4.5).it}>
           <div class={qu.flexH().gap(2).it}>
             <div>Multi LFO</div>
             <div class={qu.grow().it} />

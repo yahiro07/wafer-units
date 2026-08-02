@@ -5,13 +5,25 @@ import {
   Knob,
   LabeledBox,
   NarrowButton,
+  ParameterSelector,
   reteToStepText,
   YStepButton,
 } from "@/components";
 import { ButtonFrame } from "@/components/button-frame";
 import { UnitWaveView } from "@/components/unit-wave-view";
 import { store } from "@/root/store";
-import { iife } from "@/utils/helpers";
+import { createSelectorOptions } from "@/utils/selector-option";
+import { useMemo } from "preact/hooks";
+
+function useParameterSelectorOptions() {
+  const { parameterIds } = store.useSnapshot();
+  return useMemo(() => {
+    return createSelectorOptions([
+      ["", "--"],
+      ...(parameterIds.map((id) => [id, id]) as [string, string][]),
+    ]);
+  }, [parameterIds]);
+}
 
 export const LfoLane = ({ slot }: { slot: LfoSlot }) => {
   const patchSlot = (attrs: Partial<LfoSlot>) => {
@@ -19,22 +31,7 @@ export const LfoLane = ({ slot }: { slot: LfoSlot }) => {
       prev.map((s) => (s.id === slot.id ? { ...s, ...attrs } : s)),
     );
   };
-  const handleClickParamId = () => {
-    const { parameterIds } = store.state;
-    if (parameterIds.length > 0) {
-      const index = parameterIds.indexOf(slot.targetParameterId ?? "");
-      const nextIndex = iife(() => {
-        if (index === -1) {
-          return 0;
-        } else if (index === parameterIds.length - 1) {
-          return -1;
-        } else {
-          return index + 1;
-        }
-      });
-      patchSlot({ targetParameterId: parameterIds[nextIndex] ?? null });
-    }
-  };
+  const parameterSelectorOptions = useParameterSelectorOptions();
   return (
     <div class={qu.flexHA().gap(3).it}>
       <LabeledBox label={`slot ${slot.id + 1}`} width={30}>
@@ -44,12 +41,11 @@ export const LfoLane = ({ slot }: { slot: LfoSlot }) => {
         />
       </LabeledBox>
       <LabeledBox label="Target Parameter" labelAlign="left">
-        <div
-          class={qu.flexC().wh(100, 40).bg("#ddd").fontSize(12).it}
-          onClick={handleClickParamId}
-        >
-          {slot.targetParameterId ?? "--"}
-        </div>
+        <ParameterSelector
+          value={slot.targetParameterId}
+          onChange={(value) => patchSlot({ targetParameterId: value })}
+          options={parameterSelectorOptions}
+        />
       </LabeledBox>
       <LabeledBox label="Center">
         <Knob

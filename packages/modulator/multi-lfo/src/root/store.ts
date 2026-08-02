@@ -12,7 +12,7 @@ export const store = createStore<{
   slots: seqNumbers(4).map((i) => ({
     id: i,
     enabled: true,
-    targetParameterId: null,
+    targetParameterId: "",
     wave: LfoWave.Sine,
     centerValue: 0.5,
     rate: 0.5,
@@ -25,6 +25,6 @@ export const store = createStore<{
   })),
 });
 
-if (0) {
+if (import.meta.env.DEV) {
   store.setParameterIds(["param1", "param2", "param3", "param4", "param5"]);
 }
