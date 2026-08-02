@@ -1,0 +1,13 @@
+{
+  "name": "tone-wheel",
+  "private": "true",
+  "scripts": {
+    "dev": "vite dev",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "preact": "^10.29.2",
+    "snap-store": "^0.1.12"
+  }
+}
