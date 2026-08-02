@@ -11,6 +11,7 @@ export function setupDrivers() {
       unitAspects: {
         unitType: "instrument",
         categoryHint: "synthesizer",
+        viewSize: [800, 380],
       },
       noteInput: {
         noteOn: uiActions.noteOn,

@@ -21,6 +21,7 @@ export const drivers = {
       unitAspects: {
         unitType: "sequencer",
         categoryHint: "stepSequencer",
+        viewSize: [340, 210],
       },
       clockHandlers: {
         start() {

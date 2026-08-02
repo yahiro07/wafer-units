@@ -16,7 +16,7 @@ export function setupUnit() {
   unitInterface?.completeSetup({
     unitAspects: {
       unitType: "sequencer",
-      // viewSize: [800, 450],
+      viewSize: [800, 450],
     },
     clockHandlers: {
       start() {

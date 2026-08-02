@@ -141,6 +141,7 @@ export const createRtfrUnit = (unitInterface: UnitInterface) => {
   unitInterface.completeSetup({
     unitAspects: {
       unitType: "sequencer",
+      viewSize: [400, 240],
     },
     noteInput: {
       noteOn: sequencer.inputNoteOn,

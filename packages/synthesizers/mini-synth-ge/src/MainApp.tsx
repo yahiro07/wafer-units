@@ -20,6 +20,7 @@ export const MainApp = () => {
       unitAspects: {
         unitType: "instrument",
         categoryHint: "synthesizer",
+        viewSize: [500, 270],
       },
       noteInput: {
         async noteOn(note, time) {

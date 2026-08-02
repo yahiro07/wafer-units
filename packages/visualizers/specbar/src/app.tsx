@@ -71,6 +71,7 @@ export function createApp(unitInterface: UnitInterface) {
       unitAspects: {
         unitType: "effect",
         categoryHint: "effect",
+        viewSize: [350, 55],
       },
       persistence: {
         emitStateBytes() {
