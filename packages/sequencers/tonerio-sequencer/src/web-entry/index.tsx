@@ -3,13 +3,14 @@ import "./page.css";
 import { onIframeUnitUnloading } from "wafer-host/unit-types";
 import { cssRealm, qu } from "@/common/css-realm";
 import { App } from "@/root/app";
+import { pageBgColor } from "@/components/effector-body";
 
 document.adoptedStyleSheets = [cssRealm.sheet];
 
 const root = document.getElementById("app")!;
 
 render(
-  <div class={qu.wh("dvw", "dvh").flexVC().it}>
+  <div class={qu.wh("dvw", "dvh").bg(pageBgColor).flexVC().it}>
     <App />
   </div>,
   root,

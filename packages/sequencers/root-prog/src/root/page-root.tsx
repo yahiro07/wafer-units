@@ -1,6 +1,6 @@
 import { useMemo } from "preact/hooks";
 import { cz, qu } from "@/common/css-realm";
-import { EffectorBody } from "@/components/effector-body";
+import { EffectorBody, pageBgColor } from "@/components/effector-body";
 import { GridBackground } from "@/components/grid-background";
 import { ShiftSelector } from "@/components/shift-selector";
 import { KeyLabelMode, LoopBars } from "@/root/parameters";
@@ -286,7 +286,7 @@ const Editor = () => {
 
 export const PageRoot = () => {
   return (
-    <div class={qu.h("dvh").flexC().it}>
+    <div class={qu.h("dvh").bg(pageBgColor).flexC().it}>
       <EffectorBody className={cz(qu.wh(420, 260).it, qu.flexC().it)}>
         <div class={qu.flexV().gap(2).it}>
           {/* <div>root-prog</div> */}

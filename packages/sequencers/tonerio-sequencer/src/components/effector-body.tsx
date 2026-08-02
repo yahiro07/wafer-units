@@ -11,8 +11,8 @@ export const EffectorBody = ({
   return (
     <div
       class={cz(
-        qu.bg("#acf").p(4).color("#333").rounded(2).it,
-        qu.bd("inset 1px #0004").it,
+        qu.bg("#acf").p(4).color("#333").it,
+        import.meta.env.DEV && qu.bd("#0004").it,
         className,
       )}
     >
@@ -20,3 +20,5 @@ export const EffectorBody = ({
     </div>
   );
 };
+
+export const pageBgColor = "#acf";

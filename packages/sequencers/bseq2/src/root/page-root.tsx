@@ -1,7 +1,7 @@
 import { cz, qu } from "@/common/css-realm";
 import { PatterRangeOptions, stepReferenceIndexMap } from "@/common/defs";
 import { getStep, setStep } from "@/common/step-bits-helper";
-import { EffectorBody } from "@/components/effector-body";
+import { EffectorBody, pageBgColor } from "@/components/effector-body";
 import { Knob } from "@/components/knob";
 import { LabeledBox } from "@/components/labeled-box";
 import { LedIndicator } from "@/components/led-indicator";
@@ -100,7 +100,7 @@ const ControlsPart = () => {
 
 export const PageRoot = () => {
   return (
-    <div class={cz(qu.wh("dvw", "dvh").flexC().it)}>
+    <div class={cz(qu.wh("dvw", "dvh").bg(pageBgColor).flexC().it)}>
       <div class={qu.flexC().it}>
         <EffectorBody className={cz(qu.wh(480, 200).it, qu.flexVC().it)}>
           <div class={qu.flexV().gap(5).it}>
