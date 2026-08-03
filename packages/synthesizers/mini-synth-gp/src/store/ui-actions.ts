@@ -24,6 +24,7 @@ export const uiActions = {
           unitType: "instrument",
           categoryHint: "synthesizer",
           viewSize: [640, 320],
+          preferJustSize: true,
         },
         noteInput: {
           noteOn(noteNumber, time) {

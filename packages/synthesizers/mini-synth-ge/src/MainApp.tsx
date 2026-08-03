@@ -21,6 +21,7 @@ export const MainApp = () => {
         unitType: "instrument",
         categoryHint: "synthesizer",
         viewSize: [500, 270],
+        preferJustSize: true,
       },
       noteInput: {
         async noteOn(note, time) {
