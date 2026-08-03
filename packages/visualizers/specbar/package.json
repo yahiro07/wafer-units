@@ -1,7 +1,6 @@
 {
   "name": "specbar",
   "private": true,
-  "license": "MIT",
   "type": "module",
   "scripts": {
     "build": "vite build"
