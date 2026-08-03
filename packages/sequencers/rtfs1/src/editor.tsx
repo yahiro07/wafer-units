@@ -1,7 +1,6 @@
 import { clampValue, seqNumbers } from "mofur/ax";
 import { npx, startDragSession } from "mofur/ax-ui";
 import { generateRandomId } from "mofur/mo";
-import { ScalerBoxAutoSized } from "mofur/mo-react";
 import {
   Button,
   createSelectorOptions,
@@ -13,6 +12,7 @@ import { LabeledRow } from "@/components";
 import { store } from "@/store";
 import { DraftNote, Note } from "@/types";
 import { CSSProperties } from "preact";
+import { ScalerBoxAutoSized } from "@/components/scaler-box-auto-sized";
 
 const sortNotes = (notes: Note[]) =>
   [...notes].sort((a, b) => {
@@ -253,7 +253,8 @@ const DummyLaneCell = ({
   const [dragging, setDragging] = useState(false);
 
   const handlePointerDown = (e0: PointerEvent) => {
-    const cellLeft = e0.currentTarget.getBoundingClientRect().left;
+    const el = e0.currentTarget as HTMLElement;
+    const cellLeft = el.getBoundingClientRect().left;
     const maxDuration = getMaxDurationForPosition(notes, lane, position);
     const draftNoteId = crypto.randomUUID();
 

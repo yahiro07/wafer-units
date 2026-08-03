@@ -1,9 +1,11 @@
+import { ComponentChildren } from "preact";
+
 export const LabeledRow = ({
   label,
   children,
 }: {
   label: string;
-  children: React.ReactNode;
+  children: ComponentChildren;
 }) => {
   return (
     <div className="flex-ha gap-3">

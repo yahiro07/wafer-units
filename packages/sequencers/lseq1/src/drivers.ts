@@ -12,9 +12,11 @@ import { persistence } from "@/store/persistence";
 import { getLoopStepCount } from "@/store/steps-helper";
 import { store } from "@/store/store";
 
+const audioContext = unitInterface?.audioContext ?? new AudioContext();
+
 const targetSynth = createTargetSynthesizer();
 const sequencerEngine = createSequencerEngine(targetSynth);
-const standaloneTickDriver = createSequencerTickDriver();
+const standaloneTickDriver = createSequencerTickDriver(audioContext);
 
 const driversInternal = {
   wrapProcessStep(stepIndex: number) {

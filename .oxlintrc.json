@@ -9,6 +9,7 @@
     "eslint/no-constant-condition": "off",
     "eslint/no-constant-binary-expression": "off",
     "typescript/unbound-method": "off",
+    "typescript/no-misused-spread": "off",
     "unicorn/no-new-array": "off",
     "unicorn/no-useless-spread": "off"
   },

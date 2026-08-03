@@ -4,7 +4,7 @@
   "scripts": {
     "build": "pnpm -r --if-present --filter './packages/**/*' build",
     "typecheck": "for f in $(find packages -name tsconfig.json | sort); do tsc -p \"$f\" || exit 1; done",
-    "lint": "oxlint --type-aware"
+    "lint": "oxlint --type-aware --type-check"
   },
   "devDependencies": {
     "@types/node": "^25.7.0",

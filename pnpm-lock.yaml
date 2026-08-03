@@ -308,6 +308,9 @@ importers:
 
   packages/sequencers/bseq2:
     devDependencies:
+      '@preact-icons/fa':
+        specifier: 'catalog:'
+        version: '@jsr/preact-icons__fa@1.0.13'
       '@preact/preset-vite':
         specifier: 'catalog:'
         version: 2.10.6(@babel/core@7.29.7)(preact@10.29.8)(vite@8.2.0(@types/node@25.9.5)(jiti@2.7.0))
@@ -716,6 +719,9 @@ importers:
       '@preact/preset-vite':
         specifier: 'catalog:'
         version: 2.10.6(@babel/core@7.29.7)(preact@10.29.8)(vite@8.2.0(@types/node@25.9.5)(jiti@2.7.0))
+      '@types/audioworklet':
+        specifier: 'catalog:'
+        version: 0.0.100
       preact:
         specifier: 'catalog:'
         version: 10.29.8
@@ -731,6 +737,9 @@ importers:
       '@preact/preset-vite':
         specifier: 'catalog:'
         version: 2.10.6(@babel/core@7.29.7)(preact@10.29.8)(vite@8.2.0(@types/node@25.9.5)(jiti@2.7.0))
+      '@types/audioworklet':
+        specifier: 'catalog:'
+        version: 0.0.100
       preact:
         specifier: 'catalog:'
         version: 10.29.8
