@@ -1,0 +1,1 @@
+@import "https://fonts.googleapis.com/css2?family=Saira:wght@400;500&display=swap";*{box-sizing:border-box;margin:0;padding:0}:root{--font-saira:"Saira", sans-serif;--font-base:var(--font-saira);--font-base-weight:400}button{all:unset}body{font-family:var(--font-base);font-weight:var(--font-base-weight);-webkit-user-select:none;user-select:none}img{-webkit-user-drag:none}

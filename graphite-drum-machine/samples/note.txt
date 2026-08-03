@@ -1,0 +1,12 @@
+fso:
+https://freesound.org/
+
+Files in fso folder are from picked from freesound.org.
+We selected samples provided under CC0 license.
+ 
+pxa:
+https://pixabay.com/
+https://pixabay.com/service/license-summary/
+
+Files in pxa folder are picked from pixabay.com.
+Pixabay Contents License is applied to them.

@@ -2,13 +2,11 @@
   "name": "mini-synth-ge",
   "unitType": "instrument",
   "categoryHint": "synthesizer",
-  "preferredSize": "500,270",
   "outputSignalTypes": "audio",
   "inputSignalTypes": "note",
-  "protocol": "wus-v01",
-  "unitTypesVersion": "0.2.5",
+  "protocol": "wafer-v01",
   "integrationFormat": "webComponents",
-  "repositoryUrl": "https://github.com/yahiro07/wus-units",
+  "repositoryUrl": "https://github.com/yahiro07/wafer-units",
   "author": "yahiro",
   "license": "MIT"
 }

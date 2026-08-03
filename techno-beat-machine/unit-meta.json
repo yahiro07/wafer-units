@@ -1,0 +1,11 @@
+{
+  "name": "techno-beat-machine",
+  "unitType": "instrument",
+  "protocol": "wafer-v01",
+  "integrationFormat": "iframe",
+  "originalRepositoryUrl": "https://github.com/apvilkko/techno-generator",
+  "originalAuthor": "Antti Pekka Vilkko",
+  "forkedRepositoryUrl": "https://github.com/yahiro07/wafer-units",
+  "forkedAuthor": "yahiro",
+  "license": "MIT"
+}

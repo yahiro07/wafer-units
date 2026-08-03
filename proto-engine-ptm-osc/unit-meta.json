@@ -2,13 +2,11 @@
   "name": "proto-engine-ptm-osc",
   "unitType": "instrument",
   "categoryHint": "synthesizer",
-  "preferredSize": "800,380",
   "outputSignalTypes": "audio",
   "inputSignalTypes": "note",
-  "protocol": "wus-v01",
-  "unitTypesVersion": "0.2.5",
+  "protocol": "wafer-v01",
   "integrationFormat": "webComponents",
-  "repositoryUrl": "https://github.com/yahiro07/wus-units",
+  "repositoryUrl": "https://github.com/yahiro07/wafer-units",
   "author": "yahiro",
   "license": "MIT"
 }
