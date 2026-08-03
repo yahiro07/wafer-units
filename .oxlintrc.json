@@ -1,0 +1,29 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "ignorePatterns": ["dist/**", ".local/**"],
+  "options": {
+    "typeAware": true,
+    "typeCheck": true
+  },
+  "rules": {
+    "eslint/no-constant-condition": "off",
+    "eslint/no-constant-binary-expression": "off",
+    "typescript/unbound-method": "off",
+    "unicorn/no-new-array": "off",
+    "unicorn/no-useless-spread": "off"
+  },
+  "overrides": [
+    {
+      "files": ["packages/synthesizers/wavicle/**/*.{ts,tsx}"],
+      "rules": {
+        "eslint/no-unused-vars": [
+          "warn",
+          {
+            "varsIgnorePattern": "^(_|jsx)$",
+            "argsIgnorePattern": "^_"
+          }
+        ]
+      }
+    }
+  ]
+}

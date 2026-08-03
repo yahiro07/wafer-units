@@ -1,0 +1,19 @@
+{
+  "name": "techno-beat-machine",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "dev": "vite dev",
+    "build": "vite build",
+    "watch": "vite build --watch",
+    "typecheck": "tsc"
+  },
+  "devDependencies": {
+    "@preact-icons/fa": "catalog:",
+    "@preact/preset-vite": "catalog:",
+    "preact": "catalog:",
+    "qulex": "catalog:",
+    "snap-store": "catalog:"
+  }
+}

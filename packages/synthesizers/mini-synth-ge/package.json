@@ -1,0 +1,17 @@
+{
+  "name": "mini-synth-ge",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "build": "vite build",
+    "watch": "vite build --watch"
+  },
+  "dependencies": {
+    "@tailwindcss/vite": "^4.3.3",
+    "solid-icons": "^1.2.0",
+    "solid-js": "^1.9.12",
+    "tailwindcss": "^4.3.3",
+    "vite-plugin-solid": "^2.11.12"
+  }
+}

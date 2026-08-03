@@ -1,19 +1,18 @@
 {
-  "name": "wus-units",
+  "name": "wafer-units",
   "private": true,
   "scripts": {
-    "build": "pnpm -r --if-present --filter './packages/*' build"
+    "build": "pnpm -r --if-present --filter './packages/**/*' build",
+    "typecheck": "for f in $(find packages -name tsconfig.json | sort); do tsc -p \"$f\" || exit 1; done",
+    "lint": "oxlint --type-aware"
   },
   "devDependencies": {
-    "@tailwindcss/vite": "^4.3.0",
-    "wus-unit-types": "^0.2.7",
-    "tailwindcss": "^4.3.0",
     "@types/node": "^25.7.0",
+    "oxfmt": "^0.61.0",
+    "oxlint": "^1.76.0",
+    "oxlint-tsgolint": "^7.0.2001",
     "typescript": "~6.0.3",
     "vite": "^8.0.12",
-    "clsx": "^2.1.1",
-    "@vitejs/plugin-react": "^6.0.1",
-    "vite-plugin-solid": "^2.11.12",
-    "@types/audioworklet": "^0.0.100"
+    "wafer-host": "link:../wafer/wafer"
   }
 }

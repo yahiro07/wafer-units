@@ -1,0 +1,17 @@
+{
+  "name": "rtfr",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "vite build"
+  },
+  "devDependencies": {
+    "@preact/preset-vite": "^2.9.4",
+    "@tailwindcss/vite": "^4.3.3",
+    "clsx": "^2.1.1",
+    "mofur": "^0.1.1",
+    "preact": "^10.26.0",
+    "snap-store": "^0.1.12",
+    "tailwindcss": "^4.3.3"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "name": "crusher",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite dev",
+    "build": "vite build",
+    "watch": "vite build --watch",
+    "typecheck": "tsc"
+  },
+  "devDependencies": {
+    "@preact/preset-vite": "catalog:",
+    "@tailwindcss/vite": "^4.3.3",
+    "@types/audioworklet": "catalog:",
+    "clsx": "^2.1.1",
+    "preact": "catalog:",
+    "snap-store": "catalog:",
+    "tailwindcss": "^4.3.3"
+  }
+}

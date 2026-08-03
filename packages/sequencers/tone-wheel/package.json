@@ -1,0 +1,16 @@
+{
+  "name": "tone-wheel",
+  "private": "true",
+  "scripts": {
+    "dev": "vite dev",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "@preact/preset-vite": "catalog:",
+    "@tailwindcss/vite": "^4.3.3",
+    "preact": "catalog:",
+    "snap-store": "catalog:",
+    "tailwindcss": "^4.3.3"
+  }
+}

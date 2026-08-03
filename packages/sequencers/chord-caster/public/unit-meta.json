@@ -1,0 +1,10 @@
+{
+  "name": "chord-caster",
+  "unitType": "sequencer",
+  "outputSignalTypes": "note",
+  "protocol": "wafer-v01",
+  "integrationFormat": "webComponents",
+  "repositoryUrl": "https://github.com/yahiro07/wafer-units",
+  "author": "yahiro",
+  "license": "MIT"
+}

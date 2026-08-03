@@ -5,6 +5,17 @@
     "lseq",
     "specbar",
     "mofus",
-    "audioworklet"
+    "audioworklet",
+    "bseq",
+    "rtfr",
+    "rtfs",
+    "partex",
+    "qstyle",
+    "automator",
+    "partex",
+    "qstyle",
+    "qulex",
+    "oxlint",
+    "preact"
   ]
 }

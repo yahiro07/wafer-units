@@ -1,0 +1,38 @@
+import { createTestSynthesizer } from "mofus/mx-audio";
+import { UnitInterface } from "wafer-host/unit-types";
+
+type AppSynthTarget = {
+  resumeIfNeed(): void;
+  noteOn(noteNumber: number, time: number): void;
+  noteOff(noteNumber: number, time: number): void;
+};
+
+export function createAppSynthTarget(
+  unitInterface: UnitInterface | undefined,
+): AppSynthTarget {
+  if (unitInterface) {
+    const noteOutputPort = unitInterface.createNoteOutputPort();
+    return {
+      resumeIfNeed() {},
+      noteOn(noteNumber: number, time: number) {
+        noteOutputPort.noteOn(noteNumber, time);
+      },
+      noteOff(noteNumber: number, time: number) {
+        noteOutputPort.noteOff(noteNumber, time);
+      },
+    };
+  } else {
+    const testSynth = createTestSynthesizer();
+    return {
+      resumeIfNeed() {
+        void testSynth.resumeIfNeed();
+      },
+      noteOn(noteNumber: number) {
+        testSynth.noteOn(noteNumber);
+      },
+      noteOff(noteNumber: number) {
+        testSynth.noteOff(noteNumber);
+      },
+    };
+  }
+}
