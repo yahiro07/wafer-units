@@ -14,6 +14,7 @@
     "@tailwindcss/vite": "^4.3.3",
     "clsx": "^2.1.1",
     "preact": "catalog:",
-    "snap-store": "catalog:"
+    "snap-store": "catalog:",
+    "tailwindcss": "^4.3.3"
   }
 }

@@ -14,6 +14,7 @@
     "clsx": "^2.1.1",
     "mofur": "^0.1.1",
     "preact": "^10.29.2",
-    "snap-store": "^0.1.12"
+    "snap-store": "^0.1.12",
+    "tailwindcss": "^4.3.3"
   }
 }

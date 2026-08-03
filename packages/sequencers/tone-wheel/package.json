@@ -7,9 +7,10 @@
     "preview": "vite preview"
   },
   "devDependencies": {
+    "@preact/preset-vite": "catalog:",
+    "@tailwindcss/vite": "^4.3.3",
     "preact": "catalog:",
     "snap-store": "catalog:",
-    "@preact/preset-vite": "catalog:",
-    "@tailwindcss/vite": "^4.3.3"
+    "tailwindcss": "^4.3.3"
   }
 }
