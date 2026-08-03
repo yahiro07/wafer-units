@@ -746,6 +746,9 @@ importers:
       '@tailwindcss/vite':
         specifier: ^4.3.3
         version: 4.3.3(vite@8.2.0(@types/node@25.9.5)(jiti@2.7.0))
+      '@types/audioworklet':
+        specifier: ^0.0.100
+        version: 0.0.100
       solid-icons:
         specifier: ^1.2.0
         version: 1.2.0(solid-js@1.9.14)
