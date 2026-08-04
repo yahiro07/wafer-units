@@ -3,7 +3,7 @@ import { defineConfig } from "vite";
 
 export default defineConfig({
   base: "./",
-  plugins: [preact()],
+  plugins: [preact({ jsxImportSource: "qulex" })],
   resolve: { tsconfigPaths: true, dedupe: ["preact"] },
   optimizeDeps: {
     exclude: ["wafer-host", "snap-store"],

@@ -36,11 +36,11 @@ const MatrixPart = () => {
               }
               return (
                 <div
-                  class={cz(
-                    styles.cell,
+                  sx={
+                    styles.cell
                     // isHalfActive && "--half-active",
                     // isStepActive && "--active",
-                  )}
+                  }
                   style={{ background: color }}
                   onPointerDown={() => toggleStep(yi, xi)}
                 />

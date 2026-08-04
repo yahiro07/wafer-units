@@ -8,7 +8,7 @@ minimumReleaseAgeExclude:
   - mofur@0.1.1
   - wafer-host@0.0.6
 catalog:
-  "qulex": "npm:@yahiro07/qulex@^0.1.6"
+  "qulex": "npm:@yahiro07/qulex@^0.1.7"
   "@preact/preset-vite": "^2.10.6"
   "@types/audioworklet": "^0.0.100"
   "@preact-icons/fa": "npm:@jsr/preact-icons__fa@^1.0.13"

@@ -314,7 +314,7 @@ const NoteLayerStrip = ({
     <div
       sx={[
         qu.relative().wh(editorW, editorH),
-        // qu.bd("blue").it,
+        // qu.bd("blue"),
         qu.overflow("hidden"),
       ]}
     >

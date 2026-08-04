@@ -17,16 +17,16 @@ export const LabeledBox = ({
 }) => {
   return (
     <div
-      class={qu.flexV().addClass(className).it}
+      sx={[qu.flexV(), className]}
       style={width ? { width: npx(width) } : undefined}
     >
       <div
-        class={qu.fontSize(11).weight("bold").it}
+        sx={qu.fontSize(11).weight("bold")}
         style={{ textAlign: labelAlign }}
       >
         {label}
       </div>
-      <div class={qu.flexC().h(40).it}>{children}</div>
+      <div sx={qu.flexC().h(40)}>{children}</div>
     </div>
   );
 };

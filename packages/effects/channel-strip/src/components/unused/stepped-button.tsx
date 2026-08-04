@@ -16,7 +16,7 @@ export const SteppedButton = ({
   onClick?: () => void;
 }) => {
   return (
-    <div class={qu.flexC().wh(40, 40).bg("#ddd").it} onClick={onClick}>
+    <div sx={qu.flexC().wh(40, 40).bg("#ddd")} onClick={onClick}>
       {active ? reteToStepText(rate) : "--"}
     </div>
   );

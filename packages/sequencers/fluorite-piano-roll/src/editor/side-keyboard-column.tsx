@@ -80,7 +80,7 @@ const KeyboardKey = ({ yi }: { yi: number }) => {
   return (
     <div class={styles.base}>
       <div
-        class={cz(styles.inner, pressed && styles.innerPressed)}
+        sx={[styles.inner, pressed && styles.innerPressed]}
         style={keyStyle}
         onPointerDown={handlePointerDown}
       >

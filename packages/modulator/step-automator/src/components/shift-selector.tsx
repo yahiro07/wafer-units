@@ -1,5 +1,5 @@
 import { ComponentChildren } from "preact";
-import { cz, qu } from "@/base/css-realm";
+import { qu } from "@/base/css-realm";
 import { Icons } from "@/base/icons";
 import { SelectorOption } from "@/base/selector-option";
 
@@ -45,25 +45,19 @@ export const ShiftSelector = <T extends string | number>({
   return (
     <ShifterFrame onShift={handleShift}>
       <div
-        class={cz(
-          qu
-            .flexHA()
-            .fJustify("between")
-            .minW(60)
-            .h(30)
-            .fontSize(14)
-            .cursor("pointer").it,
-          qu.bg("#ddd").it,
-        )}
+        sx={[
+          qu.flexHA().fJustify("between").minW(60).h(30).fontSize(14),
+          qu.bg("#ddd").cursor("pointer"),
+        ]}
       >
         <Icons.CaretLeft
           size={13}
-          class={cz(qu.ml(-0.75).it, !canShiftLeft && qu.invisible().it)}
+          sx={[qu.ml(-0.75), !canShiftLeft && qu.invisible()]}
         />
         <div>{currentOption?.label}</div>
         <Icons.CaretRight
           size={13}
-          class={cz(qu.mr(-0.75).it, !canShiftRight && qu.invisible().it)}
+          sx={[qu.mr(-0.75), !canShiftRight && qu.invisible()]}
         />
       </div>
     </ShifterFrame>

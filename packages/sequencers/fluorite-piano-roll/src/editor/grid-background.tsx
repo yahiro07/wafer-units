@@ -1,4 +1,4 @@
-import { css, cz } from "@/common/css-realm";
+import { css } from "@/common/css-realm";
 import { colors } from "@/editor/theme";
 import { uiConfig } from "@/editor/ui-config";
 import { npx } from "@/utils/helpers";
@@ -43,11 +43,11 @@ export const GridBackground = ({
         return (
           <div
             key={`${xi}-${yi}`}
-            class={cz(
+            sx={[
               hasBottomBorder && "--has-bottom-border",
               isBlackKey && "--is-black-key",
               `--border-${borderStrength}`,
-            )}
+            ]}
             style={{
               left: npx(x),
               top: npx(y),

@@ -7,5 +7,5 @@ export const PlainCellContent = ({
   text: string;
   width: number;
 }) => {
-  return <div class={qu.flexC().w(width).it}>{text}</div>;
+  return <div sx={qu.flexC().w(width)}>{text}</div>;
 };

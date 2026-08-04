@@ -109,7 +109,7 @@ const BeatDotsRow = ({ w, bars }: { w: number; bars: LoopBars }) => {
           key={i}
           sx={[
             qu.wh((w + 1) / 16, 16).flexC(),
-            // qu.bg("#fff").bd("#ccc").it,
+            // qu.bg("#fff").bd("#ccc"),
             qu.color("#888"),
           ]}
         >

@@ -1,4 +1,4 @@
-import { cz, qu } from "@/common/css-realm";
+import { qu } from "@/common/css-realm";
 
 export const ButtonWithIndicator = ({
   active,
@@ -9,17 +9,17 @@ export const ButtonWithIndicator = ({
 }) => {
   return (
     <div
-      class={cz(
-        qu.wh(28, 17).bg("#999").bd("#555").rounded(1).cursor("pointer").it,
-        qu.flexVA().it,
-      )}
+      sx={[
+        qu.wh(28, 17).bg("#999").bd("#555").rounded(1).cursor("pointer"),
+        qu.flexVA(),
+      ]}
       onClick={onClick}
     >
       <div
-        class={cz(
-          qu.wh(12, 5).rounded(1).bd("#444").mt(0.5).it,
-          qu.bg(active ? "#0f0" : "#666").it,
-        )}
+        sx={[
+          qu.wh(12, 5).rounded(1).bd("#444").mt(0.5),
+          qu.bg(active ? "#0f0" : "#666"),
+        ]}
       />
     </div>
   );

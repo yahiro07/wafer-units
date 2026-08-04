@@ -1,5 +1,5 @@
 import { ComponentChildren } from "preact";
-import { cz, qu } from "@/common/css-realm";
+import { qu } from "@/common/css-realm";
 
 export const EffectorBody = ({
   children,
@@ -10,11 +10,11 @@ export const EffectorBody = ({
 }) => {
   return (
     <div
-      class={cz(
-        qu.bg("#ccc").p(4).color("#444").rounded(2).it,
-        qu.bd(`inset 1px #0004`).it,
+      sx={[
+        qu.bg("#ccc").p(4).color("#444").rounded(2),
+        qu.bd(`inset 1px #0004`),
         className,
-      )}
+      ]}
     >
       {children}
     </div>

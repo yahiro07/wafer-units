@@ -11,9 +11,7 @@ const ratioOptionValues = [0.5, 1, 2, 3, 4, 5, 7, 9, 11, 13];
 const ratioOptions = createPlainSelectorOptions(ratioOptionValues);
 
 const ModuleHeader = ({ label }: { label: string }) => {
-  return (
-    <div class={qu.w(20).pt(3).fontSize(12).weight("bold").it}>{label}</div>
-  );
+  return <div sx={qu.w(20).pt(3).fontSize(12).weight("bold")}>{label}</div>;
 };
 
 const ControlsPart = () => {
@@ -27,9 +25,9 @@ const ControlsPart = () => {
   const cellW = 55;
 
   return (
-    <div class={qu.flexC().gap(4).it}>
-      <div class={qu.h("full").flexV().fJustify("between").pt(4).it}>
-        <div class={qu.fontSize(17).weight("bold").it}>mop2</div>
+    <div sx={qu.flexC().gap(4)}>
+      <div sx={qu.h("full").flexV().fJustify("between").pt(4)}>
+        <div sx={qu.fontSize(17).weight("bold")}>mop2</div>
         <LabeledBox label="octave" width={cellW}>
           <Knob
             value={parameters.octave}
@@ -39,10 +37,10 @@ const ControlsPart = () => {
             onChange={(value) => setParameter("octave", value)}
           />
         </LabeledBox>
-        <div class={qu.h(40).it} />
+        <div sx={qu.h(40)} />
       </div>
-      <div class={qu.flexV().gap(3).it}>
-        <div class={qu.flexHA().gap(2).it}>
+      <div sx={qu.flexV().gap(3)}>
+        <div sx={qu.flexHA().gap(2)}>
           <ModuleHeader label="OP1" />
           <LabeledBox label={`ratio: ${parameters.op1Ratio}`} width={cellW}>
             <OptionMappedKnob
@@ -70,7 +68,7 @@ const ControlsPart = () => {
             />
           </LabeledBox>
         </div>
-        <div class={qu.flexHA().gap(2).it}>
+        <div sx={qu.flexHA().gap(2)}>
           <ModuleHeader label="OP2" />
           <LabeledBox label={`ratio: ${parameters.op2Ratio}`} width={cellW}>
             <OptionMappedKnob
@@ -98,7 +96,7 @@ const ControlsPart = () => {
             />
           </LabeledBox>
         </div>
-        <div class={qu.flexHA().gap(2).it}>
+        <div sx={qu.flexHA().gap(2)}>
           <ModuleHeader label="AMP" />
           <LabeledBox label="attack" width={cellW}>
             <Knob
@@ -126,8 +124,8 @@ const ControlsPart = () => {
 
 export const PageRoot = () => {
   return (
-    <div class={qu.h("dvh").flexC().it}>
-      <EffectorBody className={cz(qu.wh(380, 220).it, qu.flexVC().it)}>
+    <div sx={qu.h("dvh").flexC()}>
+      <EffectorBody className={cz(qu.wh(380, 220), qu.flexVC())}>
         <ControlsPart />
       </EffectorBody>
     </div>

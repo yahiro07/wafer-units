@@ -17,12 +17,12 @@ const ControlsPart = () => {
   const cellW = 48;
 
   return (
-    <div class={qu.flexV().gap(1.5).it}>
-      <div class={qu.flexHA().fJustify("between").pl(1.5).pr(1).it}>
-        <div class={qu.fontSize(17).weight("bold").it}>S7 Synthesizer</div>
+    <div sx={qu.flexV().gap(1.5)}>
+      <div sx={qu.flexHA().fJustify("between").pl(1.5).pr(1)}>
+        <div sx={qu.fontSize(17).weight("bold")}>S7 Synthesizer</div>
       </div>
-      <div class={qu.flexV().gap(0).it}>
-        <div class={qu.flexHA().gap(3).it}>
+      <div sx={qu.flexV().gap(0)}>
+        <div sx={qu.flexHA().gap(3)}>
           <LabeledBox label="octave" width={cellW}>
             <Knob
               value={parameters.octave}
@@ -51,7 +51,7 @@ const ControlsPart = () => {
             />
           </LabeledBox>
         </div>
-        <div class={qu.flexHA().gap(3).it}>
+        <div sx={qu.flexHA().gap(3)}>
           <LabeledBox label="volume" width={cellW}>
             <Knob
               value={parameters.volume}
@@ -80,8 +80,8 @@ const ControlsPart = () => {
 
 export const PageRoot = () => {
   return (
-    <div class={qu.h("dvh").flexC().it}>
-      <EffectorBody className={cz(qu.wh(300, 160).it, qu.flexVC().it)}>
+    <div sx={qu.h("dvh").flexC()}>
+      <EffectorBody className={cz(qu.wh(300, 160), qu.flexVC())}>
         <ControlsPart />
       </EffectorBody>
     </div>
