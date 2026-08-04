@@ -1,5 +1,5 @@
 import { colors } from "@/ui/common/colors";
-import { cz, qu } from "@/ui/common/css-realm";
+import { qu } from "@/ui/common/css-realm";
 import { npx } from "@/utils/helpers";
 import { qfc } from "@/utils/qfc";
 
@@ -11,13 +11,13 @@ export const PartIndicator = qfc<{
   render: ({ active, width, height }, styles) => {
     return (
       <div
-        class={cz(styles.base, active && styles.active)}
+        sx={[styles.base, active && styles.active]}
         style={{ width: npx(width), height: npx(height) }}
       />
     );
   },
   styles: {
-    base: qu.bg("#4444").rounded(1).it,
-    active: qu.bg(`${colors.active}!important`).it,
+    base: qu.bg("#4444").rounded(1),
+    active: qu.bg(`${colors.active}!important`),
   },
 });

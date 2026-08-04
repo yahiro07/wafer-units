@@ -32,17 +32,17 @@ export const Button = qfc<{
     return (
       <button
         type="button"
-        class={cz(styles.base, disabled && styles.baseDisabled, className)}
+        sx={[styles.base, disabled && styles.baseDisabled, className]}
         style={{ width: npx(width), height: npx(height) }}
         onClick={onClick}
       >
         <div
-          class={cz(
+          sx={[
             styles.inner,
             active && styles.innerActive,
             disabled && styles.innerDisabled,
             altActive && styles.innerAltActive,
-          )}
+          ]}
         >
           {children}
         </div>
@@ -50,21 +50,15 @@ export const Button = qfc<{
     );
   },
   styles: {
-    base: cz(
-      qu.bg("#222").color("#fff").p(0.5).rounded(1).it,
-      qu.cursor("pointer").it,
-    ),
-    baseDisabled: qu.pointerEvents("none").it,
+    base: qu.bg("#222").color("#fff").p(0.5).rounded(1).cursor("pointer"),
+    baseDisabled: qu.pointerEvents("none"),
     inner: cz(
-      qu.wh("full", "full").flexC().it,
-      qu.bd("inset 1px #aaa3").bg(colors.buttonBg).rounded(2).it,
+      qu.wh("full", "full").flexC(),
+      qu.bd("inset 1px #aaa3").bg(colors.buttonBg).rounded(2),
     ),
-    innerActive: qu.bg(colors.active).it,
-    innerDisabled: qu.bg("#444").css({ borderColor: "#aaa3" }).it,
-    innerAltActive: cz(
-      qu.bd(`solid 1.5px ${colors.active}`).it,
-      qu.color(colors.active).it,
-    ),
+    innerActive: qu.bg(colors.active),
+    innerDisabled: cz(qu.bg("#444"), { borderColor: "#aaa3" }),
+    innerAltActive: qu.bd(`solid 1.5px ${colors.active}`).color(colors.active),
   },
 });
 
@@ -79,7 +73,7 @@ export const PartButton = ({
 }) => {
   return (
     <Button
-      className={qu.fontSize(22).weight("500").it}
+      className={cz(qu.fontSize(22).weight("500"))}
       altActive={active}
       onClick={onClick}
     >
@@ -103,7 +97,7 @@ export const ControlButton = ({
     <Button
       height={40}
       asr={1.6}
-      className={qu.fontSize(16).it}
+      className={cz(qu.fontSize(16))}
       active={active}
       onClick={onClick}
     >
@@ -128,9 +122,9 @@ export const PartActiveButton = ({
       asr={2}
       disabled={disabled}
       onClick={onClick}
-      className={qu.relative().it}
+      className={cz(qu.relative())}
     >
-      <div class={qu.absoluteFull().flexC().pb(3).it}>
+      <div sx={qu.absoluteFull().flexC().pb(3)}>
         <PartIndicator width={18} height={6} active={active} />
       </div>
     </Button>

@@ -1,5 +1,5 @@
 import { colors } from "@/ui/common/colors";
-import { cz, qu } from "@/ui/common/css-realm";
+import { qu } from "@/ui/common/css-realm";
 import { Button } from "@/ui/components/buttons";
 import { npx } from "@/utils/helpers";
 
@@ -14,10 +14,10 @@ const StepButtonIndicator = ({
 }) => {
   return (
     <div
-      class={cz(
-        qu.bg("#4444").rounded(99).it,
-        active && qu.bg(`${altColor ? "#684" : colors.active}!important`).it,
-      )}
+      sx={[
+        qu.bg("#4444").rounded(99),
+        active && qu.bg(`${altColor ? "#684" : colors.active}!important`),
+      ]}
       style={{ width: npx(size), height: npx(size) }}
     />
   );

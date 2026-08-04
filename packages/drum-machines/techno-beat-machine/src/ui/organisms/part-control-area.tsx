@@ -34,7 +34,7 @@ const PartButtonsColumn = ({ partKey }: { partKey: PartKey }) => {
   const isBlank = partItem.notes.every((note) => note === null);
 
   return (
-    <div class={qu.flexVC().gap(2).it}>
+    <div sx={qu.flexVC().gap(2)}>
       <PartIndicatorContainer partKey={partKey} />
       <PartButton
         label={partKey}
@@ -52,7 +52,7 @@ const PartButtonsColumn = ({ partKey }: { partKey: PartKey }) => {
 
 export const PartButtonsColumns = () => {
   return (
-    <div class={qu.flexHA().gap(2).it}>
+    <div sx={qu.flexHA().gap(2)}>
       <PartButtonsColumn partKey="BD" />
       <PartButtonsColumn partKey="SN" />
       <PartButtonsColumn partKey="HO" />

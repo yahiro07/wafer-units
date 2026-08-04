@@ -14,7 +14,7 @@ const StepsBlock = ({
   const part = useCurrentPart();
   const notes = part.notes;
   return (
-    <div class={qu.flexH().gap(1).p(1).bd("_inset 1px #0004").it}>
+    <div sx={qu.flexH().gap(1).p(1).bd("_inset 1px #0004")}>
       {seqNumbers(4).map((i) => (
         <StepButton
           key={i}
@@ -32,7 +32,7 @@ const SequenceStepLane = ({ laneOffset }: { laneOffset: number }) => {
   const { stepLength } = part;
 
   return (
-    <div class={qu.flexH().gap(1).it}>
+    <div sx={qu.flexH().gap(1)}>
       {seqNumbers(4).map((i) => (
         <StepsBlock
           offset={(laneOffset + i * 4) % stepLength}
@@ -45,7 +45,7 @@ const SequenceStepLane = ({ laneOffset }: { laneOffset: number }) => {
 
 const SequenceStepLaneDummy = () => {
   return (
-    <div class={qu.css({ visibility: "hidden" }).it}>
+    <div sx={{ visibility: "hidden" }}>
       <SequenceStepLane laneOffset={0} />
     </div>
   );
@@ -55,7 +55,7 @@ export const PartEditStepsArea = () => {
   const part = useCurrentPart();
   const twoColumn = part.stepLength === 32;
   return (
-    <div class={qu.flexV().ml(-1).gap(1).it}>
+    <div sx={qu.flexV().ml(-1).gap(1)}>
       <SequenceStepLane laneOffset={0} />
       {twoColumn && <SequenceStepLane laneOffset={16} />}
       {!twoColumn && <SequenceStepLaneDummy />}

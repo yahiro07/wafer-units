@@ -31,14 +31,14 @@ export const Knob = ({
       dragDisabled={disabled}
     >
       <div
-        class={qu.wh(36, 36).rounded("100%").relative().bg("#aaa").it}
+        sx={qu.wh(36, 36).rounded("100%").relative().bg("#aaa")}
         style={{ opacity: disabled ? 0.5 : 1 }}
       >
         <div
-          class={qu.full().flexVA().it}
+          sx={qu.full().flexVA()}
           style={{ transform: `rotate(${tickAngle}deg)` }}
         >
-          <div class={qu.wh(2, 10).bg("#fff").it} />
+          <div sx={qu.wh(2, 10).bg("#fff")} />
         </div>
       </div>
     </KnobFrame>

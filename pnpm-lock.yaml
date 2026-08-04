@@ -96,8 +96,8 @@ importers:
         specifier: 'catalog:'
         version: 10.29.8
       qulex:
-        specifier: 'catalog:'
-        version: '@yahiro07/qulex@0.1.5'
+        specifier: npm:@yahiro07/qulex@^0.1.6
+        version: '@yahiro07/qulex@0.1.6'
       snap-store:
         specifier: 'catalog:'
         version: 0.1.12(preact@10.29.8)(react@19.2.8)
@@ -1608,6 +1608,9 @@ packages:
   '@yahiro07/qulex@0.1.5':
     resolution: {integrity: sha512-ro7FdOKIyYNZ76UO7xmoKECOfbhDLSRMgRQhpCs4nevvxTCu7j9fpedzhdPBX3mvxd5Dk5PC4iiS1MmRl3gNCA==}
 
+  '@yahiro07/qulex@0.1.6':
+    resolution: {integrity: sha512-eGuYbtLLp6F022s6wL4INsoLd9t8Kkue2ph6oFWeiahtndY57UHgjPLX22xG5T0h1MF4gjjL01YzJs59p8nRCg==}
+
   alumina-visor@0.1.6:
     resolution: {integrity: sha512-teCRvUD5m+pE/apudTPAwgAH67mXBof6C2b5nnRbbtiYGE1bitO56p5CHRiMN9cOx6GqqVDDP0XFVYuqgMuQHA==}
     hasBin: true
@@ -3020,6 +3023,8 @@ snapshots:
   '@yahiro07/mini-css@0.1.0': {}
 
   '@yahiro07/qulex@0.1.5': {}
+
+  '@yahiro07/qulex@0.1.6': {}
 
   alumina-visor@0.1.6(alumina@0.1.14):
     dependencies:

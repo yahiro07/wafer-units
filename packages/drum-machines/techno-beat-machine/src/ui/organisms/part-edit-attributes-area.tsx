@@ -38,7 +38,7 @@ const SamplesShifterContainer = () => {
 
 const SamplesSelectorWrapper = () => {
   return (
-    <div class={qu.flexHA().gap(1).it}>
+    <div sx={qu.flexHA().gap(1)}>
       <SamplesSelectorContainer />
       <SamplesShifterContainer />
     </div>
@@ -63,7 +63,7 @@ const PartKnobs = () => {
   const part = useCurrentPart();
   const [min, max, mode] = pitchTweakRangeMap[part.partKey];
   return (
-    <div class={qu.flexHA().gap(8).it}>
+    <div sx={qu.flexHA().gap(8)}>
       <LabeledKnob
         label="PITCH"
         value={part.pitchTweak}
@@ -88,7 +88,7 @@ const PartKnobs = () => {
 
 const PartEditOperationButtons = () => {
   return (
-    <div class={qu.flexHA().gap(2).it}>
+    <div sx={qu.flexHA().gap(2)}>
       <ControlButton label="RND" onClick={partActions.randomizePart} />
       <ControlButton label="CLEAR" onClick={partActions.clearPartNotes} />
       <ControlButton label="ALTER" onClick={partActions.toggleWeakAll} />
@@ -98,7 +98,7 @@ const PartEditOperationButtons = () => {
 
 export const PartEditAttributesArea = () => {
   return (
-    <div class={qu.flexHA().gap(8).it}>
+    <div sx={qu.flexHA().gap(8)}>
       <SamplesSelectorWrapper />
       <PartKnobs />
       <StepLengthSelectorContainer />
