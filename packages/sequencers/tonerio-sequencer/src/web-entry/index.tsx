@@ -10,7 +10,7 @@ document.adoptedStyleSheets = [cssRealm.sheet];
 const root = document.getElementById("app")!;
 
 render(
-  <div class={qu.wh("dvw", "dvh").bg(pageBgColor).flexVC().it}>
+  <div sx={qu.wh("dvw", "dvh").bg(pageBgColor).flexVC()}>
     <App />
   </div>,
   root,
