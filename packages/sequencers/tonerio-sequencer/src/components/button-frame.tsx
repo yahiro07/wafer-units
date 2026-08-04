@@ -1,3 +1,4 @@
+import { qu } from "@/common/css-realm";
 import { ComponentChildren } from "preact";
 
 export const ButtonFrame = ({
@@ -8,7 +9,7 @@ export const ButtonFrame = ({
   onClick: () => void;
 }) => {
   return (
-    <div onClick={onClick} style={{ cursor: "pointer" }}>
+    <div onClick={onClick} sx={qu.cursor("pointer")}>
       {children}
     </div>
   );

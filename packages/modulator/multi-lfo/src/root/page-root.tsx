@@ -5,19 +5,19 @@ import { store } from "@/root/store";
 export const PageRoot = () => {
   const { parameterIds, connected, slots } = store.useSnapshot();
   return (
-    <div class={qu.h("dvh").flexC().it}>
-      <div class={qu.wh(500, 310).bg("#aaa").p(4).color("#333").it}>
-        <div class={qu.flexV().gap(3).px(4.5).it}>
-          <div class={qu.flexH().gap(2).it}>
+    <div sx={qu.h("dvh").flexC()}>
+      <div sx={qu.wh(500, 310).bg("#aaa").p(4).color("#333")}>
+        <div sx={qu.flexV().gap(3).px(4.5)}>
+          <div sx={qu.flexH().gap(2)}>
             <div>Multi LFO</div>
-            <div class={qu.grow().it} />
-            <div class={qu.fontSize(12).it}>
+            <div sx={qu.grow()} />
+            <div sx={qu.fontSize(12)}>
               {connected
                 ? `Connected, ${parameterIds.length > 0 ? parameterIds.length : "no"} parameters available`
                 : "Disconnected"}
             </div>
           </div>
-          <div class={qu.flexVC().gap(2).it}>
+          <div sx={qu.flexVC().gap(2)}>
             {slots.map((slot) => (
               <LfoLane key={slot.id} slot={slot} />
             ))}

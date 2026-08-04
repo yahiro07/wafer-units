@@ -1,4 +1,4 @@
-import { cz, qu } from "@/common/css-realm";
+import { qu } from "@/common/css-realm";
 import { Icons } from "@/common/icons";
 import { Button } from "@/components/button";
 import { EffectorBody } from "@/components/effector-body";
@@ -71,11 +71,11 @@ const PagerContainer = () => {
   };
   return (
     <LabeledBox label="">
-      <div class={qu.flexHA().gap(2).it}>
+      <div sx={qu.flexHA().gap(2)}>
         <Button disabled={!canShiftLeft} onClick={() => shiftPage(-1)}>
           <Icons.CaretLeft />
         </Button>
-        <div class={qu.w(50).flexC().it}>
+        <div sx={qu.w(50).flexC()}>
           {st.pageIndex + 1} / {totalPages}
         </div>
         <Button disabled={!canShiftRight} onClick={() => shiftPage(1)}>
@@ -97,11 +97,11 @@ const TrashButtonContainer = () => {
 
 const TopBar = () => {
   return (
-    <div class={qu.w("full").flexV().gap(4).it}>
-      <div class={qu.flexHA().fJustify("between").it}>
-        <div class={qu.weight("bold").fontSize(24).it}>Fluorite Piano Roll</div>
-        <div class={qu.flexHA().gap(7).it}>
-          <div class={qu.flexHA().gap(6).it}>
+    <div sx={qu.w("full").flexV().gap(4)}>
+      <div sx={qu.flexHA().fJustify("between")}>
+        <div sx={qu.weight("bold").fontSize(24)}>Fluorite Piano Roll</div>
+        <div sx={qu.flexHA().gap(7)}>
+          <div sx={qu.flexHA().gap(6)}>
             <TrashButtonContainer />
             <OctaveKnobContainer />
             <DutyKnobContainer />
@@ -116,8 +116,8 @@ const TopBar = () => {
 
 export const PageRoot = () => {
   return (
-    <EffectorBody className={cz(qu.wh(800, 450).flexC().it)}>
-      <div class={qu.flexV().gap(2).it}>
+    <EffectorBody sx={qu.wh(800, 450).flexC()}>
+      <div sx={qu.flexV().gap(2)}>
         <TopBar />
         <PianoRollEditorViewContainer />
       </div>

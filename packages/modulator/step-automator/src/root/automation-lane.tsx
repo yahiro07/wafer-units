@@ -43,9 +43,9 @@ export const AutomationLane = ({
     });
   };
   return (
-    <div class={qu.flexV().gap(5).it}>
-      <div class={qu.flexHA().fJustify("between").it}>
-        <div class={qu.flexHA().gap(2).it}>
+    <div sx={qu.flexV().gap(5)}>
+      <div sx={qu.flexHA().fJustify("between")}>
+        <div sx={qu.flexHA().gap(2)}>
           <LabeledBox width={30}>
             <IndicatorButton
               active={lane.enabled}
@@ -60,7 +60,7 @@ export const AutomationLane = ({
             />
           </LabeledBox>
         </div>
-        <div class={qu.flexHA().gap(3).it}>
+        <div sx={qu.flexHA().gap(3)}>
           <LabeledBox label="clock-div">
             <ShiftSelector
               options={clockDivisionOptions}
@@ -77,12 +77,12 @@ export const AutomationLane = ({
           </LabeledBox>
         </div>
       </div>
-      <div class={qu.flexH().gap(2).it}>
+      <div sx={qu.flexH().gap(2)}>
         {lane.stepValues.map((_, index) => {
           const destIndex = gaugeReferenceIndexMap[lane.patternRange][index];
           const value = lane.stepValues[destIndex];
           return (
-            <div class={qu.flexVC().gap(3).it}>
+            <div sx={qu.flexVC().gap(3)}>
               <StepIndicatorLed active={playbackStepIndex === index} />
               <ParameterGauge
                 key={index}

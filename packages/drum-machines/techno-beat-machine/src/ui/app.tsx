@@ -8,14 +8,14 @@ import { qu } from "./common/css-realm";
 
 const PageRoot = () => {
   return (
-    <div class={qu.h("dvh").flexC().it}>
-      <div class={qu.wh(900, 500).bg(colors.panelBg).flexC().it}>
-        <div class={qu.flexV().gap(16).it}>
-          <div class={qu.flexV().gap(6).it}>
+    <div sx={qu.h("dvh").flexC()}>
+      <div sx={qu.wh(900, 500).bg(colors.panelBg).flexC()}>
+        <div sx={qu.flexV().gap(16)}>
+          <div sx={qu.flexV().gap(6)}>
             <MasterControlArea />
             <PartButtonsColumns />
           </div>
-          <div class={qu.flexV().gap(3).it}>
+          <div sx={qu.flexV().gap(3)}>
             <PartEditAttributesArea />
             <PartEditStepsArea />
           </div>

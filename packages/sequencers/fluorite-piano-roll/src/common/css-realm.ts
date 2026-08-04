@@ -1,3 +1,3 @@
 import { createCssRealm } from "qulex";
 
-export const { qu, cz, cssRealm } = createCssRealm();
+export const { qu, cz, css, cssRealm } = createCssRealm();

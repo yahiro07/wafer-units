@@ -12,9 +12,7 @@ const ModuleHeader = ({
   label: string;
   width?: number;
 }) => {
-  return (
-    <div class={qu.w(width).pt(3).fontSize(12).weight("bold").it}>{label}</div>
-  );
+  return <div sx={qu.w(width).pt(3).fontSize(12).weight("bold")}>{label}</div>;
 };
 
 const ControlsPart = () => {
@@ -29,11 +27,11 @@ const ControlsPart = () => {
   const gapX = 1;
 
   return (
-    <div class={qu.flexV().gap(1).it}>
-      <div class={qu.fontSize(17).weight("bold").it}>MPD1 Synthesizer</div>
-      <div class={qu.flexHA().gap(4).it}>
-        <div class={qu.flexV().gap(3).it}>
-          <div class={qu.flexHA().gap(gapX).it}>
+    <div sx={qu.flexV().gap(1)}>
+      <div sx={qu.fontSize(17).weight("bold")}>MPD1 Synthesizer</div>
+      <div sx={qu.flexHA().gap(4)}>
+        <div sx={qu.flexV().gap(3)}>
+          <div sx={qu.flexHA().gap(gapX)}>
             <ModuleHeader label="OSC" />
             <LabeledBox label="octave" width={cellW}>
               <Knob
@@ -66,7 +64,7 @@ const ControlsPart = () => {
               />
             </LabeledBox>
           </div>
-          <div class={qu.flexHA().gap(gapX).it}>
+          <div sx={qu.flexHA().gap(gapX)}>
             <ModuleHeader label="SHAPE" />
             <LabeledBox label="value" width={cellW}>
               <Knob
@@ -93,7 +91,7 @@ const ControlsPart = () => {
               />
             </LabeledBox>
           </div>
-          <div class={qu.flexHA().gap(gapX).it}>
+          <div sx={qu.flexHA().gap(gapX)}>
             <ModuleHeader label="AMP" />
             <LabeledBox label="attack" width={cellW}>
               <Knob
@@ -121,8 +119,8 @@ const ControlsPart = () => {
             </LabeledBox>
           </div>
         </div>
-        <div class={qu.flexV().gap(3).it}>
-          <div class={qu.flexHA().gap(gapX).it}>
+        <div sx={qu.flexV().gap(3)}>
+          <div sx={qu.flexHA().gap(gapX)}>
             <ModuleHeader label="SUB OSC" />
             <LabeledBox label="wave" width={cellW}>
               <Knob
@@ -140,7 +138,7 @@ const ControlsPart = () => {
               />
             </LabeledBox>
           </div>
-          <div class={qu.flexHA().gap(gapX).it}>
+          <div sx={qu.flexHA().gap(gapX)}>
             <ModuleHeader label="FX" />
             <LabeledBox label="tone" width={cellW}>
               <Knob
@@ -155,7 +153,7 @@ const ControlsPart = () => {
               />
             </LabeledBox>
           </div>
-          <div class={qu.flexHA().gap(gapX).it}>
+          <div sx={qu.flexHA().gap(gapX)}>
             <ModuleHeader label="" />
             <LabeledBox label="output" width={cellW}>
               <Knob
@@ -172,8 +170,8 @@ const ControlsPart = () => {
 
 export const PageRoot = () => {
   return (
-    <div class={qu.h("dvh").flexC().it}>
-      <EffectorBody className={cz(qu.wh(480, 260).it, qu.flexVC().it)}>
+    <div sx={qu.h("dvh").flexC()}>
+      <EffectorBody className={cz(qu.wh(480, 260), qu.flexVC())}>
         <ControlsPart />
       </EffectorBody>
     </div>

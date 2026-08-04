@@ -1,5 +1,5 @@
 import { ComponentChildren } from "preact";
-import { cz, qu } from "@/common/css-realm";
+import { qu } from "@/common/css-realm";
 import { colors } from "@/editor/theme";
 
 export const EffectorBody = ({
@@ -10,7 +10,7 @@ export const EffectorBody = ({
   className?: string;
 }) => {
   return (
-    <div class={cz(qu.bg(colors.panelBody).p(4).color("#fff").it, className)}>
+    <div sx={[qu.bg(colors.panelBody).p(4).color("#fff"), className]}>
       {children}
     </div>
   );

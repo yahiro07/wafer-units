@@ -234,7 +234,7 @@ const EditInputLayer = ({
   }
   return (
     <div
-      class={qu.absoluteFull().it}
+      sx={qu.absoluteFull()}
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
       style={{ cursor }}
@@ -250,35 +250,32 @@ const NoteView = ({
   sectionRange: SectionRange;
 }) => {
   const { cellW, cellH } = uiConfig;
-  const noteH = cellH - 2;
   const pos = note.position - sectionRange.offset;
   const yi = note.pitch;
   const dur = note.duration;
   return (
-    <div key={note.id}>
-      <div
-        class={qu.absolute().flexC().cursor("pointer").it}
-        style={{
-          left: npx(pos * cellW),
-          bottom: npx(yi * cellH),
-          width: npx(cellW * dur - 0.5),
-          height: npx(cellH),
-        }}
-      >
-        <div
-          class={cz(
-            qu.bg(colors.noteBg).w("full").flexHA().it,
-            qu.h(noteH).css({ border: "solid 0.5px #0004" }).it,
-            qu.rounded(2).pl(0.5).it,
-            qu.color("#0008").fontSize(10).it,
-            "font-monospace",
-          )}
-        >
-          {noteNameLabels[yi]}
-        </div>
-      </div>
+    <div
+      class={styleNoteView.base}
+      style={{
+        left: npx(pos * cellW),
+        bottom: npx(yi * cellH),
+        width: npx(cellW * dur - 0.5),
+        height: npx(cellH),
+      }}
+    >
+      <div class={styleNoteView.label}>{noteNameLabels[yi]}</div>
     </div>
   );
+};
+const styleNoteView = {
+  base: cz(qu.absolute().flexC().cursor("pointer")),
+  label: cz(
+    qu.bg(colors.noteBg).w("full").flexHA(),
+    qu.h(uiConfig.cellH - 2).css({ border: "solid 0.5px #0004" }),
+    qu.rounded(2).pl(0.5),
+    qu.color("#0008").fontSize(10),
+    "font-monospace",
+  ),
 };
 
 const NotesDisplayLayer = ({
@@ -289,7 +286,7 @@ const NotesDisplayLayer = ({
   sectionRange: SectionRange;
 }) => {
   return (
-    <div class={qu.absoluteFull().it}>
+    <div sx={qu.absoluteFull()}>
       {notes
         .filter(
           (note) =>
@@ -315,11 +312,11 @@ const NoteLayerStrip = ({
   const editorW = cellW * sectionRange.duration;
   return (
     <div
-      class={cz(
-        qu.relative().wh(editorW, editorH).it,
-        // qu.bd("blue").it,
-        qu.overflow("hidden").it,
-      )}
+      sx={[
+        qu.relative().wh(editorW, editorH),
+        // qu.bd("blue"),
+        qu.overflow("hidden"),
+      ]}
     >
       <NotesDisplayLayer notes={notes} sectionRange={sectionRange} />
       <EditInputLayer notes={notes} sectionRange={sectionRange} />
@@ -338,7 +335,7 @@ const RepeatingNoteLayers = () => {
     [sectionOffset, sectionStride],
   );
   return (
-    <div class={qu.absoluteFull().flexH().it}>
+    <div sx={qu.absoluteFull().flexH()}>
       {seqNumbers(nx).map((i) => {
         return (
           <NoteLayerStrip
@@ -361,14 +358,18 @@ const PlayPositionLineLayer = () => {
 
   return (
     <div
-      class={cz(
-        qu.absolute().top(0).wh(barW, "full").pointerEvents("none").it,
-        qu.css({ borderRight: "solid 1px #0ff4" }).it,
-        qu.bg("linear-gradient(to right, #0cc0, #0ff3)").it,
-      )}
+      class={stylePlayPositionLineLayer.base}
       style={{ left: npx(localPos * cellW - barW) }}
     />
   );
+};
+const stylePlayPositionLineLayer = {
+  base: cz(
+    qu.absolute().top(0).pointerEvents("none"),
+    qu.wh(uiConfig.cellW * 1.5, "full"),
+    qu.css({ borderRight: "solid 1px #0ff4" }),
+    qu.bg("linear-gradient(to right, #0cc0, #0ff3)"),
+  ),
 };
 
 export const PianoRollEditorView = () => {
@@ -387,13 +388,10 @@ export const PianoRollEditorView = () => {
   return (
     <div
       ref={baseDivRef}
-      class={cz(
-        qu.flexH().gap(0.5).h(340).it,
-        qu.overflowXY("hidden", "scroll").it,
-      )}
+      sx={[qu.flexH().gap(0.5).h(340), qu.overflowXY("hidden", "scroll")]}
     >
       <SideKeyboardColumn />
-      <div class={qu.relative().wh(editorW, editorH).flexH().it}>
+      <div sx={qu.relative().wh(editorW, editorH).flexH()}>
         <GridBackground nx={32} ny={numKeys} width={editorW} height={editorH} />
         <RepeatingNoteLayers />
         <PlayPositionLineLayer />

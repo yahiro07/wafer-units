@@ -1,4 +1,4 @@
-import { cz, qu } from "@/common/css-realm";
+import { qu } from "@/common/css-realm";
 import { KnobFrame } from "@/components/knob-frame";
 
 export const ParameterGauge = ({
@@ -13,13 +13,13 @@ export const ParameterGauge = ({
   return (
     <KnobFrame value={value} min={0} max={1} step={0.01} onChange={onChange}>
       <div
-        class={cz(
-          qu.wh(25, 100).flexV().fJustify("end").it,
-          qu.bg(altColor ? "#555" : "#777").it,
-        )}
+        sx={[
+          qu.wh(25, 100).flexV().fJustify("end"),
+          qu.bg(altColor ? "#555" : "#777"),
+        ]}
       >
         <div
-          class={qu.wh(25, 50).bg(altColor ? "#46a" : "#48c").it}
+          sx={qu.wh(25, 50).bg(altColor ? "#46a" : "#48c")}
           style={{ height: `${value * 100}%` }}
         />
       </div>

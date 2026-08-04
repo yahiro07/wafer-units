@@ -1,4 +1,4 @@
-import { cz, qu } from "@/common/css-realm";
+import { qu } from "@/common/css-realm";
 
 export const IndicatorButton = ({
   active,
@@ -9,9 +9,7 @@ export const IndicatorButton = ({
 }) => {
   return (
     <div
-      class={cz(
-        qu.flexC().wh(22, 16).rounded(1).bd("#555").cursor("pointer").it,
-      )}
+      sx={qu.flexC().wh(22, 16).rounded(1).bd("#555").cursor("pointer")}
       style={{
         background: active ? "#0f0" : "#999",
         cursor: "pointer",

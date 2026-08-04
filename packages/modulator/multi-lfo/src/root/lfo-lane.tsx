@@ -33,7 +33,7 @@ export const LfoLane = ({ slot }: { slot: LfoSlot }) => {
   };
   const parameterSelectorOptions = useParameterSelectorOptions();
   return (
-    <div class={qu.flexHA().gap(3).it}>
+    <div sx={qu.flexHA().gap(3)}>
       <LabeledBox label={`slot ${slot.id + 1}`} width={30}>
         <IndicatorButton
           active={slot.enabled}
@@ -63,7 +63,7 @@ export const LfoLane = ({ slot }: { slot: LfoSlot }) => {
         </ButtonFrame>
       </LabeledBox>
       <LabeledBox>
-        <div class={qu.flexV().gap(1).it}>
+        <div sx={qu.flexV().gap(1)}>
           <NarrowButton
             text="INV"
             active={slot.inverted}

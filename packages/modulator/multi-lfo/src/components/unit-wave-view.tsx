@@ -62,7 +62,7 @@ export const UnitWaveView = ({
     [wave, inverted, shifted],
   );
   return (
-    <div class={qu.wh(40, 40).bg("#ddd").it}>
+    <div sx={qu.wh(40, 40).bg("#ddd")}>
       <svg viewBox="0 0 16 16">
         <path d={svgPathData} stroke="#48c" fill="#48c4" />
       </svg>

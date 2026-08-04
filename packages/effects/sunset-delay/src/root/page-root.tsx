@@ -21,25 +21,25 @@ const ControlsPart = () => {
   const cellW = 48;
 
   return (
-    <div class={qu.flexVC().gap(5).it}>
-      <div class={qu.flexHA().gap(2).it}>
+    <div sx={qu.flexVC().gap(5)}>
+      <div sx={qu.flexHA().gap(2)}>
         <LabeledBox label="On" width={cellW}>
           <ButtonWithIndicator
             active={parameters.isOn}
             onClick={() => setParameter("isOn", !parameters.isOn)}
           />
         </LabeledBox>
-        <LabeledBox label="Time" width={cellW} className={qu.relative().it}>
+        <LabeledBox label="Time" width={cellW} className={cz(qu.relative())}>
           <OptionMappedKnob<DelayTime>
             options={delayTimeOptions}
             value={parameters.time}
             onChange={(value) => setParameter("time", value)}
           />
           <div
-            class={cz(
-              qu.absolute().bottom(-14).left(0).fontSize(12).w(cellW).it,
-              qu.flexC().it,
-            )}
+            sx={[
+              qu.absolute().bottom(-14).left(0).fontSize(12).w(cellW),
+              qu.flexC(),
+            ]}
           >
             {parameters.time.toString()}
           </div>
@@ -63,7 +63,7 @@ const ControlsPart = () => {
           />
         </LabeledBox>
       </div>
-      <div class={qu.flexHA().gap(2).it}>
+      <div sx={qu.flexHA().gap(2)}>
         <LabeledBox label="LFO" width={cellW}>
           <ButtonWithIndicator
             active={parameters.lfoOn}
@@ -84,7 +84,7 @@ const ControlsPart = () => {
         </LabeledBox>
       </div>
       {false && (
-        <div class={qu.flexVC().gap(2.5).pt(4).it}>
+        <div sx={qu.flexVC().gap(2.5).pt(4)}>
           <LedIndicator active={parameters.isOn} />
           <StompButton onClick={() => setParameter("isOn", !parameters.isOn)} />
         </div>
@@ -103,7 +103,7 @@ const SafetyPart = () => {
   };
   return (
     <div>
-      <label class={qu.flexH().gap(1).it}>
+      <label sx={qu.flexH().gap(1)}>
         <input
           type="checkbox"
           checked={parameters.safety}
@@ -122,11 +122,11 @@ const SafetyPart = () => {
 
 export const PageRoot = () => {
   return (
-    <div class={qu.flexC().it}>
-      <EffectorBody className={cz(qu.wh(320, 210).it, qu.flexVC().it)}>
-        <div class={qu.flexV().gap(3).it}>
-          <div class={qu.flexHA().gap(2).fJustify("between").it}>
-            <div class={qu.fontSize(18).weight("bold").it}>Sunset Delay</div>
+    <div sx={qu.flexC()}>
+      <EffectorBody className={cz(qu.wh(320, 210), qu.flexVC())}>
+        <div sx={qu.flexV().gap(3)}>
+          <div sx={qu.flexHA().gap(2).fJustify("between")}>
+            <div sx={qu.fontSize(18).weight("bold")}>Sunset Delay</div>
             <SafetyPart />
           </div>
           <ControlsPart />

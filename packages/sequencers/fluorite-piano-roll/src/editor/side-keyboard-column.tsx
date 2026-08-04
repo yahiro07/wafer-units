@@ -76,33 +76,28 @@ const KeyboardKey = ({ yi }: { yi: number }) => {
     });
   };
 
+  const styles = keyboardKeyStyles;
   return (
-    <div
-      class={cz(qu.wh(80, cellH).css({ pointerEvents: "none" }).relative().it)}
-    >
+    <div class={styles.base}>
       <div
-        class={cz(
-          qu.absolute().it,
-          qu.pointerEvents("auto").cursor("pointer").it,
-          pressed && qu.bg("#4dd!important").it,
-        )}
+        sx={[styles.inner, pressed && styles.innerPressed]}
         style={keyStyle}
         onPointerDown={handlePointerDown}
       >
-        {label && (
-          <div
-            class={cz(
-              qu.flexHA().h("full").fJustify("end").p(1).it,
-              qu.color("#666").fontSize(12).it,
-              "font-monospace",
-            )}
-          >
-            {label}
-          </div>
-        )}
+        {label && <div class={styles.label}>{label}</div>}
       </div>
     </div>
   );
+};
+const keyboardKeyStyles = {
+  base: cz(qu.wh(80, uiConfig.cellH).relative().pointerEvents("none")),
+  inner: cz(qu.absolute(), qu.pointerEvents("auto").cursor("pointer")),
+  innerPressed: qu.bg("#4dd!important"),
+  label: cz(
+    qu.flexHA().h("full").fJustify("end").p(1),
+    qu.color("#666").fontSize(12),
+    "font-monospace",
+  ),
 };
 
 export const SideKeyboardColumn = () => {

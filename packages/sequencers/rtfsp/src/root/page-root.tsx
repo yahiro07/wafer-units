@@ -21,8 +21,8 @@ const LabeledSection = ({
   children: ComponentChildren;
 }) => {
   return (
-    <div class={qu.flexV().gap(1).it}>
-      <div class={qu.fontSize(12).weight("bold").it}>{label}</div>
+    <div sx={qu.flexV().gap(1)}>
+      <div sx={qu.fontSize(12).weight("bold")}>{label}</div>
       {children}
     </div>
   );
@@ -42,16 +42,16 @@ const DegreesSelector = ({
     setDegreeFlags(newDegreeFlags);
   };
   return (
-    <div class={qu.flexHA().gap(1).it}>
+    <div sx={qu.flexHA().gap(1)}>
       {seqNumbers(labels.length).map((i) => {
         const active = (degreeFlags & (1 << i)) !== 0;
         return (
           <div
             onClick={() => handleButtonClick(i)}
-            class={cz(
-              qu.bg("#fff").bd("#888").wh(36, 36).flexC().it,
-              qu.cursor("pointer").it,
-            )}
+            sx={[
+              qu.bg("#fff").bd("#888").wh(36, 36).flexC(),
+              qu.cursor("pointer"),
+            ]}
             style={active ? { background: "#48f8", color: "#fff" } : undefined}
           >
             {labels[i]}
@@ -70,16 +70,16 @@ const OctaveSelector = ({
   setOctave: (octave: number) => void;
 }) => {
   return (
-    <div class={qu.flexHA().gap(1).it}>
+    <div sx={qu.flexHA().gap(1)}>
       {seqNumbers(5).map((i) => {
         const oct = i - 2;
         const active = oct === octave;
         return (
           <div
-            class={cz(
-              qu.bg("#fff").bd("#888").wh(36, 36).flexC().it,
-              qu.cursor("pointer").it,
-            )}
+            sx={[
+              qu.bg("#fff").bd("#888").wh(36, 36).flexC(),
+              qu.cursor("pointer"),
+            ]}
             style={active ? { background: "#48f8", color: "#fff" } : undefined}
             onClick={() => setOctave(oct)}
           >
@@ -104,11 +104,11 @@ const PresetNotesView = ({
   );
   const sz = 8;
   return (
-    <div class={qu.relative().h("full").it}>
+    <div sx={qu.relative().h("full")}>
       {notes.map((note, i) => (
         <div
           key={i}
-          class={qu.absolute().it}
+          sx={qu.absolute()}
           style={{
             left: note.position * sz,
             bottom: note.degreeIndex * sz,
@@ -139,7 +139,7 @@ const PatternCard = ({
     : undefined;
   return (
     <div
-      class={qu.bg("#fff").bd("#888").relative().wh(100, 44).it}
+      sx={qu.bg("#fff").bd("#888").relative().wh(100, 44)}
       onClick={onClick}
       style={onClick && { cursor: "pointer" }}
     >
@@ -151,20 +151,20 @@ const PatternCard = ({
       )}
       {presetIndex !== undefined && (
         <div
-          class={cz(
-            qu.absolute().top(0).right(0).mr(0.25).it,
-            qu.fontSize(11).color("#444").it,
-          )}
+          sx={[
+            qu.absolute().top(0).right(0).mr(0.25),
+            qu.fontSize(11).color("#444"),
+          ]}
         >
           {presetIndex}
         </div>
       )}
       {displayBarLength && (
         <div
-          class={cz(
-            qu.absolute().bottom(0).right(0).mr(0.25).it,
-            qu.fontSize(11).color("#444").it,
-          )}
+          sx={[
+            qu.absolute().bottom(0).right(0).mr(0.25),
+            qu.fontSize(11).color("#444"),
+          ]}
         >
           {displayBarLength === 1 ? "1bar" : `${displayBarLength}bars`}
         </div>
@@ -175,7 +175,7 @@ const PatternCard = ({
 
 const PatternList = () => {
   return (
-    <div class={qu.flexH().gap(2).w(540).css({ flexWrap: "wrap" }).it}>
+    <div sx={qu.flexH().gap(2).w(540).css({ flexWrap: "wrap" })}>
       {seqNumbers(presets.length).map((i) => (
         <PatternCard
           key={i}
@@ -192,9 +192,9 @@ const PatternList = () => {
 
 const PageList = () => {
   return (
-    <div class={qu.flexV().gap(2).it}>
+    <div sx={qu.flexV().gap(2)}>
       {seqNumbers(3).map((i) => (
-        <div class={qu.bd("#888").wh(36, 36).flexC().it}>{i}</div>
+        <div sx={qu.bd("#888").wh(36, 36).flexC()}>{i}</div>
       ))}
     </div>
   );
@@ -209,12 +209,12 @@ const Timeline = () => {
   const sz = 10;
   const szx = 16;
   return (
-    <div class={qu.flexV().it}>
-      <div class={qu.wh(514, 60).relative().bg("#fff").bd("#888").it}>
+    <div sx={qu.flexV()}>
+      <div sx={qu.wh(514, 60).relative().bg("#fff").bd("#888")}>
         {notes.map((note, i) => (
           <div
             key={i}
-            class={qu.absolute().it}
+            sx={qu.absolute()}
             style={{
               left: note.position * szx,
               bottom: note.degreeIndex * sz,
@@ -226,18 +226,18 @@ const Timeline = () => {
           />
         ))}
       </div>
-      <div class={qu.wh(540, 20).flexHA().it}>
+      <div sx={qu.wh(540, 20).flexHA()}>
         {seqNumbers(32).map((i) => {
           const altColor = i % 4 === 0;
           const active = i === st.playPos;
           return (
-            <div key={i} class={qu.wh(szx, 10).flexC().it}>
+            <div key={i} sx={qu.wh(szx, 10).flexC()}>
               <div
-                class={cz(
-                  qu.wh(7, 7).rounded("full").bg("#ccc").it,
-                  altColor && qu.bg("#aaa").it,
-                  active && qu.bg("#4f0").it,
-                )}
+                sx={[
+                  qu.wh(7, 7).rounded("full").bg("#ccc"),
+                  altColor && qu.bg("#aaa"),
+                  active && qu.bg("#4f0"),
+                ]}
               />
             </div>
           );
@@ -279,12 +279,12 @@ const DutyKnobContainer = () => {
 
 export const PageRoot = () => {
   return (
-    <div class={qu.h("dvh").flexC().it}>
-      <EffectorBody className={cz(qu.wh(750, 450).it, qu.flexC().it)}>
-        <div class={qu.flexV().gap(4).it}>
-          <div class={qu.flexHA().fJustify("between").it}>
+    <div sx={qu.h("dvh").flexC()}>
+      <EffectorBody className={cz(qu.wh(750, 450), qu.flexC())}>
+        <div sx={qu.flexV().gap(4)}>
+          <div sx={qu.flexHA().fJustify("between")}>
             <div>RTFS-P</div>
-            <div class={qu.flexHA().gap(4).it}>
+            <div sx={qu.flexHA().gap(4)}>
               <LabeledSection label="octave">
                 <OctaveSelectorContainer />
               </LabeledSection>
@@ -293,7 +293,7 @@ export const PageRoot = () => {
               </LabeledBox>
             </div>
           </div>
-          <div class={qu.flexH().gap(4).it}>
+          <div sx={qu.flexH().gap(4)}>
             <LabeledSection label="pattern">
               <CurrentPatternContainer />
             </LabeledSection>
@@ -301,7 +301,7 @@ export const PageRoot = () => {
               <DegreeSelectorContainer />
             </LabeledSection>
           </div>
-          <div class={qu.flexHA().gap(4).it}>
+          <div sx={qu.flexHA().gap(4)}>
             <LabeledSection label="presets">
               <PatternList />
             </LabeledSection>

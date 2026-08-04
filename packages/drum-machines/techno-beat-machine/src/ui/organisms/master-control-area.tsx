@@ -20,8 +20,8 @@ export const MasterVolumeContainer = () => {
 export const MasterControlArea = () => {
   const { localPlaying, soloMode } = store.useSnapshot();
   return (
-    <div class={qu.flexHA().gap(6).it}>
-      <div class={qu.flexHA().gap(2).it}>
+    <div sx={qu.flexHA().gap(6)}>
+      <div sx={qu.flexHA().gap(2)}>
         <ControlButton
           label="PLAY"
           active={localPlaying}

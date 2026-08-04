@@ -6,7 +6,7 @@ import { store } from "@/root/store";
 import { isBitSet, seqNumbers, toggleBit } from "@/utils/helpers";
 
 const TitleLabel = ({ title }: { title: string }) => {
-  return <div class={qu.fontSize(18).weight("bold").it}>{title}</div>;
+  return <div sx={qu.fontSize(18).weight("bold")}>{title}</div>;
 };
 
 const MatrixPart = () => {
@@ -18,12 +18,13 @@ const MatrixPart = () => {
     store.setStepBits(newStepBits);
   };
 
+  const styles = styleMatrixPart;
   return (
-    <div class={qu.flexV().gap(1).it}>
+    <div class={styles.base}>
       {seqNumbers(8).map((i) => {
         const yi = 7 - i;
         return (
-          <div class={qu.flexHA().gap(1).it}>
+          <div sx={styles.row}>
             {seqNumbers(16).map((xi) => {
               const isStepActive = isBitSet(stepBits[yi], xi);
               const isHalfActive = playPos === xi;
@@ -35,7 +36,11 @@ const MatrixPart = () => {
               }
               return (
                 <div
-                  class={qu.wh(20, 20).cursor("pointer").it}
+                  sx={
+                    styles.cell
+                    // isHalfActive && "--half-active",
+                    // isStepActive && "--active",
+                  }
                   style={{ background: color }}
                   onPointerDown={() => toggleStep(yi, xi)}
                 />
@@ -47,13 +52,27 @@ const MatrixPart = () => {
     </div>
   );
 };
+const styleMatrixPart = {
+  base: cz(qu.flexV().gap(1)),
+  row: cz(qu.flexHA().gap(1)),
+  cell: cz(qu.wh(20, 20).cursor("pointer"), {
+    background: "#888",
+    //not working in qulex 0.1.7, bug?
+    // "&.--half-active": {
+    //   background: "#999",
+    // },
+    // "&.--active": {
+    //   background: "#fff",
+    // },
+  }),
+};
 
 const ControlsPart = () => {
   const { octave, duty } = store.useSnapshot();
   return (
-    <div class={qu.w("full").flexHA().gap(2).fJustify("between").it}>
+    <div sx={qu.w("full").flexHA().gap(2).fJustify("between")}>
       <TitleLabel title="Tonerio Sequencer" />
-      <div class={qu.flexHA().gap(6).it}>
+      <div sx={qu.flexHA().gap(6)}>
         <LabeledBox label="Octave">
           <Knob
             value={octave}
@@ -73,9 +92,9 @@ const ControlsPart = () => {
 
 export const PageRoot = () => {
   return (
-    <div class={qu.flexC().it}>
-      <EffectorBody className={cz(qu.wh(480, 280).pt(2).it, qu.flexVC().it)}>
-        <div class={qu.flexV().gap(1).it}>
+    <div sx={qu.flexC()}>
+      <EffectorBody className={cz(qu.wh(480, 280).pt(2), qu.flexVC())}>
+        <div sx={qu.flexV().gap(1)}>
           <ControlsPart />
           <MatrixPart />
         </div>
