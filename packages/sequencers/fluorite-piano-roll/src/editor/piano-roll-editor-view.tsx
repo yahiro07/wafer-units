@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "preact/hooks";
-import { qu } from "@/common/css-realm";
+import { cz, qu } from "@/common/css-realm";
 import { LoopBarLength, Note } from "@/definitions/model";
 import { GridBackground } from "@/editor/grid-background";
 import { SideKeyboardColumn } from "@/editor/side-keyboard-column";
@@ -250,35 +250,32 @@ const NoteView = ({
   sectionRange: SectionRange;
 }) => {
   const { cellW, cellH } = uiConfig;
-  const noteH = cellH - 2;
   const pos = note.position - sectionRange.offset;
   const yi = note.pitch;
   const dur = note.duration;
   return (
-    <div key={note.id}>
-      <div
-        sx={qu.absolute().flexC().cursor("pointer")}
-        style={{
-          left: npx(pos * cellW),
-          bottom: npx(yi * cellH),
-          width: npx(cellW * dur - 0.5),
-          height: npx(cellH),
-        }}
-      >
-        <div
-          sx={[
-            qu.bg(colors.noteBg).w("full").flexHA(),
-            qu.h(noteH).css({ border: "solid 0.5px #0004" }),
-            qu.rounded(2).pl(0.5),
-            qu.color("#0008").fontSize(10),
-            "font-monospace",
-          ]}
-        >
-          {noteNameLabels[yi]}
-        </div>
-      </div>
+    <div
+      class={styleNoteView.base}
+      style={{
+        left: npx(pos * cellW),
+        bottom: npx(yi * cellH),
+        width: npx(cellW * dur - 0.5),
+        height: npx(cellH),
+      }}
+    >
+      <div class={styleNoteView.label}>{noteNameLabels[yi]}</div>
     </div>
   );
+};
+const styleNoteView = {
+  base: cz(qu.absolute().flexC().cursor("pointer")),
+  label: cz(
+    qu.bg(colors.noteBg).w("full").flexHA(),
+    qu.h(uiConfig.cellH - 2).css({ border: "solid 0.5px #0004" }),
+    qu.rounded(2).pl(0.5),
+    qu.color("#0008").fontSize(10),
+    "font-monospace",
+  ),
 };
 
 const NotesDisplayLayer = ({
@@ -361,14 +358,18 @@ const PlayPositionLineLayer = () => {
 
   return (
     <div
-      sx={[
-        qu.absolute().top(0).wh(barW, "full").pointerEvents("none"),
-        qu.css({ borderRight: "solid 1px #0ff4" }),
-        qu.bg("linear-gradient(to right, #0cc0, #0ff3)"),
-      ]}
+      class={stylePlayPositionLineLayer.base}
       style={{ left: npx(localPos * cellW - barW) }}
     />
   );
+};
+const stylePlayPositionLineLayer = {
+  base: cz(
+    qu.absolute().top(0).pointerEvents("none"),
+    qu.wh(uiConfig.cellW * 1.5, "full"),
+    qu.css({ borderRight: "solid 1px #0ff4" }),
+    qu.bg("linear-gradient(to right, #0cc0, #0ff3)"),
+  ),
 };
 
 export const PianoRollEditorView = () => {

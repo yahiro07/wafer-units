@@ -1,3 +1,4 @@
+import { css, cz } from "@/common/css-realm";
 import { colors } from "@/editor/theme";
 import { uiConfig } from "@/editor/ui-config";
 import { npx } from "@/utils/helpers";
@@ -17,10 +18,10 @@ export const GridBackground = ({
 
   return (
     <div
+      class={styles.base}
       style={{
         width: npx(width),
         height: npx(height),
-        border: "solid 0.5px #222",
       }}
     >
       {Array.from({ length: nx * ny }).map((_, i) => {
@@ -29,37 +30,58 @@ export const GridBackground = ({
         const x = xi * cellW;
         const y = yi * cellH;
         const subNoteIndex = (ny - yi - 1) % 12;
-        let bgColor = colors.pianoRollBg;
-        let borderColor = colors.gridWeak2;
         const isBlackKey = [1, 3, 6, 8, 10].includes(subNoteIndex);
-        if (isBlackKey) {
-          bgColor = colors.pianoRollBgBlackKey;
-        }
+
+        let borderStrength = "default";
         if (xi % 4 === 3) {
-          borderColor = colors.gridStrong;
+          borderStrength = "stronger1";
         }
         if (xi === 15) {
-          borderColor = colors.gridStrong2;
+          borderStrength = "stronger2";
         }
         const hasBottomBorder = subNoteIndex === 0 || subNoteIndex === 5;
         return (
           <div
             key={`${xi}-${yi}`}
+            class={cz(
+              hasBottomBorder && "--has-bottom-border",
+              isBlackKey && "--is-black-key",
+              `--border-${borderStrength}`,
+            )}
             style={{
-              position: "absolute",
               left: npx(x),
               top: npx(y),
-              width: npx(cellW),
-              height: npx(cellH),
-              borderRight: `solid 0.5px ${borderColor}`,
-              borderBottom: hasBottomBorder
-                ? `solid 0.5px ${colors.gridStrong}`
-                : "none",
-              backgroundColor: bgColor,
             }}
           />
         );
       })}
     </div>
   );
+};
+const styles = {
+  base: css({
+    border: "solid 0.5px #222",
+    ">div": {
+      position: "absolute",
+      width: npx(uiConfig.cellW),
+      height: npx(uiConfig.cellH),
+      background: colors.pianoRollBg,
+
+      "&.--is-black-key": {
+        background: colors.pianoRollBgBlackKey,
+      },
+
+      "&.--has-bottom-border": {
+        borderBottom: `solid 0.5px ${colors.gridStrong}`,
+      },
+
+      borderRight: `solid 0.5px ${colors.gridWeak2}`,
+      "&.--border-stronger1": {
+        borderRightColor: colors.gridStrong,
+      },
+      "&.--border-stronger2": {
+        borderRightColor: colors.gridStrong2,
+      },
+    },
+  }),
 };
