@@ -1,5 +1,5 @@
 import { useState } from "preact/hooks";
-import { cz, qu } from "@/common/css-realm";
+import { qu } from "@/common/css-realm";
 import { noteNameLabels, uiConfig } from "@/editor/ui-config";
 import { store } from "@/root/store";
 import { startDragSession } from "@/utils/drag-session";
@@ -77,25 +77,23 @@ const KeyboardKey = ({ yi }: { yi: number }) => {
   };
 
   return (
-    <div
-      class={cz(qu.wh(80, cellH).css({ pointerEvents: "none" }).relative().it)}
-    >
+    <div sx={qu.wh(80, cellH).css({ pointerEvents: "none" }).relative()}>
       <div
-        class={cz(
-          qu.absolute().it,
-          qu.pointerEvents("auto").cursor("pointer").it,
-          pressed && qu.bg("#4dd!important").it,
-        )}
+        sx={[
+          qu.absolute(),
+          qu.pointerEvents("auto").cursor("pointer"),
+          pressed && qu.bg("#4dd!important"),
+        ]}
         style={keyStyle}
         onPointerDown={handlePointerDown}
       >
         {label && (
           <div
-            class={cz(
-              qu.flexHA().h("full").fJustify("end").p(1).it,
-              qu.color("#666").fontSize(12).it,
+            sx={[
+              qu.flexHA().h("full").fJustify("end").p(1),
+              qu.color("#666").fontSize(12),
               "font-monospace",
-            )}
+            ]}
           >
             {label}
           </div>

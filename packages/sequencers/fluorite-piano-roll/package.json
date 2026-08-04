@@ -12,7 +12,7 @@
     "@preact-icons/fa": "catalog:",
     "@preact/preset-vite": "catalog:",
     "preact": "catalog:",
-    "qulex": "catalog:",
+    "qulex": "link:../../../../qulex",
     "snap-store": "catalog:"
   }
 }

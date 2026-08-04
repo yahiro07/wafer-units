@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "preact/hooks";
-import { cz, qu } from "@/common/css-realm";
+import { qu } from "@/common/css-realm";
 import { LoopBarLength, Note } from "@/definitions/model";
 import { GridBackground } from "@/editor/grid-background";
 import { SideKeyboardColumn } from "@/editor/side-keyboard-column";
@@ -234,7 +234,7 @@ const EditInputLayer = ({
   }
   return (
     <div
-      class={qu.absoluteFull().it}
+      sx={qu.absoluteFull()}
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
       style={{ cursor }}
@@ -257,7 +257,7 @@ const NoteView = ({
   return (
     <div key={note.id}>
       <div
-        class={qu.absolute().flexC().cursor("pointer").it}
+        sx={qu.absolute().flexC().cursor("pointer")}
         style={{
           left: npx(pos * cellW),
           bottom: npx(yi * cellH),
@@ -266,13 +266,13 @@ const NoteView = ({
         }}
       >
         <div
-          class={cz(
-            qu.bg(colors.noteBg).w("full").flexHA().it,
-            qu.h(noteH).css({ border: "solid 0.5px #0004" }).it,
-            qu.rounded(2).pl(0.5).it,
-            qu.color("#0008").fontSize(10).it,
+          sx={[
+            qu.bg(colors.noteBg).w("full").flexHA(),
+            qu.h(noteH).css({ border: "solid 0.5px #0004" }),
+            qu.rounded(2).pl(0.5),
+            qu.color("#0008").fontSize(10),
             "font-monospace",
-          )}
+          ]}
         >
           {noteNameLabels[yi]}
         </div>
@@ -289,7 +289,7 @@ const NotesDisplayLayer = ({
   sectionRange: SectionRange;
 }) => {
   return (
-    <div class={qu.absoluteFull().it}>
+    <div sx={qu.absoluteFull()}>
       {notes
         .filter(
           (note) =>
@@ -315,11 +315,11 @@ const NoteLayerStrip = ({
   const editorW = cellW * sectionRange.duration;
   return (
     <div
-      class={cz(
-        qu.relative().wh(editorW, editorH).it,
+      sx={[
+        qu.relative().wh(editorW, editorH),
         // qu.bd("blue").it,
-        qu.overflow("hidden").it,
-      )}
+        qu.overflow("hidden"),
+      ]}
     >
       <NotesDisplayLayer notes={notes} sectionRange={sectionRange} />
       <EditInputLayer notes={notes} sectionRange={sectionRange} />
@@ -338,7 +338,7 @@ const RepeatingNoteLayers = () => {
     [sectionOffset, sectionStride],
   );
   return (
-    <div class={qu.absoluteFull().flexH().it}>
+    <div sx={qu.absoluteFull().flexH()}>
       {seqNumbers(nx).map((i) => {
         return (
           <NoteLayerStrip
@@ -361,11 +361,11 @@ const PlayPositionLineLayer = () => {
 
   return (
     <div
-      class={cz(
-        qu.absolute().top(0).wh(barW, "full").pointerEvents("none").it,
-        qu.css({ borderRight: "solid 1px #0ff4" }).it,
-        qu.bg("linear-gradient(to right, #0cc0, #0ff3)").it,
-      )}
+      sx={[
+        qu.absolute().top(0).wh(barW, "full").pointerEvents("none"),
+        qu.css({ borderRight: "solid 1px #0ff4" }),
+        qu.bg("linear-gradient(to right, #0cc0, #0ff3)"),
+      ]}
       style={{ left: npx(localPos * cellW - barW) }}
     />
   );
@@ -387,13 +387,10 @@ export const PianoRollEditorView = () => {
   return (
     <div
       ref={baseDivRef}
-      class={cz(
-        qu.flexH().gap(0.5).h(340).it,
-        qu.overflowXY("hidden", "scroll").it,
-      )}
+      sx={[qu.flexH().gap(0.5).h(340), qu.overflowXY("hidden", "scroll")]}
     >
       <SideKeyboardColumn />
-      <div class={qu.relative().wh(editorW, editorH).flexH().it}>
+      <div sx={qu.relative().wh(editorW, editorH).flexH()}>
         <GridBackground nx={32} ny={numKeys} width={editorW} height={editorH} />
         <RepeatingNoteLayers />
         <PlayPositionLineLayer />
