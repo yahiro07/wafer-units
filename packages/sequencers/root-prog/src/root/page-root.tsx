@@ -1,5 +1,5 @@
 import { useMemo } from "preact/hooks";
-import { cz, qu } from "@/common/css-realm";
+import { qu } from "@/common/css-realm";
 import { EffectorBody, pageBgColor } from "@/components/effector-body";
 import { GridBackground } from "@/components/grid-background";
 import { ShiftSelector } from "@/components/shift-selector";
@@ -32,9 +32,9 @@ const ControlsPart = () => {
   const keyLabelModeOptions = useKeyLabelModeOptions();
   return (
     <div>
-      <div class={qu.flexHA().gap(2).fJustify("between").it}>
-        <div class={qu.flexHA().gap(2).it}>
-          <div class={qu.fontSize(14).weight("500").it}>Key/Label</div>
+      <div sx={qu.flexHA().gap(2).fJustify("between")}>
+        <div sx={qu.flexHA().gap(2)}>
+          <div sx={qu.fontSize(14).weight("500")}>Key/Label</div>
           <ShiftSelector
             options={keyLabelModeOptions}
             value={st.keyLabelMode}
@@ -42,8 +42,8 @@ const ControlsPart = () => {
             winWidth={120}
           />
         </div>
-        <div class={qu.flexHA().gap(2).it}>
-          <div class={qu.fontSize(14).weight("500").it}>Bars</div>
+        <div sx={qu.flexHA().gap(2)}>
+          <div sx={qu.fontSize(14).weight("500")}>Bars</div>
           <ShiftSelector
             options={LoopBarsOptions}
             value={st.loopBars}
@@ -65,10 +65,7 @@ const pitchLabelsSource: Record<KeyLabelMode, string[]> = {
 const BeatDot = ({ active }: { active: boolean }) => {
   return (
     <div
-      class={cz(
-        qu.wh(4, 4).bg("#888").rounded("50%").it,
-        active && qu.bg("#0f0").it,
-      )}
+      sx={[qu.wh(4, 4).bg("#888").rounded("50%"), active && qu.bg("#0f0")]}
     />
   );
 };
@@ -88,7 +85,7 @@ const BeatDotCellContent = ({
     const active2 =
       playStepIndex >= 0 && (stepIndex + 4) >> 2 === playStepIndex >> 2;
     return (
-      <div class={qu.flexC().gap(1.5).it}>
+      <div sx={qu.flexC().gap(1.5)}>
         <BeatDot active={active1} />
         <BeatDot active={active2} />
       </div>
@@ -106,15 +103,15 @@ const BeatDotCellContent = ({
 const BeatDotsRow = ({ w, bars }: { w: number; bars: LoopBars }) => {
   const { playStepIndex } = store.useSnapshot();
   return (
-    <div class={qu.flexH().it}>
+    <div sx={qu.flexH()}>
       {seqNumbers(16).map((i) => (
         <div
           key={i}
-          class={cz(
-            qu.wh((w + 1) / 16, 16).flexC().it,
+          sx={[
+            qu.wh((w + 1) / 16, 16).flexC(),
             // qu.bg("#fff").bd("#ccc").it,
-            qu.color("#888").it,
-          )}
+            qu.color("#888"),
+          ]}
         >
           <BeatDotCellContent bars={bars} i={i} playStepIndex={playStepIndex} />
         </div>
@@ -136,10 +133,10 @@ const PitchLabelsColumn = ({
         const yi = 8 - i;
         return (
           <div
-            class={cz(
-              qu.wh(36, (h + 1) / 9).flexC().it,
-              qu.bg("#fff").bd("#ccc").fontSize(12).it,
-            )}
+            sx={[
+              qu.wh(36, (h + 1) / 9).flexC(),
+              qu.bg("#fff").bd("#ccc").fontSize(12),
+            ]}
           >
             {pitchLabels[yi]}
           </div>
@@ -186,7 +183,7 @@ const EditInputLayer = ({ notes }: { notes: number[] }) => {
   };
   return (
     <div
-      class={qu.relative().w("full").h("full").it}
+      sx={qu.relative().w("full").h("full")}
       onPointerDown={handlePointerDown}
     />
   );
@@ -224,7 +221,7 @@ const NotesDisplayLayer = ({
         return (
           <div key={xi}>
             <div
-              class={qu.absolute().flexC().it}
+              sx={qu.absolute().flexC()}
               style={{
                 left: npx(xi * cellW),
                 bottom: npx(yi * cellH),
@@ -232,10 +229,10 @@ const NotesDisplayLayer = ({
                 height: npx(cellH),
               }}
             >
-              <div class={qu.bg("#0cf").rounded("50%").wh(16, 16).it} />
+              <div sx={qu.bg("#0cf").rounded("50%").wh(16, 16)} />
             </div>
             <div
-              class={qu.absolute().flexC().it}
+              sx={qu.absolute().flexC()}
               style={{
                 left: npx(xi * cellW),
                 bottom: npx(yi * cellH),
@@ -243,7 +240,7 @@ const NotesDisplayLayer = ({
                 height: npx(cellH),
               }}
             >
-              <div class={qu.bg("#0cf").w("full").h(8).it} />
+              <div sx={qu.bg("#0cf").w("full").h(8)} />
             </div>
           </div>
         );
@@ -260,11 +257,11 @@ const Editor = () => {
   const bgAltStrideX = st.loopBars === 8 ? 2 : 4;
 
   return (
-    <div class={qu.flexH().fAlign("end").gap(2).it}>
+    <div sx={qu.flexH().fAlign("end").gap(2)}>
       <PitchLabelsColumn pitchLabels={pitchLabels} h={h} />
-      <div className={qu.flexV().gap(2).it}>
+      <div sx={qu.flexV().gap(2)}>
         <BeatDotsRow w={w} bars={st.loopBars} />
-        <div class={qu.relative().wh(w, h).it}>
+        <div sx={qu.relative().wh(w, h)}>
           <GridBackground
             nx={16}
             ny={9}
@@ -272,10 +269,10 @@ const Editor = () => {
             height={h}
             bgAlterStrideX={bgAltStrideX}
           />
-          <div class={qu.absolute().top(0).left(0).wh(w, h).it}>
+          <div sx={qu.absolute().top(0).left(0).wh(w, h)}>
             <NotesDisplayLayer notes={st.notes} w={w} h={h} />
           </div>
-          <div class={qu.absolute().top(0).left(0).wh(w, h).it}>
+          <div sx={qu.absolute().top(0).left(0).wh(w, h)}>
             <EditInputLayer notes={st.notes} />
           </div>
         </div>
@@ -286,9 +283,9 @@ const Editor = () => {
 
 export const PageRoot = () => {
   return (
-    <div class={qu.h("dvh").bg(pageBgColor).flexC().it}>
-      <EffectorBody className={cz(qu.wh(420, 260).it, qu.flexC().it)}>
-        <div class={qu.flexV().gap(2).it}>
+    <div sx={qu.h("dvh").bg(pageBgColor).flexC()}>
+      <EffectorBody sx={[qu.wh(420, 260), qu.flexC()]}>
+        <div sx={qu.flexV().gap(2)}>
           {/* <div>root-prog</div> */}
           <ControlsPart />
           <Editor />

@@ -378,8 +378,8 @@ importers:
         specifier: 'catalog:'
         version: 10.29.8
       qulex:
-        specifier: link:../../../../qulex
-        version: link:../../../../qulex
+        specifier: 'catalog:'
+        version: '@yahiro07/qulex@0.1.6'
       snap-store:
         specifier: 'catalog:'
         version: 0.1.12(preact@10.29.8)(react@19.2.8)
