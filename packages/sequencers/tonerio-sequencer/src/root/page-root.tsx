@@ -1,9 +1,56 @@
 import { cz, qu } from "@/common/css-realm";
+import { Icons } from "@/common/icons";
 import { EffectorBody } from "@/components/effector-body";
+import { IconButton } from "@/components/icon-button";
 import { Knob } from "@/components/knob";
 import { LabeledBox } from "@/components/labeled-box";
 import { store } from "@/root/store";
-import { isBitSet, seqNumbers, toggleBit } from "@/utils/helpers";
+import { isBitSet, seqNumbers, setBit, toggleBit } from "@/utils/helpers";
+
+function getRandomPitch() {
+  if (Math.random() < 0.2) return 0; //add weight for root note
+  return Math.floor(Math.random() * 8);
+}
+
+function generateRandomStepBits() {
+  const stepBits = seqNumbers(8).map(() => 0);
+  let prevYi = 0;
+  for (let i = 0; i < 16; i++) {
+    let yi = getRandomPitch();
+    if (i >= 1 && yi === prevYi) {
+      //retry to reduce the same pitch
+      yi = getRandomPitch();
+      if (yi === prevYi) {
+        yi = getRandomPitch();
+      }
+    }
+    stepBits[yi] = setBit(stepBits[yi], i);
+    prevYi = yi;
+  }
+  return stepBits;
+}
+
+const actions = {
+  toggleStep(yi: number, xi: number) {
+    const { stepBits } = store.state;
+    const newStepBits = [...stepBits];
+    newStepBits[yi] = toggleBit(newStepBits[yi], xi);
+    store.setStepBits(newStepBits);
+  },
+  setOctave(value: number) {
+    store.setOctave(value);
+  },
+  setDuty(value: number) {
+    store.setDuty(value);
+  },
+  clearSteps() {
+    store.setStepBits(seqNumbers(8).map(() => 0));
+  },
+  randomizeSteps() {
+    const stepBits = generateRandomStepBits();
+    store.setStepBits(stepBits);
+  },
+};
 
 const TitleLabel = ({ title }: { title: string }) => {
   return <div sx={qu.fontSize(18).weight("bold")}>{title}</div>;
@@ -11,12 +58,6 @@ const TitleLabel = ({ title }: { title: string }) => {
 
 const MatrixPart = () => {
   const { stepBits, playPos } = store.useSnapshot();
-
-  const toggleStep = (yi: number, xi: number) => {
-    const newStepBits = [...stepBits];
-    newStepBits[yi] = toggleBit(newStepBits[yi], xi);
-    store.setStepBits(newStepBits);
-  };
 
   const styles = styleMatrixPart;
   return (
@@ -42,7 +83,7 @@ const MatrixPart = () => {
                     // isStepActive && "--active",
                   }
                   style={{ background: color }}
-                  onPointerDown={() => toggleStep(yi, xi)}
+                  onPointerDown={() => actions.toggleStep(yi, xi)}
                 />
               );
             })}
@@ -72,18 +113,24 @@ const ControlsPart = () => {
   return (
     <div sx={qu.w("full").flexHA().gap(2).fJustify("between")}>
       <TitleLabel title="Tonerio Sequencer" />
-      <div sx={qu.flexHA().gap(6)}>
+      <div sx={qu.flexHA().gap(4)}>
+        <IconButton onClick={actions.randomizeSteps}>
+          <Icons.Random />
+        </IconButton>
+        <IconButton onClick={actions.clearSteps}>
+          <Icons.Trash />
+        </IconButton>
         <LabeledBox label="Octave">
           <Knob
             value={octave}
-            onChange={(value) => store.setOctave(value)}
+            onChange={actions.setOctave}
             min={-2}
             max={2}
             step={1}
           />
         </LabeledBox>
         <LabeledBox label="Duty">
-          <Knob value={duty} onChange={(value) => store.setDuty(value)} />
+          <Knob value={duty} onChange={actions.setDuty} />
         </LabeledBox>
       </div>
     </div>

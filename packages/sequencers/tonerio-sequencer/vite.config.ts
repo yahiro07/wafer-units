@@ -7,6 +7,14 @@ export default defineConfig({
   resolve: {
     tsconfigPaths: true,
     dedupe: ["preact"],
+    alias: [
+      //import workaround for @preact-icons/fa
+      { find: /^npm:preact@\^?[\d.]+$/, replacement: "preact" },
+      {
+        find: /^npm:preact@\^?[\d.]+\/jsx-runtime$/,
+        replacement: "preact/jsx-runtime",
+      },
+    ],
   },
   optimizeDeps: {
     exclude: ["wafer-host", "snap-store"],

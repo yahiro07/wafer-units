@@ -9,5 +9,5 @@ export type SequencerEditState = {
 export const defaultSequencerEditState: SequencerEditState = {
   octave: 0,
   duty: 0.5,
-  stepBits: seqNumbers(10).map(() => 0),
+  stepBits: seqNumbers(8).map(() => 0),
 };
