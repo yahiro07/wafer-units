@@ -28,8 +28,8 @@ catalogs:
       specifier: ^0.1.12
       version: 0.1.12
     wafer-host:
-      specifier: ^0.0.6
-      version: 0.0.6
+      specifier: ^0.1.2
+      version: 0.1.2
 
 importers:
 
@@ -55,7 +55,7 @@ importers:
         version: 8.2.0(@types/node@25.9.5)(jiti@2.7.0)
       wafer-host:
         specifier: 'catalog:'
-        version: 0.0.6(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: 0.1.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
 
   packages/drum-machines/graphite-drum-machine:
     devDependencies:
@@ -2359,8 +2359,8 @@ packages:
       vite:
         optional: true
 
-  wafer-host@0.0.6:
-    resolution: {integrity: sha512-J7STTkOf3gzV5pQ74DueS+13uuTM+nEanpC8sE2orEGHzLpvphWookJ0Q7SotT0KCDZ0vSi5F21LeIL5Vi7bdA==}
+  wafer-host@0.1.2:
+    resolution: {integrity: sha512-yAXhe8mgQBjvpA5w+/BVsdCviKQyok//zl9+FGS1o9Z3zXZXdaglPWzQ4JeVeKO+w/FKuEN6X1wnfWZkar7LZg==}
     peerDependencies:
       react: ^19.2.6
       react-dom: ^19.2.6
@@ -3658,7 +3658,7 @@ snapshots:
     optionalDependencies:
       vite: 8.2.0(@types/node@25.9.5)(jiti@2.7.0)
 
-  wafer-host@0.0.6(react-dom@19.2.8(react@19.2.8))(react@19.2.8):
+  wafer-host@0.1.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8):
     optionalDependencies:
       react: 19.2.8
       react-dom: 19.2.8(react@19.2.8)

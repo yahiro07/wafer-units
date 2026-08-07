@@ -6,7 +6,7 @@ minimumReleaseAgeExclude:
   - "@yahiro07/qulex"
   - "@yahiro07/mini-css"
   - mofur@0.1.1
-  - wafer-host@0.0.6
+  - wafer-host
 catalog:
   "qulex": "npm:@yahiro07/qulex@^0.1.7"
   "@preact/preset-vite": "^2.10.6"
@@ -15,4 +15,4 @@ catalog:
   "preact": "^10.29.2"
   "snap-store": "^0.1.12"
   "mini-css": "npm:@yahiro07/mini-css@^0.1.0"
-  "wafer-host": "^0.0.6"
+  "wafer-host": "^0.1.2"
