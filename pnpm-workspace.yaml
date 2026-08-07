@@ -15,4 +15,4 @@ catalog:
   "preact": "^10.29.2"
   "snap-store": "^0.1.12"
   "mini-css": "npm:@yahiro07/mini-css@^0.1.0"
-  "wafer-host": "^0.1.2"
+  "wafer-host": "^0.1.3"
