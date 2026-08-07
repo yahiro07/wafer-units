@@ -67,13 +67,16 @@ const MatrixPart = () => {
         return (
           <div sx={styles.row}>
             {seqNumbers(16).map((xi) => {
+              const isBaseAlt = xi % 8 >= 4;
               const isStepActive = isBitSet(stepBits[yi], xi);
               const isHalfActive = playPos === xi;
-              let color = "#888";
+              let color = "#777";
               if (isStepActive) {
                 color = "#fff";
               } else if (isHalfActive) {
                 color = "#999";
+              } else if (isBaseAlt) {
+                color = "#888";
               }
               return (
                 <div
