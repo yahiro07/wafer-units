@@ -62,9 +62,6 @@ export function createEngine(unitInterface: UnitInterface | undefined) {
       state.rootNoteNumber = noteNumber;
     },
     noteOff(_noteNumber: number) {},
-    setProgressionRootNote(noteNumber: number) {
-      state.rootNoteNumber = noteNumber;
-    },
   };
 
   return {
