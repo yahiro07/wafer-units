@@ -49,6 +49,7 @@ export function createSequencerEngine(
         const note = getNotePitch(relNote, rootNoteNumber, local.keyTranspose);
         noteOutputPort?.noteOn(note, time);
         noteOutputPort?.noteOff(note, time + unitDuration);
+        noteOutputPort?.setProgressionRootNote(note, time);
         local.lastEmitNote = relNote;
       }
     },

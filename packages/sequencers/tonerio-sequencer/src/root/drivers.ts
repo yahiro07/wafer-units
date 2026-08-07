@@ -49,8 +49,11 @@ export function setupUnit() {
       },
     },
     noteInput: {
-      noteOn: engine.inputNoteOn,
-      noteOff: engine.inputNoteOff,
+      noteOn() {},
+      noteOff() {},
+      setProgressionRootNote(noteNumber) {
+        engine.setRootNote(noteNumber);
+      },
     },
     hostCallbacks: {
       setKey: engine.setKey,

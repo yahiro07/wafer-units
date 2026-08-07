@@ -15,10 +15,7 @@ export function setupUnit() {
       unitType: "sequencer",
       viewSize: [480, 200],
     },
-    noteInput: {
-      noteOn: engine.inputNoteOn,
-      noteOff: engine.inputNoteOff,
-    },
+    noteInput: engine.noteInput,
     clockHandlers: {
       start() {
         engine.clockHandlers.start?.();

@@ -1,4 +1,8 @@
-import { ClockHandlers, UnitInterface } from "wafer-host/unit-types";
+import {
+  ClockHandlers,
+  NoteInputPort,
+  UnitInterface,
+} from "wafer-host/unit-types";
 import {
   defaultSequencerEditState,
   PatternRange,
@@ -53,15 +57,21 @@ export function createEngine(unitInterface: UnitInterface | undefined) {
       }
     },
   };
+  const noteInput: NoteInputPort = {
+    noteOn(noteNumber: number) {
+      state.rootNoteNumber = noteNumber;
+    },
+    noteOff(_noteNumber: number) {},
+    setProgressionRootNote(noteNumber: number) {
+      state.rootNoteNumber = noteNumber;
+    },
+  };
 
   return {
     setState: (attrs: Partial<SequencerEditState>) => {
       Object.assign(state.editState, attrs);
     },
     clockHandlers,
-    inputNoteOn(noteNumber: number) {
-      state.rootNoteNumber = noteNumber;
-    },
-    inputNoteOff(_noteNumber: number) {},
+    noteInput,
   };
 }
