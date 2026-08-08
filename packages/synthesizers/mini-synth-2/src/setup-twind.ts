@@ -1,15 +1,16 @@
 import { install } from "@twind/core";
 import presetTailwind from "@twind/preset-tailwind";
+import presetExt from "@twind/preset-ext";
 
 install({
-  presets: [presetTailwind()],
+  presets: [presetTailwind(), presetExt()],
   theme: {
     extend: {
       colors: {
-        // clKnobFace: "#ddd",
-        // clKnobEdge: "#555",
-        clKnobTick: "#0bf",
-        clText: "#333",
+        clPrimary: "#07f",
+        clKnobTick: "#07f",
+        clText: "#555",
+        clSectionEdge: "#bbb",
       },
     },
   },

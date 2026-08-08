@@ -39,9 +39,9 @@ export const Knob = ({
 const styles = {
   base: css({
     "@apply": "relative rounded-full",
-    width: "60px",
-    height: "60px",
-    background: "linear-gradient(to bottom, #fff, #0008)",
+    width: "54px",
+    height: "54px",
+    background: "linear-gradient(to bottom, #fff, #0006)",
     padding: "3px",
     border: "solid 0.5px #4448",
   }),

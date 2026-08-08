@@ -19,15 +19,15 @@ export const KnobBox = ({
   return (
     <div class={styles.base}>
       <Knob value={value} onChange={onChange} min={min} max={max} step={step} />
-      <div class="label">{label}</div>
+      <div class={styles.label}>{label}</div>
     </div>
   );
 };
 const styles = {
   base: css({
-    "@apply": "flex-vc",
-    "> .label": {
-      "@apply": "text-sm text-gray-500 weight-[600]",
-    },
+    "@apply": "flex-vc gap-1",
+  }),
+  label: css({
+    apply: "text-sm text-gray-500 font-[600]",
   }),
 };
