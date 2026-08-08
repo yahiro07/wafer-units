@@ -9,6 +9,7 @@ install({
         // clKnobFace: "#ddd",
         // clKnobEdge: "#555",
         clKnobTick: "#0bf",
+        clText: "#333",
       },
     },
   },

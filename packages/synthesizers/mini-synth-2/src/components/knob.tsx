@@ -5,15 +5,25 @@ import { css, cx } from "@twind/core";
 export const Knob = ({
   value,
   onChange,
+  min = 0,
+  max = 1,
+  step = 0.01,
 }: {
   value: number;
   onChange: (value: number) => void;
+  min?: number;
+  max?: number;
+  step?: number;
 }) => {
-  const min = 0;
-  const max = 1;
   const tickAngle = linearInterpolate(value, min, max, -135, 135);
   return (
-    <KnobFrame value={value} min={0} max={1} step={0.01} onChange={onChange}>
+    <KnobFrame
+      value={value}
+      min={min}
+      max={max}
+      step={step}
+      onChange={onChange}
+    >
       <div class={styles.base}>
         <div class={styles.inner}></div>
         <div
