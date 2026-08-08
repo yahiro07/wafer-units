@@ -3,6 +3,15 @@ import presetTailwind from "@twind/preset-tailwind";
 
 install({
   presets: [presetTailwind()],
+  theme: {
+    extend: {
+      colors: {
+        // clKnobFace: "#ddd",
+        // clKnobEdge: "#555",
+        clKnobTick: "#0bf",
+      },
+    },
+  },
   rules: [
     ["flex-h", "~(flex)"],
     ["flex-hs", "flex items-start"],
