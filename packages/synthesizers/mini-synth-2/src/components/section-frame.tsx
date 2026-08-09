@@ -21,7 +21,7 @@ export const SectionFrame = ({
 };
 const styles = {
   base: css({
-    "@apply": "flex-v rounded-[3px]",
+    "@apply": "flex-v rounded-[4px]",
     border: "solid 1px theme('colors.clSectionEdge')",
   }),
   headerRow: css({

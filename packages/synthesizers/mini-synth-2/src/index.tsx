@@ -42,7 +42,7 @@ const PresetSelectionPart = () => {
 
 const TopBar = () => {
   return (
-    <div class="bd-clSectionEdge rounded-[3px] flex-ha py-2 px-3 justify-between">
+    <div class="bd-clSectionEdge rounded-[4px] flex-ha py-2 px-3 justify-between">
       <div class="w-[120px]">
         <TitleText />
       </div>
