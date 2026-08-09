@@ -1,8 +1,15 @@
-import presetTailwind from "@twind/preset-tailwind";
+import {
+  twind,
+  cssom,
+  tx as tx$,
+  css as css$,
+  defineConfig,
+} from "@twind/core";
+import { createTz } from "@/utils/tz";
 import presetExt from "@twind/preset-ext";
-import { defineConfig } from "@twind/core";
+import presetTailwind from "@twind/preset-tailwind";
 
-export const twindConfig = defineConfig({
+const config = defineConfig({
   presets: [presetTailwind(), presetExt()],
   theme: {
     extend: {
@@ -34,3 +41,8 @@ export const twindConfig = defineConfig({
     ["bd-", ({ $$ }) => `border border-solid border-${$$}`],
   ],
 });
+
+export const tw = twind(config, cssom());
+export const tx = tx$.bind(tw);
+export const css = css$.bind(tw);
+export const tz = createTz(tx, css);
