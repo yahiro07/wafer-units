@@ -5,18 +5,7 @@ import { defineConfig, UserConfig } from "vite";
 const configCommon: UserConfig = {
   base: "./",
   plugins: [preact(), tailwindcss()],
-  resolve: {
-    tsconfigPaths: true,
-    dedupe: ["preact"],
-    alias: [
-      //import workaround for @preact-icons/fa
-      { find: /^npm:preact@\^?[\d.]+$/, replacement: "preact" },
-      {
-        find: /^npm:preact@\^?[\d.]+\/jsx-runtime$/,
-        replacement: "preact/jsx-runtime",
-      },
-    ],
-  },
+  resolve: { tsconfigPaths: true },
   optimizeDeps: {
     exclude: ["wafer-host", "mofur", "snap-store"],
   },
