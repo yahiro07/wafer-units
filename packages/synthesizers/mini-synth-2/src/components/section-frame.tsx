@@ -27,6 +27,6 @@ const styles = {
     borderBottom: "solid 1px theme('colors.clSectionEdge')",
   }),
   contentRow: css({
-    "@apply": "flex-h justify-around pt-5 pb-3 px-1",
+    "@apply": "flex-h justify-around pt-5 pb-3 px-1.5",
   }),
 };
