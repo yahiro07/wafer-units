@@ -8,6 +8,7 @@ import { actions } from "@/root/actions";
 import { SynthParameters } from "@/core/definitions";
 import { useEffect } from "preact/hooks";
 import { setupSynchronization, setupUnit } from "@/root/drivers";
+import { cx } from "@twind/core";
 
 const presetOptions = createPlainSelectorOptions(allPresetKeys);
 
@@ -54,7 +55,12 @@ const RandomizerButton = () => {
 
 const TopBar = () => {
   return (
-    <div class="bd-clSectionEdge rounded-[4px] flex-ha py-2 px-4 justify-between">
+    <div
+      class={cx(
+        "flex-ha py-2 px-4 justify-between",
+        "bg-clTopBarBg bd-clSectionEdge rounded-[4px]",
+      )}
+    >
       <div class="w-[120px]">
         <TitleText />
       </div>
@@ -131,8 +137,8 @@ export const App = () => {
   useEffect(setupUnit, []);
   useEffect(setupSynchronization, []);
   return (
-    <div class="h-[100dvh] flex-c text-clText bg-white">
-      <div class="w-[680px] flex-v gap-3 shrink-0">
+    <div class="h-[100dvh] flex-c text-clText bg-clPanelBody">
+      <div class="w-[700px] flex-v gap-3 shrink-0">
         <TopBar />
         <ParametersSection />
       </div>

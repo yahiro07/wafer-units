@@ -7,10 +7,15 @@ install({
   theme: {
     extend: {
       colors: {
-        clPrimary: "#07f",
+        clPanelBody: "#aaa",
+        clPrimary: "#06d",
         clKnobTick: "#07f",
         clText: "#555",
-        clSectionEdge: "#bbb",
+        clSectionBg: "#fff",
+        clSectionHeaderBg: "#ddd",
+        clSectionEdge: "#666",
+        clTopBarBg: "#e0e0e0",
+        clButtonBg: "#fff",
       },
     },
   },

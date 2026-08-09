@@ -21,6 +21,6 @@ export const Button = ({
 };
 const styles = {
   base: css({
-    "@apply": "bd-clSectionEdge rounded-[2px] flex-c",
+    "@apply": "bg-clButtonBg bd-clSectionEdge rounded-[2px] flex-c",
   }),
 };
