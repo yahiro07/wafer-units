@@ -1,6 +1,5 @@
 import { ComponentChildren } from "preact";
 import { qu } from "@/common/css-realm";
-import { Icons } from "@/common/icons";
 import { SelectorOption } from "@/utils/selector-option";
 
 export const ShifterFrame = ({
@@ -33,8 +32,8 @@ export const ShiftSelector = <T extends string | number>({
 }) => {
   const currentIndex = options.findIndex((option) => option.value === value);
   const currentOption = options[currentIndex];
-  const canShiftLeft = currentIndex > 0;
-  const canShiftRight = currentIndex < options.length - 1;
+  // const canShiftLeft = currentIndex > 0;
+  // const canShiftRight = currentIndex < options.length - 1;
 
   const handleShift = (dir: -1 | 1) => {
     const newIndex = currentIndex + dir;
@@ -50,15 +49,17 @@ export const ShiftSelector = <T extends string | number>({
           qu.bg("#ddd").cursor("pointer"),
         ]}
       >
-        <Icons.CaretLeft
+        {/* <Icons.CaretLeft
           size={13}
           sx={[qu.ml(-0.75), !canShiftLeft && qu.invisible()]}
-        />
+        /> */}
+        <span>&lt;</span>
         <div>{currentOption?.label}</div>
-        <Icons.CaretRight
+        {/* <Icons.CaretRight
           size={13}
           sx={[qu.mr(-0.75), !canShiftRight && qu.invisible()]}
-        />
+        /> */}
+        <span>&gt;</span>
       </div>
     </ShifterFrame>
   );
