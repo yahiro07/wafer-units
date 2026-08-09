@@ -1,7 +1,6 @@
 import { useMemo } from "preact/hooks";
 import { pitchTweakRangeMap } from "@/model/defs";
 import { qu } from "@/ui/common/css-realm";
-import { Icons } from "@/ui/common/icons";
 import { sampleVariationsMap, stepLengthOptions } from "@/ui/common/ui-data";
 import { Button, ControlButton } from "@/ui/components/buttons";
 import { LabeledKnob } from "@/ui/components/labeled-knob";
@@ -10,6 +9,7 @@ import { UpperLabel } from "@/ui/components/upper-label";
 import { partActions } from "@/ui/store/actions";
 import { useCurrentPart } from "@/ui/store/readers";
 import { createPlainSelectorOptions } from "@/utils/selector-option";
+import { Icons } from "@/ui/components/icons";
 
 const SamplesSelectorContainer = () => {
   const part = useCurrentPart();
@@ -31,7 +31,7 @@ const SamplesSelectorContainer = () => {
 const SamplesShifterContainer = () => {
   return (
     <Button height={40} asr={1} onClick={() => partActions.shiftSample()}>
-      <Icons.Swap />
+      <Icons.Exchange size={20} />
     </Button>
   );
 };

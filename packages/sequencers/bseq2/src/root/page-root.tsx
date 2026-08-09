@@ -5,7 +5,7 @@ import { EffectorBody, pageBgColor } from "@/components/effector-body";
 import { Knob } from "@/components/knob";
 import { LabeledBox } from "@/components/labeled-box";
 import { LedIndicator } from "@/components/led-indicator";
-import { OptionMappedKnob } from "@/components/unused/option-mapped-knob";
+import { OptionMappedKnob } from "@/components/option-mapped-knob";
 import { store } from "@/root/store";
 import { seqNumbers } from "@/utils/helpers";
 

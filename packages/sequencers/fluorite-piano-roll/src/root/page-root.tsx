@@ -1,8 +1,8 @@
 import { qu } from "@/common/css-realm";
-import { Icons } from "@/common/icons";
 import { Button } from "@/components/button";
 import { EffectorBody } from "@/components/effector-body";
 import { IconButton } from "@/components/icon-button";
+import { Icons } from "@/components/icons";
 import { Knob } from "@/components/knob";
 import { LabeledBox } from "@/components/labeled-box";
 import { ShiftSelector } from "@/components/shift-selector";
@@ -73,13 +73,13 @@ const PagerContainer = () => {
     <LabeledBox label="">
       <div sx={qu.flexHA().gap(2)}>
         <Button disabled={!canShiftLeft} onClick={() => shiftPage(-1)}>
-          <Icons.CaretLeft />
+          <Icons.CaretLeft size={20} />
         </Button>
         <div sx={qu.w(50).flexC()}>
           {st.pageIndex + 1} / {totalPages}
         </div>
         <Button disabled={!canShiftRight} onClick={() => shiftPage(1)}>
-          <Icons.CaretRight />
+          <Icons.CaretRight size={20} />
         </Button>
       </div>
     </LabeledBox>
@@ -90,7 +90,7 @@ const TrashButtonContainer = () => {
   const hasNote = store.useSnapshot().notes.length > 0;
   return (
     <IconButton disabled={!hasNote} onClick={() => store.setNotes([])}>
-      <Icons.Trash />
+      <Icons.Trash size={20} />
     </IconButton>
   );
 };

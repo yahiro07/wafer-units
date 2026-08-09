@@ -1,7 +1,7 @@
 import { cz, qu } from "@/common/css-realm";
-import { Icons } from "@/common/icons";
 import { EffectorBody } from "@/components/effector-body";
 import { IconButton } from "@/components/icon-button";
+import { Icons } from "@/components/icons";
 import { Knob } from "@/components/knob";
 import { LabeledBox } from "@/components/labeled-box";
 import { store } from "@/root/store";
@@ -116,25 +116,29 @@ const ControlsPart = () => {
   return (
     <div sx={qu.w("full").flexHA().gap(2).fJustify("between")}>
       <TitleLabel title="Tonerio Sequencer" />
-      <div sx={qu.flexHA().gap(4)}>
-        <IconButton onClick={actions.randomizeSteps}>
-          <Icons.Random />
-        </IconButton>
-        <IconButton onClick={actions.clearSteps}>
-          <Icons.Trash />
-        </IconButton>
-        <LabeledBox label="Octave">
-          <Knob
-            value={octave}
-            onChange={actions.setOctave}
-            min={-2}
-            max={2}
-            step={1}
-          />
-        </LabeledBox>
-        <LabeledBox label="Duty">
-          <Knob value={duty} onChange={actions.setDuty} />
-        </LabeledBox>
+      <div sx={qu.flexHA().gap(5)}>
+        <div sx={qu.flexHA().gap(2)}>
+          <IconButton onClick={actions.randomizeSteps}>
+            <Icons.Random size={20} />
+          </IconButton>
+          <IconButton onClick={actions.clearSteps}>
+            <Icons.Trash size={20} />
+          </IconButton>
+        </div>
+        <div sx={qu.flexHA().gap(5)}>
+          <LabeledBox label="Octave">
+            <Knob
+              value={octave}
+              onChange={actions.setOctave}
+              min={-2}
+              max={2}
+              step={1}
+            />
+          </LabeledBox>
+          <LabeledBox label="Duty">
+            <Knob value={duty} onChange={actions.setDuty} />
+          </LabeledBox>
+        </div>
       </div>
     </div>
   );

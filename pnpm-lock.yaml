@@ -6,9 +6,6 @@ settings:
 
 catalogs:
   default:
-    '@preact-icons/fa':
-      specifier: npm:@jsr/preact-icons__fa@^1.0.13
-      version: 1.0.13
     '@preact/preset-vite':
       specifier: ^2.10.6
       version: 2.10.6
@@ -56,9 +53,6 @@ importers:
 
   packages/drum-machines/graphite-drum-machine:
     devDependencies:
-      '@preact-icons/fa':
-        specifier: npm:@jsr/preact-icons__fa@^1.0.13
-        version: '@jsr/preact-icons__fa@1.0.13'
       '@preact/preset-vite':
         specifier: 2.10.6
         version: 2.10.6(@babel/core@7.29.7)(preact@10.29.8)(vite@8.2.0(@types/node@25.9.5)(jiti@2.7.0))
@@ -83,9 +77,6 @@ importers:
 
   packages/drum-machines/techno-beat-machine:
     devDependencies:
-      '@preact-icons/fa':
-        specifier: 'catalog:'
-        version: '@jsr/preact-icons__fa@1.0.13'
       '@preact/preset-vite':
         specifier: 'catalog:'
         version: 2.10.6(@babel/core@7.29.7)(preact@10.29.8)(vite@8.2.0(@types/node@25.9.5)(jiti@2.7.0))
@@ -101,9 +92,6 @@ importers:
 
   packages/effects/channel-strip:
     dependencies:
-      '@preact-icons/fa':
-        specifier: 'catalog:'
-        version: '@jsr/preact-icons__fa@1.0.13'
       '@preact/preset-vite':
         specifier: 'catalog:'
         version: 2.10.6(@babel/core@7.29.7)(preact@10.29.8)(vite@8.2.0(@types/node@25.9.5)(jiti@2.7.0))
@@ -191,9 +179,6 @@ importers:
 
   packages/effects/sunset-chorus-mini:
     devDependencies:
-      '@preact-icons/fa':
-        specifier: 'catalog:'
-        version: '@jsr/preact-icons__fa@1.0.13'
       '@preact/preset-vite':
         specifier: 'catalog:'
         version: 2.10.6(@babel/core@7.29.7)(preact@10.29.8)(vite@8.2.0(@types/node@25.9.5)(jiti@2.7.0))
@@ -215,9 +200,6 @@ importers:
 
   packages/effects/sunset-delay:
     devDependencies:
-      '@preact-icons/fa':
-        specifier: 'catalog:'
-        version: '@jsr/preact-icons__fa@1.0.13'
       '@preact/preset-vite':
         specifier: 'catalog:'
         version: 2.10.6(@babel/core@7.29.7)(preact@10.29.8)(vite@8.2.0(@types/node@25.9.5)(jiti@2.7.0))
@@ -233,9 +215,6 @@ importers:
 
   packages/effects/timing-cheker:
     dependencies:
-      '@preact-icons/fa':
-        specifier: 'catalog:'
-        version: '@jsr/preact-icons__fa@1.0.13'
       '@preact/preset-vite':
         specifier: 'catalog:'
         version: 2.10.6(@babel/core@7.29.7)(preact@10.29.8)(vite@8.2.0(@types/node@25.9.5)(jiti@2.7.0))
@@ -266,9 +245,6 @@ importers:
 
   packages/modulator/step-automator:
     devDependencies:
-      '@preact-icons/fa':
-        specifier: 'catalog:'
-        version: '@jsr/preact-icons__fa@1.0.13'
       '@preact/preset-vite':
         specifier: 'catalog:'
         version: 2.10.6(@babel/core@7.29.7)(preact@10.29.8)(vite@8.2.0(@types/node@25.9.5)(jiti@2.7.0))
@@ -305,9 +281,6 @@ importers:
 
   packages/sequencers/bseq2:
     devDependencies:
-      '@preact-icons/fa':
-        specifier: 'catalog:'
-        version: '@jsr/preact-icons__fa@1.0.13'
       '@preact/preset-vite':
         specifier: 'catalog:'
         version: 2.10.6(@babel/core@7.29.7)(preact@10.29.8)(vite@8.2.0(@types/node@25.9.5)(jiti@2.7.0))
@@ -347,9 +320,6 @@ importers:
 
   packages/sequencers/drum-loop-player:
     dependencies:
-      '@preact-icons/fa':
-        specifier: 'catalog:'
-        version: '@jsr/preact-icons__fa@1.0.13'
       '@preact/preset-vite':
         specifier: 'catalog:'
         version: 2.10.6(@babel/core@7.29.7)(preact@10.29.8)(vite@8.2.0(@types/node@25.9.5)(jiti@2.7.0))
@@ -365,9 +335,6 @@ importers:
 
   packages/sequencers/fluorite-piano-roll:
     dependencies:
-      '@preact-icons/fa':
-        specifier: 'catalog:'
-        version: '@jsr/preact-icons__fa@1.0.13'
       '@preact/preset-vite':
         specifier: 'catalog:'
         version: 2.10.6(@babel/core@7.29.7)(preact@10.29.8)(vite@8.2.0(@types/node@25.9.5)(jiti@2.7.0))
@@ -500,9 +467,6 @@ importers:
 
   packages/sequencers/root-prog:
     dependencies:
-      '@preact-icons/fa':
-        specifier: 'catalog:'
-        version: '@jsr/preact-icons__fa@1.0.13'
       '@preact/preset-vite':
         specifier: 'catalog:'
         version: 2.10.6(@babel/core@7.29.7)(preact@10.29.8)(vite@8.2.0(@types/node@25.9.5)(jiti@2.7.0))
@@ -590,9 +554,6 @@ importers:
 
   packages/sequencers/rtfsp:
     dependencies:
-      '@preact-icons/fa':
-        specifier: 'catalog:'
-        version: '@jsr/preact-icons__fa@1.0.13'
       '@preact/preset-vite':
         specifier: 'catalog:'
         version: 2.10.6(@babel/core@7.29.7)(preact@10.29.8)(vite@8.2.0(@types/node@25.9.5)(jiti@2.7.0))
@@ -626,9 +587,6 @@ importers:
 
   packages/sequencers/tonerio-sequencer:
     devDependencies:
-      '@preact-icons/fa':
-        specifier: 'catalog:'
-        version: '@jsr/preact-icons__fa@1.0.13'
       '@preact/preset-vite':
         specifier: 'catalog:'
         version: 2.10.6(@babel/core@7.29.7)(preact@10.29.8)(vite@8.2.0(@types/node@25.9.5)(jiti@2.7.0))
@@ -1054,12 +1012,6 @@ packages:
 
   '@jridgewell/trace-mapping@0.3.31':
     resolution: {integrity: sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==}
-
-  '@jsr/preact-icons__common@1.1.0':
-    resolution: {integrity: sha512-mVjtQUxBw+NjQ29oTq33LgAO8gjgiGtvkWAExwdW7iHLtxZiIXwCEEfFR3IRvZhpg2htEwTJZ6V5h+GMli36Yg==, tarball: https://npm.jsr.io/~/11/@jsr/preact-icons__common/1.1.0.tgz}
-
-  '@jsr/preact-icons__fa@1.0.13':
-    resolution: {integrity: sha512-RxDqel5V25PRPQF1Emuz64qIdY/hyUBsjKyiWpR0CL5p65nQ424yQrNEFodrRAaknj3lUFrTpd1NV85VboSF3A==, tarball: https://npm.jsr.io/~/11/@jsr/preact-icons__fa/1.0.13.tgz}
 
   '@napi-rs/wasm-runtime@1.2.2':
     resolution: {integrity: sha512-JfB4kuJQjaoHuCTseIINHtHWeJnvgEcxjwA5t/Y00ZgaOO1Crz3fjT/p8kT28zA/Caz7oiUMn3d6H2yOVCVwuw==}
@@ -2182,9 +2134,6 @@ packages:
     resolution: {integrity: sha512-DTPx3RWSSnWyzLxQnlH0rJP+EW5ekl16ZU4/psbIhA0e53kJfdgaN5vKM+xP7yJtXVu+nfdVFmlgFDEKAe4Pyw==}
     engines: {node: ^10 || ^12 || >=14}
 
-  preact@10.22.1:
-    resolution: {integrity: sha512-jRYbDDgMpIb5LHq3hkI0bbl+l/TQ9UnkdQ0ww+lp+4MMOdqaUYdFc5qeyP+IV8FAd/2Em7drVPeKdQxsiWCf/A==}
-
   preact@10.29.8:
     resolution: {integrity: sha512-ej2aVZ+vZ8WO7tvlQWRM9N63A0KzF9q4mWJfDUHgYaIofWY9hu74QdnQrjoPMmZi2/nZ5gN0bJCQF49xQqx09Q==}
     peerDependencies:
@@ -2691,19 +2640,6 @@ snapshots:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
-
-  '@jsr/preact-icons__common@1.1.0':
-    dependencies:
-      preact: 10.29.8
-    transitivePeerDependencies:
-      - preact-render-to-string
-
-  '@jsr/preact-icons__fa@1.0.13':
-    dependencies:
-      '@jsr/preact-icons__common': 1.1.0
-      preact: 10.22.1
-    transitivePeerDependencies:
-      - preact-render-to-string
 
   '@napi-rs/wasm-runtime@1.2.2(@emnapi/core@2.0.0-alpha.3)(@emnapi/runtime@2.0.0-alpha.3)':
     dependencies:
@@ -3550,8 +3486,6 @@ snapshots:
       nanoid: 3.3.16
       picocolors: 1.1.1
       source-map-js: 1.2.1
-
-  preact@10.22.1: {}
 
   preact@10.29.8: {}
 
