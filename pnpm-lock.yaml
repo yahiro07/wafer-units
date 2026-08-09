@@ -101,9 +101,6 @@ importers:
 
   packages/effects/channel-strip:
     dependencies:
-      '@preact-icons/fa':
-        specifier: 'catalog:'
-        version: '@jsr/preact-icons__fa@1.0.13'
       '@preact/preset-vite':
         specifier: 'catalog:'
         version: 2.10.6(@babel/core@7.29.7)(preact@10.29.8)(vite@8.2.0(@types/node@25.9.5)(jiti@2.7.0))
