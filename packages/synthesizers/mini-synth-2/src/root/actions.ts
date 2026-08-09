@@ -1,5 +1,6 @@
 import { SynthParameters } from "@/core/definitions";
 import { allPresets } from "@/core/presets";
+import { createRandomParameters } from "@/root/randomizer";
 import { allPresetKeys, store } from "@/root/store";
 
 export const actions = {
@@ -21,19 +22,7 @@ export const actions = {
     store.patchParameters({ [key]: value });
   },
   randomizeParameters() {
-    const randF = Math.random;
-    store.patchParameters({
-      oscWave: Math.floor(randF() * 3),
-      oscDetune: randF(),
-      oscSub: randF(),
-      oscDrift: randF(),
-      fxChorus: randF(),
-      fxReverb: randF(),
-      filterCutoff: randF(),
-      filterPeak: randF(),
-      filterEnvMod: randF(),
-      ampDecay: randF(),
-      ampRelease: randF(),
-    });
+    const paramAttrs = createRandomParameters();
+    store.patchParameters(paramAttrs);
   },
 };
