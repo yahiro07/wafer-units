@@ -16,7 +16,7 @@ function probably(p: number, a: number, b: number) {
 
 export function createRandomParameters(): Partial<SynthParameters> {
   return {
-    oscWave: randI(3),
+    oscWave: probably(0.5, 0, randI(3)),
     oscDetune: probably(0.5, 0, randRange(0, 0.5)),
     oscSub: probably(0.5, 0, randF()),
     oscDrift: probably(0.6, 0, randF()),
