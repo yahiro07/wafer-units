@@ -131,7 +131,7 @@ export const App = () => {
   useEffect(setupUnit, []);
   useEffect(setupSynchronization, []);
   return (
-    <div class="h-[100dvh] flex-c text-clText">
+    <div class="h-[100dvh] flex-c text-clText bg-white">
       <div class="w-[680px] flex-v gap-3 shrink-0">
         <TopBar />
         <ParametersSection />
