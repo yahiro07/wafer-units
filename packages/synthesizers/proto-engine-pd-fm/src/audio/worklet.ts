@@ -140,13 +140,30 @@ function createSynthesizerCore() {
   let releaseStartValue = 0.0;
   let egTime = 0.0; // Elapsed seconds since note-on or note-off.
   let hasStarted = false;
+  let previousGate = 0.0;
 
   const interpolators = {
     shape: createInterpolator(),
     envMod: createInterpolator(),
   };
 
+  function resetVoiceState() {
+    phase1 = 0.0;
+    phase2 = 0.0;
+    phaseSub = 0.0;
+    driftPhase1 = 0.0;
+    driftPhase2 = 0.0;
+    sampleCount = 0;
+    heldSample = 0.0;
+    egValue = 0.0;
+    isReleased = false;
+    releaseStartValue = 0.0;
+    egTime = 0.0;
+    hasStarted = false;
+  }
+
   return {
+    reset: resetVoiceState,
     process(
       _inputs: Float32Array[][],
       outputs: Float32Array[][],
@@ -190,7 +207,14 @@ function createSynthesizerCore() {
         // -------------------------------------------------------------
         // 1. Envelope update
         // -------------------------------------------------------------
-        if (gate > 0.5) {
+        const gateOn = gate > 0.5;
+        if (gateOn && previousGate <= 0.5) {
+          // Rising gate edge: hard-reset voice state for pooled reuse / steal.
+          resetVoiceState();
+        }
+        previousGate = gateOn ? 1.0 : 0.0;
+
+        if (gateOn) {
           hasStarted = true;
           if (isReleased) {
             // Reset when a note is triggered again.
@@ -311,11 +335,7 @@ function createSynthesizerCore() {
         }
       }
 
-      // Stop processing once the envelope is fully faded after note-off.
-      if (hasStarted && isReleased && egValue < 0.0001) {
-        return false; // The voice node will be released automatically.
-      }
-
+      // Keep the processor alive so pooled voices can be reused.
       return true;
     },
   };
@@ -354,7 +374,9 @@ class SynthProcessor extends AudioWorkletProcessor {
     super();
 
     this.port.onmessage = (event: MessageEvent) => {
-      if (event.data?.type === "stop") {
+      if (event.data?.type === "reset") {
+        this.synthesizerCore.reset();
+      } else if (event.data?.type === "stop") {
         this.shouldStop = true;
       }
     };
