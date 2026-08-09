@@ -14,6 +14,7 @@ install({
       },
     },
   },
+  ignorelist: [/^ri-/],
   rules: [
     ["flex-h", "~(flex)"],
     ["flex-hs", "flex items-start"],
