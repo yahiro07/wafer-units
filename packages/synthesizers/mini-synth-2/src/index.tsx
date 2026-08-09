@@ -24,14 +24,18 @@ const presetOptions = createPlainSelectorOptions([
 const PresetSelectionPart = () => {
   return (
     <div class="flex-ha gap-1.5">
-      <Button asr={1.3}>prev</Button>
+      <Button asr={1.3}>
+        <i class="ri-arrow-left-s-line text-2xl" />
+      </Button>
       <Selector
         value={presetOptions[0].value}
         onChange={() => {}}
         options={presetOptions}
         height={44}
       />
-      <Button asr={1.3}>next</Button>
+      <Button asr={1.3}>
+        <i class="ri-arrow-right-s-line text-2xl" />
+      </Button>
     </div>
   );
 };
@@ -44,8 +48,11 @@ const TopBar = () => {
       </div>
       <PresetSelectionPart />
       <div class="w-[120px] flex-ha justify-end">
-        <Button>
-          <span class="text-clPrimary">RND</span>
+        <Button asr={2}>
+          <div class="flex-ha gap-1">
+            <span class="text-clPrimary">RND</span>
+            <i class="ri-dice-3-line text-xl" />
+          </div>
         </Button>
       </div>
     </div>
