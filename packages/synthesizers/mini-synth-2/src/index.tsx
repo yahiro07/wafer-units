@@ -10,7 +10,9 @@ import { Selector } from "@/components/selector";
 const TitleText = () => {
   return (
     <div class="text-[18px]">
-      MiniSynth<span class="text-clPrimary">2</span>
+      <i class="ri-instance-line text-xl" />
+      <span class="ml-[2px]">MiniSynth</span>
+      <span class="text-clPrimary">2</span>
     </div>
   );
 };
