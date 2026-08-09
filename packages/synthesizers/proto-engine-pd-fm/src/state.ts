@@ -52,7 +52,7 @@ if (0) {
   });
 }
 
-if (1) {
+if (0) {
   Object.assign(defaultParams, {
     waveMode: WaveMode.PD,
     shape: 0.7,

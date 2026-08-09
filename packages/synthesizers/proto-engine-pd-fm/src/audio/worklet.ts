@@ -31,14 +31,56 @@ function computePDReso(phase: number, amount: number): number {
   return Math.sin(phase * resoMultiplier * 2.0 * Math.PI) * window;
 }
 
+function processOscPD(
+  shape: number,
+  egValue: number,
+  envMod: number,
+  phase: number,
+) {
+  // Let envelope modulation overshoot at attack, then settle back during decay.
+  let currentIndex = shape + egValue * envMod;
+  currentIndex = clampValue(currentIndex, 0, 1); // Safety clamp.
+  // CZ-style phase distortion that bends toward a saw waveform.
+  return computePD(phase, currentIndex);
+}
+
+function processOscFM(
+  shape: number,
+  egValue: number,
+  envMod: number,
+  phase: number,
+) {
+  const currentIndex = shape + egValue * power2(envMod);
+  const modDepth = currentIndex * 5.0;
+  const ratio = 1.0 + Math.floor(shape * 7.0); // Ratio: 1x to 8x.
+  return Math.sin(
+    2.0 * Math.PI * phase + Math.sin(2.0 * Math.PI * phase * ratio) * modDepth,
+  );
+}
+
+function processOscEx1(
+  shape: number,
+  egValue: number,
+  envMod: number,
+  phase: number,
+) {
+  return 0;
+}
+
+function processOscEx2(
+  shape: number,
+  egValue: number,
+  envMod: number,
+  phase: number,
+) {
+  return 0;
+}
+
 function createSynthesizerCore() {
   // Oscillator phase state for two main oscillators plus the sub oscillator.
   let phase1 = 0.0;
   let phase2 = 0.0;
   let phaseSub = 0.0;
-
-  // One-sample buffer for FM feedback.
-  let fbStorage = 0.0;
 
   // Irregular LFO phase state for pitch drift.
   let driftPhase1 = 0.0;
@@ -169,65 +211,15 @@ function createSynthesizerCore() {
         // -------------------------------------------------------------
         // 5. Waveform generation for each algorithm
         // -------------------------------------------------------------
-        let osc1Out = 0.0;
-        let osc2Out = 0.0;
+        const oscFn = {
+          [WaveMode.PD]: processOscPD,
+          [WaveMode.FM]: processOscFM,
+          [WaveMode.EX1]: processOscEx1,
+          [WaveMode.EX2]: processOscEx2,
+        }[waveMode];
 
-        switch (waveMode) {
-          case WaveMode.PD: {
-            // Let envelope modulation overshoot at attack, then settle back during decay.
-            let currentIndex = shape + egValue * envMod;
-            currentIndex = clampValue(currentIndex, 0, 1); // Safety clamp.
-            // CZ-style phase distortion that bends toward a saw waveform.
-            osc1Out = computePD(phase1, currentIndex);
-            if (isDualOsc) osc2Out = computePD(phase2, currentIndex);
-            break;
-          }
-          case WaveMode.FM: {
-            const currentIndex = shape + egValue * power2(envMod);
-            const modDepth = currentIndex * 5.0;
-            const ratio = 1.0 + Math.floor(shape * 7.0); // Ratio: 1x to 8x.
-
-            osc1Out = Math.sin(
-              2.0 * Math.PI * phase1 +
-                Math.sin(2.0 * Math.PI * phase1 * ratio) * modDepth,
-            );
-            if (isDualOsc) {
-              osc2Out = Math.sin(
-                2.0 * Math.PI * phase2 +
-                  Math.sin(2.0 * Math.PI * phase2 * ratio) * modDepth,
-              );
-            }
-            break;
-          }
-          case WaveMode.FM_FB: {
-            // Let envelope modulation overshoot at attack, then settle back during decay.
-            let currentIndex = shape + egValue * envMod;
-            currentIndex = clampValue(currentIndex, 0, 1); // Safety clamp.
-
-            // FM with feedback.
-            const fbAmount = currentIndex * 2.5; // Feedback amount.
-            const modulator = Math.sin(
-              2.0 * Math.PI * phase1 + fbStorage * fbAmount,
-            );
-            fbStorage = modulator; // Store one sample of feedback.
-
-            osc1Out = Math.sin(2.0 * Math.PI * phase1 + modulator * 2.0);
-            if (isDualOsc) {
-              osc2Out = Math.sin(2.0 * Math.PI * phase2 + modulator * 2.0); // OSC2 shares the same modulator.
-            }
-            break;
-          }
-          case WaveMode.PD_RESO: {
-            // Let envelope modulation overshoot at attack, then settle back during decay.
-            let currentIndex = shape + egValue * envMod;
-            currentIndex = clampValue(currentIndex, 0, 1); // Safety clamp.
-
-            // CZ-style pseudo-resonance filter.
-            osc1Out = computePDReso(phase1, currentIndex);
-            if (isDualOsc) osc2Out = computePDReso(phase2, currentIndex);
-            break;
-          }
-        }
+        const osc1Out = oscFn(shape, egValue, envMod, phase1);
+        const osc2Out = isDualOsc ? oscFn(shape, egValue, envMod, phase2) : 0.0;
 
         // Mix the main oscillators.
         let mainMix = isDualOsc ? (osc1Out + osc2Out) * 0.5 : osc1Out;
@@ -328,11 +320,7 @@ class SynthProcessor extends AudioWorkletProcessor {
       return false;
     }
 
-    return this.synthesizerCore.process(
-      _inputs,
-      outputs,
-      parameters,
-    );
+    return this.synthesizerCore.process(_inputs, outputs, parameters);
   }
 }
 
