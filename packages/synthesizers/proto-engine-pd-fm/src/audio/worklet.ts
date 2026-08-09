@@ -1,6 +1,8 @@
 import { createInterpolator } from "@/audio/interpolator";
+import { phaseTweakers } from "@/audio/phase-tweakers";
+import { power2 } from "@/audio/synth-math-utils";
 import { WaveMode } from "@/constants";
-import { clampValue, linearInterpolate, lowClip, power2 } from "@/utils/nums";
+import { clampValue, linearInterpolate, lowClip } from "@/utils/helpers";
 
 // PD (Phase Distortion) calculation
 function computePD(phase: number, amount: number): number {
@@ -31,6 +33,13 @@ function computePDReso(phase: number, amount: number): number {
   return Math.sin(phase * resoMultiplier * 2.0 * Math.PI) * window;
 }
 
+type OscFn = (
+  shape: number,
+  egValue: number,
+  envMod: number,
+  phase: number,
+) => number;
+
 function processOscPD(
   shape: number,
   egValue: number,
@@ -58,22 +67,57 @@ function processOscFM(
   );
 }
 
-function processOscEx1(
-  shape: number,
-  egValue: number,
-  envMod: number,
-  phase: number,
+type PtmBaseWaveKind = "saw" | "sine" | "rect";
+type PtmKind = keyof typeof phaseTweakers;
+
+function getPtmWave(
+  pp: number,
+  ptmKind: PtmKind,
+  ptmLevel: number,
+  baseWaveKind: PtmBaseWaveKind,
 ) {
-  return 0;
+  let [phase] = phaseTweakers[ptmKind](pp, ptmLevel);
+  phase -= Math.floor(phase);
+  if (baseWaveKind === "saw") {
+    return 1 - phase * 2;
+  } else if (baseWaveKind === "rect") {
+    return phase < 0.5 ? 1 : -1;
+  } else {
+    return -Math.cos(phase * Math.PI * 2);
+  }
 }
 
-function processOscEx2(
-  shape: number,
-  egValue: number,
-  envMod: number,
-  phase: number,
-) {
-  return 0;
+const ptmKindMap = {
+  [WaveMode.PTM2]: ["sfm", "sine"],
+  [WaveMode.PTM3]: ["sdm", "sine"],
+  [WaveMode.PTM4]: ["pw", "rect"],
+  [WaveMode.PTM5]: ["accel", "saw"],
+  [WaveMode.PTM6]: ["screw", "saw"],
+  [WaveMode.PTM7]: ["drill", "rect"],
+  [WaveMode.PTM8]: ["squash", "saw"],
+  [WaveMode.PTM9]: ["creep", "sine"],
+  [WaveMode.PTM10]: ["creep2", "saw"],
+  [WaveMode.PTM11]: ["sub-pw", "rect"],
+} satisfies { [key in WaveMode]?: [PtmKind, PtmBaseWaveKind] };
+
+let kindTextOut = "";
+function bindOscFunctionForExWaves(waveMode: WaveMode): OscFn {
+  const [ptmKind, baseWaveKind] =
+    ptmKindMap[waveMode as keyof typeof ptmKindMap] ??
+    ptmKindMap[WaveMode.PTM2];
+
+  if (0) {
+    const kindsText = `${waveMode}-${ptmKind}-${baseWaveKind}`;
+    if (kindTextOut !== kindsText) {
+      kindTextOut = kindsText;
+      console.log(kindsText);
+    }
+  }
+
+  return (shape, egLevel, envMod, phase) => {
+    const ptmLevel = clampValue(shape + egLevel * envMod, 0, 1);
+    return getPtmWave(phase, ptmKind, ptmLevel, baseWaveKind);
+  };
 }
 
 function createSynthesizerCore() {
@@ -129,6 +173,15 @@ function createSynthesizerCore() {
 
       interpolators.shape.feed(_shape, bufferSize);
       interpolators.envMod.feed(_envMod, bufferSize);
+
+      let oscFn: OscFn;
+      if (waveMode === WaveMode.PD) {
+        oscFn = processOscPD;
+      } else if (waveMode === WaveMode.FM) {
+        oscFn = processOscFM;
+      } else {
+        oscFn = bindOscFunctionForExWaves(waveMode);
+      }
 
       // Process the current audio block.
       for (let i = 0; i < bufferSize; i++) {
@@ -211,12 +264,6 @@ function createSynthesizerCore() {
         // -------------------------------------------------------------
         // 5. Waveform generation for each algorithm
         // -------------------------------------------------------------
-        const oscFn = {
-          [WaveMode.PD]: processOscPD,
-          [WaveMode.FM]: processOscFM,
-          [WaveMode.EX1]: processOscEx1,
-          [WaveMode.EX2]: processOscEx2,
-        }[waveMode];
 
         const osc1Out = oscFn(shape, egValue, envMod, phase1);
         const osc2Out = isDualOsc ? oscFn(shape, egValue, envMod, phase2) : 0.0;
@@ -284,7 +331,12 @@ class SynthProcessor extends AudioWorkletProcessor {
         maxValue: 22000.0,
       },
       { name: "gate", defaultValue: 0.0, minValue: 0.0, maxValue: 1.0 }, // 1.0 = note on, 0.0 = note off
-      { name: "waveMode", defaultValue: 0, minValue: 0, maxValue: 3 },
+      {
+        name: "waveMode",
+        defaultValue: 0,
+        minValue: 0,
+        maxValue: WaveMode.NumWaveModes - 1,
+      },
       { name: "shape", defaultValue: 0.0, minValue: 0.0, maxValue: 1.0 },
       { name: "envMod", defaultValue: 0.0, minValue: 0.0, maxValue: 1.0 },
       { name: "detune", defaultValue: 0.0, minValue: 0.0, maxValue: 1.0 },
