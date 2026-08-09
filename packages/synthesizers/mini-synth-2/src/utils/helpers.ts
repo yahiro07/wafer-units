@@ -29,7 +29,3 @@ export function linearInterpolate(
 }
 
 export const npx = (value: number) => `${value}px`;
-
-export function uniqueArrayItems<T>(items: T[]): T[] {
-  return items.filter((item, index) => items.indexOf(item) === index);
-}
