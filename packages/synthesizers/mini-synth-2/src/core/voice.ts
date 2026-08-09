@@ -1,5 +1,5 @@
 import { SynthParameters } from "@/core/definitions";
-import { midiToFreq } from "./utils";
+import { midiToFreq } from "./synthesis-utils";
 
 let pulse125Wave: PeriodicWave | null = null;
 let sawWave: PeriodicWave | null = null;

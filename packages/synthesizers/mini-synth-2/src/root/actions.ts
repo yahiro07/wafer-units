@@ -21,6 +21,19 @@ export const actions = {
     store.patchParameters({ [key]: value });
   },
   randomizeParameters() {
-    //todo
+    const randF = Math.random;
+    store.patchParameters({
+      oscWave: Math.floor(randF() * 3),
+      oscDetune: randF(),
+      oscSub: randF(),
+      oscDrift: randF(),
+      fxChorus: randF(),
+      fxReverb: randF(),
+      filterCutoff: randF(),
+      filterPeak: randF(),
+      filterEnvMod: randF(),
+      ampDecay: randF(),
+      ampRelease: randF(),
+    });
   },
 };
