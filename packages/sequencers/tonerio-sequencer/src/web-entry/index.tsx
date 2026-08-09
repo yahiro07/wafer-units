@@ -10,7 +10,9 @@ document.adoptedStyleSheets = [cssRealm.sheet];
 const root = document.getElementById("app")!;
 
 render(
-  <div sx={qu.wh("dvw", "dvh").bg(pageBgColor).flexVC()}>
+  <div
+    sx={[qu.wh("dvw", "dvh").bg(pageBgColor).flexVC(), qu.overflow("hidden")]}
+  >
     <App />
   </div>,
   root,
