@@ -1,6 +1,5 @@
 import { isBitSet, seqNumbers, toggleBit } from "mofur/ax";
 import { pieceDisplayNames } from "@/base/constants";
-import { Icons } from "@/base/icons";
 import { pieceSampleUrls } from "@/base/piece-sample-urls";
 import { PieceItem } from "@/base/type";
 import {
@@ -17,6 +16,7 @@ import {
 } from "@/components";
 import { useAppContext } from "@/store/app-context";
 import { ComponentChild } from "preact";
+import { Icons } from "@/components/icons";
 
 const PieceHeadPart = ({
   piece,
@@ -67,7 +67,7 @@ const PieceHeadPart = ({
         }
         onClick={handlers.shiftVariationIndex}
       >
-        <Icons.Swap />
+        <Icons.Exchange />
       </PieceOperationButton>
       {stepIndicatorContent}
     </div>
