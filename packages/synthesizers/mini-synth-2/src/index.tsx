@@ -62,7 +62,7 @@ const TopBar = () => {
 const App = () => {
   return (
     <div class="h-[100dvh] flex-c text-clText">
-      <div class="w-[660px] flex-v gap-3">
+      <div class="w-[680px] flex-v gap-3">
         <TopBar />
         <div class="flex-v gap-3">
           <div class="flex-h gap-3">
@@ -72,7 +72,11 @@ const App = () => {
               <KnobBox label="sub" value={0.5} onChange={() => {}} />
               <KnobBox label="drift" value={0.5} onChange={() => {}} />
             </SectionFrame>
-            <SectionFrame header="AMPLIFIER" className="grow">
+            <SectionFrame
+              header="AMPLIFIER"
+              className="grow"
+              contentClassName="!px-3"
+            >
               <KnobBox label="decay" value={0.5} onChange={() => {}} />
               <KnobBox label="release" value={0.5} onChange={() => {}} />
             </SectionFrame>
