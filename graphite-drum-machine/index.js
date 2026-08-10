@@ -270,7 +270,7 @@ t = _.slice, n = { __e: function(e, t, n, r) {
 	return e.__v.__b - t.__v.__b;
 }, O.__r = 0, c = Math.random().toString(8), l = "__d" + c, u = "__a" + c, d = /(PointerCapture)$|Capture$/i, f = 0, p = oe(!1), m = oe(!0), h = 0;
 //#endregion
-//#region ../../../node_modules/.pnpm/wafer-host@0.0.6_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/wafer-host/dist/unit-helper/index.js
+//#region ../../../node_modules/.pnpm/wafer-host@0.1.5_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/wafer-host/dist/unit-helper/index.js
 function _e(e) {
 	if (!Array.from(document.head.querySelectorAll("link[rel=\"stylesheet\"]")).some((t) => t.href === e)) {
 		console.log(`Inserting link tag for ${e}`);
@@ -304,7 +304,7 @@ function ve(e, t) {
 	};
 }
 //#endregion
-//#region ../../../node_modules/.pnpm/wafer-host@0.0.6_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/wafer-host/dist/unit-types/index.js
+//#region ../../../node_modules/.pnpm/wafer-host@0.1.5_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/wafer-host/dist/unit-types/index.js
 function ye(e, t) {
 	return window?.queryUnitInterfaceForModule?.(e, t);
 }
@@ -1156,12 +1156,12 @@ var zt = ge({}), Bt = ({ children: e, store: t, actions: n }) => /* @__PURE__ */
 	},
 	children: e
 });
-function Vt() {
+function H() {
 	return jt(zt);
 }
 //#endregion
 //#region src/store/automation-input.ts
-function Ht(e, t) {
+function Vt(e, t) {
 	function n(e) {
 		let [t, n] = e.split("_");
 		return [t, n];
@@ -1196,22 +1196,22 @@ function Ht(e, t) {
 }
 //#endregion
 //#region src/store/persistence.ts
-function Ut(e) {
+function Ht(e) {
 	return e * 255 >>> 0;
 }
-function Wt(e) {
+function Ut(e) {
 	return e / 255;
 }
-function Gt(e, t) {
+function Wt(e, t) {
 	return {
 		emitStateBytes() {
 			let { pieces: t, masterVolume: n } = e.state;
-			return new Uint8Array([Ut(n), ...t.flatMap((e) => [
+			return new Uint8Array([Ht(n), ...t.flatMap((e) => [
 				M.indexOf(e.id),
 				e.variationIndex,
 				+!!e.active,
-				Ut(e.volume),
-				Ut(e.pitch),
+				Ht(e.volume),
+				Ht(e.pitch),
 				e.patternBits >> 8 & 255,
 				e.patternBits & 255
 			])]);
@@ -1219,14 +1219,14 @@ function Gt(e, t) {
 		applyStateBytes(n) {
 			let r = M.length;
 			if (n.length !== 7 * r + 1) return;
-			let i = Wt(n[0]), a = be(r).map((e) => {
+			let i = Ut(n[0]), a = be(r).map((e) => {
 				let t = 1 + e * 7;
 				return {
 					id: M[n[t + 0]],
 					variationIndex: n[t + 1],
 					active: n[t + 2] !== 0,
-					volume: Wt(n[t + 3]),
-					pitch: Wt(n[t + 4]),
+					volume: Ut(n[t + 3]),
+					pitch: Ut(n[t + 4]),
 					patternBits: n[t + 5] << 8 | n[t + 6]
 				};
 			});
@@ -1239,20 +1239,20 @@ function Gt(e, t) {
 }
 //#endregion
 //#region ../../../node_modules/.pnpm/snap-store@0.1.12_preact@10.29.8_react@19.2.8/node_modules/snap-store/dist/store-impl-CzL-_B7V.js
-var Kt = Symbol("V"), qt = Symbol("IMMUT_BASE"), Jt = Symbol("IS_RAW"), Yt = Symbol("P"), H = "Array", Xt = [
+var Gt = Symbol("V"), Kt = Symbol("IMMUT_BASE"), qt = Symbol("IS_RAW"), Jt = Symbol("P"), U = "Array", Yt = [
 	Symbol.iterator,
 	Symbol.toStringTag,
-	Jt
-], Zt = {
+	qt
+], Xt = {
 	Map: "Map",
 	Set: "Set",
-	Array: H
-}, Qt = "[object Object]", $t = "[object Map]", en = "[object Set]", tn = "[object Array]", nn = "[object Function]", rn = {
-	[$t]: "Map",
-	[en]: "Set",
-	[tn]: H,
-	[Qt]: "Object"
-}, an = [
+	Array: U
+}, Zt = "[object Object]", Qt = "[object Map]", $t = "[object Set]", en = "[object Array]", tn = "[object Function]", nn = {
+	[Qt]: "Map",
+	[$t]: "Set",
+	[en]: U,
+	[Zt]: "Object"
+}, rn = [
 	"push",
 	"pop",
 	"shift",
@@ -1262,20 +1262,20 @@ var Kt = Symbol("V"), qt = Symbol("IMMUT_BASE"), Jt = Symbol("IS_RAW"), Yt = Sym
 	"copyWithin",
 	"delete",
 	"fill"
-], on = [
+], an = [
 	"set",
 	"clear",
 	"delete"
-], sn = [
+], on = [
 	"add",
 	"clear",
 	"delete"
-], cn = [
+], sn = [
 	"splice",
 	"sort",
 	"unshift",
 	"shift"
-], ln = "concat.copyWithin.entries.every.fill.filter.find.findIndex.flat.flatMap.forEach.includes.indexOf.join.keys.lastIndexOf.map.pop.push.reduce.reduceRight.reverse.shift.unshift.slice.some.sort.splice.values.valueOf".split("."), un = {
+], cn = "concat.copyWithin.entries.every.fill.filter.find.findIndex.flat.flatMap.forEach.includes.indexOf.join.keys.lastIndexOf.map.pop.push.reduce.reduceRight.reverse.shift.unshift.slice.some.sort.splice.values.valueOf".split("."), ln = {
 	Map: [
 		"clear",
 		"delete",
@@ -1297,8 +1297,8 @@ var Kt = Symbol("V"), qt = Symbol("IMMUT_BASE"), Jt = Symbol("IS_RAW"), Yt = Sym
 		"keys",
 		"values"
 	],
-	[H]: ln
-}, dn = {
+	[U]: cn
+}, un = {
 	Map: [
 		"clear",
 		"set",
@@ -1309,7 +1309,7 @@ var Kt = Symbol("V"), qt = Symbol("IMMUT_BASE"), Jt = Symbol("IS_RAW"), Yt = Sym
 		"add",
 		"delete"
 	],
-	[H]: [
+	[U]: [
 		"pop",
 		"push",
 		"shift",
@@ -1318,17 +1318,20 @@ var Kt = Symbol("V"), qt = Symbol("IMMUT_BASE"), Jt = Symbol("IS_RAW"), Yt = Sym
 		"sort",
 		"copyWithin"
 	]
-}, fn = {
+}, dn = {
 	Map: ["forEach", "get"],
 	Set: ["forEach"],
-	[H]: ["forEach", "map"]
+	[U]: ["forEach", "map"]
 };
-function pn(e, t = "") {
+function fn(e, t = "") {
 	e.value >= 2 ** 53 - 1 ? (e.value = 1, e.prefixSeed += 1) : e.value += 1;
 	let { value: n, prefixSeed: r } = e;
 	return `${t}${r}_${n}`;
 }
-var mn = {
+var pn = {
+	value: 0,
+	prefixSeed: 1
+}, mn = {
 	value: 0,
 	prefixSeed: 1
 }, hn = {
@@ -1337,144 +1340,141 @@ var mn = {
 }, gn = {
 	value: 0,
 	prefixSeed: 1
-}, _n = {
-	value: 0,
-	prefixSeed: 1
-}, vn = {}, yn = {};
+}, _n = {}, vn = {};
+function yn() {
+	return fn(mn, "MID_");
+}
 function bn() {
-	return pn(hn, "MID_");
+	return fn(pn, "MV_");
 }
 function xn() {
-	return pn(mn, "MV_");
+	return fn(hn, "SI_");
 }
 function Sn() {
-	return pn(gn, "SI_");
+	return fn(gn, "SR_");
 }
-function Cn() {
-	return pn(_n, "SR_");
-}
-var wn = {
+var Cn = {
 	autoFreeze: !1,
 	autoRevoke: !0
-}, Tn = Object.prototype.toString, En = !!Reflect, Dn = Object.prototype.hasOwnProperty;
-function On(e, t) {
-	return En ? Reflect.has(e, t) : Dn.call(e, t);
+}, wn = Object.prototype.toString, Tn = !!Reflect, En = Object.prototype.hasOwnProperty;
+function Dn(e, t) {
+	return Tn ? Reflect.has(e, t) : En.call(e, t);
 }
-function kn(e, t, n, r) {
+function On(e, t, n, r) {
 	let i = [], a = (e, t, n) => {
-		G(e) || i.includes(e) || (i.push(e), r(e, t, n), Array.isArray(e) && e.forEach((t, n) => {
+		K(e) || i.includes(e) || (i.push(e), r(e, t, n), Array.isArray(e) && e.forEach((t, n) => {
 			a(t, e, n);
-		}), jn(e) && e.forEach((t, n) => {
+		}), An(e) && e.forEach((t, n) => {
 			a(t, e, n);
-		}), An(e) && Object.keys(e).forEach((t) => {
+		}), kn(e) && Object.keys(e).forEach((t) => {
 			a(e[t], e, t);
 		}));
 	};
 	a(e, t, n);
 }
-function U(e) {
-	return Tn.call(e);
+function W(e) {
+	return wn.call(e);
 }
-function W(...e) {
+function G(...e) {
 	return e;
 }
+function kn(e) {
+	return W(e) === Zt;
+}
 function An(e) {
-	return U(e) === Qt;
+	return W(e) === Qt;
 }
 function jn(e) {
-	return U(e) === $t;
+	return W(e) === $t;
 }
 function Mn(e) {
-	return U(e) === en;
+	return W(e) === tn;
 }
 function Nn(e) {
-	return U(e) === nn;
+	return nn[W(e)];
 }
-function Pn(e) {
-	return rn[U(e)];
-}
-function G(e) {
-	let t = U(e);
+function K(e) {
+	let t = W(e);
 	return ![
-		Qt,
-		tn,
-		$t,
+		Zt,
 		en,
-		nn
+		Qt,
+		$t,
+		tn
 	].includes(t);
 }
-function Fn(e) {
+function Pn(e) {
 	return e.constructor.name === "AsyncFunction" || typeof e.then == "function";
 }
-function In(e) {
+function Fn(e) {
 	return typeof Promise < "u" && e instanceof Promise;
 }
-function Ln(e) {
+function In(e) {
 	var t = typeof e;
 	return t === "number" || t === "string" && /^[0-9]*$/.test(e);
 }
-function Rn(e) {
+function Ln(e) {
 	return typeof e == "symbol";
 }
 Array.prototype, Map.prototype, Set.prototype, Function.prototype;
-function zn(e) {
-	return e && e[Kt] || "";
+function Rn(e) {
+	return e && e[Gt] || "";
 }
-function Bn(e, t) {
-	let n = zn(e);
+function zn(e, t) {
+	let n = Rn(e);
 	return n ? n !== t : !1;
 }
-function Vn(e, t) {
+function Bn(e, t) {
 	if (t) return e;
 	if (Array.isArray(e)) return e.slice();
 	let n = e;
-	return e && An(e) && (n = Object.assign({}, e)), jn(e) && (n = new Map(e)), Mn(e) && (n = new Set(e)), n;
+	return e && kn(e) && (n = Object.assign({}, e)), An(e) && (n = new Map(e)), jn(e) && (n = new Set(e)), n;
 }
-function Hn(e, t) {
-	return t.immutBase ? e : Vn(e, t.readOnly);
+function Vn(e, t) {
+	return t.immutBase ? e : Bn(e, t.readOnly);
 }
-function Un(e) {
+function Hn(e) {
 	let t = e;
-	if (!Rn(e)) return e;
-	let n = vn[t];
-	return n || (n = Sn(), vn[t] = n), n;
+	if (!Ln(e)) return e;
+	let n = _n[t];
+	return n || (n = xn(), _n[t] = n), n;
 }
-function Wn(e, t) {
+function Un(e, t) {
 	let n = e.map((e) => e.join("|")), r = t.join("|");
 	return n.indexOf(r);
 }
-function K(e, t) {
-	let n = e;
-	return t && (n = q(e, !0)), n.join("|");
-}
 function q(e, t) {
+	let n = e;
+	return t && (n = J(e, !0)), n.join("|");
+}
+function J(e, t) {
 	let n = [];
 	if (t) return e.forEach((e) => {
-		let t = Un(e);
+		let t = Hn(e);
 		n.push(t);
 	}), n;
 	n = e.slice();
-	let r = e.length - 1, i = e[r], a = Un(i);
+	let r = e.length - 1, i = e[r], a = Hn(i);
 	return n[r] = a, n;
 }
-function Gn(e) {
-	return e.map((e) => yn[e] || e);
+function Wn(e) {
+	return e.map((e) => vn[e] || e);
 }
-function Kn(e, t, n) {
-	let { keyPaths: r, keyStrPaths: i } = e, a = n || q(t);
-	Wn(i, a) < 0 && (r.push(t), i.push(a));
+function Gn(e, t, n) {
+	let { keyPaths: r, keyStrPaths: i } = e, a = n || J(t);
+	Un(i, a) < 0 && (r.push(t), i.push(a));
 }
-function qn(e) {
-	let { keyPaths: t, keyStrPaths: n, keyStrPath: r } = e, i = Wn(n, r);
+function Kn(e) {
+	let { keyPaths: t, keyStrPaths: n, keyStrPath: r } = e, i = Un(n, r);
 	n.splice(i, 1), t.splice(i, 1), e.keyPath = t[0], e.keyStrPath = n[0];
 }
-function Jn(e, t) {
+function qn(e, t) {
 	let n = e.get(t);
 	if (n !== void 0) return n;
 	let r = e.get(Number(t) || t);
 	if (r !== void 0) return r;
 }
-function J(e, t) {
+function Y(e, t) {
 	let n, r = e, i = t.length - 1, a = !0;
 	for (let e = 0; e <= i; e++) {
 		let o = t[e];
@@ -1482,17 +1482,17 @@ function J(e, t) {
 			a = !1;
 			break;
 		}
-		n = jn(r) ? Jn(r, o) : r[o], r = n;
+		n = An(r) ? qn(r, o) : r[o], r = n;
 	}
 	return {
 		val: n,
 		isGetted: a
 	};
 }
-function Yn(e, t) {
+function Jn(e, t) {
 	let n, r = !1, i = t.length - 1;
 	for (let a = 0; a <= i; a++) {
-		let i = t[a], { isGetted: o, val: s } = J(e, i);
+		let i = t[a], { isGetted: o, val: s } = Y(e, i);
 		if (o) {
 			n = s, r = !0;
 			break;
@@ -1503,7 +1503,7 @@ function Yn(e, t) {
 		val: n
 	};
 }
-function Xn(e, t, n) {
+function Yn(e, t, n) {
 	let r = e, i = t.length - 1;
 	for (let e = 0; e <= i && r; e++) {
 		let a = t[e];
@@ -1511,20 +1511,20 @@ function Xn(e, t, n) {
 			r[a] = n;
 			break;
 		}
-		r = jn(r) ? Jn(r, a) : r[a];
+		r = An(r) ? qn(r, a) : r[a];
 	}
 }
-function Zn(e, t, n) {
+function Xn(e, t, n) {
 	let r = t.length - 1;
 	for (let i = 0; i <= r; i++) {
 		let r = t[i];
-		Xn(e, r, n);
+		Yn(e, r, n);
 	}
 }
-function Qn(e, t) {
-	let n = K(e), r = "";
+function Zn(e, t) {
+	let n = q(e), r = "";
 	for (let e of t) {
-		let t = `${K(e, !0)}|`;
+		let t = `${q(e, !0)}|`;
 		if (n.startsWith(t)) {
 			r = n.substring(t.length);
 			break;
@@ -1532,14 +1532,14 @@ function Qn(e, t) {
 	}
 	let i = [];
 	if (r) {
-		let e = Gn(r.split("|"));
+		let e = Wn(r.split("|"));
 		t.forEach((t) => {
 			i.push(t.concat(e));
 		});
 	}
 	return i;
 }
-var $n = /* @__PURE__ */ new Map(), Y = /* @__PURE__ */ new Map(), er = /* @__PURE__ */ new WeakMap(), tr = /* @__PURE__ */ new Map();
+var Qn = /* @__PURE__ */ new Map(), $n = /* @__PURE__ */ new Map(), er = /* @__PURE__ */ new WeakMap(), tr = /* @__PURE__ */ new Map();
 function nr(e) {
 	e.rootMeta.modified = !0;
 	let t = (e) => {
@@ -1556,36 +1556,36 @@ function rr(e, t, n) {
 	return r;
 }
 function ir(e, t, n) {
-	let { ver: r, parentMeta: i = null, immutBase: a, compareVer: o, apiCtx: s, hasOnOperate: c } = n, l = Pn(t), u = n.sourceId, d = [], f = [], p = [], m = [], h = [], g = [], _ = Un(e), v = 0, y = null;
+	let { ver: r, parentMeta: i = null, immutBase: a, compareVer: o, apiCtx: s, hasOnOperate: c } = n, l = Nn(t), u = n.sourceId, d = [], f = [], p = [], m = [], h = [], g = [], _ = Hn(e), v = 0, y = null;
 	if (i) {
-		u = i.sourceId, y = i.copy, v = or(y, s), p = i.selfType === "Array" ? i.keyPath.concat(e) : i.arrKeyPath, d = rr(y, e, s), f = q(d);
+		u = i.sourceId, y = i.copy, v = or(y, s), p = i.selfType === "Array" ? i.keyPath.concat(e) : i.arrKeyPath, d = rr(y, e, s), f = J(d);
 		let t = [];
 		if (i.arrKeyPath.length) {
-			let e = K(i.arrKeyPath, !0), n = hr(u, e);
-			t = Qn(d, n);
+			let e = q(i.arrKeyPath, !0), n = hr(u, e);
+			t = Zn(d, n);
 		}
 		if (!t.length) {
 			let { keyStrPathStr: e } = i, n = e ? `${e}|${_}` : _;
 			t = hr(u, n);
 		}
 		if (t.length > 1) {
-			let { copy: e } = i.rootMeta, { val: n } = J(e, d), r = [], a = !1, o = [];
+			let { copy: e } = i.rootMeta, { val: n } = Y(e, d), r = [], a = !1, o = [];
 			t.forEach((t, i) => {
-				let { val: s } = J(e, t);
+				let { val: s } = Y(e, t);
 				if (!a) {
-					let { val: n } = J(e, t.slice(0, t.length - 1));
+					let { val: n } = Y(e, t.slice(0, t.length - 1));
 					Array.isArray(n) && (a = !0);
 				}
-				s === n ? (g.push(t), h.push(q(t)), o.push(t)) : r.push(i);
+				s === n ? (g.push(t), h.push(J(t)), o.push(t)) : r.push(i);
 			}), a && (m = o), r.forEach((e) => t.splice(e, 1));
 		} else i.keyPaths.length > 0 ? i.keyPaths.forEach((t) => {
 			let n = t.concat(e);
-			g.push(n), h.push(q(n));
+			g.push(n), h.push(J(n));
 		}) : (g = [d], h = [f]);
 	}
 	!p.length && m.length && (p = m[0]), p.length && !m.length && m.push(p);
 	let b = i ? `${i.keyStrPathStr}|${_}` : _, x = {
-		id: bn(),
+		id: yn(),
 		sourceId: u,
 		rootMeta: null,
 		parentMeta: i,
@@ -1615,9 +1615,9 @@ function ir(e, t, n) {
 		newNodes: [],
 		ver: r,
 		compareVer: o,
-		revoke: W,
+		revoke: G,
 		hasOnOperate: c,
-		execOnOperate: W
+		execOnOperate: G
 	};
 	return x.rootMeta = v === 0 ? x : i.rootMeta, x;
 }
@@ -1640,65 +1640,65 @@ function sr(e) {
 	return e && Q(e) || null;
 }
 function cr(e) {
-	return e && e[Kt] || "";
+	return e && e[Gt] || "";
 }
 function lr(e) {
 	return Q(e) || null;
 }
 function Q(e) {
-	return e[Yt];
+	return e[Jt];
 }
 function ur(e, t, n) {
 	t.copy = e.copy, t.self = e.self, t.parentMeta[n] = e.self;
 }
 function dr(e) {
-	return er.get(e) || Cn();
+	return er.get(e) || Sn();
 }
 function fr(e, t) {
 	return er.set(e, t);
 }
 function pr(e) {
-	return $n.get(e);
+	return Qn.get(e);
 }
 function mr(e, t, n) {
-	let r = $n.get(e);
-	r || (r = {}, $n.set(e, r)), r[t] = n;
+	let r = Qn.get(e);
+	r || (r = {}, Qn.set(e, r)), r[t] = n;
 }
 function hr(e, t) {
 	let n = pr(e);
 	return n && n[t] || [];
 }
 function gr(e) {
-	return Y.get(e) || [];
+	return $n.get(e) || [];
 }
 function _r(e, t, n) {
-	let r = $n.get(e);
+	let r = Qn.get(e);
 	r && n.forEach((e) => Reflect.deleteProperty(r, e));
-	let i = (Y.get(e) || []).filter((e, n) => !t.includes(n));
-	Y.set(e, i);
+	let i = ($n.get(e) || []).filter((e, n) => !t.includes(n));
+	$n.set(e, i);
 }
 function vr(e, t) {
 	let { sourceId: n, keyPaths: r } = e;
 	t.forEach((e) => mr(n, e, r));
-	let i = Y.get(n) || [], a = r.map((e) => K(e, !0)), o = !1;
+	let i = $n.get(n) || [], a = r.map((e) => q(e, !0)), o = !1;
 	out: for (let e of i) for (let t of e) {
-		let n = K(t, !0);
+		let n = q(t, !0);
 		if (a.includes(n)) {
-			let t = e.map((e) => K(e, !0));
+			let t = e.map((e) => q(e, !0));
 			r.forEach((n, r) => {
 				t.includes(a[r]) || e.push(n);
 			}), o = !0;
 			break out;
 		}
 	}
-	o || i.push(r), Y.set(n, i);
+	o || i.push(r), $n.set(n, i);
 }
 function yr(e, t, n) {
 	let r = null;
 	if (!(n && n.parentMeta !== t)) return r;
-	let i = n.keyPath, a = t.keyPath.concat(e), o = q(i), s = q(a), c = o.join("|"), l = s.join("|");
+	let i = n.keyPath, a = t.keyPath.concat(e), o = J(i), s = J(a), c = o.join("|"), l = s.join("|");
 	if (c !== l) {
-		Kn(n, a, s), vr(n, [c, l]);
+		Gn(n, a, s), vr(n, [c, l]);
 		let i = n.modified, o = e, u = n, d = t;
 		do
 			d.copy[o] = u.copy, d.modified = i, o = d.key, u = d, d = d.parentMeta;
@@ -1717,7 +1717,7 @@ function br(e, t, n) {
 	r[o] = a;
 }
 function xr(e, t) {
-	return !An(e) || cr(e) === t;
+	return !kn(e) || cr(e) === t;
 }
 function Sr(e, t) {
 	let { metaMap: n } = t, r = /* @__PURE__ */ new Map();
@@ -1728,7 +1728,7 @@ function Sr(e, t) {
 			return;
 		}
 		let s = e;
-		kn(n, i, a, (e, n, r) => {
+		On(n, i, a, (e, n, r) => {
 			let i = Z(e, t);
 			if (i) {
 				let { modified: e, copy: t, self: a } = i;
@@ -1756,12 +1756,12 @@ function Cr(e, t) {
 		r += 1;
 		let n = null, s = null, c = [];
 		for (let t of o) {
-			let { val: r } = J(e.proxyVal, t), i = sr(r);
+			let { val: r } = Y(e.proxyVal, t), i = sr(r);
 			i && (i.modified && !n && (n = i), s = i, c.push(i.self));
 		}
-		if (c[0] !== c[1]) i.push(r), o.forEach((e) => a.push(K(e)));
-		else if (n) for (let e of o) Xn(t, e, n.copy);
-		else if (s) for (let e of o) Xn(t, e, s.self);
+		if (c[0] !== c[1]) i.push(r), o.forEach((e) => a.push(q(e)));
+		else if (n) for (let e of o) Yn(t, e, n.copy);
+		else if (s) for (let e of o) Yn(t, e, s.self);
 	}
 	i.length && _r(e.sourceId, i, a);
 }
@@ -1773,26 +1773,26 @@ function Tr(e) {
 	e.rootMeta.scopes.push(e);
 }
 function Er(e, t, n) {
-	let { traps: r, immutBase: i, apiCtx: a, autoRevoke: o } = n, s = ir(e, t, n), c = Hn(t, n);
+	let { traps: r, immutBase: i, apiCtx: a, autoRevoke: o } = n, s = ir(e, t, n), c = Vn(t, n);
 	s.copy = c;
-	let l = Object.assign(Object.assign({}, r), { get: (e, t) => Yt === t ? s : r.get(e, t) });
-	if (i) s.proxyVal = new Proxy(c, l), s.revoke = W;
+	let l = Object.assign(Object.assign({}, r), { get: (e, t) => Jt === t ? s : r.get(e, t) });
+	if (i) s.proxyVal = new Proxy(c, l), s.revoke = G;
 	else {
 		let e = Proxy.revocable(c, l);
-		s.proxyVal = e.proxy, s.revoke = o ? e.revoke : W;
+		s.proxyVal = e.proxy, s.revoke = o ? e.revoke : G;
 	}
 	return a.metaMap.set(c, s), a.metaMap.set(s.proxyVal, s), a.metaMap.set(s.self, s), s;
 }
 function Dr(e, t) {
-	return e === "Array" || (fn[e] || []).includes(t);
+	return e === "Array" || (dn[e] || []).includes(t);
 }
 function Or(e, t) {
 	let { key: n, parentMeta: r, parent: i, parentType: a, apiCtx: o } = t, s = (e, n) => {
 		let c = n || "";
-		if (G(e) || !e) return e;
+		if (K(e) || !e) return e;
 		if (!r) throw Error("[[ createMeta ]]: meta should not be null");
-		if (!Nn(e)) {
-			if (r.newNodeStats[c] || e[Jt]) return e;
+		if (!Mn(e)) {
+			if (r.newNodeStats[c] || e[qt]) return e;
 			let n = X(e, o);
 			return n || (n = Er(c, e, t), Tr(n), r.selfType === "Map" ? i.set(c, n.copy) : i[c] = n.copy), n.proxyVal;
 		}
@@ -1816,7 +1816,7 @@ function Or(e, t) {
 	return s(e, n);
 }
 function kr(e, t) {
-	if (!An(e)) return e;
+	if (!kn(e)) return e;
 	let n = X(e, t);
 	return n ? n.copy : e;
 }
@@ -1861,7 +1861,7 @@ function Ar(e, t, n) {
 }
 function jr(e) {
 	let { calledBy: t, parentMeta: n, op: r, parentType: i } = e;
-	(["deleteProperty", "set"].includes(t) || t === "get" && (i === "Set" && sn.includes(r) || i === "Array" && an.includes(r) || i === "Map" && on.includes(r))) && nr(n);
+	(["deleteProperty", "set"].includes(t) || t === "get" && (i === "Set" && on.includes(r) || i === "Array" && rn.includes(r) || i === "Map" && an.includes(r))) && nr(n);
 }
 function Mr(e, t) {
 	let n = e.keyPath.slice();
@@ -1881,8 +1881,8 @@ function Nr(e, t) {
 		key: r,
 		parentType: o
 	});
-	let m = un[o] || [];
-	if (Nn(i) && m.includes(n)) return n === "slice" ? f.slice : (cn.includes(n) && (s.isArrOrderChanged = !0), p ? o === "Set" || o === "Map" ? p[n].bind(p) : p[n] : f[n].bind(f));
+	let m = ln[o] || [];
+	if (Mn(i) && m.includes(n)) return n === "slice" ? f.slice : (sn.includes(n) && (s.isArrOrderChanged = !0), p ? o === "Set" || o === "Map" ? p[n].bind(p) : p[n] : f[n].bind(f));
 	if (!p) return d;
 	let h = p[r], g = () => {
 		let e = Z(h, c);
@@ -1895,13 +1895,13 @@ function Nr(e, t) {
 		let e = Z(i, c);
 		if (e) {
 			let { keyPaths: t } = e;
-			t.length === 1 ? e.isDel = !0 : qn(e);
+			t.length === 1 ? e.isDel = !0 : Kn(e);
 		} else g();
 		let t = p[r];
-		G(t) || c.newNodeMap.delete(Mr(s, r)), delete p[r];
+		K(t) || c.newNodeMap.delete(Mr(s, r)), delete p[r];
 		return;
 	}
-	n === "set" && u && !l && !G(d) && (s.newNodeStats[r] = !0, c.newNodeMap.set(Mr(s, r), {
+	n === "set" && u && !l && !K(d) && (s.newNodeStats[r] = !0, c.newNodeMap.set(Mr(s, r), {
 		parent: p,
 		node: d,
 		key: r,
@@ -1909,17 +1909,17 @@ function Nr(e, t) {
 	})), p[r] = d, g(), _();
 }
 function Pr(e) {
-	if (G(e)) return e;
+	if (K(e)) return e;
 	if (Array.isArray(e) && e.length > 0) return e.forEach(Pr), Object.freeze(e);
-	if (Mn(e)) {
+	if (jn(e)) {
 		let t = e;
-		t.add = () => t, t.delete = () => !1, t.clear = W;
+		t.add = () => t, t.delete = () => !1, t.clear = G;
 		for (let e of t.values()) Object.freeze(e);
 		return Object.freeze(e);
 	}
-	if (jn(e)) {
+	if (An(e)) {
 		let t = e;
-		t.set = () => t, t.delete = () => !1, t.clear = W;
+		t.set = () => t, t.delete = () => !1, t.clear = G;
 		for (let e of t.values()) Object.freeze(e);
 		return Object.freeze(e);
 	}
@@ -1942,25 +1942,25 @@ var Ir = [
 ], Lr = {};
 Ir.forEach((e) => Lr[e] = 1);
 var Rr = {
-	[H]: 1,
+	[U]: 1,
 	Set: 1,
 	Map: 1
 }, $ = /* @__PURE__ */ new Map();
 function zr(e) {
-	let t = e || {}, n = t.onOperate, r = !!n, i = t.customKeys || [], a = t[qt] ?? !1, o = t.readOnly ?? !1, s = t.disableWarn, c = t.compareVer ?? !1, l = t.autoFreeze ?? wn.autoFreeze, u = t.disableProxy ?? !1, d = "", f = !1, p = {
+	let t = e || {}, n = t.onOperate, r = !!n, i = t.customKeys || [], a = t[Kt] ?? !1, o = t.readOnly ?? !1, s = t.disableWarn, c = t.compareVer ?? !1, l = t.autoFreeze ?? Cn.autoFreeze, u = t.disableProxy ?? !1, d = "", f = !1, p = {
 		metaMap: /* @__PURE__ */ new Map(),
 		newNodeMap: /* @__PURE__ */ new Map(),
 		metaVer: d
 	};
-	u || (d = xn(), p.metaVer = d, tr.set(d, p));
-	let m = t.autoRevoke ?? wn.autoRevoke, h = t.silenceSetTrapErr ?? !0, g = (e, t) => (console.warn(`${e} failed, cuase draft root has been finised! key:`, t), h), _ = (e, t) => (console.warn(`${e} failed, cuase the value is an expired limu proxy data! key:`, t), h), v = () => (s || console.warn("can not mutate state at readOnly mode!"), !0), y = (e, t, r) => {
+	u || (d = bn(), p.metaVer = d, tr.set(d, p));
+	let m = t.autoRevoke ?? Cn.autoRevoke, h = t.silenceSetTrapErr ?? !0, g = (e, t) => (console.warn(`${e} failed, cuase draft root has been finised! key:`, t), h), _ = (e, t) => (console.warn(`${e} failed, cuase the value is an expired limu proxy data! key:`, t), h), v = () => (s || console.warn("can not mutate state at readOnly mode!"), !0), y = (e, t, r) => {
 		let { mayProxyVal: i, parentMeta: o, value: s, isCustom: c = !1 } = r, l = !1, u = e !== "get", d = u ? s : i;
 		if (!n) return {
 			isChanged: l,
 			replacedValue: d
 		};
 		let { selfType: f = "", keyPath: p = [], copy: m, self: h, modified: g, proxyVal: _, arrKeyPath: v = [], keyPaths: y = [], keyStrPaths: b = [], arrKeyPaths: x = [] } = o || {}, S = !1;
-		r.isChanged === void 0 ? (un[f] || []).includes(t) ? (S = !0, l = (dn[f] || []).includes(t)) : u && (l = !o || (g ? m : h)[t] !== s) : l = r.isChanged;
+		r.isChanged === void 0 ? (ln[f] || []).includes(t) ? (S = !0, l = (un[f] || []).includes(t)) : u && (l = !o || (g ? m : h)[t] !== s) : l = r.isChanged;
 		let C = !1;
 		return n({
 			immutBase: a,
@@ -1994,10 +1994,10 @@ function zr(e) {
 	}, b = (() => {
 		let e = !0, s = {
 			get: (e, t) => {
-				if (Kt === t) return d;
+				if (Gt === t) return d;
 				let n = e[t];
-				if (Xt.includes(t)) {
-					if (Nn(n)) {
+				if (Yt.includes(t)) {
+					if (Mn(n)) {
 						if (Symbol.iterator === t && Array.isArray(e)) {
 							let t = 0, n = () => ({
 								next: () => {
@@ -2020,7 +2020,7 @@ function zr(e) {
 					}
 					return n;
 				}
-				if (t === "__proto__" || t === "toJSON" && !On(e, t)) return n;
+				if (t === "__proto__" || t === "toJSON" && !Dn(e, t)) return n;
 				let l = n, u = X(e, p), f = yr(t, u, Z(l, p));
 				if (f) return f;
 				if (i.includes(t)) return y("get", t, {
@@ -2048,7 +2048,7 @@ function zr(e) {
 					apiCtx: p,
 					hasOnOperate: r,
 					autoRevoke: m
-				}), h === "Array" && Ln(t) || Zt[h] && (l = Nr(e, {
+				}), h === "Array" && In(t) || Xt[h] && (l = Nr(e, {
 					op: t,
 					key: t,
 					value: n,
@@ -2069,21 +2069,21 @@ function zr(e) {
 				if (ar(i)) if (c = !0, xr(i, d)) {
 					if (kr(i, p) === t[r]) return !0;
 					let e = X(i, p);
-					yr(r, s, e), Kn(e, s.keyPath.concat(r));
+					yr(r, s, e), Gn(e, s.keyPath.concat(r));
 				} else e = !1;
-				else if (Bn(i, d)) {
+				else if (zn(i, d)) {
 					let { proxyVal: e, self: t, sourceId: n } = s.rootMeta, o = Q(i);
 					if (o.sourceId !== n) l = Fr(i);
 					else {
-						let { isGetted: n, val: i } = Yn(e, o.keyPaths);
+						let { isGetted: n, val: i } = Jn(e, o.keyPaths);
 						if (!n) return _("set", r);
 						let c = Q(i);
 						ur(o, c, r);
 						let u = s.keyPath.concat(r);
 						c.keyPaths.forEach((t) => {
-							let { isGetted: n, val: i } = J(e, t);
+							let { isGetted: n, val: i } = Y(e, t);
 							n && ur(o, Q(i), r);
-						}), Kn(c, u), Zn(t, c.keyPaths, c.self), a = c.keyPaths.length === 1, p.metaMap.set(c.copy, c), l = i;
+						}), Gn(c, u), Xn(t, c.keyPaths, c.self), a = c.keyPaths.length === 1, p.metaMap.set(c.copy, c), l = i;
 					}
 				}
 				if (o) return y("set", r, {
@@ -2092,7 +2092,7 @@ function zr(e) {
 					value: l
 				}), v();
 				if (s && s.selfType === "Array") {
-					if (s.copy && s.__callSet && Ln(r)) return l = y("set", r, {
+					if (s.copy && s.__callSet && In(r)) return l = y("set", r, {
 						parentMeta: s,
 						value: l
 					}).replacedValue, s.copy[r] = l, !0;
@@ -2145,7 +2145,7 @@ function zr(e) {
 		};
 		return {
 			createDraft: (e) => {
-				if (G(e)) throw Error("base state can not be primitive");
+				if (K(e)) throw Error("base state can not be primitive");
 				if (u) return $.set(e, b.finishDraft), e;
 				let n = e, i = t.sourceId || dr(e), l = X(e, p);
 				if (l) {
@@ -2177,7 +2177,7 @@ function zr(e) {
 	return b;
 }
 function Br(e) {
-	if (!Nn(e)) throw Error("produce callback is not a function");
+	if (!Mn(e)) throw Error("produce callback is not a function");
 }
 var Vr = "Not a Limu root draft";
 function Hr(e) {
@@ -2192,7 +2192,7 @@ function Wr(e) {
 	return Hr(e)(e);
 }
 function Gr(e, t) {
-	if (Fn(e) || In(t)) throw Error("produce callback can not be a promise function or result");
+	if (Pn(e) || Fn(t)) throw Error("produce callback can not be a promise function or result");
 }
 function Kr(e, t, n) {
 	Br(t);
@@ -2200,7 +2200,7 @@ function Kr(e, t, n) {
 	return Gr(t, t(r)), Wr(r);
 }
 function qr(e, t, n) {
-	if (!t || !Nn(t)) {
+	if (!t || !Mn(t)) {
 		let n = e, r = t;
 		return Br(e), (e) => Kr(e, n, r);
 	}
@@ -2316,7 +2316,7 @@ function $r(e) {
 //#endregion
 //#region src/ui/debug-ui.tsx
 var ei = () => {
-	let { actions: e } = Vt(), [t, n] = Et(!1);
+	let { actions: e } = H(), [t, n] = Et(!1);
 	return Ot(() => {
 		if (t) {
 			Oe.gAudioContext?.resume(), e.start();
@@ -2333,7 +2333,7 @@ var ei = () => {
 		children: "play"
 	});
 }, ti = () => {
-	let { store: e } = Vt(), { pieces: t } = e.useSnapshot();
+	let { store: e } = H(), { pieces: t } = e.useSnapshot();
 	return /* @__PURE__ */ I("div", { children: t.map((e) => /* @__PURE__ */ I("div", { children: [
 		e.id,
 		": ",
@@ -2345,119 +2345,18 @@ var ei = () => {
 		className: "flex-ha gap-8",
 		children: [/* @__PURE__ */ I(ei, {}), /* @__PURE__ */ I(ti, {})]
 	})
-}), ri = ge && ge({
-	color: void 0,
-	size: void 0,
-	class: void 0,
-	className: void 0,
-	style: void 0,
-	attr: void 0
-}), ii = /^(?:accent|alignment|arabic|baseline|cap|clip(?!PathU)|color|dominant|fill|flood|font|glyph(?!R)|horiz|image(!S)|letter|lighting|marker(?!H|W|U)|overline|paint|pointer|shape|stop|strikethrough|stroke|text(?!L)|transform|underline|unicode|units|v|vector|vert|word|writing|x(?!C))[A-Z]/, ai = /[A-Z0-9]/g;
-function oi(e) {
-	let t = {};
-	for (let n in e) n.indexOf("-") === -1 && ii.test(n) ? t[n.replace(ai, "-$&").toLowerCase()] = e[n] : t[n] = e[n];
-	return t;
-}
-function si(e) {
-	return e && e.map((e, t) => S(e.tag, {
-		key: t,
-		...oi(e.attr)
-	}, si(e.child || [])));
-}
-function ci(e) {
-	return (t) => /* @__PURE__ */ I(li, {
-		attr: { ...e.attr },
-		...t,
-		children: si(e.child || [])
+}), ri = ({ className: e, spec: t, size: n }) => /* @__PURE__ */ I("i", {
+	class: e ? [t, e].join(" ") : t,
+	style: n ? { fontSize: `${n}px` } : void 0
+});
+function ii(e) {
+	return (t) => /* @__PURE__ */ I(ri, {
+		spec: e,
+		...t
 	});
 }
-function li(e) {
-	let t = (t) => {
-		let { attr: n, size: r, title: i, class: a, className: o, ...s } = e, c = a || o || "", l = r || t.size || "1em";
-		t.class && (c = `${c} ${t.class}`), t.className && (c = `${c} ${t.className}`);
-		let u = {
-			stroke: t.stroke || "currentColor",
-			fill: t.fill || "currentColor",
-			strokeWidth: t.strokeWidth || 0,
-			class: c,
-			...t.attr,
-			...n,
-			...s,
-			height: l,
-			width: l
-		};
-		return u = oi(u), /* @__PURE__ */ I("svg", {
-			...u,
-			style: oi({
-				color: e.color || t.color,
-				...t.style,
-				...e.style
-			}),
-			xmlns: "http://www.w3.org/2000/svg",
-			children: [i && /* @__PURE__ */ I("title", { children: i }), e.children]
-		});
-	};
-	return ri === void 0 ? t(ri) : /* @__PURE__ */ I(ri.Consumer, { children: (e) => t(e) });
-}
-ge && ge({
-	color: void 0,
-	size: void 0,
-	class: void 0,
-	className: void 0,
-	style: void 0,
-	attr: void 0
-});
-//#endregion
-//#region ../../../node_modules/.pnpm/@jsr+preact-icons__fa@1.0.13/node_modules/@jsr/preact-icons__fa/mod.js
-function ui(e) {
-	return ci({
-		tag: "svg",
-		attr: { viewBox: "0 0 256 512" },
-		child: [{
-			tag: "path",
-			attr: { d: "M31.7 239l136-136c9.4-9.4 24.6-9.4 33.9 0l22.6 22.6c9.4 9.4 9.4 24.6 0 33.9L127.9 256l96.4 96.4c9.4 9.4 9.4 24.6 0 33.9L201.7 409c-9.4 9.4-24.6 9.4-33.9 0l-136-136c-9.5-9.4-9.5-24.6-.1-34z" }
-		}]
-	})(e);
-}
-function di(e) {
-	return ci({
-		tag: "svg",
-		attr: { viewBox: "0 0 256 512" },
-		child: [{
-			tag: "path",
-			attr: { d: "M224.3 273l-136 136c-9.4 9.4-24.6 9.4-33.9 0l-22.6-22.6c-9.4-9.4-9.4-24.6 0-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6 0-33.9L54.3 103c9.4-9.4 24.6-9.4 33.9 0l136 136c9.5 9.4 9.5 24.6.1 34z" }
-		}]
-	})(e);
-}
-function fi(e) {
-	return ci({
-		tag: "svg",
-		attr: { viewBox: "0 0 512 512" },
-		child: [{
-			tag: "path",
-			attr: { d: "M0 168v-16c0-13.255 10.745-24 24-24h360V80c0-21.367 25.899-32.042 40.971-16.971l80 80c9.372 9.373 9.372 24.569 0 33.941l-80 80C409.956 271.982 384 261.456 384 240v-48H24c-13.255 0-24-10.745-24-24zm488 152H128v-48c0-21.314-25.862-32.08-40.971-16.971l-80 80c-9.372 9.373-9.372 24.569 0 33.941l80 80C102.057 463.997 128 453.437 128 432v-48h360c13.255 0 24-10.745 24-24v-16c0-13.255-10.745-24-24-24z" }
-		}]
-	})(e);
-}
-function pi(e) {
-	return ci({
-		tag: "svg",
-		attr: { viewBox: "0 0 448 512" },
-		child: [{
-			tag: "path",
-			attr: { d: "M424.4 214.7L72.4 6.6C43.8-10.3 0 6.1 0 47.9V464c0 37.5 40.7 60.1 72.4 41.3l352-208c31.4-18.5 31.5-64.1 0-82.6z" }
-		}]
-	})(e);
-}
-//#endregion
-//#region src/base/icons.ts
-var mi = {
-	Play: pi,
-	ChevronLeft: ui,
-	ChevronRight: di,
-	Swap: fi
-}, hi = ({ piece: e, stepIndicatorContent: t }) => {
-	let { actions: n } = Vt(), r = Fe[e.id], i = {
+var ai = { Exchange: ii("ri-arrow-left-right-line") }, oi = ({ piece: e, stepIndicatorContent: t }) => {
+	let { actions: n } = H(), r = Fe[e.id], i = {
 		setVolume(t) {
 			n.patchPiece(e.id, { volume: t });
 		},
@@ -2499,13 +2398,13 @@ var mi = {
 			/* @__PURE__ */ I(lt, {
 				coverContent: /* @__PURE__ */ I(ct, { label: (e.variationIndex + 1).toString() }),
 				onClick: i.shiftVariationIndex,
-				children: /* @__PURE__ */ I(mi.Swap, {})
+				children: /* @__PURE__ */ I(ai.Exchange, {})
 			}),
 			t
 		]
 	});
-}, gi = ({ piece: e, stepPosition: t }) => /* @__PURE__ */ I(ut, { active: e.active && Ce(e.patternBits, t) }), _i = ({ piece: e, stepPosition: t }) => {
-	let { actions: n } = Vt(), r = (t) => {
+}, si = ({ piece: e, stepPosition: t }) => /* @__PURE__ */ I(ut, { active: e.active && Ce(e.patternBits, t) }), ci = ({ piece: e, stepPosition: t }) => {
+	let { actions: n } = H(), r = (t) => {
 		n.patchPiece(e.id, { patternBits: we(e.patternBits, t) });
 	};
 	return /* @__PURE__ */ I("div", {
@@ -2523,20 +2422,20 @@ var mi = {
 			})
 		}, n))
 	});
-}, vi = ({ piece: e, stepPosition: t }) => /* @__PURE__ */ I(ft, {
-	headPart: /* @__PURE__ */ I(hi, {
+}, li = ({ piece: e, stepPosition: t }) => /* @__PURE__ */ I(ft, {
+	headPart: /* @__PURE__ */ I(oi, {
 		piece: e,
-		stepIndicatorContent: /* @__PURE__ */ I(gi, {
+		stepIndicatorContent: /* @__PURE__ */ I(si, {
 			piece: e,
 			stepPosition: t
 		})
 	}),
-	bodyPart: /* @__PURE__ */ I(_i, {
+	bodyPart: /* @__PURE__ */ I(ci, {
 		piece: e,
 		stepPosition: t
 	})
-}), yi = () => {
-	let { store: e, actions: t } = Vt(), { pieces: n, stepPosition: r, masterVolume: i } = e.useSnapshot();
+}), ui = () => {
+	let { store: e, actions: t } = H(), { pieces: n, stepPosition: r, masterVolume: i } = e.useSnapshot();
 	return /* @__PURE__ */ I("div", {
 		className: "w-full h-full flex-c bg-(--cl-panel-bg)",
 		children: /* @__PURE__ */ I(pt, { children: /* @__PURE__ */ I("div", {
@@ -2579,7 +2478,7 @@ var mi = {
 				})]
 			}), /* @__PURE__ */ I("div", {
 				className: "flex-v gap-2",
-				children: n.map((e) => /* @__PURE__ */ I(vi, {
+				children: n.map((e) => /* @__PURE__ */ I(li, {
 					piece: e,
 					stepPosition: r
 				}, e.id))
@@ -2589,10 +2488,10 @@ var mi = {
 };
 //#endregion
 //#region src/ui/app.tsx
-function bi(e) {
+function di(e) {
 	let t = Ne(e, Be.pieceItems), n = $r(Be.pieceItems), r = mt(n, t);
 	t.preloadFirst(), t.setMasterVolume(n.state.masterVolume);
-	let i = Gt(n, t), a = Ht(n, r);
+	let i = Wt(n, t), a = Vt(n, r);
 	return e?.completeSetup({
 		unitAspects: {
 			unitType: "instrument",
@@ -2609,16 +2508,16 @@ function bi(e) {
 	}), { Render: () => /* @__PURE__ */ I(Bt, {
 		store: n,
 		actions: r,
-		children: /* @__PURE__ */ I(it, { children: [/* @__PURE__ */ I(yi, {}), Pe.isDevelopment && /* @__PURE__ */ I(ni, {})] })
+		children: /* @__PURE__ */ I(it, { children: [/* @__PURE__ */ I(ui, {}), Pe.isDevelopment && /* @__PURE__ */ I(ni, {})] })
 	}) };
 }
 //#endregion
 //#region src/wc-entry/page.css?inline
-var xi = "/*! tailwindcss v4.3.3 | MIT License | https://tailwindcss.com */\n@layer properties{@supports (((-webkit-hyphens:none)) and (not (margin-trim:inline))) or ((-moz-orient:inline) and (not (color:rgb(from red r g b)))){*,:before,:after,::backdrop{--tw-rotate-x:initial;--tw-rotate-y:initial;--tw-rotate-z:initial;--tw-skew-x:initial;--tw-skew-y:initial;--tw-border-style:solid;--tw-font-weight:initial}}}@layer theme{:root,:host{--font-sans:-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", \"Noto Sans\", Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\";--font-mono:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, \"Liberation Mono\", \"Courier New\", monospace;--color-green-500:oklch(72.3% .219 149.579);--color-gray-400:oklch(70.7% .022 261.325);--color-black:#000;--color-white:#fff;--spacing:.25rem;--text-sm:.875rem;--text-sm--line-height:calc(1.25 / .875);--text-xl:1.25rem;--text-xl--line-height:calc(1.75 / 1.25);--font-weight-medium:500;--font-weight-bold:700;--default-font-family:var(--font-sans);--default-mono-font-family:var(--font-mono)}}@layer base{*,:after,:before,::backdrop{box-sizing:border-box;border:0 solid;margin:0;padding:0}::file-selector-button{box-sizing:border-box;border:0 solid;margin:0;padding:0}html,:host{-webkit-text-size-adjust:100%;tab-size:4;line-height:1.5;font-family:var(--default-font-family,-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", \"Noto Sans\", Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\");font-feature-settings:var(--default-font-feature-settings,normal);font-variation-settings:var(--default-font-variation-settings,normal);-webkit-tap-highlight-color:transparent}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;-webkit-text-decoration:inherit;-webkit-text-decoration:inherit;-webkit-text-decoration:inherit;-webkit-text-decoration:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,samp,pre{font-family:var(--default-mono-font-family,ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, \"Liberation Mono\", \"Courier New\", monospace);font-feature-settings:var(--default-mono-font-feature-settings,normal);font-variation-settings:var(--default-mono-font-variation-settings,normal);font-size:1em}small{font-size:80%}sub,sup{vertical-align:baseline;font-size:75%;line-height:0;position:relative}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}:-moz-focusring:where(:not(iframe)){outline:auto}progress{vertical-align:baseline}summary{display:list-item}ol,ul,menu{list-style:none}img,svg,video,canvas,audio,iframe,embed,object{vertical-align:middle;display:block}img,video{max-width:100%;height:auto}button,input,select,optgroup,textarea{font:inherit;font-feature-settings:inherit;font-variation-settings:inherit;letter-spacing:inherit;color:inherit;opacity:1;background-color:#0000;border-radius:0}::file-selector-button{font:inherit;font-feature-settings:inherit;font-variation-settings:inherit;letter-spacing:inherit;color:inherit;opacity:1;background-color:#0000;border-radius:0}:where(select:is([multiple],[size])) optgroup{font-weight:bolder}:where(select:is([multiple],[size])) optgroup option{padding-inline-start:20px}::file-selector-button{margin-inline-end:4px}::placeholder{opacity:1}@supports (not ((-webkit-appearance:-apple-pay-button))) or (contain-intrinsic-size:1px){::placeholder{color:currentColor}@supports (color:color-mix(in lab, red, red)){::placeholder{color:color-mix(in oklab, currentcolor 50%, transparent)}}}textarea{resize:vertical}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-date-and-time-value{min-height:1lh;text-align:inherit}::-webkit-datetime-edit{display:inline-flex}::-webkit-datetime-edit-fields-wrapper{padding:0}::-webkit-datetime-edit{padding-block:0}::-webkit-datetime-edit-year-field{padding-block:0}::-webkit-datetime-edit-month-field{padding-block:0}::-webkit-datetime-edit-day-field{padding-block:0}::-webkit-datetime-edit-hour-field{padding-block:0}::-webkit-datetime-edit-minute-field{padding-block:0}::-webkit-datetime-edit-second-field{padding-block:0}::-webkit-datetime-edit-millisecond-field{padding-block:0}::-webkit-datetime-edit-meridiem-field{padding-block:0}::-webkit-calendar-picker-indicator{line-height:1}:-moz-ui-invalid{box-shadow:none}button,input:where([type=button],[type=reset],[type=submit]){appearance:button}::file-selector-button{appearance:button}::-webkit-inner-spin-button{height:auto}::-webkit-outer-spin-button{height:auto}[hidden]:where(:not([hidden=until-found])){display:none!important}*{box-sizing:border-box;margin:0;padding:0}}@layer components;@layer utilities{.absolute{position:absolute}.relative{position:relative}.top-0{top:0}.right-0{right:0}.mt-\\[4px\\]{margin-top:4px}.mr-\\[2px\\]{margin-right:2px}.flex{display:flex}.h-6{height:calc(var(--spacing) * 6)}.h-7{height:calc(var(--spacing) * 7)}.h-8{height:calc(var(--spacing) * 8)}.h-20{height:calc(var(--spacing) * 20)}.h-\\[3\\.5px\\]{height:3.5px}.h-\\[10px\\]{height:10px}.h-\\[380px\\]{height:380px}.h-dvh{height:100dvh}.h-full{height:100%}.w-2\\.5{width:calc(var(--spacing) * 2.5)}.w-5\\.5{width:calc(var(--spacing) * 5.5)}.w-6{width:calc(var(--spacing) * 6)}.w-8{width:calc(var(--spacing) * 8)}.w-18{width:calc(var(--spacing) * 18)}.w-\\[2px\\]{width:2px}.w-\\[11px\\]{width:11px}.w-\\[75px\\]{width:75px}.w-\\[840px\\]{width:840px}.w-dvw{width:100dvw}.w-full{width:100%}.transform{transform:var(--tw-rotate-x,) var(--tw-rotate-y,) var(--tw-rotate-z,) var(--tw-skew-x,) var(--tw-skew-y,)}.cursor-pointer{cursor:pointer}.justify-between{justify-content:space-between}.justify-center{justify-content:center}.gap-2{gap:calc(var(--spacing) * 2)}.gap-3{gap:calc(var(--spacing) * 3)}.gap-8{gap:calc(var(--spacing) * 8)}.gap-\\[5px\\]{gap:5px}.overflow-hidden{overflow:hidden}.rounded-\\[1px\\]{border-radius:1px}.rounded-\\[2px\\]{border-radius:2px}.rounded-full{border-radius:2147483647px}.border{border-style:var(--tw-border-style);border-width:1px}.border-\\[0\\.5px\\]{border-style:var(--tw-border-style);border-width:.5px}.border-black\\/20{border-color:#0003}@supports (color:color-mix(in lab, red, red)){.border-black\\/20{border-color:color-mix(in oklab, var(--color-black) 20%, transparent)}}.border-black\\/40{border-color:#0006}@supports (color:color-mix(in lab, red, red)){.border-black\\/40{border-color:color-mix(in oklab, var(--color-black) 40%, transparent)}}.bg-\\(--cl-body-part-bg\\){background-color:var(--cl-body-part-bg)}.bg-\\(--cl-head-part-bg\\){background-color:var(--cl-head-part-bg)}.bg-\\(--cl-indicator-active\\){background-color:var(--cl-indicator-active)}.bg-\\(--cl-indicator-active-alt\\){background-color:var(--cl-indicator-active-alt)}.bg-\\(--cl-knob-bg\\){background-color:var(--cl-knob-bg)}.bg-\\(--cl-knob-tick-bg\\){background-color:var(--cl-knob-tick-bg)}.bg-\\(--cl-panel-bg\\){background-color:var(--cl-panel-bg)}.bg-\\(--cl-piece-active-button-bg\\){background-color:var(--cl-piece-active-button-bg)}.bg-\\(--cl-piece-indicator-bg\\){background-color:var(--cl-piece-indicator-bg)}.bg-\\(--cl-piece-operation-button-bg\\){background-color:var(--cl-piece-operation-button-bg)}.bg-\\(--cl-step-button-bg\\){background-color:var(--cl-step-button-bg)}.bg-\\(--cl-step-button-bg-alt\\){background-color:var(--cl-step-button-bg-alt)}.bg-\\(--cl-step-indicator\\){background-color:var(--cl-step-indicator)}.bg-gray-400{background-color:var(--color-gray-400)}.bg-green-500{background-color:var(--color-green-500)}.bg-white\\/50{background-color:#ffffff80}@supports (color:color-mix(in lab, red, red)){.bg-white\\/50{background-color:color-mix(in oklab, var(--color-white) 50%, transparent)}}.p-2{padding:calc(var(--spacing) * 2)}.p-2\\.5{padding:calc(var(--spacing) * 2.5)}.px-1{padding-inline:var(--spacing)}.px-2{padding-inline:calc(var(--spacing) * 2)}.text-sm{font-size:var(--text-sm);line-height:var(--tw-leading,var(--text-sm--line-height))}.text-xl{font-size:var(--text-xl);line-height:var(--tw-leading,var(--text-xl--line-height))}.text-\\[8px\\]{font-size:8px}.text-\\[14px\\]{font-size:14px}.font-bold{--tw-font-weight:var(--font-weight-bold);font-weight:var(--font-weight-bold)}.font-medium{--tw-font-weight:var(--font-weight-medium);font-weight:var(--font-weight-medium)}.text-ellipsis{text-overflow:ellipsis}.whitespace-nowrap{white-space:nowrap}.text-white{color:var(--color-white)}}:host,:host *,:host :before,:host :after{--tw-border-style:solid}:host{-webkit-user-select:none;user-select:none;font-family:Inter,sans-serif}img{-webkit-user-drag:none}@property --tw-rotate-x{syntax:\"*\";inherits:false}@property --tw-rotate-y{syntax:\"*\";inherits:false}@property --tw-rotate-z{syntax:\"*\";inherits:false}@property --tw-skew-x{syntax:\"*\";inherits:false}@property --tw-skew-y{syntax:\"*\";inherits:false}@property --tw-border-style{syntax:\"*\";inherits:false;initial-value:solid}@property --tw-font-weight{syntax:\"*\";inherits:false}", Si = "https://fonts.googleapis.com/css2?family=Inter:wght@400..700&display=swap", Ci = ye?.("wafer-v01", import.meta.url), wi = bi(Ci), Ti = ve((e) => (he(/* @__PURE__ */ I(wi.Render, {}), e), () => {
+var fi = "@import \"https://cdn.jsdelivr.net/npm/remixicon@4.9.1/fonts/remixicon.min.css\";@layer components;@layer properties{@supports (((-webkit-hyphens:none)) and (not (margin-trim:inline))) or ((-moz-orient:inline) and (not (color:rgb(from red r g b)))){*,:before,:after,::backdrop{--tw-rotate-x:initial;--tw-rotate-y:initial;--tw-rotate-z:initial;--tw-skew-x:initial;--tw-skew-y:initial;--tw-border-style:solid;--tw-font-weight:initial}}}@layer theme{:root,:host{--font-sans:-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", \"Noto Sans\", Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\";--font-mono:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, \"Liberation Mono\", \"Courier New\", monospace;--color-green-500:oklch(72.3% .219 149.579);--color-gray-400:oklch(70.7% .022 261.325);--color-black:#000;--color-white:#fff;--spacing:.25rem;--text-sm:.875rem;--text-sm--line-height:calc(1.25 / .875);--text-xl:1.25rem;--text-xl--line-height:calc(1.75 / 1.25);--font-weight-medium:500;--font-weight-bold:700;--default-font-family:var(--font-sans);--default-mono-font-family:var(--font-mono)}}@layer base{*,:after,:before,::backdrop{box-sizing:border-box;border:0 solid;margin:0;padding:0}::file-selector-button{box-sizing:border-box;border:0 solid;margin:0;padding:0}html,:host{-webkit-text-size-adjust:100%;tab-size:4;line-height:1.5;font-family:var(--default-font-family,-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", \"Noto Sans\", Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\");font-feature-settings:var(--default-font-feature-settings,normal);font-variation-settings:var(--default-font-variation-settings,normal);-webkit-tap-highlight-color:transparent}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;-webkit-text-decoration:inherit;-webkit-text-decoration:inherit;-webkit-text-decoration:inherit;-webkit-text-decoration:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,samp,pre{font-family:var(--default-mono-font-family,ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, \"Liberation Mono\", \"Courier New\", monospace);font-feature-settings:var(--default-mono-font-feature-settings,normal);font-variation-settings:var(--default-mono-font-variation-settings,normal);font-size:1em}small{font-size:80%}sub,sup{vertical-align:baseline;font-size:75%;line-height:0;position:relative}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}:-moz-focusring:where(:not(iframe)){outline:auto}progress{vertical-align:baseline}summary{display:list-item}ol,ul,menu{list-style:none}img,svg,video,canvas,audio,iframe,embed,object{vertical-align:middle;display:block}img,video{max-width:100%;height:auto}button,input,select,optgroup,textarea{font:inherit;font-feature-settings:inherit;font-variation-settings:inherit;letter-spacing:inherit;color:inherit;opacity:1;background-color:#0000;border-radius:0}::file-selector-button{font:inherit;font-feature-settings:inherit;font-variation-settings:inherit;letter-spacing:inherit;color:inherit;opacity:1;background-color:#0000;border-radius:0}:where(select:is([multiple],[size])) optgroup{font-weight:bolder}:where(select:is([multiple],[size])) optgroup option{padding-inline-start:20px}::file-selector-button{margin-inline-end:4px}::placeholder{opacity:1}@supports (not ((-webkit-appearance:-apple-pay-button))) or (contain-intrinsic-size:1px){::placeholder{color:currentColor}@supports (color:color-mix(in lab, red, red)){::placeholder{color:color-mix(in oklab, currentcolor 50%, transparent)}}}textarea{resize:vertical}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-date-and-time-value{min-height:1lh;text-align:inherit}::-webkit-datetime-edit{display:inline-flex}::-webkit-datetime-edit-fields-wrapper{padding:0}::-webkit-datetime-edit{padding-block:0}::-webkit-datetime-edit-year-field{padding-block:0}::-webkit-datetime-edit-month-field{padding-block:0}::-webkit-datetime-edit-day-field{padding-block:0}::-webkit-datetime-edit-hour-field{padding-block:0}::-webkit-datetime-edit-minute-field{padding-block:0}::-webkit-datetime-edit-second-field{padding-block:0}::-webkit-datetime-edit-millisecond-field{padding-block:0}::-webkit-datetime-edit-meridiem-field{padding-block:0}::-webkit-calendar-picker-indicator{line-height:1}:-moz-ui-invalid{box-shadow:none}button,input:where([type=button],[type=reset],[type=submit]){appearance:button}::file-selector-button{appearance:button}::-webkit-inner-spin-button{height:auto}::-webkit-outer-spin-button{height:auto}[hidden]:where(:not([hidden=until-found])){display:none!important}*{box-sizing:border-box;margin:0;padding:0}}@layer utilities{.absolute{position:absolute}.relative{position:relative}.top-0{top:0}.right-0{right:0}.mt-\\[4px\\]{margin-top:4px}.mr-\\[2px\\]{margin-right:2px}.flex{display:flex}.h-6{height:calc(var(--spacing) * 6)}.h-7{height:calc(var(--spacing) * 7)}.h-8{height:calc(var(--spacing) * 8)}.h-20{height:calc(var(--spacing) * 20)}.h-\\[3\\.5px\\]{height:3.5px}.h-\\[10px\\]{height:10px}.h-\\[380px\\]{height:380px}.h-dvh{height:100dvh}.h-full{height:100%}.w-2\\.5{width:calc(var(--spacing) * 2.5)}.w-5\\.5{width:calc(var(--spacing) * 5.5)}.w-6{width:calc(var(--spacing) * 6)}.w-8{width:calc(var(--spacing) * 8)}.w-18{width:calc(var(--spacing) * 18)}.w-\\[2px\\]{width:2px}.w-\\[11px\\]{width:11px}.w-\\[75px\\]{width:75px}.w-\\[840px\\]{width:840px}.w-dvw{width:100dvw}.w-full{width:100%}.transform{transform:var(--tw-rotate-x,) var(--tw-rotate-y,) var(--tw-rotate-z,) var(--tw-skew-x,) var(--tw-skew-y,)}.cursor-pointer{cursor:pointer}.justify-between{justify-content:space-between}.justify-center{justify-content:center}.gap-2{gap:calc(var(--spacing) * 2)}.gap-3{gap:calc(var(--spacing) * 3)}.gap-8{gap:calc(var(--spacing) * 8)}.gap-\\[5px\\]{gap:5px}.overflow-hidden{overflow:hidden}.rounded-\\[1px\\]{border-radius:1px}.rounded-\\[2px\\]{border-radius:2px}.rounded-full{border-radius:2147483647px}.border{border-style:var(--tw-border-style);border-width:1px}.border-\\[0\\.5px\\]{border-style:var(--tw-border-style);border-width:.5px}.border-black\\/20{border-color:#0003}@supports (color:color-mix(in lab, red, red)){.border-black\\/20{border-color:color-mix(in oklab, var(--color-black) 20%, transparent)}}.border-black\\/40{border-color:#0006}@supports (color:color-mix(in lab, red, red)){.border-black\\/40{border-color:color-mix(in oklab, var(--color-black) 40%, transparent)}}.bg-\\(--cl-body-part-bg\\){background-color:var(--cl-body-part-bg)}.bg-\\(--cl-head-part-bg\\){background-color:var(--cl-head-part-bg)}.bg-\\(--cl-indicator-active\\){background-color:var(--cl-indicator-active)}.bg-\\(--cl-indicator-active-alt\\){background-color:var(--cl-indicator-active-alt)}.bg-\\(--cl-knob-bg\\){background-color:var(--cl-knob-bg)}.bg-\\(--cl-knob-tick-bg\\){background-color:var(--cl-knob-tick-bg)}.bg-\\(--cl-panel-bg\\){background-color:var(--cl-panel-bg)}.bg-\\(--cl-piece-active-button-bg\\){background-color:var(--cl-piece-active-button-bg)}.bg-\\(--cl-piece-indicator-bg\\){background-color:var(--cl-piece-indicator-bg)}.bg-\\(--cl-piece-operation-button-bg\\){background-color:var(--cl-piece-operation-button-bg)}.bg-\\(--cl-step-button-bg\\){background-color:var(--cl-step-button-bg)}.bg-\\(--cl-step-button-bg-alt\\){background-color:var(--cl-step-button-bg-alt)}.bg-\\(--cl-step-indicator\\){background-color:var(--cl-step-indicator)}.bg-gray-400{background-color:var(--color-gray-400)}.bg-green-500{background-color:var(--color-green-500)}.bg-white\\/50{background-color:#ffffff80}@supports (color:color-mix(in lab, red, red)){.bg-white\\/50{background-color:color-mix(in oklab, var(--color-white) 50%, transparent)}}.p-2{padding:calc(var(--spacing) * 2)}.p-2\\.5{padding:calc(var(--spacing) * 2.5)}.px-1{padding-inline:var(--spacing)}.px-2{padding-inline:calc(var(--spacing) * 2)}.text-sm{font-size:var(--text-sm);line-height:var(--tw-leading,var(--text-sm--line-height))}.text-xl{font-size:var(--text-xl);line-height:var(--tw-leading,var(--text-xl--line-height))}.text-\\[8px\\]{font-size:8px}.text-\\[14px\\]{font-size:14px}.font-bold{--tw-font-weight:var(--font-weight-bold);font-weight:var(--font-weight-bold)}.font-medium{--tw-font-weight:var(--font-weight-medium);font-weight:var(--font-weight-medium)}.text-ellipsis{text-overflow:ellipsis}.whitespace-nowrap{white-space:nowrap}.text-white{color:var(--color-white)}}:host,:host *,:host :before,:host :after{--tw-border-style:solid}:host{-webkit-user-select:none;user-select:none;font-family:Inter,sans-serif}img{-webkit-user-drag:none}@property --tw-rotate-x{syntax:\"*\";inherits:false}@property --tw-rotate-y{syntax:\"*\";inherits:false}@property --tw-rotate-z{syntax:\"*\";inherits:false}@property --tw-skew-x{syntax:\"*\";inherits:false}@property --tw-skew-y{syntax:\"*\";inherits:false}@property --tw-border-style{syntax:\"*\";inherits:false;initial-value:solid}@property --tw-font-weight{syntax:\"*\";inherits:false}", pi = "https://fonts.googleapis.com/css2?family=Inter:wght@400..700&display=swap", mi = ye?.("wafer-v01", import.meta.url), hi = di(mi), gi = ve((e) => (he(/* @__PURE__ */ I(hi.Render, {}), e), () => {
 	he(null, e);
 }), {
-	cssTexts: [xi, e],
-	stylesheetUrls: [Si]
+	cssTexts: [fi, e],
+	stylesheetUrls: [pi]
 });
 //#endregion
-export { Ti as default };
+export { gi as default };

@@ -833,7 +833,7 @@ function L(e, t, n, r) {
 	return [i];
 }
 //#endregion
-//#region ../../../node_modules/.pnpm/wafer-host@0.0.6_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/wafer-host/dist/unit-helper/index.js
+//#region ../../../node_modules/.pnpm/wafer-host@0.1.5_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/wafer-host/dist/unit-helper/index.js
 function Ye(e) {
 	if (!Array.from(document.head.querySelectorAll("link[rel=\"stylesheet\"]")).some((t) => t.href === e)) {
 		console.log(`Inserting link tag for ${e}`);
@@ -1436,7 +1436,7 @@ var [J, Y] = Ot({
 	parameters: z(R)
 });
 //#endregion
-//#region ../../../node_modules/.pnpm/wafer-host@0.0.6_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/wafer-host/dist/unit-types/index.js
+//#region ../../../node_modules/.pnpm/wafer-host@0.1.5_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/wafer-host/dist/unit-types/index.js
 function kt(e, t) {
 	return window?.queryUnitInterfaceForModule?.(e, t);
 }
@@ -1733,7 +1733,8 @@ var Q = qt(), nn = !1, $ = {
 			unitAspects: {
 				unitType: "instrument",
 				categoryHint: "synthesizer",
-				viewSize: [640, 320]
+				viewSize: [640, 376],
+				preferJustSize: !0
 			},
 			noteInput: {
 				noteOn(e, t) {
@@ -1804,7 +1805,7 @@ function on() {
 }
 //#endregion
 //#region src/app.tsx
-var sn = /*#__PURE__*/ j("<div class=flex-c><div class=\"h-auto w-[min(96vw,640px)] border border-slate-600\">");
+var sn = /*#__PURE__*/ j("<div class=\"h-full flex-c\"><div class=\"h-auto w-[min(96vw,640px)] border border-slate-600\">");
 function cn() {
 	let e = $.initialize();
 	return C(() => {

@@ -8584,7 +8584,7 @@ function Be(e) {
 	};
 }
 //#endregion
-//#region ../../../node_modules/.pnpm/wafer-host@0.0.6_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/wafer-host/dist/unit-types/index.js
+//#region ../../../node_modules/.pnpm/wafer-host@0.1.5_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/wafer-host/dist/unit-types/index.js
 function Ve(e, t) {
 	return window?.queryUnitInterfaceForModule?.(e, t);
 }
@@ -9803,11 +9803,11 @@ var k = cr({
 			});
 		}
 	}
-}, mr = Be(Ue()), hr = Fe(), gr = { wrapProcessStep(e) {
-	mr.processOnStep(e);
+}, mr = He?.audioContext ?? new AudioContext(), hr = Be(Ue()), gr = Fe(mr), _r = { wrapProcessStep(e) {
+	hr.processOnStep(e);
 	let t = We(k.state.loopBars);
 	A.setPlayPos(e % t);
-} }, _r = {
+} }, vr = {
 	setupUnitInterface() {
 		He?.completeSetup({
 			unitAspects: {
@@ -9824,10 +9824,10 @@ var k = cr({
 					A.setExPlaying(!0);
 				},
 				processStep(e) {
-					gr.wrapProcessStep(e);
+					_r.wrapProcessStep(e);
 				},
 				stop() {
-					A.setExPlaying(!1), mr.allNotesOff();
+					A.setExPlaying(!1), hr.allNotesOff();
 				}
 			},
 			persistence: pr,
@@ -9847,31 +9847,31 @@ var k = cr({
 		});
 	},
 	setupStateSynchronization() {
-		return mr.setAttributes({
+		return hr.setAttributes({
 			bpm: k.state.bpm,
 			loopBars: k.state.loopBars,
 			allSteps: k.state.allSteps,
 			octaveShift: k.state.octaveShift,
 			stepDuty: k.state.stepDuty
-		}), hr.setBpm(k.state.bpm), k.subscribe((e) => {
+		}), gr.setBpm(k.state.bpm), k.subscribe((e) => {
 			let { allSteps: t, previewNote: n, loopBars: r, octaveShift: i, stepDuty: a, stdPlaying: o, bpm: s } = e;
-			t !== void 0 && mr.setAttributes({ allSteps: t }), n !== void 0 && mr.emitPreviewNote(n), r !== void 0 && mr.setAttributes({ loopBars: r }), i !== void 0 && mr.setAttributes({ octaveShift: i }), a !== void 0 && mr.setAttributes({ stepDuty: a }), o !== void 0 && (o ? (hr.setBpm(k.state.bpm), hr.start({ processStep: gr.wrapProcessStep })) : (hr.stop(), mr.allNotesOff())), s !== void 0 && (mr.setAttributes({ bpm: s }), hr.setBpm(s));
+			t !== void 0 && hr.setAttributes({ allSteps: t }), n !== void 0 && hr.emitPreviewNote(n), r !== void 0 && hr.setAttributes({ loopBars: r }), i !== void 0 && hr.setAttributes({ octaveShift: i }), a !== void 0 && hr.setAttributes({ stepDuty: a }), o !== void 0 && (o ? (gr.setBpm(k.state.bpm), gr.start({ processStep: _r.wrapProcessStep })) : (gr.stop(), hr.allNotesOff())), s !== void 0 && (hr.setAttributes({ bpm: s }), gr.setBpm(s));
 		});
 	},
 	setupAll() {
-		_r.setupUnitInterface();
-		let e = _r.setupStateSynchronization(), t = _r.setupMidiKeyboardInput();
+		vr.setupUnitInterface();
+		let e = vr.setupStateSynchronization(), t = vr.setupMidiKeyboardInput();
 		return () => {
 			e(), t?.();
 		};
 	}
-}, vr = {
+}, yr = {
 	defaultKeyWidth: 20,
 	defaultKeyHeight: 80,
 	blackKeyWidthRatio: .8,
 	blackKeyHeightRatio: .55
-}, yr = ({ baseNoteNumber: e, activeNotes: t, noteOn: n, noteOff: r, keyWidth: i = vr.defaultKeyWidth, keyHeight: a = vr.defaultKeyHeight }) => {
-	let o = i * vr.blackKeyWidthRatio, s = a * vr.blackKeyHeightRatio;
+}, br = ({ baseNoteNumber: e, activeNotes: t, noteOn: n, noteOff: r, keyWidth: i = yr.defaultKeyWidth, keyHeight: a = yr.defaultKeyHeight }) => {
+	let o = i * yr.blackKeyWidthRatio, s = a * yr.blackKeyHeightRatio;
 	return /* @__PURE__ */ (0, w.jsxs)("div", {
 		className: "relative",
 		children: [/* @__PURE__ */ (0, w.jsx)("div", {
@@ -9926,7 +9926,7 @@ var k = cr({
 			})
 		})]
 	});
-}, br = ({ noteNumber: e, activeNotes: t, noteOn: n, noteOff: r, keyWidth: i = vr.defaultKeyWidth, keyHeight: a = vr.defaultKeyHeight }) => /* @__PURE__ */ (0, w.jsx)("div", {
+}, xr = ({ noteNumber: e, activeNotes: t, noteOn: n, noteOff: r, keyWidth: i = yr.defaultKeyWidth, keyHeight: a = yr.defaultKeyHeight }) => /* @__PURE__ */ (0, w.jsx)("div", {
 	className: "relative",
 	children: /* @__PURE__ */ (0, w.jsx)("div", {
 		className: "flex-h",
@@ -9944,7 +9944,7 @@ var k = cr({
 			}, o);
 		})
 	})
-}), xr = () => {
+}), Sr = () => {
 	let { editPos: e, loopBars: t } = k.useSnapshot(), n = e / 16 >>> 0, r = e % 16, i = n / t * 360, a = r / 16 * 360;
 	return /* @__PURE__ */ (0, w.jsxs)("div", {
 		className: "flex-ha gap-2",
@@ -9973,10 +9973,10 @@ var k = cr({
 			})
 		]
 	});
-}, Sr = {
+}, Cr = {
 	1: "/16",
 	2: "/8"
-}, Cr = () => {
+}, wr = () => {
 	let e = k.useSnapshot();
 	return /* @__PURE__ */ (0, w.jsxs)("div", {
 		className: "flex-h gap-5 items-end relative",
@@ -10002,7 +10002,7 @@ var k = cr({
 			}),
 			/* @__PURE__ */ (0, w.jsx)("div", {
 				className: "grow flex-c",
-				children: /* @__PURE__ */ (0, w.jsx)(xr, {})
+				children: /* @__PURE__ */ (0, w.jsx)(Sr, {})
 			}),
 			/* @__PURE__ */ (0, w.jsxs)("div", {
 				className: "flex-h gap-2 items-end",
@@ -10012,17 +10012,17 @@ var k = cr({
 					onClick: A.rotateBars
 				}), /* @__PURE__ */ (0, w.jsx)(re, {
 					label: "STEP",
-					text: Sr[e.stepStride],
+					text: Cr[e.stepStride],
 					onClick: A.rotateStride
 				})]
 			})
 		]
 	});
 };
-function wr(e) {
+function Tr(e) {
 	return e === Re.rest ? "" : e === Re.tie ? "-" : "o";
 }
-var Tr = ({ offset: e }) => {
+var Er = ({ offset: e }) => {
 	let { allSteps: t, editPos: n, playPos: r, stdPlaying: i, exPlaying: a } = k.useSnapshot(), o = t.slice(e, e + 4), s = i || a;
 	return /* @__PURE__ */ (0, w.jsx)("div", {
 		className: "flex-h",
@@ -10032,25 +10032,25 @@ var Tr = ({ offset: e }) => {
 				className: "w-[16px] h-[16px] flex-c text-[12px]",
 				style: { border: a },
 				onClick: () => A.setEditPos(i),
-				children: wr(o[t])
+				children: Tr(o[t])
 			}, t);
 		})
 	});
-}, Er = ({ barIndex: e }) => /* @__PURE__ */ (0, w.jsxs)("div", {
+}, Dr = ({ barIndex: e }) => /* @__PURE__ */ (0, w.jsxs)("div", {
 	className: "flex-h gap-1",
 	children: [
-		/* @__PURE__ */ (0, w.jsx)(Tr, { offset: e * 16 + 0 }),
-		/* @__PURE__ */ (0, w.jsx)(Tr, { offset: e * 16 + 4 }),
-		/* @__PURE__ */ (0, w.jsx)(Tr, { offset: e * 16 + 8 }),
-		/* @__PURE__ */ (0, w.jsx)(Tr, { offset: e * 16 + 12 })
+		/* @__PURE__ */ (0, w.jsx)(Er, { offset: e * 16 + 0 }),
+		/* @__PURE__ */ (0, w.jsx)(Er, { offset: e * 16 + 4 }),
+		/* @__PURE__ */ (0, w.jsx)(Er, { offset: e * 16 + 8 }),
+		/* @__PURE__ */ (0, w.jsx)(Er, { offset: e * 16 + 12 })
 	]
-}), Dr = () => {
+}), Or = () => {
 	let { loopBars: e } = k.useSnapshot();
 	return /* @__PURE__ */ (0, w.jsx)("div", {
 		className: "border border-[#888] bg-[#fff] w-[300px] h-[115px] flex-vc gap-1.5",
-		children: b(e).map((e, t) => /* @__PURE__ */ (0, w.jsx)(Er, { barIndex: t }, t))
+		children: b(e).map((e, t) => /* @__PURE__ */ (0, w.jsx)(Dr, { barIndex: t }, t))
 	});
-}, Or = ({ children: e }) => {
+}, kr = ({ children: e }) => {
 	let { octaveShift: t, stepDuty: n, editing: r } = k.useSnapshot(), i = "w-[80px] flex-v gap-1";
 	return /* @__PURE__ */ (0, w.jsxs)("div", {
 		className: "flex-ha",
@@ -10090,7 +10090,7 @@ var Tr = ({ offset: e }) => {
 			})
 		]
 	});
-}, kr = () => /* @__PURE__ */ (0, w.jsxs)("div", {
+}, Ar = () => /* @__PURE__ */ (0, w.jsxs)("div", {
 	className: "flex-ha gap-2",
 	children: [
 		/* @__PURE__ */ (0, w.jsx)(ne, {
@@ -10111,7 +10111,7 @@ var Tr = ({ offset: e }) => {
 			onClick: A.putTie
 		})
 	]
-}), Ar = () => {
+}), jr = () => {
 	let { activeNotes: e } = k.useSnapshot();
 	return /* @__PURE__ */ (0, w.jsxs)("div", {
 		className: "flex-h",
@@ -10119,14 +10119,14 @@ var Tr = ({ offset: e }) => {
 			48,
 			60,
 			72
-		].map((t) => /* @__PURE__ */ (0, w.jsx)(yr, {
+		].map((t) => /* @__PURE__ */ (0, w.jsx)(br, {
 			baseNoteNumber: t,
 			activeNotes: e,
 			noteOn: A.inputNoteOn,
 			noteOff: A.inputNoteOff,
 			keyWidth: 20,
 			keyHeight: 50
-		}, t)), /* @__PURE__ */ (0, w.jsx)(br, {
+		}, t)), /* @__PURE__ */ (0, w.jsx)(xr, {
 			noteNumber: 84,
 			activeNotes: e,
 			noteOn: A.inputNoteOn,
@@ -10135,27 +10135,27 @@ var Tr = ({ offset: e }) => {
 			keyHeight: 50
 		})]
 	});
-}, jr = () => /* @__PURE__ */ (0, w.jsx)("div", {
+}, Mr = () => /* @__PURE__ */ (0, w.jsx)("div", {
 	className: "flex-c h-full",
 	children: /* @__PURE__ */ (0, w.jsx)("div", {
 		className: "flex-vc bg-gray-200 p-3 border border-gray-400",
 		children: /* @__PURE__ */ (0, w.jsxs)("div", {
 			className: "flex-vc gap-2",
 			children: [
-				/* @__PURE__ */ (0, w.jsx)(Cr, {}),
-				/* @__PURE__ */ (0, w.jsx)(Or, { children: /* @__PURE__ */ (0, w.jsx)(Dr, {}) }),
-				/* @__PURE__ */ (0, w.jsx)(kr, {}),
-				/* @__PURE__ */ (0, w.jsx)(Ar, {})
+				/* @__PURE__ */ (0, w.jsx)(wr, {}),
+				/* @__PURE__ */ (0, w.jsx)(kr, { children: /* @__PURE__ */ (0, w.jsx)(Or, {}) }),
+				/* @__PURE__ */ (0, w.jsx)(Ar, {}),
+				/* @__PURE__ */ (0, w.jsx)(jr, {})
 			]
 		})
 	})
 });
-function Mr() {
-	return (0, te.useEffect)(_r.setupAll, []), /* @__PURE__ */ (0, w.jsx)(jr, {});
+function Nr() {
+	return (0, te.useEffect)(vr.setupAll, []), /* @__PURE__ */ (0, w.jsx)(Mr, {});
 }
-var Nr = y((e) => {
+var Pr = y((e) => {
 	let t = (0, _.createRoot)(e);
-	return t.render(/* @__PURE__ */ (0, w.jsx)(Mr, {})), () => {
+	return t.render(/* @__PURE__ */ (0, w.jsx)(Nr, {})), () => {
 		t.unmount();
 	};
 }, {
@@ -10163,4 +10163,4 @@ var Nr = y((e) => {
 	stylesheetUrls: ["https://fonts.googleapis.com/css2?family=Inter:wght@400..700&display=swap"]
 });
 //#endregion
-export { Nr as default };
+export { Pr as default };
