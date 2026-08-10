@@ -25,9 +25,12 @@ export const Knob = ({
       onChange={onChange}
     >
       <div class={styles}>
-        <div class="inner"></div>
-        <div class="tickPlane" style={{ transform: `rotate(${tickAngle}deg)` }}>
-          <div class="tick" />
+        <div class="x-inner"></div>
+        <div
+          class="x-tickPlane"
+          style={{ transform: `rotate(${tickAngle}deg)` }}
+        >
+          <div class="x-tick" />
         </div>
       </div>
     </KnobFrame>
@@ -40,13 +43,13 @@ const styles = css({
   background: "linear-gradient(to bottom, #fff, #0006)",
   padding: "3px",
   border: "solid 0.5px #4448",
-  "& > .inner": {
+  "& > .x-inner": {
     "@apply": "w-full h-full rounded-full",
     background: "#eee",
   },
-  "& > .tickPlane": {
+  "& > .x-tickPlane": {
     "@apply": "absolute-full flex-va",
-    "& > .tick": {
+    "& > .x-tick": {
       "@apply": "w-[4px] h-[15px] bg-clKnobTick",
     },
   },

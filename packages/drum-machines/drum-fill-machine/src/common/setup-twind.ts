@@ -20,7 +20,7 @@ const config = defineConfig({
       },
     },
   },
-  ignorelist: [/^ri-/, /^--/],
+  ignorelist: [/^ri-/, /^--/, /^_/, /^x-/],
   rules: [
     ["flex-h", "~(flex)"],
     ["flex-hs", "flex items-start"],
