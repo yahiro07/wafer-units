@@ -28,7 +28,6 @@ export function createRandomParameters(): Partial<SynthParameters> {
     chorus: randF(),
     delay: randF(),
     reverb: randF(),
-    master: randF(),
     // oscDetune: probably(0.5, 0, randRange(0, 0.5)),
     // oscSub: probably(0.5, 0, randF()),
     // oscDrift: probably(0.6, 0, randF()),

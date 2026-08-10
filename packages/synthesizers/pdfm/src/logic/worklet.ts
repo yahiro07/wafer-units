@@ -351,8 +351,8 @@ class SynthProcessor extends AudioWorkletProcessor {
       { name: "envMod", defaultValue: 0.0, minValue: 0.0, maxValue: 1.0 },
       { name: "detune", defaultValue: 0.0, minValue: 0.0, maxValue: 1.0 },
       { name: "sub", defaultValue: 0.0, minValue: 0.0, maxValue: 1.0 },
-      { name: "decay", defaultValue: 0.5, minValue: 0.001, maxValue: 1.0 },
-      { name: "release", defaultValue: 0.3, minValue: 0.001, maxValue: 1.0 },
+      { name: "decay", defaultValue: 0.5, minValue: 0.0, maxValue: 1.0 },
+      { name: "release", defaultValue: 0.3, minValue: 0.0, maxValue: 1.0 },
       { name: "drift", defaultValue: 0.0, minValue: 0.0, maxValue: 1.0 },
       { name: "loFi", defaultValue: 0.0, minValue: 0.0, maxValue: 1.0 },
     ];
