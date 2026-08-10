@@ -5,7 +5,7 @@ import { createPlainSelectorOptions } from "@/utils/selector-option";
 import { Selector } from "@/components/selector";
 import { allPresetKeys, store } from "@/root/store";
 import { actions } from "@/root/actions";
-import { SynthParameters, WaveMode } from "@/core/definitions";
+import { SynthParameters, WaveMode } from "@/defs/definitions";
 import { cx } from "@twind/core";
 
 const presetOptions = createPlainSelectorOptions(allPresetKeys);

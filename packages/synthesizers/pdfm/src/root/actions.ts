@@ -1,5 +1,5 @@
-import { SynthParameters } from "@/core/definitions";
-import { allPresets } from "@/core/presets";
+import { SynthParameters } from "@/defs/definitions";
+import { allPresets } from "@/defs/presets";
 import { createRandomParameters } from "@/root/randomizer";
 import { allPresetKeys, store } from "@/root/store";
 

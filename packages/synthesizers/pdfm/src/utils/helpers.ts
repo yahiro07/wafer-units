@@ -10,6 +10,14 @@ export function clampValue(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), max);
 }
 
+export function lowClip(value: number, lo: number) {
+  return Math.max(value, lo);
+}
+
+export function highClip(value: number, hi: number) {
+  return Math.min(value, hi);
+}
+
 export function linearInterpolate(
   value: number,
   s0: number,

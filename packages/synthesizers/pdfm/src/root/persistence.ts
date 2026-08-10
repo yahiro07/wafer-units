@@ -1,4 +1,4 @@
-import { SynthParameters } from "@/core/definitions";
+import { SynthParameters, WaveMode } from "@/defs/definitions";
 import { allPresetKeys, store } from "@/root/store";
 
 function paramToByte(value: number) {
@@ -12,37 +12,39 @@ const mappers = {
   serializeParameters(parameters: SynthParameters): number[] {
     const pr = parameters;
     return [
-      pr.oscWave, //0
+      pr.waveMode, //0
       ...[
-        pr.oscDetune, //1
-        pr.oscSub,
-        pr.oscDrift,
-        pr.fxChorus,
-        pr.fxReverb,
-        pr.filterCutoff,
-        pr.filterPeak,
-        pr.filterEnvMod,
-        pr.ampDecay,
-        pr.ampRelease,
-        pr.masterVolume, //11
+        pr.shape, //1
+        pr.envMod,
+        pr.detune,
+        pr.sub,
+        pr.decay,
+        pr.release,
+        pr.drift,
+        pr.loFi,
+        pr.chorus,
+        pr.delay,
+        pr.reverb,
+        pr.master, //12
       ].map(paramToByte),
     ];
   },
   deserializeParameters(bytes: number[]): SynthParameters {
     const floatParams = bytes.map(paramFromByte);
     return {
-      oscWave: bytes[0] as SynthParameters["oscWave"],
-      oscDetune: floatParams[1],
-      oscSub: floatParams[2],
-      oscDrift: floatParams[3],
-      fxChorus: floatParams[4],
-      fxReverb: floatParams[5],
-      filterCutoff: floatParams[6],
-      filterPeak: floatParams[7],
-      filterEnvMod: floatParams[8],
-      ampDecay: floatParams[9],
-      ampRelease: floatParams[10],
-      masterVolume: floatParams[11],
+      waveMode: bytes[0] as WaveMode,
+      shape: floatParams[1],
+      envMod: floatParams[2],
+      detune: floatParams[3],
+      sub: floatParams[4],
+      decay: floatParams[5],
+      release: floatParams[6],
+      drift: floatParams[7],
+      loFi: floatParams[8],
+      chorus: floatParams[9],
+      delay: floatParams[10],
+      reverb: floatParams[11],
+      master: floatParams[12],
     };
   },
   presetNameToIndex(presetName: string) {
@@ -63,7 +65,7 @@ export const persistence = {
     return new Uint8Array([formatRevision, presetIndex, ...paramBytes]);
   },
   applyStateBytes(bytes: Uint8Array) {
-    if (bytes.length === 2 + 12 && bytes[0] === formatRevision) {
+    if (bytes.length === 2 + 13 && bytes[0] === formatRevision) {
       const presetIndex = bytes[1];
       const presetKey = mappers.presetNameFromIndex(presetIndex);
       const parameters = mappers.deserializeParameters([...bytes.slice(2)]);
