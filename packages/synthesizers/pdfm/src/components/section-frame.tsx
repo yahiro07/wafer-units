@@ -1,5 +1,5 @@
-import { tz } from "@/common/setup-twind";
-import { cx } from "@twind/core";
+import { tz } from "@/utils/tz";
+import { tx } from "@twind/core";
 import { ComponentChildren } from "preact";
 
 export const SectionFrame = ({
@@ -14,11 +14,11 @@ export const SectionFrame = ({
   children: ComponentChildren;
 }) => {
   return (
-    <div class={cx(styles.base, className)}>
+    <div class={tx(styles.base, className)}>
       <div class={styles.headerRow}>
         <span>{header}</span>
       </div>
-      <div class={cx(styles.contentRow, contentClassName)}>{children}</div>
+      <div class={tx(styles.contentRow, contentClassName)}>{children}</div>
     </div>
   );
 };

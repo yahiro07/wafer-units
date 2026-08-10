@@ -1,10 +1,11 @@
 import {
   Class,
-  css as $css,
   CSSObject,
   CSSProperties,
   Falsey,
   TxFunction,
+  css,
+  tx,
 } from "@twind/core";
 
 type StyleObject = CSSProperties & {
@@ -25,9 +26,9 @@ type TzArg = string | number | boolean | StyleObject | Falsey | TzArg[];
 
 type TzFunction = (...args: TzArg[]) => string;
 
-type CssFunction = typeof $css;
+type CssFunction = typeof css;
 
-export function createTz(tx: TxFunction, css: CssFunction): TzFunction {
+function createTz(tx: TxFunction, css: CssFunction): TzFunction {
   function normalize(arg: TzArg): Class {
     if (Array.isArray(arg)) {
       return arg.map(normalize);
@@ -40,3 +41,4 @@ export function createTz(tx: TxFunction, css: CssFunction): TzFunction {
 
   return (...args) => tx(...args.map(normalize));
 }
+export const tz = createTz(tx, css);

@@ -1,5 +1,5 @@
-import { tz } from "@/common/setup-twind";
 import { SelectorOption } from "@/utils/selector-option";
+import { tz } from "@/utils/tz";
 
 export const Selector = <T extends string | number>({
   value,

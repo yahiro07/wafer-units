@@ -1,5 +1,5 @@
-import { tz } from "@/common/setup-twind";
 import { Knob } from "@/components/knob";
+import { tz } from "@/utils/tz";
 
 export const KnobBox = ({
   label,

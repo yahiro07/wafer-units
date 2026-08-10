@@ -1,6 +1,6 @@
-import { tz } from "@/common/setup-twind";
 import { KnobFrame } from "@/components/knob-frame";
 import { linearInterpolate } from "@/utils/helpers";
+import { tz } from "@/utils/tz";
 
 export const Knob = ({
   value,

@@ -1,4 +1,4 @@
-import { tz } from "@/common/setup-twind";
+import { tz } from "@/utils/tz";
 import { ComponentChildren } from "preact";
 
 export const Button = ({

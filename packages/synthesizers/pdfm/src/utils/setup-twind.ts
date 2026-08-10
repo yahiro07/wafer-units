@@ -1,25 +1,13 @@
-import { defineConfig, install, css, tx } from "@twind/core";
-import { createTz } from "@/utils/tz";
+import { defineConfig, install } from "@twind/core";
 import presetExt from "@twind/preset-ext";
 import presetTailwind from "@twind/preset-tailwind";
+import { uiColors } from "@/common/ui-colors";
 
 const config = defineConfig({
   presets: [presetTailwind(), presetExt()],
   theme: {
     extend: {
-      colors: {
-        clPanelBody: "#ddd",
-        clPrimary: "#fff",
-        clKnobTick: "#f80",
-        clText: "#666",
-        clSectionBg: "#fff",
-        clSectionHeaderBg: "#f80",
-        clSectionEdge: "#f80",
-        clControlBg: "#fff",
-        clControlEdge: "#ddd",
-        clTopBarBg: "#999",
-        clButtonBg: "#fff",
-      },
+      colors: uiColors,
     },
   },
   ignorelist: [/^ri-/, /^--/, /^_/, /^x-/],
@@ -39,4 +27,3 @@ const config = defineConfig({
 });
 
 install(config);
-export const tz = createTz(tx, css);
