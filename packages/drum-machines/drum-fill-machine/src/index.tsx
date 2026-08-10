@@ -26,7 +26,7 @@ const App = () => {
   return (
     <div class="h-[100dvh] flex-c">
       <div class="flex-v gap-3 w-[480px] bg-gray-300 px-8 py-5">
-        <h1 class="text-xl font-bold">Drum Fill Machine</h1>
+        <h1 class="text-xl font-[600]">Drum Fill Machine</h1>
         <div class="flex-v gap-5">
           <div class="flex-h gap-2">
             <div class="flex-ha gap-2 justify-between">
