@@ -50,7 +50,7 @@ const styles = css({
   "& > .x-tickPlane": {
     "@apply": "absolute-full flex-va",
     "& > .x-tick": {
-      "@apply": "w-[4px] h-[15px] bg-clKnobTick",
+      "@apply": "w-[3.5px] h-[14px] bg-clKnobTick",
     },
   },
 });

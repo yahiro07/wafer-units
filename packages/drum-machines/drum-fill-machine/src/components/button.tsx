@@ -28,9 +28,9 @@ export const Button = ({
 };
 const styles = {
   base: tz({
-    "@apply": "bg-clButtonBg bd-clSectionEdge rounded-[2px] flex-c",
+    "@apply": "bg-clControlBg bd-clControlEdge rounded-[2px] flex-c",
     "&.--active": {
-      "@apply": "bg-clPrimary text-clButtonBg",
+      "@apply": "bg-clPrimary text-white",
     },
   }),
 };
