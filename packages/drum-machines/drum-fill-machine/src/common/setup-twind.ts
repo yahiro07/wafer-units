@@ -15,7 +15,7 @@ const config = defineConfig({
     extend: {
       colors: {
         clPanelBody: "#aaa",
-        clPrimary: "#06d",
+        clPrimary: "#f80",
         clKnobTick: "#07f",
         clText: "#555",
         clSectionBg: "#fff",
