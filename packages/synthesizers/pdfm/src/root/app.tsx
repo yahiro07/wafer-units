@@ -14,7 +14,10 @@ const presetOptions = createPlainSelectorOptions(allPresetKeys);
 const TitleText = () => {
   return (
     <div class="text-[20px] text-white">
-      <i class="ri-instance-line text-xl ml-[-2px]" />
+      <i
+        class="ri-instance-line text-xl ml-[-2px]"
+        onClick={actions.emitPresetData}
+      />
       <span class="ml-[2px]">PDFM</span>
     </div>
   );

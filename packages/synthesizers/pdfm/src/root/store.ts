@@ -9,5 +9,5 @@ export const store = createStore<{
   presetKey: string;
 }>({
   parameters: defaultSynthParameters,
-  presetKey: "Init",
+  presetKey: allPresetKeys[0],
 });

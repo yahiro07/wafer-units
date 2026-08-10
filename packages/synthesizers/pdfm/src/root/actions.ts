@@ -7,7 +7,8 @@ export const actions = {
   setPreset(presetKey: string) {
     const preset = allPresets[presetKey];
     if (preset) {
-      store.assign({ presetKey, parameters: preset });
+      store.setPresetKey(presetKey);
+      store.patchParameters(preset);
     }
   },
   shiftPreset(dir: 1 | -1) {
@@ -24,5 +25,14 @@ export const actions = {
   randomizeParameters() {
     const paramAttrs = createRandomParameters();
     store.patchParameters(paramAttrs);
+  },
+  async emitPresetData() {
+    const { master: _, ...attrs } = store.state.parameters;
+    const jsonText = JSON.stringify(attrs, null, 2).replaceAll(
+      /\.(\d+)/g,
+      (_match, digits: string) => "." + digits.slice(0, 2),
+    );
+    await navigator.clipboard.writeText(jsonText);
+    console.log("Preset data copied to clipboard");
   },
 };

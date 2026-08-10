@@ -30,6 +30,8 @@ export type SynthParameters = {
   master: number;
 };
 
+export type SynthPresetParameters = Omit<SynthParameters, "master">;
+
 export const defaultSynthParameters: SynthParameters = {
   waveMode: WaveMode.PD,
   shape: 0,
