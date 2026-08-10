@@ -1,6 +1,6 @@
 import { KnobFrame } from "@/components/knob-frame";
 import { linearInterpolate } from "@/utils/helpers";
-import { css } from "@twind/core";
+import { css, cx } from "@twind/core";
 
 export const Knob = ({
   value,
@@ -24,33 +24,33 @@ export const Knob = ({
       step={step}
       onChange={onChange}
     >
-      <div class={styles}>
-        <div class="x-inner"></div>
+      <div class={styles.base}>
+        <div class={styles.inner}></div>
         <div
-          class="x-tickPlane"
+          class={styles.tickPlane}
           style={{ transform: `rotate(${tickAngle}deg)` }}
         >
-          <div class="x-tick" />
+          <div class={styles.tick} />
         </div>
       </div>
     </KnobFrame>
   );
 };
-const styles = css({
-  "@apply": "relative rounded-full hover:opacity-80",
-  width: "40px",
-  height: "40px",
-  background: "linear-gradient(to bottom, #fff, #0006)",
-  padding: "3px",
-  border: "solid 0.5px #4448",
-  "& > .x-inner": {
+const styles = {
+  base: css({
+    "@apply": "relative rounded-full",
+    width: "54px",
+    height: "54px",
+    background: "linear-gradient(to bottom, #fff, #0006)",
+    padding: "3px",
+    border: "solid 0.5px #4448",
+  }),
+  inner: css({
     "@apply": "w-full h-full rounded-full",
     background: "#eee",
-  },
-  "& > .x-tickPlane": {
+  }),
+  tickPlane: css({
     "@apply": "absolute-full flex-va",
-    "& > .x-tick": {
-      "@apply": "w-[3.5px] h-[14px] bg-clKnobTick",
-    },
-  },
-});
+  }),
+  tick: cx("w-[4px] h-[15px]", "bg-clKnobTick"),
+};

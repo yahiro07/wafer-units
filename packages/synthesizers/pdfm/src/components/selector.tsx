@@ -1,5 +1,5 @@
 import { SelectorOption } from "@/utils/selector-option";
-import { tz } from "@/common/setup-twind";
+import { css } from "@twind/core";
 
 export const Selector = <T extends string | number>({
   value,
@@ -8,7 +8,7 @@ export const Selector = <T extends string | number>({
   width = 160,
   height = 40,
 }: {
-  value: T;
+  value: string;
   onChange: (value: T) => void;
   options: SelectorOption<T>[];
   width?: number;
@@ -37,9 +37,10 @@ export const Selector = <T extends string | number>({
   );
 };
 const styles = {
-  base: tz(
-    "text-center outline-none cursor-pointer rounded-[1px]",
-    "bg-clControlBg bd-clControlEdge px-2",
-    "hover:opacity-80",
-  ),
+  base: css({
+    "@apply":
+      "text-center outline-none cursor-pointer appearance-none rounded-[1px]",
+    border: "solid 1px theme('colors.clSectionEdge')",
+    padding: "0 8px",
+  }),
 };
