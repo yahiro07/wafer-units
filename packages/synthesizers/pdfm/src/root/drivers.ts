@@ -3,9 +3,9 @@ import { createEngine } from "@/core/engine";
 import { actions } from "@/root/actions";
 import { persistence } from "@/root/persistence";
 import { store } from "@/root/store";
-import { setupMidiKeyboardInput } from "@/utils/midi-keyboard-input";
 import { queryUnitInterface } from "wafer-host/unit-types";
 import { useEffect } from "preact/hooks";
+import { setupMidiKeyboardInput } from "@/utils/midi-keyboard-input";
 
 const unitInterface = queryUnitInterface("wafer-v01");
 const engine = createEngine(unitInterface);
