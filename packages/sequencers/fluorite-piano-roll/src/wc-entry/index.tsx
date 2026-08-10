@@ -13,7 +13,7 @@ const webFontUrls = [
 export default createCustomElementClass(
   (shadowRoot) => {
     render(
-      <div class={qu.bg(colors.panelBody).flexC().it}>
+      <div sx={qu.bg(colors.panelBody).flexC()}>
         <App />
       </div>,
       shadowRoot,

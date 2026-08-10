@@ -6,19 +6,19 @@ export const PageRoot = () => {
   const { parameterIds, connected, lanes, playbackStepIndex } =
     store.useSnapshot();
   return (
-    <div class={qu.h("dvh").flexC().it}>
-      <div class={qu.wh(560, 300).bg("#aaa").p(4).color("#333").flexVC().it}>
-        <div class={qu.flexV().gap(4).it}>
-          <div class={qu.flexH().gap(2).px(1).it}>
+    <div sx={qu.h("dvh").flexC()}>
+      <div sx={qu.wh(560, 300).bg("#aaa").p(4).color("#333").flexVC()}>
+        <div sx={qu.flexV().gap(4)}>
+          <div sx={qu.flexH().gap(2).px(1)}>
             <div>Step Automator</div>
-            <div class={qu.grow().it} />
-            <div class={qu.fontSize(12).it}>
+            <div sx={qu.grow()} />
+            <div sx={qu.fontSize(12)}>
               {connected
                 ? `Connected, ${parameterIds.length > 0 ? parameterIds.length : "no"} parameters available`
                 : "Disconnected"}
             </div>
           </div>
-          <div class={qu.flexVC().gap(2).it}>
+          <div sx={qu.flexVC().gap(2)}>
             {lanes.map((lane) => (
               <AutomationLane
                 key={lane.id}

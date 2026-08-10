@@ -10,7 +10,6 @@
     "typecheck": "tsc"
   },
   "devDependencies": {
-    "@preact-icons/fa": "catalog:",
     "@preact/preset-vite": "catalog:",
     "preact": "catalog:",
     "qulex": "catalog:",

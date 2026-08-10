@@ -138,10 +138,9 @@ export function createEngine(unitInterface: UnitInterface | undefined) {
       Object.assign(state.editState, attrs);
     },
     clockHandlers,
-    inputNoteOn(noteNumber: number) {
+    setRootNote(noteNumber: number) {
       state.rootScaleIndex = absoluteToScaleIndex(noteNumber, state.key);
     },
-    inputNoteOff(_noteNumber: number) {},
     setKey(keySpec: SongKeySpec) {
       state.key =
         ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"][

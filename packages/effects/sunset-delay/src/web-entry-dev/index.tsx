@@ -9,7 +9,7 @@ const rootElement = document.getElementById("app")!;
 document.adoptedStyleSheets = [cssRealm.sheet];
 
 render(
-  <div class={qu.h("dvh").flexC().it}>
+  <div sx={qu.h("dvh").flexC()}>
     <App />
   </div>,
   rootElement,

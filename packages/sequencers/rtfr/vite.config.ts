@@ -10,7 +10,7 @@ export default defineConfig({
     lib: {
       entry: resolve(__dirname, "src/index.tsx"),
       formats: ["es"],
-      fileName: "index",
+      fileName: "index.sharable",
     },
     outDir: "../../../dist/rtfr",
     emptyOutDir: true,

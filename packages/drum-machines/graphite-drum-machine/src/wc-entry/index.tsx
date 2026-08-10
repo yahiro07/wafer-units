@@ -34,5 +34,8 @@ export default createCustomElementClass(
       render(null, shadowRoot);
     };
   },
-  { cssTexts: [cssText, cssText2], stylesheetUrls: [webFontUrl] },
+  {
+    cssTexts: [cssText, cssText2],
+    stylesheetUrls: [webFontUrl],
+  },
 );

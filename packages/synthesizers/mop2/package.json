@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@preact/preset-vite": "catalog:",
+    "@types/audioworklet": "catalog:",
     "preact": "catalog:",
     "qulex": "catalog:",
     "snap-store": "catalog:"

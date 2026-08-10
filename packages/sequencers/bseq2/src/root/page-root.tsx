@@ -5,12 +5,12 @@ import { EffectorBody, pageBgColor } from "@/components/effector-body";
 import { Knob } from "@/components/knob";
 import { LabeledBox } from "@/components/labeled-box";
 import { LedIndicator } from "@/components/led-indicator";
-import { OptionMappedKnob } from "@/components/unused/option-mapped-knob";
+import { OptionMappedKnob } from "@/components/option-mapped-knob";
 import { store } from "@/root/store";
 import { seqNumbers } from "@/utils/helpers";
 
 const TitleLabel = ({ title }: { title: string }) => {
-  return <div class={qu.fontSize(18).weight("bold").it}>{title}</div>;
+  return <div sx={qu.fontSize(18).weight("bold")}>{title}</div>;
 };
 
 const MatrixPart = () => {
@@ -31,7 +31,7 @@ const MatrixPart = () => {
   };
 
   return (
-    <div class={qu.flexH().gap(1).it}>
+    <div sx={qu.flexH().gap(1)}>
       {seqNumbers(16).map((xIndex) => {
         const si = stepReferenceIndexMap[patternRange][xIndex];
         const stepValue = getStep(stepBits, si);
@@ -45,19 +45,16 @@ const MatrixPart = () => {
           color = "#666";
         }
         return (
-          <div class={qu.flexVC().gap(1.5).it}>
+          <div sx={qu.flexVC().gap(1.5)}>
             <LedIndicator active={playPos === xIndex} />
             <div
-              class={qu.wh(24, 30).cursor("pointer").relative().it}
+              sx={qu.wh(24, 30).cursor("pointer").relative()}
               style={{ background: color }}
               onPointerDown={() => toggleStep(si)}
             >
               {isTie && (
                 <div
-                  class={cz(
-                    qu.absolute().top(0).left(-6).wh(6, 30).it,
-                    qu.bg("#cf0").it,
-                  )}
+                  sx={[qu.absolute().top(0).left(-6).wh(6, 30), qu.bg("#cf0")]}
                 />
               )}
             </div>
@@ -71,9 +68,9 @@ const MatrixPart = () => {
 const ControlsPart = () => {
   const { octave, duty, patternRange } = store.useSnapshot();
   return (
-    <div class={qu.full().flexHA().gap(2).fJustify("between").it}>
+    <div sx={qu.full().flexHA().gap(2).fJustify("between")}>
       <TitleLabel title="bseq2" />
-      <div class={qu.flexHA().gap(6).it}>
+      <div sx={qu.flexHA().gap(6)}>
         <LabeledBox label="Octave">
           <Knob
             value={octave}
@@ -100,10 +97,10 @@ const ControlsPart = () => {
 
 export const PageRoot = () => {
   return (
-    <div class={cz(qu.wh("dvw", "dvh").bg(pageBgColor).flexC().it)}>
-      <div class={qu.flexC().it}>
-        <EffectorBody className={cz(qu.wh(480, 200).it, qu.flexVC().it)}>
-          <div class={qu.flexV().gap(5).it}>
+    <div sx={[qu.wh("dvw", "dvh").bg(pageBgColor).flexC()]}>
+      <div sx={qu.flexC()}>
+        <EffectorBody className={cz(qu.wh(480, 200), qu.flexVC())}>
+          <div sx={qu.flexV().gap(5)}>
             <ControlsPart />
             <MatrixPart />
           </div>

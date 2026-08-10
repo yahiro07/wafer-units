@@ -14,6 +14,7 @@ export function App() {
           unitType: "instrument",
           categoryHint: "synthesizer",
           viewSize: [640, 320],
+          preferJustSize: true,
         },
         noteInput: {
           noteOn(note, time) {

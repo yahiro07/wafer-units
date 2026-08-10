@@ -1,5 +1,5 @@
 import { ComponentChildren } from "preact";
-import { cz, qu } from "@/base/css-realm";
+import { qu } from "@/base/css-realm";
 import { LfoWave, XStep, YStep } from "@/base/types";
 import { KnobFrame } from "@/components/knob-frame";
 import { linearInterpolate, npx } from "@/utils/helpers";
@@ -35,14 +35,14 @@ export const Knob = ({
       dragDisabled={disabled}
     >
       <div
-        class={qu.wh(28, 28).rounded(14).relative().bd("#444").it}
+        sx={qu.wh(28, 28).rounded(14).relative().bd("#444")}
         style={{ opacity: disabled ? 0.5 : 1 }}
       >
         <div
-          class={qu.full().flexVA().it}
+          sx={qu.full().flexVA()}
           style={{ transform: `rotate(${tickAngle}deg)` }}
         >
-          <div class={qu.wh(2, 10).bg("#fff").it} />
+          <div sx={qu.wh(2, 10).bg("#fff")} />
         </div>
       </div>
     </KnobFrame>
@@ -58,7 +58,7 @@ export const IndicatorButton = ({
 }) => {
   return (
     <div
-      class={qu.flexC().wh(20, 20).it}
+      sx={qu.flexC().wh(20, 20)}
       style={{
         background: active ? "#59e" : "#ddd",
         cursor: "pointer",
@@ -75,7 +75,7 @@ export const PlainCellContent = ({
   text: string;
   width: number;
 }) => {
-  return <div class={qu.flexC().w(width).it}>{text}</div>;
+  return <div sx={qu.flexC().w(width)}>{text}</div>;
 };
 
 export const WaveButton = ({
@@ -93,7 +93,7 @@ export const WaveButton = ({
     [LfoWave.SampleHold]: "◉",
   }[wave];
   return (
-    <div class={qu.flexC().wh(40, 40).bg("#ddd").it} onClick={onClick}>
+    <div sx={qu.flexC().wh(40, 40).bg("#ddd")} onClick={onClick}>
       {text}
     </div>
   );
@@ -113,7 +113,7 @@ export const XStepButton = ({
     [XStep.div4]: "/4",
   }[xStep];
   return (
-    <div class={qu.flexC().wh(40, 40).bg("#ddd").it} onClick={onClick}>
+    <div sx={qu.flexC().wh(40, 40).bg("#ddd")} onClick={onClick}>
       {text}
     </div>
   );
@@ -133,7 +133,7 @@ export const YStepButton = ({
     [YStep.step8]: "8",
   }[yStep];
   return (
-    <div class={qu.flexC().wh(40, 40).bg("#ddd").it} onClick={onClick}>
+    <div sx={qu.flexC().wh(40, 40).bg("#ddd")} onClick={onClick}>
       {text}
     </div>
   );
@@ -155,7 +155,7 @@ export const SteppedButton = ({
   onClick?: () => void;
 }) => {
   return (
-    <div class={qu.flexC().wh(40, 40).bg("#ddd").it} onClick={onClick}>
+    <div sx={qu.flexC().wh(40, 40).bg("#ddd")} onClick={onClick}>
       {active ? reteToStepText(rate) : "--"}
     </div>
   );
@@ -173,17 +173,14 @@ export const LabeledBox = ({
   width?: number;
 }) => {
   return (
-    <div
-      class={qu.flexV().it}
-      style={width ? { width: npx(width) } : undefined}
-    >
+    <div sx={qu.flexV()} style={width ? { width: npx(width) } : undefined}>
       <div
-        class={qu.fontSize(10).weight("bold").h(15).it}
+        sx={qu.fontSize(10).weight("bold").h(15)}
         style={{ textAlign: labelAlign }}
       >
         {label}
       </div>
-      <div class={qu.flexC().h(40).it}>{children}</div>
+      <div sx={qu.flexC().h(40)}>{children}</div>
     </div>
   );
 };
@@ -201,13 +198,13 @@ export const NarrowButton = ({
 }) => {
   return (
     <div
-      class={cz(
-        qu.flexC().wh(40, 20).bg("#ddd").weight("bold").cursor("pointer").it,
-        active && qu.bg("#48c").color("#fff").it,
-      )}
+      sx={[
+        qu.flexC().wh(40, 20).bg("#ddd").weight("bold").cursor("pointer"),
+        active && qu.bg("#48c").color("#fff"),
+      ]}
       onClick={onClick}
     >
-      {text && <div class={qu.fontSize(9).it}>{text}</div>}
+      {text && <div sx={qu.fontSize(9)}>{text}</div>}
       {children}
     </div>
   );
@@ -224,7 +221,7 @@ export const ParameterSelector = <T extends string | number>({
 }) => {
   return (
     <GeneralSelector
-      className={qu.flexC().wh(100, 40).bg("#ddd").pl(1).fontSize(12).it}
+      sx={qu.flexC().wh(100, 40).bg("#ddd").pl(1).fontSize(12)}
       options={options}
       value={value}
       onChange={onChange}

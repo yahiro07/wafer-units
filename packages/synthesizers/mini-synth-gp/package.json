@@ -1,7 +1,6 @@
 {
   "name": "mini-synth-gp",
   "private": true,
-  "license": "MIT",
   "type": "module",
   "scripts": {
     "build": "vite build"

@@ -6,9 +6,6 @@ settings:
 
 catalogs:
   default:
-    '@preact-icons/fa':
-      specifier: npm:@jsr/preact-icons__fa@^1.0.13
-      version: 1.0.13
     '@preact/preset-vite':
       specifier: ^2.10.6
       version: 2.10.6
@@ -22,14 +19,11 @@ catalogs:
       specifier: ^10.29.2
       version: 10.29.8
     qulex:
-      specifier: npm:@yahiro07/qulex@^0.1.5
-      version: 0.1.5
+      specifier: npm:@yahiro07/qulex@^0.1.7
+      version: 0.1.7
     snap-store:
       specifier: ^0.1.12
       version: 0.1.12
-    wafer-host:
-      specifier: ^0.0.6
-      version: 0.0.6
 
 importers:
 
@@ -54,14 +48,11 @@ importers:
         specifier: ^8.0.12
         version: 8.2.0(@types/node@25.9.5)(jiti@2.7.0)
       wafer-host:
-        specifier: 'catalog:'
-        version: 0.0.6(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        specifier: ^0.1.5
+        version: 0.1.5(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
 
   packages/drum-machines/graphite-drum-machine:
     devDependencies:
-      '@preact-icons/fa':
-        specifier: npm:@jsr/preact-icons__fa@^1.0.13
-        version: '@jsr/preact-icons__fa@1.0.13'
       '@preact/preset-vite':
         specifier: 2.10.6
         version: 2.10.6(@babel/core@7.29.7)(preact@10.29.8)(vite@8.2.0(@types/node@25.9.5)(jiti@2.7.0))
@@ -86,9 +77,6 @@ importers:
 
   packages/drum-machines/techno-beat-machine:
     devDependencies:
-      '@preact-icons/fa':
-        specifier: 'catalog:'
-        version: '@jsr/preact-icons__fa@1.0.13'
       '@preact/preset-vite':
         specifier: 'catalog:'
         version: 2.10.6(@babel/core@7.29.7)(preact@10.29.8)(vite@8.2.0(@types/node@25.9.5)(jiti@2.7.0))
@@ -97,16 +85,13 @@ importers:
         version: 10.29.8
       qulex:
         specifier: 'catalog:'
-        version: '@yahiro07/qulex@0.1.5'
+        version: '@yahiro07/qulex@0.1.7'
       snap-store:
         specifier: 'catalog:'
         version: 0.1.12(preact@10.29.8)(react@19.2.8)
 
   packages/effects/channel-strip:
     dependencies:
-      '@preact-icons/fa':
-        specifier: 'catalog:'
-        version: '@jsr/preact-icons__fa@1.0.13'
       '@preact/preset-vite':
         specifier: 'catalog:'
         version: 2.10.6(@babel/core@7.29.7)(preact@10.29.8)(vite@8.2.0(@types/node@25.9.5)(jiti@2.7.0))
@@ -115,7 +100,7 @@ importers:
         version: 10.29.8
       qulex:
         specifier: 'catalog:'
-        version: '@yahiro07/qulex@0.1.5'
+        version: '@yahiro07/qulex@0.1.7'
       snap-store:
         specifier: 'catalog:'
         version: 0.1.12(preact@10.29.8)(react@19.2.8)
@@ -194,9 +179,6 @@ importers:
 
   packages/effects/sunset-chorus-mini:
     devDependencies:
-      '@preact-icons/fa':
-        specifier: 'catalog:'
-        version: '@jsr/preact-icons__fa@1.0.13'
       '@preact/preset-vite':
         specifier: 'catalog:'
         version: 2.10.6(@babel/core@7.29.7)(preact@10.29.8)(vite@8.2.0(@types/node@25.9.5)(jiti@2.7.0))
@@ -218,9 +200,6 @@ importers:
 
   packages/effects/sunset-delay:
     devDependencies:
-      '@preact-icons/fa':
-        specifier: 'catalog:'
-        version: '@jsr/preact-icons__fa@1.0.13'
       '@preact/preset-vite':
         specifier: 'catalog:'
         version: 2.10.6(@babel/core@7.29.7)(preact@10.29.8)(vite@8.2.0(@types/node@25.9.5)(jiti@2.7.0))
@@ -229,16 +208,13 @@ importers:
         version: 10.29.8
       qulex:
         specifier: 'catalog:'
-        version: '@yahiro07/qulex@0.1.5'
+        version: '@yahiro07/qulex@0.1.7'
       snap-store:
         specifier: 'catalog:'
         version: 0.1.12(preact@10.29.8)(react@19.2.8)
 
   packages/effects/timing-cheker:
     dependencies:
-      '@preact-icons/fa':
-        specifier: 'catalog:'
-        version: '@jsr/preact-icons__fa@1.0.13'
       '@preact/preset-vite':
         specifier: 'catalog:'
         version: 2.10.6(@babel/core@7.29.7)(preact@10.29.8)(vite@8.2.0(@types/node@25.9.5)(jiti@2.7.0))
@@ -262,16 +238,13 @@ importers:
         version: 10.29.8
       qulex:
         specifier: 'catalog:'
-        version: '@yahiro07/qulex@0.1.5'
+        version: '@yahiro07/qulex@0.1.7'
       snap-store:
         specifier: 'catalog:'
         version: 0.1.12(preact@10.29.8)(react@19.2.8)
 
   packages/modulator/step-automator:
     devDependencies:
-      '@preact-icons/fa':
-        specifier: 'catalog:'
-        version: '@jsr/preact-icons__fa@1.0.13'
       '@preact/preset-vite':
         specifier: 'catalog:'
         version: 2.10.6(@babel/core@7.29.7)(preact@10.29.8)(vite@8.2.0(@types/node@25.9.5)(jiti@2.7.0))
@@ -280,7 +253,7 @@ importers:
         version: 10.29.8
       qulex:
         specifier: 'catalog:'
-        version: '@yahiro07/qulex@0.1.5'
+        version: '@yahiro07/qulex@0.1.7'
       snap-store:
         specifier: 'catalog:'
         version: 0.1.12(preact@10.29.8)(react@19.2.8)
@@ -316,7 +289,7 @@ importers:
         version: 10.29.8
       qulex:
         specifier: 'catalog:'
-        version: '@yahiro07/qulex@0.1.5'
+        version: '@yahiro07/qulex@0.1.7'
       snap-store:
         specifier: 'catalog:'
         version: 0.1.12(preact@10.29.8)(react@19.2.8)
@@ -347,9 +320,6 @@ importers:
 
   packages/sequencers/drum-loop-player:
     dependencies:
-      '@preact-icons/fa':
-        specifier: 'catalog:'
-        version: '@jsr/preact-icons__fa@1.0.13'
       '@preact/preset-vite':
         specifier: 'catalog:'
         version: 2.10.6(@babel/core@7.29.7)(preact@10.29.8)(vite@8.2.0(@types/node@25.9.5)(jiti@2.7.0))
@@ -365,9 +335,6 @@ importers:
 
   packages/sequencers/fluorite-piano-roll:
     dependencies:
-      '@preact-icons/fa':
-        specifier: 'catalog:'
-        version: '@jsr/preact-icons__fa@1.0.13'
       '@preact/preset-vite':
         specifier: 'catalog:'
         version: 2.10.6(@babel/core@7.29.7)(preact@10.29.8)(vite@8.2.0(@types/node@25.9.5)(jiti@2.7.0))
@@ -376,7 +343,7 @@ importers:
         version: 10.29.8
       qulex:
         specifier: 'catalog:'
-        version: '@yahiro07/qulex@0.1.5'
+        version: '@yahiro07/qulex@0.1.7'
       snap-store:
         specifier: 'catalog:'
         version: 0.1.12(preact@10.29.8)(react@19.2.8)
@@ -500,9 +467,6 @@ importers:
 
   packages/sequencers/root-prog:
     dependencies:
-      '@preact-icons/fa':
-        specifier: 'catalog:'
-        version: '@jsr/preact-icons__fa@1.0.13'
       '@preact/preset-vite':
         specifier: 'catalog:'
         version: 2.10.6(@babel/core@7.29.7)(preact@10.29.8)(vite@8.2.0(@types/node@25.9.5)(jiti@2.7.0))
@@ -511,7 +475,7 @@ importers:
         version: 10.29.8
       qulex:
         specifier: 'catalog:'
-        version: '@yahiro07/qulex@0.1.5'
+        version: '@yahiro07/qulex@0.1.7'
       snap-store:
         specifier: 'catalog:'
         version: 0.1.12(preact@10.29.8)(react@19.2.8)
@@ -590,9 +554,6 @@ importers:
 
   packages/sequencers/rtfsp:
     dependencies:
-      '@preact-icons/fa':
-        specifier: 'catalog:'
-        version: '@jsr/preact-icons__fa@1.0.13'
       '@preact/preset-vite':
         specifier: 'catalog:'
         version: 2.10.6(@babel/core@7.29.7)(preact@10.29.8)(vite@8.2.0(@types/node@25.9.5)(jiti@2.7.0))
@@ -601,7 +562,7 @@ importers:
         version: 10.29.8
       qulex:
         specifier: 'catalog:'
-        version: '@yahiro07/qulex@0.1.5'
+        version: '@yahiro07/qulex@0.1.7'
       snap-store:
         specifier: 'catalog:'
         version: 0.1.12(preact@10.29.8)(react@19.2.8)
@@ -626,9 +587,6 @@ importers:
 
   packages/sequencers/tonerio-sequencer:
     devDependencies:
-      '@preact-icons/fa':
-        specifier: 'catalog:'
-        version: '@jsr/preact-icons__fa@1.0.13'
       '@preact/preset-vite':
         specifier: 'catalog:'
         version: 2.10.6(@babel/core@7.29.7)(preact@10.29.8)(vite@8.2.0(@types/node@25.9.5)(jiti@2.7.0))
@@ -637,7 +595,7 @@ importers:
         version: 10.29.8
       qulex:
         specifier: 'catalog:'
-        version: '@yahiro07/qulex@0.1.5'
+        version: '@yahiro07/qulex@0.1.7'
       snap-store:
         specifier: 'catalog:'
         version: 0.1.12(preact@10.29.8)(react@19.2.8)
@@ -652,7 +610,7 @@ importers:
         version: 10.29.8
       qulex:
         specifier: 'catalog:'
-        version: '@yahiro07/qulex@0.1.5'
+        version: '@yahiro07/qulex@0.1.7'
       snap-store:
         specifier: 'catalog:'
         version: 0.1.12(preact@10.29.8)(react@19.2.8)
@@ -674,6 +632,27 @@ importers:
       vite-plugin-solid:
         specifier: ^2.11.12
         version: 2.11.14(solid-js@1.9.14)(vite@8.2.0(@types/node@25.9.5)(jiti@2.7.0))
+
+  packages/synthesizers/mini-synth-2:
+    devDependencies:
+      '@preact/preset-vite':
+        specifier: 'catalog:'
+        version: 2.10.6(@babel/core@7.29.7)(preact@10.29.8)(vite@8.2.0(@types/node@25.9.5)(jiti@2.7.0))
+      '@twind/core':
+        specifier: ^1.1.3
+        version: 1.1.3(typescript@6.0.3)
+      '@twind/preset-ext':
+        specifier: ^1.0.7
+        version: 1.0.7(@twind/core@1.1.3(typescript@6.0.3))(typescript@6.0.3)
+      '@twind/preset-tailwind':
+        specifier: ^1.1.4
+        version: 1.1.4(@twind/core@1.1.3(typescript@6.0.3))(typescript@6.0.3)
+      preact:
+        specifier: 'catalog:'
+        version: 10.29.8
+      snap-store:
+        specifier: 'catalog:'
+        version: 0.1.12(preact@10.29.8)(react@19.2.8)
 
   packages/synthesizers/mini-synth-ge:
     dependencies:
@@ -716,12 +695,15 @@ importers:
       '@preact/preset-vite':
         specifier: 'catalog:'
         version: 2.10.6(@babel/core@7.29.7)(preact@10.29.8)(vite@8.2.0(@types/node@25.9.5)(jiti@2.7.0))
+      '@types/audioworklet':
+        specifier: 'catalog:'
+        version: 0.0.100
       preact:
         specifier: 'catalog:'
         version: 10.29.8
       qulex:
         specifier: 'catalog:'
-        version: '@yahiro07/qulex@0.1.5'
+        version: '@yahiro07/qulex@0.1.7'
       snap-store:
         specifier: 'catalog:'
         version: 0.1.12(preact@10.29.8)(react@19.2.8)
@@ -731,12 +713,15 @@ importers:
       '@preact/preset-vite':
         specifier: 'catalog:'
         version: 2.10.6(@babel/core@7.29.7)(preact@10.29.8)(vite@8.2.0(@types/node@25.9.5)(jiti@2.7.0))
+      '@types/audioworklet':
+        specifier: 'catalog:'
+        version: 0.0.100
       preact:
         specifier: 'catalog:'
         version: 10.29.8
       qulex:
         specifier: 'catalog:'
-        version: '@yahiro07/qulex@0.1.5'
+        version: '@yahiro07/qulex@0.1.7'
       snap-store:
         specifier: 'catalog:'
         version: 0.1.12(preact@10.29.8)(react@19.2.8)
@@ -746,6 +731,9 @@ importers:
       '@tailwindcss/vite':
         specifier: ^4.3.3
         version: 4.3.3(vite@8.2.0(@types/node@25.9.5)(jiti@2.7.0))
+      '@types/audioworklet':
+        specifier: ^0.0.100
+        version: 0.0.100
       solid-icons:
         specifier: ^1.2.0
         version: 1.2.0(solid-js@1.9.14)
@@ -790,7 +778,7 @@ importers:
         version: 10.29.8
       qulex:
         specifier: 'catalog:'
-        version: '@yahiro07/qulex@0.1.5'
+        version: '@yahiro07/qulex@0.1.7'
       snap-store:
         specifier: 'catalog:'
         version: 0.1.12(preact@10.29.8)(react@19.2.8)
@@ -1024,12 +1012,6 @@ packages:
 
   '@jridgewell/trace-mapping@0.3.31':
     resolution: {integrity: sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==}
-
-  '@jsr/preact-icons__common@1.1.0':
-    resolution: {integrity: sha512-mVjtQUxBw+NjQ29oTq33LgAO8gjgiGtvkWAExwdW7iHLtxZiIXwCEEfFR3IRvZhpg2htEwTJZ6V5h+GMli36Yg==, tarball: https://npm.jsr.io/~/11/@jsr/preact-icons__common/1.1.0.tgz}
-
-  '@jsr/preact-icons__fa@1.0.13':
-    resolution: {integrity: sha512-RxDqel5V25PRPQF1Emuz64qIdY/hyUBsjKyiWpR0CL5p65nQ424yQrNEFodrRAaknj3lUFrTpd1NV85VboSF3A==, tarball: https://npm.jsr.io/~/11/@jsr/preact-icons__fa/1.0.13.tgz}
 
   '@napi-rs/wasm-runtime@1.2.2':
     resolution: {integrity: sha512-JfB4kuJQjaoHuCTseIINHtHWeJnvgEcxjwA5t/Y00ZgaOO1Crz3fjT/p8kT28zA/Caz7oiUMn3d6H2yOVCVwuw==}
@@ -1542,6 +1524,35 @@ packages:
     peerDependencies:
       vite: ^5.2.0 || ^6 || ^7 || ^8
 
+  '@twind/core@1.1.3':
+    resolution: {integrity: sha512-/B/aNFerMb2IeyjSJy3SJxqVxhrT77gBDknLMiZqXIRr4vNJqiuhx7KqUSRzDCwUmyGuogkamz+aOLzN6MeSLw==}
+    engines: {node: '>=14.15.0'}
+    peerDependencies:
+      typescript: ^4.8.4
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+
+  '@twind/preset-ext@1.0.7':
+    resolution: {integrity: sha512-v0yu6CooiUTUinAQY1r28Y4w28FyM+nnBNC/WuSOP33EM1D1uSZvmM+ihAZWwrLSrmRzEz8gWbyj6Wq2fowzrA==}
+    engines: {node: '>=14.15.0'}
+    peerDependencies:
+      '@twind/core': ^1.1.0
+      typescript: ^4.8.4
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+
+  '@twind/preset-tailwind@1.1.4':
+    resolution: {integrity: sha512-zv85wrP/DW4AxgWrLfH7kyGn/KJF3K04FMLVl2AjoxZGYdCaoZDkL8ma3hzaKQ+WGgBFRubuB/Ku2Rtv/wjzVw==}
+    engines: {node: '>=14.15.0'}
+    peerDependencies:
+      '@twind/core': ^1.1.0
+      typescript: ^4.8.4
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+
   '@tybys/wasm-util@0.10.3':
     resolution: {integrity: sha512-F3fo1MYrRJYL3zER0OUOmkutjr1Vp23m7OsSgp7nq4SP6OqX6C/56XFIPAl5bt3zaBRjmW7SGz3u/6LwFpYcOg==}
 
@@ -1593,8 +1604,8 @@ packages:
   '@yahiro07/mini-css@0.1.0':
     resolution: {integrity: sha512-BU6d+sCFGtp6gMUVJhh+nrGY0Lp7KEMmp5u7qgvVa+XmKBLS9CsvOT06YXNaBeH3kHkJ1OIsG66+6BBjaNMWSA==}
 
-  '@yahiro07/qulex@0.1.5':
-    resolution: {integrity: sha512-ro7FdOKIyYNZ76UO7xmoKECOfbhDLSRMgRQhpCs4nevvxTCu7j9fpedzhdPBX3mvxd5Dk5PC4iiS1MmRl3gNCA==}
+  '@yahiro07/qulex@0.1.7':
+    resolution: {integrity: sha512-PxYL5zQMCxDsL/PnGBxn0G8sCVLW0qE2B4Kacge7Q9FPhmwRb0Qf/UaqbBjdW7lw3Z+4mS9/56c4dBSflivY/g==}
 
   alumina-visor@0.1.6:
     resolution: {integrity: sha512-teCRvUD5m+pE/apudTPAwgAH67mXBof6C2b5nnRbbtiYGE1bitO56p5CHRiMN9cOx6GqqVDDP0XFVYuqgMuQHA==}
@@ -2123,9 +2134,6 @@ packages:
     resolution: {integrity: sha512-DTPx3RWSSnWyzLxQnlH0rJP+EW5ekl16ZU4/psbIhA0e53kJfdgaN5vKM+xP7yJtXVu+nfdVFmlgFDEKAe4Pyw==}
     engines: {node: ^10 || ^12 || >=14}
 
-  preact@10.22.1:
-    resolution: {integrity: sha512-jRYbDDgMpIb5LHq3hkI0bbl+l/TQ9UnkdQ0ww+lp+4MMOdqaUYdFc5qeyP+IV8FAd/2Em7drVPeKdQxsiWCf/A==}
-
   preact@10.29.8:
     resolution: {integrity: sha512-ej2aVZ+vZ8WO7tvlQWRM9N63A0KzF9q4mWJfDUHgYaIofWY9hu74QdnQrjoPMmZi2/nZ5gN0bJCQF49xQqx09Q==}
     peerDependencies:
@@ -2347,8 +2355,8 @@ packages:
       vite:
         optional: true
 
-  wafer-host@0.0.6:
-    resolution: {integrity: sha512-J7STTkOf3gzV5pQ74DueS+13uuTM+nEanpC8sE2orEGHzLpvphWookJ0Q7SotT0KCDZ0vSi5F21LeIL5Vi7bdA==}
+  wafer-host@0.1.5:
+    resolution: {integrity: sha512-14fhR1knR8dg4Q6pFK8/VD3wjNzMLy5ezTfvvt+4gshz8XKUYRCAo/oi1foitrrI+F5VyIUGeiqz88TuWXO9xw==}
     peerDependencies:
       react: ^19.2.6
       react-dom: ^19.2.6
@@ -2632,19 +2640,6 @@ snapshots:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
-
-  '@jsr/preact-icons__common@1.1.0':
-    dependencies:
-      preact: 10.29.8
-    transitivePeerDependencies:
-      - preact-render-to-string
-
-  '@jsr/preact-icons__fa@1.0.13':
-    dependencies:
-      '@jsr/preact-icons__common': 1.1.0
-      preact: 10.22.1
-    transitivePeerDependencies:
-      - preact-render-to-string
 
   '@napi-rs/wasm-runtime@1.2.2(@emnapi/core@2.0.0-alpha.3)(@emnapi/runtime@2.0.0-alpha.3)':
     dependencies:
@@ -2956,6 +2951,24 @@ snapshots:
       tailwindcss: 4.3.3
       vite: 8.2.0(@types/node@25.9.5)(jiti@2.7.0)
 
+  '@twind/core@1.1.3(typescript@6.0.3)':
+    dependencies:
+      csstype: 3.2.3
+    optionalDependencies:
+      typescript: 6.0.3
+
+  '@twind/preset-ext@1.0.7(@twind/core@1.1.3(typescript@6.0.3))(typescript@6.0.3)':
+    dependencies:
+      '@twind/core': 1.1.3(typescript@6.0.3)
+    optionalDependencies:
+      typescript: 6.0.3
+
+  '@twind/preset-tailwind@1.1.4(@twind/core@1.1.3(typescript@6.0.3))(typescript@6.0.3)':
+    dependencies:
+      '@twind/core': 1.1.3(typescript@6.0.3)
+    optionalDependencies:
+      typescript: 6.0.3
+
   '@tybys/wasm-util@0.10.3':
     dependencies:
       tslib: 2.8.1
@@ -3007,7 +3020,7 @@ snapshots:
 
   '@yahiro07/mini-css@0.1.0': {}
 
-  '@yahiro07/qulex@0.1.5': {}
+  '@yahiro07/qulex@0.1.7': {}
 
   alumina-visor@0.1.6(alumina@0.1.14):
     dependencies:
@@ -3474,8 +3487,6 @@ snapshots:
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
-  preact@10.22.1: {}
-
   preact@10.29.8: {}
 
   react-dom@19.2.8(react@19.2.8):
@@ -3646,7 +3657,7 @@ snapshots:
     optionalDependencies:
       vite: 8.2.0(@types/node@25.9.5)(jiti@2.7.0)
 
-  wafer-host@0.0.6(react-dom@19.2.8(react@19.2.8))(react@19.2.8):
+  wafer-host@0.1.5(react-dom@19.2.8(react@19.2.8))(react@19.2.8):
     optionalDependencies:
       react: 19.2.8
       react-dom: 19.2.8(react@19.2.8)
