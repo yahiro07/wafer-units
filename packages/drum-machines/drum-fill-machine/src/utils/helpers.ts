@@ -28,8 +28,31 @@ export function linearInterpolate(
   return v;
 }
 
-export const npx = (value: number) => `${value}px`;
+export function npx(value: number) {
+  return `${value}px`;
+}
 
-export function uniqueArrayItems<T>(items: T[]): T[] {
-  return items.filter((item, index) => items.indexOf(item) === index);
+export function pickObjectMembers<T extends {}, K extends keyof T>(
+  obj: T,
+  keys: K[] | Record<K, 1 | true>,
+  options?: { ignoreUndefined?: boolean },
+): Pick<T, K> {
+  const keysArray = Array.isArray(keys) ? keys : (Object.keys(keys) as K[]);
+  const resObject: Pick<T, K> = {} as Pick<T, K>;
+  for (const key of keysArray) {
+    const value = obj[key];
+    if (value === undefined && options?.ignoreUndefined) continue;
+    resObject[key] = obj[key];
+  }
+  return resObject;
+}
+
+export function filterObjectValuesNonUndefined<T extends object>(obj: T) {
+  const resObject: Partial<T> = {};
+  for (const key in obj) {
+    const value = obj[key];
+    if (value === undefined) continue;
+    resObject[key] = value;
+  }
+  return resObject;
 }

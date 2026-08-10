@@ -11,6 +11,7 @@ import {
 import { store } from "@/root/store";
 import { Icons } from "@/common/icons";
 import { ShiftSelector } from "@/components/shift-selector";
+import { useSetupDrivers } from "@/root/drivers";
 
 const loopBarOptions = createPlainSelectorOptions([2, 4, 8, 16, 32]);
 
@@ -126,6 +127,7 @@ const BottomRow = () => {
 };
 
 export const App = () => {
+  useSetupDrivers();
   return (
     <div class="h-[100dvh] flex-c">
       <div class="flex-v gap-3 w-[500px] bg-gray-300 px-8 py-5">

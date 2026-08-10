@@ -16,6 +16,11 @@ export const allHatSampleKeys: HiHatSampleKey[] = [
 
 export const allCymbalSampleKeys: CymbalSampleKey[] = ["cc1", "cc2", "cc3"];
 
+export const allSampleKeys: SampleKey[] = [
+  ...allHatSampleKeys,
+  ...allCymbalSampleKeys,
+];
+
 export type SampleKey = HiHatSampleKey | CymbalSampleKey;
 
 export type PartKey = "hat" | "cymbal";
@@ -28,11 +33,32 @@ export type PartItem = {
   enabled: boolean;
 };
 
-export type SceneParameters = {
+export type SceneEditState = {
   patternKey: PatternKey;
   loopBars: LoopBars;
   hatPartItem: PartItem;
   cymbalPartItem: PartItem;
   volumeSlopeUp: boolean;
   loopEnabled: boolean;
+};
+
+export const defaultSceneEditState: SceneEditState = {
+  patternKey: "pattern1",
+  loopBars: 4,
+  hatPartItem: {
+    partKey: "hat",
+    sampleKey: "hc1",
+    pitchTweak: 0,
+    volume: 0.5,
+    enabled: true,
+  },
+  cymbalPartItem: {
+    partKey: "cymbal",
+    sampleKey: "cc1",
+    pitchTweak: 0,
+    volume: 0.5,
+    enabled: true,
+  },
+  volumeSlopeUp: false,
+  loopEnabled: true,
 };
