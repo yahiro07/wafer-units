@@ -1,5 +1,5 @@
+import { tz } from "@/common/setup-twind";
 import { Knob } from "@/components/knob";
-import { css } from "@twind/core";
 
 export const KnobBox = ({
   label,
@@ -24,10 +24,6 @@ export const KnobBox = ({
   );
 };
 const styles = {
-  base: css({
-    "@apply": "flex-vc gap-1",
-  }),
-  label: css({
-    apply: "text-sm text-gray-500 font-[600]",
-  }),
+  base: tz("flex-vc gap-1"),
+  label: tz("text-sm font-[600]"),
 };

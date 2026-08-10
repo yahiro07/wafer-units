@@ -1,4 +1,5 @@
-import { css, cx } from "@twind/core";
+import { tz } from "@/common/setup-twind";
+import { cx } from "@twind/core";
 import { ComponentChildren } from "preact";
 
 export const SectionFrame = ({
@@ -22,16 +23,12 @@ export const SectionFrame = ({
   );
 };
 const styles = {
-  base: css({
-    "@apply": "flex-v rounded-[4px] overflow-hidden",
-    backgroundColor: "theme('colors.clSectionBg')",
+  base: tz("flex-v rounded-[4px] overflow-hidden bg-clSectionBg", {
     border: "solid 1.5px theme('colors.clSectionEdge')",
   }),
-  headerRow: css({
-    "@apply": "flex-ha px-4  pt-2.5 pb-1.5 text-clPrimary",
-    backgroundColor: "theme('colors.clSectionHeaderBg')",
-  }),
-  contentRow: css({
-    "@apply": "flex-h justify-around pt-5 pb-3 px-2",
-  }),
+  headerRow: tz(
+    "flex-ha px-4 text-clPrimary h-[40px]",
+    "bg-clSectionHeaderBg text-[18px]",
+  ),
+  contentRow: tz("flex-h justify-around pt-5 pb-3 px-2"),
 };

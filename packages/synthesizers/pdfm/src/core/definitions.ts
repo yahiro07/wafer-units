@@ -1,29 +1,47 @@
+export enum WaveMode {
+  PD = 0,
+  FM = 1,
+  PTM2 = 2,
+  PTM3 = 3,
+  PTM4 = 4,
+  PTM5 = 5,
+  PTM6 = 6,
+  PTM7 = 7,
+  PTM8 = 8,
+  PTM9 = 9,
+  PTM10 = 10,
+  PTM11 = 11,
+  NumWaveModes = 12,
+}
+
 export type SynthParameters = {
-  oscWave: number; // 0, 1, 2 (saw, rect, pulse)
-  oscDetune: number; // 0~1
-  oscSub: number; // 0~1
-  oscDrift: number; // 0~1
-  filterCutoff: number; // 0~1
-  filterPeak: number; // 0~1
-  filterEnvMod: number; // 0~1
-  ampDecay: number; // 0~1
-  ampRelease: number; // 0~1
-  fxChorus: number; // 0~1
-  fxReverb: number; // 0~1
-  masterVolume: number; // 0~1
+  waveMode: WaveMode;
+  shape: number;
+  envMod: number;
+  detune: number;
+  sub: number;
+  decay: number;
+  release: number;
+  drift: number;
+  loFi: number;
+  chorus: number;
+  delay: number;
+  reverb: number;
+  master: number;
 };
 
 export const defaultSynthParameters: SynthParameters = {
-  oscWave: 0,
-  oscDetune: 0,
-  oscSub: 0,
-  oscDrift: 0,
-  filterCutoff: 1,
-  filterPeak: 0,
-  filterEnvMod: 0,
-  ampDecay: 1,
-  ampRelease: 0.1,
-  fxChorus: 0,
-  fxReverb: 0,
-  masterVolume: 0.8,
+  waveMode: WaveMode.PD,
+  shape: 0,
+  envMod: 0,
+  detune: 0,
+  sub: 0,
+  decay: 1,
+  release: 0,
+  drift: 0,
+  loFi: 0,
+  chorus: 0,
+  delay: 0,
+  reverb: 0,
+  master: 0.7,
 };

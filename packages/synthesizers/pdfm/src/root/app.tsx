@@ -5,16 +5,14 @@ import { createPlainSelectorOptions } from "@/utils/selector-option";
 import { Selector } from "@/components/selector";
 import { allPresetKeys, store } from "@/root/store";
 import { actions } from "@/root/actions";
-import { SynthParameters } from "@/core/definitions";
-import { useEffect } from "preact/hooks";
-import { setupSynchronization, setupUnit } from "@/root/drivers";
+import { SynthParameters, WaveMode } from "@/core/definitions";
 import { cx } from "@twind/core";
 
 const presetOptions = createPlainSelectorOptions(allPresetKeys);
 
 const TitleText = () => {
   return (
-    <div class="text-[18px] text-white">
+    <div class="text-[20px] text-white">
       <i class="ri-instance-line text-xl ml-[-2px]" />
       <span class="ml-[2px]">PDFM</span>
     </div>
@@ -60,7 +58,7 @@ const TopBar = () => {
         "bg-clTopBarBg rounded-[4px]",
       )}
     >
-      <div class="w-[120px]">
+      <div class="w-[120px] flex-ha pt-1">
         <TitleText />
       </div>
       <PresetSelectionPart />
@@ -101,31 +99,36 @@ const ParametersSection = () => {
   return (
     <div class="flex-v gap-3">
       <div class="flex-h gap-3">
-        <SectionFrame header="OSCILLATOR" className="w-[60%]">
-          <ParameterKnob paramKey="oscWave" label="wave" steps={3} />
-          <ParameterKnob paramKey="oscDetune" label="detune" />
-          <ParameterKnob paramKey="oscSub" label="sub" />
-          <ParameterKnob paramKey="oscDrift" label="drift" />
+        <SectionFrame header="OSCILLATOR" className="w-[65%]">
+          <ParameterKnob
+            paramKey="waveMode"
+            label="WAVE"
+            steps={WaveMode.NumWaveModes}
+          />
+          <ParameterKnob paramKey="shape" label="SHAPE" />
+          <ParameterKnob paramKey="envMod" label="ENV" />
+          <ParameterKnob paramKey="sub" label="SUB" />
+          <ParameterKnob paramKey="detune" label="DETUNE" />
         </SectionFrame>
         <SectionFrame
           header="AMPLIFIER"
           className="grow"
           contentClassName="!px-3"
         >
-          <ParameterKnob paramKey="ampDecay" label="decay" />
-          <ParameterKnob paramKey="ampRelease" label="release" />
+          <ParameterKnob paramKey="decay" label="DECAY" />
+          <ParameterKnob paramKey="release" label="RELEASE" />
         </SectionFrame>
       </div>
       <div class="flex-h gap-3">
-        <SectionFrame header="FILTER" className="grow">
-          <ParameterKnob paramKey="filterCutoff" label="cutoff" />
-          <ParameterKnob paramKey="filterPeak" label="peak" />
-          <ParameterKnob paramKey="filterEnvMod" label="envmod" />
+        <SectionFrame header="EFFECTS" className="w-[65%]">
+          <ParameterKnob paramKey="loFi" label="LO-FI" />
+          <ParameterKnob paramKey="chorus" label="CHORUS" />
+          <ParameterKnob paramKey="delay" label="DELAY" />
+          <ParameterKnob paramKey="reverb" label="REVERB" />
         </SectionFrame>
         <SectionFrame header="MASTER" className="grow">
-          <ParameterKnob paramKey="fxChorus" label="chorus" />
-          <ParameterKnob paramKey="fxReverb" label="reverb" />
-          <ParameterKnob paramKey="masterVolume" label="volume" />
+          <ParameterKnob paramKey="drift" label="DRIFT" />
+          <ParameterKnob paramKey="master" label="VOLUME" />
         </SectionFrame>
       </div>
     </div>
@@ -133,8 +136,7 @@ const ParametersSection = () => {
 };
 
 export const App = () => {
-  useEffect(setupUnit, []);
-  useEffect(setupSynchronization, []);
+  // useSetupDrivers();
   return (
     <div class="h-[100dvh] flex-c text-clText bg-clPanelBody">
       <div class="w-[700px] flex-v gap-3 shrink-0">

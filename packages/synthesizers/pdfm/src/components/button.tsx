@@ -1,4 +1,4 @@
-import { css } from "@twind/core";
+import { tz } from "@/common/setup-twind";
 import { ComponentChildren } from "preact";
 
 export const Button = ({
@@ -20,7 +20,5 @@ export const Button = ({
   );
 };
 const styles = {
-  base: css({
-    "@apply": "bg-clButtonBg rounded-[2px] flex-c",
-  }),
+  base: tz("bg-clButtonBg rounded-[2px] flex-c"),
 };

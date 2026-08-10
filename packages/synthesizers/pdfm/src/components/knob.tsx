@@ -1,6 +1,6 @@
+import { tz } from "@/common/setup-twind";
 import { KnobFrame } from "@/components/knob-frame";
 import { linearInterpolate } from "@/utils/helpers";
-import { css, cx } from "@twind/core";
 
 export const Knob = ({
   value,
@@ -37,20 +37,14 @@ export const Knob = ({
   );
 };
 const styles = {
-  base: css({
-    "@apply": "relative rounded-full",
+  base: tz("relative rounded-full", {
     width: "54px",
     height: "54px",
     background: "linear-gradient(to bottom, #fff8, #0008)",
     padding: "4px",
     border: "solid 0.5px #4448",
   }),
-  inner: css({
-    "@apply": "w-full h-full rounded-full",
-    background: "#eee",
-  }),
-  tickPlane: css({
-    "@apply": "absolute-full flex-va",
-  }),
-  tick: cx("w-[4px] h-[15px]", "bg-clKnobTick"),
+  inner: tz("w-full h-full rounded-full bg-[#eee]"),
+  tickPlane: tz("absolute-full flex-va"),
+  tick: tz("w-[4px] h-[15px]", "bg-clKnobTick"),
 };

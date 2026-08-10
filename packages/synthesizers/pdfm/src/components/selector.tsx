@@ -1,5 +1,5 @@
+import { tz } from "@/common/setup-twind";
 import { SelectorOption } from "@/utils/selector-option";
-import { css } from "@twind/core";
 
 export const Selector = <T extends string | number>({
   value,
@@ -37,9 +37,7 @@ export const Selector = <T extends string | number>({
   );
 };
 const styles = {
-  base: css({
-    "@apply":
-      "text-center outline-none cursor-pointer appearance-none rounded-[1px]",
-    padding: "0 8px",
-  }),
+  base: tz(
+    "text-center outline-none cursor-pointer appearance-none rounded-[1px]",
+  ),
 };

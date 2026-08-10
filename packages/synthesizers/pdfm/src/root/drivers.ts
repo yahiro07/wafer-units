@@ -5,11 +5,12 @@ import { persistence } from "@/root/persistence";
 import { store } from "@/root/store";
 import { setupMidiKeyboardInput } from "@/utils/midi-keyboard-input";
 import { queryUnitInterface } from "wafer-host/unit-types";
+import { useEffect } from "preact/hooks";
 
 const unitInterface = queryUnitInterface("wafer-v01");
 const engine = createEngine(unitInterface);
 
-export function setupUnit() {
+function setupUnit() {
   engine.setParameters(store.state.parameters);
   engine.connects();
 
@@ -74,10 +75,15 @@ export function setupUnit() {
   }
 }
 
-export function setupSynchronization() {
+function setupSynchronization() {
   return store.subscribe(({ parameters }) => {
     if (parameters) {
       engine.setParameters(parameters);
     }
   });
+}
+
+export function useSetupDrivers() {
+  useEffect(setupUnit, []);
+  useEffect(setupSynchronization, []);
 }
