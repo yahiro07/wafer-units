@@ -1,5 +1,4 @@
 import { render } from "preact";
-import { tx } from "./common/setup-twind";
 import { createPlainSelectorOptions } from "@/utils/selector-option";
 import { Selector } from "@/components/selector";
 import { Button } from "@/components/button";
@@ -25,12 +24,12 @@ const patterOptions = createPlainSelectorOptions([
 
 const App = () => {
   return (
-    <div class={tx`h-[100dvh] flex-c`}>
-      <div class={tx`flex-v gap-3 w-[480px] bg-gray-300 px-8 py-5`}>
-        <h1 class={tx`text-xl font-bold`}>Drum Fill Machine</h1>
-        <div class={tx`flex-v gap-5`}>
-          <div class={tx`flex-h gap-2`}>
-            <div class={tx`flex-ha gap-2 justify-between`}>
+    <div class="h-[100dvh] flex-c">
+      <div class="flex-v gap-3 w-[480px] bg-gray-300 px-8 py-5">
+        <h1 class="text-xl font-bold">Drum Fill Machine</h1>
+        <div class="flex-v gap-5">
+          <div class="flex-h gap-2">
+            <div class="flex-ha gap-2 justify-between">
               pattern
               <Selector
                 options={patterOptions}
@@ -38,8 +37,8 @@ const App = () => {
                 onChange={() => {}}
               />
             </div>
-            <div class={tx`grow`} />
-            <div class={tx`flex-ha gap-2`}>
+            <div class="grow" />
+            <div class="flex-ha gap-2">
               loop bars
               <Selector
                 options={loopBarOptions}
@@ -50,16 +49,16 @@ const App = () => {
             </div>
           </div>
 
-          <div class={tx`flex-v gap-2`}>
-            <div class={tx`flex-ha gap-3`}>
-              <div class={tx`grow`}>hi-hat</div>
+          <div class="flex-v gap-2">
+            <div class="flex-ha gap-3">
+              <div class="grow">hi-hat</div>
               <Selector options={hatOptions} value="hc1" onChange={() => {}} />
               <Knob value={0.5} onChange={() => {}} />
               <Knob value={0.5} onChange={() => {}} />
               <Button asr={1.2} active children="on" />
             </div>
-            <div class={tx`flex-ha gap-3`}>
-              <div class={tx`grow`}>cymbal</div>
+            <div class="flex-ha gap-3">
+              <div class="grow">cymbal</div>
               <Selector
                 options={cymbalOptions}
                 value="cc1"
@@ -71,12 +70,12 @@ const App = () => {
             </div>
           </div>
 
-          <div class={tx`flex-h justify-between`}>
-            <div class={tx`flex-ha gap-2`}>
+          <div class="flex-h justify-between">
+            <div class="flex-ha gap-2">
               <div>volume slope up</div>
               <Button asr={1.2} children="on" />
             </div>
-            <div class={tx`flex-h gap-2`}>
+            <div class="flex-h gap-2">
               <Button>Trigger</Button>
               <Button active>Loop</Button>
             </div>

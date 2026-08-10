@@ -1,6 +1,6 @@
 import { KnobFrame } from "@/components/knob-frame";
 import { linearInterpolate } from "@/utils/helpers";
-import { css, tw } from "@/common/setup-twind";
+import { css } from "@twind/core";
 
 export const Knob = ({
   value,
@@ -33,23 +33,21 @@ export const Knob = ({
     </KnobFrame>
   );
 };
-const styles = tw(
-  css({
-    "@apply": "relative rounded-full",
-    width: "40px",
-    height: "40px",
-    background: "linear-gradient(to bottom, #fff, #0006)",
-    padding: "3px",
-    border: "solid 0.5px #4448",
-    "& > .inner": {
-      "@apply": "w-full h-full rounded-full",
-      background: "#eee",
+const styles = css({
+  "@apply": "relative rounded-full",
+  width: "40px",
+  height: "40px",
+  background: "linear-gradient(to bottom, #fff, #0006)",
+  padding: "3px",
+  border: "solid 0.5px #4448",
+  "& > .inner": {
+    "@apply": "w-full h-full rounded-full",
+    background: "#eee",
+  },
+  "& > .tickPlane": {
+    "@apply": "absolute-full flex-va",
+    "& > .tick": {
+      "@apply": "w-[4px] h-[15px] bg-clKnobTick",
     },
-    "& > .tickPlane": {
-      "@apply": "absolute-full flex-va",
-      "& > .tick": {
-        "@apply": "w-[4px] h-[15px] bg-clKnobTick",
-      },
-    },
-  }),
-);
+  },
+});

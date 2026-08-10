@@ -1,10 +1,4 @@
-import {
-  twind,
-  cssom,
-  tx as tx$,
-  css as css$,
-  defineConfig,
-} from "@twind/core";
+import { defineConfig, install, css, tx } from "@twind/core";
 import { createTz } from "@/utils/tz";
 import presetExt from "@twind/preset-ext";
 import presetTailwind from "@twind/preset-tailwind";
@@ -42,7 +36,5 @@ const config = defineConfig({
   ],
 });
 
-export const tw = twind(config, cssom());
-export const tx = tx$.bind(tw);
-export const css = css$.bind(tw);
+install(config);
 export const tz = createTz(tx, css);
