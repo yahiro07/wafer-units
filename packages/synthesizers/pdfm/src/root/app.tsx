@@ -7,6 +7,7 @@ import { allPresetKeys, store } from "@/root/store";
 import { actions } from "@/root/actions";
 import { SynthParameters, WaveMode } from "@/defs/definitions";
 import { cx } from "@twind/core";
+import { useSetupDrivers } from "@/root/drivers";
 
 const presetOptions = createPlainSelectorOptions(allPresetKeys);
 
@@ -136,7 +137,7 @@ const ParametersSection = () => {
 };
 
 export const App = () => {
-  // useSetupDrivers();
+  useSetupDrivers();
   return (
     <div class="h-[100dvh] flex-c text-clText bg-clPanelBody">
       <div class="w-[700px] flex-v gap-3 shrink-0">
