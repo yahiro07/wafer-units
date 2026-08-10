@@ -13,9 +13,13 @@ type StyleObject = CSSProperties & {
     | `${string} &${string}`
     | `@media ${string}`
     | `@supports ${string}`
-    | `@keyframes ${string}`
     | `@layer ${string}`]?: StyleObject;
+} & {
+  [K in `@keyframes ${string}`]?: {
+    [offset: string]: CSSProperties;
+  };
 };
+
 // oxlint-disable-next-line typescript/no-redundant-type-constituents
 type TzArg = string | number | boolean | StyleObject | Falsey | TzArg[];
 
