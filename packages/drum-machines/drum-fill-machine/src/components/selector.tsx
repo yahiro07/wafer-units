@@ -38,8 +38,7 @@ export const Selector = <T extends string | number>({
 };
 const styles = {
   base: tz({
-    "@apply":
-      "text-center outline-none cursor-pointer appearance-none rounded-[1px]",
+    "@apply": "text-center outline-none cursor-pointer rounded-[1px]",
     border: "solid 1px #888",
     padding: "0 8px",
   }),
