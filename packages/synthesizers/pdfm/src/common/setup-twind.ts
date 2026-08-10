@@ -8,16 +8,16 @@ const config = defineConfig({
   theme: {
     extend: {
       colors: {
-        clPanelBody: "#aaa",
-        clPrimary: "#f80",
+        clPanelBody: "#ddd",
+        clPrimary: "#fff",
         clKnobTick: "#f80",
-        clText: "#555",
+        clText: "#666",
         clSectionBg: "#fff",
-        // clSectionHeaderBg: "#ddd",
-        // clSectionEdge: "#888",
+        clSectionHeaderBg: "#f80",
+        clSectionEdge: "#f80",
         clControlBg: "#fff",
         clControlEdge: "#ddd",
-        clTopBarBg: "#e0e0e0",
+        clTopBarBg: "#999",
         clButtonBg: "#fff",
       },
     },

@@ -14,10 +14,9 @@ const presetOptions = createPlainSelectorOptions(allPresetKeys);
 
 const TitleText = () => {
   return (
-    <div class="text-[18px]">
+    <div class="text-[18px] text-white">
       <i class="ri-instance-line text-xl ml-[-2px]" />
-      <span class="ml-[2px]">MiniSynth</span>
-      <span class="text-clPrimary">2</span>
+      <span class="ml-[2px]">PDFM</span>
     </div>
   );
 };
@@ -46,7 +45,7 @@ const RandomizerButton = () => {
   return (
     <Button asr={2} onClick={actions.randomizeParameters}>
       <div class="flex-ha gap-1">
-        <span class="text-clPrimary">RND</span>
+        <span>RND</span>
         <i class="ri-dice-3-line text-xl" />
       </div>
     </Button>
@@ -58,7 +57,7 @@ const TopBar = () => {
     <div
       class={cx(
         "flex-ha py-2 px-4 justify-between",
-        "bg-clTopBarBg bd-clSectionEdge rounded-[4px]",
+        "bg-clTopBarBg rounded-[4px]",
       )}
     >
       <div class="w-[120px]">

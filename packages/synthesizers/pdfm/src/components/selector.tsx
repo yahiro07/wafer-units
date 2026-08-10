@@ -40,7 +40,6 @@ const styles = {
   base: css({
     "@apply":
       "text-center outline-none cursor-pointer appearance-none rounded-[1px]",
-    border: "solid 1px theme('colors.clSectionEdge')",
     padding: "0 8px",
   }),
 };

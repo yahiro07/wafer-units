@@ -41,8 +41,8 @@ const styles = {
     "@apply": "relative rounded-full",
     width: "54px",
     height: "54px",
-    background: "linear-gradient(to bottom, #fff, #0006)",
-    padding: "3px",
+    background: "linear-gradient(to bottom, #fff8, #0008)",
+    padding: "4px",
     border: "solid 0.5px #4448",
   }),
   inner: css({
