@@ -37,7 +37,7 @@ export const Knob = ({
   );
 };
 const styles = css({
-  "@apply": "relative rounded-full",
+  "@apply": "relative rounded-full hover:opacity-80",
   width: "40px",
   height: "40px",
   background: "linear-gradient(to bottom, #fff, #0006)",

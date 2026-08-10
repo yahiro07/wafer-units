@@ -1,7 +1,9 @@
 import { SceneParameters } from "@/core/definitions";
 import { createStore } from "snap-store";
 
-export type StoreState = SceneParameters;
+export type StoreState = SceneParameters & {
+  oneShotTriggered: boolean;
+};
 
 export const store = createStore<StoreState>({
   patternKey: "pattern1",
@@ -21,4 +23,6 @@ export const store = createStore<StoreState>({
     enabled: true,
   },
   volumeSlopeUp: false,
+  loopEnabled: true,
+  oneShotTriggered: false,
 });

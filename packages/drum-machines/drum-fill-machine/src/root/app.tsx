@@ -1,5 +1,4 @@
 import { createPlainSelectorOptions } from "@/utils/selector-option";
-import { Selector } from "@/components/selector";
 import { Button } from "@/components/button";
 import { Knob } from "@/components/knob";
 import {
@@ -11,6 +10,7 @@ import {
 } from "@/core/definitions";
 import { store } from "@/root/store";
 import { Icons } from "@/common/icons";
+import { ShiftSelector } from "@/components/shift-selector";
 
 const loopBarOptions = createPlainSelectorOptions([2, 4, 8, 16, 32]);
 
@@ -19,6 +19,33 @@ const patterOptions = createPlainSelectorOptions([
   "pattern2",
   "pattern3",
 ]);
+
+const TopRow = () => {
+  const { patternKey, loopBars } = store.useSnapshot();
+  return (
+    <div class="flex-h gap-2">
+      <div class="flex-ha gap-2 justify-between">
+        pattern
+        <ShiftSelector
+          options={patterOptions}
+          value={patternKey}
+          onChange={store.setPatternKey}
+          width={140}
+        />
+      </div>
+      <div class="grow" />
+      <div class="flex-ha gap-2">
+        loop bars
+        <ShiftSelector
+          options={loopBarOptions}
+          value={loopBars}
+          onChange={store.setLoopBars}
+          width={100}
+        />
+      </div>
+    </div>
+  );
+};
 
 const PartEditRow = ({ partKey }: { partKey: PartKey }) => {
   const { hatPartItem, cymbalPartItem } = store.useSnapshot();
@@ -70,48 +97,46 @@ const PartEditRow = ({ partKey }: { partKey: PartKey }) => {
   );
 };
 
+const BottomRow = () => {
+  const { volumeSlopeUp, loopEnabled, oneShotTriggered } = store.useSnapshot();
+  const triggerOneShot = () => {
+    store.toggleOneShotTriggered();
+  };
+  return (
+    <div class="flex-h justify-between">
+      <div class="flex-ha gap-2">
+        <div>volume slope up</div>
+        <Button
+          asr={1.2}
+          children="on"
+          active={volumeSlopeUp}
+          onClick={store.toggleVolumeSlopeUp}
+        />
+      </div>
+      <div class="flex-h gap-2">
+        <Button active={loopEnabled} onClick={store.toggleLoopEnabled}>
+          Loop
+        </Button>
+        <Button activeBlink={oneShotTriggered} onClick={triggerOneShot}>
+          Trigger
+        </Button>
+      </div>
+    </div>
+  );
+};
+
 export const App = () => {
   return (
     <div class="h-[100dvh] flex-c">
       <div class="flex-v gap-3 w-[500px] bg-gray-300 px-8 py-5">
         <h1 class="text-xl font-[600]">Drum Fill Machine</h1>
         <div class="flex-v gap-5">
-          <div class="flex-h gap-2">
-            <div class="flex-ha gap-2 justify-between">
-              pattern
-              <Selector
-                options={patterOptions}
-                value="pattern1"
-                onChange={() => {}}
-              />
-            </div>
-            <div class="grow" />
-            <div class="flex-ha gap-2">
-              loop bars
-              <Selector
-                options={loopBarOptions}
-                value={4}
-                onChange={() => {}}
-                width={100}
-              />
-            </div>
-          </div>
-
+          <TopRow />
           <div class="flex-v gap-2">
             <PartEditRow partKey="hat" />
             <PartEditRow partKey="cymbal" />
           </div>
-
-          <div class="flex-h justify-between">
-            <div class="flex-ha gap-2">
-              <div>volume slope up</div>
-              <Button asr={1.2} children="on" />
-            </div>
-            <div class="flex-h gap-2">
-              <Button>Trigger</Button>
-              <Button active>Loop</Button>
-            </div>
-          </div>
+          <BottomRow />
         </div>
       </div>
     </div>

@@ -13,6 +13,7 @@ type StyleObject = CSSProperties & {
     | `${string} &${string}`
     | `@media ${string}`
     | `@supports ${string}`
+    | `@keyframes ${string}`
     | `@layer ${string}`]?: StyleObject;
 };
 // oxlint-disable-next-line typescript/no-redundant-type-constituents

@@ -40,5 +40,6 @@ const styles = {
   base: tz(
     "text-center outline-none cursor-pointer rounded-[1px]",
     "bg-clControlBg bd-clControlEdge px-2",
+    "hover:opacity-80",
   ),
 };

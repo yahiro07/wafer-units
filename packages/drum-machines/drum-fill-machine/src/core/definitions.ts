@@ -34,4 +34,5 @@ export type SceneParameters = {
   hatPartItem: PartItem;
   cymbalPartItem: PartItem;
   volumeSlopeUp: boolean;
+  loopEnabled: boolean;
 };
