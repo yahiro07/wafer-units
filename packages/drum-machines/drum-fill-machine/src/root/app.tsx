@@ -13,7 +13,7 @@ import { Icons } from "@/common/icons";
 import { ShiftSelector } from "@/components/shift-selector";
 import { useSetupDrivers } from "@/root/drivers";
 
-const loopBarOptions = createPlainSelectorOptions([2, 4, 8, 16, 32]);
+const loopBarOptions = createPlainSelectorOptions([1, 2, 4, 8, 16, 32]);
 
 const patterOptions = createPlainSelectorOptions([
   "pattern1",

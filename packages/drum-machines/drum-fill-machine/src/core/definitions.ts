@@ -1,10 +1,17 @@
 export type PatternKey = "pattern1" | "pattern2" | "pattern3";
 
-export type LoopBars = 2 | 4 | 8 | 16 | 32;
+export type LoopBars = 1 | 2 | 4 | 8 | 16 | 32;
 
-export const allHatSampleKeys = ["sd1", "sd2", "sd3", "sd4"] as const;
+export const allHatSampleKeys = [
+  "sd1",
+  "sd2",
+  "sd3",
+  "sd4",
+  "hc1",
+  "hc2",
+] as const;
 
-export const allCymbalSampleKeys = ["cc1", "cc2", "cc3", "cc4", "cc5"] as const;
+export const allCymbalSampleKeys = ["cc1", "cc2", "cc3"] as const;
 
 export type SampleKey =
   | (typeof allHatSampleKeys)[number]
