@@ -6,37 +6,32 @@ function randI(max: number) {
   return Math.floor(randF() * max);
 }
 
-// function randRange(min: number, max: number) {
-//   return min + randF() * (max - min);
-// }
+function randRange(min: number, max: number) {
+  return min + randF() * (max - min);
+}
 
-// function probably(p: number, a: number, b: number) {
-//   return randF() < p ? a : b;
-// }
+function probably(p: number, a: number, b: number) {
+  return randF() < p ? a : b;
+}
+
+function randB(p: number) {
+  return randF() < p;
+}
 
 export function createRandomParameters(): Partial<SynthParameters> {
+  const fixDR = randB(0.5) ? "D" : "R";
   return {
     waveMode: randI(WaveMode.NumWaveModes),
     shape: randF(),
     envMod: randF(),
-    detune: randF(),
-    sub: randF(),
-    decay: randF(),
-    release: randF(),
-    drift: randF(),
-    loFi: randF(),
-    chorus: randF(),
-    delay: randF(),
-    reverb: randF(),
-    // oscDetune: probably(0.5, 0, randRange(0, 0.5)),
-    // oscSub: probably(0.5, 0, randF()),
-    // oscDrift: probably(0.6, 0, randF()),
-    // filterCutoff: probably(0.4, 1, randRange(0.3, 1)),
-    // filterPeak: probably(0.4, 0, randF()),
-    // filterEnvMod: probably(0.3, 0, randF()),
-    // ampDecay: probably(0.3, 1, randRange(0.3, 0.9)),
-    // ampRelease: probably(0.4, 0, randF()),
-    // fxChorus: probably(0.6, 0, randRange(0, 0.6)),
-    // fxReverb: probably(0.6, 0, randRange(0, 0.6)),
+    detune: probably(0.5, 0, randF()),
+    sub: probably(0.5, 0, randF()),
+    decay: probably(fixDR === "D" ? 0.3 : 0, 1, randF()),
+    release: probably(fixDR === "R" ? 0.3 : 0, 0, randF()),
+    drift: probably(0.5, 0, randF()),
+    loFi: probably(0.5, 0, randF()),
+    chorus: probably(0.5, 0, randF()),
+    delay: probably(0.5, 0, randF()),
+    reverb: probably(0.5, 0, randRange(0, 0.7)),
   };
 }
