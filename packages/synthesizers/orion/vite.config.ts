@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [preact()],
   resolve: { tsconfigPaths: true },
   build: {
-    outDir: `../../../dist/pdfm`,
+    outDir: `../../../dist/orion`,
     emptyOutDir: true,
   },
   server: { port: 3000 },
