@@ -171,6 +171,7 @@ function createVoice(
     noteOff(time) {
       if (state !== "active") return;
       internal.releaseNote(internal.resolveTime(time));
+      noteNumber = null;
     },
 
     applyParametersToNodes() {
@@ -275,7 +276,10 @@ export function createSynthesizerEngine(
       const voice = pickVoice(voices);
       if (!voice) return;
 
-      if (voice.noteNumber !== null) {
+      if (
+        voice.noteNumber !== null &&
+        activeVoices.get(voice.noteNumber) === voice
+      ) {
         activeVoices.delete(voice.noteNumber);
       }
 
@@ -286,7 +290,6 @@ export function createSynthesizerEngine(
     noteOff(noteNumber, time) {
       const voice = activeVoices.get(noteNumber);
       if (!voice) return;
-
       voice.noteOff(time);
       if (activeVoices.get(noteNumber) === voice) {
         activeVoices.delete(noteNumber);
