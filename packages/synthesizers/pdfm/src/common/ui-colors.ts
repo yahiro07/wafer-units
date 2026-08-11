@@ -1,13 +1,16 @@
+const coreColors = {
+  boxFrame: "#058",
+};
+
 export const uiColors = {
-  clPanelBody: "#ddd",
+  clPanelBody: "#222",
   clPrimary: "#fff",
-  clKnobTick: "#f80",
-  clText: "#666",
-  clSectionBg: "#fff",
-  clSectionHeaderBg: "#f80",
-  clSectionEdge: "#f80",
-  clControlBg: "#fff",
-  clControlEdge: "#ddd",
-  clTopBarBg: "#999",
-  clButtonBg: "#fff",
+  clKnobTick: "#07b",
+  clText: "#444",
+  clSectionBg: "#222",
+  clSectionHeaderBg: coreColors.boxFrame,
+  clSectionEdge: coreColors.boxFrame,
+  clSectionText: "#ddd",
+  clTopBarBg: coreColors.boxFrame,
+  clButtonBg: "#bbb",
 };

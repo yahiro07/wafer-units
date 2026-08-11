@@ -18,7 +18,7 @@ const TitleText = () => {
         class="ri-instance-line text-xl ml-[-2px]"
         onClick={actions.emitPresetData}
       />
-      <span class="ml-[2px]">PDFM</span>
+      <span class="ml-[2px] whitespace-nowrap">ORION</span>
     </div>
   );
 };

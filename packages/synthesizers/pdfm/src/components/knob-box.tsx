@@ -25,5 +25,5 @@ export const KnobBox = ({
 };
 const styles = {
   base: tz("flex-vc gap-1"),
-  label: tz("text-sm font-[600]"),
+  label: tz("text-sm font-[600] text-clSectionText"),
 };

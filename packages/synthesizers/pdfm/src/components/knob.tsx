@@ -40,11 +40,11 @@ const styles = {
   base: tz("relative rounded-full", {
     width: "54px",
     height: "54px",
-    background: "linear-gradient(to bottom, #fff8, #0008)",
+    background: "linear-gradient(to bottom, #fff8, #2228)",
     padding: "4px",
-    border: "solid 0.5px #4448",
+    border: "solid 0.5px #444",
   }),
-  inner: tz("w-full h-full rounded-full bg-[#eee]"),
+  inner: tz("w-full h-full rounded-full bg-[#aaa]"),
   tickPlane: tz("absolute-full flex-va"),
   tick: tz("w-[4px] h-[15px]", "bg-clKnobTick"),
 };
