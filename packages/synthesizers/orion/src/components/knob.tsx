@@ -1,3 +1,4 @@
+import { knobColors } from "@/common/ui-colors";
 import { KnobFrame } from "@/components/knob-frame";
 import { linearInterpolate } from "@/utils/helpers";
 import { tz } from "@/utils/tz";
@@ -36,15 +37,16 @@ export const Knob = ({
     </KnobFrame>
   );
 };
+const kc = knobColors;
 const styles = {
   base: tz("relative rounded-full", {
     width: "54px",
     height: "54px",
-    background: "linear-gradient(to bottom, #fff8, #2228)",
+    background: `linear-gradient(to bottom, ${kc.cutoutGrad1}, ${kc.cutoutGrad2})`,
     padding: "4px",
-    border: "solid 0.5px #444",
+    border: `solid 0.5px ${kc.borderColor}`,
   }),
-  inner: tz("w-full h-full rounded-full bg-[#aaa]"),
+  inner: tz("w-full h-full rounded-full", `bg-[${kc.topFace}]`),
   tickPlane: tz("absolute-full flex-va"),
   tick: tz("w-[4px] h-[15px]", "bg-clKnobTick"),
 };

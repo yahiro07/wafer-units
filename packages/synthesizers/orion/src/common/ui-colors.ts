@@ -1,16 +1,23 @@
 const coreColors = {
-  boxFrame: "#058",
+  boxFrame: "#0aa",
 };
 
 export const uiColors = {
-  clPanelBody: "#222",
+  clPanelBody: "#ddd",
   clPrimary: "#fff",
-  clKnobTick: "#07b",
-  clText: "#444",
-  clSectionBg: "#222",
+  clKnobTick: "#09b",
+  clText: "#555",
   clSectionHeaderBg: coreColors.boxFrame,
   clSectionEdge: coreColors.boxFrame,
-  clSectionText: "#ddd",
+  clSectionBg: "#fff",
+  clSectionText: "#666",
   clTopBarBg: coreColors.boxFrame,
-  clButtonBg: "#bbb",
+  clButtonBg: "#f0f0f0",
+};
+
+export const knobColors = {
+  borderColor: "#4448",
+  cutoutGrad1: "#fff8",
+  cutoutGrad2: "#2228",
+  topFace: "#eee",
 };
