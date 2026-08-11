@@ -3,6 +3,7 @@ import { queryUnitInterface } from "wafer-host/unit-types";
 import { allPartKeys } from "@/model/defs";
 import { createSequencerEngine } from "@/model/sequencer-engine";
 import { allSampleKeys } from "@/ui/common/ui-data";
+import { persistence } from "@/ui/persistence";
 import { store } from "@/ui/store/store";
 
 const unitInterface = queryUnitInterface("wafer-v01");
@@ -26,6 +27,7 @@ function setupUnit() {
       processStep: sequencer.onHostStep,
       stop: sequencer.onHostStop,
     },
+    persistence,
     cleanup: sequencer.cleanup,
   });
 }
