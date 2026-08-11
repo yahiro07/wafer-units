@@ -11,16 +11,21 @@ export const unitInterface = queryUnitInterfaceForModule(
 const midiNoteNumberToFrequency = (note: number): number =>
   440.0 * Math.pow(2.0, (note - 69) / 12.0);
 
-const MAX_WORKLET_VOICES = 8;
-const WORKLET_CLOSE_DELAY_MS = 100;
+const MAX_VOICES = 4;
+const ACTIVE_STEAL_RESET_SECONDS = 0.001;
+const RELEASE_IDLE_MARGIN_SECONDS = 0.1;
+const PARAM_SMOOTHING_SECONDS = 0.005;
 
-interface ActiveVoice {
-  noteNumber: number;
+type VoiceState = "idle" | "active" | "releasing";
+
+interface Voice {
   workletNode: AudioWorkletNode;
   gateParam: AudioParam;
+  noteNumber: number | null;
+  state: VoiceState;
   startedAt: number;
-  cleanupTimerId?: number;
-  closeTimerId?: number;
+  releasedAt: number;
+  idleTimerId?: number;
 }
 
 type EngineApi = {
@@ -41,10 +46,134 @@ export function createSynthEngine(): EngineApi {
   let audioCtx: AudioContext | null = null;
   let mainOutputNode: GainNode | null = null;
   let effectChain: ReturnType<typeof createEffectChain> | undefined;
+  let voices: Voice[] = [];
 
-  const activeVoices = new Map<number, ActiveVoice>();
-  const liveVoices = new Set<ActiveVoice>();
+  const activeVoices = new Map<number, Voice>();
   const synthParameters: SynthParameters = { ...defaultParams };
+
+  function setParamAtTime(
+    workletNode: AudioWorkletNode,
+    key: string,
+    value: number,
+    time: number,
+    smooth: boolean,
+  ) {
+    const param = workletNode.parameters.get(key);
+    if (!param) return;
+
+    if (smooth) {
+      param.setTargetAtTime(value, time, PARAM_SMOOTHING_SECONDS);
+    } else {
+      param.setValueAtTime(value, time);
+    }
+  }
+
+  function applyParametersToVoice(
+    voice: Voice,
+    params: SynthParameters,
+    time: number,
+    smooth: boolean,
+  ) {
+    (Object.keys(params) as Array<keyof SynthParameters>).forEach((key) => {
+      if (
+        key === "chorus" ||
+        key === "delay" ||
+        key === "reverb" ||
+        key === "master"
+      ) {
+        return;
+      }
+      setParamAtTime(voice.workletNode, key, params[key], time, smooth);
+    });
+  }
+
+  function clearIdleTimer(voice: Voice) {
+    if (voice.idleTimerId === undefined) return;
+    window.clearTimeout(voice.idleTimerId);
+    voice.idleTimerId = undefined;
+  }
+
+  function scheduleIdle(voice: Voice, releasedAt: number) {
+    if (!audioCtx) return;
+
+    clearIdleTimer(voice);
+    const releaseSeconds = Math.max(0.01, synthParameters.release);
+    const idleAt = releasedAt + releaseSeconds * 10 + RELEASE_IDLE_MARGIN_SECONDS;
+    const delaySeconds = Math.max(0, idleAt - audioCtx.currentTime);
+
+    voice.idleTimerId = window.setTimeout(() => {
+      if (voice.state === "releasing") {
+        voice.state = "idle";
+        voice.noteNumber = null;
+      }
+      voice.idleTimerId = undefined;
+    }, delaySeconds * 1000);
+  }
+
+  function createVoice(): Voice {
+    if (!audioCtx || !mainOutputNode) {
+      throw new Error("Audio context is not initialized");
+    }
+
+    const workletNode = new AudioWorkletNode(audioCtx, "synth-processor", {
+      numberOfInputs: 0,
+      numberOfOutputs: 1,
+      outputChannelCount: [1],
+    });
+    const gateParam = workletNode.parameters.get("gate");
+    if (!gateParam) {
+      throw new Error("synth-processor is missing the gate parameter");
+    }
+
+    const now = audioCtx.currentTime;
+    gateParam.setValueAtTime(0.0, now);
+    setParamAtTime(workletNode, "frequency", 440.0, now, false);
+    workletNode.connect(mainOutputNode);
+
+    const voice: Voice = {
+      workletNode,
+      gateParam,
+      noteNumber: null,
+      state: "idle",
+      startedAt: 0,
+      releasedAt: 0,
+      idleTimerId: undefined,
+    };
+    applyParametersToVoice(voice, synthParameters, now, false);
+
+    return voice;
+  }
+
+  function pickVoice(): Voice | undefined {
+    const idleVoice = voices.find((voice) => voice.state === "idle");
+    if (idleVoice) return idleVoice;
+
+    const releasingVoice = voices
+      .filter((voice) => voice.state === "releasing")
+      .sort((a, b) => a.releasedAt - b.releasedAt)[0];
+    if (releasingVoice) return releasingVoice;
+
+    return voices
+      .filter((voice) => voice.state === "active")
+      .sort((a, b) => a.startedAt - b.startedAt)[0];
+  }
+
+  function releaseVoice(voice: Voice, time: number) {
+    if (!audioCtx) return;
+
+    const targetTime = Math.max(time, audioCtx.currentTime);
+    voice.gateParam.setValueAtTime(0.0, targetTime);
+    voice.state = "releasing";
+    voice.releasedAt = targetTime;
+    scheduleIdle(voice, targetTime);
+
+    if (
+      voice.noteNumber !== null &&
+      activeVoices.get(voice.noteNumber) === voice
+    ) {
+      activeVoices.delete(voice.noteNumber);
+    }
+  }
 
   async function init(): Promise<void> {
     if (audioCtx) return;
@@ -67,77 +196,22 @@ export function createSynthEngine(): EngineApi {
     effectChain = createEffectChain(audioCtx);
     mainOutputNode.connect(effectChain.inputNode);
     effectChain.outputNode.connect(audioDestination);
+
+    voices = Array.from({ length: MAX_VOICES }, () => createVoice());
   }
 
   function updateVoiceParameter(key: keyof SynthParameters, value: number) {
-    const now = audioCtx?.currentTime || 0;
-    liveVoices.forEach((voice) => {
-      const param = voice.workletNode.parameters.get(key);
-      if (param) {
-        param.setTargetAtTime(value, now, 0.005);
-      }
+    if (!audioCtx) return;
+    const now = audioCtx.currentTime;
+    voices.forEach((voice) => {
+      if (voice.state === "idle") return;
+      setParamAtTime(voice.workletNode, key, value, now, true);
     });
   }
 
   function updateEffectParameter(key: keyof SynthParameters, value: number) {
     if (key === "chorus" || key === "delay" || key === "reverb") {
       effectChain?.updateParameters({ [key]: value });
-    }
-  }
-
-  function forgetVoice(voice: ActiveVoice) {
-    liveVoices.delete(voice);
-    if (activeVoices.get(voice.noteNumber) === voice) {
-      activeVoices.delete(voice.noteNumber);
-    }
-  }
-
-  function stopVoice(voice: ActiveVoice) {
-    if (voice.cleanupTimerId !== undefined) {
-      window.clearTimeout(voice.cleanupTimerId);
-      voice.cleanupTimerId = undefined;
-    }
-    if (voice.closeTimerId !== undefined) return;
-
-    forgetVoice(voice);
-    voice.workletNode.port.postMessage({ type: "stop" });
-    voice.closeTimerId = window.setTimeout(() => {
-      try {
-        voice.workletNode.disconnect();
-      } finally {
-        voice.workletNode.port.close();
-      }
-    }, WORKLET_CLOSE_DELAY_MS);
-  }
-
-  function scheduleVoiceCleanup(voice: ActiveVoice, targetTime: number) {
-    if (!audioCtx) return;
-
-    const releaseTimeConstant = Math.max(0.01, synthParameters.release);
-    const releaseTailSeconds = releaseTimeConstant * 10 + 0.1;
-    const delaySeconds =
-      Math.max(0, targetTime - audioCtx.currentTime) + releaseTailSeconds;
-
-    voice.cleanupTimerId = window.setTimeout(() => {
-      stopVoice(voice);
-    }, delaySeconds * 1000);
-  }
-
-  function findOldestLiveVoice(): ActiveVoice | undefined {
-    let oldestVoice: ActiveVoice | undefined;
-    liveVoices.forEach((voice) => {
-      if (!oldestVoice || voice.startedAt < oldestVoice.startedAt) {
-        oldestVoice = voice;
-      }
-    });
-    return oldestVoice;
-  }
-
-  function reserveVoiceSlot() {
-    while (liveVoices.size >= MAX_WORKLET_VOICES) {
-      const oldestVoice = findOldestLiveVoice();
-      if (!oldestVoice) return;
-      stopVoice(oldestVoice);
     }
   }
 
@@ -160,7 +234,11 @@ export function createSynthEngine(): EngineApi {
 
       if (key === "master") {
         if (mainOutputNode) {
-          mainOutputNode.gain.setTargetAtTime(value, now, 0.005);
+          mainOutputNode.gain.setTargetAtTime(
+            value,
+            now,
+            PARAM_SMOOTHING_SECONDS,
+          );
         }
         return;
       }
@@ -173,14 +251,20 @@ export function createSynthEngine(): EngineApi {
 
       const now = audioCtx?.currentTime || 0;
       if (mainOutputNode) {
-        mainOutputNode.gain.setTargetAtTime(synthParameters.master, now, 0.005);
+        mainOutputNode.gain.setTargetAtTime(
+          synthParameters.master,
+          now,
+          PARAM_SMOOTHING_SECONDS,
+        );
       }
 
-      (Object.keys(synthParameters) as Array<keyof SynthParameters>).forEach(
-        (key) => {
-          updateVoiceParameter(key, synthParameters[key]);
-        },
-      );
+      voices.forEach((voice) => {
+        if (voice.state === "idle") return;
+        applyParametersToVoice(voice, synthParameters, now, true);
+        if (voice.state === "releasing") {
+          scheduleIdle(voice, voice.releasedAt);
+        }
+      });
 
       effectChain?.updateParameters({
         chorus: synthParameters.chorus,
@@ -189,7 +273,7 @@ export function createSynthEngine(): EngineApi {
       });
     },
     noteOn(noteNumber, time) {
-      if (!audioCtx || !mainOutputNode) {
+      if (!audioCtx || !mainOutputNode || voices.length === 0) {
         console.warn(
           "SynthEngine is not initialized. Call init() before using the engine.",
         );
@@ -200,68 +284,64 @@ export function createSynthEngine(): EngineApi {
 
       const existingVoice = activeVoices.get(noteNumber);
       if (existingVoice) {
-        stopVoice(existingVoice);
+        releaseVoice(existingVoice, time ?? audioCtx.currentTime);
       }
 
-      reserveVoiceSlot();
+      const voice = pickVoice();
+      if (!voice) return;
 
-      const workletNode = new AudioWorkletNode(audioCtx, "synth-processor", {
-        numberOfInputs: 0,
-        numberOfOutputs: 1,
-        outputChannelCount: [1],
-      });
+      clearIdleTimer(voice);
+      if (voice.noteNumber !== null) {
+        activeVoices.delete(voice.noteNumber);
+      }
 
-      const targetTime =
+      let targetTime =
         time && time > audioCtx.currentTime ? time : audioCtx.currentTime;
 
-      const freqParam = workletNode.parameters.get("frequency");
-      if (freqParam)
-        freqParam.setValueAtTime(
-          midiNoteNumberToFrequency(noteNumber),
-          targetTime,
-        );
-
-      (Object.keys(synthParameters) as Array<keyof SynthParameters>).forEach(
-        (key) => {
-          const p = workletNode.parameters.get(key);
-          if (p) p.setValueAtTime(synthParameters[key], targetTime);
-        },
-      );
-
-      const gateParam = workletNode.parameters.get("gate")!;
-      if (targetTime > audioCtx.currentTime) {
-        gateParam.setValueAtTime(0.0, audioCtx.currentTime);
+      // Force a gate edge so the worklet envelope retriggers cleanly.
+      if (voice.state === "active" || voice === existingVoice) {
+        voice.gateParam.setValueAtTime(0.0, targetTime);
+        targetTime += ACTIVE_STEAL_RESET_SECONDS;
       }
-      gateParam.setValueAtTime(1.0, targetTime);
 
-      workletNode.connect(mainOutputNode);
+      setParamAtTime(
+        voice.workletNode,
+        "frequency",
+        midiNoteNumberToFrequency(noteNumber),
+        targetTime,
+        false,
+      );
+      applyParametersToVoice(voice, synthParameters, targetTime, false);
+      voice.gateParam.setValueAtTime(1.0, targetTime);
 
-      const voice: ActiveVoice = {
-        noteNumber,
-        workletNode,
-        gateParam,
-        startedAt: targetTime,
-      };
+      voice.noteNumber = noteNumber;
+      voice.state = "active";
+      voice.startedAt = targetTime;
       activeVoices.set(noteNumber, voice);
-      liveVoices.add(voice);
     },
     noteOff(noteNumber, time) {
       const voice = activeVoices.get(noteNumber);
-      if (!voice) return;
+      if (!voice || !audioCtx) return;
 
       const targetTime =
-        time && audioCtx && time > audioCtx.currentTime
-          ? time
-          : audioCtx?.currentTime || 0;
-      voice.gateParam.setValueAtTime(0.0, targetTime);
-      scheduleVoiceCleanup(voice, targetTime);
-
-      activeVoices.delete(noteNumber);
+        time && time > audioCtx.currentTime ? time : audioCtx.currentTime;
+      releaseVoice(voice, targetTime);
     },
     getNumActiveNotes() {
       return activeVoices.size;
     },
     cleanup() {
+      activeVoices.clear();
+      voices.forEach((voice) => {
+        clearIdleTimer(voice);
+        voice.workletNode.port.postMessage({ type: "stop" });
+        try {
+          voice.workletNode.disconnect();
+        } finally {
+          voice.workletNode.port.close();
+        }
+      });
+      voices = [];
       effectChain?.cleanup();
       mainOutputNode?.disconnect();
     },

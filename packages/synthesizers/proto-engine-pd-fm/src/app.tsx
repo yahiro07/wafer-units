@@ -3,15 +3,16 @@ import { uiActions } from "@/actions";
 import { setupDrivers } from "@/drivers";
 import { SynthParameters } from "@/state";
 import { appState } from "@/store";
+import { WaveMode } from "@/constants";
 
 function LinearSlider(props: {
   paramKey: keyof SynthParameters;
   label: string;
 }) {
   const isWaveMode = props.paramKey === "waveMode";
-  const min = "0";
-  const max = isWaveMode ? "3" : "1";
-  const step = isWaveMode ? "1" : "0.01";
+  const min = 0;
+  const max = isWaveMode ? WaveMode.NumWaveModes - 1 : 1;
+  const step = isWaveMode ? 1 : 0.01;
 
   return (
     <div

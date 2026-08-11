@@ -1,7 +1,7 @@
-import { createInterpolator } from "@/audio/interpolator";
-import { phaseTweakers } from "@/audio/phase-tweakers";
-import { power2 } from "@/audio/synth-math-utils";
-import { WaveMode } from "@/constants";
+import { WaveMode } from "@/defs/definitions";
+import { createInterpolator } from "@/logic/interpolator";
+import { phaseTweakers } from "@/logic/phase-tweakers";
+import { power2 } from "@/logic/synth-math-utils";
 import { clampValue, linearInterpolate, lowClip } from "@/utils/helpers";
 
 // PD (Phase Distortion) calculation
@@ -21,16 +21,6 @@ function computePD(phase: number, amount: number): number {
   } else {
     return -Math.cos(2.0 * Math.PI * distortedPhase + Math.PI);
   }
-}
-
-// PD_RESO (pseudo resonance) calculation
-function computePDReso(phase: number, amount: number): number {
-  // Set the high-harmonic multiplier from the current index value.
-  const resoMultiplier = 1.0 + Math.floor(amount * 15.0);
-  // Apply a trailing decay window across the cycle, similar to CZ behavior.
-  const window = 1.0 - phase;
-
-  return Math.sin(phase * resoMultiplier * 2.0 * Math.PI) * window;
 }
 
 type OscFn = (
@@ -361,8 +351,8 @@ class SynthProcessor extends AudioWorkletProcessor {
       { name: "envMod", defaultValue: 0.0, minValue: 0.0, maxValue: 1.0 },
       { name: "detune", defaultValue: 0.0, minValue: 0.0, maxValue: 1.0 },
       { name: "sub", defaultValue: 0.0, minValue: 0.0, maxValue: 1.0 },
-      { name: "decay", defaultValue: 0.5, minValue: 0.001, maxValue: 1.0 },
-      { name: "release", defaultValue: 0.3, minValue: 0.001, maxValue: 1.0 },
+      { name: "decay", defaultValue: 0.5, minValue: 0.0, maxValue: 1.0 },
+      { name: "release", defaultValue: 0.3, minValue: 0.0, maxValue: 1.0 },
       { name: "drift", defaultValue: 0.0, minValue: 0.0, maxValue: 1.0 },
       { name: "loFi", defaultValue: 0.0, minValue: 0.0, maxValue: 1.0 },
     ];
