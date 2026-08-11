@@ -25,7 +25,7 @@ namespace _persistentSpecTypes {
   type SceneEditState = {
     patternKey: PatternKey; //allPatternKeys.indexOf
     loopBars: LoopBars; //as is, 1byte
-    hatPartItem: PartItem;
+    rollPartItem: PartItem;
     cymbalPartItem: PartItem;
     volumeSlopeUp: boolean; //1byte
     loopEnabled: boolean; //1byte
@@ -91,7 +91,7 @@ export const persistence: Persistence = {
     const {
       patternKey,
       loopBars,
-      hatPartItem,
+      rollPartItem,
       cymbalPartItem,
       volumeSlopeUp,
       loopEnabled,
@@ -99,7 +99,7 @@ export const persistence: Persistence = {
     return new Uint8Array([
       allPatternKeys.indexOf(patternKey),
       loopBars,
-      ...emitPartItem(hatPartItem),
+      ...emitPartItem(rollPartItem),
       ...emitPartItem(cymbalPartItem),
       volumeSlopeUp ? 1 : 0,
       loopEnabled ? 1 : 0,
@@ -114,14 +114,14 @@ export const persistence: Persistence = {
     const loopBars = bytes[1] as LoopBars;
     if (!allLoopBars.includes(loopBars)) return;
 
-    const hatPartItem = readPartItem(bytes, 2, "hat");
+    const rollPartItem = readPartItem(bytes, 2, "roll");
     const cymbalPartItem = readPartItem(bytes, 2 + BYTES_PER_PART, "cymbal");
-    if (!hatPartItem || !cymbalPartItem) return;
+    if (!rollPartItem || !cymbalPartItem) return;
 
     store.assign({
       patternKey,
       loopBars,
-      hatPartItem,
+      rollPartItem,
       cymbalPartItem,
       volumeSlopeUp: bytes[EXPECTED_LENGTH - 2] !== 0,
       loopEnabled: bytes[EXPECTED_LENGTH - 1] !== 0,

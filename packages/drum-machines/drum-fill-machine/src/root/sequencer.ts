@@ -69,7 +69,7 @@ export function createSequencer(
           }
         }
         if (stepIndex >= totalSteps - 16) {
-          const hatPart = sceneState.hatPartItem;
+          const hatPart = sceneState.rollPartItem;
           if (hatPart.enabled) {
             internal.playSample(hatPart, time);
           }

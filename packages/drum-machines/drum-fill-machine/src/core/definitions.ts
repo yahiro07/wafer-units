@@ -10,7 +10,7 @@ export type LoopBars = 1 | 2 | 4 | 8 | 16 | 32;
 
 export const allLoopBars: LoopBars[] = [1, 2, 4, 8, 16, 32];
 
-export const allHatSampleKeys = [
+export const allRollSampleKeys = [
   "sd1",
   "sd2",
   "sd3",
@@ -22,17 +22,17 @@ export const allHatSampleKeys = [
 export const allCymbalSampleKeys = ["cc1", "cc2", "cc3"] as const;
 
 export type SampleKey =
-  | (typeof allHatSampleKeys)[number]
+  | (typeof allRollSampleKeys)[number]
   | (typeof allCymbalSampleKeys)[number];
 
 export const allSampleKeys: SampleKey[] = [
-  ...allHatSampleKeys,
+  ...allRollSampleKeys,
   ...allCymbalSampleKeys,
 ];
 
-export type PartKey = "hat" | "cymbal";
+export type PartKey = "roll" | "cymbal";
 
-export const allPartKeys: PartKey[] = ["hat", "cymbal"];
+export const allPartKeys: PartKey[] = ["roll", "cymbal"];
 
 export type PartItem = {
   partKey: PartKey;
@@ -45,7 +45,7 @@ export type PartItem = {
 export type SceneEditState = {
   patternKey: PatternKey;
   loopBars: LoopBars;
-  hatPartItem: PartItem;
+  rollPartItem: PartItem;
   cymbalPartItem: PartItem;
   volumeSlopeUp: boolean;
   loopEnabled: boolean;
@@ -54,8 +54,8 @@ export type SceneEditState = {
 export const defaultSceneEditState: SceneEditState = {
   patternKey: "pattern1",
   loopBars: 4,
-  hatPartItem: {
-    partKey: "hat",
+  rollPartItem: {
+    partKey: "roll",
     sampleKey: "sd1",
     pitchTweak: 0,
     volume: 0.5,

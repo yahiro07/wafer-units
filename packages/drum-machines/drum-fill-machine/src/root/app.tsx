@@ -3,7 +3,7 @@ import { Button } from "@/components/button";
 import { Knob } from "@/components/knob";
 import {
   allCymbalSampleKeys,
-  allHatSampleKeys,
+  allRollSampleKeys,
   PartItem,
   PartKey,
   SampleKey,
@@ -62,16 +62,16 @@ const _TopRow = () => {
 };
 
 const PartEditRow = ({ partKey }: { partKey: PartKey }) => {
-  const { hatPartItem, cymbalPartItem } = store.useSnapshot();
-  const partItem = partKey === "hat" ? hatPartItem : cymbalPartItem;
+  const { rollPartItem: hatPartItem, cymbalPartItem } = store.useSnapshot();
+  const partItem = partKey === "roll" ? hatPartItem : cymbalPartItem;
   const patchPartAttrs = (attrs: Partial<PartItem>) => {
     const patchPartItemFn =
-      partKey === "hat" ? store.patchHatPartItem : store.patchCymbalPartItem;
+      partKey === "roll" ? store.patchRollPartItem : store.patchCymbalPartItem;
     patchPartItemFn(attrs);
   };
   const shiftSample = () => {
     const allSampleKeys = (
-      partKey === "hat" ? allHatSampleKeys : allCymbalSampleKeys
+      partKey === "roll" ? allRollSampleKeys : allCymbalSampleKeys
     ) as readonly SampleKey[];
     const index = allSampleKeys.indexOf(partItem.sampleKey);
     const nextIndex = (index + 1) % allSampleKeys.length;
@@ -81,7 +81,7 @@ const PartEditRow = ({ partKey }: { partKey: PartKey }) => {
   };
   return (
     <div class="flex-ha gap-3">
-      <div class="grow">{partKey === "hat" ? "roll" : "crash"}</div>
+      <div class="grow">{partKey}</div>
       <div class="flex-h">
         <div class="w-[140px] h-[40px] bg-clControlBg bd-clControlEdge flex-c">
           {partItem.sampleKey}
@@ -170,7 +170,7 @@ export const App = () => {
         <div class="flex-v gap-5">
           {/* <TopRow /> */}
           <div class="flex-v gap-2">
-            <PartEditRow partKey="hat" />
+            <PartEditRow partKey="roll" />
             <PartEditRow partKey="cymbal" />
           </div>
           <BottomRow />

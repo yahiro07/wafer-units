@@ -15,7 +15,7 @@ sequencer.setSceneEditStateAttrs(
   pickObjectMembers(store.state, {
     patternKey: 1,
     loopBars: 1,
-    hatPartItem: 1,
+    rollPartItem: 1,
     cymbalPartItem: 1,
     volumeSlopeUp: 1,
     loopEnabled: 1,
@@ -43,7 +43,7 @@ function useSetupSynchronization() {
     const {
       patternKey,
       loopBars,
-      hatPartItem,
+      rollPartItem,
       cymbalPartItem,
       volumeSlopeUp,
       loopEnabled,
@@ -52,7 +52,7 @@ function useSetupSynchronization() {
     const editStateAttrs = filterObjectValuesNonUndefined({
       patternKey,
       loopBars,
-      hatPartItem,
+      rollPartItem,
       cymbalPartItem,
       volumeSlopeUp,
       loopEnabled,
