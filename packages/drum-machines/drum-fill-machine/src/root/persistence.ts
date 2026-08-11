@@ -26,7 +26,7 @@ namespace _persistentSpecTypes {
     patternKey: PatternKey; //allPatternKeys.indexOf
     loopBars: LoopBars; //as is, 1byte
     rollPartItem: PartItem;
-    cymbalPartItem: PartItem;
+    crashPartItem: PartItem;
     volumeSlopeUp: boolean; //1byte
     loopEnabled: boolean; //1byte
   };
@@ -38,7 +38,7 @@ namespace _persistentSpecTypes {
 }
 
 const BYTES_PER_PART = 5;
-const EXPECTED_LENGTH = 2 + BYTES_PER_PART * 2 + 2; // patternKey, loopBars, hat, cymbal, volumeSlopeUp, loopEnabled
+const EXPECTED_LENGTH = 2 + BYTES_PER_PART * 2 + 2; // patternKey, loopBars, roll, crash, volumeSlopeUp, loopEnabled
 
 function unaryToByte(value: number): number {
   return (clampValue(value, 0, 1) * 255) >>> 0;
@@ -92,7 +92,7 @@ export const persistence: Persistence = {
       patternKey,
       loopBars,
       rollPartItem,
-      cymbalPartItem,
+      crashPartItem,
       volumeSlopeUp,
       loopEnabled,
     } = store.state;
@@ -100,7 +100,7 @@ export const persistence: Persistence = {
       allPatternKeys.indexOf(patternKey),
       loopBars,
       ...emitPartItem(rollPartItem),
-      ...emitPartItem(cymbalPartItem),
+      ...emitPartItem(crashPartItem),
       volumeSlopeUp ? 1 : 0,
       loopEnabled ? 1 : 0,
     ]);
@@ -115,14 +115,14 @@ export const persistence: Persistence = {
     if (!allLoopBars.includes(loopBars)) return;
 
     const rollPartItem = readPartItem(bytes, 2, "roll");
-    const cymbalPartItem = readPartItem(bytes, 2 + BYTES_PER_PART, "cymbal");
-    if (!rollPartItem || !cymbalPartItem) return;
+    const crashPartItem = readPartItem(bytes, 2 + BYTES_PER_PART, "crash");
+    if (!rollPartItem || !crashPartItem) return;
 
     store.assign({
       patternKey,
       loopBars,
       rollPartItem,
-      cymbalPartItem,
+      crashPartItem,
       volumeSlopeUp: bytes[EXPECTED_LENGTH - 2] !== 0,
       loopEnabled: bytes[EXPECTED_LENGTH - 1] !== 0,
     });

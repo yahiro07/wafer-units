@@ -60,18 +60,18 @@ export function createSequencer(
 
       if (sceneState.loopEnabled || playbackState.oneShotTriggered) {
         if (stepIndex === 0) {
-          const cymbalPart = sceneState.cymbalPartItem;
-          if (cymbalPart.enabled) {
-            internal.playSample(cymbalPart, time);
+          const crashPart = sceneState.crashPartItem;
+          if (crashPart.enabled) {
+            internal.playSample(crashPart, time);
           }
           if (playbackState.oneShotTriggered) {
             emitEvent({ type: "oneShotCompleted" });
           }
         }
         if (stepIndex >= totalSteps - 16) {
-          const hatPart = sceneState.rollPartItem;
-          if (hatPart.enabled) {
-            internal.playSample(hatPart, time);
+          const rollPart = sceneState.rollPartItem;
+          if (rollPart.enabled) {
+            internal.playSample(rollPart, time);
           }
         }
       }

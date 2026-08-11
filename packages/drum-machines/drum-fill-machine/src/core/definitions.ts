@@ -19,20 +19,20 @@ export const allRollSampleKeys = [
   "hc2",
 ] as const;
 
-export const allCymbalSampleKeys = ["cc1", "cc2", "cc3"] as const;
+export const allCrashSampleKeys = ["cc1", "cc2", "cc3"] as const;
 
 export type SampleKey =
   | (typeof allRollSampleKeys)[number]
-  | (typeof allCymbalSampleKeys)[number];
+  | (typeof allCrashSampleKeys)[number];
 
 export const allSampleKeys: SampleKey[] = [
   ...allRollSampleKeys,
-  ...allCymbalSampleKeys,
+  ...allCrashSampleKeys,
 ];
 
-export type PartKey = "roll" | "cymbal";
+export type PartKey = "roll" | "crash";
 
-export const allPartKeys: PartKey[] = ["roll", "cymbal"];
+export const allPartKeys: PartKey[] = ["roll", "crash"];
 
 export type PartItem = {
   partKey: PartKey;
@@ -46,7 +46,7 @@ export type SceneEditState = {
   patternKey: PatternKey;
   loopBars: LoopBars;
   rollPartItem: PartItem;
-  cymbalPartItem: PartItem;
+  crashPartItem: PartItem;
   volumeSlopeUp: boolean;
   loopEnabled: boolean;
 };
@@ -61,8 +61,8 @@ export const defaultSceneEditState: SceneEditState = {
     volume: 0.5,
     enabled: true,
   },
-  cymbalPartItem: {
-    partKey: "cymbal",
+  crashPartItem: {
+    partKey: "crash",
     sampleKey: "cc1",
     pitchTweak: 0,
     volume: 0.5,

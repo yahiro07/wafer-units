@@ -8,10 +8,10 @@ type ParamKind = "pitch" | "volume";
 
 const automationPartToStoreKey: Record<
   AutomationPartId,
-  "rollPartItem" | "cymbalPartItem"
+  "rollPartItem" | "crashPartItem"
 > = {
   roll: "rollPartItem",
-  crash: "cymbalPartItem",
+  crash: "crashPartItem",
 };
 
 function mapPitchToUnary(value: number): number {
@@ -36,11 +36,10 @@ function getPartItem(partId: AutomationPartId): PartItem {
 }
 
 function patchPartItem(partId: AutomationPartId, attrs: Partial<PartItem>) {
-  const storeKey = automationPartToStoreKey[partId];
-  if (storeKey === "rollPartItem") {
+  if (partId === "roll") {
     store.patchRollPartItem(attrs);
   } else {
-    store.patchCymbalPartItem(attrs);
+    store.patchCrashPartItem(attrs);
   }
 }
 

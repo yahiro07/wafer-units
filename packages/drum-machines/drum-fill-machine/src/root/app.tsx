@@ -1,8 +1,5 @@
-import { createPlainSelectorOptions } from "@/utils/selector-option";
-import { Button } from "@/components/button";
-import { Knob } from "@/components/knob";
 import {
-  allCymbalSampleKeys,
+  allCrashSampleKeys,
   allRollSampleKeys,
   PartItem,
   PartKey,
@@ -12,6 +9,9 @@ import { store } from "@/root/store";
 import { Icons } from "@/common/icons";
 import { ShiftSelector } from "@/components/shift-selector";
 import { useSetupDrivers } from "@/root/drivers";
+import { createPlainSelectorOptions } from "@/utils/selector-option";
+import { Button } from "@/components/button";
+import { Knob } from "@/components/knob";
 
 const loopBarOptions = createPlainSelectorOptions([1, 2, 4, 8, 16, 32]);
 
@@ -62,16 +62,16 @@ const _TopRow = () => {
 };
 
 const PartEditRow = ({ partKey }: { partKey: PartKey }) => {
-  const { rollPartItem: hatPartItem, cymbalPartItem } = store.useSnapshot();
-  const partItem = partKey === "roll" ? hatPartItem : cymbalPartItem;
+  const { rollPartItem, crashPartItem } = store.useSnapshot();
+  const partItem = partKey === "roll" ? rollPartItem : crashPartItem;
   const patchPartAttrs = (attrs: Partial<PartItem>) => {
     const patchPartItemFn =
-      partKey === "roll" ? store.patchRollPartItem : store.patchCymbalPartItem;
+      partKey === "roll" ? store.patchRollPartItem : store.patchCrashPartItem;
     patchPartItemFn(attrs);
   };
   const shiftSample = () => {
     const allSampleKeys = (
-      partKey === "roll" ? allRollSampleKeys : allCymbalSampleKeys
+      partKey === "roll" ? allRollSampleKeys : allCrashSampleKeys
     ) as readonly SampleKey[];
     const index = allSampleKeys.indexOf(partItem.sampleKey);
     const nextIndex = (index + 1) % allSampleKeys.length;
@@ -171,7 +171,7 @@ export const App = () => {
           {/* <TopRow /> */}
           <div class="flex-v gap-2">
             <PartEditRow partKey="roll" />
-            <PartEditRow partKey="cymbal" />
+            <PartEditRow partKey="crash" />
           </div>
           <BottomRow />
         </div>
