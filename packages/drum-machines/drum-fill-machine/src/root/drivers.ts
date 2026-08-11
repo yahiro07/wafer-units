@@ -1,3 +1,4 @@
+import { automationInput } from "@/root/automation";
 import { createSequencer } from "@/root/sequencer";
 import { persistence } from "@/root/persistence";
 import { store } from "@/root/store";
@@ -34,6 +35,7 @@ function setupUnit() {
       stop: sequencer.onHostStop,
     },
     persistence,
+    automationInput,
     cleanup: sequencer.cleanup,
   });
 }
