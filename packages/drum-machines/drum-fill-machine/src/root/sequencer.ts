@@ -37,10 +37,14 @@ export function createSequencer(
   );
   const sceneState = structuredClone(defaultSceneEditState);
   const playbackState = {
-    playing: false,
+    // playing: false,
     oneShotTriggered: false,
   };
   const listeners = new Set<(ev: SequencerEvent) => void>();
+
+  const emitEvent = (ev: SequencerEvent) => {
+    listeners.forEach((listener) => listener(ev));
+  };
 
   const internal = {
     playSample(part: PartItem, time: number) {
@@ -54,11 +58,14 @@ export function createSequencer(
       const totalSteps = sceneState.loopBars * 16;
       const stepIndex = inputStepIndex % totalSteps;
 
-      if (sceneState.loopEnabled) {
+      if (sceneState.loopEnabled || playbackState.oneShotTriggered) {
         if (stepIndex === 0) {
           const cymbalPart = sceneState.cymbalPartItem;
           if (cymbalPart.enabled) {
             internal.playSample(cymbalPart, time);
+          }
+          if (playbackState.oneShotTriggered) {
+            emitEvent({ type: "oneShotCompleted" });
           }
         }
         if (stepIndex >= totalSteps - 16) {
@@ -82,13 +89,13 @@ export function createSequencer(
       return () => listeners.delete(listener);
     },
     onHostStart() {
-      playbackState.playing = true;
+      // playbackState.playing = true;
     },
     onHostStep(stepIndex, time) {
       internal.handleStep(stepIndex, time);
     },
     onHostStop() {
-      playbackState.playing = false;
+      // playbackState.playing = false;
     },
     cleanup() {
       samplePlayer.cleanup();

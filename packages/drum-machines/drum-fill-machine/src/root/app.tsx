@@ -21,29 +21,42 @@ const patterOptions = createPlainSelectorOptions([
   "pattern3",
 ]);
 
+const PatternSelectorContainer = () => {
+  const { patternKey } = store.useSnapshot();
+  return (
+    <div class="flex-ha gap-2 justify-between">
+      pattern
+      <ShiftSelector
+        options={patterOptions}
+        value={patternKey}
+        onChange={store.setPatternKey}
+        width={140}
+      />
+    </div>
+  );
+};
+
+const LoopBarsSelectorContainer = () => {
+  const { loopBars } = store.useSnapshot();
+  return (
+    <div class="flex-ha gap-2">
+      loop bars
+      <ShiftSelector
+        options={loopBarOptions}
+        value={loopBars}
+        onChange={store.setLoopBars}
+        width={100}
+      />
+    </div>
+  );
+};
+
 const TopRow = () => {
-  const { patternKey, loopBars } = store.useSnapshot();
   return (
     <div class="flex-h gap-2">
-      <div class="flex-ha gap-2 justify-between">
-        pattern
-        <ShiftSelector
-          options={patterOptions}
-          value={patternKey}
-          onChange={store.setPatternKey}
-          width={140}
-        />
-      </div>
+      <PatternSelectorContainer />
       <div class="grow" />
-      <div class="flex-ha gap-2">
-        loop bars
-        <ShiftSelector
-          options={loopBarOptions}
-          value={loopBars}
-          onChange={store.setLoopBars}
-          width={100}
-        />
-      </div>
+      <LoopBarsSelectorContainer />
     </div>
   );
 };
@@ -98,29 +111,51 @@ const PartEditRow = ({ partKey }: { partKey: PartKey }) => {
   );
 };
 
-const BottomRow = () => {
-  const { volumeSlopeUp, loopEnabled, oneShotTriggered } = store.useSnapshot();
+const VolumeSlopeUpContainer = () => {
+  const { volumeSlopeUp } = store.useSnapshot();
+
+  return (
+    <div class="flex-ha gap-2">
+      <div>volume slope up</div>
+      <Button
+        asr={1.2}
+        children="on"
+        active={volumeSlopeUp}
+        onClick={store.toggleVolumeSlopeUp}
+      />
+    </div>
+  );
+};
+
+const LoopButton = () => {
+  const { loopEnabled } = store.useSnapshot();
+  return (
+    <Button active={loopEnabled} onClick={store.toggleLoopEnabled}>
+      Loop
+    </Button>
+  );
+};
+
+const TriggerOneShotButton = () => {
+  const { oneShotTriggered } = store.useSnapshot();
   const triggerOneShot = () => {
     store.toggleOneShotTriggered();
   };
   return (
+    <Button activeBlink={oneShotTriggered} onClick={triggerOneShot}>
+      Trigger
+    </Button>
+  );
+};
+
+const BottomRow = () => {
+  return (
     <div class="flex-h justify-between">
-      <div class="flex-ha gap-2">
-        <div>volume slope up</div>
-        <Button
-          asr={1.2}
-          children="on"
-          active={volumeSlopeUp}
-          onClick={store.toggleVolumeSlopeUp}
-        />
-      </div>
+      {/* <VolumeSlopeUpContainer /> */}
+      <LoopBarsSelectorContainer />
       <div class="flex-h gap-2">
-        <Button active={loopEnabled} onClick={store.toggleLoopEnabled}>
-          Loop
-        </Button>
-        <Button activeBlink={oneShotTriggered} onClick={triggerOneShot}>
-          Trigger
-        </Button>
+        <LoopButton />
+        <TriggerOneShotButton />
       </div>
     </div>
   );
@@ -133,7 +168,7 @@ export const App = () => {
       <div class="flex-v gap-3 w-[500px] bg-gray-300 px-8 py-5">
         <h1 class="text-xl font-[600]">Drum Fill Machine</h1>
         <div class="flex-v gap-5">
-          <TopRow />
+          {/* <TopRow /> */}
           <div class="flex-v gap-2">
             <PartEditRow partKey="hat" />
             <PartEditRow partKey="cymbal" />
