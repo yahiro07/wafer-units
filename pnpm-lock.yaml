@@ -726,7 +726,7 @@ importers:
         specifier: 'catalog:'
         version: 0.1.12(preact@10.29.8)(react@19.2.8)
 
-  packages/synthesizers/pdfm:
+  packages/synthesizers/orion:
     devDependencies:
       '@preact/preset-vite':
         specifier: 'catalog:'

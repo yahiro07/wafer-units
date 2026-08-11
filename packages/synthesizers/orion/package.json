@@ -1,5 +1,5 @@
 {
-  "name": "pdfm",
+  "name": "orion",
   "private": "true",
   "scripts": {
     "dev": "vite dev",
