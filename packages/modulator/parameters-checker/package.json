@@ -1,0 +1,19 @@
+{
+  "name": "parameters-checker",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite dev",
+    "build": "vite build",
+    "watch": "vite build --watch",
+    "typecheck": "tsc"
+  },
+  "devDependencies": {
+    "@preact/preset-vite": "catalog:",
+    "@twind/core": "^1.1.3",
+    "@twind/preset-ext": "^1.0.7",
+    "@twind/preset-tailwind": "^1.1.4",
+    "preact": "catalog:",
+    "snap-store": "catalog:"
+  }
+}

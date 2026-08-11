@@ -30,7 +30,7 @@ export function setupUnit() {
       automationInput: {
         getParameterSpecs() {
           return [
-            { id: "oscWave", step: 3 },
+            { id: "oscWave", steps: 3 },
             { id: "oscDetune" },
             { id: "oscSub" },
             { id: "oscDrift" },

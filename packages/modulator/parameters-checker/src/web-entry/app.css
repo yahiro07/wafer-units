@@ -1,0 +1,11 @@
+@import url("https://cdn.jsdelivr.net/npm/remixicon@4.9.1/fonts/remixicon.min.css");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap");
+
+body {
+  font-family: "Inter", sans-serif;
+  user-select: none;
+}
+
+img {
+  -webkit-user-drag: none;
+}
