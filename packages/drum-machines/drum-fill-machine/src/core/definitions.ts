@@ -2,26 +2,18 @@ export type PatternKey = "pattern1" | "pattern2" | "pattern3";
 
 export type LoopBars = 2 | 4 | 8 | 16 | 32;
 
-export type HiHatSampleKey = "hc1" | "hc2" | "hc3" | "hc4" | "hc5";
+export const allHatSampleKeys = ["hc1", "hc2", "hc3", "hc4", "hc5"] as const;
 
-export type CymbalSampleKey = "cc1" | "cc2" | "cc3";
+export const allCymbalSampleKeys = ["cc1", "cc2", "cc3", "cc4", "cc5"] as const;
 
-export const allHatSampleKeys: HiHatSampleKey[] = [
-  "hc1",
-  "hc2",
-  "hc3",
-  "hc4",
-  "hc5",
-];
-
-export const allCymbalSampleKeys: CymbalSampleKey[] = ["cc1", "cc2", "cc3"];
+export type SampleKey =
+  | (typeof allHatSampleKeys)[number]
+  | (typeof allCymbalSampleKeys)[number];
 
 export const allSampleKeys: SampleKey[] = [
   ...allHatSampleKeys,
   ...allCymbalSampleKeys,
 ];
-
-export type SampleKey = HiHatSampleKey | CymbalSampleKey;
 
 export type PartKey = "hat" | "cymbal";
 

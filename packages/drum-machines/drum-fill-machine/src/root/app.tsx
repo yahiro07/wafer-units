@@ -59,7 +59,7 @@ const PartEditRow = ({ partKey }: { partKey: PartKey }) => {
   const shiftSample = () => {
     const allSampleKeys = (
       partKey === "hat" ? allHatSampleKeys : allCymbalSampleKeys
-    ) as SampleKey[];
+    ) as readonly SampleKey[];
     const index = allSampleKeys.indexOf(partItem.sampleKey);
     const nextIndex = (index + 1) % allSampleKeys.length;
     const nextSampleKey = allSampleKeys[nextIndex];
