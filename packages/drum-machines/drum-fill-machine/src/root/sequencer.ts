@@ -45,7 +45,7 @@ export function createSequencer(
   const internal = {
     playSample(part: PartItem, time: number) {
       samplePlayer.play(part.sampleKey, {
-        speedRate: 2 ^ part.pitchTweak,
+        speedRate: 2 ** part.pitchTweak,
         volume: part.volume * 2,
         time,
       });
