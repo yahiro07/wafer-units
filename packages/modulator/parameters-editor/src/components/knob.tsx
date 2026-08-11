@@ -40,8 +40,8 @@ const styles = {
   base: tz("relative rounded-full", {
     width: "54px",
     height: "54px",
-    background: "linear-gradient(to bottom, #fff8, #0008)",
-    padding: "4px",
+    background: "#d0d0d0",
+    padding: "5px",
     border: "solid 0.5px #4448",
   }),
   inner: tz("w-full h-full rounded-full bg-[#eee]"),

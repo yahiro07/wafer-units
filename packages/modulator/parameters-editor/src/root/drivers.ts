@@ -10,7 +10,7 @@ function setupUnit() {
   unitInterface?.completeSetup({
     unitAspects: {
       unitType: "sequencer",
-      viewSize: [800, 600],
+      viewSize: [850, 580],
     },
     unitCallbacks: {
       onConnectedTo(srcPortId) {
@@ -27,14 +27,24 @@ function setupUnit() {
             );
             store.setParameterItems(parameterItems);
           }
+          store.setConnected(true);
         }
+      },
+      onDisconnectedTo() {
+        store.setParameterItems([]);
+        store.setConnected(false);
       },
     },
   });
 }
 
 function setupSynchronization() {
-  return store.subscribe(() => {});
+  return store.subscribe(({ latestEditPayload }) => {
+    if (latestEditPayload) {
+      const { id, value } = latestEditPayload;
+      automationOutputPort?.setParameter(id, value);
+    }
+  });
 }
 
 export function useSetupDrivers() {
