@@ -45,5 +45,5 @@ export const defaultSynthParameters: SynthParameters = {
   chorus: 0,
   delay: 0,
   reverb: 0,
-  master: 0.7,
+  master: 0.5,
 };

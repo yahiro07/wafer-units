@@ -25,6 +25,9 @@ function setupUnit() {
           engine.noteOff(noteNumber, time ?? 0);
         },
       },
+      hostCallbacks: {
+        setBpm: engine.setBpm,
+      },
       automationInput,
       persistence,
       cleanup: engine.cleanup,

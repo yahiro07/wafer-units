@@ -11,6 +11,7 @@ export type EffectChain = {
   inputNode: AudioNode;
   outputNode: AudioNode;
   updateParameters(params: Partial<EffectParameters>): void;
+  setBpm(bpm: number): void;
   cleanup(): void;
 };
 
@@ -19,6 +20,10 @@ type SubEffect = {
   outputNode: AudioNode;
   setLevel(level: number): void;
   cleanup(): void;
+};
+
+type DelayEffect = SubEffect & {
+  setDelayTime(seconds: number): void;
 };
 
 function _createChorus(audioContext: AudioContext): SubEffect {
@@ -90,7 +95,7 @@ function _createChorus(audioContext: AudioContext): SubEffect {
   };
 }
 
-function createDelay(audioContext: AudioContext): SubEffect {
+function createDelay(audioContext: AudioContext): DelayEffect {
   const now = () => audioContext.currentTime;
   const setTarget = (param: AudioParam, value: number) => {
     param.setTargetAtTime(value, audioContext.currentTime, 0.01);
@@ -106,6 +111,7 @@ function createDelay(audioContext: AudioContext): SubEffect {
   inputNode.connect(delayDry);
   inputNode.connect(delayNode);
 
+  // Dotted eighth at 120 BPM as the default.
   delayNode.delayTime.setValueAtTime(0.375, now());
   delayNode.connect(delayFeedback);
   delayFeedback.connect(delayNode);
@@ -123,6 +129,9 @@ function createDelay(audioContext: AudioContext): SubEffect {
     setLevel(level: number): void {
       setTarget(delayWet.gain, level * 0.5);
       setTarget(delayFeedback.gain, level * 0.65);
+    },
+    setDelayTime(seconds: number): void {
+      setTarget(delayNode.delayTime, seconds);
     },
     cleanup() {
       delayNode.disconnect();
@@ -214,6 +223,11 @@ export function createEffectChain(audioContext: AudioContext): EffectChain {
       if (params.reverb !== undefined) {
         reverb.setLevel(params.reverb);
       }
+    },
+    setBpm(bpm: number): void {
+      const safeBpm = Math.max(bpm, 1);
+      // Dotted eighth note: 3/4 of a quarter-note beat.
+      delay.setDelayTime((60 / safeBpm) * 0.75);
     },
     cleanup() {
       chorus.cleanup();

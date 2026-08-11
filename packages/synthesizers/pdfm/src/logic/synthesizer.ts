@@ -27,6 +27,7 @@ type ISynthesizer = {
   noteOn(noteNumber: number, time?: number): void;
   noteOff(noteNumber: number, time?: number): void;
   cleanup(): void;
+  setBpm(bpm: number): void;
 };
 
 function createVoice(
@@ -294,6 +295,10 @@ export function createSynthesizerEngine(
       if (activeVoices.get(noteNumber) === voice) {
         activeVoices.delete(noteNumber);
       }
+    },
+
+    setBpm(bpm) {
+      effectChain.setBpm(bpm);
     },
 
     cleanup() {
