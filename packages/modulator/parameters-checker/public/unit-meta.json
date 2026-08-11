@@ -1,5 +1,5 @@
 {
-  "name": "parameters-editor",
+  "name": "parameters-checker",
   "unitType": "sequencer",
   "protocol": "wafer-v01",
   "integrationFormat": "iframe",

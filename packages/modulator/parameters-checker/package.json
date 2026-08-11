@@ -1,5 +1,5 @@
 {
-  "name": "parameters-editor",
+  "name": "parameters-checker",
   "private": true,
   "type": "module",
   "scripts": {

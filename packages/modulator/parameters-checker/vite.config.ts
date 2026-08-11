@@ -5,6 +5,6 @@ export default defineConfig({
   base: "./",
   plugins: [preact()],
   resolve: { tsconfigPaths: true },
-  build: { outDir: "../../../dist/parameters-editor", emptyOutDir: true },
+  build: { outDir: "../../../dist/parameters-checker", emptyOutDir: true },
   server: { port: 3000 },
 });
