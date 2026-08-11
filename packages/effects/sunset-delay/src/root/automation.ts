@@ -20,7 +20,7 @@ export const automationInput: AutomationPort = {
       { id: "mix" },
       { id: "lfoRate" },
       { id: "lfoDepth" },
-      { id: "safety" },
+      { id: "safety", steps: 2 },
     ];
   },
   getParameter(id: AutomationParameterId) {
