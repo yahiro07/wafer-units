@@ -68,7 +68,7 @@ const PartEditRow = ({ partKey }: { partKey: PartKey }) => {
   };
   return (
     <div class="flex-ha gap-3">
-      <div class="grow">{partKey}</div>
+      <div class="grow">{partKey === "hat" ? "roll" : "crash"}</div>
       <div class="flex-h">
         <div class="w-[140px] h-[40px] bg-clControlBg bd-clControlEdge flex-c">
           {partItem.sampleKey}
