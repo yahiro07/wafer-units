@@ -51,7 +51,7 @@ const LoopBarsSelectorContainer = () => {
   );
 };
 
-const TopRow = () => {
+const _TopRow = () => {
   return (
     <div class="flex-h gap-2">
       <PatternSelectorContainer />
@@ -111,7 +111,7 @@ const PartEditRow = ({ partKey }: { partKey: PartKey }) => {
   );
 };
 
-const VolumeSlopeUpContainer = () => {
+const _VolumeSlopeUpContainer = () => {
   const { volumeSlopeUp } = store.useSnapshot();
 
   return (
