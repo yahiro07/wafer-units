@@ -1,4 +1,5 @@
 import { createSequencer } from "@/root/sequencer";
+import { persistence } from "@/root/persistence";
 import { store } from "@/root/store";
 import {
   filterObjectValuesNonUndefined,
@@ -32,6 +33,7 @@ function setupUnit() {
       processStep: sequencer.onHostStep,
       stop: sequencer.onHostStop,
     },
+    persistence,
     cleanup: sequencer.cleanup,
   });
 }

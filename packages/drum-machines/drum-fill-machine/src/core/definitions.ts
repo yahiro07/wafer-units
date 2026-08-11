@@ -1,6 +1,14 @@
 export type PatternKey = "pattern1" | "pattern2" | "pattern3";
 
+export const allPatternKeys: PatternKey[] = [
+  "pattern1",
+  "pattern2",
+  "pattern3",
+];
+
 export type LoopBars = 1 | 2 | 4 | 8 | 16 | 32;
+
+export const allLoopBars: LoopBars[] = [1, 2, 4, 8, 16, 32];
 
 export const allHatSampleKeys = [
   "sd1",
@@ -23,6 +31,8 @@ export const allSampleKeys: SampleKey[] = [
 ];
 
 export type PartKey = "hat" | "cymbal";
+
+export const allPartKeys: PartKey[] = ["hat", "cymbal"];
 
 export type PartItem = {
   partKey: PartKey;
