@@ -8,7 +8,7 @@ const numWaveModes = WaveMode.NumWaveModes;
 export const automationInput: AutomationPort = {
   getParameterSpecs() {
     return [
-      { id: "waveMode", step: numWaveModes },
+      { id: "waveMode", steps: numWaveModes },
       { id: "shape" },
       { id: "envMod" },
       { id: "detune" },

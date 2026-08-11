@@ -34,7 +34,7 @@ export const MainApp = () => {
       automationInput: {
         getParameterSpecs() {
           return [
-            { id: "oscWave", step: 2 },
+            { id: "oscWave", steps: 2 },
             { id: "oscDetune" },
             { id: "oscSub" },
             { id: "oscDrift" },
