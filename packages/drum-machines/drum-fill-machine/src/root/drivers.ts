@@ -1,4 +1,6 @@
+import { automationInput } from "@/root/automation";
 import { createSequencer } from "@/root/sequencer";
+import { persistence } from "@/root/persistence";
 import { store } from "@/root/store";
 import {
   filterObjectValuesNonUndefined,
@@ -14,8 +16,8 @@ sequencer.setSceneEditStateAttrs(
   pickObjectMembers(store.state, {
     patternKey: 1,
     loopBars: 1,
-    hatPartItem: 1,
-    cymbalPartItem: 1,
+    rollPartItem: 1,
+    crashPartItem: 1,
     volumeSlopeUp: 1,
     loopEnabled: 1,
   }),
@@ -32,6 +34,8 @@ function setupUnit() {
       processStep: sequencer.onHostStep,
       stop: sequencer.onHostStop,
     },
+    persistence,
+    automationInput,
     cleanup: sequencer.cleanup,
   });
 }
@@ -41,8 +45,8 @@ function useSetupSynchronization() {
     const {
       patternKey,
       loopBars,
-      hatPartItem,
-      cymbalPartItem,
+      rollPartItem,
+      crashPartItem,
       volumeSlopeUp,
       loopEnabled,
       oneShotTriggered,
@@ -50,8 +54,8 @@ function useSetupSynchronization() {
     const editStateAttrs = filterObjectValuesNonUndefined({
       patternKey,
       loopBars,
-      hatPartItem,
-      cymbalPartItem,
+      rollPartItem,
+      crashPartItem,
       volumeSlopeUp,
       loopEnabled,
     });

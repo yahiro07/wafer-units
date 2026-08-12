@@ -1,9 +1,6 @@
-import { createPlainSelectorOptions } from "@/utils/selector-option";
-import { Button } from "@/components/button";
-import { Knob } from "@/components/knob";
 import {
-  allCymbalSampleKeys,
-  allHatSampleKeys,
+  allCrashSampleKeys,
+  allRollSampleKeys,
   PartItem,
   PartKey,
   SampleKey,
@@ -12,6 +9,9 @@ import { store } from "@/root/store";
 import { Icons } from "@/common/icons";
 import { ShiftSelector } from "@/components/shift-selector";
 import { useSetupDrivers } from "@/root/drivers";
+import { createPlainSelectorOptions } from "@/utils/selector-option";
+import { Button } from "@/components/button";
+import { Knob } from "@/components/knob";
 
 const loopBarOptions = createPlainSelectorOptions([1, 2, 4, 8, 16, 32]);
 
@@ -51,7 +51,7 @@ const LoopBarsSelectorContainer = () => {
   );
 };
 
-const TopRow = () => {
+const _TopRow = () => {
   return (
     <div class="flex-h gap-2">
       <PatternSelectorContainer />
@@ -62,16 +62,16 @@ const TopRow = () => {
 };
 
 const PartEditRow = ({ partKey }: { partKey: PartKey }) => {
-  const { hatPartItem, cymbalPartItem } = store.useSnapshot();
-  const partItem = partKey === "hat" ? hatPartItem : cymbalPartItem;
+  const { rollPartItem, crashPartItem } = store.useSnapshot();
+  const partItem = partKey === "roll" ? rollPartItem : crashPartItem;
   const patchPartAttrs = (attrs: Partial<PartItem>) => {
     const patchPartItemFn =
-      partKey === "hat" ? store.patchHatPartItem : store.patchCymbalPartItem;
+      partKey === "roll" ? store.patchRollPartItem : store.patchCrashPartItem;
     patchPartItemFn(attrs);
   };
   const shiftSample = () => {
     const allSampleKeys = (
-      partKey === "hat" ? allHatSampleKeys : allCymbalSampleKeys
+      partKey === "roll" ? allRollSampleKeys : allCrashSampleKeys
     ) as readonly SampleKey[];
     const index = allSampleKeys.indexOf(partItem.sampleKey);
     const nextIndex = (index + 1) % allSampleKeys.length;
@@ -81,7 +81,7 @@ const PartEditRow = ({ partKey }: { partKey: PartKey }) => {
   };
   return (
     <div class="flex-ha gap-3">
-      <div class="grow">{partKey === "hat" ? "roll" : "crash"}</div>
+      <div class="grow">{partKey}</div>
       <div class="flex-h">
         <div class="w-[140px] h-[40px] bg-clControlBg bd-clControlEdge flex-c">
           {partItem.sampleKey}
@@ -111,7 +111,7 @@ const PartEditRow = ({ partKey }: { partKey: PartKey }) => {
   );
 };
 
-const VolumeSlopeUpContainer = () => {
+const _VolumeSlopeUpContainer = () => {
   const { volumeSlopeUp } = store.useSnapshot();
 
   return (
@@ -170,8 +170,8 @@ export const App = () => {
         <div class="flex-v gap-5">
           {/* <TopRow /> */}
           <div class="flex-v gap-2">
-            <PartEditRow partKey="hat" />
-            <PartEditRow partKey="cymbal" />
+            <PartEditRow partKey="roll" />
+            <PartEditRow partKey="crash" />
           </div>
           <BottomRow />
         </div>

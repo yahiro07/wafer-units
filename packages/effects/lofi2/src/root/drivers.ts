@@ -1,4 +1,5 @@
 import { queryUnitInterface } from "wafer-host/unit-types";
+import { automationInput } from "@/editor/automation";
 import { persistence } from "@/editor/persistence";
 import { store } from "@/editor/store";
 import { createEngine } from "./engine";
@@ -28,5 +29,6 @@ export function setupUnit() {
       viewSize: [320, 180],
     },
     persistence,
+    automationInput,
   });
 }
