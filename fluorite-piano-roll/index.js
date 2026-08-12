@@ -2877,15 +2877,20 @@ var Wi = () => /* @__PURE__ */ J(vi, {
 //#endregion
 //#region src/root/app.tsx
 Jr();
-var $i = () => (qe(Yr, []), /* @__PURE__ */ J(Qi, {})), ea = he((e) => (pe(/* @__PURE__ */ J("div", {
-	sx: P.bg(Z.panelBody).flexC(),
-	children: /* @__PURE__ */ J($i, {})
-}), e), () => {
-	pe(null, e);
-}), {
-	cssTexts: ["@import \"https://cdn.jsdelivr.net/npm/remixicon@4.9.1/fonts/remixicon.min.css\";*{box-sizing:border-box;margin:0;padding:0}body{-webkit-user-select:none;user-select:none;font-family:Inter,sans-serif}img{-webkit-user-drag:none}.font-monospace{font-family:Roboto Mono,monospace}"],
-	stylesheetUrls: ["https://fonts.googleapis.com/css2?family=Inter:wght@400..700&display=swap", "https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap"],
+var $i = () => (qe(Yr, []), /* @__PURE__ */ J(Qi, {})), ea = "*{box-sizing:border-box;margin:0;padding:0}body{-webkit-user-select:none;user-select:none;font-family:Inter,sans-serif}img{-webkit-user-drag:none}.font-monospace{font-family:Roboto Mono,monospace}", ta = ["https://fonts.googleapis.com/css2?family=Inter:wght@400..700&display=swap", "https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap"], na = "https://cdn.jsdelivr.net/npm/remixicon@4.9.1/fonts/remixicon.min.css";
+ta.push(na);
+var ra = he((e) => {
+	let t = document.createElement("link");
+	return t.rel = "stylesheet", t.href = na, e.appendChild(t), pe(/* @__PURE__ */ J("div", {
+		sx: P.bg(Z.panelBody).flexC(),
+		children: /* @__PURE__ */ J($i, {})
+	}), e), () => {
+		pe(null, e);
+	};
+}, {
+	cssTexts: [ea],
+	stylesheetUrls: ta,
 	adoptedStyleSheets: [Me.sheet]
 });
 //#endregion
-export { ea as default };
+export { ra as default };

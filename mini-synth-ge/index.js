@@ -1565,7 +1565,7 @@ var Ht = /*#__PURE__*/ M("<div class=flex-c><div class=\"bg-gray-100 border bord
 				return [
 					{
 						id: "oscWave",
-						step: 2
+						steps: 2
 					},
 					{ id: "oscDetune" },
 					{ id: "oscSub" },

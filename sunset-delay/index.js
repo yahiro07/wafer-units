@@ -1938,7 +1938,10 @@ var Y = Lr({ parameters: at }), Rr = {
 			{ id: "mix" },
 			{ id: "lfoRate" },
 			{ id: "lfoDepth" },
-			{ id: "safety" }
+			{
+				id: "safety",
+				steps: 2
+			}
 		];
 	},
 	getParameter(e) {
