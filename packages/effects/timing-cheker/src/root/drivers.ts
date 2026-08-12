@@ -103,6 +103,6 @@ function setupSynchronization() {
 }
 
 export function useSetupDrivers() {
-  useEffect(setupUnit, []);
   useLayoutEffect(setupSynchronization, []);
+  useEffect(setupUnit, []);
 }
