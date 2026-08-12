@@ -1,6 +1,8 @@
 import { createInterpolator } from "@/audio/interpolator";
+import { phaseTweakers } from "@/audio/phase-tweakers";
+import { power2 } from "@/audio/synth-math-utils";
 import { WaveMode } from "@/constants";
-import { clampValue, linearInterpolate, lowClip, power2 } from "@/utils/nums";
+import { clampValue, linearInterpolate, lowClip } from "@/utils/helpers";
 
 // PD (Phase Distortion) calculation
 function computePD(phase: number, amount: number): number {
@@ -31,14 +33,98 @@ function computePDReso(phase: number, amount: number): number {
   return Math.sin(phase * resoMultiplier * 2.0 * Math.PI) * window;
 }
 
+type OscFn = (
+  shape: number,
+  egValue: number,
+  envMod: number,
+  phase: number,
+) => number;
+
+function processOscPD(
+  shape: number,
+  egValue: number,
+  envMod: number,
+  phase: number,
+) {
+  // Let envelope modulation overshoot at attack, then settle back during decay.
+  let currentIndex = shape + egValue * envMod;
+  currentIndex = clampValue(currentIndex, 0, 1); // Safety clamp.
+  // CZ-style phase distortion that bends toward a saw waveform.
+  return computePD(phase, currentIndex);
+}
+
+function processOscFM(
+  shape: number,
+  egValue: number,
+  envMod: number,
+  phase: number,
+) {
+  const currentIndex = shape + egValue * power2(envMod);
+  const modDepth = currentIndex * 5.0;
+  const ratio = 1.0 + Math.floor(shape * 7.0); // Ratio: 1x to 8x.
+  return Math.sin(
+    2.0 * Math.PI * phase + Math.sin(2.0 * Math.PI * phase * ratio) * modDepth,
+  );
+}
+
+type PtmBaseWaveKind = "saw" | "sine" | "rect";
+type PtmKind = keyof typeof phaseTweakers;
+
+function getPtmWave(
+  pp: number,
+  ptmKind: PtmKind,
+  ptmLevel: number,
+  baseWaveKind: PtmBaseWaveKind,
+) {
+  let [phase] = phaseTweakers[ptmKind](pp, ptmLevel);
+  phase -= Math.floor(phase);
+  if (baseWaveKind === "saw") {
+    return 1 - phase * 2;
+  } else if (baseWaveKind === "rect") {
+    return phase < 0.5 ? 1 : -1;
+  } else {
+    return -Math.cos(phase * Math.PI * 2);
+  }
+}
+
+const ptmKindMap = {
+  [WaveMode.PTM2]: ["sfm", "sine"],
+  [WaveMode.PTM3]: ["sdm", "sine"],
+  [WaveMode.PTM4]: ["pw", "rect"],
+  [WaveMode.PTM5]: ["accel", "saw"],
+  [WaveMode.PTM6]: ["screw", "saw"],
+  [WaveMode.PTM7]: ["drill", "rect"],
+  [WaveMode.PTM8]: ["squash", "saw"],
+  [WaveMode.PTM9]: ["creep", "sine"],
+  [WaveMode.PTM10]: ["creep2", "saw"],
+  [WaveMode.PTM11]: ["sub-pw", "rect"],
+} satisfies { [key in WaveMode]?: [PtmKind, PtmBaseWaveKind] };
+
+let kindTextOut = "";
+function bindOscFunctionForExWaves(waveMode: WaveMode): OscFn {
+  const [ptmKind, baseWaveKind] =
+    ptmKindMap[waveMode as keyof typeof ptmKindMap] ??
+    ptmKindMap[WaveMode.PTM2];
+
+  if (0) {
+    const kindsText = `${waveMode}-${ptmKind}-${baseWaveKind}`;
+    if (kindTextOut !== kindsText) {
+      kindTextOut = kindsText;
+      console.log(kindsText);
+    }
+  }
+
+  return (shape, egLevel, envMod, phase) => {
+    const ptmLevel = clampValue(shape + egLevel * envMod, 0, 1);
+    return getPtmWave(phase, ptmKind, ptmLevel, baseWaveKind);
+  };
+}
+
 function createSynthesizerCore() {
   // Oscillator phase state for two main oscillators plus the sub oscillator.
   let phase1 = 0.0;
   let phase2 = 0.0;
   let phaseSub = 0.0;
-
-  // One-sample buffer for FM feedback.
-  let fbStorage = 0.0;
 
   // Irregular LFO phase state for pitch drift.
   let driftPhase1 = 0.0;
@@ -54,13 +140,30 @@ function createSynthesizerCore() {
   let releaseStartValue = 0.0;
   let egTime = 0.0; // Elapsed seconds since note-on or note-off.
   let hasStarted = false;
+  let previousGate = 0.0;
 
   const interpolators = {
     shape: createInterpolator(),
     envMod: createInterpolator(),
   };
 
+  function resetVoiceState() {
+    phase1 = 0.0;
+    phase2 = 0.0;
+    phaseSub = 0.0;
+    driftPhase1 = 0.0;
+    driftPhase2 = 0.0;
+    sampleCount = 0;
+    heldSample = 0.0;
+    egValue = 0.0;
+    isReleased = false;
+    releaseStartValue = 0.0;
+    egTime = 0.0;
+    hasStarted = false;
+  }
+
   return {
+    reset: resetVoiceState,
     process(
       _inputs: Float32Array[][],
       outputs: Float32Array[][],
@@ -88,6 +191,15 @@ function createSynthesizerCore() {
       interpolators.shape.feed(_shape, bufferSize);
       interpolators.envMod.feed(_envMod, bufferSize);
 
+      let oscFn: OscFn;
+      if (waveMode === WaveMode.PD) {
+        oscFn = processOscPD;
+      } else if (waveMode === WaveMode.FM) {
+        oscFn = processOscFM;
+      } else {
+        oscFn = bindOscFunctionForExWaves(waveMode);
+      }
+
       // Process the current audio block.
       for (let i = 0; i < bufferSize; i++) {
         const shape = interpolators.shape.advance();
@@ -95,7 +207,14 @@ function createSynthesizerCore() {
         // -------------------------------------------------------------
         // 1. Envelope update
         // -------------------------------------------------------------
-        if (gate > 0.5) {
+        const gateOn = gate > 0.5;
+        if (gateOn && previousGate <= 0.5) {
+          // Rising gate edge: hard-reset voice state for pooled reuse / steal.
+          resetVoiceState();
+        }
+        previousGate = gateOn ? 1.0 : 0.0;
+
+        if (gateOn) {
           hasStarted = true;
           if (isReleased) {
             // Reset when a note is triggered again.
@@ -169,65 +288,9 @@ function createSynthesizerCore() {
         // -------------------------------------------------------------
         // 5. Waveform generation for each algorithm
         // -------------------------------------------------------------
-        let osc1Out = 0.0;
-        let osc2Out = 0.0;
 
-        switch (waveMode) {
-          case WaveMode.PD: {
-            // Let envelope modulation overshoot at attack, then settle back during decay.
-            let currentIndex = shape + egValue * envMod;
-            currentIndex = clampValue(currentIndex, 0, 1); // Safety clamp.
-            // CZ-style phase distortion that bends toward a saw waveform.
-            osc1Out = computePD(phase1, currentIndex);
-            if (isDualOsc) osc2Out = computePD(phase2, currentIndex);
-            break;
-          }
-          case WaveMode.FM: {
-            const currentIndex = shape + egValue * power2(envMod);
-            const modDepth = currentIndex * 5.0;
-            const ratio = 1.0 + Math.floor(shape * 7.0); // Ratio: 1x to 8x.
-
-            osc1Out = Math.sin(
-              2.0 * Math.PI * phase1 +
-                Math.sin(2.0 * Math.PI * phase1 * ratio) * modDepth,
-            );
-            if (isDualOsc) {
-              osc2Out = Math.sin(
-                2.0 * Math.PI * phase2 +
-                  Math.sin(2.0 * Math.PI * phase2 * ratio) * modDepth,
-              );
-            }
-            break;
-          }
-          case WaveMode.FM_FB: {
-            // Let envelope modulation overshoot at attack, then settle back during decay.
-            let currentIndex = shape + egValue * envMod;
-            currentIndex = clampValue(currentIndex, 0, 1); // Safety clamp.
-
-            // FM with feedback.
-            const fbAmount = currentIndex * 2.5; // Feedback amount.
-            const modulator = Math.sin(
-              2.0 * Math.PI * phase1 + fbStorage * fbAmount,
-            );
-            fbStorage = modulator; // Store one sample of feedback.
-
-            osc1Out = Math.sin(2.0 * Math.PI * phase1 + modulator * 2.0);
-            if (isDualOsc) {
-              osc2Out = Math.sin(2.0 * Math.PI * phase2 + modulator * 2.0); // OSC2 shares the same modulator.
-            }
-            break;
-          }
-          case WaveMode.PD_RESO: {
-            // Let envelope modulation overshoot at attack, then settle back during decay.
-            let currentIndex = shape + egValue * envMod;
-            currentIndex = clampValue(currentIndex, 0, 1); // Safety clamp.
-
-            // CZ-style pseudo-resonance filter.
-            osc1Out = computePDReso(phase1, currentIndex);
-            if (isDualOsc) osc2Out = computePDReso(phase2, currentIndex);
-            break;
-          }
-        }
+        const osc1Out = oscFn(shape, egValue, envMod, phase1);
+        const osc2Out = isDualOsc ? oscFn(shape, egValue, envMod, phase2) : 0.0;
 
         // Mix the main oscillators.
         let mainMix = isDualOsc ? (osc1Out + osc2Out) * 0.5 : osc1Out;
@@ -272,11 +335,7 @@ function createSynthesizerCore() {
         }
       }
 
-      // Stop processing once the envelope is fully faded after note-off.
-      if (hasStarted && isReleased && egValue < 0.0001) {
-        return false; // The voice node will be released automatically.
-      }
-
+      // Keep the processor alive so pooled voices can be reused.
       return true;
     },
   };
@@ -292,7 +351,12 @@ class SynthProcessor extends AudioWorkletProcessor {
         maxValue: 22000.0,
       },
       { name: "gate", defaultValue: 0.0, minValue: 0.0, maxValue: 1.0 }, // 1.0 = note on, 0.0 = note off
-      { name: "waveMode", defaultValue: 0, minValue: 0, maxValue: 3 },
+      {
+        name: "waveMode",
+        defaultValue: 0,
+        minValue: 0,
+        maxValue: WaveMode.NumWaveModes - 1,
+      },
       { name: "shape", defaultValue: 0.0, minValue: 0.0, maxValue: 1.0 },
       { name: "envMod", defaultValue: 0.0, minValue: 0.0, maxValue: 1.0 },
       { name: "detune", defaultValue: 0.0, minValue: 0.0, maxValue: 1.0 },
@@ -310,7 +374,9 @@ class SynthProcessor extends AudioWorkletProcessor {
     super();
 
     this.port.onmessage = (event: MessageEvent) => {
-      if (event.data?.type === "stop") {
+      if (event.data?.type === "reset") {
+        this.synthesizerCore.reset();
+      } else if (event.data?.type === "stop") {
         this.shouldStop = true;
       }
     };
@@ -328,11 +394,7 @@ class SynthProcessor extends AudioWorkletProcessor {
       return false;
     }
 
-    return this.synthesizerCore.process(
-      _inputs,
-      outputs,
-      parameters,
-    );
+    return this.synthesizerCore.process(_inputs, outputs, parameters);
   }
 }
 

@@ -1,3 +1,7 @@
+export function seqNumbers(length: number) {
+  return Array.from({ length }, (_, i) => i);
+}
+
 export function clampValue(value: number, lo: number, hi: number) {
   if (value < lo) return lo;
   if (value > hi) return hi;
@@ -28,8 +32,4 @@ export function linearInterpolate(
     return clampValue(v, lo, hi);
   }
   return v;
-}
-
-export function power2(value: number) {
-  return value * value;
 }

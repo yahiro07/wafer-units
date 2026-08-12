@@ -1,24 +1,24 @@
 export type PartKey =
   | "BD"
   | "SN"
-  | "CL"
   | "HO"
   | "HC"
+  | "CL"
   | "RD"
-  | "PR"
+  | "BS"
   | "ST"
-  | "BS";
+  | "PR";
 
 export const allPartKeys: PartKey[] = [
   "BD",
   "SN",
-  "CL",
   "HO",
   "HC",
+  "CL",
   "RD",
-  "PR",
-  "ST",
   "BS",
+  "ST",
+  "PR",
 ];
 
 export type PartStyle =

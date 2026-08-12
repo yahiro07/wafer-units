@@ -1,4 +1,4 @@
-import { useLayoutEffect } from "preact/hooks";
+import { useEffect, useLayoutEffect } from "preact/hooks";
 import { queryUnitInterface } from "wafer-host/unit-types";
 import { createSchedulingPlotter } from "@/root/scheduling-plotter";
 import { store } from "@/root/store";
@@ -103,6 +103,6 @@ function setupSynchronization() {
 }
 
 export function useSetupDrivers() {
-  useLayoutEffect(setupUnit, []);
   useLayoutEffect(setupSynchronization, []);
+  useEffect(setupUnit, []);
 }

@@ -10,8 +10,20 @@ const webFontUrls = [
   "https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap",
 ];
 
+const iconsUrl =
+  "https://cdn.jsdelivr.net/npm/remixicon@4.9.1/fonts/remixicon.min.css";
+
+//a workaround for the issue that the icons are not shown in web components
+//insert icons css into both parent's document head and shadow root
+webFontUrls.push(iconsUrl);
+
 export default createCustomElementClass(
   (shadowRoot) => {
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = iconsUrl;
+    shadowRoot.appendChild(link);
+
     render(
       <div sx={qu.bg(colors.panelBody).flexC()}>
         <App />
