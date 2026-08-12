@@ -1,4 +1,4 @@
-import { createStore } from "snap-store";
+import { createStore } from "snap-store/preact";
 
 export const store = createStore<{
   barLength: number;

@@ -7,7 +7,7 @@ import { LayeredLayout } from "@/components/layered-layout";
 import { useSetupDrivers } from "@/root/drivers";
 import { store } from "@/root/store";
 import { createSelectorOptions } from "@/utils/selector-option";
-import { flexC, flexH, flexV, npx } from "@/utils/utility-styles";
+import { flexC, flexH, flexHA, flexV, npx } from "@/utils/utility-styles";
 
 const barLengthOptions = createSelectorOptions([
   [0.0625, "1/16"],
@@ -112,19 +112,53 @@ const ChannelLaneContainer = ({
   );
 };
 
+const TimeSpanGauge = () => {
+  const { barLength, hostBpm } = store.useSnapshot();
+  const unitLength = barLength / 4;
+  const unitLengthText = unitLength >= 1 ? unitLength : `1/${1 / unitLength}`;
+  const unitMs = unitLength * (240 / hostBpm) * 1000;
+  const unitMsText = Number(unitMs.toFixed(3));
+
+  return (
+    <div class={cssTimeSpanGauge}>
+      <div>
+        <span>←</span>
+        <span>
+          {unitLengthText}bar, {unitMsText}ms
+        </span>
+        <span>→</span>
+      </div>
+    </div>
+  );
+};
+const cssTimeSpanGauge = css({
+  paddingLeft: "104px",
+  "> div": {
+    width: "201px",
+    height: "28px",
+    border: "solid 1px #aaa",
+    ...flexC(),
+    justifyContent: "space-between",
+  },
+});
+
 export const App = () => {
   useSetupDrivers();
   return (
-    <div class={css(flexV(1))}>
-      <div class={css(flexH(4), { justifyContent: "flex-end" })}>
-        <HostBpmContainer />
-        <div class={css(flexH(1))}>
-          <div>bars</div>
-          <GeneralSelector
-            options={barLengthOptions}
-            value={1}
-            onChange={store.setBarLength}
-          />
+    <div class={css(flexV(2))}>
+      <div class={css(flexHA(4), { justifyContent: "space-between" })}>
+        <TimeSpanGauge />
+        <div class={css(flexHA(4))}>
+          <HostBpmContainer />
+          <div class={css(flexHA(1))}>
+            <div>bars</div>
+            <GeneralSelector
+              className={css({ height: "28px" })}
+              options={barLengthOptions}
+              value={1}
+              onChange={store.setBarLength}
+            />
+          </div>
         </div>
       </div>
       <SchedulerLaneContainer />
