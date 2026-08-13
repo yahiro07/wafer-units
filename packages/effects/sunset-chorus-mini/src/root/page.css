@@ -9,6 +9,13 @@
   }
 }
 
+html,
+body {
+  overflow: hidden;
+  overscroll-behavior: none;
+  touch-action: none;
+}
+
 body {
   font-family: "Inter", sans-serif;
   user-select: none;
