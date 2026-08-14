@@ -7,10 +7,12 @@ import { store } from "@/root/store";
 const unitInterface = queryUnitInterface("wafer-v01");
 
 const engine = createEngine(unitInterface);
-engine.setState(store.state);
 
 export function setupSynchronization() {
-  engine.setup();
+  {
+    const { octave, duty, stepBits } = store.state;
+    engine.setState({ octave, duty, stepBits });
+  }
   const unsubscribeStore = store.subscribe(({ octave, duty, stepBits }) => {
     if (octave !== undefined) {
       engine.setState({ octave });
@@ -23,7 +25,6 @@ export function setupSynchronization() {
     }
   });
   return () => {
-    engine.teardown();
     unsubscribeStore();
   };
 }
