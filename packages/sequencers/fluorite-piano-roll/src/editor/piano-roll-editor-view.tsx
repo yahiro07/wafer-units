@@ -314,8 +314,7 @@ const NoteLayerStrip = ({
     <div
       sx={[
         qu.relative().wh(editorW, editorH),
-        // qu.bd("blue"),
-        qu.overflow("hidden"),
+        qu.overflow("hidden").css({ touchAction: "none" }),
       ]}
     >
       <NotesDisplayLayer notes={notes} sectionRange={sectionRange} />
