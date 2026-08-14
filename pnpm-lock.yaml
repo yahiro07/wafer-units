@@ -22,8 +22,8 @@ catalogs:
       specifier: npm:@yahiro07/qulex@^0.1.7
       version: 0.1.7
     snap-store:
-      specifier: ^0.1.13
-      version: 0.1.13
+      specifier: ^0.1.14
+      version: 0.1.14
 
 importers:
 
@@ -70,7 +70,7 @@ importers:
         version: 10.29.8
       snap-store:
         specifier: 'catalog:'
-        version: 0.1.13(preact@10.29.8)(react@19.2.8)
+        version: 0.1.14(preact@10.29.8)(react@19.2.8)
 
   packages/drum-machines/graphite-drum-machine:
     devDependencies:
@@ -109,7 +109,7 @@ importers:
         version: '@yahiro07/qulex@0.1.7'
       snap-store:
         specifier: 'catalog:'
-        version: 0.1.13(preact@10.29.8)(react@19.2.8)
+        version: 0.1.14(preact@10.29.8)(react@19.2.8)
 
   packages/effects/channel-strip:
     dependencies:
@@ -124,7 +124,7 @@ importers:
         version: '@yahiro07/qulex@0.1.7'
       snap-store:
         specifier: 'catalog:'
-        version: 0.1.13(preact@10.29.8)(react@19.2.8)
+        version: 0.1.14(preact@10.29.8)(react@19.2.8)
 
   packages/effects/crusher:
     devDependencies:
@@ -145,7 +145,7 @@ importers:
         version: 10.29.8
       snap-store:
         specifier: 'catalog:'
-        version: 0.1.13(preact@10.29.8)(react@19.2.8)
+        version: 0.1.14(preact@10.29.8)(react@19.2.8)
       tailwindcss:
         specifier: ^4.3.3
         version: 4.3.3
@@ -169,7 +169,7 @@ importers:
         version: 10.29.8
       snap-store:
         specifier: 'catalog:'
-        version: 0.1.13(preact@10.29.8)(react@19.2.8)
+        version: 0.1.14(preact@10.29.8)(react@19.2.8)
       tailwindcss:
         specifier: ^4.3.3
         version: 4.3.3
@@ -193,7 +193,7 @@ importers:
         version: 10.29.8
       snap-store:
         specifier: 'catalog:'
-        version: 0.1.13(preact@10.29.8)(react@19.2.8)
+        version: 0.1.14(preact@10.29.8)(react@19.2.8)
       tailwindcss:
         specifier: ^4.3.3
         version: 4.3.3
@@ -214,7 +214,7 @@ importers:
         version: 10.29.8
       snap-store:
         specifier: 'catalog:'
-        version: 0.1.13(preact@10.29.8)(react@19.2.8)
+        version: 0.1.14(preact@10.29.8)(react@19.2.8)
       tailwindcss:
         specifier: ^4.3.3
         version: 4.3.3
@@ -232,7 +232,7 @@ importers:
         version: '@yahiro07/qulex@0.1.7'
       snap-store:
         specifier: 'catalog:'
-        version: 0.1.13(preact@10.29.8)(react@19.2.8)
+        version: 0.1.14(preact@10.29.8)(react@19.2.8)
 
   packages/effects/timing-cheker:
     dependencies:
@@ -247,7 +247,7 @@ importers:
         version: 10.29.8
       snap-store:
         specifier: 'catalog:'
-        version: 0.1.13(preact@10.29.8)(react@19.2.8)
+        version: 0.1.14(preact@10.29.8)(react@19.2.8)
 
   packages/modulator/multi-lfo:
     devDependencies:
@@ -262,7 +262,7 @@ importers:
         version: '@yahiro07/qulex@0.1.7'
       snap-store:
         specifier: 'catalog:'
-        version: 0.1.13(preact@10.29.8)(react@19.2.8)
+        version: 0.1.14(preact@10.29.8)(react@19.2.8)
 
   packages/modulator/parameters-checker:
     devDependencies:
@@ -283,7 +283,7 @@ importers:
         version: 10.29.8
       snap-store:
         specifier: 'catalog:'
-        version: 0.1.13(preact@10.29.8)(react@19.2.8)
+        version: 0.1.14(preact@10.29.8)(react@19.2.8)
 
   packages/modulator/step-automator:
     devDependencies:
@@ -298,7 +298,7 @@ importers:
         version: '@yahiro07/qulex@0.1.7'
       snap-store:
         specifier: 'catalog:'
-        version: 0.1.13(preact@10.29.8)(react@19.2.8)
+        version: 0.1.14(preact@10.29.8)(react@19.2.8)
 
   packages/sequencers/bseq1:
     dependencies:
@@ -334,7 +334,7 @@ importers:
         version: '@yahiro07/qulex@0.1.7'
       snap-store:
         specifier: 'catalog:'
-        version: 0.1.13(preact@10.29.8)(react@19.2.8)
+        version: 0.1.14(preact@10.29.8)(react@19.2.8)
 
   packages/sequencers/chord-caster:
     devDependencies:
@@ -373,7 +373,7 @@ importers:
         version: 10.29.8
       snap-store:
         specifier: 'catalog:'
-        version: 0.1.13(preact@10.29.8)(react@19.2.8)
+        version: 0.1.14(preact@10.29.8)(react@19.2.8)
 
   packages/sequencers/fluorite-piano-roll:
     dependencies:
@@ -388,7 +388,7 @@ importers:
         version: '@yahiro07/qulex@0.1.7'
       snap-store:
         specifier: 'catalog:'
-        version: 0.1.13(preact@10.29.8)(react@19.2.8)
+        version: 0.1.14(preact@10.29.8)(react@19.2.8)
 
   packages/sequencers/lseq1:
     devDependencies:
@@ -520,7 +520,7 @@ importers:
         version: '@yahiro07/qulex@0.1.7'
       snap-store:
         specifier: 'catalog:'
-        version: 0.1.13(preact@10.29.8)(react@19.2.8)
+        version: 0.1.14(preact@10.29.8)(react@19.2.8)
 
   packages/sequencers/rtfr:
     devDependencies:
@@ -607,7 +607,7 @@ importers:
         version: '@yahiro07/qulex@0.1.7'
       snap-store:
         specifier: 'catalog:'
-        version: 0.1.13(preact@10.29.8)(react@19.2.8)
+        version: 0.1.14(preact@10.29.8)(react@19.2.8)
 
   packages/sequencers/tone-wheel:
     devDependencies:
@@ -622,7 +622,7 @@ importers:
         version: 10.29.8
       snap-store:
         specifier: 'catalog:'
-        version: 0.1.13(preact@10.29.8)(react@19.2.8)
+        version: 0.1.14(preact@10.29.8)(react@19.2.8)
       tailwindcss:
         specifier: ^4.3.3
         version: 4.3.3
@@ -640,7 +640,7 @@ importers:
         version: '@yahiro07/qulex@0.1.7'
       snap-store:
         specifier: 'catalog:'
-        version: 0.1.13(preact@10.29.8)(react@19.2.8)
+        version: 0.1.14(preact@10.29.8)(react@19.2.8)
 
   packages/synthesizers/bs03:
     dependencies:
@@ -655,7 +655,7 @@ importers:
         version: '@yahiro07/qulex@0.1.7'
       snap-store:
         specifier: 'catalog:'
-        version: 0.1.13(preact@10.29.8)(react@19.2.8)
+        version: 0.1.14(preact@10.29.8)(react@19.2.8)
 
   packages/synthesizers/mini-synth:
     dependencies:
@@ -694,7 +694,7 @@ importers:
         version: 10.29.8
       snap-store:
         specifier: 'catalog:'
-        version: 0.1.13(preact@10.29.8)(react@19.2.8)
+        version: 0.1.14(preact@10.29.8)(react@19.2.8)
 
   packages/synthesizers/mini-synth-ge:
     dependencies:
@@ -748,7 +748,7 @@ importers:
         version: '@yahiro07/qulex@0.1.7'
       snap-store:
         specifier: 'catalog:'
-        version: 0.1.13(preact@10.29.8)(react@19.2.8)
+        version: 0.1.14(preact@10.29.8)(react@19.2.8)
 
   packages/synthesizers/mpd1:
     dependencies:
@@ -766,7 +766,7 @@ importers:
         version: '@yahiro07/qulex@0.1.7'
       snap-store:
         specifier: 'catalog:'
-        version: 0.1.13(preact@10.29.8)(react@19.2.8)
+        version: 0.1.14(preact@10.29.8)(react@19.2.8)
 
   packages/synthesizers/orion:
     devDependencies:
@@ -790,7 +790,7 @@ importers:
         version: 10.29.8
       snap-store:
         specifier: 'catalog:'
-        version: 0.1.13(preact@10.29.8)(react@19.2.8)
+        version: 0.1.14(preact@10.29.8)(react@19.2.8)
 
   packages/synthesizers/proto-engine-pd-fm:
     dependencies:
@@ -847,7 +847,7 @@ importers:
         version: '@yahiro07/qulex@0.1.7'
       snap-store:
         specifier: 'catalog:'
-        version: 0.1.13(preact@10.29.8)(react@19.2.8)
+        version: 0.1.14(preact@10.29.8)(react@19.2.8)
 
   packages/synthesizers/wavicle:
     dependencies:
@@ -2279,8 +2279,8 @@ packages:
       react:
         optional: true
 
-  snap-store@0.1.13:
-    resolution: {integrity: sha512-ADr8sk9X7WqtX+DGqjl4S1F6upd8wS427Ze95sC9PbWHs49bX+FQMZw6u+d0ugmzinMfn1psUjmpj70upeIK6w==}
+  snap-store@0.1.14:
+    resolution: {integrity: sha512-v8OJzbe4Dq+vmTcVslunraKL+4AsISu4YdsKRWNmj9Z6XDfPGH+hWG4RtrKdg13VAtrGAZxd9MqesD1l0l53jA==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
       preact: '>=10.0.0'
@@ -3635,7 +3635,7 @@ snapshots:
       preact: 10.29.8
       react: 19.2.8
 
-  snap-store@0.1.13(preact@10.29.8)(react@19.2.8):
+  snap-store@0.1.14(preact@10.29.8)(react@19.2.8):
     optionalDependencies:
       preact: 10.29.8
       react: 19.2.8
