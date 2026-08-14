@@ -8,8 +8,6 @@ const unitInterface = queryUnitInterface("wafer-v01");
 const engine = createSequencerEngine(unitInterface);
 
 export function setupUnit() {
-  engine.setState(store.state);
-
   unitInterface?.completeSetup({
     unitAspects: {
       unitType: "sequencer",
@@ -48,5 +46,5 @@ export function setupSynchronization() {
     if (notes !== undefined) {
       engine.setState({ notes });
     }
-  });
+  }, true);
 }

@@ -2,26 +2,12 @@ import { automationInput } from "@/root/automation";
 import { createSequencer } from "@/root/sequencer";
 import { persistence } from "@/root/persistence";
 import { store } from "@/root/store";
-import {
-  filterObjectValuesNonUndefined,
-  pickObjectMembers,
-} from "@/utils/helpers";
+import { filterObjectValuesNonUndefined } from "@/utils/helpers";
 import { useEffect } from "preact/hooks";
 import { queryUnitInterface } from "wafer-host/unit-types";
 
 const unitInterface = queryUnitInterface("wafer-v01");
 const sequencer = createSequencer(unitInterface);
-
-sequencer.setSceneEditStateAttrs(
-  pickObjectMembers(store.state, {
-    patternKey: 1,
-    loopBars: 1,
-    rollPartItem: 1,
-    crashPartItem: 1,
-    volumeSlopeUp: 1,
-    loopEnabled: 1,
-  }),
-);
 
 function setupUnit() {
   unitInterface?.completeSetup({
@@ -65,7 +51,7 @@ function useSetupSynchronization() {
     if (oneShotTriggered !== undefined) {
       sequencer.setOneShotTriggered(oneShotTriggered);
     }
-  });
+  }, true);
 
   const unsubscribeHitCallback = sequencer.subscribeEvents((ev) => {
     if (ev.type === "sampleHit") {

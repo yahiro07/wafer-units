@@ -355,7 +355,7 @@ importers:
         version: 10.29.8
       snap-store:
         specifier: ^0.1.12
-        version: 0.1.12(preact@10.29.8)(react@19.2.8)
+        version: 0.1.14(preact@10.29.8)(react@19.2.8)
       tailwindcss:
         specifier: ^4.3.3
         version: 4.3.3

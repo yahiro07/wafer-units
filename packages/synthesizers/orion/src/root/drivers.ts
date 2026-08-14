@@ -10,7 +10,6 @@ const unitInterface = queryUnitInterface("wafer-v01");
 const engine = createSynthesizerEngine(unitInterface);
 
 function setupUnit() {
-  engine.setParameters(store.state.parameters);
   if (unitInterface) {
     unitInterface.completeSetup({
       unitAspects: {
@@ -49,7 +48,7 @@ function setupSynchronization() {
     if (parameters) {
       engine.setParameters(parameters);
     }
-  });
+  }, true);
 }
 
 export function useSetupDrivers() {
