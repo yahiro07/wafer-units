@@ -6,15 +6,6 @@ const unitInterface = queryUnitInterface("wafer-v01");
 const automationOutputPort = unitInterface?.createAutomationOutputPort();
 
 const sequencer = createSequencer(unitInterface, automationOutputPort);
-sequencer.setAutomationLanes(store.state.lanes);
-
-export function setupSynchronization() {
-  return store.subscribe(({ lanes }) => {
-    if (lanes) {
-      sequencer.setAutomationLanes(lanes);
-    }
-  });
-}
 
 export function setupUnit() {
   unitInterface?.completeSetup({
@@ -62,4 +53,12 @@ export function setupUnit() {
       },
     },
   });
+}
+
+export function setupSynchronization() {
+  return store.subscribe(({ lanes }) => {
+    if (lanes) {
+      sequencer.setAutomationLanes(lanes);
+    }
+  }, true);
 }

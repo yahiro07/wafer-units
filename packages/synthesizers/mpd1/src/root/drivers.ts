@@ -9,7 +9,6 @@ const unitInterface = queryUnitInterface("wafer-v01");
 const engine = createEngine(unitInterface);
 
 export function setupUnit() {
-  engine.setParameters(store.state.parameters);
   engine.connects();
 
   if (unitInterface) {
@@ -46,5 +45,5 @@ export function setupSynchronization() {
     if (parameters) {
       engine.setParameters(parameters);
     }
-  });
+  }, true);
 }

@@ -34,10 +34,6 @@ export function setupUnit() {
 }
 
 export function setupSynchronization() {
-  {
-    const { octave, duty, patternRange, stepBits } = store.state;
-    engine.setState({ octave, duty, patternRange, stepBits });
-  }
   return store.subscribe(({ octave, duty, patternRange, stepBits }) => {
     if (octave !== undefined) {
       engine.setState({ octave });
@@ -51,5 +47,5 @@ export function setupSynchronization() {
     if (stepBits !== undefined) {
       engine.setState({ stepBits });
     }
-  });
+  }, true);
 }

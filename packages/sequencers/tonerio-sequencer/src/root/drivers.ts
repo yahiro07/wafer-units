@@ -8,27 +8,6 @@ const unitInterface = queryUnitInterface("wafer-v01");
 
 const engine = createEngine(unitInterface);
 
-export function setupSynchronization() {
-  {
-    const { octave, duty, stepBits } = store.state;
-    engine.setState({ octave, duty, stepBits });
-  }
-  const unsubscribeStore = store.subscribe(({ octave, duty, stepBits }) => {
-    if (octave !== undefined) {
-      engine.setState({ octave });
-    }
-    if (duty !== undefined) {
-      engine.setState({ duty });
-    }
-    if (stepBits !== undefined) {
-      engine.setState({ stepBits });
-    }
-  });
-  return () => {
-    unsubscribeStore();
-  };
-}
-
 export function setupUnit() {
   unitInterface?.completeSetup({
     unitAspects: {
@@ -61,4 +40,18 @@ export function setupUnit() {
     persistence: persistence,
     automationInput: automationInput,
   });
+}
+
+export function setupSynchronization() {
+  return store.subscribe(({ octave, duty, stepBits }) => {
+    if (octave !== undefined) {
+      engine.setState({ octave });
+    }
+    if (duty !== undefined) {
+      engine.setState({ duty });
+    }
+    if (stepBits !== undefined) {
+      engine.setState({ stepBits });
+    }
+  }, true);
 }
