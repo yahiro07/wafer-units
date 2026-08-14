@@ -8,8 +8,6 @@ const unitInterface = queryUnitInterface("wafer-v01");
 const engine = createEngine(unitInterface);
 
 export function setupUnit() {
-  engine.setState(store.state);
-
   unitInterface?.completeSetup({
     unitAspects: {
       unitType: "sequencer",
@@ -36,6 +34,10 @@ export function setupUnit() {
 }
 
 export function setupSynchronization() {
+  {
+    const { octave, duty, patternRange, stepBits } = store.state;
+    engine.setState({ octave, duty, patternRange, stepBits });
+  }
   return store.subscribe(({ octave, duty, patternRange, stepBits }) => {
     if (octave !== undefined) {
       engine.setState({ octave });
