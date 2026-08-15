@@ -25,7 +25,7 @@ export default createCustomElementClass(
     shadowRoot.appendChild(link);
 
     render(
-      <div sx={qu.bg(colors.panelBody).flexC()}>
+      <div sx={qu.bg(colors.panelBody).h("full").flexC()}>
         <App />
       </div>,
       shadowRoot,

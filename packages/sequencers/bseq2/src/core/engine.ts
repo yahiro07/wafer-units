@@ -8,8 +8,8 @@ import {
   PatternRange,
   SequencerEditState,
   stepReferenceIndexMap,
-} from "@/common/defs";
-import { getStep } from "@/common/step-bits-helper";
+} from "@/core/defs";
+import { getStep } from "@/core/step-bits-helper";
 import { clampValue, mapUnaryTo } from "@/utils/helpers";
 
 function resolveDuration(

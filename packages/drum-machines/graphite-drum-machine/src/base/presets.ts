@@ -71,7 +71,7 @@ export const presets = {
         kick: "|o---|o---|o---|o---|",
         snare: "",
         opHat: "",
-        clHat: "|oooo|oooo|oooo|oooo|",
+        clHat: "|o-o-|o-o-|o-o-|o-o-|",
         clap: "",
       })[id],
     })),

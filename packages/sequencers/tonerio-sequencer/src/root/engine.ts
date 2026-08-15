@@ -132,8 +132,6 @@ export function createEngine(unitInterface: UnitInterface | undefined) {
   };
 
   return {
-    setup() {},
-    teardown() {},
     setState: (attrs: Partial<SequencerEditState>) => {
       Object.assign(state.editState, attrs);
     },

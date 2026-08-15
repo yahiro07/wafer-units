@@ -12,7 +12,6 @@ const sequencer = createSequencerEngine(unitInterface);
 
 sequencer.registerPartEntries(allPartKeys);
 sequencer.registerSampleEntries(allSampleKeys);
-sequencer.setPartItems(store.state.partItems);
 
 function setupUnit() {
   unitInterface?.completeSetup({
@@ -55,7 +54,7 @@ function useSetupSynchronization() {
       const st = store.state;
       sequencer.setSoloPartKey(st.soloMode ? st.currentPartKey : null);
     }
-  });
+  }, true);
 
   const unsubscribeHitCallback = sequencer.setHitCallback((partKey) => {
     store.setPartHitCounts((prev) => ({

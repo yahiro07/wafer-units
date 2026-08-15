@@ -1,15 +1,16 @@
 import { queryUnitInterface } from "wafer-host/unit-types";
 import { automationInput } from "@/root/automation";
-import { createEngine } from "@/root/engine";
+import { createEngine } from "@/core/engine";
 import { persistence } from "@/root/persistence";
 import { store } from "@/root/store";
+import { presets } from "@/core/presets";
+import { generateRandomPattern } from "@/core/randomizer";
+import { decodePreset } from "@/core/preset-decoder";
 
 const unitInterface = queryUnitInterface("wafer-v01");
 const engine = createEngine(unitInterface);
 
 export function setupUnit() {
-  engine.setState(store.state);
-
   unitInterface?.completeSetup({
     unitAspects: {
       unitType: "sequencer",
@@ -28,6 +29,35 @@ export function setupUnit() {
       stop() {
         engine.clockHandlers.stop?.();
         store.setPlayPos(-1);
+      },
+    },
+    presetProvider: {
+      getCommandNames() {
+        return ["clear", "rand", "rand-t"];
+      },
+      applyCommand(commandName) {
+        if (commandName === "clear") {
+          store.setStepBits(0);
+        } else if (commandName === "rand") {
+          const res = generateRandomPattern(false);
+          store.assign(res);
+        } else if (commandName === "rand-t") {
+          const res = generateRandomPattern(true);
+          store.assign(res);
+        }
+      },
+      getPresetNames() {
+        return Object.keys(presets);
+      },
+      applyPreset(presetName: string) {
+        const pattern = presets[presetName as keyof typeof presets];
+        if (pattern) {
+          const res = decodePreset(pattern);
+          if (res) {
+            const { stepBits, patternRange } = res;
+            store.assign({ stepBits, patternRange });
+          }
+        }
       },
     },
     persistence: persistence,
@@ -49,5 +79,5 @@ export function setupSynchronization() {
     if (stepBits !== undefined) {
       engine.setState({ stepBits });
     }
-  });
+  }, true);
 }

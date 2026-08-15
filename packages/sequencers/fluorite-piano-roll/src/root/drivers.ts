@@ -8,10 +8,6 @@ const engine = createSequencerEngine(unitInterface);
 
 export function setupUnit() {
   const st = store.state;
-  engine.setOctave(st.octave);
-  engine.setDuty(st.duty);
-  engine.setLoopBars(st.loopBars);
-  engine.setNotes(st.notes);
 
   unitInterface?.completeSetup({
     unitAspects: {
@@ -67,5 +63,6 @@ export function setupSynchronization() {
         engine.setDuty(duty);
       }
     },
+    true,
   );
 }

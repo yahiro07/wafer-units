@@ -47,7 +47,14 @@ export function KnobFrame(props: {
     });
   };
   return (
-    <div onPointerDown={handlePointerDown} style={{ cursor: "pointer" }}>
+    <div
+      onPointerDown={handlePointerDown}
+      style={{
+        cursor: "pointer",
+        touchAction: "none",
+        WebkitTapHighlightColor: "transparent",
+      }}
+    >
       {props.children}
     </div>
   );

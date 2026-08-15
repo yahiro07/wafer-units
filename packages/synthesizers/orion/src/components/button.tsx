@@ -20,5 +20,5 @@ export const Button = ({
   );
 };
 const styles = {
-  base: tz("bg-clButtonBg rounded-[2px] flex-c"),
+  base: tz("bg-clButtonBg rounded-[2px] flex-c hover:opacity-90"),
 };

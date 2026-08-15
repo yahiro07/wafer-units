@@ -24,14 +24,14 @@ function computePD(phase: number, amount: number): number {
 }
 
 // PD_RESO (pseudo resonance) calculation
-function computePDReso(phase: number, amount: number): number {
-  // Set the high-harmonic multiplier from the current index value.
-  const resoMultiplier = 1.0 + Math.floor(amount * 15.0);
-  // Apply a trailing decay window across the cycle, similar to CZ behavior.
-  const window = 1.0 - phase;
+// function computePDReso(phase: number, amount: number): number {
+//   // Set the high-harmonic multiplier from the current index value.
+//   const resoMultiplier = 1.0 + Math.floor(amount * 15.0);
+//   // Apply a trailing decay window across the cycle, similar to CZ behavior.
+//   const window = 1.0 - phase;
 
-  return Math.sin(phase * resoMultiplier * 2.0 * Math.PI) * window;
-}
+//   return Math.sin(phase * resoMultiplier * 2.0 * Math.PI) * window;
+// }
 
 type OscFn = (
   shape: number,

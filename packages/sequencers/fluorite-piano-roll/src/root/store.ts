@@ -13,7 +13,7 @@ export const store = createStore<{
   octave: 0,
   duty: 1,
   playPos: null,
-  loopBars: 1,
+  loopBars: 2,
   pageIndex: 0,
   notes: [],
   previewNotePitch: null,

@@ -39,5 +39,6 @@ export const Selector = <T extends string | number>({
 const styles = {
   base: tz(
     "text-center outline-none cursor-pointer appearance-none rounded-[1px]",
+    "hover:opacity-90",
   ),
 };

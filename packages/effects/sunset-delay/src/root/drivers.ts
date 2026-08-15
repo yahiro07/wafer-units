@@ -7,18 +7,8 @@ import { store } from "@/root/store";
 const unitInterface = queryUnitInterfaceForModule("wafer-v01", import.meta.url);
 const engine = createEngine(unitInterface);
 
-export function setupSynchronization() {
-  return store.subscribe(({ parameters }) => {
-    if (parameters) {
-      engine.setParameters(parameters);
-    }
-  });
-}
-
 export function setupUnit() {
   engine.setup();
-  engine.setParameters(store.state.parameters);
-
   unitInterface?.completeSetup({
     unitAspects: {
       unitType: "effect",
@@ -31,4 +21,12 @@ export function setupUnit() {
     automationInput,
     cleanup: () => engine.teardown(),
   });
+}
+
+export function setupSynchronization() {
+  return store.subscribe(({ parameters }) => {
+    if (parameters) {
+      engine.setParameters(parameters);
+    }
+  }, true);
 }

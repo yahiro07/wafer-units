@@ -314,8 +314,7 @@ const NoteLayerStrip = ({
     <div
       sx={[
         qu.relative().wh(editorW, editorH),
-        // qu.bd("blue"),
-        qu.overflow("hidden"),
+        qu.overflow("hidden").css({ touchAction: "none" }),
       ]}
     >
       <NotesDisplayLayer notes={notes} sectionRange={sectionRange} />
@@ -388,7 +387,11 @@ export const PianoRollEditorView = () => {
   return (
     <div
       ref={baseDivRef}
-      sx={[qu.flexH().gap(0.5).h(340), qu.overflowXY("hidden", "scroll")]}
+      sx={[
+        qu.flexH().gap(0.5).h(340),
+        qu.overflowXY("hidden", "scroll"),
+        qu.css({ touchAction: "pan-y" }),
+      ]}
     >
       <SideKeyboardColumn />
       <div sx={qu.relative().wh(editorW, editorH).flexH()}>
