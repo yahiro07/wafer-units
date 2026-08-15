@@ -361,6 +361,8 @@ const InputLayer = () => {
   );
 };
 
+const isMobile = "ontouchstart" in document;
+
 const PianoRollEditor = () => {
   const {
     inputNotes,
@@ -379,29 +381,35 @@ const PianoRollEditor = () => {
     <div
       ref={refBaseDiv}
       className={clsx(
-        "bg-white overflow-x-hidden overflow-y-scroll relative",
+        "bg-white overflow-x-hidden overflow-y-scroll",
         "border border-gray-300",
       )}
       style={{ height: npx(configs.scrollPartHeight) }}
+      onWheel={(e) => e.stopPropagation()}
     >
-      <BackgroundGridLayer />
-      <NotesLayer
-        notes={inputNotes}
-        stepOffset={currentPageIndex * 32}
-        draftNote={draftNote}
-        patternBars={patternBars}
-        ghostEnabled={ghostEnabled}
-      />
-      {ghostEnabled && (
-        <NotesLayer
-          notes={mappedNotes}
-          stepOffset={currentPageIndex * 32}
-          draftNote={null}
-          patternBars={patternBars}
-          ghostEnabled={ghostEnabled}
-        />
-      )}
-      <InputLayer />
+      <div className="flex-h">
+        <div className="relative grow touch-none">
+          <BackgroundGridLayer />
+          <NotesLayer
+            notes={inputNotes}
+            stepOffset={currentPageIndex * 32}
+            draftNote={draftNote}
+            patternBars={patternBars}
+            ghostEnabled={ghostEnabled}
+          />
+          {ghostEnabled && (
+            <NotesLayer
+              notes={mappedNotes}
+              stepOffset={currentPageIndex * 32}
+              draftNote={null}
+              patternBars={patternBars}
+              ghostEnabled={ghostEnabled}
+            />
+          )}
+          <InputLayer />
+        </div>
+        {isMobile && <div className="w-[24px] bg-[#eee]" />}
+      </div>
     </div>
   );
 };
