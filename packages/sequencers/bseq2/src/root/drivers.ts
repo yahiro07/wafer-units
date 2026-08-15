@@ -3,8 +3,9 @@ import { automationInput } from "@/root/automation";
 import { createEngine } from "@/root/engine";
 import { persistence } from "@/root/persistence";
 import { store } from "@/root/store";
-import { decodePreset, presets } from "@/root/presets";
+import { presets } from "@/root/presets";
 import { generateRandomPattern } from "@/root/randomizer";
+import { decodePreset } from "@/root/preset-decoder";
 
 const unitInterface = queryUnitInterface("wafer-v01");
 const engine = createEngine(unitInterface);
