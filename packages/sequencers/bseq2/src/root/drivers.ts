@@ -4,6 +4,7 @@ import { createEngine } from "@/root/engine";
 import { persistence } from "@/root/persistence";
 import { store } from "@/root/store";
 import { decodePreset, presets } from "@/root/presets";
+import { generateRandomPattern } from "@/root/randomizer";
 
 const unitInterface = queryUnitInterface("wafer-v01");
 const engine = createEngine(unitInterface);
@@ -31,17 +32,17 @@ export function setupUnit() {
     },
     presetProvider: {
       getCommandNames() {
-        return ["clear", "random"];
+        return ["clear", "rand1", "rand2"];
       },
       applyCommand(commandName) {
         if (commandName === "clear") {
           store.setStepBits(0);
-        } else if (commandName === "random") {
-          const patternRange = ([4, 8, 16] as const)[
-            Math.floor(Math.random() * 3)
-          ];
-          const stepBits = Math.round(Math.random() * 0xffffffff);
-          store.assign({ stepBits, patternRange });
+        } else if (commandName === "rand1") {
+          const res = generateRandomPattern(false);
+          store.assign(res);
+        } else if (commandName === "rand2") {
+          const res = generateRandomPattern(true);
+          store.assign(res);
         }
       },
       getPresetNames() {
