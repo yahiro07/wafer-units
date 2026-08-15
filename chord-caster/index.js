@@ -252,7 +252,7 @@ e = h.slice, t = { __e: function(e, t, n, r) {
 	return e.__v.__b - t.__v.__b;
 }, D.__r = 0, s = Math.random().toString(8), c = "__d" + s, l = "__a" + s, u = /(PointerCapture)$|Capture$/i, d = 0, f = ne(!1), p = ne(!0);
 //#endregion
-//#region ../../../node_modules/.pnpm/wafer-host@0.1.5_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/wafer-host/dist/unit-helper/index.js
+//#region ../../../node_modules/.pnpm/wafer-host@0.1.7_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/wafer-host/dist/unit-helper/index.js
 function fe(e) {
 	if (!Array.from(document.head.querySelectorAll("link[rel=\"stylesheet\"]")).some((t) => t.href === e)) {
 		console.log(`Inserting link tag for ${e}`);
@@ -286,7 +286,7 @@ function pe(e, t) {
 	};
 }
 //#endregion
-//#region ../../../node_modules/.pnpm/wafer-host@0.1.5_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/wafer-host/dist/unit-types/index.js
+//#region ../../../node_modules/.pnpm/wafer-host@0.1.7_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/wafer-host/dist/unit-types/index.js
 function me(e, t) {
 	return window?.queryUnitInterfaceForModule?.(e, t);
 }
@@ -482,7 +482,7 @@ function Ve({ options: e, value: t, onChange: n, reverseOptionsOrder: r = !1, cl
 	});
 }
 //#endregion
-//#region ../../../node_modules/.pnpm/snap-store@0.1.12_preact@10.29.8_react@19.2.8/node_modules/snap-store/dist/store-impl-CzL-_B7V.js
+//#region ../../../node_modules/.pnpm/snap-store@0.1.14_preact@10.29.8_react@19.2.8/node_modules/snap-store/dist/store-impl-VSv4Uyxk.js
 var He = Symbol("V"), Ue = Symbol("IMMUT_BASE"), We = Symbol("IS_RAW"), Ge = Symbol("P"), R = "Array", Ke = [
 	Symbol.iterator,
 	Symbol.toStringTag,
@@ -1459,15 +1459,15 @@ function Hn(e, t) {
 	n !== -1 && e.splice(n, 1);
 }
 function Un(e, t) {
-	let { useEffect: n, useRef: r, useState: i } = t, a = {}, o = e, s = {}, c = s, l = [], u, d = !1;
-	function f(e) {
+	let { useEffect: n, useRef: r, useState: i } = t, a = {}, o = e, s = {}, c = s, l = [], u, d = !1, f = 0;
+	function p(e) {
 		for (let t of l) t(e);
 	}
 	for (let t in e) {
 		let e = t, n = (t) => {
 			let n;
 			if (n = typeof t == "function" ? t(o[e]) : t, n !== o[e]) {
-				o[e] = n, d ? (u ??= {}, u[e] = n) : f({ [e]: n });
+				o[e] = n, f++, d ? (u ??= {}, u[e] = n) : p({ [e]: n });
 				for (let t in a) {
 					let n = a[t];
 					if (n.dependentFieldKeys.has(e)) {
@@ -1491,12 +1491,12 @@ function Un(e, t) {
 			n((e) => !e);
 		};
 	}
-	let p = (e) => {
+	let m = (e) => {
 		for (let t in e) {
 			let n = Vn(t), r = e[t], i = c[`set${n}`];
 			i?.(r);
 		}
-	}, m = (t) => {
+	}, h = (t) => {
 		let n = {}, r = /* @__PURE__ */ new Set();
 		for (let t in e) Object.defineProperty(n, t, { get() {
 			return r.has(t) || r.add(t), o[t];
@@ -1510,33 +1510,41 @@ function Un(e, t) {
 			},
 			deactivate() {
 				a[t] === i && delete a[t];
-			}
+			},
+			renderedStateVersion: f
 		};
 		return i;
-	}, h = () => {
+	}, g = () => {
 		let [, e] = i(0), t = r(null);
-		return t.current ||= m(Math.random().toString(36).substring(2, 15)), n(() => (t.current && (t.current.refreshView = () => e((e) => e + 1), t.current.activate()), () => {
-			var e;
-			(e = t.current) == null || e.deactivate();
-		}), []), t.current.getterObject;
-	}, g = (e) => (l.push(e), () => {
+		return t.current ||= h(Math.random().toString(36).substring(2, 15)), t.current.renderedStateVersion = f, n(() => {
+			let n = t.current;
+			if (n && (n.refreshView = () => e((e) => e + 1), n.activate(), n.renderedStateVersion !== f)) {
+				var r;
+				(r = n.refreshView) == null || r.call(n);
+			}
+			return () => {
+				var e;
+				(e = t.current) == null || e.deactivate();
+			};
+		}, []), t.current.getterObject;
+	}, _ = (e, t) => (l.push(e), t && e(o), () => {
 		Hn(l, e);
-	}), _ = (e) => {
+	}), v = (e) => {
 		d = !0;
 		try {
 			e();
 		} finally {
-			d = !1, u !== void 0 && (f(u), u = void 0);
+			d = !1, u !== void 0 && (p(u), u = void 0);
 		}
 	};
 	return {
 		state: o,
-		assign: p,
-		useSnapshot: h,
-		subscribe: g,
+		assign: m,
+		useSnapshot: g,
+		subscribe: _,
 		mutations: s,
 		...s,
-		batch: _
+		batch: v
 	};
 }
 //#endregion
@@ -1721,7 +1729,7 @@ t.diffed = function(e) {
 	n != null && e.type === "textarea" && "value" in t && t.value !== n.value && (n.value = t.value == null ? "" : t.value);
 };
 //#endregion
-//#region ../../../node_modules/.pnpm/snap-store@0.1.12_preact@10.29.8_react@19.2.8/node_modules/snap-store/dist/index.js
+//#region ../../../node_modules/.pnpm/snap-store@0.1.14_preact@10.29.8_react@19.2.8/node_modules/snap-store/dist/index.js
 function pr(e) {
 	return Un(e, {
 		useEffect: je,
