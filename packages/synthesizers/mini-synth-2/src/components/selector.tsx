@@ -39,7 +39,7 @@ export const Selector = <T extends string | number>({
 const styles = {
   base: css({
     "@apply":
-      "text-center outline-none cursor-pointer appearance-none rounded-[1px]",
+      "text-center outline-none cursor-pointer appearance-none rounded-[1px] hover:opacity-80",
     border: "solid 1px theme('colors.clSectionEdge')",
     padding: "0 8px",
   }),

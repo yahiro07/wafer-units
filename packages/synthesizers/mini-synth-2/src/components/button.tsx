@@ -1,4 +1,4 @@
-import { css } from "@twind/core";
+import { tx } from "@twind/core";
 import { ComponentChildren } from "preact";
 
 export const Button = ({
@@ -20,7 +20,8 @@ export const Button = ({
   );
 };
 const styles = {
-  base: css({
-    "@apply": "bg-clButtonBg bd-clSectionEdge rounded-[2px] flex-c",
-  }),
+  base: tx(
+    "bg-clButtonBg bd-clSectionEdge rounded-[2px] flex-c",
+    "hover:opacity-80",
+  ),
 };

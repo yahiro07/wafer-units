@@ -39,7 +39,7 @@ export const Knob = ({
 };
 const kc = knobColors;
 const styles = {
-  base: tz("relative rounded-full", {
+  base: tz("relative rounded-full hover:opacity-90", {
     width: "54px",
     height: "54px",
     background: `linear-gradient(to bottom, ${kc.cutoutGrad1}, ${kc.cutoutGrad2})`,
