@@ -69,7 +69,7 @@ export const PieceActiveButton = ({
 }) => {
   return (
     <button
-      className={clsx("w-8 h-8", "flex-c", "cursor-pointer")}
+      className={clsx("w-8 h-8", "flex-c", "cursor-pointer hover:opacity-80")}
       onClick={onClick}
     >
       <div
@@ -105,6 +105,7 @@ export const Knob = ({
           "relative",
           uiClasses.bgKnob,
           uiClasses.borderCommon,
+          "hover:opacity-80",
         )}
       >
         <div
@@ -134,6 +135,7 @@ export const PieceNameBox = ({
         "flex-ha",
         "overflow-hidden text-ellipsis whitespace-nowrap",
         "text-white font-bold text-sm",
+        "hover:opacity-80",
       )}
       onClick={onClick}
     >
@@ -170,6 +172,7 @@ export const PieceOperationButton = ({
         "w-8 h-8 flex-c text-white text-md",
         "cursor-pointer",
         "relative",
+        "hover:opacity-80",
         uiClasses.bgPieceOperationButton,
         uiClasses.borderCommon,
         uiClasses.roundedFew,
@@ -219,6 +222,7 @@ export const StepButton = ({
       className={clsx(
         "w-5.5 h-8 relative flex-va cursor-pointer",
         "overflow-hidden",
+        "hover:opacity-80",
         uiClasses.roundedFew,
         altColor ? uiClasses.bgStepButtonAlt : uiClasses.bgStepButton,
         uiClasses.borderCommon,
@@ -281,6 +285,7 @@ export const PresetButton = ({
         "w-18 h-8 flex-c text-white text-[14px]",
         "cursor-pointer",
         "relative",
+        "hover:opacity-80",
         uiClasses.bgPieceOperationButton,
         uiClasses.borderCommon,
         uiClasses.roundedFew,
