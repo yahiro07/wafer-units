@@ -22,38 +22,52 @@ function getNotePitch(relNote: number, rootNote: number, keyTranspose: number) {
 export function createSequencerEngine(
   unitInterface: UnitInterface | undefined,
 ) {
+  const noteOutputPort = unitInterface?.createNoteOutputPort();
+
   const editState: SequencerEditState = {
     loopBars: 4,
     notes: seqNumbers(16).map(() => -1),
   };
 
-  const local = {
+  const state = {
     lastEmitNote: -1,
     keyTranspose: 0,
+    rootNoteNumber: 48,
   };
-  const rootNoteNumber = 48;
 
-  const noteOutputPort = unitInterface?.createNoteOutputPort();
+  const internal = {
+    playNote(note: number, time: number) {
+      if (note === state.lastEmitNote) return;
+      if (state.lastEmitNote !== -1) {
+        noteOutputPort?.noteOff(state.lastEmitNote, time);
+      }
+      noteOutputPort?.noteOn(note, time);
+      state.lastEmitNote = note;
+    },
+    stopNote() {
+      if (state.lastEmitNote !== -1) {
+        noteOutputPort?.noteOff(state.lastEmitNote);
+        state.lastEmitNote = -1;
+      }
+    },
+  };
 
   const clockHandlers: ClockHandlers = {
-    processStep(stepIndex, time, unitDuration) {
-      const shift = {
-        1: 0,
-        2: 1,
-        4: 2,
-        8: 3,
-      }[editState.loopBars];
+    processStep(stepIndex, time) {
+      const shift = Math.floor(Math.log2(editState.loopBars));
       const pos = (stepIndex >> shift) % 16;
       const relNote = editState.notes[pos];
-      if (relNote !== -1 && relNote !== local.lastEmitNote) {
-        const note = getNotePitch(relNote, rootNoteNumber, local.keyTranspose);
-        noteOutputPort?.noteOn(note, time);
-        noteOutputPort?.noteOff(note, time + unitDuration);
-        local.lastEmitNote = relNote;
+      if (relNote !== -1) {
+        const note = getNotePitch(
+          relNote,
+          state.rootNoteNumber,
+          state.keyTranspose,
+        );
+        internal.playNote(note, time);
       }
     },
     stop() {
-      local.lastEmitNote = -1;
+      internal.stopNote();
     },
   };
 
@@ -62,7 +76,7 @@ export function createSequencerEngine(
       Object.assign(editState, attrs);
     },
     setKeyTranspose(keyTranspose: number) {
-      local.keyTranspose = keyTranspose;
+      state.keyTranspose = keyTranspose;
     },
     clockHandlers,
   };
