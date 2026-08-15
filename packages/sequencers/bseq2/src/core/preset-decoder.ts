@@ -1,4 +1,4 @@
-import { PatternRange } from "@/common/defs";
+import { PatternRange } from "@/core/defs";
 
 export function decodePreset(
   preset: string,

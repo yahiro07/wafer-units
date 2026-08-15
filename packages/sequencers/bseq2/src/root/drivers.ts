@@ -1,11 +1,11 @@
 import { queryUnitInterface } from "wafer-host/unit-types";
 import { automationInput } from "@/root/automation";
-import { createEngine } from "@/root/engine";
+import { createEngine } from "@/core/engine";
 import { persistence } from "@/root/persistence";
 import { store } from "@/root/store";
-import { presets } from "@/root/presets";
-import { generateRandomPattern } from "@/root/randomizer";
-import { decodePreset } from "@/root/preset-decoder";
+import { presets } from "@/core/presets";
+import { generateRandomPattern } from "@/core/randomizer";
+import { decodePreset } from "@/core/preset-decoder";
 
 const unitInterface = queryUnitInterface("wafer-v01");
 const engine = createEngine(unitInterface);

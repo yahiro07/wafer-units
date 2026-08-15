@@ -1,6 +1,6 @@
 import { cz, qu } from "@/common/css-realm";
-import { PatterRangeOptions, stepReferenceIndexMap } from "@/common/defs";
-import { getStep, setStep } from "@/common/step-bits-helper";
+import { PatterRangeOptions, stepReferenceIndexMap } from "@/core/defs";
+import { getStep, setStep } from "@/core/step-bits-helper";
 import { EffectorBody, pageBgColor } from "@/components/effector-body";
 import { Knob } from "@/components/knob";
 import { LabeledBox } from "@/components/labeled-box";

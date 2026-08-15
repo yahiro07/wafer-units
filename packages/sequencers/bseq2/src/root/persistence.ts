@@ -1,5 +1,5 @@
 import { Persistence } from "wafer-host/unit-types";
-import { PatternRange } from "@/common/defs";
+import { PatternRange } from "@/core/defs";
 import { store } from "@/root/store";
 
 export const persistence: Persistence = {

@@ -1,5 +1,5 @@
 import { createStore } from "snap-store";
-import { defaultSequencerEditState, PatternRange } from "@/common/defs";
+import { defaultSequencerEditState, PatternRange } from "@/core/defs";
 
 export const store = createStore<{
   octave: number;
