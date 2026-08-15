@@ -33,15 +33,15 @@ export function setupUnit() {
     },
     presetProvider: {
       getCommandNames() {
-        return ["clear", "rand1", "rand2"];
+        return ["clear", "rand", "rand-t"];
       },
       applyCommand(commandName) {
         if (commandName === "clear") {
           store.setStepBits(0);
-        } else if (commandName === "rand1") {
+        } else if (commandName === "rand") {
           const res = generateRandomPattern(false);
           store.assign(res);
-        } else if (commandName === "rand2") {
+        } else if (commandName === "rand-t") {
           const res = generateRandomPattern(true);
           store.assign(res);
         }
