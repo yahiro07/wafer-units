@@ -385,7 +385,7 @@ const PianoRollEditor = () => {
         "border border-gray-300",
       )}
       style={{ height: npx(configs.scrollPartHeight) }}
-      onWheel={(e) => e.stopPropagation()}
+      onWheel={(e) => e.preventDefault()}
     >
       <div className="flex-h">
         <div className="relative grow touch-none">

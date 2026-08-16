@@ -12,12 +12,12 @@ export function setupUnit() {
       viewSize: [700, 394],
     },
     noteInput: {
-      noteOn(noteNumber) {
-        synth.noteOn(noteNumber);
+      noteOn(noteNumber, time) {
+        synth.noteOn(noteNumber, time);
         asyncRerender();
       },
-      noteOff(noteNumber) {
-        synth.noteOff(noteNumber);
+      noteOff(noteNumber, time) {
+        synth.noteOff(noteNumber, time);
         asyncRerender();
       },
     },

@@ -26,8 +26,8 @@ export interface ISynthesizerEngine {
     instrumentKey: IInstrumentKey,
     updateReleaseParam: boolean,
   ): void;
-  noteOn(noteNumber: number, velocity?: number): void;
-  noteOff(noteNumber: number): void;
+  noteOn(noteNumber: number, time?: number, velocity?: number): void;
+  noteOff(noteNumber: number, time?: number): void;
   finalize(): void;
 }
 
@@ -150,7 +150,8 @@ export function createSynthesizerEngine(): ISynthesizerEngine {
       }
       asyncRerender();
     },
-    noteOn(noteNumber, _velocity?: number) {
+    noteOn(noteNumber, time, _velocity) {
+      time = Math.max(time ?? 0, audioContext.currentTime);
       if (!instrumentData) {
         console.warn(`noteOn called while instrumentData is not loaded`);
         return;
@@ -169,13 +170,14 @@ export function createSynthesizerEngine(): ISynthesizerEngine {
         gainAdjustment,
         voiceMixer,
       );
-      noteVoiceManager.noteOn(noteKey, voice);
+      noteVoiceManager.noteOn(noteKey, time, voice);
       holdNoteNumbers.push(noteNumber);
       noteReceived = true;
     },
-    noteOff(noteNumber) {
+    noteOff(noteNumber, time) {
+      time = Math.max(time ?? 0, audioContext.currentTime);
       const noteKey = createNoteKey(noteNumber);
-      noteVoiceManager.noteOff(noteKey);
+      noteVoiceManager.noteOff(noteKey, time);
       arrays.remove(holdNoteNumbers, noteNumber);
     },
     finalize() {

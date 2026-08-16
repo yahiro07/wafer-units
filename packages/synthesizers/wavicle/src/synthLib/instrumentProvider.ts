@@ -36,7 +36,7 @@ function createInstrumentsSampleBased(): IInstrumentSourceDefinition[] {
   return [
     {
       instrumentKey: "piano",
-      sourcePath: "samples/freesound/piano_4s_c0c7.m4a",
+      sourcePath: "samples/freesound/piano_4s_c0c7.mp3",
       sliceDuration: 4,
       noteNumbers: octaveNoteSequence(24, 8),
       looped: false,
@@ -45,7 +45,7 @@ function createInstrumentsSampleBased(): IInstrumentSourceDefinition[] {
     },
     {
       instrumentKey: "elepi",
-      sourcePath: "samples/freesound/rhodes_4s_d1d6.m4a",
+      sourcePath: "samples/freesound/rhodes_4s_d1d6.mp3",
       sliceDuration: 4,
       noteNumbers: octaveNoteSequence(36 + 2, 7),
       looped: false,
@@ -54,7 +54,7 @@ function createInstrumentsSampleBased(): IInstrumentSourceDefinition[] {
     },
     {
       instrumentKey: "celesta",
-      sourcePath: "samples/freesound/celesta_4s_g2g6.m4a",
+      sourcePath: "samples/freesound/celesta_4s_g2g6.mp3",
       sliceDuration: 4,
       noteNumbers: octaveNoteSequence(36 + 7, 5),
       looped: false,
@@ -63,7 +63,7 @@ function createInstrumentsSampleBased(): IInstrumentSourceDefinition[] {
     },
     {
       instrumentKey: "guitar",
-      sourcePath: "samples/freesound/guitar_4s_e3e6.m4a",
+      sourcePath: "samples/freesound/guitar_4s_e3e6.mp3",
       sliceDuration: 4,
       noteNumbers: octaveNoteSequence(36 + 4, 4),
       looped: false,
@@ -82,33 +82,33 @@ function createInstrumentsArcTrax(): IInstrumentSourceDefinition[] {
     number,
     ISampleLoopingMethod | undefined,
   ][] = [
-    ["bell", "steelbell.m4a", false, 1.5, 0.9, undefined],
-    ["ocarina", "sleepy.m4a", true, 1, 0.5, "SL"],
+    ["bell", "steelbell.mp3", false, 1.5, 0.9, undefined],
+    ["ocarina", "sleepy.mp3", true, 1, 0.5, "SL"],
 
-    ["bass1", "bass2.m4a", false, 1.4, 0.5, undefined],
-    ["bass2", "slidebass.m4a", true, 1, 0.2, "SL"],
+    ["bass1", "bass2.mp3", false, 1.4, 0.5, undefined],
+    ["bass2", "slidebass.mp3", true, 1, 0.2, "SL"],
 
-    ["pluck1", "hipluck2.m4a", false, 1, 0.5, undefined],
-    ["pluck2", "pluck1.m4a", false, 4, 0.5, undefined],
-    ["pluck3", "brightkey.m4a", false, 1, 0.7, undefined],
-    ["pluck4", "key_shiny.m4a", false, 1, 0.7, undefined],
+    ["pluck1", "hipluck2.mp3", false, 1, 0.5, undefined],
+    ["pluck2", "pluck1.mp3", false, 4, 0.5, undefined],
+    ["pluck3", "brightkey.mp3", false, 1, 0.7, undefined],
+    ["pluck4", "key_shiny.mp3", false, 1, 0.7, undefined],
 
-    ["brass1", "trumpet.m4a", true, 1, 0.4, "SL"],
-    ["brass2", "brass2.m4a", true, 1.4, 0.5, "XF"],
+    ["brass1", "trumpet.mp3", true, 1, 0.4, "SL"],
+    ["brass2", "brass2.mp3", true, 1.4, 0.5, "XF"],
 
-    ["lead1", "super1.m4a", true, 0.7, 0.7, "XF"],
-    ["lead2", "coldwave.m4a", true, 0.8, 0.5, "XF"],
-    ["lead3", "lead_bright.m4a", true, 0.4, 0.7, "XF"],
-    ["lead4", "finale.m4a", true, 0.8, 0.5, "XF"],
+    ["lead1", "super1.mp3", true, 0.7, 0.7, "XF"],
+    ["lead2", "coldwave.mp3", true, 0.8, 0.5, "XF"],
+    ["lead3", "lead_bright.mp3", true, 0.4, 0.7, "XF"],
+    ["lead4", "finale.mp3", true, 0.8, 0.5, "XF"],
 
-    ["pad1", "softkey.m4a", false, 1, 0.8, undefined],
-    ["pad2", "pad2.m4a", true, 1, 0.7, "XF"],
+    ["pad1", "softkey.mp3", false, 1, 0.8, undefined],
+    ["pad2", "pad2.mp3", true, 1, 0.7, "XF"],
 
-    ["strings1", "gradient.m4a", true, 0.8, 0.8, "XF"],
-    ["strings2", "slowstrings.m4a", false, 1, 0.8, undefined],
+    ["strings1", "gradient.mp3", true, 0.8, 0.8, "XF"],
+    ["strings2", "slowstrings.mp3", false, 1, 0.8, undefined],
 
-    ["orchestra", "grandwave.m4a", true, 1, 0.8, "XF"],
-    ["nes", "chipwave.m4a", true, 1, 0.4, "SL"],
+    ["orchestra", "grandwave.mp3", true, 1, 0.8, "XF"],
+    ["nes", "chipwave.mp3", true, 1, 0.4, "SL"],
   ];
 
   return toneFileSpecs.map((toneFileSpec) => {
