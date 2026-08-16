@@ -11,9 +11,9 @@ export type SynthParameters = {
 export const defaultSynthParameters: SynthParameters = {
   octave: 0,
   unisonDetune: 0.5,
-  unisonSpread: 1,
+  unisonSpread: 0,
   unisonMix: 1,
-  ampRelease: 0.5,
+  ampRelease: 0,
   volume: 0.5,
   phaseRandom: true,
 };
