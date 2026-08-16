@@ -1,9 +1,22 @@
 import { ISynthesizer, SynthParameters } from "@/root/synth-common";
 
-type OscillatorBank = {
+type OscillatorNodes = {
   oscillators: OscillatorNode[];
   gains: GainNode[];
   panners: StereoPannerNode[];
+};
+
+type OscillatorBank = {
+  noteOn(noteNumber: number, time: number): void;
+  affectParametersUpdate(): void;
+  stop(time: number): void;
+};
+
+type AmpGate = {
+  inputNode: GainNode;
+  gateOn(time: number): void;
+  gateOff(time: number): void;
+  disconnect(): void;
 };
 
 const DETUNE_RATIOS = [0, 0.0146, 0.0381, 0.0883, -0.0146, -0.0381, -0.0883];
@@ -25,41 +38,42 @@ function getOscillatorGain(index: number, unisonMix: number): number {
   return sideGain / normalization;
 }
 
-function applyParametersToBank(
-  bank: OscillatorBank,
-  time: number,
+function createAmpGate(
+  audioContext: AudioContext,
+  destinationNode: AudioNode,
   parameters: SynthParameters,
-  baseFrequency?: number,
-): void {
-  for (let index = 0; index < bank.oscillators.length; index += 1) {
-    const oscillator = bank.oscillators[index];
+): AmpGate {
+  const inputNode = audioContext.createGain();
+  inputNode.gain.value = 0;
+  inputNode.connect(destinationNode);
 
-    if (baseFrequency !== undefined) {
-      oscillator.frequency.setValueAtTime(baseFrequency, time);
-    }
-    oscillator.detune.setValueAtTime(
-      DETUNE_RATIOS[index] * parameters.unisonDetune ** 2 * 1200,
-      time,
-    );
-    bank.gains[index].gain.setValueAtTime(
-      getOscillatorGain(index, parameters.unisonMix),
-      time,
-    );
-    bank.panners[index].pan.setValueAtTime(
-      PAN_DIRECTIONS[index] * parameters.unisonSpread,
-      time,
-    );
-  }
+  return {
+    inputNode,
+    gateOn(time) {
+      inputNode.gain.cancelScheduledValues(time);
+      inputNode.gain.setValueAtTime(0, time);
+      inputNode.gain.linearRampToValueAtTime(1, time + ATTACK_SECONDS);
+    },
+    gateOff(time) {
+      const releaseSeconds = Math.max(
+        ATTACK_SECONDS,
+        parameters.ampRelease ** 2 * MAX_RELEASE_SECONDS,
+      );
+      inputNode.gain.cancelScheduledValues(time);
+      inputNode.gain.setValueAtTime(1, time);
+      inputNode.gain.linearRampToValueAtTime(0, time + releaseSeconds);
+    },
+    disconnect() {
+      inputNode.disconnect();
+    },
+  };
 }
 
-function createBank(
-  time: number,
-  baseFrequency: number,
+function createOscillatorNodes(
   audioContext: AudioContext,
-  gateGain: GainNode,
-  parameters: SynthParameters,
-): OscillatorBank {
-  const bank: OscillatorBank = {
+  destinationNode: AudioNode,
+) {
+  const nodes: OscillatorNodes = {
     oscillators: [],
     gains: [],
     panners: [],
@@ -73,119 +87,143 @@ function createBank(
     oscillator.type = "sawtooth";
     oscillator.connect(gain);
     gain.connect(panner);
-    panner.connect(gateGain);
+    panner.connect(destinationNode);
 
-    bank.oscillators.push(oscillator);
-    bank.gains.push(gain);
-    bank.panners.push(panner);
+    nodes.oscillators.push(oscillator);
+    nodes.gains.push(gain);
+    nodes.panners.push(panner);
   }
-
-  applyParametersToBank(bank, time, parameters, baseFrequency);
-  for (const oscillator of bank.oscillators) {
-    oscillator.start(time);
-  }
-
-  return bank;
+  return nodes;
 }
 
-function stopBank(
-  bank: OscillatorBank,
-  time: number,
+function createOscillatorBank(
   audioContext: AudioContext,
-): void {
-  for (const oscillator of bank.oscillators) {
-    oscillator.stop(time);
-  }
+  destinationNode: AudioNode,
+  parameters: SynthParameters,
+): OscillatorBank {
+  let nodes = createOscillatorNodes(audioContext, destinationNode);
 
-  const delayMilliseconds =
-    Math.max(0, time - audioContext.currentTime + 0.02) * 1000;
-  setTimeout(() => {
-    for (const oscillator of bank.oscillators) oscillator.disconnect();
-    for (const gain of bank.gains) gain.disconnect();
-    for (const panner of bank.panners) panner.disconnect();
-  }, delayMilliseconds);
+  const internal = {
+    applyParametersToNodes(
+      nodesToApply: OscillatorNodes,
+      time: number,
+      baseFrequency?: number,
+    ): void {
+      for (
+        let index = 0;
+        index < nodesToApply.oscillators.length;
+        index += 1
+      ) {
+        const oscillator = nodesToApply.oscillators[index];
+
+        if (baseFrequency !== undefined) {
+          oscillator.frequency.setValueAtTime(baseFrequency, time);
+        }
+        oscillator.detune.setValueAtTime(
+          DETUNE_RATIOS[index] * parameters.unisonDetune ** 2 * 1200,
+          time,
+        );
+        nodesToApply.gains[index].gain.setValueAtTime(
+          getOscillatorGain(index, parameters.unisonMix),
+          time,
+        );
+        nodesToApply.panners[index].pan.setValueAtTime(
+          PAN_DIRECTIONS[index] * parameters.unisonSpread,
+          time,
+        );
+      }
+    },
+    startOscillatorNodes(
+      nodesToStart: OscillatorNodes,
+      time: number,
+      baseFrequency: number,
+    ) {
+      internal.applyParametersToNodes(nodesToStart, time, baseFrequency);
+      for (const oscillator of nodesToStart.oscillators) {
+        oscillator.start(time);
+      }
+    },
+    stopOscillatorNodes(nodesToStop: OscillatorNodes, time: number) {
+      for (const oscillator of nodesToStop.oscillators) {
+        oscillator.stop(time);
+      }
+      const delayMilliseconds =
+        Math.max(0, time - audioContext.currentTime + 0.02) * 1000;
+      setTimeout(() => {
+        for (const oscillator of nodesToStop.oscillators)
+          oscillator.disconnect();
+        for (const gain of nodesToStop.gains) gain.disconnect();
+        for (const panner of nodesToStop.panners) panner.disconnect();
+      }, delayMilliseconds);
+    },
+  };
+
+  internal.startOscillatorNodes(
+    nodes,
+    audioContext.currentTime,
+    getBaseFrequency(69, parameters.octave),
+  );
+
+  return {
+    noteOn(noteNumber, time) {
+      const baseFrequency = getBaseFrequency(noteNumber, parameters.octave);
+      if (parameters.phaseRandom) {
+        internal.applyParametersToNodes(nodes, time, baseFrequency);
+      } else {
+        internal.stopOscillatorNodes(nodes, time);
+        nodes = createOscillatorNodes(audioContext, destinationNode);
+        internal.startOscillatorNodes(nodes, time, baseFrequency);
+      }
+    },
+    affectParametersUpdate() {
+      internal.applyParametersToNodes(nodes, audioContext.currentTime);
+    },
+    stop(time) {
+      internal.stopOscillatorNodes(nodes, time);
+    },
+  };
 }
 
 export function createSynthesizerGpFreerunMono(
   audioContext: AudioContext,
   initialParameters: SynthParameters,
 ): ISynthesizer {
-  let parameters = initialParameters;
+  let parameters = structuredClone(initialParameters);
   let currentNote: number | undefined;
 
   const outputNode = audioContext.createGain();
-  const gateGain = audioContext.createGain();
   outputNode.gain.value = parameters.volume;
-  gateGain.gain.value = 0;
-  gateGain.connect(outputNode);
+  const ampGate = createAmpGate(audioContext, outputNode, parameters);
 
-  let bank = createBank(
-    audioContext.currentTime,
-    getBaseFrequency(69, parameters.octave),
+  const oscillatorBank = createOscillatorBank(
     audioContext,
-    gateGain,
+    ampGate.inputNode,
     parameters,
   );
 
   return {
     outputNode,
-
     setParameters(nextParameters: SynthParameters) {
-      parameters = nextParameters;
+      Object.assign(parameters, nextParameters);
       const time = audioContext.currentTime;
-
       outputNode.gain.setValueAtTime(parameters.volume, time);
-      applyParametersToBank(
-        bank,
-        time,
-        parameters,
-        currentNote === undefined
-          ? undefined
-          : getBaseFrequency(currentNote, parameters.octave),
-      );
+      oscillatorBank.affectParametersUpdate();
     },
-
     noteOn(noteNumber: number, time: number) {
       const startTime = Math.max(time, audioContext.currentTime);
-      const baseFrequency = getBaseFrequency(noteNumber, parameters.octave);
-
-      if (parameters.phaseRandom) {
-        applyParametersToBank(bank, startTime, parameters, baseFrequency);
-      } else {
-        stopBank(bank, startTime, audioContext);
-        bank = createBank(
-          startTime,
-          baseFrequency,
-          audioContext,
-          gateGain,
-          parameters,
-        );
-      }
-
+      oscillatorBank.noteOn(noteNumber, startTime);
       currentNote = noteNumber;
-      gateGain.gain.cancelScheduledValues(startTime);
-      gateGain.gain.setValueAtTime(0, startTime);
-      gateGain.gain.linearRampToValueAtTime(1, startTime + ATTACK_SECONDS);
+      ampGate.gateOn(startTime);
     },
-
     noteOff(noteNumber: number, time: number) {
       if (currentNote !== noteNumber) return;
-
       currentNote = undefined;
       const stopTime = Math.max(time, audioContext.currentTime);
-      const releaseSeconds = Math.max(
-        ATTACK_SECONDS,
-        parameters.ampRelease ** 2 * MAX_RELEASE_SECONDS,
-      );
-
-      gateGain.gain.cancelScheduledValues(stopTime);
-      gateGain.gain.setValueAtTime(1, stopTime);
-      gateGain.gain.linearRampToValueAtTime(0, stopTime + releaseSeconds);
+      ampGate.gateOff(stopTime);
     },
-
     cleanup() {
-      stopBank(bank, audioContext.currentTime, audioContext);
-      gateGain.disconnect();
+      oscillatorBank.stop(audioContext.currentTime);
+      ampGate.disconnect();
       outputNode.disconnect();
     },
   };
