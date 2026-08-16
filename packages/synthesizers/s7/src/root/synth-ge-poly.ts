@@ -110,7 +110,11 @@ export function createSynthesizerGePoly(
         // Web Audio oscillators normally start at phase 0.
         // When perfectly aligned, the attack is very sharp (effectively click noise).
         // When phaseRandom is true, a small random start delay shifts each oscillator's phase.
-        const startDelay = p.phaseRandom ? Math.random() * 0.02 : 0; // Up to 20ms offset
+        const startDelay = p.phaseRandom
+          ? i === 0
+            ? 0 //should not delay center wave
+            : Math.random() * 0.003
+          : 0; // Up to 5ms offset
 
         // --- Mix (gain) ---
         const sideGain = i === 0 ? 1 : p.unisonMix;
