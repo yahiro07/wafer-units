@@ -1,41 +1,46 @@
-import { createLoopIntervalMonitor } from "@/funcs";
 import { INoteVoice } from "./noteVoice";
 
 interface INoteVoiceManager {
-  noteOn(noteKey: string, voice: INoteVoice): void;
-  noteOff(noteKey: string): void;
+  noteOn(noteKey: string, time: number, voice: INoteVoice): void;
+  noteOff(noteKey: string, time: number): void;
   updateVoices(): void;
 }
 
 export function createNoteVoiceManager(): INoteVoiceManager {
   const voices: Record<string, INoteVoice | undefined> = {};
-  const loopIntervalMonitor = createLoopIntervalMonitor();
+  const releasingVoices: INoteVoice[] = [];
 
   return {
-    noteOn(noteKey: string, voice: INoteVoice) {
+    noteOn(noteKey: string, time: number, voice: INoteVoice) {
       const oldVoice = voices[noteKey];
       if (oldVoice) {
-        oldVoice.forceStop();
-        delete voices[noteKey];
+        oldVoice.forceStop(time);
+        releasingVoices.push(oldVoice);
       }
-      voice.noteOn();
+      voice.noteOn(time);
       voices[noteKey] = voice;
     },
-    noteOff(noteKey: string) {
+    noteOff(noteKey: string, time: number) {
       const voice = voices[noteKey];
       if (voice) {
-        voice.noteOff();
+        voice.noteOff(time);
       }
     },
     updateVoices() {
-      const elapsedMs = loopIntervalMonitor.next();
       for (const noteKey in voices) {
         const voice = voices[noteKey];
         if (voice) {
-          const done = voice.update(elapsedMs);
+          const done = voice.update();
           if (done) {
             delete voices[noteKey];
           }
+        }
+      }
+      for (let i = releasingVoices.length - 1; i >= 0; i--) {
+        const voice = releasingVoices[i];
+        const done = voice.update();
+        if (done) {
+          releasingVoices.splice(i, 1);
         }
       }
     },
