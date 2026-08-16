@@ -103,20 +103,24 @@ export function createSynthesizerGePoly(
         // --- Detune ---
         // Scale to cents based on JP-8000 max detune width (~100 cents at max)
         // Multiply by unisonDetune (0~1)
-        const detuneCents = DETUNE_RATIOS[i] * p.unisonDetune ** 2 * 1200;
+        const detuneCents = DETUNE_RATIOS[i] * p.unisonDetune ** 2 * 1800;
         osc.detune.setValueAtTime(detuneCents, startTime);
 
         // --- Phase randomization (PeriodicWave emulation) ---
         // Web Audio oscillators normally start at phase 0.
         // When perfectly aligned, the attack is very sharp (effectively click noise).
         // When phaseRandom is true, a small random start delay shifts each oscillator's phase.
-        const startDelay = p.phaseRandom ? Math.random() * 0.02 : 0; // Up to 20ms offset
+        const startDelay = p.phaseRandom
+          ? i === 0
+            ? 0 //should not delay center wave
+            : Math.random() * 0.003
+          : 0; // Up to 5ms offset
 
         // --- Mix (gain) ---
-        // Center voice (i=0) is fixed at 1; others use unisonMix (0~1)
-        const gainVal = i === 0 ? 1.0 : p.unisonMix;
-        // Scale down to avoid clipping when all 7 voices stack
-        const normalizedGain = gainVal / (1.0 + p.unisonMix * 6);
+        const sideGain = i === 0 ? 1 : p.unisonMix;
+        const normalization = Math.sqrt(1 + p.unisonMix ** 2 * 6);
+        const normalizedGain = sideGain / normalization;
+
         gainNode.gain.setValueAtTime(normalizedGain, startTime);
 
         // --- Stereo spread ---
@@ -150,14 +154,17 @@ export function createSynthesizerGePoly(
       const p = state.parameters;
       const stopTime = Math.max(time, audioContext.currentTime);
 
-      // Map ampRelease (0~1) to seconds (e.g. up to ~3s release)
-      const releaseTimeSeconds = p.ampRelease ** 2 * 3.0;
+      // Map ampRelease (0~1) to seconds (e.g. up to ~4s release)
+      const releaseTimeSeconds = p.ampRelease * 4.0;
       const finishTime = stopTime + releaseTimeSeconds;
 
-      // Ramp gain from current value to 0 (linear release)
-      note.gateGain.gain.cancelScheduledValues(stopTime);
-      note.gateGain.gain.setValueAtTime(note.gateGain.gain.value, stopTime);
-      note.gateGain.gain.linearRampToValueAtTime(0, finishTime);
+      // Ramp gain from current value to 0 (exponential release)
+      const gain = note.gateGain.gain;
+      gain.cancelScheduledValues(stopTime);
+      gain.setValueAtTime(1, stopTime);
+      // gain.setValueAtTime(note.gateGain.gain.value, stopTime);
+      gain.exponentialRampToValueAtTime(0.0001, finishTime);
+      gain.setValueAtTime(0, finishTime);
 
       // Stop oscillators after release and free resources
       note.oscillators.forEach((osc) => {

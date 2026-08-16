@@ -13,7 +13,7 @@ export const defaultSynthParameters: SynthParameters = {
   unisonDetune: 0.5,
   unisonSpread: 1,
   unisonMix: 1,
-  ampRelease: 0.5,
+  ampRelease: 0,
   volume: 0.5,
   phaseRandom: true,
 };
