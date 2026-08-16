@@ -103,7 +103,7 @@ export function createSynthesizerGePoly(
         // --- Detune ---
         // Scale to cents based on JP-8000 max detune width (~100 cents at max)
         // Multiply by unisonDetune (0~1)
-        const detuneCents = DETUNE_RATIOS[i] * p.unisonDetune ** 2 * 1200;
+        const detuneCents = DETUNE_RATIOS[i] * p.unisonDetune ** 2 * 1800;
         osc.detune.setValueAtTime(detuneCents, startTime);
 
         // --- Phase randomization (PeriodicWave emulation) ---
@@ -154,14 +154,17 @@ export function createSynthesizerGePoly(
       const p = state.parameters;
       const stopTime = Math.max(time, audioContext.currentTime);
 
-      // Map ampRelease (0~1) to seconds (e.g. up to ~3s release)
-      const releaseTimeSeconds = p.ampRelease ** 2 * 3.0;
+      // Map ampRelease (0~1) to seconds (e.g. up to ~4s release)
+      const releaseTimeSeconds = p.ampRelease * 4.0;
       const finishTime = stopTime + releaseTimeSeconds;
 
-      // Ramp gain from current value to 0 (linear release)
-      note.gateGain.gain.cancelScheduledValues(stopTime);
-      note.gateGain.gain.setValueAtTime(note.gateGain.gain.value, stopTime);
-      note.gateGain.gain.linearRampToValueAtTime(0, finishTime);
+      // Ramp gain from current value to 0 (exponential release)
+      const gain = note.gateGain.gain;
+      gain.cancelScheduledValues(stopTime);
+      gain.setValueAtTime(1, stopTime);
+      // gain.setValueAtTime(note.gateGain.gain.value, stopTime);
+      gain.exponentialRampToValueAtTime(0.0001, finishTime);
+      gain.setValueAtTime(0, finishTime);
 
       // Stop oscillators after release and free resources
       note.oscillators.forEach((osc) => {
