@@ -113,10 +113,10 @@ export function createSynthesizerGePoly(
         const startDelay = p.phaseRandom ? Math.random() * 0.02 : 0; // Up to 20ms offset
 
         // --- Mix (gain) ---
-        // Center voice (i=0) is fixed at 1; others use unisonMix (0~1)
-        const gainVal = i === 0 ? 1.0 : p.unisonMix;
-        // Scale down to avoid clipping when all 7 voices stack
-        const normalizedGain = gainVal / (1.0 + p.unisonMix * 6);
+        const sideGain = i === 0 ? 1 : p.unisonMix;
+        const normalization = Math.sqrt(1 + p.unisonMix ** 2 * 6);
+        const normalizedGain = sideGain / normalization;
+
         gainNode.gain.setValueAtTime(normalizedGain, startTime);
 
         // --- Stereo spread ---

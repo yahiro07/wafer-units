@@ -1,13 +1,10 @@
 import { UnitInterface } from "wafer-host/unit-types";
 import { defaultSynthParameters } from "@/root/synth-common";
-import { createSynthesizerGpFreerunMono } from "@/root/synth-gp-freerun-mono";
+import { createSynthesizerGePoly } from "@/root/synth-ge-poly";
 
 export function createEngine(unitInterface: UnitInterface | undefined) {
   const audioContext = unitInterface?.audioContext ?? new AudioContext();
-  const synth = createSynthesizerGpFreerunMono(
-    audioContext,
-    defaultSynthParameters,
-  );
+  const synth = createSynthesizerGePoly(audioContext, defaultSynthParameters);
   const destinationNode =
     unitInterface?.audioOutputNode ?? audioContext.destination;
   return {
