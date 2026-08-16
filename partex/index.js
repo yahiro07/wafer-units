@@ -4144,7 +4144,7 @@ var tc = (e) => {
 		ref: o,
 		className: G("bg-white overflow-x-hidden overflow-y-scroll", "border border-gray-300"),
 		style: { height: Wr(Q.scrollPartHeight) },
-		onWheel: (e) => e.stopPropagation(),
+		onWheel: (e) => e.preventDefault(),
 		children: /* @__PURE__ */ q("div", {
 			className: "flex-h",
 			children: [/* @__PURE__ */ q("div", {

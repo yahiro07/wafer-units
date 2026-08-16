@@ -2773,6 +2773,7 @@ var Ni = 1, $ = {
 			N.overflowXY("hidden", "scroll"),
 			N.css({ touchAction: "pan-y" })
 		],
+		onWheel: (e) => e.preventDefault(),
 		children: [/* @__PURE__ */ J(ki, {}), /* @__PURE__ */ Y("div", {
 			sx: N.relative().wh(r, i).flexH(),
 			children: [
