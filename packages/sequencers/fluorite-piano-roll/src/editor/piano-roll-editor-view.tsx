@@ -392,6 +392,7 @@ export const PianoRollEditorView = () => {
         qu.overflowXY("hidden", "scroll"),
         qu.css({ touchAction: "pan-y" }),
       ]}
+      onWheel={(e) => e.preventDefault()}
     >
       <SideKeyboardColumn />
       <div sx={qu.relative().wh(editorW, editorH).flexH()}>
