@@ -1,7 +1,8 @@
 import { css, cz } from "@/common/css-realm";
 import { uiColors } from "@/common/ui-colors";
 import { GridBackground } from "@/components/grid-background";
-import { seqNumbers } from "@/utils/helpers";
+import { fillNumbers, seqNumbers } from "@/utils/helpers";
+import { createStore } from "snap-store";
 
 const StepsIndicatorBar = () => {
   let currentStep = 3;
@@ -19,10 +20,130 @@ const czStepsIndicatorBar = cz(
   "[&>div.current]:(bg-clPlayPos)",
 );
 
-const StepsBarEditor = () => {
+//stepNote: 0:none, 1:on, 2:tie
+
+const store = createStore<{
+  stepNotes: number[];
+  previewStepNotes: number[] | null;
+}>({
+  stepNotes: fillNumbers(32, 0),
+  previewStepNotes: null,
+});
+if (1) {
+  store.setStepNotes(
+    seqNumbers(32).map((i) => (i === 3 || i === 7 ? 1 : i === 4 ? 2 : 0)),
+  );
+}
+
+const uiConfigs = {
+  stepCellWidth: 40,
+  stepCellHeight: 50,
+};
+
+type StepsRange = {
+  offset: number;
+  length: number;
+};
+
+type DragBand = {
+  start: number;
+  end: number;
+};
+
+function startStepsBarDragInput(
+  e: PointerEvent,
+  nx: number,
+  callbacks: {
+    onTap: (index: number) => void;
+    onBandChanged: (band: DragBand) => void;
+  },
+) {}
+
+const stepNotesEditCore = {
+  applyBandEdit(originalStepNotes: number[], band: DragBand): number[] {
+    return originalStepNotes;
+  },
+  toggleStep(originalStepNotes: number[], index: number): number[] {
+    return originalStepNotes;
+  },
+};
+
+function handleStepsBarEditorPointerDown(
+  e: PointerEvent,
+  stepsRange: StepsRange,
+) {
+  const nx = stepsRange.length;
+  const originalStepNotes = [...store.state.stepNotes];
+  startStepsBarDragInput(e, nx, {
+    onTap(index) {
+      const stepNotes = stepNotesEditCore.toggleStep(
+        originalStepNotes,
+        stepsRange.offset + index,
+      );
+      store.setStepNotes(stepNotes);
+    },
+    onBandChanged(band) {
+      const stepNotes = stepNotesEditCore.applyBandEdit(
+        originalStepNotes,
+        band,
+      );
+      store.setPreviewStepNotes(stepNotes);
+    },
+  });
+}
+
+const StepNotesLayer = ({ stepsRange }: { stepsRange: StepsRange }) => {
+  const nx = stepsRange.length;
+  const st = store.useSnapshot();
+  const stepNotes = st.previewStepNotes ?? st.stepNotes;
+  const rangedNotes = stepNotes.slice(
+    stepsRange.offset,
+    stepsRange.offset + nx,
+  );
   return (
-    <div class="w-[640px] h-[50px]">
-      <GridBackground nx={16} ny={1} bgAlterStrideX={4} />
+    <div class="absolute-full flex-h cursor-pointer">
+      {rangedNotes.map((note, idx) => (
+        <div
+          key={idx}
+          class={cz(czStepNote, note === 1 && "head", note == 2 && "tie")}
+        >
+          {note}
+        </div>
+      ))}
+    </div>
+  );
+};
+const czStepNote = cz(
+  "w-[40px] h-[50px] flex-c",
+  css({
+    "&.head": {
+      background: "#8f8a",
+      border: "solid 1px #080",
+    },
+    "&.tie": {
+      background: "#8f8a",
+      border: "solid 1px #080",
+    },
+    "&.head:has(+ &.tie)": {
+      borderRight: "none",
+    },
+    "&.head + &.tie": {
+      borderLeft: "none",
+    },
+  }),
+);
+
+const StepsBarEditor = ({ stepsRange }: { stepsRange: StepsRange }) => {
+  const nx = stepsRange.length;
+  const { stepCellWidth, stepCellHeight } = uiConfigs;
+  return (
+    <div
+      class="relative"
+      style={{ width: stepCellWidth * nx, height: stepCellHeight }}
+      onPointerDown={(e) => handleStepsBarEditorPointerDown(e, stepsRange)}
+    >
+      <GridBackground nx={nx} ny={1} bgAlterStrideX={4} />
+      <StepNotesLayer stepsRange={stepsRange} />
     </div>
   );
 };
@@ -45,8 +166,8 @@ export const App = () => {
         <div class={css({ background: uiColors.clAccent })}>fff</div>
       </div>
       <StepsIndicatorBar />
-      <StepsBarEditor />
-      <StepsBarEditor />
+      <StepsBarEditor stepsRange={{ offset: 0, length: 16 }} />
+      <StepsBarEditor stepsRange={{ offset: 16, length: 16 }} />
     </div>
   );
 };

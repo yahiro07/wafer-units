@@ -2,6 +2,10 @@ export function seqNumbers(n: number): number[] {
   return new Array(n).fill(0).map((_, i) => i);
 }
 
+export function fillNumbers(n: number, value: number): number[] {
+  return new Array(n).fill(value);
+}
+
 export function iife<T>(fn: () => T): T {
   return fn();
 }
