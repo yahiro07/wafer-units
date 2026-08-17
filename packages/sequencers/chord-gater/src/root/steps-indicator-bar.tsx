@@ -1,12 +1,13 @@
 import { cz } from "@/common/css-realm";
+import { store } from "@/root/store";
 import { seqNumbers } from "@/utils/helpers";
 
 export const StepsIndicatorBar = () => {
-  let currentStep = 3;
+  const { playStepIndex } = store.useSnapshot();
   return (
     <div class={czStepsIndicatorBar}>
       {seqNumbers(16).map((i) => (
-        <div key={i} class={cz(i === currentStep && "current")} />
+        <div key={i} class={cz(i === playStepIndex && "current")} />
       ))}
     </div>
   );

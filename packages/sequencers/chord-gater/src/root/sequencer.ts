@@ -3,36 +3,29 @@ import {
   NoteInputPort,
   UnitInterface,
 } from "wafer-host/unit-types";
-import { clampValue } from "@/utils/helpers";
+import { clampValue, seqNumbers } from "@/utils/helpers";
 import {
   defaultSequencerEditState,
   SequencerEditState,
 } from "@/root/definitions";
 
-const cMajorScaleNotes = [0, 2, 4, 5, 7, 9, 11];
+const majorSubDegrees = [0, 2, 4, 5, 7, 9, 11];
 
-function getNotePitch(
-  relNote: number,
-  rootNote: number,
-  keyTranspose: number,
-  octaveShift: number,
-) {
-  const octave = (relNote / 7) >>> 0;
-  const subIndex = relNote % 7;
-  return clampValue(
-    rootNote +
-      octave * 12 +
-      cMajorScaleNotes[subIndex] +
-      keyTranspose +
-      octaveShift * 12,
-    0,
-    127,
-  );
+function createScaleNoteNumbers(keyTranspose: number) {
+  return seqNumbers(84).map((i) => {
+    const oct = (i / 7) >>> 0;
+    const sub = i % 7;
+    return oct * 12 + majorSubDegrees[sub] + keyTranspose;
+  });
 }
 
-function getNoteStepLength(stepNotes: number[], startIndex: number) {
+function getNoteStepLength(
+  stepNotes: number[],
+  startIndex: number,
+  patternLength: number,
+) {
   let duration = 1;
-  for (let i = startIndex + 1; i < stepNotes.length; i++) {
+  for (let i = startIndex + 1; i < patternLength; i++) {
     if (stepNotes[i] === 2) {
       duration++;
     } else {
@@ -42,7 +35,7 @@ function getNoteStepLength(stepNotes: number[], startIndex: number) {
   return duration;
 }
 
-const toneIndexToRelNoteMap = [0, 4, 7, 11, 12, 16, 19, 23, 24];
+const toneIndexToScaleRelNoteMap = [0, 2, 4, 6, 7, 9, 11, 13, 14];
 
 export type ISequencerListener = {
   onDisplayStepIndexChanged(stepIndex: number): void;
@@ -57,46 +50,52 @@ export function createSequencer(unitInterface: UnitInterface | undefined) {
   );
 
   const state = {
+    scaleNoteNumbers: createScaleNoteNumbers(0),
     sentNotes: new Set<number>(),
-    keyTranspose: 0,
     rootNoteNumber: 48,
     liveRootNoteLatest: -1,
   };
   let listener: ISequencerListener | null = null;
 
   const internal = {
-    playNote(note: number, time: number, duration?: number) {
+    playSequencerNote(note: number, time: number, duration: number) {
+      noteOutputPort?.noteOn(note, time);
+      noteOutputPort?.noteOff(note, time + duration);
+    },
+    playLiveNote(note: number, time: number) {
       if (state.sentNotes.has(note)) return;
       noteOutputPort?.noteOn(note, time);
-      if (duration) {
-        noteOutputPort?.noteOff(note, time + duration);
-      }
       state.sentNotes.add(note);
     },
-    stopNotes(time: number) {
+    stopLiveNotes(time: number) {
       state.sentNotes.forEach((note) => {
         noteOutputPort?.noteOff(note, time);
       });
       state.sentNotes.clear();
     },
-    triggerChord(time: number, duration?: number) {
-      const notes = editState.chordEnabled
-        ? (editState.chordToneFlags
-            .map((flag, index) =>
-              flag
-                ? getNotePitch(
-                    toneIndexToRelNoteMap[index],
-                    state.rootNoteNumber,
-                    state.keyTranspose,
-                    editState.octaveShift,
-                  )
-                : undefined,
-            )
-            .filter(Boolean) as number[])
-        : [state.rootNoteNumber];
-      notes.forEach((note) => {
-        internal.playNote(note, time, duration);
-      });
+    getChordTone(rootNote: number, scaleRel: number) {
+      const { scaleNoteNumbers } = state;
+      const { octaveShift } = editState;
+      const rootIndex = scaleNoteNumbers.indexOf(rootNote);
+      if (rootIndex < 0) return rootNote + octaveShift * 12;
+      return scaleNoteNumbers[
+        clampValue(rootIndex + scaleRel + octaveShift * 7, 0, 83)
+      ];
+    },
+    getChordNotes() {
+      if (editState.chordEnabled) {
+        return editState.chordToneFlags
+          .map((flag, index) => {
+            if (flag) {
+              const scaleRel = toneIndexToScaleRelNoteMap[index];
+              return internal.getChordTone(state.rootNoteNumber, scaleRel);
+            }
+            return undefined;
+          })
+          .filter(Boolean) as number[];
+      } else {
+        return [state.rootNoteNumber + editState.octaveShift * 12];
+      }
     },
   };
 
@@ -107,15 +106,17 @@ export function createSequencer(unitInterface: UnitInterface | undefined) {
       const stepNote = editState.stepNotes[pos];
       if (stepNote === 1) {
         const duration =
-          getNoteStepLength(editState.stepNotes, pos) * unitDuration;
-        internal.triggerChord(time, duration);
-      } else if (stepNote === 0) {
-        internal.stopNotes(time);
+          getNoteStepLength(editState.stepNotes, pos, editState.patternLength) *
+          unitDuration *
+          editState.stepDuty;
+        const notes = internal.getChordNotes();
+        notes.forEach((note) => {
+          internal.playSequencerNote(note, time, duration);
+        });
       }
       listener?.onDisplayStepIndexChanged(stepIndex % 16);
     },
     stop() {
-      internal.stopNotes(0);
       listener?.onDisplayStepIndexChanged(-1);
     },
   };
@@ -129,16 +130,19 @@ export function createSequencer(unitInterface: UnitInterface | undefined) {
           state.liveRootNoteLatest !== -1 &&
           noteNumber !== state.liveRootNoteLatest
         ) {
-          internal.stopNotes(time);
+          internal.stopLiveNotes(time);
         }
-        internal.triggerChord(time);
+        const notes = internal.getChordNotes();
+        notes.forEach((note) => {
+          internal.playLiveNote(note, time);
+        });
         state.liveRootNoteLatest = noteNumber;
       }
     },
     noteOff(noteNumber, time) {
       time = Math.max(time ?? 0, audioContext?.currentTime ?? 0);
       if (noteNumber === state.liveRootNoteLatest) {
-        internal.stopNotes(time);
+        internal.stopLiveNotes(time);
         state.liveRootNoteLatest = -1;
       }
     },
@@ -149,7 +153,7 @@ export function createSequencer(unitInterface: UnitInterface | undefined) {
       Object.assign(editState, attrs);
     },
     setKeyTranspose(keyTranspose: number) {
-      state.keyTranspose = keyTranspose;
+      state.scaleNoteNumbers = createScaleNoteNumbers(keyTranspose);
     },
     clockHandlers,
     noteInput,
