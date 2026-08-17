@@ -3,15 +3,16 @@ import { queryUnitInterface } from "wafer-host/unit-types";
 import { createSequencer, ISequencerListener } from "@/root/sequencer";
 import { store } from "@/root/store";
 import { pickObjectMembers } from "@/utils/helpers";
+import { useEffect } from "preact/hooks";
 
 const unitInterface = queryUnitInterface("wafer-v01");
 const sequencer = createSequencer(unitInterface);
 
-export function setupUnit() {
+function setupUnit() {
   unitInterface?.completeSetup({
     unitAspects: {
       unitType: "sequencer",
-      viewSize: [420, 260],
+      viewSize: [720, 360],
     },
     hostCallbacks: {
       setKey(keySpec) {
@@ -24,7 +25,7 @@ export function setupUnit() {
   });
 }
 
-export function setupSynchronization() {
+function setupSynchronization() {
   const unsubscribeStore = store.subscribe((attrs) => {
     const editStateAttrs = pickObjectMembers(
       attrs,
@@ -55,4 +56,9 @@ export function setupSynchronization() {
     unsubscribeStore();
     sequencer.setListener(null);
   };
+}
+
+export function useSetupDrivers() {
+  useEffect(setupUnit, []);
+  useEffect(setupSynchronization, []);
 }

@@ -2,6 +2,7 @@ import { Button } from "@/components/button";
 import { ButtonsSelector } from "@/components/buttons-selector";
 import { Knob } from "@/components/knob";
 import { SideLabelBox } from "@/components/side-label-box";
+import { useSetupDrivers } from "@/root/drivers";
 import { StepsEditorRoot } from "@/root/steps-editor";
 import { StepsIndicatorBar } from "@/root/steps-indicator-bar";
 import { store } from "@/root/store";
@@ -108,6 +109,7 @@ const ChordButtonsContainer = () => {
 };
 
 export const App = () => {
+  useSetupDrivers();
   return (
     <div class="flex-v gap-4 bg-clPageBg p-8 text-white">
       <div class="flex-ha gap-2 justify-between">
