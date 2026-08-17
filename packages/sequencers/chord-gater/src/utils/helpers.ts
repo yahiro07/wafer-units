@@ -2,7 +2,7 @@ export function seqNumbers(n: number): number[] {
   return new Array(n).fill(0).map((_, i) => i);
 }
 
-export function fillNumbers(n: number, value: number): number[] {
+export function fillArray<T>(n: number, value: T): T[] {
   return new Array(n).fill(value);
 }
 

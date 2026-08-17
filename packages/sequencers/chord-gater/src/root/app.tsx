@@ -87,18 +87,22 @@ const GaterHeaderContainer = () => {
   );
 };
 
+const chordToneLabels = ["R0", "3", "5", "7", "R1", "3", "5", "7", "R2"];
+
 const ChordButtonsContainer = () => {
+  const { chordToneFlags } = store.useSnapshot();
+  const toggle = (index: number) => {
+    store.setChordToneFlags((prev) =>
+      prev.map((flag, i) => (i === index ? !flag : flag)),
+    );
+  };
   return (
     <div class="flex-h gap-1.25">
-      <Button>R0</Button>
-      <Button>3</Button>
-      <Button active>5</Button>
-      <Button>7</Button>
-      <Button>R1</Button>
-      <Button>3</Button>
-      <Button>5</Button>
-      <Button>7</Button>
-      <Button>R2</Button>
+      {chordToneLabels.map((label, index) => (
+        <Button active={chordToneFlags[index]} onClick={() => toggle(index)}>
+          {label}
+        </Button>
+      ))}
     </div>
   );
 };
