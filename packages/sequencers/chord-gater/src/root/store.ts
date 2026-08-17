@@ -5,10 +5,12 @@ import { createStore } from "snap-store";
 //stepNote: 0:none, 1:on, 2:tie
 
 export const store = createStore<{
+  octaveShift: number;
   patternLength: PatternLength;
   stepNotes: number[];
   previewStepNotes: number[] | null;
 }>({
+  octaveShift: 0,
   patternLength: 4,
   stepNotes: fillNumbers(32, 0),
   previewStepNotes: null,

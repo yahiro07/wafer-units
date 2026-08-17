@@ -305,7 +305,7 @@ const StepsBarEditor = ({ stepsRange }: { stepsRange: StepsRange }) => {
   );
 };
 
-export const StepsEditorRoot = () => {
+const StepsEditorRootInner = () => {
   const { patternLength } = store.useSnapshot();
   if (patternLength === 4) {
     return (
@@ -333,4 +333,12 @@ export const StepsEditorRoot = () => {
       </div>
     );
   }
+};
+
+export const StepsEditorRoot = () => {
+  return (
+    <div class="h-120px">
+      <StepsEditorRootInner />
+    </div>
+  );
 };
