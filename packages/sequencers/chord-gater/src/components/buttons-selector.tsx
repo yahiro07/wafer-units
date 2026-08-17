@@ -1,5 +1,5 @@
 import { css, cz } from "@/common/css-realm";
-import { fontSpecs, uiColors } from "@/common/ui-theme";
+import { fontSpecs, uiColors } from "@/components/ui-theme";
 import { SelectorOption } from "@/utils/selector-option";
 import { flexH, npx } from "@/utils/utility-styles";
 
