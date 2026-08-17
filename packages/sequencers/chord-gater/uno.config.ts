@@ -1,8 +1,10 @@
 import { defineConfig } from "unocss";
 import presetWind4 from "@unocss/preset-wind4";
 import { uiColors } from "./src/common/ui-colors";
+import { transformerVariantGroup } from "unocss";
 
 export default defineConfig({
+  transformers: [transformerVariantGroup()],
   presets: [presetWind4()],
   theme: { colors: uiColors },
   configDeps: ["./src/common/ui-colors.ts"],

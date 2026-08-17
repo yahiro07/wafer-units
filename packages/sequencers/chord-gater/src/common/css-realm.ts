@@ -1,3 +1,3 @@
 import { createCssRealm } from "mini-css";
 
-export const { css, styled, cssRealm } = createCssRealm();
+export const { css, cz, styled, cssRealm } = createCssRealm();
