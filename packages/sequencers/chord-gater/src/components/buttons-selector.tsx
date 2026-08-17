@@ -55,7 +55,7 @@ const style = css({
     height: npx(36),
   },
   "&.--wide > button": {
-    width: npx(56),
+    width: npx(48),
     height: npx(34),
   },
 });

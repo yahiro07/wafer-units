@@ -28,7 +28,7 @@ export const store = createStore<StoreState>({
 if (1) {
   store.setStepNotes(
     seqNumbers(32).map((i) =>
-      i === 3 || i === 7 ? 1 : i === 4 || i === 5 ? 2 : 0,
+      i === 2 || i === 3 || i === 7 ? 1 : i === 4 || i === 5 ? 2 : 0,
     ),
   );
 }
