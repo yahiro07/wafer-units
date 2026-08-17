@@ -1,7 +1,8 @@
 import { css, cz } from "@/common/css-realm";
 import { uiColors } from "@/common/ui-colors";
 import { GridBackground } from "@/components/grid-background";
-import { fillNumbers, seqNumbers } from "@/utils/helpers";
+import { startDragSession } from "@/utils/drag-session";
+import { clampValue, fillNumbers, seqNumbers } from "@/utils/helpers";
 import { createStore } from "snap-store";
 
 const StepsIndicatorBar = () => {
@@ -57,14 +58,49 @@ function startStepsBarDragInput(
     onTap: (index: number) => void;
     onBandChanged: (band: DragBand) => void;
   },
-) {}
+) {
+  const indexFromX = (x: number) =>
+    clampValue(Math.floor(x / uiConfigs.stepCellWidth), 0, nx - 1);
+  startDragSession(
+    e,
+    {
+      onUp(ev) {
+        const startIndex = indexFromX(ev.originalPosition.x);
+        const endIndex = indexFromX(ev.position.x);
+        if (startIndex === endIndex) {
+          callbacks.onTap(startIndex);
+        }
+      },
+    },
+    { coordinate: "relative" },
+  );
+}
 
 const stepNotesEditCore = {
   applyBandEdit(originalStepNotes: number[], band: DragBand): number[] {
     return originalStepNotes;
   },
   toggleStep(originalStepNotes: number[], index: number): number[] {
-    return originalStepNotes;
+    const notes = [...originalStepNotes];
+    if (notes[index] === 0) {
+      notes[index] = 1;
+      return notes;
+    }
+    let start = index;
+    while (start > 0 && notes[start] === 2 && notes[start - 1] === 2) {
+      start--;
+    }
+    if (start > 0 && notes[start] === 2 && notes[start - 1] === 1) {
+      start--;
+    }
+    let end = start + 1;
+    while (end < notes.length && notes[end] === 2) {
+      end++;
+    }
+    for (let i = start; i < end; i++) {
+      notes[i] = 0;
+    }
+    return notes;
   },
 };
 
@@ -138,7 +174,7 @@ const StepsBarEditor = ({ stepsRange }: { stepsRange: StepsRange }) => {
   const { stepCellWidth, stepCellHeight } = uiConfigs;
   return (
     <div
-      class="relative"
+      class="relative touch-none"
       style={{ width: stepCellWidth * nx, height: stepCellHeight }}
       onPointerDown={(e) => handleStepsBarEditorPointerDown(e, stepsRange)}
     >
