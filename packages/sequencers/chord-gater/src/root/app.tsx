@@ -1,6 +1,6 @@
 import { css } from "@/common/css-realm";
 import { uiColors } from "@/common/ui-colors";
-import { StepsBarEditor } from "@/root/steps-bar-editor";
+import { StepsEditorRoot } from "@/root/steps-editor";
 import { StepsIndicatorBar } from "@/root/steps-indicator-bar";
 
 export const App = () => {
@@ -21,8 +21,7 @@ export const App = () => {
         <div class={css({ background: uiColors.clAccent })}>fff</div>
       </div>
       <StepsIndicatorBar />
-      <StepsBarEditor stepsRange={{ offset: 0, length: 16 }} />
-      <StepsBarEditor stepsRange={{ offset: 16, length: 16 }} />
+      <StepsEditorRoot />
     </div>
   );
 };

@@ -259,9 +259,7 @@ const StepNotesLayer = ({ stepsRange }: { stepsRange: StepsRange }) => {
         <div
           key={idx}
           class={cz(czStepNote, note === 1 && "head", note == 2 && "tie")}
-        >
-          {note}
-        </div>
+        />
       ))}
     </div>
   );
@@ -292,7 +290,7 @@ const czStepNote = cz(
   }),
 );
 
-export const StepsBarEditor = ({ stepsRange }: { stepsRange: StepsRange }) => {
+const StepsBarEditor = ({ stepsRange }: { stepsRange: StepsRange }) => {
   const nx = stepsRange.length;
   const { stepCellWidth, stepCellHeight } = uiConfigs;
   return (
@@ -305,4 +303,34 @@ export const StepsBarEditor = ({ stepsRange }: { stepsRange: StepsRange }) => {
       <StepNotesLayer stepsRange={stepsRange} />
     </div>
   );
+};
+
+export const StepsEditorRoot = () => {
+  const { patternLength } = store.useSnapshot();
+  if (patternLength === 4) {
+    return (
+      <div class="flex-h">
+        <StepsBarEditor stepsRange={{ offset: 0, length: 4 }} />
+        <StepsBarEditor stepsRange={{ offset: 0, length: 4 }} />
+        <StepsBarEditor stepsRange={{ offset: 0, length: 4 }} />
+        <StepsBarEditor stepsRange={{ offset: 0, length: 4 }} />
+      </div>
+    );
+  } else if (patternLength === 8) {
+    return (
+      <div class="flex-h">
+        <StepsBarEditor stepsRange={{ offset: 0, length: 8 }} />
+        <StepsBarEditor stepsRange={{ offset: 0, length: 8 }} />
+      </div>
+    );
+  } else if (patternLength === 16) {
+    return <StepsBarEditor stepsRange={{ offset: 0, length: 16 }} />;
+  } else {
+    return (
+      <div class="flex-v gap-3">
+        <StepsBarEditor stepsRange={{ offset: 0, length: 16 }} />
+        <StepsBarEditor stepsRange={{ offset: 16, length: 16 }} />
+      </div>
+    );
+  }
 };
