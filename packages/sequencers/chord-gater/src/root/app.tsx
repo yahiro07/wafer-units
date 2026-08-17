@@ -32,7 +32,9 @@ const store = createStore<{
 });
 if (1) {
   store.setStepNotes(
-    seqNumbers(32).map((i) => (i === 3 || i === 7 ? 1 : i === 4 ? 2 : 0)),
+    seqNumbers(32).map((i) =>
+      i === 3 || i === 7 ? 1 : i === 4 || i === 5 ? 2 : 0,
+    ),
   );
 }
 
@@ -164,6 +166,12 @@ const czStepNote = cz(
       borderRight: "none",
     },
     "&.head + &.tie": {
+      borderLeft: "none",
+    },
+    "&.tie:has(+ &.tie)": {
+      borderRight: "none",
+    },
+    "&.tie + &.tie": {
       borderLeft: "none",
     },
   }),
