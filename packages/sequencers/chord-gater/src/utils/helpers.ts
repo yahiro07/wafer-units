@@ -39,3 +39,18 @@ export function unaryToByte(value: number): number {
 export function unaryFromByte(byte: number): number {
   return byte / 255;
 }
+
+export function pickObjectMembers<T extends {}, K extends keyof T>(
+  obj: T,
+  keys: K[] | Record<K, 1 | true>,
+  options?: { ignoreUndefined?: boolean },
+): Pick<T, K> {
+  const keysArray = Array.isArray(keys) ? keys : (Object.keys(keys) as K[]);
+  const resObject: Pick<T, K> = {} as Pick<T, K>;
+  for (const key of keysArray) {
+    const value = obj[key];
+    if (value === undefined && options?.ignoreUndefined) continue;
+    resObject[key] = obj[key];
+  }
+  return resObject;
+}

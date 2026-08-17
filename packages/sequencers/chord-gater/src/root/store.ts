@@ -1,29 +1,21 @@
-import { PatternLength } from "@/root/definitions";
-import { fillArray, seqNumbers } from "@/utils/helpers";
+import {
+  defaultSequencerEditState,
+  SequencerEditState,
+} from "@/root/definitions";
+import { seqNumbers } from "@/utils/helpers";
 import { createStore } from "snap-store";
 
 //stepNote: 0:none, 1:on, 2:tie
 
-type StoreState = {
-  octaveShift: number;
-  stepDuty: number;
-  chordEnabled: boolean;
-  chordToneFlags: boolean[];
-  gaterEnabled: boolean;
-  patternLength: PatternLength;
-  stepNotes: number[];
+type StoreState = SequencerEditState & {
   previewStepNotes: number[] | null;
+  playStepIndex: number;
 };
 
 export const store = createStore<StoreState>({
-  octaveShift: 0,
-  stepDuty: 0.5,
-  chordEnabled: true,
-  chordToneFlags: seqNumbers(8).map((i) => i === 0),
-  gaterEnabled: true,
-  patternLength: 4,
-  stepNotes: fillArray(32, 0),
+  ...defaultSequencerEditState,
   previewStepNotes: null,
+  playStepIndex: -1,
 });
 if (1) {
   store.setStepNotes(
