@@ -269,11 +269,11 @@ const czStepNote = cz(
   css({
     "&.head": {
       background: "#8f8a",
-      border: "solid 1px #080",
+      border: "solid 2px #080",
     },
     "&.tie": {
       background: "#8f8a",
-      border: "solid 1px #080",
+      border: "solid 2px #080",
     },
     "&.head:has(+ &.tie)": {
       borderRight: "none",
@@ -336,9 +336,5 @@ const StepsEditorRootInner = () => {
 };
 
 export const StepsEditorRoot = () => {
-  return (
-    <div class="h-120px">
-      <StepsEditorRootInner />
-    </div>
-  );
+  return <StepsEditorRootInner />;
 };

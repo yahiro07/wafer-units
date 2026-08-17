@@ -56,3 +56,13 @@ export function flexVC(gap?: number) {
     ...(gap && { gap: npx4(gap) }),
   } as const;
 }
+
+export function absoluteFull() {
+  return {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
+  } as const;
+}

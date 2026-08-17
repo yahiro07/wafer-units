@@ -6,11 +6,17 @@ import { createStore } from "snap-store";
 
 export const store = createStore<{
   octaveShift: number;
+  stepDuty: number;
+  chordEnabled: boolean;
+  gaterEnabled: boolean;
   patternLength: PatternLength;
   stepNotes: number[];
   previewStepNotes: number[] | null;
 }>({
   octaveShift: 0,
+  stepDuty: 0.5,
+  chordEnabled: true,
+  gaterEnabled: true,
   patternLength: 4,
   stepNotes: fillNumbers(32, 0),
   previewStepNotes: null,

@@ -1,5 +1,5 @@
 import { css, cz } from "@/common/css-realm";
-import { fontSpecs } from "@/common/ui-theme";
+import { fontSpecs, uiColors } from "@/common/ui-theme";
 import { SelectorOption } from "@/utils/selector-option";
 import { flexH, npx } from "@/utils/utility-styles";
 
@@ -40,22 +40,22 @@ const style = css({
   fontFamily: fontSpecs.mono,
   "> button": {
     border: "inset 1px #4448",
-    background: "#444",
+    background: uiColors.clButtonBg,
     color: "#fff",
     borderRadius: npx(2),
     cursor: "pointer",
 
     "&.--active": {
-      background: "#fa4",
+      background: uiColors.clPrimary,
       color: "#000",
     },
   },
   "&.--narrow > button": {
     width: npx(40),
-    height: npx(40),
+    height: npx(36),
   },
   "&.--wide > button": {
-    width: npx(60),
-    height: npx(36),
+    width: npx(56),
+    height: npx(34),
   },
 });
