@@ -43,6 +43,11 @@ const uiConfigs = {
   stepCellHeight: 50,
 };
 
+const tapConfigs = {
+  maxDistance: 8,
+  maxDurationMs: 250,
+};
+
 type StepsRange = {
   offset: number;
   length: number;
@@ -53,25 +58,144 @@ type DragBand = {
   end: number;
 };
 
+type NoteSpan = {
+  start: number;
+  end: number;
+};
+
+function findNoteSpan(notes: number[], index: number): NoteSpan | null {
+  if (notes[index] !== 1 && notes[index] !== 2) return null;
+  let start = index;
+  while (start > 0 && notes[start] === 2 && notes[start - 1] === 2) {
+    start--;
+  }
+  if (start > 0 && notes[start] === 2 && notes[start - 1] === 1) {
+    start--;
+  }
+  let end = start + 1;
+  while (end < notes.length && notes[end] === 2) {
+    end++;
+  }
+  return { start, end };
+}
+
+function clearRange(notes: number[], start: number, end: number) {
+  for (let i = start; i < end; i++) {
+    notes[i] = 0;
+  }
+}
+
+function writeNote(notes: number[], start: number, end: number) {
+  notes[start] = 1;
+  for (let i = start + 1; i < end; i++) {
+    notes[i] = 2;
+  }
+}
+
+function clearOverlappingNotes(
+  notes: number[],
+  rangeStart: number,
+  rangeEnd: number,
+) {
+  const spans: NoteSpan[] = [];
+  let i = 0;
+  while (i < notes.length) {
+    if (notes[i] === 1) {
+      const span = findNoteSpan(notes, i);
+      if (span) {
+        if (span.start < rangeEnd && span.end > rangeStart) {
+          spans.push(span);
+        }
+        i = span.end;
+        continue;
+      }
+    }
+    i++;
+  }
+  for (const span of spans) {
+    clearRange(notes, span.start, span.end);
+  }
+}
+
 function startStepsBarDragInput(
   e: PointerEvent,
-  nx: number,
+  stepsRange: StepsRange,
+  totalSteps: number,
   callbacks: {
     onTap: (index: number) => void;
     onBandChanged: (band: DragBand) => void;
+    onCommit: (band: DragBand) => void;
+    onCancel: () => void;
   },
 ) {
   const indexFromX = (x: number) =>
-    clampValue(Math.floor(x / uiConfigs.stepCellWidth), 0, nx - 1);
+    clampValue(
+      stepsRange.offset + Math.floor(x / uiConfigs.stepCellWidth),
+      0,
+      totalSteps - 1,
+    );
+  const bandFromEvent = (ev: {
+    position: { x: number };
+    originalPosition: { x: number };
+  }): DragBand => ({
+    start: indexFromX(ev.originalPosition.x),
+    end: indexFromX(ev.position.x),
+  });
+  const pointerDistance = (ev: {
+    position: { x: number; y: number };
+    originalPosition: { x: number; y: number };
+  }) =>
+    Math.hypot(
+      ev.position.x - ev.originalPosition.x,
+      ev.position.y - ev.originalPosition.y,
+    );
+
+  const t0 = performance.now();
+  let dragStarted = false;
+  let lastEvent = {
+    position: { x: 0, y: 0 },
+    originalPosition: { x: 0, y: 0 },
+  };
+
+  const promoteToDrag = (ev: typeof lastEvent) => {
+    dragStarted = true;
+    callbacks.onBandChanged(bandFromEvent(ev));
+  };
+
+  const tapTimer = window.setTimeout(() => {
+    promoteToDrag(lastEvent);
+  }, tapConfigs.maxDurationMs);
+
   startDragSession(
     e,
     {
-      onUp(ev) {
-        const startIndex = indexFromX(ev.originalPosition.x);
-        const endIndex = indexFromX(ev.position.x);
-        if (startIndex === endIndex) {
-          callbacks.onTap(startIndex);
+      onDown(ev) {
+        lastEvent = ev;
+      },
+      onMove(ev) {
+        lastEvent = ev;
+        if (dragStarted || pointerDistance(ev) > tapConfigs.maxDistance) {
+          promoteToDrag(ev);
         }
+      },
+      onUp(ev) {
+        window.clearTimeout(tapTimer);
+        const dt = performance.now() - t0;
+        if (
+          !dragStarted &&
+          pointerDistance(ev) <= tapConfigs.maxDistance &&
+          dt <= tapConfigs.maxDurationMs
+        ) {
+          callbacks.onTap(indexFromX(ev.originalPosition.x));
+          return;
+        }
+        const band = bandFromEvent(ev);
+        callbacks.onBandChanged(band);
+        callbacks.onCommit(band);
+      },
+      onCancel() {
+        window.clearTimeout(tapTimer);
+        callbacks.onCancel();
       },
     },
     { coordinate: "relative" },
@@ -80,7 +204,39 @@ function startStepsBarDragInput(
 
 const stepNotesEditCore = {
   applyBandEdit(originalStepNotes: number[], band: DragBand): number[] {
-    return originalStepNotes;
+    const notes = [...originalStepNotes];
+    const grab = band.start;
+    const current = band.end;
+    const grabbed = findNoteSpan(notes, grab);
+
+    if (!grabbed) {
+      const start = Math.min(grab, current);
+      const end = Math.max(grab, current) + 1;
+      clearOverlappingNotes(notes, start, end);
+      writeNote(notes, start, end);
+      return notes;
+    }
+
+    const isResize = notes[grab] === 2 && grab === grabbed.end - 1;
+    if (isResize) {
+      clearRange(notes, grabbed.start, grabbed.end);
+      if (current < grabbed.start) {
+        return notes;
+      }
+      const end = current + 1;
+      clearOverlappingNotes(notes, grabbed.start, end);
+      writeNote(notes, grabbed.start, end);
+      return notes;
+    }
+
+    const length = grabbed.end - grabbed.start;
+    let newStart = grabbed.start + (current - grab);
+    newStart = clampValue(newStart, 0, notes.length - length);
+    const newEnd = newStart + length;
+    clearRange(notes, grabbed.start, grabbed.end);
+    clearOverlappingNotes(notes, newStart, newEnd);
+    writeNote(notes, newStart, newEnd);
+    return notes;
   },
   toggleStep(originalStepNotes: number[], index: number): number[] {
     const notes = [...originalStepNotes];
@@ -88,20 +244,9 @@ const stepNotesEditCore = {
       notes[index] = 1;
       return notes;
     }
-    let start = index;
-    while (start > 0 && notes[start] === 2 && notes[start - 1] === 2) {
-      start--;
-    }
-    if (start > 0 && notes[start] === 2 && notes[start - 1] === 1) {
-      start--;
-    }
-    let end = start + 1;
-    while (end < notes.length && notes[end] === 2) {
-      end++;
-    }
-    for (let i = start; i < end; i++) {
-      notes[i] = 0;
-    }
+    const span = findNoteSpan(notes, index);
+    if (!span) return notes;
+    clearRange(notes, span.start, span.end);
     return notes;
   },
 };
@@ -110,22 +255,26 @@ function handleStepsBarEditorPointerDown(
   e: PointerEvent,
   stepsRange: StepsRange,
 ) {
-  const nx = stepsRange.length;
   const originalStepNotes = [...store.state.stepNotes];
-  startStepsBarDragInput(e, nx, {
+  startStepsBarDragInput(e, stepsRange, originalStepNotes.length, {
     onTap(index) {
-      const stepNotes = stepNotesEditCore.toggleStep(
-        originalStepNotes,
-        stepsRange.offset + index,
+      store.setStepNotes(
+        stepNotesEditCore.toggleStep(originalStepNotes, index),
       );
-      store.setStepNotes(stepNotes);
     },
     onBandChanged(band) {
-      const stepNotes = stepNotesEditCore.applyBandEdit(
-        originalStepNotes,
-        band,
+      store.setPreviewStepNotes(
+        stepNotesEditCore.applyBandEdit(originalStepNotes, band),
       );
-      store.setPreviewStepNotes(stepNotes);
+    },
+    onCommit(band) {
+      store.setStepNotes(
+        stepNotesEditCore.applyBandEdit(originalStepNotes, band),
+      );
+      store.setPreviewStepNotes(null);
+    },
+    onCancel() {
+      store.setPreviewStepNotes(null);
     },
   });
 }
