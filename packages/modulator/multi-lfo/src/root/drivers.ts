@@ -1,4 +1,5 @@
 import { queryUnitInterface } from "wafer-host/unit-types";
+import { automationInput } from "@/root/automation";
 import { createSequencer } from "@/root/sequencer";
 import { store } from "@/root/store";
 
@@ -38,6 +39,7 @@ export function setupUnit() {
         store.setSlots(data.slots);
       },
     },
+    automationInput,
   });
 }
 
