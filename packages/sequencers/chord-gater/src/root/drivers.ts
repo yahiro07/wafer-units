@@ -1,5 +1,6 @@
 import { queryUnitInterface } from "wafer-host/unit-types";
 
+import { persistence } from "@/root/persistence";
 import { createSequencer, ISequencerListener } from "@/root/sequencer";
 import { store } from "@/root/store";
 import { pickObjectMembers } from "@/utils/helpers";
@@ -21,7 +22,7 @@ function setupUnit() {
     },
     clockHandlers: sequencer.clockHandlers,
     noteInput: sequencer.noteInput,
-    // persistence,
+    persistence,
   });
 }
 
