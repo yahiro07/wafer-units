@@ -1,4 +1,5 @@
 import { queryUnitInterface } from "wafer-host/unit-types";
+import { automationInput } from "@/root/automation";
 import { createEngine } from "@/root/engine";
 import { persistence } from "@/root/persistence";
 import { store } from "@/root/store";
@@ -25,6 +26,7 @@ export function setupUnit() {
           engine.noteOff(noteNumber, time ?? 0);
         },
       },
+      automationInput,
       persistence,
       cleanup: engine.disconnects,
     });
