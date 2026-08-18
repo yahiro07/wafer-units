@@ -9,6 +9,7 @@ export const store = createStore<{
   pageIndex: number;
   notes: Note[];
   previewNotePitch: number | null;
+  stateLoadRevision: number;
 }>({
   octave: 0,
   duty: 1,
@@ -17,6 +18,7 @@ export const store = createStore<{
   pageIndex: 0,
   notes: [],
   previewNotePitch: null,
+  stateLoadRevision: 0,
 });
 
 if (0) {

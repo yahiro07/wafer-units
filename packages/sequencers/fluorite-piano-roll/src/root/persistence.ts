@@ -54,5 +54,6 @@ export const persistence: Persistence = {
       notes,
       pageIndex: 0,
     });
+    store.setStateLoadRevision((prev) => prev + 1);
   },
 };

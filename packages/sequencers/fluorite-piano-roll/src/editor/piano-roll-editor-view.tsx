@@ -8,6 +8,7 @@ import { noteNameLabels, uiConfig } from "@/editor/ui-config";
 import { store } from "@/root/store";
 import { startDragSession } from "@/utils/drag-session";
 import { npx, seqNumbers } from "@/utils/helpers";
+import { RefObject } from "preact";
 
 type SectionRange = {
   offset: number;
@@ -371,19 +372,39 @@ const stylePlayPositionLineLayer = {
   ),
 };
 
+function calculateNotesCenter(notes: Note[]) {
+  let minPitch = notes[0].pitch;
+  let maxPitch = notes[0].pitch;
+  for (const note of notes) {
+    if (note.pitch < minPitch) minPitch = note.pitch;
+    if (note.pitch > maxPitch) maxPitch = note.pitch;
+  }
+  const midPitch = (minPitch + maxPitch) / 2;
+
+  const { cellH, numKeys } = uiConfig;
+  const editorH = cellH * numKeys;
+  return editorH - (midPitch + 0.5) * cellH;
+}
+
+function useSetInitialScrollPosition(baseDivRef: RefObject<HTMLDivElement>) {
+  const { stateLoadRevision, notes } = store.useSnapshot();
+
+  useEffect(() => {
+    const el = baseDivRef.current;
+    if (el) {
+      const centerY =
+        notes.length > 0 ? calculateNotesCenter(notes) : el.scrollHeight / 2;
+      el.scrollTop = centerY - el.clientHeight / 2;
+    }
+  }, [stateLoadRevision]);
+}
+
 export const PianoRollEditorView = () => {
   const { cellW, cellH, numKeys } = uiConfig;
   const editorW = cellW * 32;
   const editorH = cellH * numKeys;
   const baseDivRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const el = baseDivRef.current;
-    if (el) {
-      el.scrollTop = el.scrollHeight / 2 - el.clientHeight / 2;
-    }
-  }, []);
-
+  useSetInitialScrollPosition(baseDivRef);
   return (
     <div
       ref={baseDivRef}
@@ -392,7 +413,10 @@ export const PianoRollEditorView = () => {
         qu.overflowXY("hidden", "scroll"),
         qu.css({ touchAction: "pan-y" }),
       ]}
-      onWheel={(e) => e.preventDefault()}
+      onWheel={(e) => {
+        e.stopPropagation();
+        e.preventDefault();
+      }}
     >
       <SideKeyboardColumn />
       <div sx={qu.relative().wh(editorW, editorH).flexH()}>
