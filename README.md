@@ -18,10 +18,10 @@ Pass the URLs of the units you need to the Vite plugin:
 
 ```ts
 export const unitSourceUrls = [
-  "https://cdn.jsdelivr.net/gh/yahiro07/wafer-units@r21/graphite-drum-machine/",
-  "https://cdn.jsdelivr.net/gh/yahiro07/wafer-units@r21/tonerio-sequencer/",
-  "https://cdn.jsdelivr.net/gh/yahiro07/wafer-units@r21/sunset-delay/",
-  // ...
+  "https://github.com/yahiro07/wafer-units/tree/r22/graphite-drum-machine/",
+  "https://github.com/yahiro07/wafer-units/tree/r22/tonerio-sequencer/",
+  "https://github.com/yahiro07/wafer-units/tree/r22/sunset-delay/",
+  ...
 ];
 ```
 
@@ -41,11 +41,11 @@ The plugin adds those units to the catalog JSON. Point `<UnitFrame>` at the cata
 
 ### Without the Vite plugin (vanilla JS)
 
-One simple approach is to clone this repository into your host app. Replace `r21` with the latest tag:
+One simple approach is to clone this repository into your host app. Replace `r22` with the latest tag:
 
 ```sh
 cd assets
-git clone -b r21 https://github.com/yahiro07/wafer-units
+git clone -b r22 https://github.com/yahiro07/wafer-units
 ```
 
 That gives you a layout like this:

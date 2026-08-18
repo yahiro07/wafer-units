@@ -48,8 +48,8 @@ importers:
         specifier: ^8.0.12
         version: 8.2.0(@types/node@25.9.5)(jiti@2.7.0)
       wafer-host:
-        specifier: ^0.1.7
-        version: 0.1.7(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        specifier: ^0.1.9
+        version: 0.1.9(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
 
   packages/drum-machines/drum-fill-machine:
     devDependencies:
@@ -2820,8 +2820,8 @@ packages:
       vite:
         optional: true
 
-  wafer-host@0.1.7:
-    resolution: {integrity: sha512-v4+56cXnzB/zaWWDCYZ4ejmyjxDHY4IH5UiMHc1X6rctMO5/10HMtcMoCHnbb/qPzz2kKJcN/4KNPTViSjcUoA==}
+  wafer-host@0.1.9:
+    resolution: {integrity: sha512-IPz4p0zKlOb5B/rETIt7cA85fvmgcCY5Kin74XPERkK8E9ykx1QV8MOomduM34YO3xnAGNHMGH0oZOCoXnvfTQ==}
     peerDependencies:
       react: ^19.2.6
       react-dom: ^19.2.6
@@ -4540,7 +4540,7 @@ snapshots:
     optionalDependencies:
       vite: 8.2.0(@types/node@25.9.5)(jiti@2.7.0)
 
-  wafer-host@0.1.7(react-dom@19.2.8(react@19.2.8))(react@19.2.8):
+  wafer-host@0.1.9(react-dom@19.2.8(react@19.2.8))(react@19.2.8):
     optionalDependencies:
       react: 19.2.8
       react-dom: 19.2.8(react@19.2.8)
