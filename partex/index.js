@@ -1791,7 +1791,7 @@ function Br(e) {
 		].indexOf(e.patternMode),
 		+!!e.ghostEnabled,
 		+!!e.realized,
-		["C", "Am"].indexOf(e.songKey)
+		["major", "minor"].indexOf(e.keysMode)
 	]);
 }
 function Vr(e) {
@@ -1814,7 +1814,7 @@ function Vr(e) {
 		"slice",
 		"shift",
 		"polyphonicShift"
-	][i[4]], u = i[5] > 0, d = i[6] > 0, f = ["C", "Am"][i[7]];
+	][i[4]], u = i[5] > 0, d = i[6] > 0, f = ["major", "minor"][i[7]];
 	if (!(!l || !f)) return {
 		inputNotes: r,
 		noteDuty: a,
@@ -1824,7 +1824,7 @@ function Vr(e) {
 		patternMode: l,
 		ghostEnabled: u,
 		realized: d,
-		songKey: f
+		keysMode: f
 	};
 }
 //#endregion
@@ -2538,13 +2538,32 @@ function aa(e, t) {
 	throw Error("never reaches here");
 }
 //#endregion
+//#region src/logic/keys-name-helper.ts
+var oa = [
+	"C/Am",
+	"C#/Am#",
+	"D/Bm",
+	"D#/Cm",
+	"E/C#m",
+	"F/Dm",
+	"F#/D#m",
+	"G/Em",
+	"G#/Fm",
+	"A/F#m",
+	"A#/Gm",
+	"B/G#m"
+];
+function sa(e) {
+	return oa[(e.keyTranspose + 24) % 12];
+}
+//#endregion
 //#region ../../../node_modules/.pnpm/wafer-host@0.1.7_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/wafer-host/dist/unit-types/index.js
-function oa(e, t) {
+function ca(e, t) {
 	return window?.queryUnitInterfaceForModule?.(e, t);
 }
 //#endregion
 //#region src/logic/resolve-note-pitch.tsx
-var sa = /* @__PURE__ */ new Map([
+var la = /* @__PURE__ */ new Map([
 	[0, 0],
 	[.5, 1],
 	[1, 2],
@@ -2558,13 +2577,13 @@ var sa = /* @__PURE__ */ new Map([
 	[5.5, 10],
 	[6, 11]
 ]);
-function ca(e, t) {
-	let n = e / 7 >>> 0, r = e - n * 7, i = sa.get(r) ?? 0;
-	return 60 + (n - 2) * 12 + i + t * 12;
+function ua(e, t, n) {
+	let r = e / 7 >>> 0, i = e - r * 7, a = la.get(i) ?? 0;
+	return Nr(60 + (r - 2) * 12 + a + t * 12 + n, 0, 127);
 }
 //#endregion
 //#region src/logic/unit-interface-debug-dummy.ts
-function la() {
+function da() {
 	let e = new AudioContext(), t = e.createGain();
 	return {
 		audioContext: e,
@@ -2579,55 +2598,58 @@ function la() {
 }
 //#endregion
 //#region src/logic/sequencer.ts
-var ua = oa("wafer-v01", import.meta.url) ?? la();
-if (!ua) throw Error("undefined unit interface");
-function da() {
+var fa = ca("wafer-v01", import.meta.url) ?? da();
+if (!fa) throw Error("undefined unit interface");
+function pa() {
 	let e = {
 		stepNotes: [],
 		octaveShift: 0,
 		noteDuty: 1,
 		loopBars: 2
-	}, t = ua.createNoteOutputPort();
+	}, t = 0, n = fa.createNoteOutputPort();
 	return {
 		setStepNotes(t) {
 			e.stepNotes = t;
 		},
-		processStep: { processStep(n, r, i) {
-			let a = e.loopBars * 16;
-			if (n %= a, r === void 0 || i === void 0) return;
-			let o = e.stepNotes.filter((e) => e.position === n && e.duration > 0);
-			for (let n of o) {
-				let a = ca(n.pitch, e.octaveShift), o = i * n.duration, s = o * (n.duration === 1 ? .2 : .4), c = e.noteDuty, l = Ir(c, s, o);
-				t.noteOn(a, r), t.noteOff(a, r + l);
+		processStep: { processStep(r, i, a) {
+			let o = e.loopBars * 16;
+			if (r %= o, i === void 0 || a === void 0) return;
+			let s = e.stepNotes.filter((e) => e.position === r && e.duration > 0);
+			for (let r of s) {
+				let o = ua(r.pitch, e.octaveShift, t), s = a * r.duration, c = s * (r.duration === 1 ? .2 : .4), l = e.noteDuty, u = Ir(l, c, s);
+				n.noteOn(o, i), n.noteOff(o, i + u);
 			}
 		} }.processStep,
 		allNotesOff() {},
-		inputNoteOn(e, n, r) {
-			t.noteOn(e, n, r);
+		inputNoteOn(e, t, r) {
+			n.noteOn(e, t, r);
 		},
-		inputNoteOff(e, n) {
-			t.noteOff(e, n);
+		inputNoteOff(e, t) {
+			n.noteOff(e, t);
 		},
 		setAttrs(t) {
 			t.octaveShift !== void 0 && (e.octaveShift = t.octaveShift), t.noteDuty !== void 0 && (e.noteDuty = t.noteDuty), t.loopBars !== void 0 && (e.loopBars = t.loopBars);
 		},
+		setKeyTranspose(e) {
+			t = e;
+		},
 		setPreviewNote(e) {}
 	};
 }
-var Y = da(), fa = Symbol("V"), pa = Symbol("IMMUT_BASE"), ma = Symbol("IS_RAW"), ha = Symbol("P"), ga = "Array", _a = [
+var Y = pa(), ma = Symbol("V"), ha = Symbol("IMMUT_BASE"), ga = Symbol("IS_RAW"), _a = Symbol("P"), va = "Array", ya = [
 	Symbol.iterator,
 	Symbol.toStringTag,
-	ma
-], va = {
+	ga
+], ba = {
 	Map: "Map",
 	Set: "Set",
-	Array: ga
-}, ya = "[object Object]", ba = "[object Map]", xa = "[object Set]", Sa = "[object Array]", Ca = "[object Function]", wa = {
-	[ba]: "Map",
-	[xa]: "Set",
-	[Sa]: ga,
-	[ya]: "Object"
-}, Ta = [
+	Array: va
+}, xa = "[object Object]", Sa = "[object Map]", Ca = "[object Set]", wa = "[object Array]", Ta = "[object Function]", Ea = {
+	[Sa]: "Map",
+	[Ca]: "Set",
+	[wa]: va,
+	[xa]: "Object"
+}, Da = [
 	"push",
 	"pop",
 	"shift",
@@ -2637,20 +2659,20 @@ var Y = da(), fa = Symbol("V"), pa = Symbol("IMMUT_BASE"), ma = Symbol("IS_RAW")
 	"copyWithin",
 	"delete",
 	"fill"
-], Ea = [
+], Oa = [
 	"set",
 	"clear",
 	"delete"
-], Da = [
+], ka = [
 	"add",
 	"clear",
 	"delete"
-], Oa = [
+], Aa = [
 	"splice",
 	"sort",
 	"unshift",
 	"shift"
-], ka = "concat.copyWithin.entries.every.fill.filter.find.findIndex.flat.flatMap.forEach.includes.indexOf.join.keys.lastIndexOf.map.pop.push.reduce.reduceRight.reverse.shift.unshift.slice.some.sort.splice.values.valueOf".split("."), Aa = {
+], ja = "concat.copyWithin.entries.every.fill.filter.find.findIndex.flat.flatMap.forEach.includes.indexOf.join.keys.lastIndexOf.map.pop.push.reduce.reduceRight.reverse.shift.unshift.slice.some.sort.splice.values.valueOf".split("."), Ma = {
 	Map: [
 		"clear",
 		"delete",
@@ -2672,8 +2694,8 @@ var Y = da(), fa = Symbol("V"), pa = Symbol("IMMUT_BASE"), ma = Symbol("IS_RAW")
 		"keys",
 		"values"
 	],
-	[ga]: ka
-}, ja = {
+	[va]: ja
+}, Na = {
 	Map: [
 		"clear",
 		"set",
@@ -2684,7 +2706,7 @@ var Y = da(), fa = Symbol("V"), pa = Symbol("IMMUT_BASE"), ma = Symbol("IS_RAW")
 		"add",
 		"delete"
 	],
-	[ga]: [
+	[va]: [
 		"pop",
 		"push",
 		"shift",
@@ -2693,163 +2715,163 @@ var Y = da(), fa = Symbol("V"), pa = Symbol("IMMUT_BASE"), ma = Symbol("IS_RAW")
 		"sort",
 		"copyWithin"
 	]
-}, Ma = {
+}, Pa = {
 	Map: ["forEach", "get"],
 	Set: ["forEach"],
-	[ga]: ["forEach", "map"]
+	[va]: ["forEach", "map"]
 };
-function Na(e, t = "") {
+function Fa(e, t = "") {
 	e.value >= 2 ** 53 - 1 ? (e.value = 1, e.prefixSeed += 1) : e.value += 1;
 	let { value: n, prefixSeed: r } = e;
 	return `${t}${r}_${n}`;
 }
-var Pa = {
-	value: 0,
-	prefixSeed: 1
-}, Fa = {
-	value: 0,
-	prefixSeed: 1
-}, Ia = {
+var Ia = {
 	value: 0,
 	prefixSeed: 1
 }, La = {
 	value: 0,
 	prefixSeed: 1
-}, Ra = {}, za = {};
-function Ba() {
-	return Na(Fa, "MID_");
-}
-function Va() {
-	return Na(Pa, "MV_");
-}
+}, Ra = {
+	value: 0,
+	prefixSeed: 1
+}, za = {
+	value: 0,
+	prefixSeed: 1
+}, Ba = {}, Va = {};
 function Ha() {
-	return Na(Ia, "SI_");
+	return Fa(La, "MID_");
 }
 function Ua() {
-	return Na(La, "SR_");
+	return Fa(Ia, "MV_");
 }
-var Wa = {
+function Wa() {
+	return Fa(Ra, "SI_");
+}
+function Ga() {
+	return Fa(za, "SR_");
+}
+var Ka = {
 	autoFreeze: !1,
 	autoRevoke: !0
-}, Ga = Object.prototype.toString, Ka = !!Reflect, qa = Object.prototype.hasOwnProperty;
-function Ja(e, t) {
-	return Ka ? Reflect.has(e, t) : qa.call(e, t);
+}, qa = Object.prototype.toString, Ja = !!Reflect, Ya = Object.prototype.hasOwnProperty;
+function Xa(e, t) {
+	return Ja ? Reflect.has(e, t) : Ya.call(e, t);
 }
-function Ya(e, t, n, r) {
+function Za(e, t, n, r) {
 	let i = [], a = (e, t, n) => {
-		ro(e) || i.includes(e) || (i.push(e), r(e, t, n), Array.isArray(e) && e.forEach((t, n) => {
+		ao(e) || i.includes(e) || (i.push(e), r(e, t, n), Array.isArray(e) && e.forEach((t, n) => {
 			a(t, e, n);
-		}), $a(e) && e.forEach((t, n) => {
+		}), to(e) && e.forEach((t, n) => {
 			a(t, e, n);
-		}), Qa(e) && Object.keys(e).forEach((t) => {
+		}), eo(e) && Object.keys(e).forEach((t) => {
 			a(e[t], e, t);
 		}));
 	};
 	a(e, t, n);
 }
-function Xa(e) {
-	return Ga.call(e);
+function Qa(e) {
+	return qa.call(e);
 }
-function Za(...e) {
+function $a(...e) {
 	return e;
 }
-function Qa(e) {
-	return Xa(e) === ya;
-}
-function $a(e) {
-	return Xa(e) === ba;
-}
 function eo(e) {
-	return Xa(e) === xa;
+	return Qa(e) === xa;
 }
 function to(e) {
-	return Xa(e) === Ca;
+	return Qa(e) === Sa;
 }
 function no(e) {
-	return wa[Xa(e)];
+	return Qa(e) === Ca;
 }
 function ro(e) {
-	let t = Xa(e);
-	return ![
-		ya,
-		Sa,
-		ba,
-		xa,
-		Ca
-	].includes(t);
+	return Qa(e) === Ta;
 }
 function io(e) {
-	return e.constructor.name === "AsyncFunction" || typeof e.then == "function";
+	return Ea[Qa(e)];
 }
 function ao(e) {
-	return typeof Promise < "u" && e instanceof Promise;
+	let t = Qa(e);
+	return ![
+		xa,
+		wa,
+		Sa,
+		Ca,
+		Ta
+	].includes(t);
 }
 function oo(e) {
+	return e.constructor.name === "AsyncFunction" || typeof e.then == "function";
+}
+function so(e) {
+	return typeof Promise < "u" && e instanceof Promise;
+}
+function co(e) {
 	var t = typeof e;
 	return t === "number" || t === "string" && /^[0-9]*$/.test(e);
 }
-function so(e) {
+function lo(e) {
 	return typeof e == "symbol";
 }
 Array.prototype, Map.prototype, Set.prototype, Function.prototype;
-function co(e) {
-	return e && e[fa] || "";
+function uo(e) {
+	return e && e[ma] || "";
 }
-function lo(e, t) {
-	let n = co(e);
+function fo(e, t) {
+	let n = uo(e);
 	return n ? n !== t : !1;
 }
-function uo(e, t) {
+function po(e, t) {
 	if (t) return e;
 	if (Array.isArray(e)) return e.slice();
 	let n = e;
-	return e && Qa(e) && (n = Object.assign({}, e)), $a(e) && (n = new Map(e)), eo(e) && (n = new Set(e)), n;
-}
-function fo(e, t) {
-	return t.immutBase ? e : uo(e, t.readOnly);
-}
-function po(e) {
-	let t = e;
-	if (!so(e)) return e;
-	let n = Ra[t];
-	return n || (n = Ha(), Ra[t] = n), n;
+	return e && eo(e) && (n = Object.assign({}, e)), to(e) && (n = new Map(e)), no(e) && (n = new Set(e)), n;
 }
 function mo(e, t) {
+	return t.immutBase ? e : po(e, t.readOnly);
+}
+function ho(e) {
+	let t = e;
+	if (!lo(e)) return e;
+	let n = Ba[t];
+	return n || (n = Wa(), Ba[t] = n), n;
+}
+function go(e, t) {
 	let n = e.map((e) => e.join("|")), r = t.join("|");
 	return n.indexOf(r);
 }
-function ho(e, t) {
+function _o(e, t) {
 	let n = e;
-	return t && (n = go(e, !0)), n.join("|");
+	return t && (n = vo(e, !0)), n.join("|");
 }
-function go(e, t) {
+function vo(e, t) {
 	let n = [];
 	if (t) return e.forEach((e) => {
-		let t = po(e);
+		let t = ho(e);
 		n.push(t);
 	}), n;
 	n = e.slice();
-	let r = e.length - 1, i = e[r], a = po(i);
+	let r = e.length - 1, i = e[r], a = ho(i);
 	return n[r] = a, n;
 }
-function _o(e) {
-	return e.map((e) => za[e] || e);
-}
-function vo(e, t, n) {
-	let { keyPaths: r, keyStrPaths: i } = e, a = n || go(t);
-	mo(i, a) < 0 && (r.push(t), i.push(a));
-}
 function yo(e) {
-	let { keyPaths: t, keyStrPaths: n, keyStrPath: r } = e, i = mo(n, r);
+	return e.map((e) => Va[e] || e);
+}
+function bo(e, t, n) {
+	let { keyPaths: r, keyStrPaths: i } = e, a = n || vo(t);
+	go(i, a) < 0 && (r.push(t), i.push(a));
+}
+function xo(e) {
+	let { keyPaths: t, keyStrPaths: n, keyStrPath: r } = e, i = go(n, r);
 	n.splice(i, 1), t.splice(i, 1), e.keyPath = t[0], e.keyStrPath = n[0];
 }
-function bo(e, t) {
+function So(e, t) {
 	let n = e.get(t);
 	if (n !== void 0) return n;
 	let r = e.get(Number(t) || t);
 	if (r !== void 0) return r;
 }
-function xo(e, t) {
+function Co(e, t) {
 	let n, r = e, i = t.length - 1, a = !0;
 	for (let e = 0; e <= i; e++) {
 		let o = t[e];
@@ -2857,17 +2879,17 @@ function xo(e, t) {
 			a = !1;
 			break;
 		}
-		n = $a(r) ? bo(r, o) : r[o], r = n;
+		n = to(r) ? So(r, o) : r[o], r = n;
 	}
 	return {
 		val: n,
 		isGetted: a
 	};
 }
-function So(e, t) {
+function wo(e, t) {
 	let n, r = !1, i = t.length - 1;
 	for (let a = 0; a <= i; a++) {
-		let i = t[a], { isGetted: o, val: s } = xo(e, i);
+		let i = t[a], { isGetted: o, val: s } = Co(e, i);
 		if (o) {
 			n = s, r = !0;
 			break;
@@ -2878,7 +2900,7 @@ function So(e, t) {
 		val: n
 	};
 }
-function Co(e, t, n) {
+function To(e, t, n) {
 	let r = e, i = t.length - 1;
 	for (let e = 0; e <= i && r; e++) {
 		let a = t[e];
@@ -2886,20 +2908,20 @@ function Co(e, t, n) {
 			r[a] = n;
 			break;
 		}
-		r = $a(r) ? bo(r, a) : r[a];
+		r = to(r) ? So(r, a) : r[a];
 	}
 }
-function wo(e, t, n) {
+function Eo(e, t, n) {
 	let r = t.length - 1;
 	for (let i = 0; i <= r; i++) {
 		let r = t[i];
-		Co(e, r, n);
+		To(e, r, n);
 	}
 }
-function To(e, t) {
-	let n = ho(e), r = "";
+function Do(e, t) {
+	let n = _o(e), r = "";
 	for (let e of t) {
-		let t = `${ho(e, !0)}|`;
+		let t = `${_o(e, !0)}|`;
 		if (n.startsWith(t)) {
 			r = n.substring(t.length);
 			break;
@@ -2907,22 +2929,22 @@ function To(e, t) {
 	}
 	let i = [];
 	if (r) {
-		let e = _o(r.split("|"));
+		let e = yo(r.split("|"));
 		t.forEach((t) => {
 			i.push(t.concat(e));
 		});
 	}
 	return i;
 }
-var Eo = /* @__PURE__ */ new Map(), Do = /* @__PURE__ */ new Map(), Oo = /* @__PURE__ */ new WeakMap(), ko = /* @__PURE__ */ new Map();
-function Ao(e) {
+var Oo = /* @__PURE__ */ new Map(), ko = /* @__PURE__ */ new Map(), Ao = /* @__PURE__ */ new WeakMap(), jo = /* @__PURE__ */ new Map();
+function Mo(e) {
 	e.rootMeta.modified = !0;
 	let t = (e) => {
 		e && !e.modified && (e.modified = !0, t(e.parentMeta));
 	};
 	t(e);
 }
-function jo(e, t, n) {
+function No(e, t, n) {
 	let r = [t], i = X(e, n);
 	if (i && i.level > 0) {
 		let { keyPath: e } = i;
@@ -2930,37 +2952,37 @@ function jo(e, t, n) {
 	}
 	return r;
 }
-function Mo(e, t, n) {
-	let { ver: r, parentMeta: i = null, immutBase: a, compareVer: o, apiCtx: s, hasOnOperate: c } = n, l = no(t), u = n.sourceId, d = [], f = [], p = [], m = [], h = [], g = [], _ = po(e), v = 0, y = null;
+function Po(e, t, n) {
+	let { ver: r, parentMeta: i = null, immutBase: a, compareVer: o, apiCtx: s, hasOnOperate: c } = n, l = io(t), u = n.sourceId, d = [], f = [], p = [], m = [], h = [], g = [], _ = ho(e), v = 0, y = null;
 	if (i) {
-		u = i.sourceId, y = i.copy, v = Po(y, s), p = i.selfType === "Array" ? i.keyPath.concat(e) : i.arrKeyPath, d = jo(y, e, s), f = go(d);
+		u = i.sourceId, y = i.copy, v = Io(y, s), p = i.selfType === "Array" ? i.keyPath.concat(e) : i.arrKeyPath, d = No(y, e, s), f = vo(d);
 		let t = [];
 		if (i.arrKeyPath.length) {
-			let e = ho(i.arrKeyPath, !0), n = Go(u, e);
-			t = To(d, n);
+			let e = _o(i.arrKeyPath, !0), n = qo(u, e);
+			t = Do(d, n);
 		}
 		if (!t.length) {
 			let { keyStrPathStr: e } = i, n = e ? `${e}|${_}` : _;
-			t = Go(u, n);
+			t = qo(u, n);
 		}
 		if (t.length > 1) {
-			let { copy: e } = i.rootMeta, { val: n } = xo(e, d), r = [], a = !1, o = [];
+			let { copy: e } = i.rootMeta, { val: n } = Co(e, d), r = [], a = !1, o = [];
 			t.forEach((t, i) => {
-				let { val: s } = xo(e, t);
+				let { val: s } = Co(e, t);
 				if (!a) {
-					let { val: n } = xo(e, t.slice(0, t.length - 1));
+					let { val: n } = Co(e, t.slice(0, t.length - 1));
 					Array.isArray(n) && (a = !0);
 				}
-				s === n ? (g.push(t), h.push(go(t)), o.push(t)) : r.push(i);
+				s === n ? (g.push(t), h.push(vo(t)), o.push(t)) : r.push(i);
 			}), a && (m = o), r.forEach((e) => t.splice(e, 1));
 		} else i.keyPaths.length > 0 ? i.keyPaths.forEach((t) => {
 			let n = t.concat(e);
-			g.push(n), h.push(go(n));
+			g.push(n), h.push(vo(n));
 		}) : (g = [d], h = [f]);
 	}
 	!p.length && m.length && (p = m[0]), p.length && !m.length && m.push(p);
 	let b = i ? `${i.keyStrPathStr}|${_}` : _, x = {
-		id: Ba(),
+		id: Ha(),
 		sourceId: u,
 		rootMeta: null,
 		parentMeta: i,
@@ -2990,90 +3012,90 @@ function Mo(e, t, n) {
 		newNodes: [],
 		ver: r,
 		compareVer: o,
-		revoke: Za,
+		revoke: $a,
 		hasOnOperate: c,
-		execOnOperate: Za
+		execOnOperate: $a
 	};
 	return x.rootMeta = v === 0 ? x : i.rootMeta, x;
 }
-function No(e) {
+function Fo(e) {
 	if (!e) return !1;
-	let t = Ro(e);
+	let t = Bo(e);
 	return t ? !t.isImmutBase : !1;
 }
-function Po(e, t) {
-	let n = Fo(e, t);
+function Io(e, t) {
+	let n = Lo(e, t);
 	return n ? n.level + 1 : 1;
 }
 function X(e, t) {
 	return t.metaMap.get(e);
 }
-function Fo(e, t) {
-	return e ? t ? t.metaMap.get(e) || null : zo(e) || null : null;
-}
-function Io(e) {
-	return e && zo(e) || null;
-}
-function Lo(e) {
-	return e && e[fa] || "";
+function Lo(e, t) {
+	return e ? t ? t.metaMap.get(e) || null : Vo(e) || null : null;
 }
 function Ro(e) {
-	return zo(e) || null;
+	return e && Vo(e) || null;
 }
 function zo(e) {
-	return e[ha];
+	return e && e[ma] || "";
 }
-function Bo(e, t, n) {
-	t.copy = e.copy, t.self = e.self, t.parentMeta[n] = e.self;
+function Bo(e) {
+	return Vo(e) || null;
 }
 function Vo(e) {
-	return Oo.get(e) || Ua();
+	return e[_a];
 }
-function Ho(e, t) {
-	return Oo.set(e, t);
+function Ho(e, t, n) {
+	t.copy = e.copy, t.self = e.self, t.parentMeta[n] = e.self;
 }
 function Uo(e) {
-	return Eo.get(e);
+	return Ao.get(e) || Ga();
 }
-function Wo(e, t, n) {
-	let r = Eo.get(e);
-	r || (r = {}, Eo.set(e, r)), r[t] = n;
+function Wo(e, t) {
+	return Ao.set(e, t);
 }
-function Go(e, t) {
-	let n = Uo(e);
+function Go(e) {
+	return Oo.get(e);
+}
+function Ko(e, t, n) {
+	let r = Oo.get(e);
+	r || (r = {}, Oo.set(e, r)), r[t] = n;
+}
+function qo(e, t) {
+	let n = Go(e);
 	return n && n[t] || [];
 }
-function Ko(e) {
-	return Do.get(e) || [];
+function Jo(e) {
+	return ko.get(e) || [];
 }
-function qo(e, t, n) {
-	let r = Eo.get(e);
+function Yo(e, t, n) {
+	let r = Oo.get(e);
 	r && n.forEach((e) => Reflect.deleteProperty(r, e));
-	let i = (Do.get(e) || []).filter((e, n) => !t.includes(n));
-	Do.set(e, i);
+	let i = (ko.get(e) || []).filter((e, n) => !t.includes(n));
+	ko.set(e, i);
 }
-function Jo(e, t) {
+function Xo(e, t) {
 	let { sourceId: n, keyPaths: r } = e;
-	t.forEach((e) => Wo(n, e, r));
-	let i = Do.get(n) || [], a = r.map((e) => ho(e, !0)), o = !1;
+	t.forEach((e) => Ko(n, e, r));
+	let i = ko.get(n) || [], a = r.map((e) => _o(e, !0)), o = !1;
 	out: for (let e of i) for (let t of e) {
-		let n = ho(t, !0);
+		let n = _o(t, !0);
 		if (a.includes(n)) {
-			let t = e.map((e) => ho(e, !0));
+			let t = e.map((e) => _o(e, !0));
 			r.forEach((n, r) => {
 				t.includes(a[r]) || e.push(n);
 			}), o = !0;
 			break out;
 		}
 	}
-	o || i.push(r), Do.set(n, i);
+	o || i.push(r), ko.set(n, i);
 }
-function Yo(e, t, n) {
+function Zo(e, t, n) {
 	let r = null;
 	if (!(n && n.parentMeta !== t)) return r;
-	let i = n.keyPath, a = t.keyPath.concat(e), o = go(i), s = go(a), c = o.join("|"), l = s.join("|");
+	let i = n.keyPath, a = t.keyPath.concat(e), o = vo(i), s = vo(a), c = o.join("|"), l = s.join("|");
 	if (c !== l) {
-		vo(n, a, s), Jo(n, [c, l]);
+		bo(n, a, s), Xo(n, [c, l]);
 		let i = n.modified, o = e, u = n, d = t;
 		do
 			d.copy[o] = u.copy, d.modified = i, o = d.key, u = d, d = d.parentMeta;
@@ -3082,7 +3104,7 @@ function Yo(e, t, n) {
 	}
 	return r;
 }
-function Xo(e, t, n) {
+function Qo(e, t, n) {
 	let { copy: r, isArrOrderChanged: i } = e, { targetNode: a, key: o } = n;
 	if (i) {
 		let e = r.findIndex((e) => e === t.copy || e === t.proxyVal);
@@ -3091,10 +3113,10 @@ function Xo(e, t, n) {
 	}
 	r[o] = a;
 }
-function Zo(e, t) {
-	return !Qa(e) || Lo(e) === t;
+function $o(e, t) {
+	return !eo(e) || zo(e) === t;
 }
-function Qo(e, t) {
+function es(e, t) {
 	let { metaMap: n } = t, r = /* @__PURE__ */ new Map();
 	t.newNodeMap.forEach((e) => {
 		let { node: n, parent: i, key: a } = e, o = r.get(n);
@@ -3103,8 +3125,8 @@ function Qo(e, t) {
 			return;
 		}
 		let s = e;
-		Ya(n, i, a, (e, n, r) => {
-			let i = Fo(e, t);
+		Za(n, i, a, (e, n, r) => {
+			let i = Lo(e, t);
 			if (i) {
 				let { modified: e, copy: t, self: a } = i;
 				n[r] = e ? t : a;
@@ -3118,70 +3140,70 @@ function Qo(e, t) {
 		let d = t ? r : o, f = i.copy, p = i.selfType;
 		if (p === "Map") return f.set(a, d), u();
 		if (p === "Set") return f.delete(c), f.add(d), u();
-		if (p === "Array") return Xo(i, e, {
+		if (p === "Array") return Qo(i, e, {
 			targetNode: d,
 			key: a
 		}), u();
 		if (l !== !0) return f[a] = d, u();
 	}), e.scopes.length = 0;
 }
-function $o(e, t) {
-	let n = Ko(e.sourceId), r = -1, i = [], a = [];
+function ts(e, t) {
+	let n = Jo(e.sourceId), r = -1, i = [], a = [];
 	for (let o of n) {
 		r += 1;
 		let n = null, s = null, c = [];
 		for (let t of o) {
-			let { val: r } = xo(e.proxyVal, t), i = Io(r);
+			let { val: r } = Co(e.proxyVal, t), i = Ro(r);
 			i && (i.modified && !n && (n = i), s = i, c.push(i.self));
 		}
-		if (c[0] !== c[1]) i.push(r), o.forEach((e) => a.push(ho(e)));
-		else if (n) for (let e of o) Co(t, e, n.copy);
-		else if (s) for (let e of o) Co(t, e, s.self);
+		if (c[0] !== c[1]) i.push(r), o.forEach((e) => a.push(_o(e)));
+		else if (n) for (let e of o) To(t, e, n.copy);
+		else if (s) for (let e of o) To(t, e, s.self);
 	}
-	i.length && qo(e.sourceId, i, a);
+	i.length && Yo(e.sourceId, i, a);
 }
-function es(e, t) {
+function ns(e, t) {
 	let { self: n, copy: r, modified: i } = e, a = n;
-	return r && i && (a = e.copy), $o(e, a), Qo(e, t), a;
+	return r && i && (a = e.copy), ts(e, a), es(e, t), a;
 }
-function ts(e) {
+function rs(e) {
 	e.rootMeta.scopes.push(e);
 }
-function ns(e, t, n) {
-	let { traps: r, immutBase: i, apiCtx: a, autoRevoke: o } = n, s = Mo(e, t, n), c = fo(t, n);
+function is(e, t, n) {
+	let { traps: r, immutBase: i, apiCtx: a, autoRevoke: o } = n, s = Po(e, t, n), c = mo(t, n);
 	s.copy = c;
-	let l = Object.assign(Object.assign({}, r), { get: (e, t) => ha === t ? s : r.get(e, t) });
-	if (i) s.proxyVal = new Proxy(c, l), s.revoke = Za;
+	let l = Object.assign(Object.assign({}, r), { get: (e, t) => _a === t ? s : r.get(e, t) });
+	if (i) s.proxyVal = new Proxy(c, l), s.revoke = $a;
 	else {
 		let e = Proxy.revocable(c, l);
-		s.proxyVal = e.proxy, s.revoke = o ? e.revoke : Za;
+		s.proxyVal = e.proxy, s.revoke = o ? e.revoke : $a;
 	}
 	return a.metaMap.set(c, s), a.metaMap.set(s.proxyVal, s), a.metaMap.set(s.self, s), s;
 }
-function rs(e, t) {
-	return e === "Array" || (Ma[e] || []).includes(t);
+function as(e, t) {
+	return e === "Array" || (Pa[e] || []).includes(t);
 }
-function is(e, t) {
+function os(e, t) {
 	let { key: n, parentMeta: r, parent: i, parentType: a, apiCtx: o } = t, s = (e, n) => {
 		let c = n || "";
-		if (ro(e) || !e) return e;
+		if (ao(e) || !e) return e;
 		if (!r) throw Error("[[ createMeta ]]: meta should not be null");
-		if (!to(e)) {
-			if (r.newNodeStats[c] || e[ma]) return e;
+		if (!ro(e)) {
+			if (r.newNodeStats[c] || e[ga]) return e;
 			let n = X(e, o);
-			return n || (n = ns(c, e, t), ts(n), r.selfType === "Map" ? i.set(c, n.copy) : i[c] = n.copy), n.proxyVal;
+			return n || (n = is(c, e, t), rs(n), r.selfType === "Map" ? i.set(c, n.copy) : i[c] = n.copy), n.proxyVal;
 		}
-		if (!rs(a, c) || r.proxyItems) return e;
+		if (!as(a, c) || r.proxyItems) return e;
 		let l = [];
 		if (a === "Set") {
 			let e = /* @__PURE__ */ new Set();
-			i.forEach((t) => e.add(s(t))), os(e, r, {
+			i.forEach((t) => e.add(s(t))), cs(e, r, {
 				dataType: "Set",
 				apiCtx: o
 			}), l = e, r.copy = l;
 		} else if (a === "Map") {
 			let e = /* @__PURE__ */ new Map();
-			i.forEach((t, n) => e.set(n, s(t, n))), os(e, r, {
+			i.forEach((t, n) => e.set(n, s(t, n))), cs(e, r, {
 				dataType: "Map",
 				apiCtx: o
 			}), l = e, r.copy = l;
@@ -3190,27 +3212,27 @@ function is(e, t) {
 	};
 	return s(e, n);
 }
-function as(e, t) {
-	if (!Qa(e)) return e;
+function ss(e, t) {
+	if (!eo(e)) return e;
 	let n = X(e, t);
 	return n ? n.copy : e;
 }
-function os(e, t, n) {
+function cs(e, t, n) {
 	let { dataType: r, apiCtx: i } = n, a = e.delete.bind(e), o = e.clear.bind(e);
 	if (e.delete = function(...e) {
-		return Ao(t), a(...e);
+		return Mo(t), a(...e);
 	}, e.clear = function(...e) {
-		return Ao(t), o(...e);
+		return Mo(t), o(...e);
 	}, r === "Set") {
 		let n = e.add.bind(e);
 		e.add = function(...e) {
-			return Ao(t), n(...e);
+			return Mo(t), n(...e);
 		};
 	}
 	if (r === "Map") {
 		let n = e.set.bind(e), r = e.get.bind(e);
 		e.set = function(...e) {
-			if (Ao(t), t.hasOnOperate) {
+			if (Mo(t), t.hasOnOperate) {
 				let n = e[1];
 				t.rootMeta.execOnOperate("set", e[0], {
 					mayProxyVal: n,
@@ -3222,7 +3244,7 @@ function os(e, t, n) {
 		}, e.get = function(...e) {
 			let n = r(...e);
 			if (t.hasOnOperate) {
-				let r = Fo(n, i), a = r ? r.copy || r.self : n;
+				let r = Lo(n, i), a = r ? r.copy || r.self : n;
 				t.rootMeta.execOnOperate("get", e[0], {
 					mayProxyVal: n,
 					value: a,
@@ -3234,108 +3256,108 @@ function os(e, t, n) {
 		};
 	}
 }
-function ss(e) {
+function ls(e) {
 	let { calledBy: t, parentMeta: n, op: r, parentType: i } = e;
-	(["deleteProperty", "set"].includes(t) || t === "get" && (i === "Set" && Da.includes(r) || i === "Array" && Ta.includes(r) || i === "Map" && Ea.includes(r))) && Ao(n);
+	(["deleteProperty", "set"].includes(t) || t === "get" && (i === "Set" && ka.includes(r) || i === "Array" && Da.includes(r) || i === "Map" && Oa.includes(r))) && Mo(n);
 }
-function cs(e, t) {
+function us(e, t) {
 	let n = e.keyPath.slice();
 	return n.push(t), n.join("|");
 }
-function ls(e, t) {
-	let { op: n, key: r, value: i, calledBy: a, parentType: o, parentMeta: s, apiCtx: c, isValueDraft: l, mayNewNode: u } = t, d = as(i, c);
+function ds(e, t) {
+	let { op: n, key: r, value: i, calledBy: a, parentType: o, parentMeta: s, apiCtx: c, isValueDraft: l, mayNewNode: u } = t, d = ss(i, c);
 	if (!s) {
 		e[r] = d;
 		return;
 	}
 	let { self: f, copy: p } = s;
-	ss({
+	ls({
 		calledBy: a,
 		parentMeta: s,
 		op: n,
 		key: r,
 		parentType: o
 	});
-	let m = Aa[o] || [];
-	if (to(i) && m.includes(n)) return n === "slice" ? f.slice : (Oa.includes(n) && (s.isArrOrderChanged = !0), p ? o === "Set" || o === "Map" ? p[n].bind(p) : p[n] : f[n].bind(f));
+	let m = Ma[o] || [];
+	if (ro(i) && m.includes(n)) return n === "slice" ? f.slice : (Aa.includes(n) && (s.isArrOrderChanged = !0), p ? o === "Set" || o === "Map" ? p[n].bind(p) : p[n] : f[n].bind(f));
 	if (!p) return d;
 	let h = p[r], g = () => {
-		let e = Fo(h, c);
+		let e = Lo(h, c);
 		e && (e.isDel = !0);
 	}, _ = () => {
-		let e = Fo(i, c);
+		let e = Lo(i, c);
 		e && e.isDel && (e.isDel = !1, e.key = r, e.keyPath = s.keyPath.concat([r]), e.level = s.level + 1, e.parent = s.copy, e.parentMeta = s);
 	};
 	if (n === "del") {
-		let e = Fo(i, c);
+		let e = Lo(i, c);
 		if (e) {
 			let { keyPaths: t } = e;
-			t.length === 1 ? e.isDel = !0 : yo(e);
+			t.length === 1 ? e.isDel = !0 : xo(e);
 		} else g();
 		let t = p[r];
-		ro(t) || c.newNodeMap.delete(cs(s, r)), delete p[r];
+		ao(t) || c.newNodeMap.delete(us(s, r)), delete p[r];
 		return;
 	}
-	n === "set" && u && !l && !ro(d) && (s.newNodeStats[r] = !0, c.newNodeMap.set(cs(s, r), {
+	n === "set" && u && !l && !ao(d) && (s.newNodeStats[r] = !0, c.newNodeMap.set(us(s, r), {
 		parent: p,
 		node: d,
 		key: r,
 		target: null
 	})), p[r] = d, g(), _();
 }
-function us(e) {
-	if (ro(e)) return e;
-	if (Array.isArray(e) && e.length > 0) return e.forEach(us), Object.freeze(e);
-	if (eo(e)) {
+function fs(e) {
+	if (ao(e)) return e;
+	if (Array.isArray(e) && e.length > 0) return e.forEach(fs), Object.freeze(e);
+	if (no(e)) {
 		let t = e;
-		t.add = () => t, t.delete = () => !1, t.clear = Za;
+		t.add = () => t, t.delete = () => !1, t.clear = $a;
 		for (let e of t.values()) Object.freeze(e);
 		return Object.freeze(e);
 	}
-	if ($a(e)) {
+	if (to(e)) {
 		let t = e;
-		t.set = () => t, t.delete = () => !1, t.clear = Za;
+		t.set = () => t, t.delete = () => !1, t.clear = $a;
 		for (let e of t.values()) Object.freeze(e);
 		return Object.freeze(e);
 	}
 	return Object.getOwnPropertyNames(e).forEach((t) => {
 		let n = e[t];
-		us(n);
+		fs(n);
 	}), Object.freeze(e);
 }
-function ds(e) {
+function ps(e) {
 	if (!e) return e;
-	let t = Io(e);
+	let t = Ro(e);
 	return t ? t.self : e;
 }
-var fs = [
+var ms = [
 	"length",
 	"constructor",
 	"asymmetricMatch",
 	"nodeType",
 	"size"
-], ps = {};
-fs.forEach((e) => ps[e] = 1);
-var ms = {
-	[ga]: 1,
+], hs = {};
+ms.forEach((e) => hs[e] = 1);
+var gs = {
+	[va]: 1,
 	Set: 1,
 	Map: 1
-}, hs = /* @__PURE__ */ new Map();
-function gs(e) {
-	let t = e || {}, n = t.onOperate, r = !!n, i = t.customKeys || [], a = t[pa] ?? !1, o = t.readOnly ?? !1, s = t.disableWarn, c = t.compareVer ?? !1, l = t.autoFreeze ?? Wa.autoFreeze, u = t.disableProxy ?? !1, d = "", f = !1, p = {
+}, _s = /* @__PURE__ */ new Map();
+function vs(e) {
+	let t = e || {}, n = t.onOperate, r = !!n, i = t.customKeys || [], a = t[ha] ?? !1, o = t.readOnly ?? !1, s = t.disableWarn, c = t.compareVer ?? !1, l = t.autoFreeze ?? Ka.autoFreeze, u = t.disableProxy ?? !1, d = "", f = !1, p = {
 		metaMap: /* @__PURE__ */ new Map(),
 		newNodeMap: /* @__PURE__ */ new Map(),
 		metaVer: d
 	};
-	u || (d = Va(), p.metaVer = d, ko.set(d, p));
-	let m = t.autoRevoke ?? Wa.autoRevoke, h = t.silenceSetTrapErr ?? !0, g = (e, t) => (console.warn(`${e} failed, cuase draft root has been finised! key:`, t), h), _ = (e, t) => (console.warn(`${e} failed, cuase the value is an expired limu proxy data! key:`, t), h), v = () => (s || console.warn("can not mutate state at readOnly mode!"), !0), y = (e, t, r) => {
+	u || (d = Ua(), p.metaVer = d, jo.set(d, p));
+	let m = t.autoRevoke ?? Ka.autoRevoke, h = t.silenceSetTrapErr ?? !0, g = (e, t) => (console.warn(`${e} failed, cuase draft root has been finised! key:`, t), h), _ = (e, t) => (console.warn(`${e} failed, cuase the value is an expired limu proxy data! key:`, t), h), v = () => (s || console.warn("can not mutate state at readOnly mode!"), !0), y = (e, t, r) => {
 		let { mayProxyVal: i, parentMeta: o, value: s, isCustom: c = !1 } = r, l = !1, u = e !== "get", d = u ? s : i;
 		if (!n) return {
 			isChanged: l,
 			replacedValue: d
 		};
 		let { selfType: f = "", keyPath: p = [], copy: m, self: h, modified: g, proxyVal: _, arrKeyPath: v = [], keyPaths: y = [], keyStrPaths: b = [], arrKeyPaths: x = [] } = o || {}, S = !1;
-		r.isChanged === void 0 ? (Aa[f] || []).includes(t) ? (S = !0, l = (ja[f] || []).includes(t)) : u && (l = !o || (g ? m : h)[t] !== s) : l = r.isChanged;
+		r.isChanged === void 0 ? (Ma[f] || []).includes(t) ? (S = !0, l = (Na[f] || []).includes(t)) : u && (l = !o || (g ? m : h)[t] !== s) : l = r.isChanged;
 		let C = !1;
 		return n({
 			immutBase: a,
@@ -3369,10 +3391,10 @@ function gs(e) {
 	}, b = (() => {
 		let e = !0, s = {
 			get: (e, t) => {
-				if (fa === t) return d;
+				if (ma === t) return d;
 				let n = e[t];
-				if (_a.includes(t)) {
-					if (to(n)) {
+				if (ya.includes(t)) {
+					if (ro(n)) {
 						if (Symbol.iterator === t && Array.isArray(e)) {
 							let t = 0, n = () => ({
 								next: () => {
@@ -3395,8 +3417,8 @@ function gs(e) {
 					}
 					return n;
 				}
-				if (t === "__proto__" || t === "toJSON" && !Ja(e, t)) return n;
-				let l = n, u = X(e, p), f = Yo(t, u, Fo(l, p));
+				if (t === "__proto__" || t === "toJSON" && !Xa(e, t)) return n;
+				let l = n, u = X(e, p), f = Zo(t, u, Lo(l, p));
 				if (f) return f;
 				if (i.includes(t)) return y("get", t, {
 					parentMeta: u,
@@ -3406,11 +3428,11 @@ function gs(e) {
 					isCustom: !0
 				}).replacedValue;
 				let h = u?.selfType;
-				return ms[h] && ps[t] ? ((t === "length" || t === "size") && y("get", t, {
+				return gs[h] && hs[t] ? ((t === "length" || t === "size") && y("get", t, {
 					parentMeta: u,
 					mayProxyVal: l,
 					value: n
-				}), u.copy[t]) : (l = is(n, {
+				}), u.copy[t]) : (l = os(n, {
 					key: t,
 					compareVer: c,
 					parentMeta: u,
@@ -3423,7 +3445,7 @@ function gs(e) {
 					apiCtx: p,
 					hasOnOperate: r,
 					autoRevoke: m
-				}), h === "Array" && oo(t) || va[h] && (l = ls(e, {
+				}), h === "Array" && co(t) || ba[h] && (l = ds(e, {
 					op: t,
 					key: t,
 					value: n,
@@ -3441,24 +3463,24 @@ function gs(e) {
 			set: (t, r, i) => {
 				if (f) return g("set", r);
 				let a = !0, s = X(t, p), c = !1, l = i;
-				if (No(i)) if (c = !0, Zo(i, d)) {
-					if (as(i, p) === t[r]) return !0;
+				if (Fo(i)) if (c = !0, $o(i, d)) {
+					if (ss(i, p) === t[r]) return !0;
 					let e = X(i, p);
-					Yo(r, s, e), vo(e, s.keyPath.concat(r));
+					Zo(r, s, e), bo(e, s.keyPath.concat(r));
 				} else e = !1;
-				else if (lo(i, d)) {
-					let { proxyVal: e, self: t, sourceId: n } = s.rootMeta, o = zo(i);
-					if (o.sourceId !== n) l = ds(i);
+				else if (fo(i, d)) {
+					let { proxyVal: e, self: t, sourceId: n } = s.rootMeta, o = Vo(i);
+					if (o.sourceId !== n) l = ps(i);
 					else {
-						let { isGetted: n, val: i } = So(e, o.keyPaths);
+						let { isGetted: n, val: i } = wo(e, o.keyPaths);
 						if (!n) return _("set", r);
-						let c = zo(i);
-						Bo(o, c, r);
+						let c = Vo(i);
+						Ho(o, c, r);
 						let u = s.keyPath.concat(r);
 						c.keyPaths.forEach((t) => {
-							let { isGetted: n, val: i } = xo(e, t);
-							n && Bo(o, zo(i), r);
-						}), vo(c, u), wo(t, c.keyPaths, c.self), a = c.keyPaths.length === 1, p.metaMap.set(c.copy, c), l = i;
+							let { isGetted: n, val: i } = Co(e, t);
+							n && Ho(o, Vo(i), r);
+						}), bo(c, u), Eo(t, c.keyPaths, c.self), a = c.keyPaths.length === 1, p.metaMap.set(c.copy, c), l = i;
 					}
 				}
 				if (o) return y("set", r, {
@@ -3467,7 +3489,7 @@ function gs(e) {
 					value: l
 				}), v();
 				if (s && s.selfType === "Array") {
-					if (s.copy && s.__callSet && oo(r)) return l = y("set", r, {
+					if (s.copy && s.__callSet && co(r)) return l = y("set", r, {
 						parentMeta: s,
 						value: l
 					}).replacedValue, s.copy[r] = l, !0;
@@ -3482,7 +3504,7 @@ function gs(e) {
 					});
 					l = e.replacedValue, u = e.isChanged;
 				}
-				return u && ls(t, {
+				return u && ds(t, {
 					parentMeta: s,
 					key: r,
 					value: l,
@@ -3504,7 +3526,7 @@ function gs(e) {
 					parentMeta: n,
 					isChanged: !0,
 					value: r
-				}), ls(e, {
+				}), ds(e, {
 					parentMeta: n,
 					op: "del",
 					key: t,
@@ -3520,14 +3542,14 @@ function gs(e) {
 		};
 		return {
 			createDraft: (e) => {
-				if (ro(e)) throw Error("base state can not be primitive");
-				if (u) return hs.set(e, b.finishDraft), e;
-				let n = e, i = t.sourceId || Vo(e), l = X(e, p);
+				if (ao(e)) throw Error("base state can not be primitive");
+				if (u) return _s.set(e, b.finishDraft), e;
+				let n = e, i = t.sourceId || Uo(e), l = X(e, p);
 				if (l) {
 					if (a && l.isImmutBase) return l.proxyVal;
 					n = l.self;
 				}
-				let f = ns("", n, {
+				let f = is("", n, {
 					ver: d,
 					traps: s,
 					immutBase: a,
@@ -3538,58 +3560,58 @@ function gs(e) {
 					autoRevoke: m,
 					sourceId: i
 				});
-				return ts(f), f.execOnOperate = y, hs.set(f.proxyVal, b.finishDraft), f.proxyVal;
+				return rs(f), f.execOnOperate = y, _s.set(f.proxyVal, b.finishDraft), f.proxyVal;
 			},
 			finishDraft: (t, n) => {
-				if (u) return hs.delete(t), t;
+				if (u) return _s.delete(t), t;
 				let r = X(t, p);
 				if (r.isImmutBase && !n) return t;
-				let i = es(r, p);
-				return l && e && (i = us(i)), ko.delete(d), hs.delete(t), Ho(i, r.sourceId), f = !0, i;
+				let i = ns(r, p);
+				return l && e && (i = fs(i)), jo.delete(d), _s.delete(t), Wo(i, r.sourceId), f = !0, i;
 			}
 		};
 	})();
 	return b;
 }
-function _s(e) {
-	if (!to(e)) throw Error("produce callback is not a function");
-}
-var vs = "Not a Limu root draft";
 function ys(e) {
-	let t = hs.get(e);
-	if (!t) throw Lo(e) && Ro(e)?.level === 0 ? Error("Draft has been finished!") : Error(vs);
+	if (!ro(e)) throw Error("produce callback is not a function");
+}
+var bs = "Not a Limu root draft";
+function xs(e) {
+	let t = _s.get(e);
+	if (!t) throw zo(e) && Bo(e)?.level === 0 ? Error("Draft has been finished!") : Error(bs);
 	return t;
 }
-function bs(e, t) {
-	return gs(t).createDraft(e);
-}
-function xs(e) {
-	return ys(e)(e);
-}
 function Ss(e, t) {
-	if (io(e) || ao(t)) throw Error("produce callback can not be a promise function or result");
+	return vs(t).createDraft(e);
 }
-function Cs(e, t, n) {
-	_s(t);
-	let r = bs(e, n);
-	return Ss(t, t(r)), xs(r);
+function Cs(e) {
+	return xs(e)(e);
 }
-function ws(e, t, n) {
-	if (!t || !to(t)) {
+function ws(e, t) {
+	if (oo(e) || so(t)) throw Error("produce callback can not be a promise function or result");
+}
+function Ts(e, t, n) {
+	ys(t);
+	let r = Ss(e, n);
+	return ws(t, t(r)), Cs(r);
+}
+function Es(e, t, n) {
+	if (!t || !ro(t)) {
 		let n = e, r = t;
-		return _s(e), (e) => Cs(e, n, r);
+		return ys(e), (e) => Ts(e, n, r);
 	}
-	return Cs(e, t, n);
+	return Ts(e, t, n);
 }
-var Ts = ws;
-function Es(e) {
+var Ds = Es;
+function Os(e) {
 	return e.charAt(0).toUpperCase() + e.slice(1);
 }
-function Ds(e, t) {
+function ks(e, t) {
 	let n = e.indexOf(t);
 	n !== -1 && e.splice(n, 1);
 }
-function Os(e, t) {
+function As(e, t) {
 	let { useEffect: n, useRef: r, useState: i } = t, a = {}, o = e, s = {}, c = s, l = [], u, d = !1;
 	function f(e) {
 		for (let t of l) t(e);
@@ -3607,9 +3629,9 @@ function Os(e, t) {
 					}
 				}
 			}
-		}, r = Es(e);
+		}, r = Os(e);
 		c[`set${r}`] = n, c[`produce${r}`] = (e) => {
-			n((t) => Ts(t, e));
+			n((t) => Ds(t, e));
 		}, c[`patch${r}`] = (e) => {
 			n((t) => {
 				let n = typeof e == "function" ? e(t) : e;
@@ -3624,7 +3646,7 @@ function Os(e, t) {
 	}
 	let p = (e) => {
 		for (let t in e) {
-			let n = Es(t), r = e[t], i = c[`set${n}`];
+			let n = Os(t), r = e[t], i = c[`set${n}`];
 			i?.(r);
 		}
 	}, m = (t) => {
@@ -3651,7 +3673,7 @@ function Os(e, t) {
 			(e = t.current) == null || e.deactivate();
 		}), []), t.current.getterObject;
 	}, g = (e) => (l.push(e), () => {
-		Ds(l, e);
+		ks(l, e);
 	}), _ = (e) => {
 		d = !0;
 		try {
@@ -3672,8 +3694,8 @@ function Os(e, t) {
 }
 //#endregion
 //#region ../../../node_modules/.pnpm/snap-store@0.1.12_preact@10.29.8_react@19.2.8/node_modules/snap-store/dist/index.js
-function ks(e) {
-	return Os(e, {
+function js(e) {
+	return As(e, {
 		useEffect: Rt,
 		useRef: Bt,
 		useState: It
@@ -3681,11 +3703,11 @@ function ks(e) {
 }
 //#endregion
 //#region src/store/store.ts
-function As() {
+function Ms() {
 	return [];
 }
-var Z = ks({
-	inputNotes: As(),
+var Z = js({
+	inputNotes: Ms(),
 	noteDuty: 1,
 	octaveShift: 0,
 	loopBars: 2,
@@ -3693,21 +3715,16 @@ var Z = ks({
 	patternMode: "shift",
 	ghostEnabled: !0,
 	realized: !1,
-	songKey: "Am",
+	keysMode: "minor",
 	currentPageIndex: 0,
 	draftNote: null,
 	mappedNotes: [],
-	backupInputNotes: null
+	backupInputNotes: null,
+	currentKeysName: "C/Am"
 });
 //#endregion
 //#region src/components/selector-option.ts
-function js(e) {
-	return e.map((e) => ({
-		label: e,
-		value: e
-	}));
-}
-function Ms(e) {
+function Ns(e) {
 	return e.map(([e, t]) => ({
 		label: t,
 		value: e
@@ -3715,22 +3732,30 @@ function Ms(e) {
 }
 //#endregion
 //#region src/app/controls-section.tsx
-var Ns = Ms([
+var Ps = Ns([
 	["slice", "slice"],
 	["shift", "shift"],
 	["polyphonicShift", "poly-shift"]
-]), Ps = js(["Am", "C"]), Fs = Ms([
+]), Fs = Ns([
 	[.25, "1/4"],
 	[.5, "1/2"],
 	[1, "1"]
-]), Is = Ms([
+]), Is = Ns([
 	.5,
 	1,
 	2,
 	4,
 	8,
 	16
-].map((e) => [e, `${e === .5 ? "1/2" : e}`])), Ls = {
+].map((e) => [e, `${e === .5 ? "1/2" : e}`]));
+function Ls() {
+	let { currentKeysName: e } = Z.useSnapshot();
+	return Ht(() => {
+		let [t, n] = e.split("/");
+		return Ns([["minor", n], ["major", t]]);
+	}, [e]);
+}
+var Rs = {
 	clearNotes() {
 		Z.assign({
 			inputNotes: [],
@@ -3759,8 +3784,8 @@ var Ns = Ms([
 			realized: !1
 		});
 	}
-}, Rs = () => {
-	let e = Z.useSnapshot();
+}, zs = () => {
+	let e = Z.useSnapshot(), t = Ls();
 	return /* @__PURE__ */ q("div", {
 		className: "flex-v gap-3",
 		children: [/* @__PURE__ */ q("div", {
@@ -3775,7 +3800,7 @@ var Ns = Ms([
 						label: "pt-mode",
 						children: /* @__PURE__ */ K(Ji, {
 							className: "w-24",
-							options: Ns,
+							options: Ps,
 							value: e.patternMode,
 							onChange: Z.setPatternMode
 						})
@@ -3808,9 +3833,9 @@ var Ns = Ms([
 						children: /* @__PURE__ */ K(Ki, {
 							label: "key",
 							children: /* @__PURE__ */ K(Ji, {
-								options: Ps,
-								value: e.songKey,
-								onChange: Z.setSongKey
+								options: t,
+								value: e.keysMode,
+								onChange: Z.setKeysMode
 							})
 						})
 					}),
@@ -3851,29 +3876,29 @@ var Ns = Ms([
 						onClick: Z.toggleGhostEnabled,
 						children: "ghost"
 					}), /* @__PURE__ */ K(qi, {
-						onClick: Ls.realizeNotes,
+						onClick: Rs.realizeNotes,
 						disabled: !e.ghostEnabled,
 						children: "realize"
 					})] }),
 					e.realized && e.backupInputNotes && /* @__PURE__ */ K(qi, {
-						onClick: Ls.undoRealize,
+						onClick: Rs.undoRealize,
 						children: "restore"
 					}),
 					/* @__PURE__ */ K(qi, {
 						text: "x",
 						className: "w-9!",
-						onClick: Ls.clearNotes
+						onClick: Rs.clearNotes
 					})
 				]
 			})]
 		})]
 	});
-}, zs = ({ direction: e, onClick: t, disabled: n }) => /* @__PURE__ */ K("button", {
-	css: Bs,
+}, Bs = ({ direction: e, onClick: t, disabled: n }) => /* @__PURE__ */ K("button", {
+	css: Vs,
 	onClick: t,
 	disabled: n,
 	children: K(e === "left" ? Ri.ChevronLeft : Ri.ChevronRight, {})
-}), Bs = Er({
+}), Vs = Er({
 	width: "28px",
 	height: "44px",
 	background: "var(--cl-button-active-bg)",
@@ -3888,9 +3913,9 @@ var Ns = Ms([
 		cursor: "default",
 		pointerEvents: "none"
 	}
-}), Vs = ({ cellW: e, cellH: t, nx: n, isComplementalMinorKey: r }) => /* @__PURE__ */ q("div", {
+}), Hs = ({ cellW: e, cellH: t, nx: n, isComplementalMinorKey: r }) => /* @__PURE__ */ q("div", {
 	className: "relative",
-	css: Ht(() => Hs(e, t), [e, t]),
+	css: Ht(() => Us(e, t), [e, t]),
 	children: [Ar(7).map((e) => {
 		let t = 6 - e, [i, a] = r ? [5, 2] : [0, 4], o = t === i;
 		return /* @__PURE__ */ K("div", {
@@ -3908,7 +3933,7 @@ var Ns = Ms([
 		})
 	})]
 });
-function Hs(e, t) {
+function Us(e, t) {
 	return Er`
     & > .grid-row {
       display: flex;
@@ -4002,18 +4027,18 @@ var Q = {
 	removeNote(e) {
 		Z.setInputNotes((t) => t.filter((t) => t.id !== e));
 	}
-}, Us = () => {
-	let { cellW: e, cellH: t, nx: n } = Q, { songKey: r } = Z.useSnapshot();
+}, Ws = () => {
+	let { cellW: e, cellH: t, nx: n } = Q, { keysMode: r } = Z.useSnapshot();
 	return /* @__PURE__ */ K("div", {
 		className: "flex-v",
-		children: Ar(Q.numOctaves).map((i) => /* @__PURE__ */ K(Vs, {
+		children: Ar(Q.numOctaves).map((i) => /* @__PURE__ */ K(Hs, {
 			cellW: e * 4,
 			cellH: t,
 			nx: n / 4,
-			isComplementalMinorKey: r === "Am"
+			isComplementalMinorKey: r === "minor"
 		}, i))
 	});
-}, Ws = ({ note: e, stepOffset: t, isDraft: n, patternBars: r, ghostEnabled: i }) => {
+}, Gs = ({ note: e, stepOffset: t, isDraft: n, patternBars: r, ghostEnabled: i }) => {
 	let { cellW: a, cellH: o, numOctaves: s } = Q, c = (e.position - t) * a, l = (7 * s - e.pitch - 1) * o, u = e.duration * a, d = o, f = e.duration <= 0, p = i && e.noteType === "ghostHead", m = i && e.noteType === "ghostTails", h = e.position + e.duration <= r * 16, g = !e.noteType && h, _ = !i && !e.noteType && !h, v = i && !e.noteType && !h;
 	return /* @__PURE__ */ K("div", {
 		className: G(n && "--draft", f && "--deleting", p && "--ghost-head", m && "--ghost-tails", g && "--input-head", _ && "--input-tails", v && "--input-tails-in-ghost-mode"),
@@ -4023,36 +4048,36 @@ var Q = {
 			width: u - 1,
 			height: d - 1
 		},
-		css: Ks
+		css: qs
 	});
-}, Gs = {
+}, Ks = {
 	main: "#0bd8",
 	alt: "#cf68"
-}, Ks = Er({
+}, qs = Er({
 	position: "absolute",
-	"&.--input-head": { background: Gs.main },
-	"&.--input-tails": { background: Gs.main },
-	"&.--input-tails-in-ghost-mode": { background: Gs.alt },
+	"&.--input-head": { background: Ks.main },
+	"&.--input-tails": { background: Ks.main },
+	"&.--input-tails-in-ghost-mode": { background: Ks.alt },
 	"&.--draft": { background: "#f80a" },
 	"&.--deleting": { background: "#f008" },
 	"&.--ghost-head": {},
 	"&.--ghost-tails": {
 		background: "#fff4",
-		border: `solid 1px ${Gs.main}`
+		border: `solid 1px ${Ks.main}`
 	}
-}), qs = ({ notes: e, stepOffset: t, draftNote: n, patternBars: r, ghostEnabled: i }) => /* @__PURE__ */ q("div", { children: [e.filter((e) => t <= e.position && e.position <= t + 32).map((e, n) => /* @__PURE__ */ K(Ws, {
+}), Js = ({ notes: e, stepOffset: t, draftNote: n, patternBars: r, ghostEnabled: i }) => /* @__PURE__ */ q("div", { children: [e.filter((e) => t <= e.position && e.position <= t + 32).map((e, n) => /* @__PURE__ */ K(Gs, {
 	note: e,
 	stepOffset: t,
 	patternBars: r,
 	ghostEnabled: i
-}, n)), n && /* @__PURE__ */ K(Ws, {
+}, n)), n && /* @__PURE__ */ K(Gs, {
 	note: n,
 	stepOffset: t,
 	isDraft: !0,
 	patternBars: r,
 	ghostEnabled: i
 })] });
-function Js() {
+function Ys() {
 	let e = Q.numOctaves * 7, t = e * Q.cellH, n = new Map(Ar(e).map((e) => [e, t - e * Q.cellH - Q.cellH / 2]));
 	function r(e) {
 		let t = n.get(e), r = n.get(e + 1);
@@ -4075,34 +4100,34 @@ function Js() {
 		y: t
 	}));
 }
-var Ys = Js();
-function Xs(e) {
-	let t = Ys[0];
-	for (let n of Ys) Math.abs(n.y - e) < Math.abs(t.y - e) && (t = n);
+var Xs = Ys();
+function Zs(e) {
+	let t = Xs[0];
+	for (let n of Xs) Math.abs(n.y - e) < Math.abs(t.y - e) && (t = n);
 	return t.relNote;
 }
-function Zs(e, t, n) {
+function Qs(e, t, n) {
 	return Math.floor(t / Q.cellW) + n - e + 1;
 }
-function Qs(e, t, n) {
+function $s(e, t, n) {
 	return {
 		stepPosition: Math.floor(e / Q.cellW) + n,
 		relativeNoteNumber: 7 * Q.numOctaves - 1 - Math.floor(t / Q.cellH)
 	};
 }
-function $s(e, t, n, r) {
-	let i = Ys.filter((e) => Math.abs(e.relNote - t) < .75);
+function ec(e, t, n, r) {
+	let i = Xs.filter((e) => Math.abs(e.relNote - t) < .75);
 	i.sort(jr((e) => Math.abs(e.y - n)));
 	for (let t of i) {
 		let n = r.find((n) => n.position <= e && e < n.position + n.duration && n.pitch === t.relNote);
 		if (n) return n;
 	}
 }
-function ec(e, t, n) {
+function tc(e, t, n) {
 	let r = e.target.getBoundingClientRect(), i = r.width / (Q.cellW * Q.nx), a = Z.state.currentPageIndex * 32;
 	$.setDraftNote(t), Ur(e.nativeEvent, {
 		onMove(e) {
-			let n = (e.position.x - r.left) / i, o = Xs((e.position.y - r.top) / i), s = Zs(t.position, n, a);
+			let n = (e.position.x - r.left) / i, o = Zs((e.position.y - r.top) / i), s = Qs(t.position, n, a);
 			$.patchDraftNote({
 				pitch: o,
 				duration: s
@@ -4120,22 +4145,22 @@ function ec(e, t, n) {
 		}
 	}, { coordinate: "page" });
 }
-var tc = (e) => {
-	let t = e.target.getBoundingClientRect(), n = t.width / (Q.cellW * Q.nx), r = (e.clientX - t.left) / n, i = (e.clientY - t.top) / n, { stepPosition: a, relativeNoteNumber: o } = Qs(r, i, Z.state.currentPageIndex * 32), s = $s(a, o, i, Z.state.inputNotes);
-	s ? ec(e, s, !1) : ec(e, {
+var nc = (e) => {
+	let t = e.target.getBoundingClientRect(), n = t.width / (Q.cellW * Q.nx), r = (e.clientX - t.left) / n, i = (e.clientY - t.top) / n, { stepPosition: a, relativeNoteNumber: o } = $s(r, i, Z.state.currentPageIndex * 32), s = ec(a, o, i, Z.state.inputNotes);
+	s ? tc(e, s, !1) : tc(e, {
 		id: Math.max(0, ...Z.state.inputNotes.map((e) => e.id)) + 1,
 		position: a,
 		pitch: o,
 		duration: 1
 	}, !0);
-}, nc = () => /* @__PURE__ */ K("div", {
+}, rc = () => /* @__PURE__ */ K("div", {
 	className: "absolute-full",
 	style: {
 		width: Q.cellW * Q.nx,
 		height: Q.cellH * 7 * Q.numOctaves
 	},
-	onPointerDown: tc
-}), rc = "ontouchstart" in document, ic = () => {
+	onPointerDown: nc
+}), ic = "ontouchstart" in document, ac = () => {
 	let { inputNotes: e, currentPageIndex: t, draftNote: n, mappedNotes: r, patternBars: i, ghostEnabled: a } = Z.useSnapshot(), o = Bt(null);
 	return Rt(() => {
 		let e = o.current;
@@ -4150,38 +4175,38 @@ var tc = (e) => {
 			children: [/* @__PURE__ */ q("div", {
 				className: "relative grow touch-none",
 				children: [
-					/* @__PURE__ */ K(Us, {}),
-					/* @__PURE__ */ K(qs, {
+					/* @__PURE__ */ K(Ws, {}),
+					/* @__PURE__ */ K(Js, {
 						notes: e,
 						stepOffset: t * 32,
 						draftNote: n,
 						patternBars: i,
 						ghostEnabled: a
 					}),
-					a && /* @__PURE__ */ K(qs, {
+					a && /* @__PURE__ */ K(Js, {
 						notes: r,
 						stepOffset: t * 32,
 						draftNote: null,
 						patternBars: i,
 						ghostEnabled: a
 					}),
-					/* @__PURE__ */ K(nc, {})
+					/* @__PURE__ */ K(rc, {})
 				]
-			}), rc && /* @__PURE__ */ K("div", { className: "w-[24px] bg-[#eee]" })]
+			}), ic && /* @__PURE__ */ K("div", { className: "w-[24px] bg-[#eee]" })]
 		})
 	});
-}, ac = () => {
+}, oc = () => {
 	let { loopBars: e } = Z.useSnapshot(), t = Math.max(1, e / 2) > 1;
 	return /* @__PURE__ */ q("div", {
 		className: "flex-ha gap-1.5",
 		children: [
-			/* @__PURE__ */ K(zs, {
+			/* @__PURE__ */ K(Bs, {
 				direction: "left",
 				disabled: !t,
 				onClick: () => $.shiftPage(-1)
 			}),
-			/* @__PURE__ */ K(ic, {}),
-			/* @__PURE__ */ K(zs, {
+			/* @__PURE__ */ K(ac, {}),
+			/* @__PURE__ */ K(Bs, {
 				direction: "right",
 				disabled: !t,
 				onClick: () => $.shiftPage(1)
@@ -4191,7 +4216,7 @@ var tc = (e) => {
 };
 //#endregion
 //#region src/app/app.tsx
-function oc() {
+function sc() {
 	Y.setAttrs({
 		octaveShift: Z.state.octaveShift,
 		noteDuty: Z.state.noteDuty,
@@ -4204,7 +4229,7 @@ function oc() {
 			"loopBars"
 		]));
 	});
-	return ua?.completeSetup({
+	return fa?.completeSetup({
 		unitAspects: {
 			unitType: "sequencer",
 			viewSize: [620, 380]
@@ -4222,6 +4247,11 @@ function oc() {
 				Y.processStep(e, t, n);
 			}
 		},
+		hostCallbacks: { setKey(e) {
+			Y.setKeyTranspose(e.keyTranspose);
+			let t = sa(e);
+			Z.setCurrentKeysName(t);
+		} },
 		persistence: {
 			emitStateBytes() {
 				return Br(zr(Z.state, {
@@ -4233,7 +4263,7 @@ function oc() {
 					patternMode: 1,
 					ghostEnabled: 1,
 					realized: 1,
-					songKey: 1
+					keysMode: 1
 				}));
 			},
 			applyStateBytes(e) {
@@ -4249,7 +4279,7 @@ function oc() {
 		}
 	}), e;
 }
-function sc() {
+function cc() {
 	let { inputNotes: e, loopBars: t, patternBars: n, ghostEnabled: r, patternMode: i } = Z.useSnapshot();
 	Rt(() => {
 		let a = r ? aa(e, {
@@ -4266,27 +4296,27 @@ function sc() {
 		i
 	]);
 }
-function cc() {
+function lc() {
 	return /* @__PURE__ */ K("div", {
 		className: G("h-full flex-c bg-(--cl-panel-bg)"),
 		children: /* @__PURE__ */ K(Gi, {
 			className: "w-[620px] h-[380px]",
 			children: /* @__PURE__ */ q("div", {
 				className: "flex-v gap-2 pt-3",
-				children: [/* @__PURE__ */ K(Rs, {}), /* @__PURE__ */ K("div", {
+				children: [/* @__PURE__ */ K(zs, {}), /* @__PURE__ */ K("div", {
 					className: "pt-1",
-					children: /* @__PURE__ */ K(ac, {})
+					children: /* @__PURE__ */ K(oc, {})
 				})]
 			})
 		})
 	});
 }
-var lc = () => (Rt(oc, []), sc(), /* @__PURE__ */ K(Vi, { children: /* @__PURE__ */ K(cc, {}) })), uc = kr((e) => (xt(/* @__PURE__ */ K(_r, {
+var uc = () => (Rt(sc, []), cc(), /* @__PURE__ */ K(Vi, { children: /* @__PURE__ */ K(lc, {}) })), dc = kr((e) => (xt(/* @__PURE__ */ K(_r, {
 	value: Pe({
 		key: "cs",
 		container: e
 	}),
-	children: /* @__PURE__ */ K(lc, {})
+	children: /* @__PURE__ */ K(uc, {})
 }), e), () => {
 	xt(null, e);
 }), {
@@ -4294,4 +4324,4 @@ var lc = () => (Rt(oc, []), sc(), /* @__PURE__ */ K(Vi, { children: /* @__PURE__
 	stylesheetUrls: ["https://fonts.googleapis.com/css2?family=Inter:wght@400..700&display=swap"]
 });
 //#endregion
-export { uc as default };
+export { dc as default };
