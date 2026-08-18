@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - main
+      - publish
 
 permissions:
   contents: write
@@ -70,7 +70,6 @@ jobs:
             echo "No changes to commit."
             exit 0
           fi
-          git commit -m "Update units bundle"
 
           last_tag="$(
             git tag -l 'r*' \
@@ -86,6 +85,7 @@ jobs:
             next_tag="r$((last_tag + 1))"
           fi
 
+          git commit -m "update units bundle ($next_tag)"
           git tag "$next_tag"
           git push origin HEAD:bundles
           git push origin "$next_tag"
