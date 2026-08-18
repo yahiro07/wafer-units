@@ -1,10 +1,102 @@
-[wafer](https://github.com/yahiro07/wafer) compatible units.
-Here are mainly my own designed apps.
+# wafer-units
 
-## Setup
+Units compatible with [wafer](https://github.com/yahiro07/wafer). This repository includes synthesizers, sequencers, effects, drum machines, and more.
 
-Run `pnpm install` at the repository root.
+## Screenshot
 
-## Build
+![screenshot](screenshot.png)
 
-Run `pnpm build` at the repository root to build all units.
+Units loaded in Wireboard app.
+
+## Usage
+
+Built units are published with `r<number>` tags. Use the latest tag when you add units to a host app.
+
+### With the Vite plugin
+
+Pass the URLs of the units you need to the Vite plugin:
+
+```ts
+export const unitSourceUrls = [
+  "https://cdn.jsdelivr.net/gh/yahiro07/wafer-units@r21/graphite-drum-machine/",
+  "https://cdn.jsdelivr.net/gh/yahiro07/wafer-units@r21/tonerio-sequencer/",
+  "https://cdn.jsdelivr.net/gh/yahiro07/wafer-units@r21/sunset-delay/",
+  // ...
+];
+```
+
+Example Vite config:
+
+```ts
+import { defineConfig } from "vite";
+import { unitLoaderPlugin } from "wafer-host/vite-plugin";
+import { unitSourceUrls } from "./src/unit-source-urls";
+
+export default defineConfig({
+  plugins: [unitLoaderPlugin({ unitSourceUrls })],
+});
+```
+
+The plugin adds those units to the catalog JSON. Point `<UnitFrame>` at the catalog URLs. See the Wafer documentation for details.
+
+### Without the Vite plugin (vanilla JS)
+
+One simple approach is to clone this repository into your host app. Replace `r21` with the latest tag:
+
+```sh
+cd assets
+git clone -b r21 https://github.com/yahiro07/wafer-units
+```
+
+That gives you a layout like this:
+
+```
+.
+├── index.css
+├── index.html
+├── index.js
+└── assets
+    └── wafer-units
+        ├── graphite-drum-machine
+        ├── sunset-delay
+        ├── tonerio-sequencer
+        └── ...
+```
+
+Load units with `<unit-frame>`. Use `index.html` for iframe-based units and `index.js` for Web Component units:
+
+```html
+<unit-frame
+  unit-id="drum1"
+  url="assets/wafer-units/graphite-drum-machine/index.js"
+></unit-frame>
+<unit-frame
+  unit-id="sequencer1"
+  url="assets/wafer-units/tonerio-sequencer/index.html"
+></unit-frame>
+```
+
+## Tech stack
+
+Units are built with React (Preact), TypeScript, and Vite. Some are iframe-based; others are Web Components.
+
+Styling is still experimental. We have tried Tailwind CSS, Tailwind-compatible libraries, and custom CSS-in-JS, looking for a compact way to write styles. CSS-in-JS often does not work well with Web Component Shadow DOM, so there is no settled approach yet.
+
+## Building locally
+
+From the repository root:
+
+```sh
+pnpm install
+pnpm build
+```
+
+`pnpm build` builds all units.
+
+## Notes
+
+Some units are incomplete. When you add them to a host, pick only the ones you need.
+
+## License
+
+This repository is MIT licensed. Some nested projects include third-party OSS; those licenses are listed separately in those projects.

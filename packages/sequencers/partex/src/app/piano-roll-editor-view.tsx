@@ -45,7 +45,7 @@ const editActions = {
 
 const BackgroundGridLayer = () => {
   const { cellW, cellH, nx } = configs;
-  const { songKey } = store.useSnapshot();
+  const { keysMode } = store.useSnapshot();
   return (
     <div className="flex-v">
       {seqNumbers(configs.numOctaves).map((i) => (
@@ -54,7 +54,7 @@ const BackgroundGridLayer = () => {
           cellW={cellW * 4}
           cellH={cellH}
           nx={nx / 4}
-          isComplementalMinorKey={songKey === "Am"}
+          isComplementalMinorKey={keysMode === "minor"}
         />
       ))}
     </div>

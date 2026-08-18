@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import {
   Button,
   Knob,
@@ -5,30 +6,36 @@ import {
   TitleLabel,
   UpperLabel,
 } from "@/components/mono3";
-import {
-  createPlainSelectorOptions,
-  createSelectorOptions,
-} from "@/components/selector-option";
+import { createSelectorOptions } from "@/components/selector-option";
 import { colorVars } from "@/components/ui-theme";
 import { store } from "@/store/store";
-import { PatternMode, SongKey } from "@/store/types";
+import { KeysMode, PatternMode } from "@/store/types";
 
-export const patternModeOptions = createSelectorOptions<PatternMode>([
+const patternModeOptions = createSelectorOptions<PatternMode>([
   ["slice", "slice"],
   ["shift", "shift"],
   ["polyphonicShift", "poly-shift"],
 ]);
 
-export const songKeyOptions = createPlainSelectorOptions<SongKey>(["Am", "C"]);
-
-export const patternBarsOptions = createSelectorOptions([
+const patternBarsOptions = createSelectorOptions([
   [0.25, "1/4"],
   [0.5, "1/2"],
   [1, "1"],
 ]);
-export const loopBarsOptions = createSelectorOptions(
+const loopBarsOptions = createSelectorOptions(
   [0.5, 1, 2, 4, 8, 16].map((v) => [v, `${v === 0.5 ? "1/2" : v}`]),
 );
+
+function useKeysModeOptions() {
+  const { currentKeysName } = store.useSnapshot();
+  return useMemo(() => {
+    const [majorKeyName, minorKeyName] = currentKeysName.split("/");
+    return createSelectorOptions<KeysMode>([
+      ["minor", minorKeyName],
+      ["major", majorKeyName],
+    ]);
+  }, [currentKeysName]);
+}
 
 const controlActions = {
   clearNotes() {
@@ -64,6 +71,7 @@ const controlActions = {
 
 export const ControlsSection = () => {
   const st = store.useSnapshot();
+  const keysModeOptions = useKeysModeOptions();
   return (
     <div className="flex-v gap-3">
       <div className="flex-ha justify-between px-9">
@@ -99,10 +107,10 @@ export const ControlsSection = () => {
         <div className="flex-ha gap-8">
           <div className="flex-ha gap-4">
             <UpperLabel label="key">
-              <ShiftSelector
-                options={songKeyOptions}
-                value={st.songKey}
-                onChange={store.setSongKey}
+              <ShiftSelector<KeysMode>
+                options={keysModeOptions}
+                value={st.keysMode}
+                onChange={store.setKeysMode}
               />
             </UpperLabel>
           </div>

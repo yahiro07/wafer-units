@@ -1,5 +1,5 @@
 import { PersistState } from "@/store/store";
-import { PatternMode, SongKey } from "@/store/types";
+import { KeysMode, PatternMode } from "@/store/types";
 
 export function serializePersistState(state: PersistState): Uint8Array {
   return new Uint8Array([
@@ -22,7 +22,7 @@ export function serializePersistState(state: PersistState): Uint8Array {
     ["slice", "shift", "polyphonicShift"].indexOf(state.patternMode),
     state.ghostEnabled ? 1 : 0,
     state.realized ? 1 : 0,
-    ["C", "Am"].indexOf(state.songKey),
+    ["major", "minor"].indexOf(state.keysMode),
   ]);
 }
 
@@ -54,8 +54,8 @@ export function deserializePersistState(
   ] as PatternMode;
   const ghostEnabled = restBytes[5] > 0;
   const realized = restBytes[6] > 0;
-  const songKey = ["C", "Am"][restBytes[7]] as SongKey;
-  if (!patternMode || !songKey) return undefined;
+  const keysMode = ["major", "minor"][restBytes[7]] as KeysMode;
+  if (!patternMode || !keysMode) return undefined;
   return {
     inputNotes,
     noteDuty,
@@ -65,6 +65,6 @@ export function deserializePersistState(
     patternMode,
     ghostEnabled,
     realized,
-    songKey,
+    keysMode,
   };
 }
