@@ -1,6 +1,6 @@
 # wafer-units
 
-Units compatible with [wafer](https://github.com/yahiro07/wafer). This repository includes synthesizers, sequencers, effects, drum machines, and more.
+WebAudio units compatible with [Wafer](https://github.com/yahiro07/wafer). This repository includes synthesizers, sequencers, effects, drum machines, and more.
 
 ## Screenshot
 

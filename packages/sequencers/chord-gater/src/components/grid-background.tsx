@@ -5,11 +5,13 @@ export const GridBackground = ({
   nx,
   ny,
   bgAlterStrideX,
+  bgInvert,
 }: {
   className?: string;
   nx: number;
   ny: number;
   bgAlterStrideX?: number;
+  bgInvert?: boolean;
 }) => {
   const bgAlterStride = bgAlterStrideX ?? 0;
 
@@ -18,7 +20,10 @@ export const GridBackground = ({
       {Array.from({ length: nx * ny }).map((_, i) => {
         const xi = i % nx;
         const yi = Math.floor(i / nx);
-        const bgAlter = xi % (bgAlterStride * 2) < bgAlterStride;
+        let bgAlter = xi % (bgAlterStride * 2) < bgAlterStride;
+        if (bgInvert) {
+          bgAlter = !bgAlter;
+        }
         return (
           <div
             key={`${xi}-${yi}`}

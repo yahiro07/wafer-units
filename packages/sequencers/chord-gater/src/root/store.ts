@@ -17,7 +17,8 @@ export const store = createStore<StoreState>({
   previewStepNotes: null,
   playStepIndex: -1,
 });
-if (1) {
+if (0) {
+  //debug dummy notes
   store.setStepNotes(
     seqNumbers(32).map((i) =>
       i === 2 || i === 3 || i === 7 ? 1 : i === 4 || i === 5 ? 2 : 0,

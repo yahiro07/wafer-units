@@ -14,6 +14,6 @@ export const StepsIndicatorBar = () => {
 };
 const czStepsIndicatorBar = cz(
   "w-[640px] flex-ha justify-around",
-  "[&>div]:(w-5 h-2 bd-clPlayPos)",
-  "[&>div.current]:(bg-clPlayPos)",
+  "[&>div]:(w-5 h-2 bd-#444 bg-#555)",
+  "[&>div.current]:(bg-clPlayPos bd-clPlayPos)",
 );
