@@ -96,6 +96,7 @@ function setupSynchronization() {
 
         //this also triggers mapped notes generation but it's asynchronous and delayed
         store.assign(state);
+        store.setStateLoadRevision((prev) => prev + 1);
       },
     },
   });

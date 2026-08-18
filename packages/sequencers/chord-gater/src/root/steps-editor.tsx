@@ -268,12 +268,12 @@ const czStepNote = cz(
   "w-[40px] h-[50px] flex-c",
   css({
     "&.head": {
-      background: "#8f8a",
-      border: "solid 2px #080",
+      background: "#fc49",
+      border: "solid 2px #f80",
     },
     "&.tie": {
-      background: "#8f8a",
-      border: "solid 2px #080",
+      background: "#fc49",
+      border: "solid 2px #f80",
     },
     "&.head:has(+ &.tie)": {
       borderRight: "none",
@@ -290,7 +290,13 @@ const czStepNote = cz(
   }),
 );
 
-const StepsBarEditor = ({ stepsRange }: { stepsRange: StepsRange }) => {
+const StepsBarEditor = ({
+  stepsRange,
+  bgInvert,
+}: {
+  stepsRange: StepsRange;
+  bgInvert?: boolean;
+}) => {
   const nx = stepsRange.length;
   const { stepCellWidth, stepCellHeight } = uiConfigs;
   return (
@@ -299,7 +305,7 @@ const StepsBarEditor = ({ stepsRange }: { stepsRange: StepsRange }) => {
       style={{ width: stepCellWidth * nx, height: stepCellHeight }}
       onPointerDown={(e) => handleStepsBarEditorPointerDown(e, stepsRange)}
     >
-      <GridBackground nx={nx} ny={1} bgAlterStrideX={4} />
+      <GridBackground nx={nx} ny={1} bgAlterStrideX={4} bgInvert={bgInvert} />
       <StepNotesLayer stepsRange={stepsRange} />
     </div>
   );
@@ -311,9 +317,9 @@ const StepsEditorRootInner = () => {
     return (
       <div class="flex-h">
         <StepsBarEditor stepsRange={{ offset: 0, length: 4 }} />
+        <StepsBarEditor stepsRange={{ offset: 0, length: 4 }} bgInvert />
         <StepsBarEditor stepsRange={{ offset: 0, length: 4 }} />
-        <StepsBarEditor stepsRange={{ offset: 0, length: 4 }} />
-        <StepsBarEditor stepsRange={{ offset: 0, length: 4 }} />
+        <StepsBarEditor stepsRange={{ offset: 0, length: 4 }} bgInvert />
       </div>
     );
   } else if (patternLength === 8) {

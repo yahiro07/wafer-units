@@ -2,7 +2,7 @@ import { css } from "@emotion/react";
 import clsx from "clsx";
 import { getSortOrder, seqNumbers } from "mofur/ax";
 import { npx, startDragSession } from "mofur/ax-ui";
-import React, { useEffect, useRef } from "react";
+import React, { RefObject, useEffect, useRef } from "react";
 import { PageShiftButton } from "@/components/page-shift-button";
 import { PianoRollBackgroundOctaveBlock } from "@/components/piano-roll-background-octave-block";
 import { store } from "@/store/store";
@@ -363,6 +363,36 @@ const InputLayer = () => {
 
 const isMobile = "ontouchstart" in document;
 
+function calculateNotesCenter(notes: Note[]) {
+  let minPitch = notes[0].pitch;
+  let maxPitch = notes[0].pitch;
+  for (const note of notes) {
+    if (note.pitch < minPitch) minPitch = note.pitch;
+    if (note.pitch > maxPitch) maxPitch = note.pitch;
+  }
+  const midPitch = (minPitch + maxPitch) / 2;
+  const numLanes = configs.numOctaves * 7;
+  const editorH = configs.cellH * numLanes;
+  return editorH - (midPitch + 0.5) * configs.cellH;
+}
+
+function useSetInitialScrollPosition(
+  baseDivRef: RefObject<HTMLDivElement | null>,
+) {
+  const { stateLoadRevision, inputNotes } = store.useSnapshot();
+
+  useEffect(() => {
+    const el = baseDivRef.current;
+    if (el) {
+      const centerY =
+        inputNotes.length > 0
+          ? calculateNotesCenter(inputNotes)
+          : el.scrollHeight / 2;
+      el.scrollTop = centerY - el.clientHeight / 2;
+    }
+  }, [stateLoadRevision]);
+}
+
 const PianoRollEditor = () => {
   const {
     inputNotes,
@@ -373,10 +403,7 @@ const PianoRollEditor = () => {
     ghostEnabled,
   } = store.useSnapshot();
   const refBaseDiv = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const baseDiv = refBaseDiv.current!;
-    baseDiv.scrollTop = baseDiv.scrollHeight / 2 - baseDiv.clientHeight / 2;
-  }, []);
+  useSetInitialScrollPosition(refBaseDiv);
   return (
     <div
       ref={refBaseDiv}
@@ -385,7 +412,10 @@ const PianoRollEditor = () => {
         "border border-gray-300",
       )}
       style={{ height: npx(configs.scrollPartHeight) }}
-      onWheel={(e) => e.preventDefault()}
+      onWheel={(e) => {
+        e.stopPropagation();
+        e.preventDefault();
+      }}
     >
       <div className="flex-h">
         <div className="relative grow touch-none">
