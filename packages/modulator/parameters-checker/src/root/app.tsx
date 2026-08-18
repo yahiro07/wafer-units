@@ -20,7 +20,13 @@ const PageRoot = () => {
           <span>{connected ? "connected" : "disconnected"}</span>
           <span>{parameterItems.length || "no"} parameters available</span>
         </div>
-        <div class="h-[500px] overflow-y-scroll bg-[#ddd] p-4">
+        <div
+          class="h-[500px] overflow-y-scroll bg-[#ddd] p-4"
+          onWheel={(e) => {
+            e.stopPropagation();
+            e.preventDefault();
+          }}
+        >
           <div class="flex-h w-[800px] flex-wrap gap-2">
             {parameterItems.map((item) => (
               <div class="w-[100px] bg-white flex-vc gap-1">
