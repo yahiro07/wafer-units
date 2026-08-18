@@ -1906,7 +1906,8 @@ var G = Rr({
 	loopBars: 2,
 	pageIndex: 0,
 	notes: [],
-	previewNotePitch: null
+	previewNotePitch: null,
+	stateLoadRevision: 0
 });
 //#endregion
 //#region src/utils/helpers.ts
@@ -1977,13 +1978,13 @@ var Wr = {
 				16
 			].includes(r),
 			a.length === i
-		].every(Boolean) && G.assign({
+		].every(Boolean) && (G.assign({
 			octave: t,
 			duty: n,
 			loopBars: r,
 			notes: a,
 			pageIndex: 0
-		});
+		}), G.setStateLoadRevision((e) => e + 1));
 	}
 };
 //#endregion
@@ -2761,19 +2762,32 @@ var Ni = 1, $ = {
 		class: Vi.base,
 		style: { left: K(r * e - n) }
 	});
-}, Vi = { base: P(N.absolute().top(0).pointerEvents("none"), N.wh(Q.cellW * 1.5, "full"), N.css({ borderRight: "solid 1px #0ff4" }), N.bg("linear-gradient(to right, #0cc0, #0ff3)")) }, Hi = () => {
+}, Vi = { base: P(N.absolute().top(0).pointerEvents("none"), N.wh(Q.cellW * 1.5, "full"), N.css({ borderRight: "solid 1px #0ff4" }), N.bg("linear-gradient(to right, #0cc0, #0ff3)")) };
+function Hi(e) {
+	let t = e[0].pitch, n = e[0].pitch;
+	for (let r of e) r.pitch < t && (t = r.pitch), r.pitch > n && (n = r.pitch);
+	let r = (t + n) / 2, { cellH: i, numKeys: a } = Q;
+	return i * a - (r + .5) * i;
+}
+function Ui(e) {
+	let { stateLoadRevision: t, notes: n } = G.useSnapshot();
+	Je(() => {
+		let t = e.current;
+		t && (t.scrollTop = (n.length > 0 ? Hi(n) : t.scrollHeight / 2) - t.clientHeight / 2);
+	}, [t]);
+}
+var Wi = () => {
 	let { cellW: e, cellH: t, numKeys: n } = Q, r = e * 32, i = t * n, a = Ye(null);
-	return Je(() => {
-		let e = a.current;
-		e && (e.scrollTop = e.scrollHeight / 2 - e.clientHeight / 2);
-	}, []), /* @__PURE__ */ Y("div", {
+	return Ui(a), /* @__PURE__ */ Y("div", {
 		ref: a,
 		sx: [
 			N.flexH().gap(.5).h(340),
 			N.overflowXY("hidden", "scroll"),
 			N.css({ touchAction: "pan-y" })
 		],
-		onWheel: (e) => e.preventDefault(),
+		onWheel: (e) => {
+			e.stopPropagation(), e.preventDefault();
+		},
 		children: [/* @__PURE__ */ J(ki, {}), /* @__PURE__ */ Y("div", {
 			sx: N.relative().wh(r, i).flexH(),
 			children: [
@@ -2791,7 +2805,7 @@ var Ni = 1, $ = {
 };
 //#endregion
 //#region src/utils/selector-option.ts
-function Ui(e) {
+function Gi(e) {
 	return e.map(([e, t]) => ({
 		label: t,
 		value: e
@@ -2799,13 +2813,13 @@ function Ui(e) {
 }
 //#endregion
 //#region src/root/page-root.tsx
-var Wi = () => /* @__PURE__ */ J(vi, {
+var Ki = () => /* @__PURE__ */ J(vi, {
 	label: "duty",
 	children: /* @__PURE__ */ J(_i, {
 		value: G.useSnapshot().duty,
 		onChange: G.setDuty
 	})
-}), Gi = () => /* @__PURE__ */ J(vi, {
+}), qi = () => /* @__PURE__ */ J(vi, {
 	label: "octave",
 	children: /* @__PURE__ */ J(_i, {
 		value: G.useSnapshot().octave,
@@ -2814,7 +2828,7 @@ var Wi = () => /* @__PURE__ */ J(vi, {
 		step: 1,
 		onChange: G.setOctave
 	})
-}), Ki = Ui([
+}), Ji = Gi([
 	.25,
 	.5,
 	1,
@@ -2822,15 +2836,15 @@ var Wi = () => /* @__PURE__ */ J(vi, {
 	4,
 	8,
 	16
-].map((e) => [e, `${e < 1 ? `1/${1 / e}` : e}`])), qi = () => /* @__PURE__ */ J(vi, {
+].map((e) => [e, `${e < 1 ? `1/${1 / e}` : e}`])), Yi = () => /* @__PURE__ */ J(vi, {
 	label: "loop bars",
 	children: /* @__PURE__ */ J(bi, {
 		minWidth: 50,
 		value: G.useSnapshot().loopBars,
-		options: Ki,
+		options: Ji,
 		onChange: G.setLoopBars
 	})
-}), Ji = () => /* @__PURE__ */ J(Hi, {}), Yi = () => {
+}), Xi = () => /* @__PURE__ */ J(Wi, {}), Zi = () => {
 	let e = G.useSnapshot(), t = Math.max(1, e.loopBars / 2), n = e.pageIndex > 0, r = e.pageIndex < t - 1, i = (t) => {
 		G.setPageIndex(e.pageIndex + t);
 	};
@@ -2860,11 +2874,11 @@ var Wi = () => /* @__PURE__ */ J(vi, {
 			]
 		})
 	});
-}, Xi = () => /* @__PURE__ */ J(di, {
+}, Qi = () => /* @__PURE__ */ J(di, {
 	disabled: !(G.useSnapshot().notes.length > 0),
 	onClick: () => G.setNotes([]),
 	children: /* @__PURE__ */ J(mi.Trash, { size: 20 })
-}), Zi = () => /* @__PURE__ */ J("div", {
+}), $i = () => /* @__PURE__ */ J("div", {
 	sx: N.w("full").flexV().gap(4),
 	children: /* @__PURE__ */ Y("div", {
 		sx: N.flexHA().fJustify("between"),
@@ -2876,38 +2890,38 @@ var Wi = () => /* @__PURE__ */ J(vi, {
 			children: [/* @__PURE__ */ Y("div", {
 				sx: N.flexHA().gap(6),
 				children: [
-					/* @__PURE__ */ J(Xi, {}),
-					/* @__PURE__ */ J(Gi, {}),
-					/* @__PURE__ */ J(Wi, {}),
-					/* @__PURE__ */ J(qi, {})
+					/* @__PURE__ */ J(Qi, {}),
+					/* @__PURE__ */ J(qi, {}),
+					/* @__PURE__ */ J(Ki, {}),
+					/* @__PURE__ */ J(Yi, {})
 				]
-			}), /* @__PURE__ */ J(Yi, {})]
+			}), /* @__PURE__ */ J(Zi, {})]
 		})]
 	})
-}), Qi = () => /* @__PURE__ */ J(ui, {
+}), ea = () => /* @__PURE__ */ J(ui, {
 	sx: N.wh(800, 450).flexC(),
 	children: /* @__PURE__ */ Y("div", {
 		sx: N.flexV().gap(2),
-		children: [/* @__PURE__ */ J(Zi, {}), /* @__PURE__ */ J(Ji, {})]
+		children: [/* @__PURE__ */ J($i, {}), /* @__PURE__ */ J(Xi, {})]
 	})
 });
 //#endregion
 //#region src/root/app.tsx
 Jr();
-var $i = () => (Je(Yr, []), /* @__PURE__ */ J(Qi, {})), ea = "*{box-sizing:border-box;margin:0;padding:0}img{-webkit-user-drag:none}.font-monospace{font-family:Roboto Mono,monospace}", ta = ["https://fonts.googleapis.com/css2?family=Inter:wght@400..700&display=swap", "https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap"], na = "https://cdn.jsdelivr.net/npm/remixicon@4.9.1/fonts/remixicon.min.css";
-ta.push(na);
-var ra = ge((e) => {
+var ta = () => (Je(Yr, []), /* @__PURE__ */ J(ea, {})), na = "*{box-sizing:border-box;margin:0;padding:0}img{-webkit-user-drag:none}.font-monospace{font-family:Roboto Mono,monospace}", ra = ["https://fonts.googleapis.com/css2?family=Inter:wght@400..700&display=swap", "https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap"], ia = "https://cdn.jsdelivr.net/npm/remixicon@4.9.1/fonts/remixicon.min.css";
+ra.push(ia);
+var aa = ge((e) => {
 	let t = document.createElement("link");
-	return t.rel = "stylesheet", t.href = na, e.appendChild(t), me(/* @__PURE__ */ J("div", {
+	return t.rel = "stylesheet", t.href = ia, e.appendChild(t), me(/* @__PURE__ */ J("div", {
 		sx: N.bg(Z.panelBody).h("full").flexC(),
-		children: /* @__PURE__ */ J($i, {})
+		children: /* @__PURE__ */ J(ta, {})
 	}), e), () => {
 		me(null, e);
 	};
 }, {
-	cssTexts: [ea],
-	stylesheetUrls: ta,
+	cssTexts: [na],
+	stylesheetUrls: ra,
 	adoptedStyleSheets: [Ne.sheet]
 });
 //#endregion
-export { ra as default };
+export { aa as default };

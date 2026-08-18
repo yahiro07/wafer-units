@@ -3720,7 +3720,8 @@ var Z = js({
 	draftNote: null,
 	mappedNotes: [],
 	backupInputNotes: null,
-	currentKeysName: "C/Am"
+	currentKeysName: "C/Am",
+	stateLoadRevision: 0
 });
 //#endregion
 //#region src/components/selector-option.ts
@@ -4160,16 +4161,29 @@ var nc = (e) => {
 		height: Q.cellH * 7 * Q.numOctaves
 	},
 	onPointerDown: nc
-}), ic = "ontouchstart" in document, ac = () => {
+}), ic = "ontouchstart" in document;
+function ac(e) {
+	let t = e[0].pitch, n = e[0].pitch;
+	for (let r of e) r.pitch < t && (t = r.pitch), r.pitch > n && (n = r.pitch);
+	let r = (t + n) / 2, i = Q.numOctaves * 7;
+	return Q.cellH * i - (r + .5) * Q.cellH;
+}
+function oc(e) {
+	let { stateLoadRevision: t, inputNotes: n } = Z.useSnapshot();
+	Rt(() => {
+		let t = e.current;
+		t && (t.scrollTop = (n.length > 0 ? ac(n) : t.scrollHeight / 2) - t.clientHeight / 2);
+	}, [t]);
+}
+var sc = () => {
 	let { inputNotes: e, currentPageIndex: t, draftNote: n, mappedNotes: r, patternBars: i, ghostEnabled: a } = Z.useSnapshot(), o = Bt(null);
-	return Rt(() => {
-		let e = o.current;
-		e.scrollTop = e.scrollHeight / 2 - e.clientHeight / 2;
-	}, []), /* @__PURE__ */ K("div", {
+	return oc(o), /* @__PURE__ */ K("div", {
 		ref: o,
 		className: G("bg-white overflow-x-hidden overflow-y-scroll", "border border-gray-300"),
 		style: { height: Wr(Q.scrollPartHeight) },
-		onWheel: (e) => e.preventDefault(),
+		onWheel: (e) => {
+			e.stopPropagation(), e.preventDefault();
+		},
 		children: /* @__PURE__ */ q("div", {
 			className: "flex-h",
 			children: [/* @__PURE__ */ q("div", {
@@ -4195,7 +4209,7 @@ var nc = (e) => {
 			}), ic && /* @__PURE__ */ K("div", { className: "w-[24px] bg-[#eee]" })]
 		})
 	});
-}, oc = () => {
+}, cc = () => {
 	let { loopBars: e } = Z.useSnapshot(), t = Math.max(1, e / 2) > 1;
 	return /* @__PURE__ */ q("div", {
 		className: "flex-ha gap-1.5",
@@ -4205,7 +4219,7 @@ var nc = (e) => {
 				disabled: !t,
 				onClick: () => $.shiftPage(-1)
 			}),
-			/* @__PURE__ */ K(ac, {}),
+			/* @__PURE__ */ K(sc, {}),
 			/* @__PURE__ */ K(Bs, {
 				direction: "right",
 				disabled: !t,
@@ -4216,7 +4230,7 @@ var nc = (e) => {
 };
 //#endregion
 //#region src/app/app.tsx
-function sc() {
+function lc() {
 	Y.setAttrs({
 		octaveShift: Z.state.octaveShift,
 		noteDuty: Z.state.noteDuty,
@@ -4274,12 +4288,12 @@ function sc() {
 					patternBars: i,
 					patternMode: o
 				}) : n;
-				Y.setStepNotes(s), Z.assign(t);
+				Y.setStepNotes(s), Z.assign(t), Z.setStateLoadRevision((e) => e + 1);
 			}
 		}
 	}), e;
 }
-function cc() {
+function uc() {
 	let { inputNotes: e, loopBars: t, patternBars: n, ghostEnabled: r, patternMode: i } = Z.useSnapshot();
 	Rt(() => {
 		let a = r ? aa(e, {
@@ -4296,7 +4310,7 @@ function cc() {
 		i
 	]);
 }
-function lc() {
+function dc() {
 	return /* @__PURE__ */ K("div", {
 		className: G("h-full flex-c bg-(--cl-panel-bg)"),
 		children: /* @__PURE__ */ K(Gi, {
@@ -4305,18 +4319,18 @@ function lc() {
 				className: "flex-v gap-2 pt-3",
 				children: [/* @__PURE__ */ K(zs, {}), /* @__PURE__ */ K("div", {
 					className: "pt-1",
-					children: /* @__PURE__ */ K(oc, {})
+					children: /* @__PURE__ */ K(cc, {})
 				})]
 			})
 		})
 	});
 }
-var uc = () => (Rt(sc, []), cc(), /* @__PURE__ */ K(Vi, { children: /* @__PURE__ */ K(lc, {}) })), dc = kr((e) => (xt(/* @__PURE__ */ K(_r, {
+var fc = () => (Rt(lc, []), uc(), /* @__PURE__ */ K(Vi, { children: /* @__PURE__ */ K(dc, {}) })), pc = kr((e) => (xt(/* @__PURE__ */ K(_r, {
 	value: Pe({
 		key: "cs",
 		container: e
 	}),
-	children: /* @__PURE__ */ K(uc, {})
+	children: /* @__PURE__ */ K(fc, {})
 }), e), () => {
 	xt(null, e);
 }), {
@@ -4324,4 +4338,4 @@ var uc = () => (Rt(sc, []), cc(), /* @__PURE__ */ K(Vi, { children: /* @__PURE__
 	stylesheetUrls: ["https://fonts.googleapis.com/css2?family=Inter:wght@400..700&display=swap"]
 });
 //#endregion
-export { dc as default };
+export { pc as default };
