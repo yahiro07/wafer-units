@@ -127,7 +127,7 @@ export const App = () => {
         <PatternLengthContainer />
         <StepDutyContainer />
       </div>
-      <div class="h-140px flex-vc gap-2">
+      <div class="h-140px flex-vc gap-2.5">
         <StepsIndicatorBar />
         <StepsEditorRoot />
       </div>

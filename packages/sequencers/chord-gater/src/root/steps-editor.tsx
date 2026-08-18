@@ -268,12 +268,12 @@ const czStepNote = cz(
   "w-[40px] h-[50px] flex-c",
   css({
     "&.head": {
-      background: "#8f8a",
-      border: "solid 2px #080",
+      background: "#fc49",
+      border: "solid 2px #f80",
     },
     "&.tie": {
-      background: "#8f8a",
-      border: "solid 2px #080",
+      background: "#fc49",
+      border: "solid 2px #f80",
     },
     "&.head:has(+ &.tie)": {
       borderRight: "none",
