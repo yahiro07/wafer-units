@@ -41,6 +41,7 @@ type StoreState = {
   mappedNotes: Note[];
   backupInputNotes: Note[] | null;
   currentKeysName: string;
+  stateLoadRevision: number;
 };
 
 export type PersistState = {
@@ -71,4 +72,5 @@ export const store = createStore<StoreState>({
   mappedNotes: [],
   backupInputNotes: null,
   currentKeysName: "C/Am",
+  stateLoadRevision: 0,
 });
