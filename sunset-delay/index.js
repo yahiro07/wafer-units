@@ -252,7 +252,7 @@ e = h.slice, t = { __e: function(e, t, n, r) {
 	return e.__v.__b - t.__v.__b;
 }, D.__r = 0, s = Math.random().toString(8), c = "__d" + s, l = "__a" + s, u = /(PointerCapture)$|Capture$/i, d = 0, f = re(!1), p = re(!0);
 //#endregion
-//#region ../../../node_modules/.pnpm/wafer-host@0.1.7_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/wafer-host/dist/unit-helper/index.js
+//#region ../../../node_modules/.pnpm/wafer-host@0.1.9_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/wafer-host/dist/unit-helper/index.js
 function pe(e) {
 	if (!Array.from(document.head.querySelectorAll("link[rel=\"stylesheet\"]")).some((t) => t.href === e)) {
 		console.log(`Inserting link tag for ${e}`);
@@ -637,7 +637,7 @@ function tt(e, t) {
 	return typeof t == "function" ? t(e) : t;
 }
 //#endregion
-//#region ../../../node_modules/.pnpm/wafer-host@0.1.7_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/wafer-host/dist/unit-types/index.js
+//#region ../../../node_modules/.pnpm/wafer-host@0.1.9_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/wafer-host/dist/unit-types/index.js
 function nt(e, t) {
 	return window?.queryUnitInterfaceForModule?.(e, t);
 }
