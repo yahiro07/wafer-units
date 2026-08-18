@@ -103,7 +103,7 @@ export function createSynthesizerGePoly(
         // --- Detune ---
         // Scale to cents based on JP-8000 max detune width (~100 cents at max)
         // Multiply by unisonDetune (0~1)
-        const detuneCents = DETUNE_RATIOS[i] * p.unisonDetune ** 2 * 1800;
+        const detuneCents = DETUNE_RATIOS[i] * p.unisonDetune ** 2 * 1500;
         osc.detune.setValueAtTime(detuneCents, startTime);
 
         // --- Phase randomization (PeriodicWave emulation) ---
