@@ -3,7 +3,8 @@ import { GridBackground } from "@/components/grid-background";
 import { GridTonicHighlighter } from "@/components/grid-tonic-highlighter";
 import { Note } from "@/root/definitions";
 import { store } from "@/root/store";
-import { seqNumbers } from "@/utils/helpers";
+import { startDragSession } from "@/utils/drag-session";
+import { clampValue, seqNumbers } from "@/utils/helpers";
 import { RefObject } from "preact";
 import { useEffect, useRef } from "preact/hooks";
 
@@ -15,248 +16,255 @@ const uiConfigs = {
 };
 uiConfigs.editorHeight = uiConfigs.stepCellHeight * uiConfigs.numCellsY;
 
-// const tapConfigs = {
-//   maxDistance: 8,
-//   maxDurationMs: 250,
-// };
+const tapConfigs = {
+  maxDistance: 8,
+  maxDurationMs: 250,
+};
 
 type StepsRange = {
   offset: number;
   length: number;
 };
 
-// type DragBand = {
-//   start: number;
-//   end: number;
-// };
+type Cell = { x: number; y: number };
+type EditMode = "create" | "move" | "resize";
 
-// type NoteSpan = {
-//   start: number;
-//   end: number;
-// };
+function rangeMinX(stepsRange: StepsRange) {
+  return stepsRange.offset;
+}
 
-// function findNoteSpan(notes: number[], index: number): NoteSpan | null {
-//   if (notes[index] !== 1 && notes[index] !== 2) return null;
-//   let start = index;
-//   while (start > 0 && notes[start] === 2 && notes[start - 1] === 2) {
-//     start--;
-//   }
-//   if (start > 0 && notes[start] === 2 && notes[start - 1] === 1) {
-//     start--;
-//   }
-//   let end = start + 1;
-//   while (end < notes.length && notes[end] === 2) {
-//     end++;
-//   }
-//   return { start, end };
-// }
+function rangeMaxX(stepsRange: StepsRange) {
+  return stepsRange.offset + stepsRange.length - 1;
+}
 
-// function clearRange(notes: number[], start: number, end: number) {
-//   for (let i = start; i < end; i++) {
-//     notes[i] = 0;
-//   }
-// }
+function rangeEndX(stepsRange: StepsRange) {
+  return stepsRange.offset + stepsRange.length;
+}
 
-// function writeNote(notes: number[], start: number, end: number) {
-//   notes[start] = 1;
-//   for (let i = start + 1; i < end; i++) {
-//     notes[i] = 2;
-//   }
-// }
+function cellFromPointer(
+  pos: { x: number; y: number },
+  stepsRange: StepsRange,
+): Cell {
+  return {
+    x: clampValue(
+      stepsRange.offset + Math.floor(pos.x / uiConfigs.stepCellWidth),
+      rangeMinX(stepsRange),
+      rangeMaxX(stepsRange),
+    ),
+    y: clampValue(
+      Math.floor((uiConfigs.editorHeight - pos.y) / uiConfigs.stepCellHeight),
+      0,
+      uiConfigs.numCellsY - 1,
+    ),
+  };
+}
 
-// function clearOverlappingNotes(
-//   notes: number[],
-//   rangeStart: number,
-//   rangeEnd: number,
-// ) {
-//   const spans: NoteSpan[] = [];
-//   let i = 0;
-//   while (i < notes.length) {
-//     if (notes[i] === 1) {
-//       const span = findNoteSpan(notes, i);
-//       if (span) {
-//         if (span.start < rangeEnd && span.end > rangeStart) {
-//           spans.push(span);
-//         }
-//         i = span.end;
-//         continue;
-//       }
-//     }
-//     i++;
-//   }
-//   for (const span of spans) {
-//     clearRange(notes, span.start, span.end);
-//   }
-// }
+function hitTestNote(notes: Note[], cell: Cell): Note | undefined {
+  let hit: Note | undefined;
+  for (const note of notes) {
+    if (
+      note.pitch === cell.y &&
+      note.position <= cell.x &&
+      cell.x < note.position + note.duration
+    ) {
+      hit = note;
+    }
+  }
+  return hit;
+}
 
-// function startStepsBarDragInput(
-//   e: PointerEvent,
-//   stepsRange: StepsRange,
-//   totalSteps: number,
-//   callbacks: {
-//     onTap: (index: number) => void;
-//     onBandChanged: (band: DragBand) => void;
-//     onCommit: (band: DragBand) => void;
-//     onCancel: () => void;
-//   },
-// ) {
-//   const indexFromX = (x: number) =>
-//     clampValue(
-//       stepsRange.offset + Math.floor(x / uiConfigs.stepCellWidth),
-//       0,
-//       totalSteps - 1,
-//     );
-//   const bandFromEvent = (ev: {
-//     position: { x: number };
-//     originalPosition: { x: number };
-//   }): DragBand => ({
-//     start: indexFromX(ev.originalPosition.x),
-//     end: indexFromX(ev.position.x),
-//   });
-//   const pointerDistance = (ev: {
-//     position: { x: number; y: number };
-//     originalPosition: { x: number; y: number };
-//   }) =>
-//     Math.hypot(
-//       ev.position.x - ev.originalPosition.x,
-//       ev.position.y - ev.originalPosition.y,
-//     );
+function nextNoteId(notes: Note[]) {
+  return notes.length > 0 ? Math.max(...notes.map((note) => note.id)) + 1 : 0;
+}
 
-//   const t0 = performance.now();
-//   let dragStarted = false;
-//   let lastEvent = {
-//     position: { x: 0, y: 0 },
-//     originalPosition: { x: 0, y: 0 },
-//   };
+function isResizeGrab(note: Note, cell: Cell) {
+  return note.duration > 1 && cell.x === note.position + note.duration - 1;
+}
 
-//   const promoteToDrag = (ev: typeof lastEvent) => {
-//     dragStarted = true;
-//     callbacks.onBandChanged(bandFromEvent(ev));
-//   };
+function makeCreatePreview(
+  id: number,
+  start: Cell,
+  current: Cell,
+  stepsRange: StepsRange,
+): Note {
+  const left = clampValue(
+    Math.min(start.x, current.x),
+    rangeMinX(stepsRange),
+    rangeMaxX(stepsRange),
+  );
+  const right = clampValue(
+    Math.max(start.x, current.x),
+    rangeMinX(stepsRange),
+    rangeMaxX(stepsRange),
+  );
+  return {
+    id,
+    position: left,
+    duration: right - left + 1,
+    pitch: clampValue(current.y, 0, uiConfigs.numCellsY - 1),
+  };
+}
 
-//   const tapTimer = window.setTimeout(() => {
-//     promoteToDrag(lastEvent);
-//   }, tapConfigs.maxDurationMs);
+function makeMovePreview(
+  original: Note,
+  start: Cell,
+  current: Cell,
+  stepsRange: StepsRange,
+): Note {
+  let position = original.position + (current.x - start.x);
+  const minX = rangeMinX(stepsRange);
+  const maxEnd = rangeEndX(stepsRange);
+  if (position < minX) position = minX;
+  if (position + original.duration > maxEnd) {
+    position = maxEnd - original.duration;
+  }
+  return {
+    ...original,
+    position,
+    pitch: clampValue(
+      original.pitch + (current.y - start.y),
+      0,
+      uiConfigs.numCellsY - 1,
+    ),
+  };
+}
 
-//   startDragSession(
-//     e,
-//     {
-//       onDown(ev) {
-//         lastEvent = ev;
-//       },
-//       onMove(ev) {
-//         lastEvent = ev;
-//         if (dragStarted || pointerDistance(ev) > tapConfigs.maxDistance) {
-//           promoteToDrag(ev);
-//         }
-//       },
-//       onUp(ev) {
-//         window.clearTimeout(tapTimer);
-//         const dt = performance.now() - t0;
-//         if (
-//           !dragStarted &&
-//           pointerDistance(ev) <= tapConfigs.maxDistance &&
-//           dt <= tapConfigs.maxDurationMs
-//         ) {
-//           callbacks.onTap(indexFromX(ev.originalPosition.x));
-//           return;
-//         }
-//         const band = bandFromEvent(ev);
-//         callbacks.onBandChanged(band);
-//         callbacks.onCommit(band);
-//       },
-//       onCancel() {
-//         window.clearTimeout(tapTimer);
-//         callbacks.onCancel();
-//       },
-//     },
-//     { coordinate: "relative" },
-//   );
-// }
+function makeResizePreview(
+  original: Note,
+  start: Cell,
+  current: Cell,
+  stepsRange: StepsRange,
+): Note {
+  let duration = original.duration + (current.x - start.x);
+  const maxEnd = rangeEndX(stepsRange);
+  if (original.position + duration > maxEnd) {
+    duration = maxEnd - original.position;
+  }
+  return {
+    ...original,
+    duration,
+    pitch: clampValue(current.y, 0, uiConfigs.numCellsY - 1),
+  };
+}
 
-// const stepNotesEditCore = {
-//   applyBandEdit(originalStepNotes: number[], band: DragBand): number[] {
-//     const notes = [...originalStepNotes];
-//     const grab = band.start;
-//     const current = band.end;
-//     const grabbed = findNoteSpan(notes, grab);
-
-//     if (!grabbed) {
-//       const start = Math.min(grab, current);
-//       const end = Math.max(grab, current) + 1;
-//       clearOverlappingNotes(notes, start, end);
-//       writeNote(notes, start, end);
-//       return notes;
-//     }
-
-//     const isResize = notes[grab] === 2 && grab === grabbed.end - 1;
-//     if (isResize) {
-//       clearRange(notes, grabbed.start, grabbed.end);
-//       if (current < grabbed.start) {
-//         return notes;
-//       }
-//       const end = current + 1;
-//       clearOverlappingNotes(notes, grabbed.start, end);
-//       writeNote(notes, grabbed.start, end);
-//       return notes;
-//     }
-
-//     const length = grabbed.end - grabbed.start;
-//     let newStart = grabbed.start + (current - grab);
-//     newStart = clampValue(newStart, 0, notes.length - length);
-//     const newEnd = newStart + length;
-//     clearRange(notes, grabbed.start, grabbed.end);
-//     clearOverlappingNotes(notes, newStart, newEnd);
-//     writeNote(notes, newStart, newEnd);
-//     return notes;
-//   },
-//   toggleStep(originalStepNotes: number[], index: number): number[] {
-//     const notes = [...originalStepNotes];
-//     if (notes[index] === 0) {
-//       notes[index] = 1;
-//       return notes;
-//     }
-//     const span = findNoteSpan(notes, index);
-//     if (!span) return notes;
-//     clearRange(notes, span.start, span.end);
-//     return notes;
-//   },
-// };
+function commitEditedNote(preview: Note | null, originalId: number) {
+  if (!preview || preview.duration < 1) {
+    store.setNotes((prev) => prev.filter((note) => note.id !== originalId));
+  } else {
+    store.setNotes((prev) =>
+      prev.map((note) => (note.id === preview.id ? preview : note)),
+    );
+  }
+}
 
 function handleStepsBarEditorPointerDown(
   e: PointerEvent,
   stepsRange: StepsRange,
 ) {
-  // const originalNotes = [...store.state.notes];
-  // startStepsBarDragInput(e, stepsRange, originalNotes.length, {
-  //   onTap(index) {
-  //     store.setStepNotes(
-  //       stepNotesEditCore.toggleStep(originalNotes, index),
-  //     );
-  //   },
-  //   onBandChanged(band) {
-  //     store.setPreviewStepNotes(
-  //       stepNotesEditCore.applyBandEdit(originalNotes, band),
-  //     );
-  //   },
-  //   onCommit(band) {
-  //     store.setStepNotes(
-  //       stepNotesEditCore.applyBandEdit(originalNotes, band),
-  //     );
-  //     store.setPreviewStepNotes(null);
-  //   },
-  //   onCancel() {
-  //     store.setPreviewStepNotes(null);
-  //   },
-  // });
+  if (e.button !== 0) return;
+
+  const t0 = performance.now();
+  let mode: EditMode = "create";
+  let startCell: Cell = { x: 0, y: 0 };
+  let originalNote: Note | null = null;
+
+  startDragSession(
+    e,
+    {
+      onDown(ev) {
+        startCell = cellFromPointer(ev.position, stepsRange);
+        const hit = hitTestNote(store.state.notes, startCell);
+        if (!hit) {
+          mode = "create";
+          originalNote = {
+            id: nextNoteId(store.state.notes),
+            position: startCell.x,
+            pitch: startCell.y,
+            duration: 1,
+          };
+          store.setPreviewNote(originalNote);
+          return;
+        }
+        mode = isResizeGrab(hit, startCell) ? "resize" : "move";
+        originalNote = hit;
+        store.setPreviewNote({ ...hit });
+      },
+      onMove(ev) {
+        if (!originalNote) return;
+        const current = cellFromPointer(ev.position, stepsRange);
+        if (mode === "create") {
+          store.setPreviewNote(
+            makeCreatePreview(originalNote.id, startCell, current, stepsRange),
+          );
+        } else if (mode === "move") {
+          store.setPreviewNote(
+            makeMovePreview(originalNote, startCell, current, stepsRange),
+          );
+        } else {
+          store.setPreviewNote(
+            makeResizePreview(originalNote, startCell, current, stepsRange),
+          );
+        }
+      },
+      onUp(ev) {
+        const preview = store.state.previewNote;
+        if (mode === "create") {
+          if (preview && preview.duration >= 1) {
+            store.setNotes((prev) => [...prev, preview]);
+          }
+          store.setPreviewNote(null);
+          return;
+        }
+        const distance = Math.hypot(
+          ev.position.x - ev.originalPosition.x,
+          ev.position.y - ev.originalPosition.y,
+        );
+        const elapsed = performance.now() - t0;
+        if (
+          originalNote &&
+          distance <= tapConfigs.maxDistance &&
+          elapsed <= tapConfigs.maxDurationMs
+        ) {
+          store.setNotes((prev) =>
+            prev.filter((note) => note.id !== originalNote!.id),
+          );
+          store.setPreviewNote(null);
+          return;
+        }
+        if (originalNote) {
+          commitEditedNote(preview, originalNote.id);
+        }
+        store.setPreviewNote(null);
+      },
+      onCancel() {
+        store.setPreviewNote(null);
+      },
+    },
+    { coordinate: "relative" },
+  );
+}
+
+function noteOverlapsRange(note: Note, stepsRange: StepsRange) {
+  const rangeStart = stepsRange.offset;
+  const rangeEnd = rangeEndX(stepsRange);
+  return note.position < rangeEnd && note.position + note.duration > rangeStart;
 }
 
 const NotesLayer = ({ stepsRange }: { stepsRange: StepsRange }) => {
-  const nx = stepsRange.length;
-  const { notes } = store.useSnapshot();
-  // const stepNotes = st.previewStepNotes ?? st.stepNotes;
-  const rangedNotes = notes.slice(stepsRange.offset, stepsRange.offset + nx);
+  const { notes, previewNote } = store.useSnapshot();
   const { stepCellWidth, stepCellHeight } = uiConfigs;
+  const visibleNotes = notes.filter(
+    (note) =>
+      note.duration >= 1 &&
+      note.id !== previewNote?.id &&
+      noteOverlapsRange(note, stepsRange),
+  );
+  const displayNotes =
+    previewNote &&
+    previewNote.duration >= 1 &&
+    noteOverlapsRange(previewNote, stepsRange)
+      ? [...visibleNotes, previewNote]
+      : visibleNotes;
   return (
     <div
       class={cz(
@@ -264,11 +272,11 @@ const NotesLayer = ({ stepsRange }: { stepsRange: StepsRange }) => {
         "[&>div]:(absolute flex-c bd-#f80 bg-#fc48)",
       )}
     >
-      {rangedNotes.map((note, idx) => (
+      {displayNotes.map((note) => (
         <div
-          key={idx}
+          key={note.id}
           style={{
-            left: note.position * stepCellWidth,
+            left: (note.position - stepsRange.offset) * stepCellWidth,
             bottom: note.pitch * stepCellHeight,
             width: note.duration * stepCellWidth,
             height: stepCellHeight,
