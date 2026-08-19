@@ -1,4 +1,4 @@
-import { WaveMode } from "@/defs/definitions";
+import { numWaveModes, WaveMode } from "@/defs/definitions";
 import { createInterpolator } from "@/logic/interpolator";
 import { phaseTweakers } from "@/logic/phase-tweakers";
 import { power2 } from "@/logic/synth-math-utils";
@@ -78,16 +78,8 @@ function getPtmWave(
 }
 
 const ptmKindMap = {
-  [WaveMode.PTM2]: ["sfm", "sine"],
+  [WaveMode.PTM2]: ["pw", "rect"],
   [WaveMode.PTM3]: ["sdm", "sine"],
-  [WaveMode.PTM4]: ["pw", "rect"],
-  [WaveMode.PTM5]: ["accel", "saw"],
-  [WaveMode.PTM6]: ["screw", "saw"],
-  [WaveMode.PTM7]: ["drill", "rect"],
-  [WaveMode.PTM8]: ["squash", "saw"],
-  [WaveMode.PTM9]: ["creep", "sine"],
-  [WaveMode.PTM10]: ["creep2", "saw"],
-  [WaveMode.PTM11]: ["sub-pw", "rect"],
 } satisfies { [key in WaveMode]?: [PtmKind, PtmBaseWaveKind] };
 
 let kindTextOut = "";
@@ -345,7 +337,7 @@ class SynthProcessor extends AudioWorkletProcessor {
         name: "waveMode",
         defaultValue: 0,
         minValue: 0,
-        maxValue: WaveMode.NumWaveModes - 1,
+        maxValue: numWaveModes - 1,
       },
       { name: "shape", defaultValue: 0.0, minValue: 0.0, maxValue: 1.0 },
       { name: "envMod", defaultValue: 0.0, minValue: 0.0, maxValue: 1.0 },

@@ -5,7 +5,7 @@ import { createPlainSelectorOptions } from "@/utils/selector-option";
 import { Selector } from "@/components/selector";
 import { allPresetKeys, store } from "@/root/store";
 import { actions } from "@/root/actions";
-import { SynthParameters, WaveMode } from "@/defs/definitions";
+import { numWaveModes, SynthParameters } from "@/defs/definitions";
 import { cx } from "@twind/core";
 import { useSetupDrivers } from "@/root/drivers";
 
@@ -107,7 +107,7 @@ const ParametersSection = () => {
           <ParameterKnob
             paramKey="waveMode"
             label="WAVE"
-            steps={WaveMode.NumWaveModes}
+            steps={numWaveModes}
           />
           <ParameterKnob paramKey="shape" label="SHAPE" />
           <ParameterKnob paramKey="envMod" label="ENV" />

@@ -1,4 +1,4 @@
-import { SynthParameters, WaveMode } from "@/defs/definitions";
+import { numWaveModes, SynthParameters } from "@/defs/definitions";
 
 const randF = Math.random;
 
@@ -21,7 +21,7 @@ function randB(p: number) {
 export function createRandomParameters(): Partial<SynthParameters> {
   const fixDR = randB(0.5) ? "D" : "R";
   return {
-    waveMode: randI(WaveMode.NumWaveModes),
+    waveMode: randI(numWaveModes),
     shape: randF(),
     envMod: randF(),
     detune: probably(0.5, 0, randF()),

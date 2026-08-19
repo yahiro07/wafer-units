@@ -3,16 +3,8 @@ export enum WaveMode {
   FM = 1,
   PTM2 = 2,
   PTM3 = 3,
-  PTM4 = 4,
-  PTM5 = 5,
-  PTM6 = 6,
-  PTM7 = 7,
-  PTM8 = 8,
-  PTM9 = 9,
-  PTM10 = 10,
-  PTM11 = 11,
-  NumWaveModes = 12,
 }
+export const numWaveModes = 4;
 
 export type SynthParameters = {
   waveMode: WaveMode;
