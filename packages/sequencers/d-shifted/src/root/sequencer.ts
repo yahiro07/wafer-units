@@ -11,12 +11,16 @@ import {
 } from "@/root/definitions";
 
 const majorSubDegrees = [0, 2, 4, 5, 7, 9, 11];
+const minorSubDegrees = [0, 2, 3, 5, 7, 8, 10];
 
-function createScaleNoteNumbers(keyTranspose: number) {
+function createScaleNoteNumbers(keyRoot: number, mode: "major" | "minor") {
+  const subDegrees = mode === "major" ? majorSubDegrees : minorSubDegrees;
   return seqNumbers(84).map((i) => {
     const oct = (i / 7) >>> 0;
     const sub = i % 7;
-    return oct * 12 + majorSubDegrees[sub] + keyTranspose;
+    //if keyRoot is negative, this value could be negative,
+    //so it should be clamped to 0-127 before sending
+    return oct * 12 + subDegrees[sub] + keyRoot;
   });
 }
 
@@ -32,11 +36,8 @@ export function createSequencer(unitInterface: UnitInterface | undefined) {
   );
 
   const state = {
-    scaleNoteNumbers: createScaleNoteNumbers(0),
-    sentNotes: new Set<number>(),
-    rootNoteShift: 0,
-    liveRootNoteLatest: -1,
-    keyMode: "minor" as "major" | "minor",
+    scaleNoteNumbers: createScaleNoteNumbers(-3, "minor"), //default Am
+    inputRootNoteNumber: -1,
   };
   let listener: ISequencerListener | null = null;
 
@@ -45,15 +46,21 @@ export function createSequencer(unitInterface: UnitInterface | undefined) {
       noteOutputPort?.noteOn(note, time);
       noteOutputPort?.noteOff(note, time + duration);
     },
-    getScaleFundamentalIndex() {
-      return state.keyMode === "major" ? 28 : 26;
+    getShiftingRootIndex() {
+      if (editState.shiftEnabled) {
+        const index = state.scaleNoteNumbers.indexOf(state.inputRootNoteNumber);
+        if (index !== -1) return index;
+      }
+      return 28;
     },
-    getOutputNoteNumber(pitch: number) {
-      const fi = internal.getScaleFundamentalIndex();
-      const root = fi + (editState.shiftEnabled ? state.rootNoteShift : 0);
-      return state.scaleNoteNumbers[
-        clampValue(root + pitch + editState.octaveShift * 7, 0, 83)
-      ];
+    getOutputNoteNumber(root: number, pitch: number) {
+      return clampValue(
+        state.scaleNoteNumbers[
+          clampValue(root + pitch + editState.octaveShift * 7, 0, 83)
+        ],
+        0,
+        127,
+      );
     },
   };
 
@@ -61,10 +68,10 @@ export function createSequencer(unitInterface: UnitInterface | undefined) {
     processStep(stepIndex, time, unitDuration) {
       const pos = stepIndex % editState.patternLength;
       const notes = editState.notes.filter((note) => note.position === pos);
-
+      const root = internal.getShiftingRootIndex();
       for (const note of notes) {
         const durationSec = note.duration * unitDuration * editState.stepDuty;
-        const noteNumber = internal.getOutputNoteNumber(note.pitch);
+        const noteNumber = internal.getOutputNoteNumber(root, note.pitch);
         internal.playNote(noteNumber, time, durationSec);
       }
       listener?.onDisplayStepIndexChanged(stepIndex % 16);
@@ -76,13 +83,7 @@ export function createSequencer(unitInterface: UnitInterface | undefined) {
 
   const noteInput: NoteInputPort = {
     noteOn(noteNumber) {
-      const index = state.scaleNoteNumbers.indexOf(noteNumber);
-      if (index !== -1) {
-        const fi = internal.getScaleFundamentalIndex();
-        state.rootNoteShift = index - fi;
-      } else {
-        state.rootNoteShift = 0;
-      }
+      state.inputRootNoteNumber = noteNumber;
     },
     noteOff() {},
   };
@@ -92,8 +93,8 @@ export function createSequencer(unitInterface: UnitInterface | undefined) {
       Object.assign(editState, attrs);
     },
     setKey(keySpec: SongKeySpec) {
-      state.keyMode = keySpec.mode;
-      state.scaleNoteNumbers = createScaleNoteNumbers(keySpec.keyTranspose);
+      const { root, mode } = keySpec;
+      state.scaleNoteNumbers = createScaleNoteNumbers(root, mode);
     },
     clockHandlers,
     noteInput,
