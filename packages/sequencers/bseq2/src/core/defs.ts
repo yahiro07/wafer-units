@@ -13,7 +13,7 @@ export type SequencerEditState = {
 };
 
 export const defaultSequencerEditState: SequencerEditState = {
-  octave: 0,
+  octave: -1,
   duty: 0.5,
   patternRange: 4,
   stepBits: 0,

@@ -32,7 +32,7 @@ function resolveDuration(
 export function createEngine(unitInterface: UnitInterface | undefined) {
   const state = {
     editState: { ...defaultSequencerEditState },
-    rootNoteNumber: 60,
+    rootNoteNumber: 57,
   };
   const noteOutputPort = unitInterface?.createNoteOutputPort();
 
@@ -48,7 +48,7 @@ export function createEngine(unitInterface: UnitInterface | undefined) {
         const dutyRate = mapUnaryTo(duty, 0.1, 1);
         const durationSec = unitDuration * duration * dutyRate;
         const noteNumber = clampValue(
-          state.rootNoteNumber - 24 + octave * 12,
+          state.rootNoteNumber - 12 + octave * 12,
           0,
           127,
         );
