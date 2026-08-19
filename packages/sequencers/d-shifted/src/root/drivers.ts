@@ -17,9 +17,7 @@ function setupUnit() {
       viewSize: [720, 360],
     },
     hostCallbacks: {
-      setKey(keySpec) {
-        sequencer.setKeyTranspose(keySpec.keyTranspose);
-      },
+      setKey: sequencer.setKey,
     },
     clockHandlers: sequencer.clockHandlers,
     noteInput: sequencer.noteInput,
