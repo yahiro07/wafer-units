@@ -20,9 +20,9 @@ function useKeyLabelModeOptions() {
   return useMemo(() => {
     const [majorKey, minorKey] = keysName.split("/");
     return createSelectorOptions<KeyLabelMode>([
-      ["doremi", `${keysName} (doremi)`],
       ["degreeMajor", `${majorKey} (degree)`],
       ["degreeMinor", `${minorKey} (degree) `],
+      ["doremi", `${keysName} (doremi)`],
     ]);
   }, [keysName]);
 }
