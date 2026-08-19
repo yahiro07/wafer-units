@@ -1,5 +1,7 @@
 import { Button } from "@/components/button";
 import { ButtonsSelector } from "@/components/buttons-selector";
+import { IconButton } from "@/components/icon-button";
+import { Icons } from "@/components/icons";
 import { Knob } from "@/components/knob";
 import { SideLabelBox } from "@/components/side-label-box";
 import { StepsEditorRoot } from "@/root/steps-editor";
@@ -65,7 +67,7 @@ const FeatureHeader = ({
   );
 };
 
-const GaterHeaderContainer = () => {
+const ShiftEnableButtonContainer = () => {
   const { shiftEnabled } = store.useSnapshot();
   return (
     <FeatureHeader
@@ -74,6 +76,13 @@ const GaterHeaderContainer = () => {
       onClick={store.toggleShiftEnabled}
     />
   );
+};
+
+const DeleteButtonContainer = () => {
+  const handleClick = () => {
+    store.setNotes([]);
+  };
+  return <IconButton icon={Icons.Trash} size={24} onClick={handleClick} />;
 };
 
 export const App = () => {
@@ -89,7 +98,8 @@ export const App = () => {
         <StepDutyContainer />
       </div>
       <div class="flex-ha gap-2 justify-between">
-        <GaterHeaderContainer />
+        <ShiftEnableButtonContainer />
+        <DeleteButtonContainer />
         <PatternLengthContainer />
         <StepDutyContainer />
       </div>
