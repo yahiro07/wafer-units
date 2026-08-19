@@ -1,4 +1,4 @@
-import { css, cz } from "@/common/css-realm";
+import { cz } from "@/common/css-realm";
 import { seqNumbers } from "@/utils/helpers";
 
 export const GridTonicHighlighter = ({
@@ -16,25 +16,16 @@ export const GridTonicHighlighter = ({
         return (
           <div
             key={i}
-            class={cz(isTonic && "--tonic", isDominant && "--dominant")}
+            class={cz(isTonic && "tonic", isDominant && "dominant")}
           />
         );
       })}
     </div>
   );
 };
-const baseStyle = css({
-  width: "100%",
-  height: "100%",
-  display: "flex",
-  flexDirection: "column-reverse",
-  "& > div": {
-    flexGrow: 1,
-    "&.--tonic": {
-      background: "#0082",
-    },
-    "&.--dominant": {
-      background: "#0051",
-    },
-  },
-});
+const baseStyle = cz(
+  "w-full h-full flex-v flex-col-reverse",
+  "[&>div]:(flex-1 min-h-0)",
+  "[&>div.tonic]:(bg-#0082)",
+  "[&>div.dominant]:(bg-#0051)",
+);
