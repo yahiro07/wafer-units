@@ -1,4 +1,5 @@
 import { SynthParameters } from "@/defs/definitions";
+import { createChorus5 } from "@/engine/chorus5";
 import { createConvolverReverb } from "@/engine/convolver-reverb";
 import { createDensityShaper } from "@/engine/density-shaper";
 import { createIirReverb } from "@/engine/iir-reverb";
@@ -49,6 +50,7 @@ export function createEffectChain(
   const lpf2 = LPF_TWO_STAGE ? audioContext.createBiquadFilter() : null;
   const densityShaper = createDensityShaper(audioContext);
   const compressor = audioContext.createDynamicsCompressor();
+  const chorus = createChorus5(audioContext);
   const reverb = USE_CONVOLVER_REVERB
     ? createConvolverReverb(audioContext)
     : createIirReverb(audioContext);
@@ -80,7 +82,8 @@ export function createEffectChain(
     lpf1.connect(densityShaper.shaperNode);
   }
   densityShaper.shaperNode.connect(compressor);
-  compressor.connect(reverb.input);
+  compressor.connect(chorus.inputNode);
+  chorus.outputNode.connect(reverb.input);
   reverb.output.connect(globalGain);
   globalGain.connect(destination);
   filterEnvScale.connect(lpf1.detune);
@@ -119,6 +122,7 @@ export function createEffectChain(
         time,
       );
       densityShaper.updateNodeParameters(clamp01(parameters.density));
+      chorus.setLevel(clamp01(parameters.chorusLevel));
       reverb.apply(parameters.reverbDecay, parameters.reverbMix, time);
       globalGain.gain.setValueAtTime(clamp01(parameters.globalVolume), time);
     },
@@ -129,6 +133,9 @@ export function createEffectChain(
       lpf2?.disconnect();
       densityShaper.shaperNode.disconnect();
       compressor.disconnect();
+      chorus.cleanupNodes();
+      chorus.inputNode.disconnect();
+      chorus.outputNode.disconnect();
       reverb.cleanup();
       globalGain.disconnect();
       filterEnvScale.disconnect();

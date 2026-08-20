@@ -135,8 +135,9 @@ export const App = () => {
         <ParameterKnob label="F" paramKey="pitchLfoRate" />
         <ParameterKnob label="F-LFO" paramKey="filterLfoDepth" />
         <ParameterKnob label="F" paramKey="filterLfoRate" />
-        <ParameterKnob label="Reverb" paramKey="reverbMix" />
+        <ParameterKnob label="REVERB" paramKey="reverbMix" />
         <ParameterKnob label="T" paramKey="reverbDecay" />
+        <ParameterKnob label="CHORUS" paramKey="chorusLevel" />
       </div>
     </div>
   );

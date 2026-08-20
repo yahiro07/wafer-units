@@ -33,6 +33,7 @@ export type SynthParameters = {
   filterLfoDepth: number;
   reverbDecay: number;
   reverbMix: number;
+  chorusLevel: number;
 };
 
 export const defaultSynthParameters: SynthParameters = {
@@ -61,6 +62,7 @@ export const defaultSynthParameters: SynthParameters = {
   filterLfoDepth: 0,
   reverbDecay: 0.5,
   reverbMix: 0,
+  chorusLevel: 0,
 };
 
 export type LinearParameterKeys = Exclude<
