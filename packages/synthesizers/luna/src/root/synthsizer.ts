@@ -16,6 +16,25 @@ const MAX_FILTER_ENV_CENTS = 4800;
 const MAX_ATTACK_SECONDS = 4;
 const MAX_DECAY_SECONDS = 8;
 const MAX_RELEASE_SECONDS = 4;
+const MAX_PUNCH_GAIN = 16;
+const MAX_PUNCH_DECAY_SECONDS = 0.12;
+const SHAPER_CURVE_SIZE = 1024;
+
+function createTransferCurve(
+  map: (x: number) => number,
+): Float32Array<ArrayBuffer> {
+  const curve = new Float32Array(
+    new ArrayBuffer(SHAPER_CURVE_SIZE * Float32Array.BYTES_PER_ELEMENT),
+  );
+  for (let i = 0; i < curve.length; i += 1) {
+    const x = (i / (curve.length - 1)) * 2 - 1;
+    curve[i] = map(x);
+  }
+  return curve;
+}
+
+const identityShaperCurve = createTransferCurve((x) => x);
+const tanhShaperCurve = createTransferCurve((x) => Math.tanh(x));
 
 function clamp(value: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, value));
@@ -108,8 +127,12 @@ export function createSynthesizerEngine(
   const hpf = audioContext.createBiquadFilter();
   const lpf = audioContext.createBiquadFilter();
   const amp = audioContext.createGain();
+  const punchGain = audioContext.createGain();
+  const punchAmount = audioContext.createGain();
+  const saturator = audioContext.createWaveShaper();
   const voiceGain = audioContext.createGain();
   const envelope = audioContext.createConstantSource();
+  const punchEnv = audioContext.createConstantSource();
   const filterEnvScale = audioContext.createGain();
 
   osc1.type = "sawtooth";
@@ -125,6 +148,11 @@ export function createSynthesizerEngine(
   hpf.type = "highpass";
   lpf.type = "lowpass";
   amp.gain.value = 0;
+  punchGain.gain.value = 1;
+  punchAmount.gain.value = 0;
+  punchEnv.offset.value = 0;
+  saturator.curve = identityShaperCurve;
+  saturator.oversample = "2x";
   envelope.offset.value = 0;
   filterEnvScale.gain.value = 0;
 
@@ -139,23 +167,34 @@ export function createSynthesizerEngine(
   mix.connect(hpf);
   hpf.connect(lpf);
   lpf.connect(amp);
-  amp.connect(voiceGain);
+  amp.connect(punchGain);
+  // punchGain.connect(saturator);
+  // saturator.connect(voiceGain);
+  punchGain.connect(voiceGain);
   voiceGain.connect(destination);
 
   envelope.connect(amp.gain);
   envelope.connect(filterEnvScale);
   filterEnvScale.connect(lpf.detune);
+  punchEnv.connect(punchAmount);
+  punchAmount.connect(punchGain.gain);
 
   osc1.start();
   osc2.start();
   noise1.start();
   noise2.start();
   envelope.start();
+  punchEnv.start();
 
   const ampEnvelope = createEnvelopeGenerator(envelope.offset, {
     attackSec: MAX_ATTACK_SECONDS,
     decaySec: MAX_DECAY_SECONDS,
     releaseSec: MAX_RELEASE_SECONDS,
+  });
+  const punchEnvelope = createEnvelopeGenerator(punchEnv.offset, {
+    attackSec: 0,
+    decaySec: MAX_PUNCH_DECAY_SECONDS,
+    releaseSec: 0,
   });
 
   const state: {
@@ -236,15 +275,34 @@ export function createSynthesizerEngine(
 
   function applyEnvelopeParameters(parameters: SynthParameters) {
     const osc2Sounding = clamp01(parameters.osc2Volume) > 0;
+    const hasNaiveWave =
+      isSineWave(parameters.osc1Wave) ||
+      (osc2Sounding && isSineWave(parameters.osc2Wave));
     ampEnvelope.setParameters({
       attack: clamp01(parameters.ampAttack) ** 2,
       decay: clamp01(parameters.ampDecay) ** 2,
       sustain: clamp01(parameters.ampSustain),
       release: clamp01(parameters.ampRelease) ** 2,
-      hasNaiveWave:
-        isSineWave(parameters.osc1Wave) ||
-        (osc2Sounding && isSineWave(parameters.osc2Wave)),
+      hasNaiveWave,
     });
+
+    const punch = clamp01(parameters.punch);
+    const punchSquared = punch ** 2;
+    punchEnvelope.setParameters({
+      attack: 0,
+      decay: 0.15 + 1.85 * punch,
+      sustain: 0,
+      release: 0,
+      hasNaiveWave,
+    });
+    punchAmount.gain.setValueAtTime(
+      punchSquared * MAX_PUNCH_GAIN,
+      audioContext.currentTime,
+    );
+    const punchCurve = punch > 0 ? tanhShaperCurve : identityShaperCurve;
+    if (saturator.curve !== punchCurve) {
+      saturator.curve = punchCurve;
+    }
   }
 
   function applyParameters(parameters: SynthParameters, time: number) {
@@ -272,6 +330,7 @@ export function createSynthesizerEngine(
       applyPitch(state.parameters, startTime);
       applyFilterAndAmp(state.parameters, startTime);
       ampEnvelope.triggerAttack(startTime);
+      punchEnvelope.triggerAttack(startTime);
     },
     noteOff(noteNumber, time) {
       if (noteNumber !== state.currentNote) return;
@@ -285,6 +344,7 @@ export function createSynthesizerEngine(
         noise1.stop();
         noise2.stop();
         envelope.stop();
+        punchEnv.stop();
       } catch {
         // already stopped
       }
@@ -300,8 +360,12 @@ export function createSynthesizerEngine(
       hpf.disconnect();
       lpf.disconnect();
       amp.disconnect();
+      punchGain.disconnect();
+      punchAmount.disconnect();
+      saturator.disconnect();
       voiceGain.disconnect();
       envelope.disconnect();
+      punchEnv.disconnect();
       filterEnvScale.disconnect();
     },
   };
