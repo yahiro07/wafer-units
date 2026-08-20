@@ -3,7 +3,7 @@ export enum OscWave {
   Rect,
   Tri,
   Sine,
-  Noise,
+  Ex, //S7 for OSC1, noise for OSC2
 }
 export const numOscWaveTypes = 5;
 

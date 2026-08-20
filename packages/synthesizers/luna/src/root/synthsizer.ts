@@ -78,7 +78,7 @@ function waveToOscillatorType(wave: OscWave): OscillatorType {
 }
 
 function isNoiseWave(wave: OscWave): boolean {
-  return Math.round(wave) === OscWave.Noise;
+  return Math.round(wave) === OscWave.Ex;
 }
 
 function isSineWave(wave: OscWave): boolean {
