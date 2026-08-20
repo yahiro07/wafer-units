@@ -4,6 +4,7 @@ import { IconButton } from "@/components/icon-button";
 import { Icons } from "@/components/icons";
 import { Knob } from "@/components/knob";
 import { SideLabelBox } from "@/components/side-label-box";
+import { useSetupDrivers } from "@/root/drivers";
 import { editActions } from "@/root/edit-actions";
 import { StepsEditorRoot } from "@/root/steps-editor";
 import { StepsIndicatorBar } from "@/root/steps-indicator-bar";
@@ -148,24 +149,24 @@ const DeleteButtonContainer = () => {
 };
 
 export const App = () => {
-  // useSetupDrivers();
+  useSetupDrivers();
   return (
     <div class="flex-v gap-4 bg-clPageBg p-8 text-white">
-      <div class="flex-ha gap-3 justify-between">
+      <div class="flex-ha gap-10">
         <div>
           <h1 class="text-2xl font-bold">D-SHIFTED</h1>
         </div>
+        <div class="grow" />
         <OctaveShiftContainer />
-        <PatternLengthContainer />
         <StepDutyContainer />
       </div>
-      <div class="flex-ha gap-2 justify-between">
+      <div class="flex-ha gap-5">
         <ShiftEnableButtonContainer />
+        <div class="grow" />
         <PatternLengthContainer />
         <PageButtonsContainer />
         <DoublerButtonContainer />
         <DeleteButtonContainer />
-        <StepDutyContainer />
       </div>
       <div class="flex-vc gap-2.5">
         <StepsIndicatorBar />
