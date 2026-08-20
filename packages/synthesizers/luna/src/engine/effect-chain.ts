@@ -110,7 +110,7 @@ export function createEffectChain(
         clamp01(parameters.lpfEnvMod) * MAX_FILTER_ENV_CENTS,
         time,
       );
-      globalGain.gain.setValueAtTime(clamp01(parameters.voiceVolume), time);
+      globalGain.gain.setValueAtTime(clamp01(parameters.globalVolume), time);
     },
     setPunchCurve(punch: number) {
       const punchCurve = punch > 0 ? tanhShaperCurve : identityShaperCurve;

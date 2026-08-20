@@ -24,7 +24,7 @@ export type SynthParameters = {
   ampDecay: number;
   ampSustain: number;
   ampRelease: number;
-  voiceVolume: number;
+  globalVolume: number;
 };
 
 export const defaultSynthParameters: SynthParameters = {
@@ -44,7 +44,7 @@ export const defaultSynthParameters: SynthParameters = {
   ampDecay: 0,
   ampSustain: 1,
   ampRelease: 0,
-  voiceVolume: 0.5,
+  globalVolume: 0.5,
 };
 
 export type LinearParameterKeys = Exclude<
