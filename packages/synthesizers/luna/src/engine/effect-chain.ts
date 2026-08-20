@@ -49,11 +49,12 @@ export function createEffectChain(
   const lpf1 = audioContext.createBiquadFilter();
   const lpf2 = LPF_TWO_STAGE ? audioContext.createBiquadFilter() : null;
   const densityShaper = createDensityShaper(audioContext);
-  const compressor = audioContext.createDynamicsCompressor();
   const chorus = createChorus5(audioContext);
   const reverb = USE_CONVOLVER_REVERB
     ? createConvolverReverb(audioContext)
     : createIirReverb(audioContext);
+  const compressor = audioContext.createDynamicsCompressor();
+  const compressorMakeup = audioContext.createGain();
   const globalGain = audioContext.createGain();
   const filterEnvScale = audioContext.createGain();
   const filterLfo = createSineLfo(audioContext);
@@ -68,8 +69,9 @@ export function createEffectChain(
   compressor.threshold.value = -18;
   compressor.ratio.value = 4;
   compressor.knee.value = 8;
-  compressor.attack.value = 0.003;
-  compressor.release.value = 0.15;
+  compressor.attack.value = 0.02;
+  compressor.release.value = 0.2;
+  compressorMakeup.gain.value = 2;
   globalGain.gain.value = 1;
   densityShaper.updateNodeParameters(0);
 
@@ -81,10 +83,11 @@ export function createEffectChain(
   } else {
     lpf1.connect(densityShaper.shaperNode);
   }
-  densityShaper.shaperNode.connect(compressor);
-  compressor.connect(chorus.inputNode);
+  densityShaper.shaperNode.connect(chorus.inputNode);
   chorus.outputNode.connect(reverb.input);
-  reverb.output.connect(globalGain);
+  reverb.output.connect(compressor);
+  compressor.connect(compressorMakeup);
+  compressorMakeup.connect(globalGain);
   globalGain.connect(destination);
   filterEnvScale.connect(lpf1.detune);
   filterLfo.output.connect(lpf1.detune);
@@ -132,11 +135,12 @@ export function createEffectChain(
       lpf1.disconnect();
       lpf2?.disconnect();
       densityShaper.shaperNode.disconnect();
-      compressor.disconnect();
       chorus.cleanupNodes();
       chorus.inputNode.disconnect();
       chorus.outputNode.disconnect();
       reverb.cleanup();
+      compressor.disconnect();
+      compressorMakeup.disconnect();
       globalGain.disconnect();
       filterEnvScale.disconnect();
       filterLfo.cleanup();

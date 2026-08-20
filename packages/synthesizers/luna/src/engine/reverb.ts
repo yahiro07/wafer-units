@@ -5,6 +5,12 @@ export type Reverb = {
   cleanup(): void;
 };
 
+export const REVERB_WET_EQ = true;
+export const REVERB_PREDELAY = true;
+export const REVERB_WET_HPF_HZ = 180;
+export const REVERB_WET_LPF_HZ = 6000;
+export const REVERB_PREDELAY_SEC = 0.03;
+
 export const MIN_REVERB_DECAY_SEC = 0.25;
 export const MAX_REVERB_DECAY_SEC = 5;
 export const REVERB_WET_SCALE = 0.55;
@@ -29,4 +35,44 @@ export function applyReverbMix(
   const mixAmount = clamp01(mix);
   dryGain.setValueAtTime(1 - mixAmount * 0.65, time);
   wetGain.setValueAtTime(mixAmount * REVERB_WET_SCALE, time);
+}
+
+export function createReverbWetChain(audioContext: AudioContext) {
+  const input = audioContext.createGain();
+  const output = audioContext.createGain();
+  const nodes: AudioNode[] = [input, output];
+  let current: AudioNode = input;
+
+  if (REVERB_PREDELAY) {
+    const delay = audioContext.createDelay(0.1);
+    delay.delayTime.value = REVERB_PREDELAY_SEC;
+    current.connect(delay);
+    nodes.push(delay);
+    current = delay;
+  }
+  if (REVERB_WET_EQ) {
+    const hpf = audioContext.createBiquadFilter();
+    hpf.type = "highpass";
+    hpf.frequency.value = REVERB_WET_HPF_HZ;
+    hpf.Q.value = Math.SQRT1_2;
+    const lpf = audioContext.createBiquadFilter();
+    lpf.type = "lowpass";
+    lpf.frequency.value = REVERB_WET_LPF_HZ;
+    lpf.Q.value = Math.SQRT1_2;
+    current.connect(hpf);
+    hpf.connect(lpf);
+    nodes.push(hpf, lpf);
+    current = lpf;
+  }
+  current.connect(output);
+
+  return {
+    input,
+    output,
+    cleanup() {
+      for (const node of nodes) {
+        node.disconnect();
+      }
+    },
+  };
 }

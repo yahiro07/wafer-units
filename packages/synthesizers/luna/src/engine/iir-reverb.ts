@@ -1,5 +1,6 @@
 import {
   applyReverbMix,
+  createReverbWetChain,
   mapReverbDecaySec,
   Reverb,
 } from "@/engine/reverb";
@@ -37,6 +38,7 @@ export function createIirReverb(audioContext: AudioContext): Reverb {
   const dryGain = audioContext.createGain();
   const wetGain = audioContext.createGain();
   const combMix = audioContext.createGain();
+  const wetChain = createReverbWetChain(audioContext);
   combMix.gain.value = COMB_MIX_GAIN;
   dryGain.gain.value = 1;
   wetGain.gain.value = 0;
@@ -91,7 +93,8 @@ export function createIirReverb(audioContext: AudioContext): Reverb {
 
   input.connect(dryGain);
   dryGain.connect(output);
-  allpassInput.connect(wetGain);
+  allpassInput.connect(wetChain.input);
+  wetChain.output.connect(wetGain);
   wetGain.connect(output);
 
   return {
@@ -114,6 +117,7 @@ export function createIirReverb(audioContext: AudioContext): Reverb {
       dryGain.disconnect();
       wetGain.disconnect();
       combMix.disconnect();
+      wetChain.cleanup();
       for (const node of combDelays) node.disconnect();
       for (const node of combFilters) node.disconnect();
       for (const node of combFeedbacks) node.disconnect();

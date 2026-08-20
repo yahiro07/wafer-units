@@ -1,4 +1,4 @@
-import { mapReverbDecaySec, Reverb } from "@/engine/reverb";
+import { mapReverbDecaySec, Reverb, createReverbWetChain } from "@/engine/reverb";
 import { invPower2 } from "@/engine/synth-math-utils";
 
 const DECAY_STEPS = 40;
@@ -39,6 +39,7 @@ export function createConvolverReverb(audioContext: AudioContext): Reverb {
   const dryGain = audioContext.createGain();
   const wetGain = audioContext.createGain();
   const convolver = audioContext.createConvolver();
+  const wetChain = createReverbWetChain(audioContext);
   convolver.normalize = true;
   dryGain.gain.value = 1;
   wetGain.gain.value = 0;
@@ -52,7 +53,8 @@ export function createConvolverReverb(audioContext: AudioContext): Reverb {
 
   input.connect(dryGain);
   input.connect(convolver);
-  convolver.connect(wetGain);
+  convolver.connect(wetChain.input);
+  wetChain.output.connect(wetGain);
   dryGain.connect(output);
   wetGain.connect(output);
 
@@ -73,6 +75,7 @@ export function createConvolverReverb(audioContext: AudioContext): Reverb {
     },
     cleanup() {
       convolver.disconnect();
+      wetChain.cleanup();
       dryGain.disconnect();
       wetGain.disconnect();
       input.disconnect();
