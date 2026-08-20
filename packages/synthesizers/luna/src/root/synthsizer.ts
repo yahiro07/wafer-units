@@ -29,9 +29,10 @@ function mapCutoffHz(
   value: number,
   nyquist: number,
   minHz: number = MIN_CUTOFF_HZ,
+  maxHz?: number,
 ): number {
   const min = clamp(minHz, 10, nyquist);
-  const max = Math.max(min, Math.min(MAX_CUTOFF_HZ, nyquist));
+  const max = Math.max(min, Math.min(MAX_CUTOFF_HZ, maxHz ?? nyquist));
   const hz = min * (max / min) ** clamp01(value);
   return clamp(hz, min, max);
 }
@@ -212,11 +213,12 @@ export function createSynthesizerEngine(
 
   function applyFilterAndAmp(parameters: SynthParameters, time: number) {
     const { osc1Hz, osc2Hz } = getOscillatorPitches(parameters);
-    const osc1SoundingHz = osc1Hz; // * 2 ** (-detuneCents / 1200);
-    const osc2SoundingHz = osc2Hz; // * 2 ** (detuneCents / 1200);
-    const lpfMinHz = Math.min(osc1SoundingHz, osc2SoundingHz) / 2;
+    const bottomF0Hz = Math.min(osc1Hz, osc2Hz);
+    const lpfMinHz = bottomF0Hz / 2;
+    const hpfMinHz = bottomF0Hz / 4;
+    const hpfMaxHz = bottomF0Hz * 16;
     hpf.frequency.setValueAtTime(
-      mapCutoffHz(parameters.hpfCutoff, nyquist),
+      mapCutoffHz(parameters.hpfCutoff, nyquist, hpfMinHz, hpfMaxHz),
       time,
     );
     hpf.Q.setValueAtTime(mapQ(parameters.hpfQ), time);
