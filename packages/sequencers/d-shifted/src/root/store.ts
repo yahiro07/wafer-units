@@ -23,7 +23,7 @@ export const store = createStore<StoreState>({
   previewNote: null,
   currentPageIndex: 0,
 });
-if (1) {
+if (0) {
   store.setPatternLength(8);
   store.setNotes([
     { id: 0, position: 0, duration: 2, pitch: 7 },

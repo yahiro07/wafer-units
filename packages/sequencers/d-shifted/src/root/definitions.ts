@@ -17,7 +17,7 @@ export type SequencerEditState = {
 
 export const defaultSequencerEditState: SequencerEditState = {
   octaveShift: 0,
-  stepDuty: 0.5,
+  stepDuty: 1,
   shiftEnabled: true,
   patternLength: 4,
   notes: [],

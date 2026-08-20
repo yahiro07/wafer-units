@@ -10,7 +10,7 @@ import { useEffect, useRef } from "preact/hooks";
 
 const uiConfigs = {
   stepCellWidth: 44,
-  stepCellHeight: 36,
+  stepCellHeight: 28,
   numCellsY: 22,
   editorHeight: 0,
 };
@@ -393,7 +393,14 @@ export const StepsEditorRoot = () => {
   const baseDivRef = useRef<HTMLDivElement>(null);
   useSetInitialScrollPosition(baseDivRef);
   return (
-    <div ref={baseDivRef} class="h-[300px] overflow-x-hidden overflow-y-scroll">
+    <div
+      ref={baseDivRef}
+      class="h-[300px] overflow-x-hidden overflow-y-scroll"
+      onWheel={(e) => {
+        e.stopPropagation();
+        e.preventDefault();
+      }}
+    >
       <div className="flex-h">
         <IndexColumn />
         <StepsEditorRootInner />

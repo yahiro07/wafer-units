@@ -14,7 +14,7 @@ function setupUnit() {
   unitInterface?.completeSetup({
     unitAspects: {
       unitType: "sequencer",
-      viewSize: [720, 360],
+      viewSize: [828, 492],
     },
     hostCallbacks: {
       setKey: sequencer.setKey,
@@ -45,15 +45,17 @@ function setupSynchronization() {
   }, true);
 
   const sequencerListener: ISequencerListener = {
-    onPlayStepPositionChanged(pos) {
-      if (pos !== -1) {
-        store.setPlayStepIndex(pos % 16);
-        const page = Math.floor(pos / 16);
-        if (store.state.currentPageIndex !== page) {
-          store.setCurrentPageIndex(page);
+    onPlayStepPositionChanged(stepIndex) {
+      if (stepIndex !== -1) {
+        store.setPlayStepIndex(stepIndex % 16);
+        if (store.state.patternLength >= 32) {
+          const page = Math.floor((stepIndex % 64) / 16);
+          if (store.state.currentPageIndex !== page) {
+            store.setCurrentPageIndex(page);
+          }
         }
       } else {
-        store.setCurrentPageIndex(-1);
+        store.setPlayStepIndex(-1);
         store.setCurrentPageIndex(0);
       }
     },

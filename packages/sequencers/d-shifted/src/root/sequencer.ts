@@ -25,7 +25,7 @@ function createScaleNoteNumbers(keyRoot: number, mode: "major" | "minor") {
 }
 
 export type ISequencerListener = {
-  onPlayStepPositionChanged(stepPosition: number): void;
+  onPlayStepPositionChanged(stepIndex: number): void;
 };
 
 export function createSequencer(unitInterface: UnitInterface | undefined) {
@@ -47,9 +47,9 @@ export function createSequencer(unitInterface: UnitInterface | undefined) {
       noteOutputPort?.noteOff(note, time + duration);
     },
     getShiftingRootIndex() {
-      if (editState.shiftEnabled) {
+      if (editState.shiftEnabled && state.inputRootNoteNumber !== -1) {
         const index = state.scaleNoteNumbers.indexOf(state.inputRootNoteNumber);
-        if (index !== -1) return index;
+        if (index !== -1) return index - 7;
       }
       return 28;
     },
@@ -70,11 +70,12 @@ export function createSequencer(unitInterface: UnitInterface | undefined) {
       const notes = editState.notes.filter((note) => note.position === pos);
       const root = internal.getShiftingRootIndex();
       for (const note of notes) {
-        const durationSec = note.duration * unitDuration * editState.stepDuty;
+        const duty = 0.2 + editState.stepDuty * 0.8;
+        const durationSec = note.duration * unitDuration * duty;
         const noteNumber = internal.getOutputNoteNumber(root, note.pitch);
         internal.playNote(noteNumber, time, durationSec);
       }
-      listener?.onPlayStepPositionChanged(pos);
+      listener?.onPlayStepPositionChanged(stepIndex);
     },
     stop() {
       listener?.onPlayStepPositionChanged(-1);
