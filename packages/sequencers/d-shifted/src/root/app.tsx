@@ -7,7 +7,9 @@ import { SideLabelBox } from "@/components/side-label-box";
 import { StepsEditorRoot } from "@/root/steps-editor";
 import { StepsIndicatorBar } from "@/root/steps-indicator-bar";
 import { store } from "@/root/store";
+import { seqNumbers } from "@/utils/helpers";
 import { createPlainSelectorOptions } from "@/utils/selector-option";
+import { useMemo } from "preact/hooks";
 
 const octaveShiftOptions = createPlainSelectorOptions([-2, -1, 0, 1, 2]);
 
@@ -25,7 +27,7 @@ const OctaveShiftContainer = () => {
   );
 };
 
-const patternLengthOptions = createPlainSelectorOptions([4, 8, 16]);
+const patternLengthOptions = createPlainSelectorOptions([4, 8, 16, 32, 64]);
 
 const PatternLengthContainer = () => {
   const { patternLength } = store.useSnapshot();
@@ -37,6 +39,49 @@ const PatternLengthContainer = () => {
         onChange={store.setPatternLength}
         size="narrow"
       />
+    </SideLabelBox>
+  );
+};
+
+type PageButtonItem = {
+  label: string;
+  value: number;
+  active: boolean;
+  enabled: boolean;
+};
+
+function usePageButtonItems(): PageButtonItem[] {
+  const { patternLength, currentPageIndex } = store.useSnapshot();
+  return useMemo(() => {
+    return seqNumbers(4).map((i) => {
+      return {
+        label: (i + 1).toString(),
+        value: i,
+        active: i === currentPageIndex,
+        enabled: patternLength === 64 || (patternLength === 32 && i < 2),
+      };
+    });
+  }, [patternLength, currentPageIndex]);
+}
+
+const PageButtonsContainer = () => {
+  const pageButtonItems = usePageButtonItems();
+  return (
+    <SideLabelBox label="PAGE">
+      <div class="flex-ha gap-1">
+        {pageButtonItems.map((item) => (
+          <Button
+            key={item.value}
+            height={36}
+            asr={1}
+            active={item.active}
+            disabled={!item.enabled}
+            onClick={() => store.setCurrentPageIndex(item.value)}
+          >
+            {item.label}
+          </Button>
+        ))}
+      </div>
     </SideLabelBox>
   );
 };
@@ -101,6 +146,7 @@ export const App = () => {
         <ShiftEnableButtonContainer />
         <DeleteButtonContainer />
         <PatternLengthContainer />
+        <PageButtonsContainer />
         <StepDutyContainer />
       </div>
       <div class="flex-vc gap-2.5">

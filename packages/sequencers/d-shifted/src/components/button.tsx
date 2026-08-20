@@ -7,18 +7,20 @@ export const Button = ({
   height = 36,
   asr = 1.25,
   active,
+  disabled,
 }: {
   children?: ComponentChildren;
   onClick?: () => void;
   height?: number;
   active?: boolean;
+  disabled?: boolean;
   asr?: number;
 }) => {
   const width = height * asr;
   return (
     <button
       onClick={onClick}
-      class={cz(styles.base, active && "active")}
+      class={cz(styles.base, active && "active", disabled && "disabled")}
       style={{ width, height }}
     >
       {children}
@@ -29,5 +31,6 @@ const styles = {
   base: cz(
     "bg-clButtonBg rounded-[2px] flex-c cursor-pointer hover:opacity-90",
     "[&.active]:(bg-clPrimary text-black)",
+    "[&.disabled]:(opacity-40 pointer-events-none)",
   ),
 };
