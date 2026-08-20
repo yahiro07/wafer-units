@@ -120,6 +120,17 @@ export const App = () => {
         <ParameterKnob label="VOL" paramKey="globalVolume" />
       </div>
       <div class="flex-h gap-8">
+        <Button
+          active={parameters.pitchLfoAltPitchEg}
+          onClick={() =>
+            actions.setParameter(
+              "pitchLfoAltPitchEg",
+              !parameters.pitchLfoAltPitchEg,
+            )
+          }
+        >
+          P-EG
+        </Button>
         <ParameterKnob label="P-LFO" paramKey="pitchLfoDepth" />
         <ParameterKnob label="F" paramKey="pitchLfoRate" />
         <ParameterKnob label="F-LFO" paramKey="filterLfoDepth" />

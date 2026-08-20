@@ -8,6 +8,8 @@ const MAX_DECAY_SECONDS = 6;
 const MAX_RELEASE_SECONDS = 6;
 const MAX_PUNCH_GAIN = 16;
 const MAX_PUNCH_DECAY_SECONDS = 0.12;
+const PITCH_EG_OCTAVE_CENTS = 1200;
+const MAX_PITCH_EG_DECAY_SECONDS = 0.4;
 
 function clamp01(value: number): number {
   return Math.min(1, Math.max(0, value));
@@ -127,6 +129,7 @@ export function createPolyVoice(
   const punchAmount = audioContext.createGain();
   const envelope = audioContext.createConstantSource();
   const punchEnv = audioContext.createConstantSource();
+  const pitchEg = audioContext.createConstantSource();
 
   osc1.type = "sawtooth";
   osc2.type = "sawtooth";
@@ -142,6 +145,7 @@ export function createPolyVoice(
   punchAmount.gain.value = 0;
   envelope.offset.value = 0;
   punchEnv.offset.value = 0;
+  pitchEg.offset.value = 0;
 
   osc1.connect(osc1Gain);
   osc2.connect(osc2Gain);
@@ -162,6 +166,9 @@ export function createPolyVoice(
   pitchMod.connect(osc1.detune);
   pitchMod.connect(osc2.detune);
   superSaw.connectPitchMod(pitchMod);
+  pitchEg.connect(osc1.detune);
+  pitchEg.connect(osc2.detune);
+  superSaw.connectPitchMod(pitchEg);
 
   osc1.start();
   osc2.start();
@@ -169,6 +176,7 @@ export function createPolyVoice(
   noise2.start();
   envelope.start();
   punchEnv.start();
+  pitchEg.start();
 
   const ampEnvelope = createEnvelopeGenerator(envelope.offset, {
     attackSec: MAX_ATTACK_SECONDS,
@@ -182,6 +190,22 @@ export function createPolyVoice(
   });
 
   let superSawRunning = false;
+
+  function triggerPitchEg(parameters: SynthParameters, time: number) {
+    pitchEg.offset.cancelScheduledValues(time);
+    const decayAmount = clamp01(parameters.pitchLfoDepth);
+    if (!parameters.pitchLfoAltPitchEg || decayAmount === 0) {
+      pitchEg.offset.setValueAtTime(0, time);
+      return;
+    }
+    const decaySec = Math.max(
+      0.005,
+      decayAmount ** 2 * MAX_PITCH_EG_DECAY_SECONDS,
+    );
+    pitchEg.offset.setValueAtTime(PITCH_EG_OCTAVE_CENTS, time);
+    pitchEg.offset.exponentialRampToValueAtTime(1, time + decaySec);
+    pitchEg.offset.setValueAtTime(0, time + decaySec);
+  }
 
   const voice: PolyVoice = {
     noteNumber: null,
@@ -261,6 +285,10 @@ export function createPolyVoice(
         punch ** 2 * MAX_PUNCH_GAIN,
         audioContext.currentTime,
       );
+      if (!parameters.pitchLfoAltPitchEg) {
+        pitchEg.offset.cancelScheduledValues(audioContext.currentTime);
+        pitchEg.offset.setValueAtTime(0, audioContext.currentTime);
+      }
     },
     triggerAttack(parameters, time) {
       if (isSuperSawWave(parameters.osc1Wave)) {
@@ -275,6 +303,7 @@ export function createPolyVoice(
       }
       ampEnvelope.triggerAttack(time);
       punchEnvelope.triggerAttack(time);
+      triggerPitchEg(parameters, time);
     },
     triggerRelease(time) {
       ampEnvelope.triggerRelease(time);
@@ -287,6 +316,7 @@ export function createPolyVoice(
         noise2.stop();
         envelope.stop();
         punchEnv.stop();
+        pitchEg.stop();
       } catch {
         // already stopped
       }
@@ -306,6 +336,7 @@ export function createPolyVoice(
       punchAmount.disconnect();
       envelope.disconnect();
       punchEnv.disconnect();
+      pitchEg.disconnect();
       superSaw.cleanup();
     },
   };

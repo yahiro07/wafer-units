@@ -101,8 +101,10 @@ export function createSynthesizerEngine(
     effectChain.apply(parameters, time, state.lastNote);
     pitchLfo.apply(
       parameters.pitchLfoRate,
-      Math.min(1, Math.max(0, parameters.pitchLfoDepth ** 2)) *
-        MAX_PITCH_LFO_CENTS,
+      parameters.pitchLfoAltPitchEg
+        ? 0
+        : Math.min(1, Math.max(0, parameters.pitchLfoDepth ** 2)) *
+            MAX_PITCH_LFO_CENTS,
       time,
     );
     applyEnvelopeParameters(parameters);

@@ -26,6 +26,7 @@ export type SynthParameters = {
   ampRelease: number;
   density: number;
   globalVolume: number;
+  pitchLfoAltPitchEg: boolean;
   pitchLfoRate: number;
   pitchLfoDepth: number;
   filterLfoRate: number;
@@ -53,6 +54,7 @@ export const defaultSynthParameters: SynthParameters = {
   ampRelease: 0,
   density: 0,
   globalVolume: 0.5,
+  pitchLfoAltPitchEg: false,
   pitchLfoRate: 0.5,
   pitchLfoDepth: 0,
   filterLfoRate: 0.5,
@@ -63,7 +65,7 @@ export const defaultSynthParameters: SynthParameters = {
 
 export type LinearParameterKeys = Exclude<
   keyof SynthParameters,
-  "attackAltPunch"
+  "attackAltPunch" | "pitchLfoAltPitchEg"
 >;
 
 export type ISynthesizer = {
