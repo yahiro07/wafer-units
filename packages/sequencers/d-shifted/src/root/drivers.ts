@@ -45,8 +45,12 @@ function setupSynchronization() {
   }, true);
 
   const sequencerListener: ISequencerListener = {
-    onDisplayStepIndexChanged(stepIndex) {
-      store.setPlayStepIndex(stepIndex);
+    onPlayStepPositionChanged(pos) {
+      store.setPlayStepIndex(pos % 16);
+      const page = Math.floor(pos / 16);
+      if (store.state.currentPageIndex !== page) {
+        store.setCurrentPageIndex(page);
+      }
     },
   };
   sequencer.setListener(sequencerListener);

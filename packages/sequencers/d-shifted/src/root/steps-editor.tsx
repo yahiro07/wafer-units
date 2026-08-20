@@ -315,7 +315,7 @@ const StepsBarEditor = ({
 };
 
 const StepsEditorRootInner = () => {
-  const { patternLength } = store.useSnapshot();
+  const { patternLength, currentPageIndex } = store.useSnapshot();
   if (patternLength === 4) {
     return (
       <div class="flex-h">
@@ -334,6 +334,12 @@ const StepsEditorRootInner = () => {
     );
   } else if (patternLength === 16) {
     return <StepsBarEditor stepsRange={{ offset: 0, length: 16 }} />;
+  } else if (patternLength === 32 || patternLength === 64) {
+    return (
+      <StepsBarEditor
+        stepsRange={{ offset: currentPageIndex * 16, length: 16 }}
+      />
+    );
   }
 };
 

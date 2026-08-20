@@ -25,7 +25,7 @@ function createScaleNoteNumbers(keyRoot: number, mode: "major" | "minor") {
 }
 
 export type ISequencerListener = {
-  onDisplayStepIndexChanged(stepIndex: number): void;
+  onPlayStepPositionChanged(stepPosition: number): void;
 };
 
 export function createSequencer(unitInterface: UnitInterface | undefined) {
@@ -74,10 +74,10 @@ export function createSequencer(unitInterface: UnitInterface | undefined) {
         const noteNumber = internal.getOutputNoteNumber(root, note.pitch);
         internal.playNote(noteNumber, time, durationSec);
       }
-      listener?.onDisplayStepIndexChanged(stepIndex % 16);
+      listener?.onPlayStepPositionChanged(pos);
     },
     stop() {
-      listener?.onDisplayStepIndexChanged(-1);
+      listener?.onPlayStepPositionChanged(-1);
     },
   };
 
