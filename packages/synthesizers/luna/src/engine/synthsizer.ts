@@ -8,6 +8,8 @@ import { createEnvelopeGenerator } from "@/engine/envelope-generator";
 import { createSuperSawOscillator } from "@/engine/super-saw-oscillator";
 import { UnitInterface } from "wafer-host/unit-types";
 
+const LPF_TWO_STAGE = false;
+
 const MIN_CUTOFF_HZ = 20;
 const MAX_CUTOFF_HZ = 18000;
 const MIN_Q = 0.1;
@@ -132,7 +134,7 @@ export function createSynthesizerEngine(
   const mix = audioContext.createGain();
   const hpf = audioContext.createBiquadFilter();
   const lpf1 = audioContext.createBiquadFilter();
-  const lpf2 = audioContext.createBiquadFilter();
+  const lpf2 = LPF_TWO_STAGE ? audioContext.createBiquadFilter() : null;
   const amp = audioContext.createGain();
   const punchGain = audioContext.createGain();
   const punchAmount = audioContext.createGain();
@@ -154,7 +156,9 @@ export function createSynthesizerEngine(
 
   hpf.type = "highpass";
   lpf1.type = "lowpass";
-  lpf2.type = "lowpass";
+  if (lpf2) {
+    lpf2.type = "lowpass";
+  }
   amp.gain.value = 0;
   punchGain.gain.value = 1;
   punchAmount.gain.value = 0;
@@ -175,8 +179,12 @@ export function createSynthesizerEngine(
   superSaw.outputNode.connect(mix);
   mix.connect(hpf);
   hpf.connect(lpf1);
-  lpf1.connect(lpf2);
-  lpf2.connect(amp);
+  if (lpf2) {
+    lpf1.connect(lpf2);
+    lpf2.connect(amp);
+  } else {
+    lpf1.connect(amp);
+  }
   amp.connect(punchGain);
   // punchGain.connect(saturator);
   // saturator.connect(voiceGain);
@@ -186,7 +194,9 @@ export function createSynthesizerEngine(
   envelope.connect(amp.gain);
   envelope.connect(filterEnvScale);
   filterEnvScale.connect(lpf1.detune);
-  filterEnvScale.connect(lpf2.detune);
+  if (lpf2) {
+    filterEnvScale.connect(lpf2.detune);
+  }
   punchEnv.connect(punchAmount);
   punchAmount.connect(punchGain.gain);
 
@@ -280,9 +290,11 @@ export function createSynthesizerEngine(
     const lpfHz = mapCutoffHz(parameters.lpfCutoff, nyquist, lpfMinHz);
     const lpfQ = mapQ(parameters.lpfQ);
     lpf1.frequency.setValueAtTime(lpfHz, time);
-    lpf2.frequency.setValueAtTime(lpfHz, time);
     lpf1.Q.setValueAtTime(lpfQ, time);
-    lpf2.Q.setValueAtTime(lpfQ, time);
+    if (lpf2) {
+      lpf2.frequency.setValueAtTime(lpfHz, time);
+      lpf2.Q.setValueAtTime(lpfQ, time);
+    }
     filterEnvScale.gain.setValueAtTime(
       clamp01(parameters.lpfEnvMod) * MAX_FILTER_ENV_CENTS,
       time,
@@ -380,7 +392,7 @@ export function createSynthesizerEngine(
       mix.disconnect();
       hpf.disconnect();
       lpf1.disconnect();
-      lpf2.disconnect();
+      lpf2?.disconnect();
       amp.disconnect();
       punchGain.disconnect();
       punchAmount.disconnect();

@@ -2,7 +2,7 @@ import { store } from "@/root/store";
 import { setupMidiKeyboardInput } from "@/utils/midi-keyboard-input";
 import { queryUnitInterface } from "wafer-host/unit-types";
 import { useEffect } from "preact/hooks";
-import { createSynthesizerEngine } from "@/root/synthsizer";
+import { createSynthesizerEngine } from "@/engine/synthsizer";
 
 const unitInterface = queryUnitInterface("wafer-v01");
 const engine = createSynthesizerEngine(unitInterface);
