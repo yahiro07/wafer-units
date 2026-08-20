@@ -5,6 +5,7 @@ import {
   SynthParameters,
 } from "@/root/definitions";
 import { createEnvelopeGenerator } from "@/root/envelope-generator";
+import { createSuperSawOscillator } from "@/root/super-saw-oscillator";
 import { UnitInterface } from "wafer-host/unit-types";
 
 const MIN_CUTOFF_HZ = 20;
@@ -81,6 +82,10 @@ function isNoiseWave(wave: OscWave): boolean {
   return Math.round(wave) === OscWave.Ex;
 }
 
+function isSuperSawWave(wave: OscWave): boolean {
+  return Math.round(wave) === OscWave.Ex;
+}
+
 function isSineWave(wave: OscWave): boolean {
   return Math.round(wave) === OscWave.Sine;
 }
@@ -118,6 +123,7 @@ export function createSynthesizerEngine(
   const noiseBuffer = createNoiseBuffer(audioContext);
   const noise1 = createNoiseSource(audioContext, noiseBuffer);
   const noise2 = createNoiseSource(audioContext, noiseBuffer);
+  const superSaw = createSuperSawOscillator(audioContext);
 
   const osc1Gain = audioContext.createGain();
   const osc2Gain = audioContext.createGain();
@@ -164,6 +170,7 @@ export function createSynthesizerEngine(
   osc2Gain.connect(mix);
   noise1Gain.connect(mix);
   noise2Gain.connect(mix);
+  superSaw.outputNode.connect(mix);
   mix.connect(hpf);
   hpf.connect(lpf);
   lpf.connect(amp);
@@ -208,16 +215,17 @@ export function createSynthesizerEngine(
   };
 
   function applyOscillatorMix(parameters: SynthParameters, time: number) {
-    const osc1IsNoise = isNoiseWave(parameters.osc1Wave);
+    const osc1IsSuperSaw = isSuperSawWave(parameters.osc1Wave);
     const osc2IsNoise = isNoiseWave(parameters.osc2Wave);
     const osc2Level = clamp01(parameters.osc2Volume);
 
-    osc1Gain.gain.setValueAtTime(osc1IsNoise ? 0 : 1, time);
-    noise1Gain.gain.setValueAtTime(osc1IsNoise ? 1 : 0, time);
+    osc1Gain.gain.setValueAtTime(osc1IsSuperSaw ? 0 : 1, time);
+    noise1Gain.gain.setValueAtTime(0, time);
     osc2Gain.gain.setValueAtTime(osc2IsNoise ? 0 : osc2Level, time);
     noise2Gain.gain.setValueAtTime(osc2IsNoise ? osc2Level : 0, time);
+    superSaw.setEnabled(osc1IsSuperSaw, time);
 
-    if (!osc1IsNoise) {
+    if (!osc1IsSuperSaw) {
       osc1.type = waveToOscillatorType(parameters.osc1Wave);
     }
     if (!osc2IsNoise) {
@@ -246,18 +254,22 @@ export function createSynthesizerEngine(
     const { osc1Hz, osc2Hz, detuneCents } = getOscillatorPitches(parameters);
     osc1.frequency.setValueAtTime(osc1Hz, time);
     osc2.frequency.setValueAtTime(osc2Hz, time);
-    osc1.detune.setValueAtTime(-detuneCents, time);
-    osc2.detune.setValueAtTime(detuneCents, time);
+    if (isSuperSawWave(parameters.osc1Wave)) {
+      osc1.detune.setValueAtTime(0, time);
+      osc2.detune.setValueAtTime(0, time);
+      superSaw.setPitch(osc1Hz, parameters.oscDetune, time);
+    } else {
+      osc1.detune.setValueAtTime(-detuneCents, time);
+      osc2.detune.setValueAtTime(detuneCents, time);
+    }
   }
 
   function applyFilterAndAmp(parameters: SynthParameters, time: number) {
     const { osc1Hz, osc2Hz } = getOscillatorPitches(parameters);
     const bottomF0Hz = Math.min(osc1Hz, osc2Hz);
     const lpfMinHz = bottomF0Hz / 2;
-    const hpfMinHz = bottomF0Hz / 4;
-    const hpfMaxHz = bottomF0Hz * 16;
     hpf.frequency.setValueAtTime(
-      mapCutoffHz(parameters.hpfCutoff, nyquist, hpfMinHz, hpfMaxHz),
+      mapCutoffHz(parameters.hpfCutoff, nyquist, 40, nyquist * 0.3),
       time,
     );
     hpf.Q.setValueAtTime(mapQ(parameters.hpfQ), time);
@@ -329,6 +341,10 @@ export function createSynthesizerEngine(
       state.lastNote = noteNumber;
       applyPitch(state.parameters, startTime);
       applyFilterAndAmp(state.parameters, startTime);
+      if (isSuperSawWave(state.parameters.osc1Wave)) {
+        const { osc1Hz } = getOscillatorPitches(state.parameters);
+        superSaw.retrigger(osc1Hz, state.parameters.oscDetune, startTime);
+      }
       ampEnvelope.triggerAttack(startTime);
       punchEnvelope.triggerAttack(startTime);
     },
@@ -367,6 +383,7 @@ export function createSynthesizerEngine(
       envelope.disconnect();
       punchEnv.disconnect();
       filterEnvScale.disconnect();
+      superSaw.cleanup();
     },
   };
 }
