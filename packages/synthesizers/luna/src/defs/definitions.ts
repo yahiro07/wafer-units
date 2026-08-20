@@ -30,6 +30,8 @@ export type SynthParameters = {
   pitchLfoDepth: number;
   filterLfoRate: number;
   filterLfoDepth: number;
+  reverbDecay: number;
+  reverbMix: number;
 };
 
 export const defaultSynthParameters: SynthParameters = {
@@ -55,6 +57,8 @@ export const defaultSynthParameters: SynthParameters = {
   pitchLfoDepth: 0,
   filterLfoRate: 0.5,
   filterLfoDepth: 0,
+  reverbDecay: 0.5,
+  reverbMix: 0,
 };
 
 export type LinearParameterKeys = Exclude<

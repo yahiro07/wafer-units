@@ -1,5 +1,6 @@
 import { SynthParameters } from "@/defs/definitions";
 import { createDensityShaper } from "@/engine/density-shaper";
+import { createIirReverb } from "@/engine/iir-reverb";
 import { getVoicePitches } from "@/engine/poly-voice";
 import { createSineLfo } from "@/engine/sine-lfo";
 
@@ -46,6 +47,7 @@ export function createEffectChain(
   const lpf2 = LPF_TWO_STAGE ? audioContext.createBiquadFilter() : null;
   const densityShaper = createDensityShaper(audioContext);
   const compressor = audioContext.createDynamicsCompressor();
+  const reverb = createIirReverb(audioContext);
   const globalGain = audioContext.createGain();
   const filterEnvScale = audioContext.createGain();
   const filterLfo = createSineLfo(audioContext);
@@ -74,7 +76,8 @@ export function createEffectChain(
     lpf1.connect(densityShaper.shaperNode);
   }
   densityShaper.shaperNode.connect(compressor);
-  compressor.connect(globalGain);
+  compressor.connect(reverb.input);
+  reverb.output.connect(globalGain);
   globalGain.connect(destination);
   filterEnvScale.connect(lpf1.detune);
   filterLfo.output.connect(lpf1.detune);
@@ -112,6 +115,7 @@ export function createEffectChain(
         time,
       );
       densityShaper.updateNodeParameters(clamp01(parameters.density));
+      reverb.apply(parameters.reverbDecay, parameters.reverbMix, time);
       globalGain.gain.setValueAtTime(clamp01(parameters.globalVolume), time);
     },
     cleanup() {
@@ -121,6 +125,7 @@ export function createEffectChain(
       lpf2?.disconnect();
       densityShaper.shaperNode.disconnect();
       compressor.disconnect();
+      reverb.cleanup();
       globalGain.disconnect();
       filterEnvScale.disconnect();
       filterLfo.cleanup();

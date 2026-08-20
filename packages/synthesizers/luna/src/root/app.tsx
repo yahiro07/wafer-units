@@ -124,6 +124,8 @@ export const App = () => {
         <ParameterKnob label="M" paramKey="pitchLfoDepth" />
         <ParameterKnob label="F-LFO" paramKey="filterLfoRate" />
         <ParameterKnob label="M" paramKey="filterLfoDepth" />
+        <ParameterKnob label="Reverb" paramKey="reverbDecay" />
+        <ParameterKnob label="M" paramKey="reverbMix" />
       </div>
     </div>
   );
