@@ -52,6 +52,21 @@ function createNoiseSource(
   return source;
 }
 
+export function resolveAttackAndPunch(parameters: SynthParameters): {
+  attack: number;
+  punch: number;
+} {
+  const ampAttack = clamp01(parameters.ampAttack);
+  if (parameters.attackAltPunch) {
+    return { attack: 0, punch: ampAttack };
+  }
+  return { attack: ampAttack, punch: 0 };
+}
+
+function shouldRandomizeSuperSawPhase(parameters: SynthParameters): boolean {
+  return !(parameters.attackAltPunch && clamp01(parameters.ampAttack) >= 0.5);
+}
+
 export function getVoicePitches(
   noteNumber: number,
   parameters: SynthParameters,
@@ -184,7 +199,12 @@ export function createPolyVoice(
           voice.noteNumber ?? 69,
           parameters,
         );
-        superSaw.retrigger(osc1Hz, parameters.oscDetune, time);
+        superSaw.retrigger(
+          osc1Hz,
+          parameters.oscDetune,
+          time,
+          shouldRandomizeSuperSawPhase(parameters),
+        );
         superSawRunning = true;
       }
       superSaw.setEnabled(wantSuperSaw, time);
@@ -220,15 +240,15 @@ export function createPolyVoice(
       const hasNaiveWave =
         isSineWave(parameters.osc1Wave) ||
         (osc2Sounding && isSineWave(parameters.osc2Wave));
+      const { attack, punch } = resolveAttackAndPunch(parameters);
       ampEnvelope.setParameters({
-        attack: clamp01(parameters.ampAttack) ** 2,
+        attack: attack ** 2,
         decay: clamp01(parameters.ampDecay) ** 2,
         sustain: clamp01(parameters.ampSustain),
         release: clamp01(parameters.ampRelease) ** 2,
         hasNaiveWave,
       });
 
-      const punch = clamp01(parameters.punch);
       punchEnvelope.setParameters({
         attack: 0,
         decay: 0.15 + 1.85 * punch,
@@ -244,7 +264,12 @@ export function createPolyVoice(
     triggerAttack(parameters, time) {
       if (isSuperSawWave(parameters.osc1Wave)) {
         const { osc1Hz } = getVoicePitches(voice.noteNumber ?? 69, parameters);
-        superSaw.retrigger(osc1Hz, parameters.oscDetune, time);
+        superSaw.retrigger(
+          osc1Hz,
+          parameters.oscDetune,
+          time,
+          shouldRandomizeSuperSawPhase(parameters),
+        );
         superSawRunning = true;
       }
       ampEnvelope.triggerAttack(time);

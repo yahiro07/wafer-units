@@ -19,7 +19,7 @@ export type SynthParameters = {
   lpfCutoff: number;
   lpfEnvMod: number;
   lpfQ: number;
-  punch: number;
+  attackAltPunch: boolean;
   ampAttack: number;
   ampDecay: number;
   ampSustain: number;
@@ -39,13 +39,18 @@ export const defaultSynthParameters: SynthParameters = {
   lpfCutoff: 1,
   lpfEnvMod: 0,
   lpfQ: 0,
-  punch: 0,
+  attackAltPunch: false,
   ampAttack: 0,
   ampDecay: 0,
   ampSustain: 1,
   ampRelease: 0,
   voiceVolume: 0.5,
 };
+
+export type LinearParameterKeys = Exclude<
+  keyof SynthParameters,
+  "attackAltPunch"
+>;
 
 export type ISynthesizer = {
   setParameters: (parameters: SynthParameters) => void;

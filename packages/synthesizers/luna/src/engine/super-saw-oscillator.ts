@@ -80,7 +80,12 @@ export function createSuperSawOscillator(audioContext: AudioContext) {
     setPitch(frequencyHz: number, unisonDetune: number, time: number) {
       applyPitch(frequencyHz, unisonDetune, time);
     },
-    retrigger(frequencyHz: number, unisonDetune: number, time: number) {
+    retrigger(
+      frequencyHz: number,
+      unisonDetune: number,
+      time: number,
+      randomizePhase = true,
+    ) {
       stopOscillators(time);
       for (let i = 0; i < VOICE_COUNT; i += 1) {
         const osc = audioContext.createOscillator();
@@ -91,7 +96,8 @@ export function createSuperSawOscillator(audioContext: AudioContext) {
           time,
         );
         osc.connect(gains[i]);
-        const startDelay = i === 0 ? 0 : Math.random() * PHASE_RANDOM_MAX_SEC;
+        const startDelay =
+          randomizePhase && i !== 0 ? Math.random() * PHASE_RANDOM_MAX_SEC : 0;
         osc.start(time + startDelay);
         oscillators.push(osc);
       }

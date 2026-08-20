@@ -7,6 +7,7 @@ import {
   createPolyVoice,
   getVoicePitches,
   PolyVoice,
+  resolveAttackAndPunch,
 } from "@/engine/poly-voice";
 import { UnitInterface } from "wafer-host/unit-types";
 
@@ -190,7 +191,7 @@ export function createSynthesizerEngine(
     for (const voice of voices) {
       voice.applyEnvelopeParameters(parameters);
     }
-    const punch = clamp01(parameters.punch);
+    const { punch } = resolveAttackAndPunch(parameters);
     const punchCurve = punch > 0 ? tanhShaperCurve : identityShaperCurve;
     if (saturator.curve !== punchCurve) {
       saturator.curve = punchCurve;

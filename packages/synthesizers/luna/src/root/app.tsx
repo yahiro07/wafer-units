@@ -3,10 +3,11 @@ import { IconButton } from "@/components/icon-button";
 import { Icons } from "@/components/icons";
 import { LabeledKnob, SideLabelBox } from "@/components/labeled-controls";
 import { actions } from "@/root/actions";
-import { numOscWaveTypes, SynthParameters } from "@/defs/definitions";
+import { LinearParameterKeys, numOscWaveTypes } from "@/defs/definitions";
 import { useSetupDrivers } from "@/root/drivers";
 import { store } from "@/root/store";
 import { createPlainSelectorOptions } from "@/utils/selector-option";
+import { Button } from "@/components/button";
 
 const octaveShiftOptions = createPlainSelectorOptions([-2, -1, 0, 1, 2]);
 
@@ -43,7 +44,7 @@ const ParameterKnob = ({
   max,
   step,
 }: {
-  paramKey: keyof SynthParameters;
+  paramKey: LinearParameterKeys;
   label: string;
   min?: number;
   max?: number;
@@ -64,6 +65,7 @@ const ParameterKnob = ({
 
 export const App = () => {
   useSetupDrivers();
+  const { parameters } = store.useSnapshot();
   return (
     <div class="flex-v gap-4 bg-clPageBg p-8 text-white">
       <div class="flex-ha gap-3 justify-between">
@@ -102,7 +104,14 @@ export const App = () => {
         <ParameterKnob label="ENV" paramKey="lpfEnvMod" />
       </div>
       <div class="flex-h gap-8">
-        <ParameterKnob label="P" paramKey="punch" />
+        <Button
+          active={parameters.attackAltPunch}
+          onClick={() =>
+            actions.setParameter("attackAltPunch", !parameters.attackAltPunch)
+          }
+        >
+          P
+        </Button>
         <ParameterKnob label="A" paramKey="ampAttack" />
         <ParameterKnob label="D" paramKey="ampDecay" />
         <ParameterKnob label="S" paramKey="ampSustain" />
