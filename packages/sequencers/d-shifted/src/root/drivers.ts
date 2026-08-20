@@ -46,10 +46,15 @@ function setupSynchronization() {
 
   const sequencerListener: ISequencerListener = {
     onPlayStepPositionChanged(pos) {
-      store.setPlayStepIndex(pos % 16);
-      const page = Math.floor(pos / 16);
-      if (store.state.currentPageIndex !== page) {
-        store.setCurrentPageIndex(page);
+      if (pos !== -1) {
+        store.setPlayStepIndex(pos % 16);
+        const page = Math.floor(pos / 16);
+        if (store.state.currentPageIndex !== page) {
+          store.setCurrentPageIndex(page);
+        }
+      } else {
+        store.setCurrentPageIndex(-1);
+        store.setCurrentPageIndex(0);
       }
     },
   };
