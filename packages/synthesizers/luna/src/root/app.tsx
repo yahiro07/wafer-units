@@ -120,12 +120,12 @@ export const App = () => {
         <ParameterKnob label="VOL" paramKey="globalVolume" />
       </div>
       <div class="flex-h gap-8">
-        <ParameterKnob label="P-LFO" paramKey="pitchLfoRate" />
-        <ParameterKnob label="M" paramKey="pitchLfoDepth" />
-        <ParameterKnob label="F-LFO" paramKey="filterLfoRate" />
-        <ParameterKnob label="M" paramKey="filterLfoDepth" />
-        <ParameterKnob label="Reverb" paramKey="reverbDecay" />
-        <ParameterKnob label="M" paramKey="reverbMix" />
+        <ParameterKnob label="P-LFO" paramKey="pitchLfoDepth" />
+        <ParameterKnob label="F" paramKey="pitchLfoRate" />
+        <ParameterKnob label="F-LFO" paramKey="filterLfoDepth" />
+        <ParameterKnob label="F" paramKey="filterLfoRate" />
+        <ParameterKnob label="Reverb" paramKey="reverbMix" />
+        <ParameterKnob label="T" paramKey="reverbDecay" />
       </div>
     </div>
   );

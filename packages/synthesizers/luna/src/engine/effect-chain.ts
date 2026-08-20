@@ -1,10 +1,12 @@
 import { SynthParameters } from "@/defs/definitions";
+import { createConvolverReverb } from "@/engine/convolver-reverb";
 import { createDensityShaper } from "@/engine/density-shaper";
 import { createIirReverb } from "@/engine/iir-reverb";
 import { getVoicePitches } from "@/engine/poly-voice";
 import { createSineLfo } from "@/engine/sine-lfo";
 
 const LPF_TWO_STAGE = false;
+const USE_CONVOLVER_REVERB = true;
 const MIN_CUTOFF_HZ = 20;
 const MAX_CUTOFF_HZ = 18000;
 const MIN_Q = 0.1;
@@ -47,7 +49,9 @@ export function createEffectChain(
   const lpf2 = LPF_TWO_STAGE ? audioContext.createBiquadFilter() : null;
   const densityShaper = createDensityShaper(audioContext);
   const compressor = audioContext.createDynamicsCompressor();
-  const reverb = createIirReverb(audioContext);
+  const reverb = USE_CONVOLVER_REVERB
+    ? createConvolverReverb(audioContext)
+    : createIirReverb(audioContext);
   const globalGain = audioContext.createGain();
   const filterEnvScale = audioContext.createGain();
   const filterLfo = createSineLfo(audioContext);

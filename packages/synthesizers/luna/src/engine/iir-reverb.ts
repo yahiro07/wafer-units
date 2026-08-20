@@ -1,3 +1,9 @@
+import {
+  applyReverbMix,
+  mapReverbDecaySec,
+  Reverb,
+} from "@/engine/reverb";
+
 const COMB_DELAY_SAMPLES = [
   1116, 1188, 1277, 1356, 1422, 1491, 1557, 1617,
 ];
@@ -5,14 +11,7 @@ const ALLPASS_DELAY_SAMPLES = [556, 441, 341, 225];
 const BASE_SAMPLE_RATE = 44100;
 const ALLPASS_GAIN = 0.5;
 const DAMPING_HZ = 3200;
-const MIN_DECAY_SEC = 0.25;
-const MAX_DECAY_SEC = 5;
 const COMB_MIX_GAIN = 1 / Math.sqrt(COMB_DELAY_SAMPLES.length);
-const WET_SCALE = 0.55;
-
-function clamp01(value: number): number {
-  return Math.min(1, Math.max(0, value));
-}
 
 function onePoleLowpassCoeffs(cutoffHz: number, sampleRate: number) {
   const x = Math.exp((-2 * Math.PI * cutoffHz) / sampleRate);
@@ -26,11 +25,7 @@ function combFeedback(delaySec: number, decaySec: number): number {
   return Math.min(0.98, 0.001 ** (delaySec / Math.max(decaySec, 0.05)));
 }
 
-function mapDecaySec(value: number): number {
-  return MIN_DECAY_SEC * (MAX_DECAY_SEC / MIN_DECAY_SEC) ** clamp01(value);
-}
-
-export function createIirReverb(audioContext: AudioContext) {
+export function createIirReverb(audioContext: AudioContext): Reverb {
   const sampleRate = audioContext.sampleRate;
   const { feedforward, feedback } = onePoleLowpassCoeffs(
     DAMPING_HZ,
@@ -56,7 +51,7 @@ export function createIirReverb(audioContext: AudioContext) {
     delay.delayTime.value = delaySec;
     const damp = audioContext.createIIRFilter(feedforward, feedback);
     const fb = audioContext.createGain();
-    fb.gain.value = combFeedback(delaySec, mapDecaySec(0.5));
+    fb.gain.value = combFeedback(delaySec, mapReverbDecaySec(0.5));
 
     input.connect(delay);
     delay.connect(damp);
@@ -103,8 +98,7 @@ export function createIirReverb(audioContext: AudioContext) {
     input,
     output,
     apply(decay: number, mix: number, time: number) {
-      const decaySec = mapDecaySec(decay);
-      const mixAmount = clamp01(mix);
+      const decaySec = mapReverbDecaySec(decay);
       for (let i = 0; i < COMB_DELAY_SAMPLES.length; i += 1) {
         const delaySec = COMB_DELAY_SAMPLES[i] / BASE_SAMPLE_RATE;
         combFeedbacks[i].gain.setValueAtTime(
@@ -112,8 +106,7 @@ export function createIirReverb(audioContext: AudioContext) {
           time,
         );
       }
-      dryGain.gain.setValueAtTime(1 - mixAmount * 0.65, time);
-      wetGain.gain.setValueAtTime(mixAmount * WET_SCALE, time);
+      applyReverbMix(dryGain.gain, wetGain.gain, mix, time);
     },
     cleanup() {
       input.disconnect();
