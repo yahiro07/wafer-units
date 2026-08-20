@@ -3,9 +3,9 @@ import { createEnvelopeGenerator } from "@/engine/envelope-generator";
 import { createSuperSawOscillator } from "@/engine/super-saw-oscillator";
 
 const MAX_OSC_DETUNE_CENTS = 50;
-const MAX_ATTACK_SECONDS = 4;
-const MAX_DECAY_SECONDS = 8;
-const MAX_RELEASE_SECONDS = 4;
+const MAX_ATTACK_SECONDS = 2;
+const MAX_DECAY_SECONDS = 6;
+const MAX_RELEASE_SECONDS = 6;
 const MAX_PUNCH_GAIN = 16;
 const MAX_PUNCH_DECAY_SECONDS = 0.12;
 
@@ -195,10 +195,7 @@ export function createPolyVoice(
       noise2Gain.gain.setValueAtTime(osc2IsNoise ? osc2Level : 0, time);
 
       if (wantSuperSaw && !superSawRunning) {
-        const { osc1Hz } = getVoicePitches(
-          voice.noteNumber ?? 69,
-          parameters,
-        );
+        const { osc1Hz } = getVoicePitches(voice.noteNumber ?? 69, parameters);
         superSaw.retrigger(
           osc1Hz,
           parameters.oscDetune,
@@ -242,10 +239,10 @@ export function createPolyVoice(
         (osc2Sounding && isSineWave(parameters.osc2Wave));
       const { attack, punch } = resolveAttackAndPunch(parameters);
       ampEnvelope.setParameters({
-        attack: attack ** 2,
-        decay: clamp01(parameters.ampDecay) ** 2,
+        attack: attack,
+        decay: clamp01(parameters.ampDecay),
         sustain: clamp01(parameters.ampSustain),
-        release: clamp01(parameters.ampRelease) ** 2,
+        release: clamp01(parameters.ampRelease),
         hasNaiveWave,
       });
 
