@@ -7,7 +7,6 @@ import { createEffectChain } from "@/engine/effect-chain";
 import {
   createPolyVoice,
   PolyVoice,
-  resolveAttackAndPunch,
 } from "@/engine/poly-voice";
 import { UnitInterface } from "wafer-host/unit-types";
 
@@ -92,8 +91,6 @@ export function createSynthesizerEngine(
     for (const voice of voices) {
       voice.applyEnvelopeParameters(parameters);
     }
-    const { punch } = resolveAttackAndPunch(parameters);
-    effectChain.setPunchCurve(punch);
   }
 
   function applyParameters(parameters: SynthParameters, time: number) {

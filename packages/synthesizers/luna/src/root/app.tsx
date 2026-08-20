@@ -116,6 +116,7 @@ export const App = () => {
         <ParameterKnob label="D" paramKey="ampDecay" />
         <ParameterKnob label="S" paramKey="ampSustain" />
         <ParameterKnob label="R" paramKey="ampRelease" />
+        <ParameterKnob label="DENSE" paramKey="density" />
         <ParameterKnob label="VOL" paramKey="globalVolume" />
       </div>
     </div>

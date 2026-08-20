@@ -1,4 +1,5 @@
 import { SynthParameters } from "@/defs/definitions";
+import { createDensityShaper } from "@/engine/density-shaper";
 import { getVoicePitches } from "@/engine/poly-voice";
 
 const LPF_TWO_STAGE = false;
@@ -7,23 +8,6 @@ const MAX_CUTOFF_HZ = 18000;
 const MIN_Q = 0.1;
 const MAX_Q = 18;
 const MAX_FILTER_ENV_CENTS = 4800;
-const SHAPER_CURVE_SIZE = 1024;
-
-function createTransferCurve(
-  map: (x: number) => number,
-): Float32Array<ArrayBuffer> {
-  const curve = new Float32Array(
-    new ArrayBuffer(SHAPER_CURVE_SIZE * Float32Array.BYTES_PER_ELEMENT),
-  );
-  for (let i = 0; i < curve.length; i += 1) {
-    const x = (i / (curve.length - 1)) * 2 - 1;
-    curve[i] = map(x);
-  }
-  return curve;
-}
-
-const identityShaperCurve = createTransferCurve((x) => x);
-const tanhShaperCurve = createTransferCurve((x) => Math.tanh(x));
 
 function clamp(value: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, value));
@@ -58,7 +42,7 @@ export function createEffectChain(
   const hpf = audioContext.createBiquadFilter();
   const lpf1 = audioContext.createBiquadFilter();
   const lpf2 = LPF_TWO_STAGE ? audioContext.createBiquadFilter() : null;
-  const saturator = audioContext.createWaveShaper();
+  const densityShaper = createDensityShaper(audioContext);
   const globalGain = audioContext.createGain();
   const filterEnvScale = audioContext.createGain();
 
@@ -68,19 +52,19 @@ export function createEffectChain(
   if (lpf2) {
     lpf2.type = "lowpass";
   }
-  saturator.curve = identityShaperCurve;
-  saturator.oversample = "2x";
   filterEnvScale.gain.value = 0;
   globalGain.gain.value = 1;
+  densityShaper.updateNodeParameters(0);
 
   input.connect(hpf);
   hpf.connect(lpf1);
   if (lpf2) {
     lpf1.connect(lpf2);
-    lpf2.connect(globalGain);
+    lpf2.connect(densityShaper.shaperNode);
   } else {
-    lpf1.connect(globalGain);
+    lpf1.connect(densityShaper.shaperNode);
   }
+  densityShaper.shaperNode.connect(globalGain);
   globalGain.connect(destination);
   filterEnvScale.connect(lpf1.detune);
   if (lpf2) {
@@ -110,20 +94,15 @@ export function createEffectChain(
         clamp01(parameters.lpfEnvMod) * MAX_FILTER_ENV_CENTS,
         time,
       );
+      densityShaper.updateNodeParameters(clamp01(parameters.density));
       globalGain.gain.setValueAtTime(clamp01(parameters.globalVolume), time);
-    },
-    setPunchCurve(punch: number) {
-      const punchCurve = punch > 0 ? tanhShaperCurve : identityShaperCurve;
-      if (saturator.curve !== punchCurve) {
-        saturator.curve = punchCurve;
-      }
     },
     cleanup() {
       input.disconnect();
       hpf.disconnect();
       lpf1.disconnect();
       lpf2?.disconnect();
-      saturator.disconnect();
+      densityShaper.shaperNode.disconnect();
       globalGain.disconnect();
       filterEnvScale.disconnect();
     },

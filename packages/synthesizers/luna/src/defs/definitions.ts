@@ -24,6 +24,7 @@ export type SynthParameters = {
   ampDecay: number;
   ampSustain: number;
   ampRelease: number;
+  density: number;
   globalVolume: number;
 };
 
@@ -44,6 +45,7 @@ export const defaultSynthParameters: SynthParameters = {
   ampDecay: 0,
   ampSustain: 1,
   ampRelease: 0,
+  density: 0,
   globalVolume: 0.5,
 };
 
