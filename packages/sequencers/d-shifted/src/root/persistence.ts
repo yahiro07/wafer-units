@@ -1,56 +1,63 @@
-import { PatternLength } from "@/root/definitions";
+import { Note, PatternLength } from "@/root/definitions";
 import { store } from "@/root/store";
-import { seqNumbers, unaryFromByte, unaryToByte } from "@/utils/helpers";
+import { unaryFromByte, unaryToByte } from "@/utils/helpers";
 import { Persistence } from "wafer-host/unit-types";
 
 namespace _persistentDataSpecTypes {
+  type Note = {
+    id: number; //omit
+    pitch: number; //0~21, 5bit
+    position: number; //0~63, as is, 1byte
+    duration: number; //0~63, as is, 1byte
+  };
+
   type _SequencerEditState = {
     octaveShift: number; //-2~2 --> 98~102
     stepDuty: number; //unaryToFloat
-    chordEnabled: boolean; //as is, 1byte
-    chordToneFlags: boolean[]; //9bits, pack to 2bytes
-    gaterEnabled: boolean; //as is, 1byte
+    shiftEnabled: boolean; //as is, 1byte
     patternLength: PatternLength; //as is, 1byte
-    stepNotes: number[]; //2bit/step, 32steps, pack to 8bytes
+    notes: Note[]; //numNotes(2bytes), ...notes ([0] for removed note, [0x80 | pitch, position, duration] for existing note)
   };
 }
 
-const NUM_CHORD_TONES = 9;
-const NUM_STEPS = 32;
-const EXPECTED_LENGTH = 15;
-const PATTERN_LENGTHS: PatternLength[] = [4, 8, 16, 32];
+const PATTERN_LENGTHS: PatternLength[] = [4, 8, 16, 32, 64];
+const HEADER_LENGTH = 6;
 
-function packChordToneFlags(flags: boolean[]): [number, number] {
-  let bits = 0;
-  for (let i = 0; i < NUM_CHORD_TONES; i++) {
-    if (flags[i]) bits |= 1 << i;
-  }
-  return [bits & 0xff, (bits >> 8) & 0xff];
-}
-
-function unpackChordToneFlags(lo: number, hi: number): boolean[] {
-  const bits = lo | (hi << 8);
-  return seqNumbers(NUM_CHORD_TONES).map((i) => ((bits >> i) & 1) === 1);
-}
-
-function packStepNotes(stepNotes: number[]): number[] {
-  const bytes = [0, 0, 0, 0, 0, 0, 0, 0];
-  for (let i = 0; i < NUM_STEPS; i++) {
-    const byteIndex = i >> 2;
-    const shift = (i & 3) * 2;
-    bytes[byteIndex] |= (stepNotes[i] & 0b11) << shift;
+function emitNoteSlots(notes: Note[]): number[] {
+  const byId = new Map(notes.map((note) => [note.id, note]));
+  const numSlots = notes.length > 0 ? Math.max(...notes.map((note) => note.id)) + 1 : 0;
+  const bytes: number[] = [(numSlots >> 8) & 0xff, numSlots & 0xff];
+  for (let id = 0; id < numSlots; id++) {
+    const note = byId.get(id);
+    if (!note) {
+      bytes.push(0);
+      continue;
+    }
+    bytes.push(0x80 | (note.pitch & 0x1f), note.position, note.duration);
   }
   return bytes;
 }
 
-function unpackStepNotes(bytes: Uint8Array, offset: number): number[] | null {
-  const stepNotes = seqNumbers(NUM_STEPS).map((i) => {
-    const byteIndex = offset + (i >> 2);
-    const shift = (i & 3) * 2;
-    return (bytes[byteIndex] >> shift) & 0b11;
-  });
-  if (stepNotes.some((code) => code > 2)) return null;
-  return stepNotes;
+function readNotes(
+  bytes: Uint8Array,
+  numSlots: number,
+): Note[] | null {
+  const notes: Note[] = [];
+  let offset = HEADER_LENGTH;
+  for (let id = 0; id < numSlots; id++) {
+    if (offset >= bytes.length) return null;
+    const marker = bytes[offset++];
+    if (marker === 0) continue;
+    if ((marker & 0x80) === 0) return null;
+    if (offset + 1 >= bytes.length) return null;
+    const pitch = marker & 0x1f;
+    const position = bytes[offset++];
+    const duration = bytes[offset++];
+    if (pitch > 21 || duration < 1) return null;
+    notes.push({ id, pitch, position, duration });
+  }
+  if (offset !== bytes.length) return null;
+  return notes;
 }
 
 export const persistence: Persistence = {
@@ -59,37 +66,34 @@ export const persistence: Persistence = {
     return new Uint8Array([
       st.octaveShift + 100,
       unaryToByte(st.stepDuty),
-      st.chordEnabled ? 1 : 0,
-      ...packChordToneFlags(st.chordToneFlags),
-      st.gaterEnabled ? 1 : 0,
+      st.shiftEnabled ? 1 : 0,
       st.patternLength,
-      ...packStepNotes(st.stepNotes),
+      ...emitNoteSlots(st.notes),
     ]);
   },
   applyStateBytes(bytes) {
-    if (bytes.length !== EXPECTED_LENGTH) return;
+    if (bytes.length < HEADER_LENGTH) return;
 
     const octaveShift = bytes[0] - 100;
     if (octaveShift < -2 || octaveShift > 2) return;
 
     const stepDuty = unaryFromByte(bytes[1]);
-    const chordEnabled = bytes[2] !== 0;
-    const chordToneFlags = unpackChordToneFlags(bytes[3], bytes[4]);
-    const gaterEnabled = bytes[5] !== 0;
-    const patternLength = bytes[6] as PatternLength;
+    const shiftEnabled = bytes[2] !== 0;
+    const patternLength = bytes[3] as PatternLength;
     if (!PATTERN_LENGTHS.includes(patternLength)) return;
 
-    const stepNotes = unpackStepNotes(bytes, 7);
-    if (!stepNotes) return;
+    const numSlots = (bytes[4] << 8) | bytes[5];
+    const notes = readNotes(bytes, numSlots);
+    if (!notes) return;
 
     store.assign({
       octaveShift,
       stepDuty,
-      chordEnabled,
-      chordToneFlags,
-      gaterEnabled,
+      shiftEnabled,
       patternLength,
-      stepNotes,
+      notes,
+      currentPageIndex: 0,
     });
+    store.setStateLoadRevision((prev) => prev + 1);
   },
 };
