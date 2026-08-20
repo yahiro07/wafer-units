@@ -4,13 +4,12 @@ import {
   SynthParameters,
 } from "@/defs/definitions";
 import { createEffectChain } from "@/engine/effect-chain";
-import {
-  createPolyVoice,
-  PolyVoice,
-} from "@/engine/poly-voice";
+import { createPolyVoice, PolyVoice } from "@/engine/poly-voice";
+import { createSineLfo } from "@/engine/sine-lfo";
 import { UnitInterface } from "wafer-host/unit-types";
 
 const MAX_POLY_VOICES = 4;
+const MAX_PITCH_LFO_CENTS = 100;
 
 function createNoiseBuffer(audioContext: AudioContext): AudioBuffer {
   const length = audioContext.sampleRate * 2;
@@ -31,9 +30,12 @@ export function createSynthesizerEngine(
 
   const noiseBuffer = createNoiseBuffer(audioContext);
   const mix = audioContext.createGain();
+  const pitchLfo = createSineLfo(audioContext);
   const voices: PolyVoice[] = [];
   for (let i = 0; i < MAX_POLY_VOICES; i += 1) {
-    voices.push(createPolyVoice(audioContext, mix, noiseBuffer));
+    voices.push(
+      createPolyVoice(audioContext, mix, noiseBuffer, pitchLfo.output),
+    );
   }
 
   const effectChain = createEffectChain(audioContext, destination);
@@ -97,6 +99,12 @@ export function createSynthesizerEngine(
     applyOscillatorMix(parameters, time);
     applyHeldPitches(parameters, time);
     effectChain.apply(parameters, time, state.lastNote);
+    pitchLfo.apply(
+      parameters.pitchLfoRate,
+      Math.min(1, Math.max(0, parameters.pitchLfoDepth ** 2)) *
+        MAX_PITCH_LFO_CENTS,
+      time,
+    );
     applyEnvelopeParameters(parameters);
   }
 
@@ -139,6 +147,7 @@ export function createSynthesizerEngine(
         voice.disconnect();
       }
       mix.disconnect();
+      pitchLfo.cleanup();
       effectChain.cleanup();
     },
   };

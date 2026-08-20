@@ -110,6 +110,7 @@ export function createPolyVoice(
   audioContext: AudioContext,
   mix: GainNode,
   noiseBuffer: AudioBuffer,
+  pitchMod: AudioNode,
 ): PolyVoice {
   const osc1 = audioContext.createOscillator();
   const osc2 = audioContext.createOscillator();
@@ -158,6 +159,9 @@ export function createPolyVoice(
   envelope.connect(amp.gain);
   punchEnv.connect(punchAmount);
   punchAmount.connect(punchGain.gain);
+  pitchMod.connect(osc1.detune);
+  pitchMod.connect(osc2.detune);
+  superSaw.connectPitchMod(pitchMod);
 
   osc1.start();
   osc2.start();

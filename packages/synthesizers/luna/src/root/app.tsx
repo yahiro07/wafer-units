@@ -119,6 +119,12 @@ export const App = () => {
         <ParameterKnob label="DENSE" paramKey="density" />
         <ParameterKnob label="VOL" paramKey="globalVolume" />
       </div>
+      <div class="flex-h gap-8">
+        <ParameterKnob label="P-LFO" paramKey="pitchLfoRate" />
+        <ParameterKnob label="M" paramKey="pitchLfoDepth" />
+        <ParameterKnob label="F-LFO" paramKey="filterLfoRate" />
+        <ParameterKnob label="M" paramKey="filterLfoDepth" />
+      </div>
     </div>
   );
 };

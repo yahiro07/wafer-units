@@ -26,6 +26,10 @@ export type SynthParameters = {
   ampRelease: number;
   density: number;
   globalVolume: number;
+  pitchLfoRate: number;
+  pitchLfoDepth: number;
+  filterLfoRate: number;
+  filterLfoDepth: number;
 };
 
 export const defaultSynthParameters: SynthParameters = {
@@ -47,6 +51,10 @@ export const defaultSynthParameters: SynthParameters = {
   ampRelease: 0,
   density: 0,
   globalVolume: 0.5,
+  pitchLfoRate: 0.5,
+  pitchLfoDepth: 0,
+  filterLfoRate: 0.5,
+  filterLfoDepth: 0,
 };
 
 export type LinearParameterKeys = Exclude<

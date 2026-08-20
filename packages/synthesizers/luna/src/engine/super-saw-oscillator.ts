@@ -21,6 +21,7 @@ export function createSuperSawOscillator(audioContext: AudioContext) {
   const gains: GainNode[] = [];
   const panners: Array<StereoPannerNode | undefined> = [];
   let oscillators: OscillatorNode[] = [];
+  let pitchMod: AudioNode | null = null;
 
   for (let i = 0; i < VOICE_COUNT; i += 1) {
     const gainNode = audioContext.createGain();
@@ -80,6 +81,12 @@ export function createSuperSawOscillator(audioContext: AudioContext) {
     setPitch(frequencyHz: number, unisonDetune: number, time: number) {
       applyPitch(frequencyHz, unisonDetune, time);
     },
+    connectPitchMod(source: AudioNode) {
+      pitchMod = source;
+      for (const osc of oscillators) {
+        source.connect(osc.detune);
+      }
+    },
     retrigger(
       frequencyHz: number,
       unisonDetune: number,
@@ -96,6 +103,7 @@ export function createSuperSawOscillator(audioContext: AudioContext) {
           time,
         );
         osc.connect(gains[i]);
+        pitchMod?.connect(osc.detune);
         const startDelay =
           randomizePhase && i !== 0 ? Math.random() * PHASE_RANDOM_MAX_SEC : 0;
         osc.start(time + startDelay);

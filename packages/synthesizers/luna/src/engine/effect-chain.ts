@@ -1,6 +1,7 @@
 import { SynthParameters } from "@/defs/definitions";
 import { createDensityShaper } from "@/engine/density-shaper";
 import { getVoicePitches } from "@/engine/poly-voice";
+import { createSineLfo } from "@/engine/sine-lfo";
 
 const LPF_TWO_STAGE = false;
 const MIN_CUTOFF_HZ = 20;
@@ -8,6 +9,7 @@ const MAX_CUTOFF_HZ = 18000;
 const MIN_Q = 0.1;
 const MAX_Q = 18;
 const MAX_FILTER_ENV_CENTS = 4800;
+const MAX_FILTER_LFO_CENTS = 2400;
 
 function clamp(value: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, value));
@@ -46,6 +48,7 @@ export function createEffectChain(
   const compressor = audioContext.createDynamicsCompressor();
   const globalGain = audioContext.createGain();
   const filterEnvScale = audioContext.createGain();
+  const filterLfo = createSineLfo(audioContext);
 
   input.gain.value = 1;
   hpf.type = "highpass";
@@ -74,8 +77,10 @@ export function createEffectChain(
   compressor.connect(globalGain);
   globalGain.connect(destination);
   filterEnvScale.connect(lpf1.detune);
+  filterLfo.output.connect(lpf1.detune);
   if (lpf2) {
     filterEnvScale.connect(lpf2.detune);
+    filterLfo.output.connect(lpf2.detune);
   }
 
   return {
@@ -101,6 +106,11 @@ export function createEffectChain(
         clamp01(parameters.lpfEnvMod) * MAX_FILTER_ENV_CENTS,
         time,
       );
+      filterLfo.apply(
+        parameters.filterLfoRate,
+        clamp01(parameters.filterLfoDepth) * MAX_FILTER_LFO_CENTS,
+        time,
+      );
       densityShaper.updateNodeParameters(clamp01(parameters.density));
       globalGain.gain.setValueAtTime(clamp01(parameters.globalVolume), time);
     },
@@ -113,6 +123,7 @@ export function createEffectChain(
       compressor.disconnect();
       globalGain.disconnect();
       filterEnvScale.disconnect();
+      filterLfo.cleanup();
     },
   };
 }
