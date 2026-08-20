@@ -115,7 +115,7 @@ export function createEffectChain(
       );
       filterLfo.apply(
         parameters.filterLfoRate,
-        clamp01(parameters.filterLfoDepth) * MAX_FILTER_LFO_CENTS,
+        clamp01(parameters.filterLfoDepth ** 2) * MAX_FILTER_LFO_CENTS,
         time,
       );
       densityShaper.updateNodeParameters(clamp01(parameters.density));
