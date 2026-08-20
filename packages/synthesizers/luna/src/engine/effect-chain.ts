@@ -6,12 +6,12 @@ import { createIirReverb } from "@/engine/iir-reverb";
 import { getVoicePitches } from "@/engine/poly-voice";
 import { createSineLfo } from "@/engine/sine-lfo";
 
-const LPF_TWO_STAGE = false;
 const USE_CONVOLVER_REVERB = true;
 const MIN_CUTOFF_HZ = 20;
 const MAX_CUTOFF_HZ = 18000;
 const MIN_Q = 0.1;
-const MAX_Q = 18;
+// const MAX_Q = 18;
+const MAX_Q = 9;
 const MAX_FILTER_ENV_CENTS = 4800;
 const MAX_FILTER_LFO_CENTS = 2400;
 
@@ -47,7 +47,7 @@ export function createEffectChain(
   const input = audioContext.createGain();
   const hpf = audioContext.createBiquadFilter();
   const lpf1 = audioContext.createBiquadFilter();
-  const lpf2 = LPF_TWO_STAGE ? audioContext.createBiquadFilter() : null;
+  const lpf2 = audioContext.createBiquadFilter();
   const densityShaper = createDensityShaper(audioContext);
   const chorus = createChorus5(audioContext);
   const reverb = USE_CONVOLVER_REVERB
@@ -62,9 +62,7 @@ export function createEffectChain(
   input.gain.value = 1;
   hpf.type = "highpass";
   lpf1.type = "lowpass";
-  if (lpf2) {
-    lpf2.type = "lowpass";
-  }
+  lpf2.type = "lowpass";
   filterEnvScale.gain.value = 0;
   compressor.threshold.value = -18;
   compressor.ratio.value = 4;
@@ -77,12 +75,19 @@ export function createEffectChain(
 
   input.connect(hpf);
   hpf.connect(lpf1);
-  if (lpf2) {
-    lpf1.connect(lpf2);
-    lpf2.connect(densityShaper.shaperNode);
-  } else {
-    lpf1.connect(densityShaper.shaperNode);
+  let lpfSteep = false;
+  function connectLpf(steep: boolean) {
+    lpf1.disconnect();
+    lpf2.disconnect();
+    if (steep) {
+      lpf1.connect(lpf2);
+      lpf2.connect(densityShaper.shaperNode);
+    } else {
+      lpf1.connect(densityShaper.shaperNode);
+    }
+    lpfSteep = steep;
   }
+  connectLpf(false);
   densityShaper.shaperNode.connect(chorus.inputNode);
   chorus.outputNode.connect(reverb.input);
   reverb.output.connect(compressor);
@@ -90,11 +95,9 @@ export function createEffectChain(
   compressorMakeup.connect(globalGain);
   globalGain.connect(destination);
   filterEnvScale.connect(lpf1.detune);
+  filterEnvScale.connect(lpf2.detune);
   filterLfo.output.connect(lpf1.detune);
-  if (lpf2) {
-    filterEnvScale.connect(lpf2.detune);
-    filterLfo.output.connect(lpf2.detune);
-  }
+  filterLfo.output.connect(lpf2.detune);
 
   return {
     input,
@@ -111,9 +114,10 @@ export function createEffectChain(
       const lpfQ = mapQ(parameters.lpfQ);
       lpf1.frequency.setValueAtTime(lpfHz, time);
       lpf1.Q.setValueAtTime(lpfQ, time);
-      if (lpf2) {
-        lpf2.frequency.setValueAtTime(lpfHz, time);
-        lpf2.Q.setValueAtTime(lpfQ, time);
+      lpf2.frequency.setValueAtTime(lpfHz, time);
+      lpf2.Q.setValueAtTime(lpfQ, time);
+      if (parameters.lpfSteep !== lpfSteep) {
+        connectLpf(parameters.lpfSteep);
       }
       filterEnvScale.gain.setValueAtTime(
         clamp01(parameters.lpfEnvMod) * MAX_FILTER_ENV_CENTS,
@@ -133,7 +137,7 @@ export function createEffectChain(
       input.disconnect();
       hpf.disconnect();
       lpf1.disconnect();
-      lpf2?.disconnect();
+      lpf2.disconnect();
       densityShaper.shaperNode.disconnect();
       chorus.cleanupNodes();
       chorus.inputNode.disconnect();

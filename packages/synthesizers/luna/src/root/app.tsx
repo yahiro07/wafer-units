@@ -101,6 +101,12 @@ export const App = () => {
         <ParameterKnob label="Q" paramKey="hpfQ" />
         <ParameterKnob label="LPF" paramKey="lpfCutoff" />
         <ParameterKnob label="Q" paramKey="lpfQ" />
+        <Button
+          active={parameters.lpfSteep}
+          onClick={() => actions.setParameter("lpfSteep", !parameters.lpfSteep)}
+        >
+          LP24
+        </Button>
         <ParameterKnob label="ENV" paramKey="lpfEnvMod" />
       </div>
       <div class="flex-h gap-8">
