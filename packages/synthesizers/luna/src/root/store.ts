@@ -1,4 +1,4 @@
-import { defaultSynthParameters, SynthParameters } from "@/root/definitions";
+import { defaultSynthParameters, SynthParameters } from "@/defs/definitions";
 import { createStore } from "snap-store";
 
 export const store = createStore<{

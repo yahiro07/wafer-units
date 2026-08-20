@@ -3,7 +3,7 @@ import { IconButton } from "@/components/icon-button";
 import { Icons } from "@/components/icons";
 import { LabeledKnob, SideLabelBox } from "@/components/labeled-controls";
 import { actions } from "@/root/actions";
-import { numOscWaveTypes, SynthParameters } from "@/root/definitions";
+import { numOscWaveTypes, SynthParameters } from "@/defs/definitions";
 import { useSetupDrivers } from "@/root/drivers";
 import { store } from "@/root/store";
 import { createPlainSelectorOptions } from "@/utils/selector-option";

@@ -1,5 +1,5 @@
-import { createShaperCurveBufferCache } from "@/root/shaper-curve-buffer-cache";
-import { mapUnaryTo, tunableSigmoid } from "@/root/synth-math-utils";
+import { createShaperCurveBufferCache } from "@/engine/shaper-curve-buffer-cache";
+import { mapUnaryTo, tunableSigmoid } from "@/engine/synth-math-utils";
 
 function fillDensityShaperCurveBuffer(
   curveBuffer: Float32Array,

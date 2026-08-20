@@ -3,9 +3,9 @@ import {
   ISynthesizer,
   OscWave,
   SynthParameters,
-} from "@/root/definitions";
-import { createEnvelopeGenerator } from "@/root/envelope-generator";
-import { createSuperSawOscillator } from "@/root/super-saw-oscillator";
+} from "@/defs/definitions";
+import { createEnvelopeGenerator } from "@/engine/envelope-generator";
+import { createSuperSawOscillator } from "@/engine/super-saw-oscillator";
 import { UnitInterface } from "wafer-host/unit-types";
 
 const MIN_CUTOFF_HZ = 20;

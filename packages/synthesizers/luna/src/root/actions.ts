@@ -1,4 +1,4 @@
-import { SynthParameters } from "@/root/definitions";
+import { SynthParameters } from "@/defs/definitions";
 import { store } from "@/root/store";
 
 export const actions = {
