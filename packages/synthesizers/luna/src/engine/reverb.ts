@@ -7,8 +7,9 @@ const MAX_REVERB_DECAY_SEC = 5;
 export const REVERB_WET_EQ = true;
 export const REVERB_PREDELAY = true;
 export const REVERB_WET_HPF_HZ = 180;
-export const REVERB_WET_LPF_HZ = 6000;
 export const REVERB_PREDELAY_SEC = 0.03;
+const MIN_DAMP_LPF_HZ = 500;
+const MAX_DAMP_LPF_HZ = 18000;
 
 function clamp01(value: number): number {
   return Math.min(1, Math.max(0, value));
@@ -19,6 +20,10 @@ function mapReverbDecaySec(value: number): number {
     MIN_REVERB_DECAY_SEC *
     (MAX_REVERB_DECAY_SEC / MIN_REVERB_DECAY_SEC) ** clamp01(value)
   );
+}
+
+function mapDampLpfHz(damp: number): number {
+  return MIN_DAMP_LPF_HZ * (MAX_DAMP_LPF_HZ / MIN_DAMP_LPF_HZ) ** clamp01(damp);
 }
 
 function createReverbWetChain(audioContext: AudioContext) {
@@ -39,20 +44,22 @@ function createReverbWetChain(audioContext: AudioContext) {
     hpf.type = "highpass";
     hpf.frequency.value = REVERB_WET_HPF_HZ;
     hpf.Q.value = Math.SQRT1_2;
-    const lpf = audioContext.createBiquadFilter();
-    lpf.type = "lowpass";
-    lpf.frequency.value = REVERB_WET_LPF_HZ;
-    lpf.Q.value = Math.SQRT1_2;
     current.connect(hpf);
-    hpf.connect(lpf);
-    nodes.push(hpf, lpf);
-    current = lpf;
+    nodes.push(hpf);
+    current = hpf;
   }
-  current.connect(output);
+  const dampLpf = audioContext.createBiquadFilter();
+  dampLpf.type = "lowpass";
+  dampLpf.frequency.value = mapDampLpfHz(0.5);
+  dampLpf.Q.value = Math.SQRT1_2;
+  current.connect(dampLpf);
+  nodes.push(dampLpf);
+  dampLpf.connect(output);
 
   return {
     input,
     output,
+    dampLpf,
     cleanup() {
       for (const node of nodes) {
         node.disconnect();
@@ -104,7 +111,7 @@ export function createReverb(audioContext: AudioContext) {
   return {
     input,
     output,
-    apply(decay: number, mix: number, time: number) {
+    apply(decay: number, mix: number, damp: number, time: number) {
       decay = invPower2(decay);
       const nextKey = Math.round(Math.min(1, Math.max(0, decay)) * DECAY_STEPS);
       if (nextKey !== decayKey) {
@@ -114,6 +121,7 @@ export function createReverb(audioContext: AudioContext) {
           mapReverbDecaySec(decay),
         );
       }
+      wetChain.dampLpf.frequency.setValueAtTime(mapDampLpfHz(damp), time);
       wetGain.gain.setValueAtTime(mix, time);
     },
     cleanup() {

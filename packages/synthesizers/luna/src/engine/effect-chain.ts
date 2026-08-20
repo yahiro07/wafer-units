@@ -12,6 +12,9 @@ const MIN_Q = 0.1;
 const MAX_Q = 9;
 const MAX_FILTER_ENV_CENTS = 4800;
 const MAX_FILTER_LFO_CENTS = 2400;
+const PRESENCE_LOW_HZ = 400;
+const PRESENCE_HIGH_HZ = 2500;
+const MAX_PRESENCE_DB = 8;
 
 function clamp(value: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, value));
@@ -51,6 +54,8 @@ export function createEffectChain(
   const reverb = createReverb(audioContext);
   const compressor = audioContext.createDynamicsCompressor();
   const compressorMakeup = audioContext.createGain();
+  const presenceLow = audioContext.createBiquadFilter();
+  const presenceHigh = audioContext.createBiquadFilter();
   const globalGain = audioContext.createGain();
   const filterEnvScale = audioContext.createGain();
   const filterLfo = createSineLfo(audioContext);
@@ -66,6 +71,12 @@ export function createEffectChain(
   compressor.attack.value = 0.02;
   compressor.release.value = 0.2;
   compressorMakeup.gain.value = 2;
+  presenceLow.type = "lowshelf";
+  presenceLow.frequency.value = PRESENCE_LOW_HZ;
+  presenceLow.gain.value = 0;
+  presenceHigh.type = "highshelf";
+  presenceHigh.frequency.value = PRESENCE_HIGH_HZ;
+  presenceHigh.gain.value = 0;
   globalGain.gain.value = 1;
   densityShaper.updateNodeParameters(0);
 
@@ -88,7 +99,9 @@ export function createEffectChain(
   chorus.outputNode.connect(reverb.input);
   reverb.output.connect(compressor);
   compressor.connect(compressorMakeup);
-  compressorMakeup.connect(globalGain);
+  compressorMakeup.connect(presenceLow);
+  presenceLow.connect(presenceHigh);
+  presenceHigh.connect(globalGain);
   globalGain.connect(destination);
   filterEnvScale.connect(lpf1.detune);
   filterEnvScale.connect(lpf2.detune);
@@ -126,7 +139,15 @@ export function createEffectChain(
       );
       densityShaper.updateNodeParameters(clamp01(parameters.density));
       chorus.setLevel(clamp01(parameters.chorusLevel));
-      reverb.apply(parameters.reverbDecay, parameters.reverbMix, time);
+      reverb.apply(
+        parameters.reverbDecay,
+        parameters.reverbMix,
+        parameters.reverbDamp,
+        time,
+      );
+      const tiltDb = clamp01(parameters.presence) * MAX_PRESENCE_DB;
+      presenceLow.gain.setValueAtTime(-tiltDb, time);
+      presenceHigh.gain.setValueAtTime(tiltDb, time);
       globalGain.gain.setValueAtTime(clamp01(parameters.globalVolume), time);
     },
     cleanup() {
@@ -141,6 +162,8 @@ export function createEffectChain(
       reverb.cleanup();
       compressor.disconnect();
       compressorMakeup.disconnect();
+      presenceLow.disconnect();
+      presenceHigh.disconnect();
       globalGain.disconnect();
       filterEnvScale.disconnect();
       filterLfo.cleanup();

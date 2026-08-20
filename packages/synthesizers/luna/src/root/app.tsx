@@ -122,8 +122,6 @@ export const App = () => {
         <ParameterKnob label="D" paramKey="ampDecay" />
         <ParameterKnob label="S" paramKey="ampSustain" />
         <ParameterKnob label="R" paramKey="ampRelease" />
-        <ParameterKnob label="DENSE" paramKey="density" />
-        <ParameterKnob label="VOL" paramKey="globalVolume" />
       </div>
       <div class="flex-h gap-8">
         <Button
@@ -141,9 +139,15 @@ export const App = () => {
         <ParameterKnob label="F" paramKey="pitchLfoRate" />
         <ParameterKnob label="F-LFO" paramKey="filterLfoDepth" />
         <ParameterKnob label="F" paramKey="filterLfoRate" />
-        <ParameterKnob label="REVERB" paramKey="reverbMix" />
-        <ParameterKnob label="T" paramKey="reverbDecay" />
+        <ParameterKnob label="DENSE" paramKey="density" />
+        <ParameterKnob label="VOL" paramKey="globalVolume" />
+      </div>
+      <div class="flex-h gap-8">
         <ParameterKnob label="CHORUS" paramKey="chorusLevel" />
+        <ParameterKnob label="REVERB" paramKey="reverbMix" />
+        <ParameterKnob label="TIME" paramKey="reverbDecay" />
+        <ParameterKnob label="TONE" paramKey="reverbDamp" />
+        <ParameterKnob label="PRESENCE" paramKey="presence" />
       </div>
     </div>
   );
