@@ -19,6 +19,7 @@ export type SynthParameters = {
   lpfCutoff: number;
   lpfEnvMod: number;
   lpfQ: number;
+  punch: number;
   ampAttack: number;
   ampDecay: number;
   ampSustain: number;
@@ -38,6 +39,7 @@ export const defaultSynthParameters: SynthParameters = {
   lpfCutoff: 1,
   lpfEnvMod: 0,
   lpfQ: 0,
+  punch: 0,
   ampAttack: 0,
   ampDecay: 0,
   ampSustain: 1,

@@ -102,6 +102,7 @@ export const App = () => {
         <ParameterKnob label="ENV" paramKey="lpfEnvMod" />
       </div>
       <div class="flex-h gap-8">
+        <ParameterKnob label="P" paramKey="punch" />
         <ParameterKnob label="A" paramKey="ampAttack" />
         <ParameterKnob label="D" paramKey="ampDecay" />
         <ParameterKnob label="S" paramKey="ampSustain" />
