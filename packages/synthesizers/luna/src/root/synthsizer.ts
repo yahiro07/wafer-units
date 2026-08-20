@@ -4,6 +4,7 @@ import {
   OscWave,
   SynthParameters,
 } from "@/root/definitions";
+import { createEnvelopeGenerator } from "@/root/envelope-generator";
 import { UnitInterface } from "wafer-host/unit-types";
 
 const MIN_CUTOFF_HZ = 20;
@@ -22,11 +23,6 @@ function clamp(value: number, min: number, max: number): number {
 
 function clamp01(value: number): number {
   return clamp(value, 0, 1);
-}
-
-function mapEnvelopeTime(value: number, maxSeconds: number): number {
-  const normalized = clamp01(value);
-  return normalized * normalized * maxSeconds;
 }
 
 function mapCutoffHz(
@@ -63,6 +59,10 @@ function waveToOscillatorType(wave: OscWave): OscillatorType {
 
 function isNoiseWave(wave: OscWave): boolean {
   return Math.round(wave) === OscWave.Noise;
+}
+
+function isSineWave(wave: OscWave): boolean {
+  return Math.round(wave) === OscWave.Sine;
 }
 
 function createNoiseBuffer(audioContext: AudioContext): AudioBuffer {
@@ -151,6 +151,12 @@ export function createSynthesizerEngine(
   noise2.start();
   envelope.start();
 
+  const ampEnvelope = createEnvelopeGenerator(envelope.offset, {
+    attackSec: MAX_ATTACK_SECONDS,
+    decaySec: MAX_DECAY_SECONDS,
+    releaseSec: MAX_RELEASE_SECONDS,
+  });
+
   const state: {
     parameters: SynthParameters;
     currentNote: number | null;
@@ -226,61 +232,28 @@ export function createSynthesizerEngine(
     voiceGain.gain.setValueAtTime(clamp01(parameters.voiceVolume), time);
   }
 
+  function applyEnvelopeParameters(parameters: SynthParameters) {
+    const osc2Sounding = clamp01(parameters.osc2Volume) > 0;
+    ampEnvelope.setParameters({
+      attack: clamp01(parameters.ampAttack) ** 2,
+      decay: clamp01(parameters.ampDecay) ** 2,
+      sustain: clamp01(parameters.ampSustain),
+      release: clamp01(parameters.ampRelease) ** 2,
+      hasNaiveWave:
+        isSineWave(parameters.osc1Wave) ||
+        (osc2Sounding && isSineWave(parameters.osc2Wave)),
+    });
+  }
+
   function applyParameters(parameters: SynthParameters, time: number) {
     applyOscillatorMix(parameters, time);
     applyPitch(parameters, time);
     applyFilterAndAmp(parameters, time);
+    applyEnvelopeParameters(parameters);
   }
 
   function resolveTime(time?: number): number {
     return Math.max(time ?? 0, audioContext.currentTime);
-  }
-
-  function scheduleAttackDecay(time: number, parameters: SynthParameters) {
-    const attackSeconds = mapEnvelopeTime(
-      parameters.ampAttack,
-      MAX_ATTACK_SECONDS,
-    );
-    const decaySeconds = mapEnvelopeTime(
-      parameters.ampDecay,
-      MAX_DECAY_SECONDS,
-    );
-    const sustain = clamp01(parameters.ampSustain);
-    const offset = envelope.offset;
-
-    offset.cancelScheduledValues(time);
-    offset.setValueAtTime(0, time);
-
-    let cursor = time;
-    if (attackSeconds > 0) {
-      offset.linearRampToValueAtTime(1, time + attackSeconds);
-      cursor = time + attackSeconds;
-    } else {
-      offset.setValueAtTime(1, time);
-    }
-
-    if (decaySeconds > 0) {
-      offset.linearRampToValueAtTime(sustain, cursor + decaySeconds);
-    } else {
-      offset.setValueAtTime(sustain, cursor);
-    }
-  }
-
-  function scheduleRelease(time: number, parameters: SynthParameters) {
-    const releaseSeconds = mapEnvelopeTime(
-      parameters.ampRelease,
-      MAX_RELEASE_SECONDS,
-    );
-    const offset = envelope.offset;
-    const currentLevel = clamp01(offset.value);
-
-    offset.cancelScheduledValues(time);
-    offset.setValueAtTime(currentLevel, time);
-    if (releaseSeconds > 0) {
-      offset.linearRampToValueAtTime(0, time + releaseSeconds);
-    } else {
-      offset.setValueAtTime(0, time);
-    }
   }
 
   applyParameters(state.parameters, audioContext.currentTime);
@@ -296,12 +269,12 @@ export function createSynthesizerEngine(
       state.lastNote = noteNumber;
       applyPitch(state.parameters, startTime);
       applyFilterAndAmp(state.parameters, startTime);
-      scheduleAttackDecay(startTime, state.parameters);
+      ampEnvelope.triggerAttack(startTime);
     },
     noteOff(noteNumber, time) {
       if (noteNumber !== state.currentNote) return;
       state.currentNote = null;
-      scheduleRelease(resolveTime(time), state.parameters);
+      ampEnvelope.triggerRelease(resolveTime(time));
     },
     cleanup() {
       try {
