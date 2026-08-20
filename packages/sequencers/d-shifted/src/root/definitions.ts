@@ -1,4 +1,4 @@
-export type PatternLength = 4 | 8 | 16 | 32;
+export type PatternLength = 4 | 8 | 16 | 32 | 64;
 
 export type Note = {
   id: number;
