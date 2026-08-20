@@ -2,6 +2,7 @@ import { cz } from "@/common/css-realm";
 import { ComponentChildren } from "preact";
 
 export const Button = ({
+  className,
   children,
   onClick,
   height = 36,
@@ -9,6 +10,7 @@ export const Button = ({
   active,
   disabled,
 }: {
+  className?: string;
   children?: ComponentChildren;
   onClick?: () => void;
   height?: number;
@@ -20,7 +22,12 @@ export const Button = ({
   return (
     <button
       onClick={onClick}
-      class={cz(styles.base, active && "active", disabled && "disabled")}
+      class={cz(
+        styles.base,
+        active && "active",
+        disabled && "disabled",
+        className,
+      )}
       style={{ width, height }}
     >
       {children}

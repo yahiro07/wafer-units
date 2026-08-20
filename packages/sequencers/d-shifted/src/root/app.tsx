@@ -123,6 +123,20 @@ const ShiftEnableButtonContainer = () => {
   );
 };
 
+const DoublerButtonContainer = () => {
+  const handleClick = () => {};
+  const { patternLength } = store.useSnapshot();
+  const enabled = patternLength !== 64;
+  return (
+    <Button onClick={handleClick} disabled={!enabled} className="bg-#0000!">
+      <div class="flex-vc gap-1 text-[11px]">
+        <span>COPY</span>
+        <span class="mt-[-6px]">2X</span>
+      </div>
+    </Button>
+  );
+};
+
 const DeleteButtonContainer = () => {
   const handleClick = () => {
     store.setNotes([]);
@@ -144,9 +158,10 @@ export const App = () => {
       </div>
       <div class="flex-ha gap-2 justify-between">
         <ShiftEnableButtonContainer />
-        <DeleteButtonContainer />
         <PatternLengthContainer />
         <PageButtonsContainer />
+        <DoublerButtonContainer />
+        <DeleteButtonContainer />
         <StepDutyContainer />
       </div>
       <div class="flex-vc gap-2.5">
