@@ -1,9 +1,8 @@
-export type Reverb = {
-  input: GainNode;
-  output: GainNode;
-  apply(decay: number, mix: number, time: number): void;
-  cleanup(): void;
-};
+import { invPower2 } from "@/engine/synth-math-utils";
+
+const DECAY_STEPS = 40;
+const MIN_REVERB_DECAY_SEC = 0.25;
+const MAX_REVERB_DECAY_SEC = 5;
 
 export const REVERB_WET_EQ = true;
 export const REVERB_PREDELAY = true;
@@ -11,33 +10,18 @@ export const REVERB_WET_HPF_HZ = 180;
 export const REVERB_WET_LPF_HZ = 6000;
 export const REVERB_PREDELAY_SEC = 0.03;
 
-export const MIN_REVERB_DECAY_SEC = 0.25;
-export const MAX_REVERB_DECAY_SEC = 5;
-export const REVERB_WET_SCALE = 0.55;
-
-export function clamp01(value: number): number {
+function clamp01(value: number): number {
   return Math.min(1, Math.max(0, value));
 }
 
-export function mapReverbDecaySec(value: number): number {
+function mapReverbDecaySec(value: number): number {
   return (
     MIN_REVERB_DECAY_SEC *
     (MAX_REVERB_DECAY_SEC / MIN_REVERB_DECAY_SEC) ** clamp01(value)
   );
 }
 
-export function applyReverbMix(
-  dryGain: AudioParam,
-  wetGain: AudioParam,
-  mix: number,
-  time: number,
-) {
-  const mixAmount = clamp01(mix);
-  dryGain.setValueAtTime(1 - mixAmount * 0.65, time);
-  wetGain.setValueAtTime(mixAmount * REVERB_WET_SCALE, time);
-}
-
-export function createReverbWetChain(audioContext: AudioContext) {
+function createReverbWetChain(audioContext: AudioContext) {
   const input = audioContext.createGain();
   const output = audioContext.createGain();
   const nodes: AudioNode[] = [input, output];
@@ -73,6 +57,72 @@ export function createReverbWetChain(audioContext: AudioContext) {
       for (const node of nodes) {
         node.disconnect();
       }
+    },
+  };
+}
+
+function createImpulseResponse(
+  audioContext: AudioContext,
+  decaySec: number,
+): AudioBuffer {
+  const sampleRate = audioContext.sampleRate;
+  const length = sampleRate * decaySec;
+  const buffer = audioContext.createBuffer(2, length, sampleRate);
+  for (let ch = 0; ch < 2; ch += 1) {
+    const data = buffer.getChannelData(ch);
+    for (let i = 0; i < length; i += 1) {
+      data[i] = (Math.random() * 2 - 1) * (1 - i / length) ** 1.8;
+    }
+  }
+  return buffer;
+}
+
+export function createReverb(audioContext: AudioContext) {
+  const input = audioContext.createGain();
+  const output = audioContext.createGain();
+  const dryGain = audioContext.createGain();
+  const wetGain = audioContext.createGain();
+  const convolver = audioContext.createConvolver();
+  const wetChain = createReverbWetChain(audioContext);
+  convolver.normalize = true;
+  dryGain.gain.value = 1;
+  wetGain.gain.value = 0;
+
+  let decayKey = Math.round(0.5 * DECAY_STEPS);
+  convolver.buffer = createImpulseResponse(
+    audioContext,
+    mapReverbDecaySec(0.5),
+  );
+
+  input.connect(dryGain);
+  input.connect(convolver);
+  convolver.connect(wetChain.input);
+  wetChain.output.connect(wetGain);
+  dryGain.connect(output);
+  wetGain.connect(output);
+
+  return {
+    input,
+    output,
+    apply(decay: number, mix: number, time: number) {
+      decay = invPower2(decay);
+      const nextKey = Math.round(Math.min(1, Math.max(0, decay)) * DECAY_STEPS);
+      if (nextKey !== decayKey) {
+        decayKey = nextKey;
+        convolver.buffer = createImpulseResponse(
+          audioContext,
+          mapReverbDecaySec(decay),
+        );
+      }
+      wetGain.gain.setValueAtTime(mix, time);
+    },
+    cleanup() {
+      convolver.disconnect();
+      wetChain.cleanup();
+      dryGain.disconnect();
+      wetGain.disconnect();
+      input.disconnect();
+      output.disconnect();
     },
   };
 }
