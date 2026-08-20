@@ -397,6 +397,7 @@ export const StepsEditorRoot = () => {
       <div className="flex-h">
         <IndexColumn />
         <StepsEditorRootInner />
+        <div class="border-0.5px border-#222" />
       </div>
     </div>
   );
