@@ -49,7 +49,7 @@ export function createSequencer(unitInterface: UnitInterface | undefined) {
     getShiftingRootIndex() {
       if (editState.shiftEnabled && state.inputRootNoteNumber !== -1) {
         const index = state.scaleNoteNumbers.indexOf(state.inputRootNoteNumber);
-        if (index !== -1) return index - 7;
+        if (index !== -1) return index - 14;
       }
       return 28;
     },
