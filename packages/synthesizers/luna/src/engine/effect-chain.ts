@@ -43,6 +43,7 @@ export function createEffectChain(
   const lpf1 = audioContext.createBiquadFilter();
   const lpf2 = LPF_TWO_STAGE ? audioContext.createBiquadFilter() : null;
   const densityShaper = createDensityShaper(audioContext);
+  const compressor = audioContext.createDynamicsCompressor();
   const globalGain = audioContext.createGain();
   const filterEnvScale = audioContext.createGain();
 
@@ -53,6 +54,11 @@ export function createEffectChain(
     lpf2.type = "lowpass";
   }
   filterEnvScale.gain.value = 0;
+  compressor.threshold.value = -18;
+  compressor.ratio.value = 4;
+  compressor.knee.value = 8;
+  compressor.attack.value = 0.003;
+  compressor.release.value = 0.15;
   globalGain.gain.value = 1;
   densityShaper.updateNodeParameters(0);
 
@@ -64,7 +70,8 @@ export function createEffectChain(
   } else {
     lpf1.connect(densityShaper.shaperNode);
   }
-  densityShaper.shaperNode.connect(globalGain);
+  densityShaper.shaperNode.connect(compressor);
+  compressor.connect(globalGain);
   globalGain.connect(destination);
   filterEnvScale.connect(lpf1.detune);
   if (lpf2) {
@@ -103,6 +110,7 @@ export function createEffectChain(
       lpf1.disconnect();
       lpf2?.disconnect();
       densityShaper.shaperNode.disconnect();
+      compressor.disconnect();
       globalGain.disconnect();
       filterEnvScale.disconnect();
     },
