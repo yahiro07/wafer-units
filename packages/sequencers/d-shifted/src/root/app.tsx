@@ -4,6 +4,7 @@ import { IconButton } from "@/components/icon-button";
 import { Icons } from "@/components/icons";
 import { Knob } from "@/components/knob";
 import { SideLabelBox } from "@/components/side-label-box";
+import { editActions } from "@/root/edit-actions";
 import { StepsEditorRoot } from "@/root/steps-editor";
 import { StepsIndicatorBar } from "@/root/steps-indicator-bar";
 import { store } from "@/root/store";
@@ -36,7 +37,7 @@ const PatternLengthContainer = () => {
       <ButtonsSelector
         options={patternLengthOptions}
         value={patternLength}
-        onChange={store.setPatternLength}
+        onChange={editActions.setPatternLength}
         size="narrow"
       />
     </SideLabelBox>
@@ -124,11 +125,14 @@ const ShiftEnableButtonContainer = () => {
 };
 
 const DoublerButtonContainer = () => {
-  const handleClick = () => {};
   const { patternLength } = store.useSnapshot();
   const enabled = patternLength !== 64;
   return (
-    <Button onClick={handleClick} disabled={!enabled} className="bg-#0000!">
+    <Button
+      onClick={editActions.duplicateSteps2x}
+      disabled={!enabled}
+      className="bg-#0000!"
+    >
       <div class="flex-vc gap-1 text-[11px]">
         <span>COPY</span>
         <span class="mt-[-6px]">2X</span>
@@ -138,10 +142,9 @@ const DoublerButtonContainer = () => {
 };
 
 const DeleteButtonContainer = () => {
-  const handleClick = () => {
-    store.setNotes([]);
-  };
-  return <IconButton icon={Icons.Trash} size={24} onClick={handleClick} />;
+  return (
+    <IconButton icon={Icons.Trash} size={24} onClick={editActions.clearNotes} />
+  );
 };
 
 export const App = () => {
