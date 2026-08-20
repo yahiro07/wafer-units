@@ -31,6 +31,7 @@ function setupSynchronization() {
     const editStateAttrs = pickObjectMembers(
       attrs,
       {
+        baseStep: 1,
         octaveShift: 1,
         stepDuty: 1,
         shiftEnabled: 1,
@@ -49,7 +50,8 @@ function setupSynchronization() {
       if (stepIndex !== -1) {
         store.setPlayStepIndex(stepIndex % 16);
         if (store.state.patternLength >= 32) {
-          const page = Math.floor((stepIndex % 64) / 16);
+          const ptLen = store.state.patternLength;
+          const page = Math.floor((stepIndex % ptLen) / 16);
           if (store.state.currentPageIndex !== page) {
             store.setCurrentPageIndex(page);
           }

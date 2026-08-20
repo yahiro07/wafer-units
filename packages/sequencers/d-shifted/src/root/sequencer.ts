@@ -49,7 +49,7 @@ export function createSequencer(unitInterface: UnitInterface | undefined) {
     getShiftingRootIndex() {
       if (editState.shiftEnabled && state.inputRootNoteNumber !== -1) {
         const index = state.scaleNoteNumbers.indexOf(state.inputRootNoteNumber);
-        if (index !== -1) return index - 14;
+        if (index !== -1) return index - 7;
       }
       return 28;
     },
@@ -66,6 +66,8 @@ export function createSequencer(unitInterface: UnitInterface | undefined) {
 
   const clockHandlers: ClockHandlers = {
     processStep(stepIndex, time, unitDuration) {
+      const shift = editState.baseStep === "8th" ? 1 : 0;
+      stepIndex >>= shift;
       const pos = stepIndex % editState.patternLength;
       const notes = editState.notes.filter((note) => note.position === pos);
       const root = internal.getShiftingRootIndex();

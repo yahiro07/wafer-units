@@ -4,13 +4,17 @@ import { IconButton } from "@/components/icon-button";
 import { Icons } from "@/components/icons";
 import { Knob } from "@/components/knob";
 import { SideLabelBox } from "@/components/side-label-box";
+import { BaseStep } from "@/root/definitions";
 import { useSetupDrivers } from "@/root/drivers";
 import { editActions } from "@/root/edit-actions";
 import { StepsEditorRoot } from "@/root/steps-editor";
 import { StepsIndicatorBar } from "@/root/steps-indicator-bar";
 import { store } from "@/root/store";
 import { seqNumbers } from "@/utils/helpers";
-import { createPlainSelectorOptions } from "@/utils/selector-option";
+import {
+  createPlainSelectorOptions,
+  createSelectorOptions,
+} from "@/utils/selector-option";
 import { useMemo } from "preact/hooks";
 
 const octaveShiftOptions = createPlainSelectorOptions([-2, -1, 0, 1, 2]);
@@ -39,6 +43,25 @@ const PatternLengthContainer = () => {
         options={patternLengthOptions}
         value={patternLength}
         onChange={editActions.setPatternLength}
+        size="narrow"
+      />
+    </SideLabelBox>
+  );
+};
+
+const baseStepOptions = createSelectorOptions<BaseStep>([
+  ["16th", "/16"],
+  ["8th", "/8"],
+]);
+
+const BaseStepContainer = () => {
+  const { baseStep } = store.useSnapshot();
+  return (
+    <SideLabelBox label="BASE">
+      <ButtonsSelector
+        options={baseStepOptions}
+        value={baseStep}
+        onChange={store.setBaseStep}
         size="narrow"
       />
     </SideLabelBox>
@@ -157,6 +180,7 @@ export const App = () => {
           <h1 class="text-2xl font-bold">D-SHIFTED</h1>
         </div>
         <div class="grow" />
+        <BaseStepContainer />
         <OctaveShiftContainer />
         <StepDutyContainer />
       </div>
