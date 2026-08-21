@@ -4,7 +4,7 @@ export const uiColors = {
   clControlEdge: "#0f0",
   clAccent: "#f80",
   clPlayPos: "#fc0",
-  clPrimary: "#fa4",
+  clPrimary: "#4bf",
   clButtonBg: "#444",
   clKnobTick: "#555",
 };

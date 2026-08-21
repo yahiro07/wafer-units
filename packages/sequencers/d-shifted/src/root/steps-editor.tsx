@@ -250,7 +250,13 @@ function noteOverlapsRange(note: Note, stepsRange: StepsRange) {
   return note.position < rangeEnd && note.position + note.duration > rangeStart;
 }
 
-const NotesLayer = ({ stepsRange }: { stepsRange: StepsRange }) => {
+const NotesLayer = ({
+  stepsRange,
+  isPrimaryNotes,
+}: {
+  stepsRange: StepsRange;
+  isPrimaryNotes: boolean;
+}) => {
   const { notes, previewNote } = store.useSnapshot();
   const { stepCellWidth, stepCellHeight } = uiConfigs;
   const visibleNotes = notes.filter(
@@ -265,11 +271,13 @@ const NotesLayer = ({ stepsRange }: { stepsRange: StepsRange }) => {
     noteOverlapsRange(previewNote, stepsRange)
       ? [...visibleNotes, previewNote]
       : visibleNotes;
+
   return (
     <div
       class={cz(
         "absolute-full flex-h",
-        "[&>div]:(absolute flex-c bd-#f80 bg-#fc48)",
+        isPrimaryNotes && "[&>div]:(absolute flex-c bd-#4cf bg-#4cf8)",
+        !isPrimaryNotes && "[&>div]:(absolute flex-c bd-#9ab bg-#cde5)",
       )}
     >
       {displayNotes.map((note) => (
@@ -290,9 +298,11 @@ const NotesLayer = ({ stepsRange }: { stepsRange: StepsRange }) => {
 const StepsBarEditor = ({
   stepsRange,
   bgInvert,
+  isPrimaryNotes = false,
 }: {
   stepsRange: StepsRange;
   bgInvert?: boolean;
+  isPrimaryNotes?: boolean;
 }) => {
   const nx = stepsRange.length;
   const { stepCellWidth, numCellsY } = uiConfigs;
@@ -309,7 +319,7 @@ const StepsBarEditor = ({
         bgInvert={bgInvert}
       />
       <GridTonicHighlighter ny={numCellsY} className="absolute-full" />
-      <NotesLayer stepsRange={stepsRange} />
+      <NotesLayer stepsRange={stepsRange} isPrimaryNotes={isPrimaryNotes} />
     </div>
   );
 };
@@ -319,7 +329,7 @@ const StepsEditorRootInner = () => {
   if (patternLength === 4) {
     return (
       <div class="flex-h">
-        <StepsBarEditor stepsRange={{ offset: 0, length: 4 }} />
+        <StepsBarEditor stepsRange={{ offset: 0, length: 4 }} isPrimaryNotes />
         <StepsBarEditor stepsRange={{ offset: 0, length: 4 }} bgInvert />
         <StepsBarEditor stepsRange={{ offset: 0, length: 4 }} />
         <StepsBarEditor stepsRange={{ offset: 0, length: 4 }} bgInvert />
@@ -328,16 +338,19 @@ const StepsEditorRootInner = () => {
   } else if (patternLength === 8) {
     return (
       <div class="flex-h">
-        <StepsBarEditor stepsRange={{ offset: 0, length: 8 }} />
+        <StepsBarEditor stepsRange={{ offset: 0, length: 8 }} isPrimaryNotes />
         <StepsBarEditor stepsRange={{ offset: 0, length: 8 }} />
       </div>
     );
   } else if (patternLength === 16) {
-    return <StepsBarEditor stepsRange={{ offset: 0, length: 16 }} />;
+    return (
+      <StepsBarEditor stepsRange={{ offset: 0, length: 16 }} isPrimaryNotes />
+    );
   } else if (patternLength === 32 || patternLength === 64) {
     return (
       <StepsBarEditor
         stepsRange={{ offset: currentPageIndex * 16, length: 16 }}
+        isPrimaryNotes
       />
     );
   }
