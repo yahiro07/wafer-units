@@ -17,7 +17,7 @@ const PRESENCE_LOW_HZ = 400;
 const PRESENCE_HIGH_HZ = 2500;
 const MAX_PRESENCE_DB = 8;
 const DENSITY_SHAPER_ENABLED = true;
-const OUTPUT_SATURATOR_ENABLED = false;
+const OUTPUT_SATURATOR_ENABLED = true;
 
 function clamp(value: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, value));

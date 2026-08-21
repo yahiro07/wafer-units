@@ -1,7 +1,7 @@
 const INPUT_HEADROOM = 1.5;
 const CURVE_SIZE = 1024;
 
-function createTanhCurve(): Float32Array {
+function createTanhCurve(): Float32Array<ArrayBuffer> {
   const curve = new Float32Array(CURVE_SIZE);
   for (let i = 0; i < CURVE_SIZE; i += 1) {
     const u = (i / (CURVE_SIZE - 1)) * 2 - 1;
