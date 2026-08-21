@@ -15,7 +15,7 @@ const MAX_FILTER_LFO_CENTS = 2400;
 const PRESENCE_LOW_HZ = 400;
 const PRESENCE_HIGH_HZ = 2500;
 const MAX_PRESENCE_DB = 8;
-const DENSITY_SHAPER_ENABLED = false;
+const DENSITY_SHAPER_ENABLED = true;
 
 function clamp(value: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, value));
@@ -85,7 +85,7 @@ export function createEffectChain(
 
   input.connect(hpf);
   hpf.connect(lpf1);
-  const postFilter = densityShaper?.shaperNode ?? chorus.inputNode;
+  const postFilter = densityShaper?.inputNode ?? chorus.inputNode;
   let lpfSteep = false;
   function connectLpf(steep: boolean) {
     lpf1.disconnect();
@@ -99,7 +99,7 @@ export function createEffectChain(
     lpfSteep = steep;
   }
   connectLpf(false);
-  densityShaper?.shaperNode.connect(chorus.inputNode);
+  densityShaper?.outputNode.connect(chorus.inputNode);
   chorus.outputNode.connect(reverb.input);
   reverb.output.connect(compressor);
   compressor.connect(compressorMakeup);
@@ -159,7 +159,7 @@ export function createEffectChain(
       hpf.disconnect();
       lpf1.disconnect();
       lpf2.disconnect();
-      densityShaper?.shaperNode.disconnect();
+      densityShaper?.cleanup();
       chorus.cleanupNodes();
       chorus.inputNode.disconnect();
       chorus.outputNode.disconnect();

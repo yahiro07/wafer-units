@@ -1,6 +1,8 @@
 import { createShaperCurveBufferCache } from "@/engine/shaper-curve-buffer-cache";
 import { mapUnaryTo, tunableSigmoid } from "@/engine/synth-math-utils";
 
+const INPUT_HEADROOM = 4;
+
 function fillDensityShaperCurveBuffer(
   curveBuffer: Float32Array,
   _wave: number,
@@ -8,12 +10,9 @@ function fillDensityShaperCurveBuffer(
 ) {
   const sz = curveBuffer.length;
   const k = mapUnaryTo(level, 0, -0.9);
-  // const g = mapUnaryTo(level, 1, 0.5);
-  const g = 1;
   for (let i = 0; i < sz; i++) {
     const input = (i / (sz - 1)) * 2 - 1;
-    const y = tunableSigmoid(input, k) * g;
-    curveBuffer[i] = y;
+    curveBuffer[i] = tunableSigmoid(input * INPUT_HEADROOM, k) / INPUT_HEADROOM;
   }
 }
 
@@ -23,15 +22,28 @@ const densityShaperCurveBufferCache = createShaperCurveBufferCache(
 );
 
 export function createDensityShaper(audioContext: AudioContext) {
+  const inputNode = audioContext.createGain();
   const shaperNode = audioContext.createWaveShaper();
+  const outputNode = audioContext.createGain();
+  inputNode.gain.value = 1 / INPUT_HEADROOM;
   shaperNode.oversample = "2x";
+  outputNode.gain.value = INPUT_HEADROOM;
+  inputNode.connect(shaperNode);
+  shaperNode.connect(outputNode);
+
   return {
-    shaperNode,
+    inputNode,
+    outputNode,
     updateNodeParameters(level: number) {
       const curve = densityShaperCurveBufferCache.update(-1, level);
       if (shaperNode.curve !== curve) {
         shaperNode.curve = curve;
       }
+    },
+    cleanup() {
+      inputNode.disconnect();
+      shaperNode.disconnect();
+      outputNode.disconnect();
     },
   };
 }
