@@ -1,5 +1,3 @@
-import { SynthParameters } from "@/core/definitions";
-
 export function createReverb(context: AudioContext) {
   const inputNode = context.createGain();
   const outputNode = context.createGain();
@@ -32,10 +30,9 @@ export function createReverb(context: AudioContext) {
   return {
     inputNode,
     outputNode,
-    updateNodeParameters(params: SynthParameters) {
-      const amount = params.fxReverb;
+    update(reverbLevel: number) {
       dryGain.gain.value = 1;
-      wetGain.gain.value = amount;
+      wetGain.gain.value = reverbLevel * 0.8;
     },
     cleanup() {
       convolver.disconnect();

@@ -1,6 +1,6 @@
 import { createChorus } from "@/core/chorus";
 import { SynthParameters } from "@/core/definitions";
-import { createReverb } from "@/core/reverb";
+import { createReverb2 } from "@/core/reverb2";
 import { createVoice, Voice } from "@/core/voice";
 
 export type ISynthesizer = {
@@ -19,7 +19,7 @@ export function createSynthesizer(
 
   const voicesGain = audioContext.createGain();
   const chorus = createChorus(audioContext);
-  const reverb = createReverb(audioContext);
+  const reverb = createReverb2(audioContext);
   const masterGain = audioContext.createGain();
 
   voicesGain.connect(chorus.inputNode);
@@ -54,8 +54,8 @@ export function createSynthesizer(
       for (const voice of state.activeVoices.values()) {
         voice.updateNodeParameters(state.parameters);
       }
-      chorus.updateNodeParameters(state.parameters);
-      reverb.updateNodeParameters(state.parameters);
+      chorus.update(state.parameters.fxChorus);
+      reverb.update(state.parameters.fxReverb);
       masterGain.gain.value = state.parameters.masterVolume;
     },
   };
