@@ -37,7 +37,7 @@ const styles = css({
   height: "80px",
   ...flexC(),
   position: "relative",
-  background: "#aab",
+  background: "#a0a6b4",
   border: "inset 0.5px #222",
   "> .tick": {
     width: "100%",
