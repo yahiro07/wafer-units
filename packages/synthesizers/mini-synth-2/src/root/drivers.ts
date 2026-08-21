@@ -1,5 +1,5 @@
 import { SynthParameters } from "@/core/definitions";
-import { createEngine } from "@/core/engine";
+import { createSynthesizerEngine } from "@/core/synthesizer";
 import { actions } from "@/root/actions";
 import { persistence } from "@/root/persistence";
 import { store } from "@/root/store";
@@ -7,11 +7,9 @@ import { setupMidiKeyboardInput } from "@/utils/midi-keyboard-input";
 import { queryUnitInterface } from "wafer-host/unit-types";
 
 const unitInterface = queryUnitInterface("wafer-v01");
-const engine = createEngine(unitInterface);
+const engine = createSynthesizerEngine(unitInterface);
 
 export function setupUnit() {
-  engine.connects();
-
   if (unitInterface) {
     unitInterface.completeSetup({
       unitAspects: {
@@ -59,7 +57,7 @@ export function setupUnit() {
         },
       },
       persistence,
-      cleanup: engine.disconnects,
+      cleanup: engine.cleanup,
     });
   } else {
     return setupMidiKeyboardInput({

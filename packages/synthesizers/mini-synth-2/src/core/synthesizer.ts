@@ -1,22 +1,20 @@
 import { createChorus2 } from "@/core/chorus2";
-import { SynthParameters } from "@/core/definitions";
+import {
+  defaultSynthParameters,
+  ISynthesizerEngine,
+  SynthParameters,
+} from "@/core/definitions";
 import { createReverb2 } from "@/core/reverb2";
 import { createSoftClipper } from "@/core/soft-clipper";
 import { createVoice, Voice } from "@/core/voice";
+import { UnitInterface } from "wafer-host/unit-types";
 
-export type ISynthesizer = {
-  outputNode: GainNode;
-  setParameters: (parameters: SynthParameters) => void;
-  noteOn: (noteNumber: number, time: number, velocity: number) => void;
-  noteOff: (noteNumber: number, time: number) => void;
-  cleanup: () => void;
-};
-
-export function createSynthesizer(
-  audioContext: AudioContext,
-  initialParameters: SynthParameters,
-): ISynthesizer {
-  const outputNode = audioContext.createGain();
+export function createSynthesizerEngine(
+  unitInterface: UnitInterface | undefined,
+): ISynthesizerEngine {
+  const audioContext = unitInterface?.audioContext ?? new AudioContext();
+  const destinationNode =
+    unitInterface?.audioOutputNode ?? audioContext.destination;
 
   const voicesGain = audioContext.createGain();
   const chorus = createChorus2(audioContext);
@@ -28,13 +26,13 @@ export function createSynthesizer(
   chorus.outputNode.connect(reverb.inputNode);
   reverb.outputNode.connect(softClipper.inputNode);
   softClipper.outputNode.connect(masterGain);
-  masterGain.connect(outputNode);
+  masterGain.connect(destinationNode);
 
   const state: {
     parameters: SynthParameters;
     activeVoices: Map<number, Voice>;
   } = {
-    parameters: initialParameters,
+    parameters: structuredClone(defaultSynthParameters),
     activeVoices: new Map<number, Voice>(),
   };
 
@@ -65,7 +63,6 @@ export function createSynthesizer(
   };
 
   return {
-    outputNode,
     setParameters(parameters) {
       state.parameters = parameters;
       internal.applyParametersToVoices();

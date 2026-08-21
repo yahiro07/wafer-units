@@ -29,3 +29,10 @@ export const defaultSynthParameters: SynthParameters = {
   fxReverb: 0,
   masterVolume: 0.5,
 };
+
+export type ISynthesizerEngine = {
+  setParameters: (parameters: SynthParameters) => void;
+  noteOn: (noteNumber: number, time: number, velocity: number) => void;
+  noteOff: (noteNumber: number, time: number) => void;
+  cleanup: () => void;
+};
