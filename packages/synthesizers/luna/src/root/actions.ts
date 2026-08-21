@@ -1,5 +1,6 @@
 import { SynthParameters } from "@/defs/definitions";
 import { allPresets } from "@/defs/presets";
+import { createRandomParameters } from "@/root/randomizer";
 import { allPresetKeys, store } from "@/root/store";
 
 export const actions = {
@@ -32,8 +33,8 @@ export const actions = {
     actions.setPreset(allPresetKeys[nextIdx]);
   },
   randomizeParameters() {
-    // const paramAttrs = createRandomParameters();
-    // store.patchParameters(paramAttrs);
+    const paramAttrs = createRandomParameters();
+    store.patchParameters(paramAttrs);
   },
   async emitPresetData() {
     const { globalVolume: _, ...attrs } = store.state.parameters;

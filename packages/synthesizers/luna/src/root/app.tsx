@@ -156,7 +156,9 @@ export const App = () => {
     <div class="flex-v gap-4 bg-clPageBg text-clPageText p-8">
       <div class="flex-ha gap-3 justify-between">
         <div class="flex-vc font-bold ">
-          <h1 class="text-6xl">LUNA</h1>
+          <h1 class="text-6xl" onClick={actions.emitPresetData}>
+            LUNA
+          </h1>
           <div class="text-[22px] mt-[-8px]">SYNTHESIZER</div>
         </div>
         <div class="flex-ha gap-5">
