@@ -8,6 +8,9 @@ export const unitInterface = queryUnitInterfaceForModule(
   "wafer-v01",
   import.meta.url,
 );
+const audioContext = unitInterface?.audioContext ?? new AudioContext();
+const destNode = unitInterface?.audioOutputNode ?? audioContext.destination;
+
 function midiNoteToFrequency(note: number): number {
   return 440 * Math.pow(2, (note - 69) / 12);
 }
@@ -28,8 +31,6 @@ export interface AudioEngine {
 const voiceCount = 6;
 
 export function createAudioEngine(): AudioEngine {
-  const audioContext = unitInterface?.audioContext ?? new AudioContext();
-  const destNode = unitInterface?.audioOutputNode ?? audioContext.destination;
   const effects = createEffectsChain(audioContext);
   effects.outputNode.connect(destNode);
 
