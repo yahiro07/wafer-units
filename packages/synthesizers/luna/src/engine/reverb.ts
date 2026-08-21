@@ -1,8 +1,8 @@
 import { invPower2 } from "@/engine/synth-math-utils";
 
-const DECAY_STEPS = 40;
+const DECAY_STEPS = 9;
 const MIN_REVERB_DECAY_SEC = 0.25;
-const MAX_REVERB_DECAY_SEC = 5;
+const MAX_REVERB_DECAY_SEC = 1.25;
 
 export const REVERB_WET_EQ = true;
 export const REVERB_PREDELAY = true;
@@ -116,10 +116,9 @@ export function createReverb(audioContext: AudioContext) {
       const nextKey = Math.round(Math.min(1, Math.max(0, decay)) * DECAY_STEPS);
       if (nextKey !== decayKey) {
         decayKey = nextKey;
-        convolver.buffer = createImpulseResponse(
-          audioContext,
-          mapReverbDecaySec(decay),
-        );
+        const decaySec = mapReverbDecaySec(decay);
+        console.log(`Reverb decay changed, ${decayKey},${decay}, ${decaySec}`);
+        convolver.buffer = createImpulseResponse(audioContext, decaySec);
       }
       wetChain.dampLpf.frequency.setValueAtTime(mapDampLpfHz(damp), time);
       wetGain.gain.setValueAtTime(mix, time);
