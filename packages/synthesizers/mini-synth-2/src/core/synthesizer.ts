@@ -1,6 +1,6 @@
 import { createChorus2 } from "@/core/chorus2";
 import { SynthParameters } from "@/core/definitions";
-import { createReverb } from "@/core/reverb";
+import { createReverb2 } from "@/core/reverb2";
 import { createSoftClipper } from "@/core/soft-clipper";
 import { createVoice, Voice } from "@/core/voice";
 
@@ -20,7 +20,7 @@ export function createSynthesizer(
 
   const voicesGain = audioContext.createGain();
   const chorus = createChorus2(audioContext);
-  const reverb = createReverb(audioContext);
+  const reverb = createReverb2(audioContext);
   const softClipper = createSoftClipper(audioContext);
   const masterGain = audioContext.createGain();
 
@@ -59,6 +59,7 @@ export function createSynthesizer(
       }
       chorus.update(state.parameters.fxChorus);
       reverb.update(state.parameters.fxReverb);
+      softClipper.update(state.parameters.saturation);
       masterGain.gain.value = state.parameters.masterVolume;
     },
   };
