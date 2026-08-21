@@ -141,7 +141,7 @@ export function createEffectChain(
       chorus.setLevel(clamp01(parameters.chorusLevel));
       reverb.apply(
         parameters.reverbDecay,
-        parameters.reverbMix,
+        parameters.reverbMix ** 2,
         parameters.reverbDamp,
         time,
       );

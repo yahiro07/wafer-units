@@ -15,7 +15,7 @@ function randRange(min: number, max: number) {
 }
 
 function randRangeI(min: number, max: number) {
-  return Math.floor(randF() * (max - min) + min);
+  return Math.round(randF() * (max - min) + min);
 }
 
 function probably(p: number, a: number, b: number) {
@@ -30,21 +30,21 @@ export function createRandomParameters(): SynthPresetParameters {
   return {
     voiceOctave: randRangeI(-1, 1),
     osc1Wave: probably(0.3, OscWave.Ex, randI(numOscWaveTypes)),
-    oscDetune: randF(),
+    oscDetune: randRange(0, 0.7),
     osc2Wave: randI(numOscWaveTypes),
     osc2Octave: randRangeI(-2, 2),
-    osc2Volume: probably(0.5, 1, 0),
-    hpfCutoff: probably(0.5, 0, randF()),
+    osc2Volume: probably(0.7, 1, 0),
+    hpfCutoff: probably(0.4, 0, randRange(0, 0.8)),
     hpfQ: randF(),
-    lpfCutoff: probably(0.5, 1, randF()),
+    lpfCutoff: probably(0.4, 1, randRange(0.1, 1)),
     lpfQ: randF(),
-    lpfEnvMod: probably(0.5, 0, randF()),
+    lpfEnvMod: probably(0.4, 0, randF()),
     lpfSteep: randB(0.5),
     attackAltPunch: randB(0.5),
-    ampAttack: probably(0.5, 0, randF()),
-    ampDecay: probably(0.5, 0, randF()),
+    ampAttack: probably(0.4, 0, randF()),
+    ampDecay: probably(0.4, 0, randF()),
     ampSustain: randF(),
-    ampRelease: probably(0.5, 0, randF()),
+    ampRelease: probably(0.4, 0, randF()),
     density: probably(0.7, 0, randF()),
     pitchLfoAltPitchEg: randB(0.2),
     pitchLfoRate: randF(),
@@ -52,9 +52,9 @@ export function createRandomParameters(): SynthPresetParameters {
     filterLfoRate: randF(),
     filterLfoDepth: probably(0.7, 0, randF()),
     reverbDecay: randF(),
-    reverbMix: probably(0.5, 0, randRange(0, 0.7)),
+    reverbMix: probably(0.4, 0, randRange(0, 0.7)),
     reverbDamp: randF(),
-    chorusLevel: probably(0.5, 0, randF()),
-    presence: probably(0.5, 0, randF()),
+    chorusLevel: probably(0.4, 0, randF()),
+    presence: probably(0.4, 0, randF()),
   };
 }

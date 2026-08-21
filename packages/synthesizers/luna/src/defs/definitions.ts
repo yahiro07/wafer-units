@@ -36,7 +36,6 @@ export type SynthParameters = {
   reverbMix: number;
   reverbDamp: number;
   chorusLevel: number;
-  delayLevel: number;
   presence: number;
 };
 
@@ -71,7 +70,6 @@ export const defaultSynthParameters: SynthParameters = {
   reverbMix: 0,
   reverbDamp: 1,
   chorusLevel: 0,
-  delayLevel: 0,
   presence: 0,
 };
 
