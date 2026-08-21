@@ -13,5 +13,10 @@ export const actions = {
   >(key: K) {
     store.patchParameters({ [key]: !store.state.parameters[key] });
   },
+  toggleOsc2Volume() {
+    store.patchParameters({
+      osc2Volume: store.state.parameters.osc2Volume === 0 ? 1 : 0,
+    });
+  },
   randomizeParameters() {},
 };

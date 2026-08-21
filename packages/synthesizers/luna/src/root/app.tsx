@@ -11,6 +11,7 @@ import { Slider } from "@/components/slider";
 import { Knob } from "@/components/knob";
 import { ComponentChildren } from "preact";
 import { cz } from "@/common/css-realm";
+import { LedIndicator } from "@/components/led-indicator";
 
 const octaveShiftOptions = createPlainSelectorOptions([-2, -1, 0, 1, 2]);
 
@@ -101,21 +102,24 @@ const SectionFrame = ({
   header,
   children,
   onHeaderClick,
+  headerInnerContext,
 }: {
   header: string;
   children: ComponentChildren;
   onHeaderClick?: () => void;
+  headerInnerContext?: ComponentChildren;
 }) => {
   return (
     <div class="flex-v gap-5">
       <div
         class={cz(
-          "flex-c text-xl bg-#79c text-white font-bold py-1",
+          "flex-c text-xl bg-#79c text-white font-bold py-1 relative",
           onHeaderClick && "cursor-pointer",
         )}
         onClick={onHeaderClick}
       >
         {header}
+        {headerInnerContext}
       </div>
       <div class="flex-c gap-4">{children}</div>
     </div>
@@ -149,7 +153,17 @@ export const App = () => {
             />
             <ParameterKnob label="DET" paramKey="oscDetune" />
           </SectionFrame>
-          <SectionFrame header="OSC2">
+          <SectionFrame
+            header="OSC2"
+            headerInnerContext={
+              <div class="absolute right-0 top-0 h-full flex-c mr-1.5">
+                <LedIndicator
+                  active={parameters.osc2Volume > 0}
+                  onClick={actions.toggleOsc2Volume}
+                />
+              </div>
+            }
+          >
             <ParameterKnob
               label="WAVE2"
               paramKey="osc2Wave"
