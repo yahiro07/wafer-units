@@ -44,14 +44,22 @@ function isSineWave(wave: OscWave): boolean {
   return Math.round(wave) === OscWave.Sine;
 }
 
-function createNoiseSource(
-  audioContext: AudioContext,
-  buffer: AudioBuffer,
-): AudioBufferSourceNode {
-  const source = audioContext.createBufferSource();
-  source.buffer = buffer;
-  source.loop = true;
-  return source;
+function stopAudioSource(
+  source: OscillatorNode | AudioBufferSourceNode,
+  time?: number,
+) {
+  source.onended = () => {
+    source.disconnect();
+  };
+  try {
+    if (time === undefined) {
+      source.stop();
+    } else {
+      source.stop(time);
+    }
+  } catch {
+    source.disconnect();
+  }
 }
 
 export function resolveAttackAndPunch(parameters: SynthParameters): {
@@ -114,14 +122,9 @@ export function createPolyVoice(
   noiseBuffer: AudioBuffer,
   pitchMod: AudioNode,
 ): PolyVoice {
-  const osc1 = audioContext.createOscillator();
-  const osc2 = audioContext.createOscillator();
-  const noise1 = createNoiseSource(audioContext, noiseBuffer);
-  const noise2 = createNoiseSource(audioContext, noiseBuffer);
   const superSaw = createSuperSawOscillator(audioContext);
   const osc1Gain = audioContext.createGain();
   const osc2Gain = audioContext.createGain();
-  const noise1Gain = audioContext.createGain();
   const noise2Gain = audioContext.createGain();
   const oscMix = audioContext.createGain();
   const amp = audioContext.createGain();
@@ -131,13 +134,8 @@ export function createPolyVoice(
   const punchEnv = audioContext.createConstantSource();
   const pitchEg = audioContext.createConstantSource();
 
-  osc1.type = "sawtooth";
-  osc2.type = "sawtooth";
-  osc1.frequency.value = 440;
-  osc2.frequency.value = 440;
   osc1Gain.gain.value = 1;
   osc2Gain.gain.value = 0;
-  noise1Gain.gain.value = 0;
   noise2Gain.gain.value = 0;
   oscMix.gain.value = 1;
   amp.gain.value = 0;
@@ -147,13 +145,8 @@ export function createPolyVoice(
   punchEnv.offset.value = 0;
   pitchEg.offset.value = 0;
 
-  osc1.connect(osc1Gain);
-  osc2.connect(osc2Gain);
-  noise1.connect(noise1Gain);
-  noise2.connect(noise2Gain);
   osc1Gain.connect(oscMix);
   osc2Gain.connect(oscMix);
-  noise1Gain.connect(oscMix);
   noise2Gain.connect(oscMix);
   superSaw.outputNode.connect(oscMix);
   oscMix.connect(amp);
@@ -163,17 +156,9 @@ export function createPolyVoice(
   envelope.connect(amp.gain);
   punchEnv.connect(punchAmount);
   punchAmount.connect(punchGain.gain);
-  pitchMod.connect(osc1.detune);
-  pitchMod.connect(osc2.detune);
   superSaw.connectPitchMod(pitchMod);
-  pitchEg.connect(osc1.detune);
-  pitchEg.connect(osc2.detune);
   superSaw.connectPitchMod(pitchEg);
 
-  osc1.start();
-  osc2.start();
-  noise1.start();
-  noise2.start();
   envelope.start();
   punchEnv.start();
   pitchEg.start();
@@ -189,7 +174,208 @@ export function createPolyVoice(
     releaseSec: 0,
   });
 
+  let osc1: OscillatorNode | null = null;
+  let osc2: OscillatorNode | null = null;
+  let noise2: AudioBufferSourceNode | null = null;
+  let playing = false;
   let superSawRunning = false;
+  let pitchedNote = 69;
+  let sourcesStopAt: number | null = null;
+
+  function bindPitchMods(osc: OscillatorNode) {
+    pitchMod.connect(osc.detune);
+    pitchEg.connect(osc.detune);
+  }
+
+  function stopOsc1(time?: number) {
+    if (!osc1) return;
+    stopAudioSource(osc1, time);
+    osc1 = null;
+  }
+
+  function stopOsc2(time?: number) {
+    if (!osc2) return;
+    stopAudioSource(osc2, time);
+    osc2 = null;
+  }
+
+  function stopNoise2(time?: number) {
+    if (!noise2) return;
+    stopAudioSource(noise2, time);
+    noise2 = null;
+  }
+
+  function stopSuperSaw(time?: number) {
+    if (!superSawRunning) return;
+    superSaw.setEnabled(false, time ?? audioContext.currentTime);
+    superSawRunning = false;
+  }
+
+  function stopVoiceSources(time?: number) {
+    stopOsc1(time);
+    stopOsc2(time);
+    stopNoise2(time);
+    stopSuperSaw(time);
+  }
+
+  function startOsc1(
+    type: OscillatorType,
+    frequencyHz: number,
+    detuneCents: number,
+    time: number,
+  ) {
+    const osc = audioContext.createOscillator();
+    osc.type = type;
+    osc.frequency.setValueAtTime(frequencyHz, time);
+    osc.detune.setValueAtTime(detuneCents, time);
+    osc.connect(osc1Gain);
+    bindPitchMods(osc);
+    osc.start(time);
+    if (sourcesStopAt !== null) {
+      osc.stop(sourcesStopAt);
+    }
+    osc1 = osc;
+  }
+
+  function startOsc2(
+    type: OscillatorType,
+    frequencyHz: number,
+    detuneCents: number,
+    time: number,
+  ) {
+    const osc = audioContext.createOscillator();
+    osc.type = type;
+    osc.frequency.setValueAtTime(frequencyHz, time);
+    osc.detune.setValueAtTime(detuneCents, time);
+    osc.connect(osc2Gain);
+    bindPitchMods(osc);
+    osc.start(time);
+    if (sourcesStopAt !== null) {
+      osc.stop(sourcesStopAt);
+    }
+    osc2 = osc;
+  }
+
+  function startNoise2(time: number) {
+    const source = audioContext.createBufferSource();
+    source.buffer = noiseBuffer;
+    source.loop = true;
+    source.connect(noise2Gain);
+    source.start(time);
+    if (sourcesStopAt !== null) {
+      source.stop(sourcesStopAt);
+    }
+    noise2 = source;
+  }
+
+  function applyPitchToSources(
+    noteNumber: number,
+    parameters: SynthParameters,
+    time: number,
+  ) {
+    pitchedNote = noteNumber;
+    const { osc1Hz, osc2Hz, detuneCents } = getVoicePitches(
+      noteNumber,
+      parameters,
+    );
+    if (isSuperSawWave(parameters.osc1Wave)) {
+      superSaw.setPitch(osc1Hz, parameters.oscDetune, time);
+    } else if (osc1) {
+      osc1.frequency.setValueAtTime(osc1Hz, time);
+      osc1.detune.setValueAtTime(-detuneCents, time);
+    }
+    if (osc2) {
+      osc2.frequency.setValueAtTime(osc2Hz, time);
+      osc2.detune.setValueAtTime(detuneCents, time);
+    }
+  }
+
+  function applyMixGains(
+    parameters: SynthParameters,
+    time: number,
+  ): {
+    osc1IsSuperSaw: boolean;
+    osc2IsNoise: boolean;
+    osc2Active: boolean;
+    osc1Level: number;
+    osc2Level: number;
+  } {
+    const osc1IsSuperSaw = isSuperSawWave(parameters.osc1Wave);
+    const osc2IsNoise = isNoiseWave(parameters.osc2Wave);
+    const osc2Raw = clamp01(parameters.osc2Volume);
+    const osc2Active = osc2Raw > 0;
+    const oscScale = 1 / (1 + osc2Raw);
+    const osc1Level = oscScale;
+    const osc2Level = osc2Raw * oscScale;
+
+    osc1Gain.gain.setValueAtTime(osc1IsSuperSaw ? 0 : osc1Level, time);
+    osc2Gain.gain.setValueAtTime(
+      osc2Active && !osc2IsNoise ? osc2Level : 0,
+      time,
+    );
+    noise2Gain.gain.setValueAtTime(
+      osc2Active && osc2IsNoise ? osc2Level : 0,
+      time,
+    );
+    return { osc1IsSuperSaw, osc2IsNoise, osc2Active, osc1Level, osc2Level };
+  }
+
+  function ensureSources(parameters: SynthParameters, time: number) {
+    const { osc1Hz, osc2Hz, detuneCents } = getVoicePitches(
+      voice.noteNumber ?? pitchedNote,
+      parameters,
+    );
+    const { osc1IsSuperSaw, osc2IsNoise, osc2Active, osc1Level } =
+      applyMixGains(parameters, time);
+
+    if (osc1IsSuperSaw) {
+      stopOsc1(time);
+      if (!superSawRunning) {
+        superSaw.retrigger(
+          osc1Hz,
+          parameters.oscDetune,
+          time,
+          shouldRandomizeSuperSawPhase(parameters),
+        );
+        superSawRunning = true;
+      }
+      superSaw.setEnabled(true, time, osc1Level);
+    } else {
+      stopSuperSaw(time);
+      if (!osc1) {
+        startOsc1(
+          waveToOscillatorType(parameters.osc1Wave),
+          osc1Hz,
+          -detuneCents,
+          time,
+        );
+      } else {
+        osc1.type = waveToOscillatorType(parameters.osc1Wave);
+      }
+    }
+
+    if (osc2Active && !osc2IsNoise) {
+      stopNoise2(time);
+      if (!osc2) {
+        startOsc2(
+          waveToOscillatorType(parameters.osc2Wave),
+          osc2Hz,
+          detuneCents,
+          time,
+        );
+      } else {
+        osc2.type = waveToOscillatorType(parameters.osc2Wave);
+      }
+    } else if (osc2Active && osc2IsNoise) {
+      stopOsc2(time);
+      if (!noise2) {
+        startNoise2(time);
+      }
+    } else {
+      stopOsc2(time);
+      stopNoise2(time);
+    }
+  }
 
   function triggerPitchEg(parameters: SynthParameters, time: number) {
     pitchEg.offset.cancelScheduledValues(time);
@@ -211,57 +397,16 @@ export function createPolyVoice(
     noteNumber: null,
     order: 0,
     envelopeNode: envelope,
-    applyMix(parameters, time, sounding) {
-      const osc1IsSuperSaw = isSuperSawWave(parameters.osc1Wave);
-      const osc2IsNoise = isNoiseWave(parameters.osc2Wave);
-      const osc2Raw = clamp01(parameters.osc2Volume);
-      const oscScale = 1 / (1 + osc2Raw);
-      const osc1Level = oscScale;
-      const osc2Level = osc2Raw * oscScale;
-      const wantSuperSaw = sounding && osc1IsSuperSaw;
-
-      osc1Gain.gain.setValueAtTime(osc1IsSuperSaw ? 0 : osc1Level, time);
-      noise1Gain.gain.setValueAtTime(0, time);
-      osc2Gain.gain.setValueAtTime(osc2IsNoise ? 0 : osc2Level, time);
-      noise2Gain.gain.setValueAtTime(osc2IsNoise ? osc2Level : 0, time);
-
-      if (wantSuperSaw && !superSawRunning) {
-        const { osc1Hz } = getVoicePitches(voice.noteNumber ?? 69, parameters);
-        superSaw.retrigger(
-          osc1Hz,
-          parameters.oscDetune,
-          time,
-          shouldRandomizeSuperSawPhase(parameters),
-        );
-        superSawRunning = true;
+    applyMix(parameters, time) {
+      if (!playing) {
+        applyMixGains(parameters, time);
+        return;
       }
-      superSaw.setEnabled(wantSuperSaw, time, osc1Level);
-      if (!wantSuperSaw) {
-        superSawRunning = false;
-      }
-
-      if (!osc1IsSuperSaw) {
-        osc1.type = waveToOscillatorType(parameters.osc1Wave);
-      }
-      if (!osc2IsNoise) {
-        osc2.type = waveToOscillatorType(parameters.osc2Wave);
-      }
+      ensureSources(parameters, time);
     },
     applyPitch(noteNumber, parameters, time) {
-      const { osc1Hz, osc2Hz, detuneCents } = getVoicePitches(
-        noteNumber,
-        parameters,
-      );
-      osc1.frequency.setValueAtTime(osc1Hz, time);
-      osc2.frequency.setValueAtTime(osc2Hz, time);
-      if (isSuperSawWave(parameters.osc1Wave)) {
-        osc1.detune.setValueAtTime(0, time);
-        osc2.detune.setValueAtTime(0, time);
-        superSaw.setPitch(osc1Hz, parameters.oscDetune, time);
-      } else {
-        osc1.detune.setValueAtTime(-detuneCents, time);
-        osc2.detune.setValueAtTime(detuneCents, time);
-      }
+      if (!playing) return;
+      applyPitchToSources(noteNumber, parameters, time);
     },
     applyEnvelopeParameters(parameters) {
       const osc2Sounding = clamp01(parameters.osc2Volume) > 0;
@@ -294,29 +439,33 @@ export function createPolyVoice(
       }
     },
     triggerAttack(parameters, time) {
-      if (isSuperSawWave(parameters.osc1Wave)) {
-        const { osc1Hz } = getVoicePitches(voice.noteNumber ?? 69, parameters);
-        superSaw.retrigger(
-          osc1Hz,
-          parameters.oscDetune,
-          time,
-          shouldRandomizeSuperSawPhase(parameters),
-        );
-        superSawRunning = true;
-      }
+      sourcesStopAt = null;
+      stopVoiceSources(time);
+      playing = true;
+      ensureSources(parameters, time);
+      applyPitchToSources(voice.noteNumber ?? pitchedNote, parameters, time);
       ampEnvelope.triggerAttack(time);
       punchEnvelope.triggerAttack(time);
       triggerPitchEg(parameters, time);
     },
     triggerRelease(time) {
       ampEnvelope.triggerRelease(time);
+      const stopAt = time + ampEnvelope.getReleaseDuration();
+      sourcesStopAt = stopAt;
+      playing = false;
+      if (osc1) stopAudioSource(osc1, stopAt);
+      if (osc2) stopAudioSource(osc2, stopAt);
+      if (noise2) stopAudioSource(noise2, stopAt);
+      if (superSawRunning) {
+        superSaw.setEnabled(false, stopAt);
+        superSawRunning = false;
+      }
     },
     stopSources() {
+      sourcesStopAt = null;
+      playing = false;
+      stopVoiceSources();
       try {
-        osc1.stop();
-        osc2.stop();
-        noise1.stop();
-        noise2.stop();
         envelope.stop();
         punchEnv.stop();
         pitchEg.stop();
@@ -325,13 +474,9 @@ export function createPolyVoice(
       }
     },
     disconnect() {
-      osc1.disconnect();
-      osc2.disconnect();
-      noise1.disconnect();
-      noise2.disconnect();
+      stopVoiceSources();
       osc1Gain.disconnect();
       osc2Gain.disconnect();
-      noise1Gain.disconnect();
       noise2Gain.disconnect();
       oscMix.disconnect();
       amp.disconnect();

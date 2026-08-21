@@ -54,6 +54,10 @@ export function createEnvelopeGenerator(
         time + decayTime,
       );
     },
+    getReleaseDuration() {
+      const jumpTime = egParams.hasNaiveWave ? 0.02 : 0.005;
+      return jumpTime + egParams.release * configs.releaseSec;
+    },
     triggerRelease(time: number) {
       const jumpTime = egParams.hasNaiveWave ? 0.02 : 0.005;
       const releaseTime = jumpTime + egParams.release * configs.releaseSec;

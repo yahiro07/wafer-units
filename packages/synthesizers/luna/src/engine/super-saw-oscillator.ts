@@ -21,6 +21,7 @@ export function createSuperSawOscillator(audioContext: AudioContext) {
   const gains: GainNode[] = [];
   const panners: Array<StereoPannerNode | undefined> = [];
   let oscillators: OscillatorNode[] = [];
+  let stopping: OscillatorNode[] = [];
   const pitchMods: AudioNode[] = [];
 
   for (let i = 0; i < VOICE_COUNT; i += 1) {
@@ -41,8 +42,9 @@ export function createSuperSawOscillator(audioContext: AudioContext) {
   }
 
   function stopOscillators(time?: number) {
-    const previous = oscillators;
+    const previous = oscillators.concat(stopping);
     oscillators = [];
+    stopping = [];
     for (const osc of previous) {
       osc.onended = () => {
         osc.disconnect();
@@ -52,6 +54,7 @@ export function createSuperSawOscillator(audioContext: AudioContext) {
           osc.stop();
         } else {
           osc.stop(time);
+          stopping.push(osc);
         }
       } catch {
         osc.disconnect();
@@ -73,10 +76,12 @@ export function createSuperSawOscillator(audioContext: AudioContext) {
   return {
     outputNode,
     setEnabled(enabled: boolean, time: number, mixLevel = 1) {
-      outputNode.gain.setValueAtTime(enabled ? mixLevel : 0, time);
-      if (!enabled) {
-        stopOscillators(time);
+      if (enabled) {
+        outputNode.gain.cancelScheduledValues(time);
+        outputNode.gain.setValueAtTime(mixLevel, time);
+        return;
       }
+      stopOscillators(time);
     },
     setPitch(frequencyHz: number, unisonDetune: number, time: number) {
       applyPitch(frequencyHz, unisonDetune, time);
@@ -95,6 +100,7 @@ export function createSuperSawOscillator(audioContext: AudioContext) {
       time: number,
       randomizePhase = true,
     ) {
+      outputNode.gain.cancelScheduledValues(time);
       stopOscillators(time);
       for (let i = 0; i < VOICE_COUNT; i += 1) {
         const osc = audioContext.createOscillator();
