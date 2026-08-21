@@ -1,7 +1,7 @@
 import { ButtonsSelector } from "@/components/buttons-selector";
 import { IconButton } from "@/components/icon-button";
 import { Icons } from "@/components/icons";
-import { LabeledBox, SideLabelBox } from "@/components/labeled-controls";
+import { LabeledBox, TopLeftLabelBox } from "@/components/labeled-controls";
 import { actions } from "@/root/actions";
 import { LinearParameterKeys, numOscWaveTypes } from "@/defs/definitions";
 import { useSetupDrivers } from "@/root/drivers";
@@ -19,14 +19,13 @@ const OctaveShiftContainer = () => {
     parameters: { voiceOctave },
   } = store.useSnapshot();
   return (
-    <SideLabelBox label="OCTAVE">
+    <TopLeftLabelBox label="OCTAVE SHIFT">
       <ButtonsSelector
         options={octaveShiftOptions}
         value={voiceOctave}
         onChange={(v) => actions.setParameter("voiceOctave", v)}
-        size="narrow"
       />
-    </SideLabelBox>
+    </TopLeftLabelBox>
   );
 };
 
@@ -128,11 +127,16 @@ export const App = () => {
   const { parameters } = store.useSnapshot();
   return (
     <div class="flex-v gap-4 bg-clPageBg text-clPageText p-8">
-      <div class="flex-ha gap-3 justify-between">
-        <h1 class="text-2xl font-bold">LUNA</h1>
-        <RandomizeButtonContainer />
-        <OctaveShiftContainer />
-        <ParameterKnob label="VOL" paramKey="globalVolume" />
+      <div class="flex-h gap-3 justify-between">
+        <div class="flex-vc font-bold ">
+          <h1 class="text-6xl">LUNA</h1>
+          <div class="text-[22px] mt-[-8px]">SYNTHESIZER</div>
+        </div>
+        {/* <RandomizeButtonContainer /> */}
+        <div class="mt-2">
+          <OctaveShiftContainer />
+        </div>
+        <ParameterKnob label="MASTER" paramKey="globalVolume" />
       </div>
       <div class="flex-h gap-8">
         <div class="flex-h gap-6">
@@ -168,7 +172,7 @@ export const App = () => {
             <ParameterSlider label="Q" paramKey="hpfQ" />
           </SectionFrame>
           <SectionFrame
-            header="LP12†"
+            header={parameters.lpfSteep ? "LP12†" : "LP24†"}
             onHeaderClick={() => actions.toggleBoolParameter("lpfSteep")}
           >
             <ParameterKnob label="CUTOFF" paramKey="lpfCutoff" />

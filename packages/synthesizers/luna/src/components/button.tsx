@@ -28,7 +28,6 @@ export const Button = ({
 const styles = {
   base: cz(
     "bg-clButtonBg rounded-[2px] flex-c cursor-pointer hover:opacity-90",
-    "text-white",
     "[&.active]:(bg-clPrimary text-black)",
   ),
 };

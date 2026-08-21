@@ -8,7 +8,6 @@ type Props<T extends string | number> = {
   options: SelectorOption<T>[];
   value: T;
   onChange: (value: T) => void;
-  size: "narrow" | "wide";
 };
 
 export const ButtonsSelector = <T extends string | number>({
@@ -16,10 +15,9 @@ export const ButtonsSelector = <T extends string | number>({
   options,
   value,
   onChange,
-  size,
 }: Props<T>) => {
   return (
-    <div class={cz(style, className, `--${size}`)}>
+    <div class={cz(style, className)}>
       {options.map((opt) => (
         <button
           key={opt.value}
@@ -34,11 +32,14 @@ export const ButtonsSelector = <T extends string | number>({
 };
 const style = css({
   ...flexH(),
-  background: "#222",
+  background: "#444",
   borderRadius: npx(2),
   padding: npx(1),
   "> button": {
+    width: npx(45),
+    height: npx(40),
     border: "inset 1px #4448",
+    fontWeight: 500,
     background: uiColors.clButtonBg,
     color: "#fff",
     borderRadius: npx(2),
@@ -46,15 +47,7 @@ const style = css({
 
     "&.--active": {
       background: uiColors.clPrimary,
-      color: "#000",
+      // color: "#000",
     },
-  },
-  "&.--narrow > button": {
-    width: npx(40),
-    height: npx(32),
-  },
-  "&.--wide > button": {
-    width: npx(48),
-    height: npx(34),
   },
 });

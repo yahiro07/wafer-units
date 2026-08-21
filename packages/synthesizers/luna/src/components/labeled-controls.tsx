@@ -43,6 +43,21 @@ export const SideLabelBox = ({
   );
 };
 
+export const TopLeftLabelBox = ({
+  label,
+  children,
+}: {
+  label: string;
+  children: ComponentChildren;
+}) => {
+  return (
+    <div class="flex-v gap-1">
+      <div class="text-xl font-bold">{label}</div>
+      <div>{children}</div>
+    </div>
+  );
+};
+
 // export const LabeledKnob = ({
 //   label,
 //   value,
