@@ -1,6 +1,7 @@
 import { createChorus2 } from "@/core/chorus2";
 import { SynthParameters } from "@/core/definitions";
-import { createReverb2 } from "@/core/reverb2";
+import { createReverb } from "@/core/reverb";
+import { createSoftClipper } from "@/core/soft-clipper";
 import { createVoice, Voice } from "@/core/voice";
 
 export type ISynthesizer = {
@@ -19,12 +20,14 @@ export function createSynthesizer(
 
   const voicesGain = audioContext.createGain();
   const chorus = createChorus2(audioContext);
-  const reverb = createReverb2(audioContext);
+  const reverb = createReverb(audioContext);
+  const softClipper = createSoftClipper(audioContext);
   const masterGain = audioContext.createGain();
 
   voicesGain.connect(chorus.inputNode);
   chorus.outputNode.connect(reverb.inputNode);
-  reverb.outputNode.connect(masterGain);
+  reverb.outputNode.connect(softClipper.inputNode);
+  softClipper.outputNode.connect(masterGain);
   masterGain.connect(outputNode);
 
   const state: {
@@ -76,6 +79,7 @@ export function createSynthesizer(
     cleanup() {
       chorus.cleanup();
       reverb.cleanup();
+      softClipper.cleanup();
       masterGain.disconnect();
       voicesGain.disconnect();
     },
