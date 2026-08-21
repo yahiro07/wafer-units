@@ -55,11 +55,12 @@ export function createVoice(
   if (typeof wave === "string") {
     osc1.type = wave as OscillatorType;
     osc2.type = wave as OscillatorType;
+    sub.type = wave as OscillatorType;
   } else {
     osc1.setPeriodicWave(wave);
     osc2.setPeriodicWave(wave);
+    sub.setPeriodicWave(wave);
   }
-  sub.type = "triangle";
 
   // Detune amount
   // 0~1 maps to 0 ~ 50 cents max
