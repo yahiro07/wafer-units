@@ -212,7 +212,7 @@ export const App = () => {
             <ParameterSlider label="Q" paramKey="hpfQ" />
           </SectionFrame>
           <SectionFrame
-            header={parameters.lpfSteep ? "LP12†" : "LP24†"}
+            header={parameters.lpfSteep ? "LP24†" : "LP12†"}
             onHeaderClick={() => actions.toggleBoolParameter("lpfSteep")}
           >
             <ParameterKnob label="CUTOFF" paramKey="lpfCutoff" />
@@ -243,7 +243,7 @@ export const App = () => {
         <SectionFrame header="MODULATION">
           <div class="flex-h gap-6">
             <ParameterKnob
-              label={parameters.pitchLfoAltPitchEg ? "P-LFO†" : "P-DOWN†"}
+              label={parameters.pitchLfoAltPitchEg ? "P-DOWN†" : "P-LFO†"}
               onLabelClick={() =>
                 actions.toggleBoolParameter("pitchLfoAltPitchEg")
               }
