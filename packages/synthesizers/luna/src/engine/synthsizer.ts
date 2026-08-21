@@ -39,7 +39,7 @@ export function createSynthesizerEngine(
   }
 
   const effectChain = createEffectChain(audioContext, destination);
-  mix.gain.value = 1;
+  mix.gain.value = 1 / Math.sqrt(MAX_POLY_VOICES);
   mix.connect(effectChain.input);
 
   const state: {

@@ -214,10 +214,13 @@ export function createPolyVoice(
     applyMix(parameters, time, sounding) {
       const osc1IsSuperSaw = isSuperSawWave(parameters.osc1Wave);
       const osc2IsNoise = isNoiseWave(parameters.osc2Wave);
-      const osc2Level = clamp01(parameters.osc2Volume);
+      const osc2Raw = clamp01(parameters.osc2Volume);
+      const oscScale = 1 / (1 + osc2Raw);
+      const osc1Level = oscScale;
+      const osc2Level = osc2Raw * oscScale;
       const wantSuperSaw = sounding && osc1IsSuperSaw;
 
-      osc1Gain.gain.setValueAtTime(osc1IsSuperSaw ? 0 : 1, time);
+      osc1Gain.gain.setValueAtTime(osc1IsSuperSaw ? 0 : osc1Level, time);
       noise1Gain.gain.setValueAtTime(0, time);
       osc2Gain.gain.setValueAtTime(osc2IsNoise ? 0 : osc2Level, time);
       noise2Gain.gain.setValueAtTime(osc2IsNoise ? osc2Level : 0, time);
@@ -232,7 +235,7 @@ export function createPolyVoice(
         );
         superSawRunning = true;
       }
-      superSaw.setEnabled(wantSuperSaw, time);
+      superSaw.setEnabled(wantSuperSaw, time, osc1Level);
       if (!wantSuperSaw) {
         superSawRunning = false;
       }

@@ -72,8 +72,8 @@ export function createSuperSawOscillator(audioContext: AudioContext) {
 
   return {
     outputNode,
-    setEnabled(enabled: boolean, time: number) {
-      outputNode.gain.setValueAtTime(enabled ? 1 : 0, time);
+    setEnabled(enabled: boolean, time: number, mixLevel = 1) {
+      outputNode.gain.setValueAtTime(enabled ? mixLevel : 0, time);
       if (!enabled) {
         stopOscillators(time);
       }
