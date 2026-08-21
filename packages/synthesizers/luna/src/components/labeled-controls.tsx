@@ -12,7 +12,7 @@ export const LabeledBox = ({
   return (
     <div class="flex-vc">
       <div>{children}</div>
-      <div class="text-sm">{label}</div>
+      <div class="text-md font-bold">{label}</div>
     </div>
   );
 };

@@ -97,7 +97,7 @@ export const App = () => {
   useSetupDrivers();
   const { parameters } = store.useSnapshot();
   return (
-    <div class="flex-v gap-4 bg-clPageBg p-8 text-white">
+    <div class="flex-v gap-4 bg-clPageBg text-clPageText p-8">
       <div class="flex-ha gap-3 justify-between">
         <h1 class="text-2xl font-bold">LUNA</h1>
         <RandomizeButtonContainer />

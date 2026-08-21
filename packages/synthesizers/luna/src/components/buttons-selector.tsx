@@ -1,5 +1,5 @@
 import { css, cz } from "@/common/css-realm";
-import { fontSpecs, uiColors } from "@/components/ui-theme";
+import { uiColors } from "@/common/ui-theme";
 import { SelectorOption } from "@/utils/selector-option";
 import { flexH, npx } from "@/utils/utility-styles";
 
@@ -37,7 +37,6 @@ const style = css({
   background: "#222",
   borderRadius: npx(2),
   padding: npx(1),
-  fontFamily: fontSpecs.mono,
   "> button": {
     border: "inset 1px #4448",
     background: uiColors.clButtonBg,

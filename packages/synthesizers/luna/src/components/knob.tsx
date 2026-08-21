@@ -1,5 +1,5 @@
 import { css } from "@/common/css-realm";
-import { uiColors } from "@/components/ui-theme";
+import { uiColors } from "@/common/ui-theme";
 import { KnobFrame } from "@/components/headless/knob-frame";
 import { linearInterpolate } from "@/utils/helpers";
 import { absoluteFull, flexVA } from "@/utils/utility-styles";
@@ -53,7 +53,7 @@ const styles = css({
     width: "100%",
     height: "100%",
     borderRadius: "50%",
-    background: "#aaa",
+    background: "#eee",
   },
   "> .tick-plane": {
     ...absoluteFull(),
