@@ -1,11 +1,7 @@
-function createImpulse(
-  audioContext: AudioContext,
-  duration: number,
-  decayTime: number,
-) {
+function createImpulse(audioContext: AudioContext, decayTime: number) {
   const { sampleRate } = audioContext;
-  const length = duration * sampleRate;
-  const impulse = audioContext.createBuffer(duration, length, sampleRate);
+  const length = Math.ceil(decayTime * sampleRate);
+  const impulse = audioContext.createBuffer(2, length, sampleRate);
   const impulseL = impulse.getChannelData(0);
   const impulseR = impulse.getChannelData(1);
   for (let i = 0; i < length; i++) {
@@ -16,7 +12,7 @@ function createImpulse(
 }
 
 export function createReverberator(audioContext: AudioContext) {
-  const impulse = createImpulse(audioContext, 2, 2);
+  const impulse = createImpulse(audioContext, 1);
   const inputNode = audioContext.createGain();
   inputNode.gain.value = 1;
 
@@ -40,7 +36,7 @@ export function createReverberator(audioContext: AudioContext) {
   function setLevel(value: number) {
     if (level !== value) {
       level = value;
-      dryGain.gain.value = 1 - level;
+      dryGain.gain.value = 1;
       wetGain.gain.value = level;
     }
   }
