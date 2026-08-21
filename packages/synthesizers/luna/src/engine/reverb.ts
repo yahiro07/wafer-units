@@ -68,6 +68,11 @@ function createReverbWetChain(audioContext: AudioContext) {
   };
 }
 
+const impulseResponseCache = new WeakMap<
+  AudioContext,
+  Map<number, AudioBuffer>
+>();
+
 function createImpulseResponse(
   audioContext: AudioContext,
   decaySec: number,
@@ -84,6 +89,26 @@ function createImpulseResponse(
   return buffer;
 }
 
+function getImpulseResponse(
+  audioContext: AudioContext,
+  decayKey: number,
+): AudioBuffer {
+  let byKey = impulseResponseCache.get(audioContext);
+  if (!byKey) {
+    byKey = new Map();
+    impulseResponseCache.set(audioContext, byKey);
+  }
+  let buffer = byKey.get(decayKey);
+  if (!buffer) {
+    buffer = createImpulseResponse(
+      audioContext,
+      mapReverbDecaySec(decayKey / DECAY_STEPS),
+    );
+    byKey.set(decayKey, buffer);
+  }
+  return buffer;
+}
+
 export function createReverb(audioContext: AudioContext) {
   const input = audioContext.createGain();
   const output = audioContext.createGain();
@@ -96,10 +121,7 @@ export function createReverb(audioContext: AudioContext) {
   wetGain.gain.value = 0;
 
   let decayKey = Math.round(0.5 * DECAY_STEPS);
-  convolver.buffer = createImpulseResponse(
-    audioContext,
-    mapReverbDecaySec(0.5),
-  );
+  convolver.buffer = getImpulseResponse(audioContext, decayKey);
 
   input.connect(dryGain);
   input.connect(convolver);
@@ -116,9 +138,7 @@ export function createReverb(audioContext: AudioContext) {
       const nextKey = Math.round(Math.min(1, Math.max(0, decay)) * DECAY_STEPS);
       if (nextKey !== decayKey) {
         decayKey = nextKey;
-        const decaySec = mapReverbDecaySec(decay);
-        console.log(`Reverb decay changed, ${decayKey},${decay}, ${decaySec}`);
-        convolver.buffer = createImpulseResponse(audioContext, decaySec);
+        convolver.buffer = getImpulseResponse(audioContext, decayKey);
       }
       wetChain.dampLpf.frequency.setValueAtTime(mapDampLpfHz(damp), time);
       wetGain.gain.setValueAtTime(mix, time);
