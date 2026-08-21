@@ -68,7 +68,7 @@ export const defaultSynthParameters: SynthParameters = {
   filterLfoDepth: 0,
   reverbDecay: 0.5,
   reverbMix: 0,
-  reverbDamp: 1,
+  reverbDamp: 0.5,
   chorusLevel: 0,
   presence: 0,
 };
