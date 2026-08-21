@@ -2,7 +2,7 @@ const VOICE_COUNT = 7;
 const DETUNE_RATIOS = [0.0, 0.0146, 0.0381, 0.0883, -0.0146, -0.0381, -0.0883];
 const PAN_DIRECTIONS = [0.0, 0.5, 0.75, 1.0, -0.5, -0.75, -1.0];
 const UNISON_SPREAD = 1;
-const VOICE_GAIN = (1 / Math.sqrt(7)) * 1.5;
+const VOICE_GAIN = (1 / Math.sqrt(7)) * 1.25;
 const PHASE_RANDOM_MAX_SEC = 0.003;
 
 function clamp01(value: number): number {
