@@ -168,7 +168,7 @@ export const App = () => {
         <div class="self-start mt-1.5px">
           <OctaveShiftContainer />
         </div>
-        <ParameterKnob label="MASTER" paramKey="globalVolume" />
+        <ParameterKnob label="VOLUME" paramKey="globalVolume" />
       </div>
       <div class="flex-h gap-8">
         <div class="flex-h gap-6">

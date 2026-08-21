@@ -36,6 +36,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
     reverbDamp: 0.9,
     chorusLevel: 0,
     presence: 0,
+    globalVolume: 0.5,
   },
   bass2: {
     voiceOctave: 0,
@@ -66,6 +67,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
     reverbDamp: 0.93,
     chorusLevel: 0.19,
     presence: 0,
+    globalVolume: 0.5,
   },
   bass3: {
     voiceOctave: 0,
@@ -96,6 +98,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
     reverbDamp: 0.39,
     chorusLevel: 0,
     presence: 0.31,
+    globalVolume: 0.5,
   },
   bass4: {
     voiceOctave: -1,
@@ -126,6 +129,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
     reverbDamp: 0.18,
     chorusLevel: 0.41,
     presence: 0.81,
+    globalVolume: 0.5,
   },
   bass5: {
     voiceOctave: 0,
@@ -156,6 +160,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
     reverbDamp: 0.61,
     chorusLevel: 0.58,
     presence: 0,
+    globalVolume: 0.5,
   },
   brass1: {
     voiceOctave: 0,
@@ -186,6 +191,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
     reverbDamp: 0.22,
     chorusLevel: 0,
     presence: 0,
+    globalVolume: 0.5,
   },
   brass2: {
     voiceOctave: -1,
@@ -216,6 +222,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
     reverbDamp: 0.56,
     chorusLevel: 0.3,
     presence: 0.97,
+    globalVolume: 0.5,
   },
   cello: {
     voiceOctave: 0,
@@ -246,6 +253,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
     reverbDamp: 0.74,
     chorusLevel: 0.23,
     presence: 0.39,
+    globalVolume: 0.5,
   },
   clarinet: {
     voiceOctave: 0,
@@ -276,6 +284,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
     reverbDamp: 0.51,
     chorusLevel: 0,
     presence: 0.72,
+    globalVolume: 0.5,
   },
   piccolo: {
     voiceOctave: 0,
@@ -306,6 +315,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
     reverbDamp: 0.33,
     chorusLevel: 0,
     presence: 0.06,
+    globalVolume: 0.5,
   },
   steelBell: {
     voiceOctave: 1,
@@ -336,6 +346,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
     reverbDamp: 0.98,
     chorusLevel: 0,
     presence: 0,
+    globalVolume: 0.5,
   },
   bell: {
     voiceOctave: 0,
@@ -366,6 +377,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
     reverbDamp: 0.4,
     chorusLevel: 0,
     presence: 0.87,
+    globalVolume: 0.5,
   },
   elepi: {
     voiceOctave: 0,
@@ -396,6 +408,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
     reverbDamp: 0.5,
     chorusLevel: 0.54,
     presence: 0.46,
+    globalVolume: 0.5,
   },
   timpani: {
     voiceOctave: 0,
@@ -426,6 +439,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
     reverbDamp: 0.4,
     chorusLevel: 0.81,
     presence: 0,
+    globalVolume: 0.5,
   },
   keys1: {
     voiceOctave: 0,
@@ -456,6 +470,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
     reverbDamp: 0.86,
     chorusLevel: 0,
     presence: 0.15,
+    globalVolume: 0.5,
   },
   keys2: {
     voiceOctave: 0,
@@ -486,6 +501,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
     reverbDamp: 0.81,
     chorusLevel: 0.82,
     presence: 0,
+    globalVolume: 0.5,
   },
   keys3: {
     voiceOctave: 0,
@@ -516,6 +532,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
     reverbDamp: 0.12,
     chorusLevel: 0.66,
     presence: 0,
+    globalVolume: 0.5,
   },
   keys4: {
     voiceOctave: 0,
@@ -546,6 +563,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
     reverbDamp: 0.24,
     chorusLevel: 0.1,
     presence: 0,
+    globalVolume: 0.5,
   },
   lead1: {
     voiceOctave: 0,
@@ -576,6 +594,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
     reverbDamp: 0.61,
     chorusLevel: 0,
     presence: 0,
+    globalVolume: 0.5,
   },
   lead2: {
     voiceOctave: -1,
@@ -606,6 +625,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
     reverbDamp: 0.95,
     chorusLevel: 0.4,
     presence: 0.87,
+    globalVolume: 0.5,
   },
   lead3: {
     voiceOctave: -1,
@@ -636,6 +656,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
     reverbDamp: 0.53,
     chorusLevel: 0.22,
     presence: 0,
+    globalVolume: 0.5,
   },
   lead4: {
     voiceOctave: 0,
@@ -666,6 +687,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
     reverbDamp: 0.5,
     chorusLevel: 0.89,
     presence: 0.86,
+    globalVolume: 0.5,
   },
   lead5: {
     voiceOctave: 0,
@@ -696,6 +718,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
     reverbDamp: 0.48,
     chorusLevel: 0,
     presence: 0.94,
+    globalVolume: 0.5,
   },
   lead6: {
     voiceOctave: 0,
@@ -726,6 +749,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
     reverbDamp: 0.56,
     chorusLevel: 0,
     presence: 0,
+    globalVolume: 0.5,
   },
   sLead1: {
     voiceOctave: -1,
@@ -756,6 +780,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
     reverbDamp: 0.98,
     chorusLevel: 0.09,
     presence: 0.14,
+    globalVolume: 0.5,
   },
   sLead2: {
     voiceOctave: 0,
@@ -786,6 +811,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
     reverbDamp: 0.51,
     chorusLevel: 0,
     presence: 0.97,
+    globalVolume: 0.5,
   },
   sLead3: {
     voiceOctave: 0,
@@ -816,6 +842,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
     reverbDamp: 0.21,
     chorusLevel: 0,
     presence: 0,
+    globalVolume: 0.5,
   },
   sLead4: {
     voiceOctave: 0,
@@ -846,6 +873,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
     reverbDamp: 0.7,
     chorusLevel: 0.54,
     presence: 0,
+    globalVolume: 0.5,
   },
   pad1: {
     voiceOctave: 0,
@@ -876,6 +904,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
     reverbDamp: 0.1,
     chorusLevel: 0.28,
     presence: 0,
+    globalVolume: 0.5,
   },
   pad2: {
     voiceOctave: 0,
@@ -906,6 +935,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
     reverbDamp: 0.4,
     chorusLevel: 0.95,
     presence: 0,
+    globalVolume: 0.5,
   },
   pad3: {
     voiceOctave: 0,
@@ -936,6 +966,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
     reverbDamp: 0.38,
     chorusLevel: 0.87,
     presence: 0,
+    globalVolume: 0.5,
   },
   strings1: {
     voiceOctave: 0,
@@ -966,6 +997,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
     reverbDamp: 0.69,
     chorusLevel: 0.37,
     presence: 0.42,
+    globalVolume: 0.5,
   },
   strings2: {
     voiceOctave: 0,
@@ -996,6 +1028,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
     reverbDamp: 0.12,
     chorusLevel: 0.72,
     presence: 0.22,
+    globalVolume: 0.5,
   },
   strings3: {
     voiceOctave: -1,
@@ -1026,6 +1059,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
     reverbDamp: 0.89,
     chorusLevel: 0,
     presence: 0.7,
+    globalVolume: 0.5,
   },
   strings4: {
     voiceOctave: 0,
@@ -1056,6 +1090,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
     reverbDamp: 0.75,
     chorusLevel: 0,
     presence: 0.81,
+    globalVolume: 0.5,
   },
   strings5: {
     voiceOctave: 0,
@@ -1086,6 +1121,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
     reverbDamp: 0.73,
     chorusLevel: 0,
     presence: 0.26,
+    globalVolume: 0.5,
   },
   drone1: {
     voiceOctave: 0,
@@ -1116,6 +1152,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
     reverbDamp: 0.5,
     chorusLevel: 0,
     presence: 0.16,
+    globalVolume: 0.5,
   },
   drone2: {
     voiceOctave: -1,
@@ -1146,6 +1183,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
     reverbDamp: 0.24,
     chorusLevel: 0.03,
     presence: 0.71,
+    globalVolume: 0.5,
   },
   choir: {
     voiceOctave: 0,
@@ -1176,5 +1214,6 @@ export const allPresets: Record<string, SynthPresetParameters> = {
     reverbDamp: 0.61,
     chorusLevel: 0.98,
     presence: 0.26,
+    globalVolume: 0.5,
   },
 };

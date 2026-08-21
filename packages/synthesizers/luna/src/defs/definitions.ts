@@ -39,7 +39,7 @@ export type SynthParameters = {
   presence: number;
 };
 
-export type SynthPresetParameters = Omit<SynthParameters, "globalVolume">;
+export type SynthPresetParameters = SynthParameters;
 
 export const defaultSynthParameters: SynthParameters = {
   voiceOctave: 0,

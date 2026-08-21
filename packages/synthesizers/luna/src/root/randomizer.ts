@@ -56,5 +56,6 @@ export function createRandomParameters(): SynthPresetParameters {
     reverbDamp: randF(),
     chorusLevel: probably(0.4, 0, randF()),
     presence: probably(0.4, 0, randF()),
+    globalVolume: 0.5,
   };
 }
