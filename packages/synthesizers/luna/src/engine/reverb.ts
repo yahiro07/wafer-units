@@ -144,20 +144,32 @@ export function createReverb(audioContext: AudioContext) {
   return {
     input,
     output,
-    apply(decay: number, mix: number, damp: number, time: number) {
-      decay = invPower2(decay);
-      const nextKey = Math.round(Math.min(1, Math.max(0, decay)) * DECAY_STEPS);
-      const keyChanged = nextKey !== decayKey;
-      if (keyChanged) {
-        decayKey = nextKey;
+    apply(
+      args: { decay?: number; mix?: number; damp?: number },
+      time: number,
+    ) {
+      if (args.decay !== undefined) {
+        const decay = invPower2(args.decay);
+        const nextKey = Math.round(
+          Math.min(1, Math.max(0, decay)) * DECAY_STEPS,
+        );
+        if (nextKey !== decayKey) {
+          decayKey = nextKey;
+          if (wetEnabled) {
+            convolver.buffer = getImpulseResponse(audioContext, decayKey);
+          }
+        }
       }
-      const wasEnabled = wetEnabled;
-      setWetEnabled(mix > 0);
-      if (wetEnabled && wasEnabled && keyChanged) {
-        convolver.buffer = getImpulseResponse(audioContext, decayKey);
+      if (args.mix !== undefined) {
+        setWetEnabled(args.mix > 0);
+        wetGain.gain.setValueAtTime(args.mix, time);
       }
-      wetChain.dampLpf.frequency.setValueAtTime(mapDampLpfHz(damp), time);
-      wetGain.gain.setValueAtTime(mix, time);
+      if (args.damp !== undefined) {
+        wetChain.dampLpf.frequency.setValueAtTime(
+          mapDampLpfHz(args.damp),
+          time,
+        );
+      }
     },
     cleanup() {
       convolver.disconnect();

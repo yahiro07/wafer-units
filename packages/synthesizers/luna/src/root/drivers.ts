@@ -5,6 +5,7 @@ import { setupMidiKeyboardInput } from "@/utils/midi-keyboard-input";
 import { queryUnitInterface } from "wafer-host/unit-types";
 import { useEffect } from "preact/hooks";
 import { createSynthesizerEngine } from "@/engine/synthsizer";
+import { SynthParameters } from "@/defs/definitions";
 
 const unitInterface = queryUnitInterface("wafer-v01");
 const engine = createSynthesizerEngine(unitInterface);
@@ -41,9 +42,18 @@ function setupUnit() {
 }
 
 function setupSynchronization() {
+  let latestParameters: Partial<SynthParameters> = {};
   return store.subscribe(({ parameters }) => {
     if (parameters) {
-      engine.setParameters(parameters);
+      const changedAttrs: Partial<SynthParameters> = {};
+      for (const _key in parameters) {
+        const key = _key as keyof SynthParameters;
+        if (parameters[key] !== latestParameters[key]) {
+          changedAttrs[key] = parameters[key] as any;
+          latestParameters[key] = parameters[key] as any;
+        }
+      }
+      engine.affectParameters(changedAttrs);
     }
   }, true);
 }

@@ -44,6 +44,10 @@ function mapQ(value: number): number {
   return MIN_Q + clamp01(value) * (MAX_Q - MIN_Q);
 }
 
+function has(patch: Partial<SynthParameters>, key: keyof SynthParameters) {
+  return key in patch;
+}
+
 export function createEffectChain(
   audioContext: AudioContext,
   destination: AudioNode,
@@ -135,47 +139,97 @@ export function createEffectChain(
   filterLfo.output.connect(lpf1.detune);
   filterLfo.output.connect(lpf2.detune);
 
+  function applyLpfFrequency(
+    parameters: SynthParameters,
+    time: number,
+    lastNote: number,
+  ) {
+    const { osc1Hz, osc2Hz } = getVoicePitches(lastNote, parameters);
+    const lpfMinHz = Math.min(osc1Hz, osc2Hz) / 2;
+    const lpfHz = mapCutoffHz(parameters.lpfCutoff, nyquist, lpfMinHz);
+    lpf1.frequency.setValueAtTime(lpfHz, time);
+    lpf2.frequency.setValueAtTime(lpfHz, time);
+  }
+
   return {
     input,
     filterEnvScale,
-    apply(parameters: SynthParameters, time: number, lastNote: number) {
-      const { osc1Hz, osc2Hz } = getVoicePitches(lastNote, parameters);
-      const lpfMinHz = Math.min(osc1Hz, osc2Hz) / 2;
-      hpf.frequency.setValueAtTime(
-        mapCutoffHz(parameters.hpfCutoff, nyquist, 40, nyquist * 0.3),
-        time,
-      );
-      hpf.Q.setValueAtTime(mapQ(parameters.hpfQ), time);
-      const lpfHz = mapCutoffHz(parameters.lpfCutoff, nyquist, lpfMinHz);
-      const lpfQ = mapQ(parameters.lpfQ);
-      lpf1.frequency.setValueAtTime(lpfHz, time);
-      lpf1.Q.setValueAtTime(lpfQ, time);
-      lpf2.frequency.setValueAtTime(lpfHz, time);
-      lpf2.Q.setValueAtTime(lpfQ, time);
-      if (parameters.lpfSteep !== lpfSteep) {
+    applyLpfFrequency,
+    apply(
+      patch: Partial<SynthParameters>,
+      parameters: SynthParameters,
+      time: number,
+      lastNote: number,
+    ) {
+      if (has(patch, "hpfCutoff")) {
+        hpf.frequency.setValueAtTime(
+          mapCutoffHz(parameters.hpfCutoff, nyquist, 40, nyquist * 0.3),
+          time,
+        );
+      }
+      if (has(patch, "hpfQ")) {
+        hpf.Q.setValueAtTime(mapQ(parameters.hpfQ), time);
+      }
+      if (
+        has(patch, "lpfCutoff") ||
+        has(patch, "voiceOctave") ||
+        has(patch, "osc2Octave")
+      ) {
+        applyLpfFrequency(parameters, time, lastNote);
+      }
+      if (has(patch, "lpfQ")) {
+        const lpfQ = mapQ(parameters.lpfQ);
+        lpf1.Q.setValueAtTime(lpfQ, time);
+        lpf2.Q.setValueAtTime(lpfQ, time);
+      }
+      if (has(patch, "lpfSteep") && parameters.lpfSteep !== lpfSteep) {
         connectLpf(parameters.lpfSteep);
       }
-      filterEnvScale.gain.setValueAtTime(
-        clamp01(parameters.lpfEnvMod) * MAX_FILTER_ENV_CENTS,
-        time,
-      );
-      filterLfo.apply(
-        parameters.filterLfoRate,
-        clamp01(parameters.filterLfoDepth ** 2) * MAX_FILTER_LFO_CENTS,
-        time,
-      );
-      densityShaper?.updateNodeParameters(clamp01(parameters.density));
-      chorus.setLevel(clamp01(parameters.chorusLevel));
-      reverb.apply(
-        parameters.reverbDecay,
-        parameters.reverbMix ** 2,
-        parameters.reverbDamp,
-        time,
-      );
-      const tiltDb = clamp01(parameters.presence) * MAX_PRESENCE_DB;
-      presenceLow.gain.setValueAtTime(-tiltDb, time);
-      presenceHigh.gain.setValueAtTime(tiltDb, time);
-      globalGain.gain.setValueAtTime(clamp01(parameters.globalVolume), time);
+      if (has(patch, "lpfEnvMod")) {
+        filterEnvScale.gain.setValueAtTime(
+          clamp01(parameters.lpfEnvMod) * MAX_FILTER_ENV_CENTS,
+          time,
+        );
+      }
+      if (has(patch, "filterLfoRate") || has(patch, "filterLfoDepth")) {
+        filterLfo.apply(
+          parameters.filterLfoRate,
+          clamp01(parameters.filterLfoDepth ** 2) * MAX_FILTER_LFO_CENTS,
+          time,
+        );
+      }
+      if (has(patch, "density")) {
+        densityShaper?.updateNodeParameters(clamp01(parameters.density));
+      }
+      if (has(patch, "chorusLevel")) {
+        chorus.setLevel(clamp01(parameters.chorusLevel));
+      }
+      if (
+        has(patch, "reverbDecay") ||
+        has(patch, "reverbMix") ||
+        has(patch, "reverbDamp")
+      ) {
+        reverb.apply(
+          {
+            decay: has(patch, "reverbDecay")
+              ? parameters.reverbDecay
+              : undefined,
+            mix: has(patch, "reverbMix")
+              ? parameters.reverbMix ** 2
+              : undefined,
+            damp: has(patch, "reverbDamp") ? parameters.reverbDamp : undefined,
+          },
+          time,
+        );
+      }
+      if (has(patch, "presence")) {
+        const tiltDb = clamp01(parameters.presence) * MAX_PRESENCE_DB;
+        presenceLow.gain.setValueAtTime(-tiltDb, time);
+        presenceHigh.gain.setValueAtTime(tiltDb, time);
+      }
+      if (has(patch, "globalVolume")) {
+        globalGain.gain.setValueAtTime(clamp01(parameters.globalVolume), time);
+      }
     },
     cleanup() {
       input.disconnect();

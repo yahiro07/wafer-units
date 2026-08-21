@@ -11,6 +11,63 @@ import { UnitInterface } from "wafer-host/unit-types";
 const MAX_POLY_VOICES = 4;
 const MAX_PITCH_LFO_CENTS = 100;
 
+const MIX_KEYS: (keyof SynthParameters)[] = [
+  "osc1Wave",
+  "oscDetune",
+  "osc2Wave",
+  "osc2Volume",
+  "attackAltPunch",
+];
+const PITCH_KEYS: (keyof SynthParameters)[] = [
+  "voiceOctave",
+  "osc2Octave",
+  "oscDetune",
+  "osc1Wave",
+];
+const ENVELOPE_KEYS: (keyof SynthParameters)[] = [
+  "ampAttack",
+  "ampDecay",
+  "ampSustain",
+  "ampRelease",
+  "attackAltPunch",
+  "osc1Wave",
+  "osc2Wave",
+  "osc2Volume",
+  "pitchLfoAltPitchEg",
+  "pitchLfoDepth",
+];
+const PITCH_LFO_KEYS: (keyof SynthParameters)[] = [
+  "pitchLfoRate",
+  "pitchLfoDepth",
+  "pitchLfoAltPitchEg",
+];
+const EFFECT_KEYS: (keyof SynthParameters)[] = [
+  "hpfCutoff",
+  "hpfQ",
+  "lpfCutoff",
+  "lpfQ",
+  "lpfSteep",
+  "lpfEnvMod",
+  "filterLfoRate",
+  "filterLfoDepth",
+  "density",
+  "chorusLevel",
+  "reverbDecay",
+  "reverbMix",
+  "reverbDamp",
+  "presence",
+  "globalVolume",
+  "voiceOctave",
+  "osc2Octave",
+];
+
+function hasAny(
+  patch: Partial<SynthParameters>,
+  keys: (keyof SynthParameters)[],
+) {
+  return keys.some((key) => key in patch);
+}
+
 function createNoiseBuffer(audioContext: AudioContext): AudioBuffer {
   const length = audioContext.sampleRate * 0.5;
   const buffer = audioContext.createBuffer(1, length, audioContext.sampleRate);
@@ -95,31 +152,43 @@ export function createSynthesizerEngine(
     }
   }
 
-  function applyParameters(parameters: SynthParameters, time: number) {
-    applyOscillatorMix(parameters, time);
-    applyHeldPitches(parameters, time);
-    effectChain.apply(parameters, time, state.lastNote);
-    pitchLfo.apply(
-      parameters.pitchLfoRate,
-      parameters.pitchLfoAltPitchEg
-        ? 0
-        : Math.min(1, Math.max(0, parameters.pitchLfoDepth ** 2)) *
-            MAX_PITCH_LFO_CENTS,
-      time,
-    );
-    applyEnvelopeParameters(parameters);
+  function applyPatch(patch: Partial<SynthParameters>, time: number) {
+    const parameters = state.parameters;
+    if (hasAny(patch, MIX_KEYS)) {
+      applyOscillatorMix(parameters, time);
+    }
+    if (hasAny(patch, PITCH_KEYS)) {
+      applyHeldPitches(parameters, time);
+    }
+    if (hasAny(patch, EFFECT_KEYS)) {
+      effectChain.apply(patch, parameters, time, state.lastNote);
+    }
+    if (hasAny(patch, PITCH_LFO_KEYS)) {
+      pitchLfo.apply(
+        parameters.pitchLfoRate,
+        parameters.pitchLfoAltPitchEg
+          ? 0
+          : Math.min(1, Math.max(0, parameters.pitchLfoDepth ** 2)) *
+              MAX_PITCH_LFO_CENTS,
+        time,
+      );
+    }
+    if (hasAny(patch, ENVELOPE_KEYS)) {
+      applyEnvelopeParameters(parameters);
+    }
   }
 
   function resolveTime(time?: number): number {
     return Math.max(time ?? 0, audioContext.currentTime);
   }
 
-  applyParameters(state.parameters, audioContext.currentTime);
+  applyPatch(state.parameters, audioContext.currentTime);
 
   return {
-    setParameters(parameters) {
-      state.parameters = { ...parameters };
-      applyParameters(state.parameters, audioContext.currentTime);
+    affectParameters(patch) {
+      if (Object.keys(patch).length === 0) return;
+      Object.assign(state.parameters, patch);
+      applyPatch(patch, audioContext.currentTime);
     },
     noteOn(noteNumber, time) {
       const startTime = resolveTime(time);
@@ -132,7 +201,7 @@ export function createSynthesizerEngine(
       voice.applyPitch(noteNumber, parameters, startTime);
       voice.applyMix(parameters, startTime, true);
       routeFilterEnvelope(voice);
-      effectChain.apply(parameters, startTime, noteNumber);
+      effectChain.applyLpfFrequency(parameters, startTime, noteNumber);
       voice.triggerAttack(parameters, startTime);
     },
     noteOff(noteNumber, time) {

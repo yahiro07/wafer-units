@@ -79,7 +79,7 @@ export type LinearParameterKeys = Exclude<
 >;
 
 export type ISynthesizer = {
-  setParameters: (parameters: SynthParameters) => void;
+  affectParameters: (parameters: Partial<SynthParameters>) => void;
   noteOn: (noteNumber: number, time?: number) => void;
   noteOff: (noteNumber: number, time?: number) => void;
   cleanup: () => void;
