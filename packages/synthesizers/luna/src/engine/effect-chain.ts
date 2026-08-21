@@ -114,6 +114,7 @@ export function createEffectChain(
   if (outputSaturator) {
     globalGain.connect(outputSaturator.inputNode);
     outputSaturator.outputNode.connect(destination);
+    outputSaturator.setEnabled(true, 0);
   } else {
     globalGain.connect(destination);
   }
