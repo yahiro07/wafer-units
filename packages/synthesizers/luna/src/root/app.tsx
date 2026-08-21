@@ -1,7 +1,11 @@
 import { ButtonsSelector } from "@/components/buttons-selector";
 import { IconButton } from "@/components/icon-button";
 import { Icons } from "@/components/icons";
-import { LabeledKnob, SideLabelBox } from "@/components/labeled-controls";
+import {
+  LabeledKnob,
+  LabeledSlider,
+  SideLabelBox,
+} from "@/components/labeled-controls";
 import { actions } from "@/root/actions";
 import { LinearParameterKeys, numOscWaveTypes } from "@/defs/definitions";
 import { useSetupDrivers } from "@/root/drivers";
@@ -53,6 +57,32 @@ const ParameterKnob = ({
   const { parameters } = store.useSnapshot();
   return (
     <LabeledKnob
+      label={label}
+      value={parameters[paramKey]}
+      min={min}
+      max={max}
+      step={step}
+      onChange={(v) => actions.setParameter(paramKey, v)}
+    />
+  );
+};
+
+const ParameterSlider = ({
+  paramKey,
+  label,
+  min,
+  max,
+  step,
+}: {
+  paramKey: LinearParameterKeys;
+  label: string;
+  min?: number;
+  max?: number;
+  step?: number;
+}) => {
+  const { parameters } = store.useSnapshot();
+  return (
+    <LabeledSlider
       label={label}
       value={parameters[paramKey]}
       min={min}
@@ -148,6 +178,7 @@ export const App = () => {
         <ParameterKnob label="TIME" paramKey="reverbDecay" />
         <ParameterKnob label="TONE" paramKey="reverbDamp" />
         <ParameterKnob label="PRESENCE" paramKey="presence" />
+        <ParameterSlider label="A" paramKey="ampAttack" />
       </div>
     </div>
   );

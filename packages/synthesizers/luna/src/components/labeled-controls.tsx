@@ -1,4 +1,5 @@
 import { Knob } from "@/components/knob";
+import { Slider } from "@/components/slider";
 import { ComponentChildren } from "preact";
 
 export const LabeledBox = ({
@@ -49,6 +50,34 @@ export const LabeledKnob = ({
   return (
     <LabeledBox label={label}>
       <Knob value={value} onChange={onChange} min={min} max={max} step={step} />
+    </LabeledBox>
+  );
+};
+
+export const LabeledSlider = ({
+  label,
+  value,
+  onChange,
+  min,
+  max,
+  step,
+}: {
+  label: string;
+  value: number;
+  onChange: (value: number) => void;
+  min?: number;
+  max?: number;
+  step?: number;
+}) => {
+  return (
+    <LabeledBox label={label}>
+      <Slider
+        value={value}
+        onChange={onChange}
+        min={min}
+        max={max}
+        step={step}
+      />
     </LabeledBox>
   );
 };
