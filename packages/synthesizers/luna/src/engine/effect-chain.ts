@@ -2,6 +2,7 @@ import { SynthParameters } from "@/defs/definitions";
 import { createChorus5 } from "@/engine/chorus5";
 import { createDensityShaper } from "@/engine/density-shaper";
 import { getVoicePitches } from "@/engine/poly-voice";
+import { createOutputSaturator } from "@/engine/output-saturator";
 import { createReverb } from "@/engine/reverb";
 import { createSineLfo } from "@/engine/sine-lfo";
 
@@ -16,6 +17,7 @@ const PRESENCE_LOW_HZ = 400;
 const PRESENCE_HIGH_HZ = 2500;
 const MAX_PRESENCE_DB = 8;
 const DENSITY_SHAPER_ENABLED = true;
+const OUTPUT_SATURATOR_ENABLED = false;
 
 function clamp(value: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, value));
@@ -60,6 +62,9 @@ export function createEffectChain(
   const presenceLow = audioContext.createBiquadFilter();
   const presenceHigh = audioContext.createBiquadFilter();
   const globalGain = audioContext.createGain();
+  const outputSaturator = OUTPUT_SATURATOR_ENABLED
+    ? createOutputSaturator(audioContext)
+    : null;
   const filterEnvScale = audioContext.createGain();
   const filterLfo = createSineLfo(audioContext);
 
@@ -106,7 +111,12 @@ export function createEffectChain(
   compressorMakeup.connect(presenceLow);
   presenceLow.connect(presenceHigh);
   presenceHigh.connect(globalGain);
-  globalGain.connect(destination);
+  if (outputSaturator) {
+    globalGain.connect(outputSaturator.inputNode);
+    outputSaturator.outputNode.connect(destination);
+  } else {
+    globalGain.connect(destination);
+  }
   filterEnvScale.connect(lpf1.detune);
   filterEnvScale.connect(lpf2.detune);
   filterLfo.output.connect(lpf1.detune);
@@ -169,6 +179,7 @@ export function createEffectChain(
       presenceLow.disconnect();
       presenceHigh.disconnect();
       globalGain.disconnect();
+      outputSaturator?.cleanup();
       filterEnvScale.disconnect();
       filterLfo.cleanup();
     },
