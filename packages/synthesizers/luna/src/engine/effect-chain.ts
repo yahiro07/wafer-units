@@ -17,6 +17,7 @@ const PRESENCE_LOW_HZ = 400;
 const PRESENCE_HIGH_HZ = 2500;
 const MAX_PRESENCE_DB = 8;
 const DENSITY_SHAPER_ENABLED = true;
+const COMPRESSOR_ENABLED = true;
 const OUTPUT_SATURATOR_ENABLED = true;
 
 function clamp(value: number, min: number, max: number): number {
@@ -57,8 +58,12 @@ export function createEffectChain(
     : null;
   const chorus = createChorus5(audioContext);
   const reverb = createReverb(audioContext);
-  const compressor = audioContext.createDynamicsCompressor();
-  const compressorMakeup = audioContext.createGain();
+  const compressor = COMPRESSOR_ENABLED
+    ? audioContext.createDynamicsCompressor()
+    : null;
+  const compressorMakeup = COMPRESSOR_ENABLED
+    ? audioContext.createGain()
+    : null;
   const presenceLow = audioContext.createBiquadFilter();
   const presenceHigh = audioContext.createBiquadFilter();
   const globalGain = audioContext.createGain();
@@ -73,12 +78,14 @@ export function createEffectChain(
   lpf1.type = "lowpass";
   lpf2.type = "lowpass";
   filterEnvScale.gain.value = 0;
-  compressor.threshold.value = -18;
-  compressor.ratio.value = 4;
-  compressor.knee.value = 8;
-  compressor.attack.value = 0.02;
-  compressor.release.value = 0.2;
-  compressorMakeup.gain.value = 2;
+  if (compressor && compressorMakeup) {
+    compressor.threshold.value = -18;
+    compressor.ratio.value = 4;
+    compressor.knee.value = 8;
+    compressor.attack.value = 0.02;
+    compressor.release.value = 0.2;
+    compressorMakeup.gain.value = 2;
+  }
   presenceLow.type = "lowshelf";
   presenceLow.frequency.value = PRESENCE_LOW_HZ;
   presenceLow.gain.value = 0;
@@ -106,9 +113,14 @@ export function createEffectChain(
   connectLpf(false);
   densityShaper?.outputNode.connect(chorus.inputNode);
   chorus.outputNode.connect(reverb.input);
-  reverb.output.connect(compressor);
-  compressor.connect(compressorMakeup);
-  compressorMakeup.connect(presenceLow);
+  if (compressor && compressorMakeup) {
+    reverb.output.connect(compressor);
+    compressor.connect(compressorMakeup);
+    compressorMakeup.connect(presenceLow);
+  } else {
+    reverb.output.connect(presenceLow);
+    reverb.output.gain.value = 3;
+  }
   presenceLow.connect(presenceHigh);
   presenceHigh.connect(globalGain);
   if (outputSaturator) {
@@ -175,8 +187,8 @@ export function createEffectChain(
       chorus.inputNode.disconnect();
       chorus.outputNode.disconnect();
       reverb.cleanup();
-      compressor.disconnect();
-      compressorMakeup.disconnect();
+      compressor?.disconnect();
+      compressorMakeup?.disconnect();
       presenceLow.disconnect();
       presenceHigh.disconnect();
       globalGain.disconnect();
