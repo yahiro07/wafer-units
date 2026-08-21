@@ -15,6 +15,7 @@ const MAX_FILTER_LFO_CENTS = 2400;
 const PRESENCE_LOW_HZ = 400;
 const PRESENCE_HIGH_HZ = 2500;
 const MAX_PRESENCE_DB = 8;
+const DENSITY_SHAPER_ENABLED = false;
 
 function clamp(value: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, value));
@@ -49,7 +50,9 @@ export function createEffectChain(
   const hpf = audioContext.createBiquadFilter();
   const lpf1 = audioContext.createBiquadFilter();
   const lpf2 = audioContext.createBiquadFilter();
-  const densityShaper = createDensityShaper(audioContext);
+  const densityShaper = DENSITY_SHAPER_ENABLED
+    ? createDensityShaper(audioContext)
+    : null;
   const chorus = createChorus5(audioContext);
   const reverb = createReverb(audioContext);
   const compressor = audioContext.createDynamicsCompressor();
@@ -78,24 +81,25 @@ export function createEffectChain(
   presenceHigh.frequency.value = PRESENCE_HIGH_HZ;
   presenceHigh.gain.value = 0;
   globalGain.gain.value = 1;
-  densityShaper.updateNodeParameters(0);
+  densityShaper?.updateNodeParameters(0);
 
   input.connect(hpf);
   hpf.connect(lpf1);
+  const postFilter = densityShaper?.shaperNode ?? chorus.inputNode;
   let lpfSteep = false;
   function connectLpf(steep: boolean) {
     lpf1.disconnect();
     lpf2.disconnect();
     if (steep) {
       lpf1.connect(lpf2);
-      lpf2.connect(densityShaper.shaperNode);
+      lpf2.connect(postFilter);
     } else {
-      lpf1.connect(densityShaper.shaperNode);
+      lpf1.connect(postFilter);
     }
     lpfSteep = steep;
   }
   connectLpf(false);
-  densityShaper.shaperNode.connect(chorus.inputNode);
+  densityShaper?.shaperNode.connect(chorus.inputNode);
   chorus.outputNode.connect(reverb.input);
   reverb.output.connect(compressor);
   compressor.connect(compressorMakeup);
@@ -137,7 +141,7 @@ export function createEffectChain(
         clamp01(parameters.filterLfoDepth ** 2) * MAX_FILTER_LFO_CENTS,
         time,
       );
-      densityShaper.updateNodeParameters(clamp01(parameters.density));
+      densityShaper?.updateNodeParameters(clamp01(parameters.density));
       chorus.setLevel(clamp01(parameters.chorusLevel));
       reverb.apply(
         parameters.reverbDecay,
@@ -155,7 +159,7 @@ export function createEffectChain(
       hpf.disconnect();
       lpf1.disconnect();
       lpf2.disconnect();
-      densityShaper.shaperNode.disconnect();
+      densityShaper?.shaperNode.disconnect();
       chorus.cleanupNodes();
       chorus.inputNode.disconnect();
       chorus.outputNode.disconnect();
