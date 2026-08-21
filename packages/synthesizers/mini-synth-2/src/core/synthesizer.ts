@@ -1,4 +1,4 @@
-import { createChorus } from "@/core/chorus";
+import { createChorus2 } from "@/core/chorus2";
 import { SynthParameters } from "@/core/definitions";
 import { createReverb2 } from "@/core/reverb2";
 import { createVoice, Voice } from "@/core/voice";
@@ -18,7 +18,7 @@ export function createSynthesizer(
   const outputNode = audioContext.createGain();
 
   const voicesGain = audioContext.createGain();
-  const chorus = createChorus(audioContext);
+  const chorus = createChorus2(audioContext);
   const reverb = createReverb2(audioContext);
   const masterGain = audioContext.createGain();
 
