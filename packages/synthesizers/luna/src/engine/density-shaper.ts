@@ -28,17 +28,36 @@ export function createDensityShaper(audioContext: AudioContext) {
   inputNode.gain.value = 1 / INPUT_HEADROOM;
   shaperNode.oversample = "2x";
   outputNode.gain.value = INPUT_HEADROOM;
-  inputNode.connect(shaperNode);
-  shaperNode.connect(outputNode);
+  inputNode.connect(outputNode);
+
+  let shaperEnabled = false;
+
+  function setShaperEnabled(enabled: boolean) {
+    if (enabled === shaperEnabled) return;
+    shaperEnabled = enabled;
+    if (enabled) {
+      inputNode.disconnect(outputNode);
+      inputNode.connect(shaperNode);
+      shaperNode.connect(outputNode);
+      return;
+    }
+    inputNode.disconnect(shaperNode);
+    shaperNode.disconnect(outputNode);
+    inputNode.connect(outputNode);
+  }
 
   return {
     inputNode,
     outputNode,
     updateNodeParameters(level: number) {
-      const curve = densityShaperCurveBufferCache.update(-1, level);
-      if (shaperNode.curve !== curve) {
-        shaperNode.curve = curve;
+      const enabled = level > 0;
+      if (enabled) {
+        const curve = densityShaperCurveBufferCache.update(-1, level);
+        if (shaperNode.curve !== curve) {
+          shaperNode.curve = curve;
+        }
       }
+      setShaperEnabled(enabled);
     },
     cleanup() {
       inputNode.disconnect();
