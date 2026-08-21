@@ -12,7 +12,7 @@ const MAX_POLY_VOICES = 4;
 const MAX_PITCH_LFO_CENTS = 100;
 
 function createNoiseBuffer(audioContext: AudioContext): AudioBuffer {
-  const length = audioContext.sampleRate * 2;
+  const length = audioContext.sampleRate * 0.5;
   const buffer = audioContext.createBuffer(1, length, audioContext.sampleRate);
   const data = buffer.getChannelData(0);
   for (let i = 0; i < length; i += 1) {
