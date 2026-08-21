@@ -99,7 +99,7 @@ export function createVoice(
   // Frequency mapping: 0~1 => 20Hz ~ 10000Hz (exponential)
   const baseFreq = 40 * Math.pow(10000 / 40, params.filterCutoff);
   filter.frequency.value = baseFreq;
-  filter.Q.value = params.filterPeak * 20; // 0 ~ 20
+  filter.Q.value = 0.707 + params.filterPeak * 20;
 
   mainOscGain.connect(filter);
   subOscGain.connect(filter);
