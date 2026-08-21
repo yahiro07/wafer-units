@@ -46,9 +46,9 @@ const styles = css({
   },
   width: "80px",
   height: "80px",
-  background: "linear-gradient(to bottom, #fff, #0006)",
-  padding: "3px",
-  border: "solid 0.5px #444",
+  background: "linear-gradient(to bottom, #fff, #0004)",
+  padding: "7px",
+  border: "solid 0.5px #666",
   "> .inner": {
     width: "100%",
     height: "100%",
@@ -59,8 +59,8 @@ const styles = css({
     ...absoluteFull(),
     ...flexVA(),
     "> .tick": {
-      width: "3.5px",
-      height: "13px",
+      width: "4px",
+      height: "15px",
       background: uiColors.clKnobTick,
     },
   },

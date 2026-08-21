@@ -1,18 +1,29 @@
-import { Knob } from "@/components/knob";
-import { Slider } from "@/components/slider";
+import { cz } from "@/common/css-realm";
 import { ComponentChildren } from "preact";
 
 export const LabeledBox = ({
   label,
   children,
+  onLabelClick,
 }: {
   label: string;
   children: ComponentChildren;
+  onLabelClick?: () => void;
 }) => {
   return (
-    <div class="flex-vc">
+    <div class="flex-vc gap-0.5">
       <div>{children}</div>
-      <div class="text-md font-bold">{label}</div>
+      <div class="w-30px flex-c">
+        <div
+          class={cz(
+            "text-lg font-bold whitespace-nowrap",
+            onLabelClick && "cursor-pointer",
+          )}
+          onClick={onLabelClick}
+        >
+          {label}
+        </div>
+      </div>
     </div>
   );
 };
@@ -32,52 +43,52 @@ export const SideLabelBox = ({
   );
 };
 
-export const LabeledKnob = ({
-  label,
-  value,
-  onChange,
-  min,
-  max,
-  step,
-}: {
-  label: string;
-  value: number;
-  onChange: (value: number) => void;
-  min?: number;
-  max?: number;
-  step?: number;
-}) => {
-  return (
-    <LabeledBox label={label}>
-      <Knob value={value} onChange={onChange} min={min} max={max} step={step} />
-    </LabeledBox>
-  );
-};
+// export const LabeledKnob = ({
+//   label,
+//   value,
+//   onChange,
+//   min,
+//   max,
+//   step,
+// }: {
+//   label: string;
+//   value: number;
+//   onChange: (value: number) => void;
+//   min?: number;
+//   max?: number;
+//   step?: number;
+// }) => {
+//   return (
+//     <LabeledBox label={label}>
+//       <Knob value={value} onChange={onChange} min={min} max={max} step={step} />
+//     </LabeledBox>
+//   );
+// };
 
-export const LabeledSlider = ({
-  label,
-  value,
-  onChange,
-  min,
-  max,
-  step,
-}: {
-  label: string;
-  value: number;
-  onChange: (value: number) => void;
-  min?: number;
-  max?: number;
-  step?: number;
-}) => {
-  return (
-    <LabeledBox label={label}>
-      <Slider
-        value={value}
-        onChange={onChange}
-        min={min}
-        max={max}
-        step={step}
-      />
-    </LabeledBox>
-  );
-};
+// export const LabeledSlider = ({
+//   label,
+//   value,
+//   onChange,
+//   min,
+//   max,
+//   step,
+// }: {
+//   label: string;
+//   value: number;
+//   onChange: (value: number) => void;
+//   min?: number;
+//   max?: number;
+//   step?: number;
+// }) => {
+//   return (
+//     <LabeledBox label={label}>
+//       <Slider
+//         value={value}
+//         onChange={onChange}
+//         min={min}
+//         max={max}
+//         step={step}
+//       />
+//     </LabeledBox>
+//   );
+// };

@@ -8,5 +8,10 @@ export const actions = {
   ) {
     store.patchParameters({ [key]: value });
   },
+  toggleBoolParameter<
+    K extends "attackAltPunch" | "lpfSteep" | "pitchLfoAltPitchEg",
+  >(key: K) {
+    store.patchParameters({ [key]: !store.state.parameters[key] });
+  },
   randomizeParameters() {},
 };
