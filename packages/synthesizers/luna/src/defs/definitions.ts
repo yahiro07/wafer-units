@@ -40,6 +40,8 @@ export type SynthParameters = {
   presence: number;
 };
 
+export type SynthPresetParameters = Omit<SynthParameters, "globalVolume">;
+
 export const defaultSynthParameters: SynthParameters = {
   voiceOctave: 0,
   osc1Wave: OscWave.Saw,

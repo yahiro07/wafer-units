@@ -4,7 +4,7 @@ import { ComponentChildren } from "preact";
 export const Button = ({
   children,
   onClick,
-  height = 36,
+  height = 42,
   asr = 1.25,
   active,
 }: {
@@ -28,6 +28,7 @@ export const Button = ({
 const styles = {
   base: cz(
     "bg-clButtonBg rounded-[2px] flex-c cursor-pointer hover:opacity-90",
+    "text-clButtonText text-18px",
     "[&.active]:(bg-clPrimary text-black)",
   ),
 };

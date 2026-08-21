@@ -1,17 +1,17 @@
 import { ButtonsSelector } from "@/components/buttons-selector";
-import { IconButton } from "@/components/icon-button";
-import { Icons } from "@/components/icons";
 import { LabeledBox, TopLeftLabelBox } from "@/components/labeled-controls";
 import { actions } from "@/root/actions";
 import { LinearParameterKeys, numOscWaveTypes } from "@/defs/definitions";
 import { useSetupDrivers } from "@/root/drivers";
-import { store } from "@/root/store";
+import { allPresetKeys, store } from "@/root/store";
 import { createPlainSelectorOptions } from "@/utils/selector-option";
 import { Slider } from "@/components/slider";
 import { Knob } from "@/components/knob";
 import { ComponentChildren } from "preact";
 import { cz } from "@/common/css-realm";
 import { LedIndicator } from "@/components/led-indicator";
+import { Button } from "@/components/button";
+import { Selector } from "@/components/selector";
 
 const octaveShiftOptions = createPlainSelectorOptions([-2, -1, 0, 1, 2]);
 
@@ -30,13 +30,36 @@ const OctaveShiftContainer = () => {
   );
 };
 
-const RandomizeButtonContainer = () => {
+const presetOptions = createPlainSelectorOptions(allPresetKeys);
+
+const PresetSelectionPart = () => {
+  const { presetKey } = store.useSnapshot();
   return (
-    <IconButton
-      icon={Icons.Exchange}
-      size={24}
-      onClick={actions.randomizeParameters}
-    />
+    <div class="flex-ha gap-1.5">
+      <Button asr={1.3} onClick={() => actions.shiftPreset(-1)}>
+        <i class="ri-arrow-left-s-line text-2xl" />
+      </Button>
+      <Selector
+        value={presetKey}
+        onChange={actions.setPreset}
+        options={presetOptions}
+        height={44}
+      />
+      <Button asr={1.3} onClick={() => actions.shiftPreset(1)}>
+        <i class="ri-arrow-right-s-line text-2xl" />
+      </Button>
+    </div>
+  );
+};
+
+const RandomizerButton = () => {
+  return (
+    <Button asr={1.9} onClick={actions.randomizeParameters}>
+      <div class="flex-ha gap-1">
+        <span>RND</span>
+        <i class="ri-dice-3-line text-xl" />
+      </div>
+    </Button>
   );
 };
 
@@ -131,13 +154,16 @@ export const App = () => {
   const { parameters } = store.useSnapshot();
   return (
     <div class="flex-v gap-4 bg-clPageBg text-clPageText p-8">
-      <div class="flex-h gap-3 justify-between">
+      <div class="flex-ha gap-3 justify-between">
         <div class="flex-vc font-bold ">
           <h1 class="text-6xl">LUNA</h1>
           <div class="text-[22px] mt-[-8px]">SYNTHESIZER</div>
         </div>
-        {/* <RandomizeButtonContainer /> */}
-        <div class="mt-2">
+        <div class="flex-ha gap-5">
+          <PresetSelectionPart />
+          <RandomizerButton />
+        </div>
+        <div class="self-start mt-1.5px">
           <OctaveShiftContainer />
         </div>
         <ParameterKnob label="MASTER" paramKey="globalVolume" />
