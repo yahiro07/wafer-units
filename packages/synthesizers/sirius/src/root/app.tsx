@@ -5,7 +5,7 @@ import { createPlainSelectorOptions } from "@/utils/selector-option";
 import { Selector } from "@/components/selector";
 import { allPresetKeys, store } from "@/root/store";
 import { actions } from "@/root/actions";
-import { numOscWaveTypes, SynthParameters } from "@/core/definitions";
+import { oscWaveTypesForUi, SynthParameters } from "@/defs/definitions";
 import { useEffect } from "preact/hooks";
 import { setupSynchronization, setupUnit } from "@/root/drivers";
 import { cx } from "@twind/core";
@@ -16,7 +16,9 @@ const TitleText = () => {
   return (
     <div class="text-[18px]">
       <i class="ri-instance-line text-xl ml-[-2px]" />
-      <span class="ml-[2px]">Sirius</span>
+      <span class="ml-[2px]" onClick={actions.emitPresetData}>
+        Sirius
+      </span>
     </div>
   );
 };
@@ -52,6 +54,19 @@ const RandomizerButton = () => {
   );
 };
 
+const OctaveMinusButton = () => {
+  const { parameters } = store.useSnapshot();
+  return (
+    <Button
+      active={parameters.patchOctave === -1}
+      asr={1.3}
+      onClick={actions.togglePatchOctaveMinus}
+    >
+      oct-
+    </Button>
+  );
+};
+
 const TopBar = () => {
   return (
     <div
@@ -60,11 +75,12 @@ const TopBar = () => {
         "bg-clTopBarBg bd-clSectionEdge rounded-[4px]",
       )}
     >
-      <div class="w-[120px]">
+      <div class="w-[160px]">
         <TitleText />
       </div>
       <PresetSelectionPart />
-      <div class="w-[120px] flex-ha justify-end">
+      <div class="w-[160px] flex-ha justify-end gap-4">
+        <OctaveMinusButton />
         <RandomizerButton />
       </div>
     </div>
@@ -97,16 +113,41 @@ const ParameterKnob = ({
   );
 };
 
+const WaveformSelectionKnob = ({
+  paramKey,
+  label,
+}: {
+  paramKey: keyof SynthParameters;
+  label: string;
+  steps?: number;
+}) => {
+  const { parameters } = store.useSnapshot();
+  const setParameter = actions.setParameter;
+  let index = oscWaveTypesForUi.indexOf(parameters[paramKey]);
+  if (index === -1) {
+    index = 0;
+  }
+  const setIndex = (index: number) => {
+    setParameter(paramKey, oscWaveTypesForUi[index]);
+  };
+  return (
+    <KnobBox
+      label={label}
+      value={index}
+      onChange={setIndex}
+      min={0}
+      max={oscWaveTypesForUi.length - 1}
+      step={1}
+    />
+  );
+};
+
 const ParametersSection = () => {
   return (
     <div class="flex-v gap-3">
       <div class="flex-h gap-3">
         <SectionFrame header="OSCILLATOR" className="w-[60%]">
-          <ParameterKnob
-            paramKey="oscWave"
-            label="wave"
-            steps={numOscWaveTypes}
-          />
+          <WaveformSelectionKnob paramKey="oscWave" label="wave" />
           <ParameterKnob paramKey="oscDetune" label="detune" />
           <ParameterKnob paramKey="oscSub" label="sub" />
           <ParameterKnob paramKey="oscDrift" label="drift" />

@@ -1,5 +1,5 @@
-import { SynthParameters } from "@/core/definitions";
-import { allPresets } from "@/core/presets";
+import { SynthParameters } from "@/defs/definitions";
+import { allPresets } from "@/defs/presets";
 import { createRandomParameters } from "@/root/randomizer";
 import { allPresetKeys, store } from "@/root/store";
 
@@ -24,5 +24,18 @@ export const actions = {
   randomizeParameters() {
     const paramAttrs = createRandomParameters();
     store.patchParameters(paramAttrs);
+  },
+  async emitPresetData() {
+    const { ...attrs } = store.state.parameters;
+    const jsonText = JSON.stringify(attrs, null, 2).replaceAll(
+      /\.(\d+)/g,
+      (_match, digits: string) => "." + digits.slice(0, 2),
+    );
+    await navigator.clipboard.writeText(jsonText);
+    console.log("Preset data copied to clipboard");
+  },
+  togglePatchOctaveMinus() {
+    const next = store.state.parameters.patchOctave === 0 ? -1 : 0;
+    store.patchParameters({ patchOctave: next });
   },
 };

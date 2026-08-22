@@ -1,4 +1,5 @@
-import { SynthParameters } from "@/core/definitions";
+import { SynthParameters } from "@/defs/definitions";
+import { linearInterpolate } from "@/utils/helpers";
 
 const configs = {
   decayTimeMax: 3,
@@ -11,6 +12,23 @@ export type AmplifierUnit = {
   triggerEnvelope: (t: number) => void;
   release: (time: number) => { tOff: number; releaseTime: number };
   cleanup: () => void;
+};
+
+const helpers = {
+  getDecayAndSustain(prAmpDecay: number) {
+    const th = 0.5;
+    if (prAmpDecay < th) {
+      return {
+        ampDecay: linearInterpolate(prAmpDecay, 0, th, 0, 1),
+        sustain: 0,
+      };
+    } else {
+      return {
+        ampDecay: linearInterpolate(prAmpDecay, th, 1, 0.2, 0),
+        sustain: linearInterpolate(prAmpDecay, th, 1, 0, 1) ** 2,
+      };
+    }
+  },
 };
 
 export function createAmplifierUnit(
@@ -30,22 +48,20 @@ export function createAmplifierUnit(
     outputNode,
     triggerEnvelope(t) {
       const riseTime = 0.001;
+      const { ampDecay, sustain } = helpers.getDecayAndSustain(params.ampDecay);
       const decayTime =
-        params.ampDecay < 1
-          ? Math.max(0.01, params.ampDecay * configs.decayTimeMax)
+        ampDecay < 1
+          ? Math.max(0.01, ampDecay * configs.decayTimeMax)
           : configs.decayTimeMax;
-      const sustain = params.ampDecay === 1 ? 1 : 0;
       inputNode.gain.setValueAtTime(0, t);
       inputNode.gain.linearRampToValueAtTime(
         Math.max(0.001, velocity),
         t + riseTime,
       );
-      if (sustain === 0) {
-        inputNode.gain.exponentialRampToValueAtTime(
-          0.001,
-          t + riseTime + decayTime,
-        );
-      }
+      inputNode.gain.exponentialRampToValueAtTime(
+        Math.max(sustain, 0.001),
+        t + riseTime + decayTime,
+      );
     },
     release(time) {
       const tOff =

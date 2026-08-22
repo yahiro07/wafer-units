@@ -1,13 +1,14 @@
-import { createChorus2 } from "@/core/chorus2";
+import { createChorus2 } from "@/engine/chorus2";
 import {
   defaultSynthParameters,
   ISynthesizerEngine,
   SynthParameters,
-} from "@/core/definitions";
-import { createOutputSaturator } from "@/core/output-saturator";
-import { createReverb2 } from "@/core/reverb2";
-import { createVoice, Voice } from "@/core/voice";
+} from "@/defs/definitions";
+import { createOutputSaturator } from "@/engine/output-saturator";
+import { createReverb2 } from "@/engine/reverb2";
+import { createVoice, Voice } from "@/engine/voice";
 import { UnitInterface } from "wafer-host/unit-types";
+import { mapVolumeControlCurveCenterUnityBrokenLinear } from "@/engine/curve";
 
 export function createSynthesizerEngine(
   unitInterface: UnitInterface | undefined,
@@ -63,7 +64,14 @@ export function createSynthesizerEngine(
       }
       chorus.update(state.parameters.fxChorus);
       reverb.update(state.parameters.fxReverb);
-      masterGain.gain.value = state.parameters.patchVolume;
+      const outGain =
+        mapVolumeControlCurveCenterUnityBrokenLinear(
+          state.parameters.patchVolume,
+        ) * 0.7;
+      masterGain.gain.linearRampToValueAtTime(
+        outGain,
+        audioContext.currentTime + 0.1,
+      );
     },
   };
 

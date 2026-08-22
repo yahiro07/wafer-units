@@ -1,6 +1,6 @@
-import { OscWave, SynthParameters } from "@/core/definitions";
+import { OscWave, SynthParameters } from "@/defs/definitions";
 import { midiToFreq, tunableSigmoid } from "./synthesis-utils";
-import { getOscWaveformPdSaw } from "@/core/pd-saw";
+import { getOscWaveformPdSaw } from "@/engine/pd-saw";
 
 const periodicWaveCache: Partial<Record<OscWave, PeriodicWave | null>> = {};
 
@@ -168,7 +168,7 @@ export function createOscillatorsUnit(
   }
   sub.connect(subOscGain);
 
-  const freq = midiToFreq(noteNumber);
+  const freq = midiToFreq(noteNumber + params.patchOctave * 12);
   osc1.frequency.value = freq;
   if (osc2) osc2.frequency.value = freq;
   sub.frequency.value = freq / 2;
@@ -208,7 +208,14 @@ export function createOscillatorsUnit(
     start(t) {
       lfo.start(t);
       osc1.start(t);
-      osc2?.start(t);
+      if (osc2) {
+        if (0) {
+          const osc2StartDelay = (1 / freq) * 0.3 * Math.random();
+          osc2.start(t + osc2StartDelay);
+        } else {
+          osc2.start(t);
+        }
+      }
       sub.start(t);
     },
     stop(t) {

@@ -7,9 +7,18 @@ export enum OscWave {
   square,
   triangle,
 }
-export const numOscWaveTypes = 7;
+export const oscWaveTypesForUi: OscWave[] = [
+  OscWave.sawtooth,
+  OscWave.sawtoothR,
+  // OscWave.sawtoothR2,
+  OscWave.pulse125,
+  OscWave.pulse25,
+  OscWave.square,
+  OscWave.triangle,
+];
 
 export type SynthParameters = {
+  patchOctave: number;
   oscWave: OscWave;
   oscDetune: number; // 0~1
   oscSub: number; // 0~1
@@ -25,6 +34,7 @@ export type SynthParameters = {
 };
 
 export const defaultSynthParameters: SynthParameters = {
+  patchOctave: 0,
   oscWave: OscWave.sawtooth,
   oscDetune: 0,
   oscSub: 0,

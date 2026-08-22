@@ -1,4 +1,4 @@
-import { SynthParameters } from "@/core/definitions";
+import { SynthParameters } from "@/defs/definitions";
 import { allPresetKeys, store } from "@/root/store";
 
 function paramToByte(value: number) {
@@ -26,6 +26,7 @@ const mappers = {
         pr.ampRelease,
         pr.patchVolume, //11
       ].map(paramToByte),
+      pr.patchOctave + 100, //12
     ];
   },
   deserializeParameters(bytes: number[]): SynthParameters {
@@ -43,6 +44,7 @@ const mappers = {
       ampDecay: floatParams[9],
       ampRelease: floatParams[10],
       patchVolume: floatParams[11],
+      patchOctave: bytes[12] - 100,
     };
   },
   presetNameToIndex(presetName: string) {
@@ -63,7 +65,7 @@ export const persistence = {
     return new Uint8Array([formatRevision, presetIndex, ...paramBytes]);
   },
   applyStateBytes(bytes: Uint8Array) {
-    if (bytes.length === 2 + 12 && bytes[0] === formatRevision) {
+    if (bytes.length === 2 + 13 && bytes[0] === formatRevision) {
       const presetIndex = bytes[1];
       const presetKey = mappers.presetNameFromIndex(presetIndex);
       const parameters = mappers.deserializeParameters([...bytes.slice(2)]);
