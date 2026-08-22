@@ -7,7 +7,15 @@ export enum OscWave {
   square,
   triangle,
 }
-export const numOscWaveTypes = 7;
+export const availableOscWaveTypes: OscWave[] = [
+  OscWave.sawtooth,
+  OscWave.sawtoothR,
+  // OscWave.sawtoothR2,
+  OscWave.pulse125,
+  OscWave.pulse25,
+  OscWave.square,
+  OscWave.triangle,
+];
 
 export type SynthParameters = {
   oscWave: OscWave;
