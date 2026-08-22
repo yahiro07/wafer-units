@@ -18,7 +18,6 @@ export type SynthParameters = {
   filterDecay: number; // 0~1
   ampDecay: number; // 0~1
   ampRelease: number; // 0~1
-  // saturation: number; // 0~1
   fxChorus: number; // 0~1
   fxReverb: number; // 0~1
   patchVolume: number; // 0~1
@@ -34,7 +33,6 @@ export const defaultSynthParameters: SynthParameters = {
   filterDecay: 0,
   ampDecay: 1,
   ampRelease: 0,
-  // saturation: 0,
   fxChorus: 0,
   fxReverb: 0,
   patchVolume: 0.5,
