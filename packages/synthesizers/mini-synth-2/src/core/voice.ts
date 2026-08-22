@@ -158,21 +158,31 @@ export function createVoice(
       sub.frequency.value = freq / 2;
 
       // Amp Envelope
+      const attackTime = 0.001;
       const decayTime =
         params.ampDecay < 1 ? Math.max(0.01, params.ampDecay * 3) : 3;
       const sustain = params.ampDecay === 1 ? 1 : 0;
       const t = time && time > context.currentTime ? time : context.currentTime;
       ampGain.gain.setValueAtTime(0, t);
-      ampGain.gain.linearRampToValueAtTime(Math.max(0.001, velocity), t + 0.01);
+      ampGain.gain.linearRampToValueAtTime(
+        Math.max(0.001, velocity),
+        t + attackTime,
+      );
       if (sustain === 0) {
-        ampGain.gain.exponentialRampToValueAtTime(0.001, t + 0.01 + decayTime);
+        ampGain.gain.exponentialRampToValueAtTime(
+          0.001,
+          t + attackTime + decayTime,
+        );
       }
 
       // Filter Envelope
       const envModCents = params.filterEnvMod * 4800; // max 4 octaves
       if (envModCents > 0) {
         filter.detune.setValueAtTime(envModCents, t);
-        filter.detune.exponentialRampToValueAtTime(1, t + 0.01 + decayTime); // ramp detune back to 0 implicitly
+        filter.detune.exponentialRampToValueAtTime(
+          1,
+          t + attackTime + decayTime,
+        ); // ramp detune back to 0 implicitly
       } else {
         filter.detune.value = 0;
       }
