@@ -131,7 +131,7 @@ const ParametersSection = () => {
           <ParameterKnob paramKey="fxChorus" label="chorus" />
           <ParameterKnob paramKey="fxReverb" label="reverb" />
           <ParameterKnob paramKey="saturation" label="saturation" />
-          <ParameterKnob paramKey="masterVolume" label="volume" />
+          <ParameterKnob paramKey="patchVolume" label="volume" />
         </SectionFrame>
       </div>
     </div>

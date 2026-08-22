@@ -8,12 +8,13 @@ export const allPresets: Record<string, SynthParameters> = {
     oscDrift: 0,
     filterCutoff: 1,
     filterPeak: 0,
-    filterEnvMod: 0,
+    filterDecay: 0,
     ampDecay: 1,
     ampRelease: 0.1,
     fxChorus: 0,
     fxReverb: 0,
-    masterVolume: 0.8,
+    patchVolume: 0.8,
+    saturation: 0,
   },
   Bass1: {
     oscWave: 1,
@@ -27,7 +28,7 @@ export const allPresets: Record<string, SynthParameters> = {
     ampRelease: 0.1,
     fxChorus: 0,
     fxReverb: 0,
-    masterVolume: 0.8,
+    patchVolume: 0.8,
   },
   Bass2: {
     oscWave: 0,
@@ -41,7 +42,7 @@ export const allPresets: Record<string, SynthParameters> = {
     ampRelease: 0.1,
     fxChorus: 0.2,
     fxReverb: 0.1,
-    masterVolume: 0.8,
+    patchVolume: 0.8,
   },
   Lead1: {
     oscWave: 0,
@@ -55,7 +56,7 @@ export const allPresets: Record<string, SynthParameters> = {
     ampRelease: 0.2,
     fxChorus: 0.1,
     fxReverb: 0.4,
-    masterVolume: 0.8,
+    patchVolume: 0.8,
   },
   Lead2: {
     oscWave: 2,
@@ -69,7 +70,7 @@ export const allPresets: Record<string, SynthParameters> = {
     ampRelease: 0.4,
     fxChorus: 0.3,
     fxReverb: 0.5,
-    masterVolume: 0.8,
+    patchVolume: 0.8,
   },
   Pad1: {
     oscWave: 0,
@@ -83,7 +84,7 @@ export const allPresets: Record<string, SynthParameters> = {
     ampRelease: 0.8,
     fxChorus: 0.8,
     fxReverb: 0.8,
-    masterVolume: 0.8,
+    patchVolume: 0.8,
   },
   Pad2: {
     oscWave: 1,
@@ -97,6 +98,6 @@ export const allPresets: Record<string, SynthParameters> = {
     ampRelease: 0.9,
     fxChorus: 0.5,
     fxReverb: 0.9,
-    masterVolume: 0.8,
+    patchVolume: 0.8,
   },
 };

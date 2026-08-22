@@ -24,7 +24,7 @@ const mappers = {
         pr.filterEnvMod,
         pr.ampDecay,
         pr.ampRelease,
-        pr.masterVolume, //11
+        pr.patchVolume, //11
       ].map(paramToByte),
     ];
   },
@@ -42,7 +42,7 @@ const mappers = {
       filterEnvMod: floatParams[8],
       ampDecay: floatParams[9],
       ampRelease: floatParams[10],
-      masterVolume: floatParams[11],
+      patchVolume: floatParams[11],
     };
   },
   presetNameToIndex(presetName: string) {

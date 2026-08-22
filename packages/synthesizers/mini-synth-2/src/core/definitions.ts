@@ -20,7 +20,7 @@ export type SynthParameters = {
   saturation: number; // 0~1
   fxChorus: number; // 0~1
   fxReverb: number; // 0~1
-  masterVolume: number; // 0~1
+  patchVolume: number; // 0~1
 };
 
 export const defaultSynthParameters: SynthParameters = {
@@ -36,7 +36,7 @@ export const defaultSynthParameters: SynthParameters = {
   saturation: 0,
   fxChorus: 0,
   fxReverb: 0,
-  masterVolume: 0.5,
+  patchVolume: 0.5,
 };
 
 export type ISynthesizerEngine = {

@@ -64,7 +64,7 @@ export function createSynthesizerEngine(
       chorus.update(state.parameters.fxChorus);
       reverb.update(state.parameters.fxReverb);
       softClipper.update(state.parameters.saturation);
-      masterGain.gain.value = state.parameters.masterVolume;
+      masterGain.gain.value = state.parameters.patchVolume;
     },
   };
 
