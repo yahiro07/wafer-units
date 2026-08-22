@@ -87,6 +87,38 @@ function getPtmWave(
   );
 }
 
+function wrapUnitPhase(phase: number) {
+  return phase - Math.floor(phase);
+}
+
+// 2x oversample, then [1, 2, 1]/4 decimate. The extra tap is the previous
+// 2x sample (recomputed) so osc1/osc2 do not need shared filter state.
+function getPtmWave2x(
+  pp: number,
+  ptmKind: PtmKind,
+  ptmLevel: number,
+  baseWaveKind: PtmBaseWaveKind,
+  phaseInc: number,
+) {
+  const dt2 = phaseInc * 0.5;
+  const y0 = getPtmWave(
+    wrapUnitPhase(pp - phaseInc),
+    ptmKind,
+    ptmLevel,
+    baseWaveKind,
+    dt2,
+  );
+  const y1 = getPtmWave(
+    wrapUnitPhase(pp - dt2),
+    ptmKind,
+    ptmLevel,
+    baseWaveKind,
+    dt2,
+  );
+  const y2 = getPtmWave(pp, ptmKind, ptmLevel, baseWaveKind, dt2);
+  return (y0 + y1 * 2 + y2) * 0.25;
+}
+
 const ptmKindMap = {
   [WaveMode.PTM2]: ["pw", "rect"],
   [WaveMode.PTM3]: ["sub-pw", "saw"],
@@ -117,10 +149,10 @@ function bindOscFunctionForExWaves(waveMode: WaveMode): OscFn {
     if (0) {
       const ptmLevel =
         envDecay === 0 ? shape : mapUnaryTo(shapeEgValue, 0, shape);
-      return getPtmWave(phase, ptmKind, ptmLevel, baseWaveKind, phaseInc);
+      return getPtmWave2x(phase, ptmKind, ptmLevel, baseWaveKind, phaseInc);
     } else {
       const ptmLevel = mapUnaryTo(shapeEgValue, shape, 1) * 0.6;
-      return getPtmWave(phase, ptmKind, ptmLevel, baseWaveKind, phaseInc);
+      return getPtmWave2x(phase, ptmKind, ptmLevel, baseWaveKind, phaseInc);
     }
   };
 }
