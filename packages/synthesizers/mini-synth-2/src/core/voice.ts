@@ -49,30 +49,32 @@ export function createVoice(
   outputNode.gain.value = 1; // fix output node gain so sound passes through
 
   // Oscillators
+  const useDualOsc = params.oscDetune > 0;
   const osc1 = context.createOscillator();
-  const osc2 = context.createOscillator();
+  const osc2 = useDualOsc ? context.createOscillator() : null;
   const sub = context.createOscillator();
 
-  const wave = getWave(context, params.oscWave);
-  if (typeof wave === "string") {
-    osc1.type = wave as OscillatorType;
-    osc2.type = wave as OscillatorType;
-    sub.type = wave as OscillatorType;
-  } else {
-    osc1.setPeriodicWave(wave);
-    osc2.setPeriodicWave(wave);
-    sub.setPeriodicWave(wave);
-  }
+  const applyWave = (osc: OscillatorNode, wave: string | PeriodicWave) => {
+    if (typeof wave === "string") {
+      osc.type = wave as OscillatorType;
+    } else {
+      osc.setPeriodicWave(wave);
+    }
+  };
+  const detuneCentsMax = 40;
 
-  // Detune amount
-  // 0~1 maps to 0 ~ 50 cents max
-  const detuneCents = params.oscDetune * 50;
-  if (params.oscDetune > 0) {
+  const wave = getWave(context, params.oscWave);
+  applyWave(osc1, wave);
+  if (osc2) applyWave(osc2, wave);
+  applyWave(sub, wave);
+
+  // Detune amount: 0~1 maps to 0 ~ 50 cents max (squared)
+  const detuneCents = params.oscDetune ** 2 * detuneCentsMax;
+  if (osc2) {
     osc1.detune.value = detuneCents;
     osc2.detune.value = -detuneCents;
   } else {
     osc1.detune.value = 0;
-    osc2.detune.value = 0;
   }
 
   // Drift
@@ -83,7 +85,7 @@ export function createVoice(
   lfoGain.gain.value = params.oscDrift * 30; // max 30 cents drift
   lfo.connect(lfoGain);
   lfoGain.connect(osc1.detune);
-  lfoGain.connect(osc2.detune);
+  if (osc2) lfoGain.connect(osc2.detune);
 
   const mainOscGain = context.createGain();
   mainOscGain.gain.value = 0.5;
@@ -91,8 +93,18 @@ export function createVoice(
   const subOscGain = context.createGain();
   subOscGain.gain.value = params.oscSub;
 
-  osc1.connect(mainOscGain);
-  osc2.connect(mainOscGain);
+  if (osc2) {
+    const panL = context.createStereoPanner();
+    const panR = context.createStereoPanner();
+    panL.pan.value = -0.5;
+    panR.pan.value = 0.5;
+    osc1.connect(panL);
+    osc2.connect(panR);
+    panL.connect(mainOscGain);
+    panR.connect(mainOscGain);
+  } else {
+    osc1.connect(mainOscGain);
+  }
   sub.connect(subOscGain);
 
   const filter = context.createBiquadFilter();
@@ -120,17 +132,14 @@ export function createVoice(
     const updateTime = context.currentTime;
 
     const nextWave = getWave(context, nextParams.oscWave);
-    if (typeof nextWave === "string") {
-      osc1.type = nextWave as OscillatorType;
-      osc2.type = nextWave as OscillatorType;
-    } else {
-      osc1.setPeriodicWave(nextWave);
-      osc2.setPeriodicWave(nextWave);
-    }
+    applyWave(osc1, nextWave);
+    if (osc2) applyWave(osc2, nextWave);
 
-    const nextDetuneCents = nextParams.oscDetune ** 2 * 50;
-    osc1.detune.setTargetAtTime(nextDetuneCents, updateTime, 0.01);
-    osc2.detune.setTargetAtTime(-nextDetuneCents, updateTime, 0.01);
+    const nextDetuneCents = nextParams.oscDetune ** 2 * detuneCentsMax;
+    if (osc2) {
+      osc1.detune.setTargetAtTime(nextDetuneCents, updateTime, 0.01);
+      osc2.detune.setTargetAtTime(-nextDetuneCents, updateTime, 0.01);
+    }
     lfoGain.gain.setTargetAtTime(nextParams.oscDrift * 30, updateTime, 0.01);
     subOscGain.gain.setTargetAtTime(nextParams.oscSub, updateTime, 0.01);
 
@@ -145,7 +154,7 @@ export function createVoice(
     noteOn(noteNumber, time, velocity) {
       const freq = midiToFreq(noteNumber);
       osc1.frequency.value = freq;
-      osc2.frequency.value = freq;
+      if (osc2) osc2.frequency.value = freq;
       sub.frequency.value = freq / 2;
 
       // Amp Envelope
@@ -170,7 +179,9 @@ export function createVoice(
 
       lfo.start(t);
       osc1.start(t);
-      osc2.start(t);
+      if (osc2) {
+        osc2.start(t);
+      }
       sub.start(t);
     },
     noteOff(time: number) {
@@ -187,7 +198,7 @@ export function createVoice(
       const stopTime = tOff + releaseTime + 0.1;
       lfo.stop(stopTime);
       osc1.stop(stopTime);
-      osc2.stop(stopTime);
+      osc2?.stop(stopTime);
       sub.stop(stopTime);
 
       const delayMs = (tOff - context.currentTime + releaseTime + 0.2) * 1000;
