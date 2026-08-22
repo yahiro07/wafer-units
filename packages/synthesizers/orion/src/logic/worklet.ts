@@ -120,20 +120,18 @@ function getPtmWave2x(
 }
 
 const ptmKindMap = {
-  [WaveMode.PTM2]: ["pw", "rect"],
-  [WaveMode.PTM3]: ["sub-pw", "saw"],
-  [WaveMode.PTM4]: ["sfm", "saw"],
-  [WaveMode.PTM5]: ["sdm", "sine"],
-  [WaveMode.PTM6]: ["speed", "saw"],
-  [WaveMode.PTM7]: ["accel", "saw"],
-  [WaveMode.PTM8]: ["screw", "saw"],
-  [WaveMode.PTM9]: ["drill", "saw"],
-  [WaveMode.PTM10]: ["squash", "saw"],
-} satisfies { [key in WaveMode]?: [PtmKind, PtmBaseWaveKind] };
+  [WaveMode.PTM2]: ["pw", "rect", 1],
+  [WaveMode.PTM3]: ["sub-pw", "saw", 1],
+  [WaveMode.PTM4]: ["sfm", "saw", 0.5],
+  [WaveMode.PTM5]: ["sdm", "sine", 0.7],
+  [WaveMode.PTM6]: ["screw", "saw", 1],
+  [WaveMode.PTM7]: ["squash", "saw", 0.6],
+  // [WaveMode.PTM7]: ["drill", "saw", 0.8],
+} satisfies { [key in WaveMode]?: [PtmKind, PtmBaseWaveKind, number] };
 
 let kindTextOut = "";
 function bindOscFunctionForExWaves(waveMode: WaveMode): OscFn {
-  const [ptmKind, baseWaveKind] =
+  const [ptmKind, baseWaveKind, ptmLevelScaling] =
     ptmKindMap[waveMode as keyof typeof ptmKindMap] ??
     ptmKindMap[WaveMode.PTM2];
 
@@ -146,12 +144,14 @@ function bindOscFunctionForExWaves(waveMode: WaveMode): OscFn {
   }
 
   return (shape, shapeEgValue, phase, envDecay, phaseInc) => {
-    if (0) {
+    if (1) {
       const ptmLevel =
-        envDecay === 0 ? shape : mapUnaryTo(shapeEgValue, 0, shape);
+        envDecay === 0
+          ? shape
+          : mapUnaryTo(shapeEgValue, 0, shape) * ptmLevelScaling;
       return getPtmWave2x(phase, ptmKind, ptmLevel, baseWaveKind, phaseInc);
     } else {
-      const ptmLevel = mapUnaryTo(shapeEgValue, shape, 1) * 0.6;
+      const ptmLevel = mapUnaryTo(shapeEgValue, shape, 1) * ptmLevelScaling;
       return getPtmWave2x(phase, ptmKind, ptmLevel, baseWaveKind, phaseInc);
     }
   };
@@ -338,7 +338,13 @@ function createSynthesizerCore() {
         // 5. Waveform generation for each algorithm
         // -------------------------------------------------------------
 
-        const osc1Out = oscFn(shape, shapeEgValue, phase1, envDecay, f1 / sampleRate);
+        const osc1Out = oscFn(
+          shape,
+          shapeEgValue,
+          phase1,
+          envDecay,
+          f1 / sampleRate,
+        );
         const osc2Out = isDualOsc
           ? oscFn(shape, shapeEgValue, phase2, envDecay, f2 / sampleRate)
           : 0.0;
