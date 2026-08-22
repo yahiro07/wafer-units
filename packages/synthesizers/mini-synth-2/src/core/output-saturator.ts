@@ -30,7 +30,6 @@ export function createOutputSaturator(audioContext: AudioContext) {
   return {
     inputNode,
     outputNode,
-    update(_level: number) {},
     cleanup() {
       inputNode.disconnect();
       preGain.disconnect();
