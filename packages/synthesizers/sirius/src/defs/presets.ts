@@ -1,7 +1,7 @@
 import { SynthParameters } from "@/defs/definitions";
 
 export const allPresets: Record<string, SynthParameters> = {
-  Init: {
+  init: {
     oscWave: 0,
     oscDetune: 0,
     oscSub: 0,
@@ -15,7 +15,7 @@ export const allPresets: Record<string, SynthParameters> = {
     fxReverb: 0,
     patchVolume: 0.8,
   },
-  Bass1: {
+  bass1: {
     oscWave: 1,
     oscDetune: 0,
     oscSub: 0.8,
@@ -29,7 +29,7 @@ export const allPresets: Record<string, SynthParameters> = {
     fxReverb: 0,
     patchVolume: 0.8,
   },
-  Bass2: {
+  bass2: {
     oscWave: 0,
     oscDetune: 0.2,
     oscSub: 0.5,
@@ -43,7 +43,35 @@ export const allPresets: Record<string, SynthParameters> = {
     fxReverb: 0.1,
     patchVolume: 0.8,
   },
-  Lead1: {
+  brass1: {
+    oscWave: 0,
+    oscDetune: 0.6,
+    oscSub: 0,
+    oscDrift: 0.27,
+    filterCutoff: 0.68,
+    filterPeak: 0.76,
+    filterDecay: 0,
+    ampDecay: 0.85,
+    ampRelease: 0,
+    fxChorus: 0.36,
+    fxReverb: 0.78,
+    patchVolume: 0.5,
+  },
+  pluck1: {
+    oscWave: 5,
+    oscDetune: 0,
+    oscSub: 0,
+    oscDrift: 0,
+    filterCutoff: 1,
+    filterPeak: 0,
+    filterDecay: 0.99,
+    ampDecay: 0.22,
+    ampRelease: 0.37,
+    fxChorus: 0,
+    fxReverb: 0.39,
+    patchVolume: 0.8,
+  },
+  lead1: {
     oscWave: 0,
     oscDetune: 0.3,
     oscSub: 0,
@@ -57,7 +85,7 @@ export const allPresets: Record<string, SynthParameters> = {
     fxReverb: 0.4,
     patchVolume: 0.8,
   },
-  Lead2: {
+  lead2: {
     oscWave: 2,
     oscDetune: 0,
     oscSub: 0,
@@ -71,7 +99,7 @@ export const allPresets: Record<string, SynthParameters> = {
     fxReverb: 0.5,
     patchVolume: 0.8,
   },
-  Pad1: {
+  pad1: {
     oscWave: 0,
     oscDetune: 0.8,
     oscSub: 0.2,
@@ -85,7 +113,7 @@ export const allPresets: Record<string, SynthParameters> = {
     fxReverb: 0.8,
     patchVolume: 0.8,
   },
-  Pad2: {
+  pad2: {
     oscWave: 1,
     oscDetune: 0.5,
     oscSub: 0.4,
@@ -98,5 +126,47 @@ export const allPresets: Record<string, SynthParameters> = {
     fxChorus: 0.5,
     fxReverb: 0.9,
     patchVolume: 0.8,
+  },
+  pad3: {
+    oscWave: 0,
+    oscDetune: 0,
+    oscSub: 0,
+    oscDrift: 0,
+    filterCutoff: 0.33,
+    filterPeak: 0.26,
+    filterDecay: 0,
+    ampDecay: 1,
+    ampRelease: 0.45,
+    fxChorus: 0.75,
+    fxReverb: 0.36,
+    patchVolume: 0.5,
+  },
+  pad4: {
+    oscWave: 0,
+    oscDetune: 0.58,
+    oscSub: 0,
+    oscDrift: 0,
+    filterCutoff: 1,
+    filterPeak: 0.25,
+    filterDecay: 0,
+    ampDecay: 0.7,
+    ampRelease: 0.89,
+    fxChorus: 0.53,
+    fxReverb: 0,
+    patchVolume: 0.5,
+  },
+  pad5: {
+    oscWave: 6,
+    oscDetune: 0.65,
+    oscSub: 0,
+    oscDrift: 0.41,
+    filterCutoff: 0.54,
+    filterPeak: 0.39,
+    filterDecay: 0,
+    ampDecay: 0.68,
+    ampRelease: 0.59,
+    fxChorus: 0.45,
+    fxReverb: 0.42,
+    patchVolume: 0.5,
   },
 };
