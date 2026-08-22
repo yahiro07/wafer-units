@@ -21,7 +21,7 @@ const mappers = {
         pr.fxReverb,
         pr.filterCutoff,
         pr.filterPeak,
-        pr.filterEnvMod,
+        pr.filterDecay,
         pr.ampDecay,
         pr.ampRelease,
         pr.patchVolume, //11
@@ -39,7 +39,7 @@ const mappers = {
       fxReverb: floatParams[5],
       filterCutoff: floatParams[6],
       filterPeak: floatParams[7],
-      filterEnvMod: floatParams[8],
+      filterDecay: floatParams[8],
       ampDecay: floatParams[9],
       ampRelease: floatParams[10],
       patchVolume: floatParams[11],

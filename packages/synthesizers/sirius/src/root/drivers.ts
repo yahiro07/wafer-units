@@ -35,10 +35,10 @@ export function setupUnit() {
             { id: "fxReverb" },
             { id: "filterCutoff" },
             { id: "filterPeak" },
-            { id: "filterEnvMod" },
+            { id: "filterDecay" },
             { id: "ampDecay" },
             { id: "ampRelease" },
-            { id: "masterVolume" },
+            { id: "patchVolume" },
           ];
         },
         getParameter(id) {
