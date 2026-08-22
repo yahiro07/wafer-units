@@ -168,7 +168,7 @@ export function createOscillatorsUnit(
   }
   sub.connect(subOscGain);
 
-  const freq = midiToFreq(noteNumber);
+  const freq = midiToFreq(noteNumber + params.patchOctave * 12);
   osc1.frequency.value = freq;
   if (osc2) osc2.frequency.value = freq;
   sub.frequency.value = freq / 2;

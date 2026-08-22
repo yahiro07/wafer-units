@@ -18,6 +18,7 @@ export const oscWaveTypesForUi: OscWave[] = [
 ];
 
 export type SynthParameters = {
+  patchOctave: number;
   oscWave: OscWave;
   oscDetune: number; // 0~1
   oscSub: number; // 0~1
@@ -33,6 +34,7 @@ export type SynthParameters = {
 };
 
 export const defaultSynthParameters: SynthParameters = {
+  patchOctave: 0,
   oscWave: OscWave.sawtooth,
   oscDetune: 0,
   oscSub: 0,

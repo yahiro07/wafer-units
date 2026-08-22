@@ -34,4 +34,8 @@ export const actions = {
     await navigator.clipboard.writeText(jsonText);
     console.log("Preset data copied to clipboard");
   },
+  togglePatchOctaveMinus() {
+    const next = store.state.parameters.patchOctave === 0 ? -1 : 0;
+    store.patchParameters({ patchOctave: next });
+  },
 };

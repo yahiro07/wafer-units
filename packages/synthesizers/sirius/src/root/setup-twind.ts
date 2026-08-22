@@ -16,6 +16,7 @@ install({
         clSectionEdge: "#666",
         clTopBarBg: "#e0e0e0",
         clButtonBg: "#fff",
+        clButtonActiveBg: "#6bf",
       },
     },
   },

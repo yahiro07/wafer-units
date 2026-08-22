@@ -2,6 +2,7 @@ import { SynthParameters } from "@/defs/definitions";
 
 export const allPresets: Record<string, SynthParameters> = {
   init: {
+    patchOctave: 0,
     oscWave: 0,
     oscDetune: 0,
     oscSub: 0,
@@ -16,6 +17,7 @@ export const allPresets: Record<string, SynthParameters> = {
     patchVolume: 0.8,
   },
   bass1: {
+    patchOctave: 0,
     oscWave: 1,
     oscDetune: 0,
     oscSub: 0.8,
@@ -30,6 +32,7 @@ export const allPresets: Record<string, SynthParameters> = {
     patchVolume: 0.8,
   },
   bass2: {
+    patchOctave: 0,
     oscWave: 0,
     oscDetune: 0.2,
     oscSub: 0.5,
@@ -44,6 +47,7 @@ export const allPresets: Record<string, SynthParameters> = {
     patchVolume: 0.8,
   },
   brass1: {
+    patchOctave: 0,
     oscWave: 0,
     oscDetune: 0.6,
     oscSub: 0,
@@ -58,6 +62,7 @@ export const allPresets: Record<string, SynthParameters> = {
     patchVolume: 0.5,
   },
   pluck1: {
+    patchOctave: 0,
     oscWave: 5,
     oscDetune: 0,
     oscSub: 0,
@@ -72,6 +77,7 @@ export const allPresets: Record<string, SynthParameters> = {
     patchVolume: 0.8,
   },
   lead1: {
+    patchOctave: 0,
     oscWave: 0,
     oscDetune: 0.3,
     oscSub: 0,
@@ -86,6 +92,7 @@ export const allPresets: Record<string, SynthParameters> = {
     patchVolume: 0.8,
   },
   lead2: {
+    patchOctave: 0,
     oscWave: 2,
     oscDetune: 0,
     oscSub: 0,
@@ -100,6 +107,7 @@ export const allPresets: Record<string, SynthParameters> = {
     patchVolume: 0.8,
   },
   pad1: {
+    patchOctave: 0,
     oscWave: 0,
     oscDetune: 0.8,
     oscSub: 0.2,
@@ -114,6 +122,7 @@ export const allPresets: Record<string, SynthParameters> = {
     patchVolume: 0.8,
   },
   pad2: {
+    patchOctave: 0,
     oscWave: 1,
     oscDetune: 0.5,
     oscSub: 0.4,
@@ -128,6 +137,7 @@ export const allPresets: Record<string, SynthParameters> = {
     patchVolume: 0.8,
   },
   pad3: {
+    patchOctave: 0,
     oscWave: 0,
     oscDetune: 0,
     oscSub: 0,
@@ -142,6 +152,7 @@ export const allPresets: Record<string, SynthParameters> = {
     patchVolume: 0.5,
   },
   pad4: {
+    patchOctave: 0,
     oscWave: 0,
     oscDetune: 0.58,
     oscSub: 0,
@@ -156,6 +167,7 @@ export const allPresets: Record<string, SynthParameters> = {
     patchVolume: 0.5,
   },
   pad5: {
+    patchOctave: 0,
     oscWave: 6,
     oscDetune: 0.65,
     oscSub: 0,

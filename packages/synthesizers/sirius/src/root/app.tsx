@@ -54,6 +54,19 @@ const RandomizerButton = () => {
   );
 };
 
+const OctaveMinusButton = () => {
+  const { parameters } = store.useSnapshot();
+  return (
+    <Button
+      active={parameters.patchOctave === -1}
+      asr={1.3}
+      onClick={actions.togglePatchOctaveMinus}
+    >
+      oct-
+    </Button>
+  );
+};
+
 const TopBar = () => {
   return (
     <div
@@ -62,11 +75,12 @@ const TopBar = () => {
         "bg-clTopBarBg bd-clSectionEdge rounded-[4px]",
       )}
     >
-      <div class="w-[120px]">
+      <div class="w-[160px]">
         <TitleText />
       </div>
       <PresetSelectionPart />
-      <div class="w-[120px] flex-ha justify-end">
+      <div class="w-[160px] flex-ha justify-end gap-4">
+        <OctaveMinusButton />
         <RandomizerButton />
       </div>
     </div>
