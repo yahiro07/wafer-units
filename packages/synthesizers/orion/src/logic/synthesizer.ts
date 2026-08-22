@@ -86,7 +86,13 @@ function createVoice(
           ) {
             return;
           }
-          internal.setParamAtTime(key, synthParameters[key], time, smooth);
+          const value = synthParameters[key];
+          internal.setParamAtTime(
+            key,
+            typeof value === "boolean" ? (value ? 1 : 0) : value,
+            time,
+            smooth,
+          );
         },
       );
     },

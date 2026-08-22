@@ -25,7 +25,7 @@ export function createRandomParameters(): Partial<SynthParameters> {
     shape: randF(),
     envDecay: randF(),
     detune: probably(0.5, 0, randF()),
-    sub: probably(0.5, 0, randF()),
+    sub: randB(0.5),
     decay: probably(fixDR === "D" ? 0.3 : 0, 1, randF()),
     release: probably(fixDR === "R" ? 0.3 : 0, 0, randF()),
     drift: probably(0.5, 0, randF()),

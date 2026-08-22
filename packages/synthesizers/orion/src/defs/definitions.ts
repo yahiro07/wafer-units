@@ -7,7 +7,6 @@ export enum WaveMode {
   PTM5,
   PTM6,
   PTM7,
-  // PTM8,
 }
 export const numWaveModes = 8;
 
@@ -16,7 +15,7 @@ export type SynthParameters = {
   shape: number;
   envDecay: number;
   detune: number;
-  sub: number;
+  sub: boolean;
   decay: number;
   release: number;
   drift: number;
@@ -29,12 +28,14 @@ export type SynthParameters = {
 
 export type SynthPresetParameters = Omit<SynthParameters, "master">;
 
+export type SynthLinearParameters = Omit<SynthParameters, "sub">;
+
 export const defaultSynthParameters: SynthParameters = {
   waveMode: WaveMode.PD,
   shape: 0,
   envDecay: 0,
   detune: 0,
-  sub: 0,
+  sub: false,
   decay: 0.5,
   release: 0,
   drift: 0,

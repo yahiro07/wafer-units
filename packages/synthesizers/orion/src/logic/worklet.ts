@@ -158,10 +158,9 @@ function bindOscFunctionForExWaves(waveMode: WaveMode): OscFn {
 }
 
 function createSynthesizerCore() {
-  // Oscillator phase state for two main oscillators plus the sub oscillator.
+  // Oscillator phase state for two main oscillators.
   let phase1 = 0.0;
   let phase2 = 0.0;
-  let phaseSub = 0.0;
 
   // Irregular LFO phase state for pitch drift.
   let driftPhase1 = 0.0;
@@ -189,7 +188,6 @@ function createSynthesizerCore() {
   function resetVoiceState() {
     phase1 = 0.0;
     phase2 = 0.0;
-    phaseSub = 0.0;
     driftPhase1 = 0.0;
     driftPhase2 = 0.0;
     sampleCount = 0;
@@ -222,7 +220,7 @@ function createSynthesizerCore() {
       const _shape = parameters["shape"][0];
       const _envDecay = parameters["envDecay"][0];
       const detune = parameters["detune"][0];
-      const subVol = parameters["sub"][0];
+      const sub = parameters["sub"][0] > 0.5;
       const decay = parameters["decay"][0];
       const release = parameters["release"][0];
       const driftAmount = parameters["drift"][0];
@@ -310,13 +308,14 @@ function createSynthesizerCore() {
         // -------------------------------------------------------------
         // 3. Oscillator frequency setup with detune handling
         // -------------------------------------------------------------
-        // Shut down OSC2 completely when detune is effectively zero.
-        const isDualOsc = detune > 0.005;
-        const detuneFactor = 1.0 + detune * 0.015; // Up to roughly 1.5% detune.
-
-        const f1 = baseFreq * (1.0 + pitchDrift);
-        const f2 = baseFreq * detuneFactor * (1.0 + pitchDrift);
-        const fSub = baseFreq * 0.5 * (1.0 + pitchDrift); // One octave below.
+        const isDualOsc = sub || detune > 0.005;
+        const detuneAmount = detune * 0.015;
+        const f1 = baseFreq * (1.0 - detuneAmount) * (1.0 + pitchDrift);
+        const f2 =
+          baseFreq *
+          (sub ? 0.5 : 1.0) *
+          (1.0 + detuneAmount) *
+          (1.0 + pitchDrift);
 
         // Advance oscillator phases.
         phase1 += f1 / sampleRate;
@@ -326,9 +325,6 @@ function createSynthesizerCore() {
           phase2 += f2 / sampleRate;
           if (phase2 >= 1.0) phase2 -= 1.0;
         }
-
-        phaseSub += fSub / sampleRate;
-        if (phaseSub >= 1.0) phaseSub -= 1.0;
 
         // -------------------------------------------------------------
         // 4. Modulation value combination (knob + envelope modulation)
@@ -372,16 +368,9 @@ function createSynthesizerCore() {
         }
 
         // -------------------------------------------------------------
-        // 7. Sub oscillator mix and final amplitude envelope
+        // 7. Final amplitude envelope
         // -------------------------------------------------------------
-        // Use a triangle wave for the sub oscillator and bypass lo-fi processing to keep the low end stable.
-        let subOut = 0.0;
-        if (subVol > 0.005) {
-          subOut = phaseSub < 0.5 ? 4.0 * phaseSub - 1.0 : 3.0 - 4.0 * phaseSub;
-        }
-
-        // Apply the main amplitude envelope to the final mix.
-        const finalSample = (mainMix + subOut * subVol * 0.6) * egValue;
+        const finalSample = mainMix * egValue;
 
         // Write the sample to the output channel.
         outputChannel[i] = finalSample;

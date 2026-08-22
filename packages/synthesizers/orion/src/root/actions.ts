@@ -22,6 +22,9 @@ export const actions = {
   ) {
     store.patchParameters({ [key]: value });
   },
+  toggleBoolParameter<K extends "sub">(key: K) {
+    store.patchParameters({ [key]: !store.state.parameters[key] });
+  },
   randomizeParameters() {
     const paramAttrs = createRandomParameters();
     store.patchParameters(paramAttrs);

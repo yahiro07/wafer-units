@@ -17,7 +17,7 @@ const mappers = {
         pr.shape, //1
         pr.envDecay,
         pr.detune,
-        pr.sub,
+        pr.sub ? 1 : 0,
         pr.decay,
         pr.release,
         pr.drift,
@@ -36,7 +36,7 @@ const mappers = {
       shape: floatParams[1],
       envDecay: floatParams[2],
       detune: floatParams[3],
-      sub: floatParams[4],
+      sub: bytes[4] !== 0,
       decay: floatParams[5],
       release: floatParams[6],
       drift: floatParams[7],

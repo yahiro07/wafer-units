@@ -5,7 +5,7 @@ import { createPlainSelectorOptions } from "@/utils/selector-option";
 import { Selector } from "@/components/selector";
 import { allPresetKeys, store } from "@/root/store";
 import { actions } from "@/root/actions";
-import { numWaveModes, SynthParameters } from "@/defs/definitions";
+import { numWaveModes, SynthLinearParameters } from "@/defs/definitions";
 import { cx } from "@twind/core";
 import { useSetupDrivers } from "@/root/drivers";
 
@@ -77,10 +77,12 @@ const ParameterKnob = ({
   paramKey,
   label,
   steps,
+  onLabelClick,
 }: {
-  paramKey: keyof SynthParameters;
+  paramKey: keyof SynthLinearParameters;
   label: string;
   steps?: number;
+  onLabelClick?: () => void;
 }) => {
   const { parameters } = store.useSnapshot();
   const setParameter = actions.setParameter;
@@ -95,11 +97,13 @@ const ParameterKnob = ({
       max={max}
       step={step}
       onChange={(v) => setParameter(paramKey, v)}
+      onLabelClick={onLabelClick}
     />
   );
 };
 
 const ParametersSection = () => {
+  const { parameters } = store.useSnapshot();
   return (
     <div class="flex-v gap-3">
       <div class="flex-h gap-3">
@@ -111,8 +115,11 @@ const ParametersSection = () => {
           />
           <ParameterKnob paramKey="shape" label="SHAPE" />
           <ParameterKnob paramKey="envDecay" label="ENV" />
-          <ParameterKnob paramKey="sub" label="SUB" />
-          <ParameterKnob paramKey="detune" label="DETUNE" />
+          <ParameterKnob
+            paramKey="detune"
+            label={parameters.sub ? "SUB-DET†" : "DET†"}
+            onLabelClick={() => actions.toggleBoolParameter("sub")}
+          />
         </SectionFrame>
         <SectionFrame
           header="AMPLIFIER"
