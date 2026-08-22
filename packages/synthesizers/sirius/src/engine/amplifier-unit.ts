@@ -16,7 +16,7 @@ export type AmplifierUnit = {
 
 const helpers = {
   getDecayAndSustain(prAmpDecay: number) {
-    const th = 0.6;
+    const th = 0.5;
     if (prAmpDecay < th) {
       return {
         ampDecay: linearInterpolate(prAmpDecay, 0, th, 0, 1),

@@ -20,16 +20,17 @@ function randChoice<T>(options: T[]): T {
 
 export function createRandomParameters(): Partial<SynthParameters> {
   return {
-    oscWave: probably(0.3, 0, randChoice(oscWaveTypesForUi)),
+    oscWave: probably(0.2, 0, randChoice(oscWaveTypesForUi)),
     oscDetune: probably(0.4, 0, randF()),
     oscSub: probably(0.4, 0, randF()),
     oscDrift: probably(0.6, 0, randF()),
-    filterCutoff: probably(0.3, 1, randF()),
+    filterCutoff: probably(0.3, 1, randRange(0.2, 1)),
     filterPeak: probably(0.3, 0, randF()),
     filterDecay: probably(0.4, 0, randF()),
     ampDecay: probably(0.25, 1, randRange(0.1, 1)),
     ampRelease: probably(0.3, 0, randF()),
     fxChorus: probably(0.4, 0, randF()),
     fxReverb: probably(0.4, 0, randF()),
+    patchVolume: 0.5,
   };
 }
