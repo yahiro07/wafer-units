@@ -1,4 +1,5 @@
 import { createChorus2 } from "@/core/chorus2";
+import { mapVolumeControlCurveCenterUnity } from "@/core/curve";
 import {
   defaultSynthParameters,
   ISynthesizerEngine,
@@ -63,7 +64,9 @@ export function createSynthesizerEngine(
       }
       chorus.update(state.parameters.fxChorus);
       reverb.update(state.parameters.fxReverb);
-      masterGain.gain.value = state.parameters.patchVolume;
+      masterGain.gain.value = mapVolumeControlCurveCenterUnity(
+        state.parameters.patchVolume,
+      );
     },
   };
 
