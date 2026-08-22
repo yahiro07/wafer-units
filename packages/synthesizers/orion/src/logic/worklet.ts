@@ -25,7 +25,12 @@ function computePD(phase: number, amount: number): number {
 
 const SHAPE_EG_MAX_SECONDS = 1.5;
 
-type OscFn = (shape: number, shapeEgValue: number, phase: number) => number;
+type OscFn = (
+  shape: number,
+  shapeEgValue: number,
+  phase: number,
+  envDecay: number,
+) => number;
 
 function processOscPD(shape: number, shapeEgValue: number, phase: number) {
   const pdLevel = mapUnaryTo(shapeEgValue, shape, 1);
@@ -63,7 +68,14 @@ function getPtmWave(
 
 const ptmKindMap = {
   [WaveMode.PTM2]: ["pw", "rect"],
-  [WaveMode.PTM3]: ["sdm", "sine"],
+  [WaveMode.PTM3]: ["sub-pw", "saw"],
+  [WaveMode.PTM4]: ["sfm", "saw"],
+  [WaveMode.PTM5]: ["sdm", "sine"],
+  [WaveMode.PTM6]: ["speed", "saw"],
+  [WaveMode.PTM7]: ["accel", "saw"],
+  [WaveMode.PTM8]: ["screw", "saw"],
+  [WaveMode.PTM9]: ["drill", "saw"],
+  [WaveMode.PTM10]: ["squash", "saw"],
 } satisfies { [key in WaveMode]?: [PtmKind, PtmBaseWaveKind] };
 
 let kindTextOut = "";
@@ -80,9 +92,15 @@ function bindOscFunctionForExWaves(waveMode: WaveMode): OscFn {
     }
   }
 
-  return (shape, shapeEgValue, phase) => {
-    const ptmLevel = mapUnaryTo(shapeEgValue, 0, shape);
-    return getPtmWave(phase, ptmKind, ptmLevel, baseWaveKind);
+  return (shape, shapeEgValue, phase, envDecay) => {
+    if (0) {
+      const ptmLevel =
+        envDecay === 0 ? shape : mapUnaryTo(shapeEgValue, 0, shape);
+      return getPtmWave(phase, ptmKind, ptmLevel, baseWaveKind);
+    } else {
+      const ptmLevel = mapUnaryTo(shapeEgValue, shape, 1) * 0.6;
+      return getPtmWave(phase, ptmKind, ptmLevel, baseWaveKind);
+    }
   };
 }
 
@@ -267,8 +285,10 @@ function createSynthesizerCore() {
         // 5. Waveform generation for each algorithm
         // -------------------------------------------------------------
 
-        const osc1Out = oscFn(shape, shapeEgValue, phase1);
-        const osc2Out = isDualOsc ? oscFn(shape, shapeEgValue, phase2) : 0.0;
+        const osc1Out = oscFn(shape, shapeEgValue, phase1, envDecay);
+        const osc2Out = isDualOsc
+          ? oscFn(shape, shapeEgValue, phase2, envDecay)
+          : 0.0;
 
         // Mix the main oscillators.
         let mainMix = isDualOsc ? (osc1Out + osc2Out) * 0.5 : osc1Out;
