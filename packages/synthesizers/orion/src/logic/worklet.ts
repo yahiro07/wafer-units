@@ -30,6 +30,7 @@ type OscFn = (
   shapeEgValue: number,
   phase: number,
   envDecay: number,
+  phaseInc: number,
 ) => number;
 
 function processOscPD(shape: number, shapeEgValue: number, phase: number) {
@@ -49,21 +50,41 @@ function processOscFM(shape: number, shapeEgValue: number, phase: number) {
 type PtmBaseWaveKind = "saw" | "sine" | "rect";
 type PtmKind = keyof typeof phaseTweakers;
 
+// 2nd-order PolyBLEP residual for a unit discontinuity at phase wrap.
+function polyBlep(t: number, dt: number): number {
+  if (dt <= 0) return 0;
+  if (t < dt) {
+    t /= dt;
+    return t + t - t * t - 1;
+  }
+  if (t > 1 - dt) {
+    t = (t - 1) / dt;
+    return t * t + t + t + 1;
+  }
+  return 0;
+}
+
 function getPtmWave(
   pp: number,
   ptmKind: PtmKind,
   ptmLevel: number,
   baseWaveKind: PtmBaseWaveKind,
+  phaseInc: number,
 ) {
-  let [phase] = phaseTweakers[ptmKind](pp, ptmLevel);
+  let [phase, maxSlope] = phaseTweakers[ptmKind](pp, ptmLevel);
   phase -= Math.floor(phase);
-  if (baseWaveKind === "saw") {
-    return 1 - phase * 2;
-  } else if (baseWaveKind === "rect") {
-    return phase < 0.5 ? 1 : -1;
-  } else {
+  if (baseWaveKind === "sine") {
     return -Math.cos(phase * Math.PI * 2);
   }
+  const dt = Math.min(0.49, maxSlope * phaseInc);
+  if (baseWaveKind === "saw") {
+    return 1 - phase * 2 + polyBlep(phase, dt);
+  }
+  return (
+    (phase < 0.5 ? 1 : -1) +
+    polyBlep(phase, dt) -
+    polyBlep((phase + 0.5) % 1, dt)
+  );
 }
 
 const ptmKindMap = {
@@ -92,14 +113,14 @@ function bindOscFunctionForExWaves(waveMode: WaveMode): OscFn {
     }
   }
 
-  return (shape, shapeEgValue, phase, envDecay) => {
+  return (shape, shapeEgValue, phase, envDecay, phaseInc) => {
     if (0) {
       const ptmLevel =
         envDecay === 0 ? shape : mapUnaryTo(shapeEgValue, 0, shape);
-      return getPtmWave(phase, ptmKind, ptmLevel, baseWaveKind);
+      return getPtmWave(phase, ptmKind, ptmLevel, baseWaveKind, phaseInc);
     } else {
       const ptmLevel = mapUnaryTo(shapeEgValue, shape, 1) * 0.6;
-      return getPtmWave(phase, ptmKind, ptmLevel, baseWaveKind);
+      return getPtmWave(phase, ptmKind, ptmLevel, baseWaveKind, phaseInc);
     }
   };
 }
@@ -285,9 +306,9 @@ function createSynthesizerCore() {
         // 5. Waveform generation for each algorithm
         // -------------------------------------------------------------
 
-        const osc1Out = oscFn(shape, shapeEgValue, phase1, envDecay);
+        const osc1Out = oscFn(shape, shapeEgValue, phase1, envDecay, f1 / sampleRate);
         const osc2Out = isDualOsc
-          ? oscFn(shape, shapeEgValue, phase2, envDecay)
+          ? oscFn(shape, shapeEgValue, phase2, envDecay, f2 / sampleRate)
           : 0.0;
 
         // Mix the main oscillators.
