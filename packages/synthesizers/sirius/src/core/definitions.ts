@@ -7,7 +7,7 @@ export enum OscWave {
   square,
   triangle,
 }
-export const availableOscWaveTypes: OscWave[] = [
+export const oscWaveTypesForUi: OscWave[] = [
   OscWave.sawtooth,
   OscWave.sawtoothR,
   // OscWave.sawtoothR2,
