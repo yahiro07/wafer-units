@@ -8,7 +8,7 @@ export const automationInput: AutomationPort = {
     return [
       { id: "waveMode", steps: numWaveModes },
       { id: "shape" },
-      { id: "envMod" },
+      { id: "envDecay" },
       { id: "detune" },
       { id: "sub" },
       { id: "decay" },

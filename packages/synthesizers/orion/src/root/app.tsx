@@ -110,7 +110,7 @@ const ParametersSection = () => {
             steps={numWaveModes}
           />
           <ParameterKnob paramKey="shape" label="SHAPE" />
-          <ParameterKnob paramKey="envMod" label="ENV" />
+          <ParameterKnob paramKey="envDecay" label="ENV" />
           <ParameterKnob paramKey="sub" label="SUB" />
           <ParameterKnob paramKey="detune" label="DETUNE" />
         </SectionFrame>

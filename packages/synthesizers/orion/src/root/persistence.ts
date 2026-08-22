@@ -15,7 +15,7 @@ const mappers = {
       pr.waveMode, //0
       ...[
         pr.shape, //1
-        pr.envMod,
+        pr.envDecay,
         pr.detune,
         pr.sub,
         pr.decay,
@@ -34,7 +34,7 @@ const mappers = {
     return {
       waveMode: bytes[0] as WaveMode,
       shape: floatParams[1],
-      envMod: floatParams[2],
+      envDecay: floatParams[2],
       detune: floatParams[3],
       sub: floatParams[4],
       decay: floatParams[5],

@@ -1,8 +1,8 @@
 import { numWaveModes, WaveMode } from "@/defs/definitions";
 import { createInterpolator } from "@/logic/interpolator";
 import { phaseTweakers } from "@/logic/phase-tweakers";
-import { power2 } from "@/logic/synth-math-utils";
-import { clampValue, linearInterpolate, lowClip } from "@/utils/helpers";
+import { mapUnaryTo } from "@/logic/synth-math-utils";
+import { linearInterpolate, lowClip } from "@/utils/helpers";
 
 // PD (Phase Distortion) calculation
 function computePD(phase: number, amount: number): number {
@@ -23,34 +23,18 @@ function computePD(phase: number, amount: number): number {
   }
 }
 
-type OscFn = (
-  shape: number,
-  egValue: number,
-  envMod: number,
-  phase: number,
-) => number;
+const SHAPE_EG_MAX_SECONDS = 1.5;
 
-function processOscPD(
-  shape: number,
-  egValue: number,
-  envMod: number,
-  phase: number,
-) {
-  // Let envelope modulation overshoot at attack, then settle back during decay.
-  let currentIndex = shape + egValue * envMod;
-  currentIndex = clampValue(currentIndex, 0, 1); // Safety clamp.
-  // CZ-style phase distortion that bends toward a saw waveform.
-  return computePD(phase, currentIndex);
+type OscFn = (shape: number, shapeEgValue: number, phase: number) => number;
+
+function processOscPD(shape: number, shapeEgValue: number, phase: number) {
+  const pdLevel = mapUnaryTo(shapeEgValue, shape, 1);
+  return computePD(phase, pdLevel);
 }
 
-function processOscFM(
-  shape: number,
-  egValue: number,
-  envMod: number,
-  phase: number,
-) {
-  const currentIndex = shape + egValue * power2(envMod);
-  const modDepth = currentIndex * 5.0;
+function processOscFM(shape: number, shapeEgValue: number, phase: number) {
+  const fmLevel = mapUnaryTo(shapeEgValue ** 2, shape, 1);
+  const modDepth = fmLevel * 12.0;
   const ratio = 1.0 + Math.floor(shape * 7.0); // Ratio: 1x to 8x.
   return Math.sin(
     2.0 * Math.PI * phase + Math.sin(2.0 * Math.PI * phase * ratio) * modDepth,
@@ -96,8 +80,8 @@ function bindOscFunctionForExWaves(waveMode: WaveMode): OscFn {
     }
   }
 
-  return (shape, egLevel, envMod, phase) => {
-    const ptmLevel = clampValue(shape + egLevel * envMod, 0, 1);
+  return (shape, shapeEgValue, phase) => {
+    const ptmLevel = mapUnaryTo(shapeEgValue, 0, shape);
     return getPtmWave(phase, ptmKind, ptmLevel, baseWaveKind);
   };
 }
@@ -123,10 +107,12 @@ function createSynthesizerCore() {
   let egTime = 0.0; // Elapsed seconds since note-on or note-off.
   let hasStarted = false;
   let previousGate = 0.0;
+  let shapeEgValue = 0.0;
+  let shapeEgTime = 0.0;
 
   const interpolators = {
     shape: createInterpolator(),
-    envMod: createInterpolator(),
+    envDecay: createInterpolator(),
   };
 
   function resetVoiceState() {
@@ -142,6 +128,8 @@ function createSynthesizerCore() {
     releaseStartValue = 0.0;
     egTime = 0.0;
     hasStarted = false;
+    shapeEgValue = 0.0;
+    shapeEgTime = 0.0;
   }
 
   return {
@@ -161,7 +149,7 @@ function createSynthesizerCore() {
       const gate = parameters["gate"][0];
       const waveMode = Math.floor(parameters["waveMode"][0]) as WaveMode;
       const _shape = parameters["shape"][0];
-      const _envMod = parameters["envMod"][0];
+      const _envDecay = parameters["envDecay"][0];
       const detune = parameters["detune"][0];
       const subVol = parameters["sub"][0];
       const decay = parameters["decay"][0];
@@ -171,7 +159,7 @@ function createSynthesizerCore() {
       const loFiAmount = _loFiAmount * _loFiAmount;
 
       interpolators.shape.feed(_shape, bufferSize);
-      interpolators.envMod.feed(_envMod, bufferSize);
+      interpolators.envDecay.feed(_envDecay, bufferSize);
 
       let oscFn: OscFn;
       if (waveMode === WaveMode.PD) {
@@ -185,7 +173,7 @@ function createSynthesizerCore() {
       // Process the current audio block.
       for (let i = 0; i < bufferSize; i++) {
         const shape = interpolators.shape.advance();
-        const envMod = interpolators.envMod.advance();
+        const envDecay = interpolators.envDecay.advance();
         // -------------------------------------------------------------
         // 1. Envelope update
         // -------------------------------------------------------------
@@ -222,6 +210,14 @@ function createSynthesizerCore() {
           egTime += 1.0 / sampleRate;
         } else {
           egValue = 0.0;
+        }
+
+        if (hasStarted && envDecay > 0) {
+          const tau = Math.max(0.01, envDecay ** 2 * SHAPE_EG_MAX_SECONDS);
+          shapeEgValue = Math.exp(-shapeEgTime / tau);
+          shapeEgTime += 1.0 / sampleRate;
+        } else {
+          shapeEgValue = 0.0;
         }
 
         // -------------------------------------------------------------
@@ -271,8 +267,8 @@ function createSynthesizerCore() {
         // 5. Waveform generation for each algorithm
         // -------------------------------------------------------------
 
-        const osc1Out = oscFn(shape, egValue, envMod, phase1);
-        const osc2Out = isDualOsc ? oscFn(shape, egValue, envMod, phase2) : 0.0;
+        const osc1Out = oscFn(shape, shapeEgValue, phase1);
+        const osc2Out = isDualOsc ? oscFn(shape, shapeEgValue, phase2) : 0.0;
 
         // Mix the main oscillators.
         let mainMix = isDualOsc ? (osc1Out + osc2Out) * 0.5 : osc1Out;
@@ -340,7 +336,7 @@ class SynthProcessor extends AudioWorkletProcessor {
         maxValue: numWaveModes - 1,
       },
       { name: "shape", defaultValue: 0.0, minValue: 0.0, maxValue: 1.0 },
-      { name: "envMod", defaultValue: 0.0, minValue: 0.0, maxValue: 1.0 },
+      { name: "envDecay", defaultValue: 0.0, minValue: 0.0, maxValue: 1.0 },
       { name: "detune", defaultValue: 0.0, minValue: 0.0, maxValue: 1.0 },
       { name: "sub", defaultValue: 0.0, minValue: 0.0, maxValue: 1.0 },
       { name: "decay", defaultValue: 0.5, minValue: 0.0, maxValue: 1.0 },

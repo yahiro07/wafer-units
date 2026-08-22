@@ -10,7 +10,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
   bass: {
     waveMode: 0,
     shape: 0.39,
-    envMod: 0.04,
+    envDecay: 0.04,
     detune: 0,
     sub: 0.81,
     decay: 0.7,
@@ -24,7 +24,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
   brass: {
     waveMode: 0,
     shape: 0.18,
-    envMod: 0.8,
+    envDecay: 0.8,
     detune: 0.07,
     sub: 0.06,
     decay: 1,
@@ -38,7 +38,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
   lead1: {
     waveMode: 2,
     shape: 0.64,
-    envMod: 0,
+    envDecay: 0,
     detune: 0,
     sub: 0.39,
     decay: 0.72,
@@ -52,7 +52,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
   lead2: {
     waveMode: 2,
     shape: 0.27,
-    envMod: 0,
+    envDecay: 0,
     detune: 0,
     sub: 0.88,
     decay: 1,
@@ -66,7 +66,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
   lead3: {
     waveMode: 3,
     shape: 0.51,
-    envMod: 0.2,
+    envDecay: 0.2,
     detune: 0.99,
     sub: 0,
     decay: 1,
@@ -80,7 +80,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
   lead4: {
     waveMode: 3,
     shape: 0.26,
-    envMod: 0.15,
+    envDecay: 0.15,
     detune: 0,
     sub: 0.59,
     decay: 0.99,
@@ -94,7 +94,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
   lead5: {
     waveMode: 3,
     shape: 0.76,
-    envMod: 0.25,
+    envDecay: 0.25,
     detune: 0.31,
     sub: 0.95,
     decay: 1,
@@ -108,7 +108,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
   elepi: {
     waveMode: 0,
     shape: 0.48,
-    envMod: 0.4,
+    envDecay: 0.4,
     detune: 0,
     sub: 0,
     decay: 0.66,
@@ -122,7 +122,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
   ["steel-bell"]: {
     waveMode: 1,
     shape: 0.86,
-    envMod: 0.9,
+    envDecay: 0.9,
     detune: 0,
     sub: 0,
     decay: 0.21,
@@ -136,7 +136,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
   ["soft-bell"]: {
     waveMode: 1,
     shape: 0.5,
-    envMod: 0.55,
+    envDecay: 0.55,
     detune: 0.0,
     sub: 0.58,
     decay: 0.28,
@@ -150,7 +150,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
   bell3: {
     waveMode: 1,
     shape: 0.54,
-    envMod: 0.04,
+    envDecay: 0.04,
     detune: 0,
     sub: 0.26,
     decay: 0.3,
@@ -164,7 +164,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
   crystal: {
     waveMode: 1,
     shape: 0.68,
-    envMod: 0.37,
+    envDecay: 0.37,
     detune: 0.03,
     sub: 0,
     decay: 1,
@@ -178,7 +178,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
   ["glass-strings"]: {
     waveMode: 3,
     shape: 0.65,
-    envMod: 0.9,
+    envDecay: 0.9,
     detune: 0.18,
     sub: 0.49,
     decay: 0.91,
@@ -192,7 +192,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
   ["dist-guitar1"]: {
     waveMode: 3,
     shape: 0.37,
-    envMod: 0.44,
+    envDecay: 0.44,
     detune: 0,
     sub: 0,
     decay: 1,
@@ -206,7 +206,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
   ["dist-guitar2"]: {
     waveMode: 3,
     shape: 0.85,
-    envMod: 0,
+    envDecay: 0,
     detune: 0,
     sub: 0.22,
     decay: 1,
@@ -220,7 +220,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
   pad1: {
     waveMode: 0,
     shape: 0.94,
-    envMod: 0.88,
+    envDecay: 0.88,
     detune: 0,
     sub: 0,
     decay: 1,
@@ -234,7 +234,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
   pad2: {
     waveMode: 3,
     shape: 0.0,
-    envMod: 0.43,
+    envDecay: 0.43,
     detune: 0.51,
     sub: 0,
     decay: 0.59,
@@ -248,7 +248,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
   ["space-pad"]: {
     waveMode: 2,
     shape: 0.73,
-    envMod: 1,
+    envDecay: 1,
     detune: 0.44,
     sub: 0.19,
     decay: 0.56,
@@ -262,7 +262,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
   ["shiny-flow"]: {
     waveMode: 3,
     shape: 0.67,
-    envMod: 0.37,
+    envDecay: 0.37,
     detune: 0.58,
     sub: 0.21,
     decay: 0.8,
@@ -276,7 +276,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
   evening: {
     waveMode: 2,
     shape: 0.02,
-    envMod: 0.45,
+    envDecay: 0.45,
     detune: 0.1,
     sub: 0.88,
     decay: 0.55,
@@ -290,7 +290,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
   mystery: {
     waveMode: 3,
     shape: 0.6,
-    envMod: 0.78,
+    envDecay: 0.78,
     detune: 0.06,
     sub: 0.18,
     decay: 0.83,
@@ -304,7 +304,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
   ["nostalgic-pad"]: {
     waveMode: 0,
     shape: 0.95,
-    envMod: 0.96,
+    envDecay: 0.96,
     detune: 0.28,
     sub: 0.19,
     decay: 0.56,
@@ -318,7 +318,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
   metalic: {
     waveMode: 3,
     shape: 1,
-    envMod: 0.2,
+    envDecay: 0.2,
     detune: 0.29,
     sub: 0.05,
     decay: 0.48,
@@ -332,7 +332,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
   electric: {
     waveMode: 1,
     shape: 0.89,
-    envMod: 0.78,
+    envDecay: 0.78,
     detune: 0.82,
     sub: 0.42,
     decay: 1,

@@ -9,7 +9,7 @@ export const numWaveModes = 4;
 export type SynthParameters = {
   waveMode: WaveMode;
   shape: number;
-  envMod: number;
+  envDecay: number;
   detune: number;
   sub: number;
   decay: number;
@@ -27,7 +27,7 @@ export type SynthPresetParameters = Omit<SynthParameters, "master">;
 export const defaultSynthParameters: SynthParameters = {
   waveMode: WaveMode.PD,
   shape: 0,
-  envMod: 0,
+  envDecay: 0,
   detune: 0,
   sub: 0,
   decay: 0.5,
