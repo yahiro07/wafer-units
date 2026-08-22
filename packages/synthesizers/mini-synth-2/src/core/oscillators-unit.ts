@@ -1,5 +1,6 @@
 import { OscWave, SynthParameters } from "@/core/definitions";
 import { midiToFreq, tunableSigmoid } from "./synthesis-utils";
+import { getOscWaveformPdSaw } from "@/core/pd-saw";
 
 const periodicWaveCache: Partial<Record<OscWave, PeriodicWave | null>> = {};
 
@@ -44,11 +45,38 @@ function getSaturatedSawWave(context: AudioContext, k: number) {
   });
 }
 
+function getPdSawWave(context: AudioContext, pdLevel: number) {
+  const n = 2048;
+  const terms = 64;
+  const time = new Float32Array(n);
+  for (let i = 0; i < n; i++) {
+    time[i] = getOscWaveformPdSaw(i / n, pdLevel);
+  }
+  const real = new Float32Array(terms);
+  const imag = new Float32Array(terms);
+  for (let h = 0; h < terms; h++) {
+    let re = 0;
+    let im = 0;
+    for (let i = 0; i < n; i++) {
+      const phi = (2 * Math.PI * h * i) / n;
+      re += time[i] * Math.cos(phi);
+      im += time[i] * Math.sin(phi);
+    }
+    real[h] = re / n;
+    imag[h] = im / n;
+  }
+  return context.createPeriodicWave(real, imag, {
+    disableNormalization: false,
+  });
+}
+
 function getWave(context: AudioContext, wave: OscWave) {
   if (wave === OscWave.sawtooth) {
     return "sawtooth";
   } else if (wave === OscWave.sawtoothR) {
     return (periodicWaveCache[wave] ??= getSaturatedSawWave(context, -0.55));
+  } else if (wave === OscWave.sawtoothR2) {
+    return (periodicWaveCache[wave] ??= getPdSawWave(context, 0.98));
   } else if (wave === OscWave.pulse125) {
     return (periodicWaveCache[wave] ??= getPulseWave(context, 0.125));
   } else if (wave === OscWave.pulse25) {
