@@ -64,9 +64,8 @@ export function createSynthesizerEngine(
       }
       chorus.update(state.parameters.fxChorus);
       reverb.update(state.parameters.fxReverb);
-      masterGain.gain.value = mapVolumeControlCurveCenterUnity(
-        state.parameters.patchVolume,
-      );
+      masterGain.gain.value =
+        mapVolumeControlCurveCenterUnity(state.parameters.patchVolume) * 0.7;
     },
   };
 
