@@ -11,3 +11,8 @@ export function createNoiseBuffer(context: AudioContext, length: number) {
   }
   return buffer;
 }
+
+//x:-1__1, k:-1__1, positive k for low curve, negative k for high curve
+export function tunableSigmoid(x: number, k: number) {
+  return (x - k * x) / (k - 2 * k * Math.abs(x) + 1);
+}

@@ -1,5 +1,3 @@
-import { SynthParameters } from "@/core/definitions";
-
 export function createChorus(context: AudioContext) {
   const inputNode = context.createGain();
   const outputNode = context.createGain();
@@ -30,10 +28,9 @@ export function createChorus(context: AudioContext) {
   return {
     inputNode,
     outputNode,
-    updateNodeParameters(params: SynthParameters) {
-      const amount = params.fxChorus;
-      wetGain.gain.value = amount;
-      dryGain.gain.value = 1 - amount * 0.5;
+    update(chorusLevel: number) {
+      wetGain.gain.value = chorusLevel;
+      dryGain.gain.value = 1 - chorusLevel * 0.5;
     },
     cleanup() {
       lfo.stop();

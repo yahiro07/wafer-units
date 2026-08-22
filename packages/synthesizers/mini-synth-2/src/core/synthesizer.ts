@@ -1,69 +1,75 @@
-import { createChorus } from "@/core/chorus";
-import { SynthParameters } from "@/core/definitions";
-import { createReverb } from "@/core/reverb";
+import { createChorus2 } from "@/core/chorus2";
+import {
+  defaultSynthParameters,
+  ISynthesizerEngine,
+  SynthParameters,
+} from "@/core/definitions";
+import { createOutputSaturator } from "@/core/output-saturator";
+import { createReverb2 } from "@/core/reverb2";
 import { createVoice, Voice } from "@/core/voice";
+import { UnitInterface } from "wafer-host/unit-types";
 
-export type ISynthesizer = {
-  outputNode: GainNode;
-  setParameters: (parameters: SynthParameters) => void;
-  noteOn: (noteNumber: number, time: number, velocity: number) => void;
-  noteOff: (noteNumber: number, time: number) => void;
-  cleanup: () => void;
-};
-
-export function createSynthesizer(
-  audioContext: AudioContext,
-  initialParameters: SynthParameters,
-): ISynthesizer {
-  const outputNode = audioContext.createGain();
+export function createSynthesizerEngine(
+  unitInterface: UnitInterface | undefined,
+): ISynthesizerEngine {
+  const audioContext = unitInterface?.audioContext ?? new AudioContext();
+  const destinationNode =
+    unitInterface?.audioOutputNode ?? audioContext.destination;
 
   const voicesGain = audioContext.createGain();
-  const chorus = createChorus(audioContext);
-  const reverb = createReverb(audioContext);
+  const chorus = createChorus2(audioContext);
+  const reverb = createReverb2(audioContext);
+  // const softClipper = createSoftClipper(audioContext);
+  const softClipper = createOutputSaturator(audioContext);
   const masterGain = audioContext.createGain();
 
   voicesGain.connect(chorus.inputNode);
   chorus.outputNode.connect(reverb.inputNode);
   reverb.outputNode.connect(masterGain);
-  masterGain.connect(outputNode);
+  masterGain.connect(softClipper.inputNode);
+  softClipper.outputNode.connect(destinationNode);
 
   const state: {
     parameters: SynthParameters;
     activeVoices: Map<number, Voice>;
   } = {
-    parameters: initialParameters,
+    parameters: structuredClone(defaultSynthParameters),
     activeVoices: new Map<number, Voice>(),
   };
 
   const internal = {
     wrapCreateVoice(noteNumber: number, time: number, velocity: number): Voice {
-      const voice = createVoice(audioContext, state.parameters);
+      const voice = createVoice(
+        audioContext,
+        state.parameters,
+        noteNumber,
+        velocity,
+      );
       voice.outputNode.connect(voicesGain);
-      voice.noteOn(noteNumber, time, velocity);
+      voice.gateOn(time);
       state.activeVoices.set(noteNumber, voice);
       return voice;
     },
     stopVoice(noteNumber: number, time: number) {
       const voice = state.activeVoices.get(noteNumber);
       if (voice) {
-        voice.noteOff(time);
+        voice.gateOff(time);
         state.activeVoices.delete(noteNumber);
       }
     },
     applyParametersToVoices() {
       for (const voice of state.activeVoices.values()) {
-        voice.updateNodeParameters(state.parameters);
+        voice.updateNodeParameters();
       }
-      chorus.updateNodeParameters(state.parameters);
-      reverb.updateNodeParameters(state.parameters);
-      masterGain.gain.value = state.parameters.masterVolume;
+      chorus.update(state.parameters.fxChorus);
+      reverb.update(state.parameters.fxReverb);
+      masterGain.gain.value = state.parameters.patchVolume;
     },
   };
 
   return {
-    outputNode,
     setParameters(parameters) {
-      state.parameters = parameters;
+      Object.assign(state.parameters, parameters);
       internal.applyParametersToVoices();
     },
     noteOn(noteNumber, time, velocity) {
@@ -76,6 +82,7 @@ export function createSynthesizer(
     cleanup() {
       chorus.cleanup();
       reverb.cleanup();
+      softClipper.cleanup();
       masterGain.disconnect();
       voicesGain.disconnect();
     },
