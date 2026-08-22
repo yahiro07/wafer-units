@@ -38,22 +38,27 @@ export function createSynthesizerEngine(
 
   const internal = {
     wrapCreateVoice(noteNumber: number, time: number, velocity: number): Voice {
-      const voice = createVoice(audioContext, state.parameters);
+      const voice = createVoice(
+        audioContext,
+        state.parameters,
+        noteNumber,
+        velocity,
+      );
       voice.outputNode.connect(voicesGain);
-      voice.noteOn(noteNumber, time, velocity);
+      voice.gateOn(time);
       state.activeVoices.set(noteNumber, voice);
       return voice;
     },
     stopVoice(noteNumber: number, time: number) {
       const voice = state.activeVoices.get(noteNumber);
       if (voice) {
-        voice.noteOff(time);
+        voice.gateOff(time);
         state.activeVoices.delete(noteNumber);
       }
     },
     applyParametersToVoices() {
       for (const voice of state.activeVoices.values()) {
-        voice.updateNodeParameters(state.parameters);
+        voice.updateNodeParameters();
       }
       chorus.update(state.parameters.fxChorus);
       reverb.update(state.parameters.fxReverb);
@@ -64,7 +69,7 @@ export function createSynthesizerEngine(
 
   return {
     setParameters(parameters) {
-      state.parameters = parameters;
+      Object.assign(state.parameters, parameters);
       internal.applyParametersToVoices();
     },
     noteOn(noteNumber, time, velocity) {

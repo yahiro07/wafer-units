@@ -1,5 +1,6 @@
 import { OscWave, SynthParameters } from "@/core/definitions";
 import { midiToFreq } from "./synthesis-utils";
+import { createFilterUnit } from "@/core/filter-unit";
 
 let pulse125Wave: PeriodicWave | null = null;
 let pulse25Wave: PeriodicWave | null = null;
@@ -41,27 +42,21 @@ const configs = {
 
 const helpers = {
   getDetuneCents: (detune: number) => detune ** 2 * configs.detuneCentsMax,
-  calcFilterBaseFreq: (cutoff: number, oscsBottomFreq: number) => {
-    //exponential filter frequency mapping
-    const topFreq = 10000;
-    const bottomFreq = oscsBottomFreq / 2;
-    return bottomFreq * Math.pow(topFreq / bottomFreq, cutoff);
-  },
-  calcFilterQ: (peak: number) => 0.707 + peak * 16,
 };
 
 export type Voice = {
   outputNode: GainNode;
-  updateNodeParameters: (params: SynthParameters) => void;
-  noteOn: (noteNumber: number, time: number, velocity: number) => void;
-  noteOff: (time: number) => void;
+  updateNodeParameters: () => void;
+  gateOn: (time: number) => void;
+  gateOff: (time: number) => void;
 };
 
 export function createVoice(
   context: AudioContext,
   params: SynthParameters,
+  noteNumber: number,
+  velocity: number,
 ): Voice {
-  let currentParams = params;
   const outputNode = context.createGain();
   outputNode.gain.value = 1; // fix output node gain so sound passes through
 
@@ -123,63 +118,48 @@ export function createVoice(
   }
   sub.connect(subOscGain);
 
-  const filter = context.createBiquadFilter();
-  filter.type = "lowpass";
-  filter.Q.value = helpers.calcFilterQ(params.filterPeak);
+  const freq = midiToFreq(noteNumber);
+  osc1.frequency.value = freq;
+  if (osc2) osc2.frequency.value = freq;
+  sub.frequency.value = freq / 2;
+  const oscsBottomFreq = params.oscSub > 0 ? freq / 2 : freq;
 
-  mainOscGain.connect(filter);
-  subOscGain.connect(filter);
+  const filter = createFilterUnit(context, params, oscsBottomFreq);
+  filter.update();
+
+  mainOscGain.connect(filter.inputNode);
+  subOscGain.connect(filter.inputNode);
 
   const ampGain = context.createGain();
   ampGain.gain.value = 0;
 
-  filter.connect(ampGain);
+  filter.outputNode.connect(ampGain);
   ampGain.connect(outputNode);
 
   let released = false;
-  let oscsBottomFreq = 1;
 
-  function updateNodeParameters(nextParams: SynthParameters) {
-    currentParams = nextParams;
+  function updateNodeParameters() {
     const updateTime = context.currentTime;
 
-    const nextWave = getWave(context, nextParams.oscWave);
+    const nextWave = getWave(context, params.oscWave);
     applyWave(osc1, nextWave);
     if (osc2) applyWave(osc2, nextWave);
 
-    const nextDetuneCents = helpers.getDetuneCents(nextParams.oscDetune);
+    const nextDetuneCents = helpers.getDetuneCents(params.oscDetune);
     if (osc2) {
       osc1.detune.setTargetAtTime(nextDetuneCents, updateTime, 0.01);
       osc2.detune.setTargetAtTime(-nextDetuneCents, updateTime, 0.01);
     }
-    lfoGain.gain.setTargetAtTime(nextParams.oscDrift * 30, updateTime, 0.01);
-    subOscGain.gain.setTargetAtTime(nextParams.oscSub, updateTime, 0.01);
+    lfoGain.gain.setTargetAtTime(params.oscDrift * 30, updateTime, 0.01);
+    subOscGain.gain.setTargetAtTime(params.oscSub, updateTime, 0.01);
 
-    const nextBaseFreq = helpers.calcFilterBaseFreq(
-      nextParams.filterCutoff,
-      oscsBottomFreq,
-    );
-    filter.frequency.setTargetAtTime(nextBaseFreq, updateTime, 0.01);
-    const nextFilterQ = helpers.calcFilterQ(nextParams.filterPeak);
-    filter.Q.setTargetAtTime(nextFilterQ, updateTime, 0.01);
+    filter.update(updateTime);
   }
 
   return {
     outputNode,
     updateNodeParameters,
-    noteOn(noteNumber, time, velocity) {
-      const freq = midiToFreq(noteNumber);
-      osc1.frequency.value = freq;
-      if (osc2) osc2.frequency.value = freq;
-      sub.frequency.value = freq / 2;
-      oscsBottomFreq = params.oscSub > 0 ? freq / 2 : freq;
-
-      const baseFreq = helpers.calcFilterBaseFreq(
-        params.filterCutoff,
-        oscsBottomFreq,
-      );
-      filter.frequency.value = baseFreq;
-
+    gateOn(time) {
       // Amp Envelope
       const riseTime = 0.001;
       const decayTime =
@@ -199,19 +179,7 @@ export function createVoice(
           t + riseTime + decayTime,
         );
       }
-
-      // Filter Envelope
-      if (params.filterDecay > 0) {
-        const filterDecayTime = params.filterDecay ** 2 * 4;
-        const envModCents = 1200 * 4; // max 4 octaves
-        filter.detune.setValueAtTime(envModCents, t);
-        filter.detune.exponentialRampToValueAtTime(
-          1,
-          t + riseTime + filterDecayTime,
-        ); // ramp detune back to 0 implicitly
-      } else {
-        filter.detune.value = 0;
-      }
+      filter.triggerEnvelope(t);
 
       lfo.start(t);
       osc1.start(t);
@@ -220,14 +188,14 @@ export function createVoice(
       }
       sub.start(t);
     },
-    noteOff(time: number) {
+    gateOff(time: number) {
       if (released) return;
       released = true;
       const tOff =
         time && time > context.currentTime ? time : context.currentTime;
       const releaseTime = Math.max(
         0.01,
-        currentParams.ampRelease * configs.releaseTimeMax,
+        params.ampRelease * configs.releaseTimeMax,
       );
 
       ampGain.gain.cancelScheduledValues(tOff);
@@ -244,6 +212,7 @@ export function createVoice(
       setTimeout(
         () => {
           outputNode.disconnect();
+          filter.cleanup();
         },
         Math.max(0, delayMs),
       );
