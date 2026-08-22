@@ -41,6 +41,10 @@ const configs = {
 
 const helpers = {
   getDetuneCents: (detune: number) => detune ** 2 * configs.detuneCentsMax,
+  // Cutoff Mapping
+  // Frequency mapping: 0~1 => 20Hz ~ 10000Hz (exponential)
+  calcFilterBaseFreq: (cutoff: number) => 40 * Math.pow(10000 / 40, cutoff),
+  calcFilterQ: (peak: number) => 0.707 + peak * 16,
 };
 
 export type Voice = {
@@ -119,11 +123,9 @@ export function createVoice(
   const filter = context.createBiquadFilter();
   filter.type = "lowpass";
 
-  // Cutoff Mapping
-  // Frequency mapping: 0~1 => 20Hz ~ 10000Hz (exponential)
-  const baseFreq = 40 * Math.pow(10000 / 40, params.filterCutoff);
+  const baseFreq = helpers.calcFilterBaseFreq(params.filterCutoff);
   filter.frequency.value = baseFreq;
-  filter.Q.value = 0.707 + params.filterPeak * 20;
+  filter.Q.value = helpers.calcFilterQ(params.filterPeak);
 
   mainOscGain.connect(filter);
   subOscGain.connect(filter);
@@ -152,9 +154,10 @@ export function createVoice(
     lfoGain.gain.setTargetAtTime(nextParams.oscDrift * 30, updateTime, 0.01);
     subOscGain.gain.setTargetAtTime(nextParams.oscSub, updateTime, 0.01);
 
-    const nextBaseFreq = 40 * Math.pow(10000 / 40, nextParams.filterCutoff);
+    const nextBaseFreq = helpers.calcFilterBaseFreq(nextParams.filterCutoff);
     filter.frequency.setTargetAtTime(nextBaseFreq, updateTime, 0.01);
-    filter.Q.setTargetAtTime(nextParams.filterPeak * 20, updateTime, 0.01);
+    const nextFilterQ = helpers.calcFilterQ(nextParams.filterPeak);
+    filter.Q.setTargetAtTime(nextFilterQ, updateTime, 0.01);
   }
 
   return {
@@ -167,7 +170,7 @@ export function createVoice(
       sub.frequency.value = freq / 2;
 
       // Amp Envelope
-      const attackTime = 0.001;
+      const riseTime = 0.001;
       const decayTime =
         params.ampDecay < 1
           ? Math.max(0.01, params.ampDecay * configs.decayTimeMax)
@@ -177,22 +180,23 @@ export function createVoice(
       ampGain.gain.setValueAtTime(0, t);
       ampGain.gain.linearRampToValueAtTime(
         Math.max(0.001, velocity),
-        t + attackTime,
+        t + riseTime,
       );
       if (sustain === 0) {
         ampGain.gain.exponentialRampToValueAtTime(
           0.001,
-          t + attackTime + decayTime,
+          t + riseTime + decayTime,
         );
       }
 
       // Filter Envelope
-      const envModCents = params.filterEnvMod * 4800; // max 4 octaves
-      if (envModCents > 0) {
+      if (params.filterDecay > 0) {
+        const filterDecayTime = params.filterDecay ** 2 * 4;
+        const envModCents = 1200 * 4; // max 4 octaves
         filter.detune.setValueAtTime(envModCents, t);
         filter.detune.exponentialRampToValueAtTime(
           1,
-          t + attackTime + decayTime,
+          t + riseTime + filterDecayTime,
         ); // ramp detune back to 0 implicitly
       } else {
         filter.detune.value = 0;

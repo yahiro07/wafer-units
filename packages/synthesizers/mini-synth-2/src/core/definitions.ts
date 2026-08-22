@@ -14,7 +14,7 @@ export type SynthParameters = {
   oscDrift: number; // 0~1
   filterCutoff: number; // 0~1
   filterPeak: number; // 0~1
-  filterEnvMod: number; // 0~1
+  filterDecay: number; // 0~1
   ampDecay: number; // 0~1
   ampRelease: number; // 0~1
   saturation: number; // 0~1
@@ -30,7 +30,7 @@ export const defaultSynthParameters: SynthParameters = {
   oscDrift: 0,
   filterCutoff: 1,
   filterPeak: 0,
-  filterEnvMod: 0,
+  filterDecay: 0,
   ampDecay: 1,
   ampRelease: 0,
   saturation: 0,

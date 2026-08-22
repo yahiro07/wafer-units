@@ -125,7 +125,7 @@ const ParametersSection = () => {
         <SectionFrame header="FILTER" className="grow">
           <ParameterKnob paramKey="filterCutoff" label="cutoff" />
           <ParameterKnob paramKey="filterPeak" label="peak" />
-          <ParameterKnob paramKey="filterEnvMod" label="envmod" />
+          <ParameterKnob paramKey="filterDecay" label="env" />
         </SectionFrame>
         <SectionFrame header="MASTER" className="grow">
           <ParameterKnob paramKey="fxChorus" label="chorus" />
