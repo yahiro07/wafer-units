@@ -1,8 +1,7 @@
 import { OscWave, SynthParameters } from "@/core/definitions";
-import { midiToFreq } from "./synthesis-utils";
+import { midiToFreq, tunableSigmoid } from "./synthesis-utils";
 
-let pulse125Wave: PeriodicWave | null = null;
-let pulse25Wave: PeriodicWave | null = null;
+const periodicWaveCache: Partial<Record<OscWave, PeriodicWave | null>> = {};
 
 function getPulseWave(context: AudioContext, duty: number) {
   const terms = 64;
@@ -19,18 +18,47 @@ function getPulseWave(context: AudioContext, duty: number) {
   });
 }
 
+function getSaturatedSawWave(context: AudioContext, k: number) {
+  const n = 2048;
+  const terms = 64;
+  const time = new Float32Array(n);
+  for (let i = 0; i < n; i++) {
+    const x = (2 * i) / n - 1;
+    time[i] = tunableSigmoid(x, k);
+  }
+  const real = new Float32Array(terms);
+  const imag = new Float32Array(terms);
+  for (let h = 0; h < terms; h++) {
+    let re = 0;
+    let im = 0;
+    for (let i = 0; i < n; i++) {
+      const phi = (2 * Math.PI * h * i) / n;
+      re += time[i] * Math.cos(phi);
+      im += time[i] * Math.sin(phi);
+    }
+    real[h] = re / n;
+    imag[h] = im / n;
+  }
+  return context.createPeriodicWave(real, imag, {
+    disableNormalization: false,
+  });
+}
+
 function getWave(context: AudioContext, wave: OscWave) {
   if (wave === OscWave.sawtooth) {
     return "sawtooth";
+  } else if (wave === OscWave.sawtoothR) {
+    return (periodicWaveCache[wave] ??= getSaturatedSawWave(context, -0.55));
+  } else if (wave === OscWave.pulse125) {
+    return (periodicWaveCache[wave] ??= getPulseWave(context, 0.125));
+  } else if (wave === OscWave.pulse25) {
+    return (periodicWaveCache[wave] ??= getPulseWave(context, 0.25));
   } else if (wave === OscWave.square) {
     return "square";
   } else if (wave === OscWave.triangle) {
     return "triangle";
-  } else if (wave === OscWave.pulse125) {
-    return (pulse125Wave ??= getPulseWave(context, 0.125));
-  } else {
-    return (pulse25Wave ??= getPulseWave(context, 0.25));
   }
+  return "sine"; //fallback, not used
 }
 
 const configs = {

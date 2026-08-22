@@ -1,11 +1,12 @@
 export enum OscWave {
   sawtooth = 0,
+  sawtoothR = 1,
   pulse125,
   pulse25,
   square,
   triangle,
 }
-export const numOscWaveTypes = 5;
+export const numOscWaveTypes = 6;
 
 export type SynthParameters = {
   oscWave: OscWave;
