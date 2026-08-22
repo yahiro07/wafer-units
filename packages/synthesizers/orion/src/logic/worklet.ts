@@ -246,7 +246,7 @@ function createSynthesizerCore() {
       const release = parameters["release"][0];
       const driftAmount = parameters["drift"][0];
       const _loFiAmount = parameters["loFi"][0];
-      const loFiAmount = _loFiAmount * _loFiAmount;
+      const loFiAmount = _loFiAmount * _loFiAmount * 0.5;
 
       interpolators.shape.feed(_shape, bufferSize);
       interpolators.envDecay.feed(_envDecay, bufferSize);

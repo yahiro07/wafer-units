@@ -30,7 +30,7 @@ export function createRandomParameters(): Partial<SynthParameters> {
     decay: probably(fixDR === "D" ? 0.3 : 0, 1, randF()),
     release: probably(fixDR === "R" ? 0.3 : 0, 0, randF()),
     drift: probably(0.5, 0, randF()),
-    loFi: probably(0.5, 0, randF()),
+    loFi: probably(0.6, 0, randRange(0, 0.6)),
     chorus: probably(0.5, 0, randF()),
     delay: probably(0.5, 0, randF()),
     reverb: probably(0.5, 0, randRange(0, 0.7)),
