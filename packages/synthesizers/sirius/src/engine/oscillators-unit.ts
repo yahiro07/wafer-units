@@ -208,7 +208,10 @@ export function createOscillatorsUnit(
     start(t) {
       lfo.start(t);
       osc1.start(t);
-      osc2?.start(t);
+      if (osc2) {
+        const osc2StartDelay = (1 / freq) * 0.3 * Math.random();
+        osc2.start(t + osc2StartDelay);
+      }
       sub.start(t);
     },
     stop(t) {
