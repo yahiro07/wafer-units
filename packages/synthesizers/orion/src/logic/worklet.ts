@@ -29,18 +29,34 @@ type OscFn = (
   shape: number,
   shapeEgValue: number,
   phase: number,
+  envRange: ShapeEnvRange,
   envDecay: number,
   phaseInc: number,
-  envRange: ShapeEnvRange,
 ) => number;
 
-function processOscPD(shape: number, shapeEgValue: number, phase: number) {
-  const pdLevel = mapUnaryTo(shapeEgValue, shape, 1);
+function processOscPD(
+  shape: number,
+  shapeEgValue: number,
+  phase: number,
+  envRange: ShapeEnvRange,
+) {
+  const pdLevel =
+    envRange === ShapeEnvRange.High
+      ? mapUnaryTo(shapeEgValue, shape, 1)
+      : mapUnaryTo(shapeEgValue, 0, shape);
   return computePD(phase, pdLevel);
 }
 
-function processOscFM(shape: number, shapeEgValue: number, phase: number) {
-  const fmLevel = mapUnaryTo(shapeEgValue ** 2, shape, 1);
+function processOscFM(
+  shape: number,
+  shapeEgValue: number,
+  phase: number,
+  envRange: ShapeEnvRange,
+) {
+  const fmLevel =
+    envRange === ShapeEnvRange.High
+      ? mapUnaryTo(shapeEgValue, shape, 1)
+      : mapUnaryTo(shapeEgValue, 0, shape);
   const modDepth = fmLevel * 12.0;
   const ratio = 1.0 + Math.floor(shape * 7.0); // Ratio: 1x to 8x.
   return Math.sin(
@@ -144,7 +160,7 @@ function bindOscFunctionForExWaves(waveMode: WaveMode): OscFn {
     }
   }
 
-  return (shape, shapeEgValue, phase, envDecay, phaseInc, envRange) => {
+  return (shape, shapeEgValue, phase, envRange, envDecay, phaseInc) => {
     if (envRange === ShapeEnvRange.High) {
       const ptmLevel = mapUnaryTo(shapeEgValue, shape, 1) * ptmLevelScaling;
       return getPtmWave2x(phase, ptmKind, ptmLevel, baseWaveKind, phaseInc);
@@ -219,11 +235,10 @@ function createSynthesizerCore() {
       const gate = parameters["gate"][0];
       const waveMode = Math.floor(parameters["waveMode"][0]) as WaveMode;
       const _shape = parameters["shape"][0];
-      const envRange = (
+      const envRange =
         parameters["envRange"][0] > 0.5
           ? ShapeEnvRange.High
-          : ShapeEnvRange.Low
-      );
+          : ShapeEnvRange.Low;
       const _envDecay = parameters["envDecay"][0];
       const detune = parameters["detune"][0];
       const sub = parameters["sub"][0] > 0.5;
@@ -344,18 +359,18 @@ function createSynthesizerCore() {
           shape,
           shapeEgValue,
           phase1,
+          envRange,
           envDecay,
           f1 / sampleRate,
-          envRange,
         );
         const osc2Out = isDualOsc
           ? oscFn(
               shape,
               shapeEgValue,
               phase2,
+              envRange,
               envDecay,
               f2 / sampleRate,
-              envRange,
             )
           : 0.0;
 
