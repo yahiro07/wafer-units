@@ -90,23 +90,25 @@ export function createOscillatorsUnit(
   lfoGain.connect(osc1.detune);
   if (osc2) lfoGain.connect(osc2.detune);
 
-  const mainOscGain = context.createGain();
-  mainOscGain.gain.value = 0.5;
+  const osc1Gain = context.createGain();
+  osc1Gain.gain.value = 0.5;
+  const osc2Gain = osc2 ? context.createGain() : null;
+  if (osc2Gain) osc2Gain.gain.value = 0.5;
 
   const subOscGain = context.createGain();
-  subOscGain.gain.value = params.oscSub;
+  subOscGain.gain.value = params.oscSub * 0.5;
 
   const panL = osc2 ? context.createStereoPanner() : null;
   const panR = osc2 ? context.createStereoPanner() : null;
-  if (osc2 && panL && panR) {
+  if (osc2 && osc2Gain && panL && panR) {
     panL.pan.value = -0.5;
     panR.pan.value = 0.5;
     osc1.connect(panL);
     osc2.connect(panR);
-    panL.connect(mainOscGain);
-    panR.connect(mainOscGain);
+    panL.connect(osc1Gain);
+    panR.connect(osc2Gain);
   } else {
-    osc1.connect(mainOscGain);
+    osc1.connect(osc1Gain);
   }
   sub.connect(subOscGain);
 
@@ -118,7 +120,8 @@ export function createOscillatorsUnit(
 
   const outputNode = context.createGain();
   outputNode.gain.value = 1;
-  mainOscGain.connect(outputNode);
+  osc1Gain.connect(outputNode);
+  osc2Gain?.connect(outputNode);
   subOscGain.connect(outputNode);
 
   return {
@@ -136,14 +139,14 @@ export function createOscillatorsUnit(
           osc2.detune.setTargetAtTime(-nextDetuneCents, t, 0.01);
         }
         lfoGain.gain.setTargetAtTime(params.oscDrift * 30, t, 0.01);
-        subOscGain.gain.setTargetAtTime(params.oscSub, t, 0.01);
+        subOscGain.gain.setTargetAtTime(params.oscSub * 0.5, t, 0.01);
       } else {
         if (osc2) {
           osc1.detune.value = nextDetuneCents;
           osc2.detune.value = -nextDetuneCents;
         }
         lfoGain.gain.value = params.oscDrift * 30;
-        subOscGain.gain.value = params.oscSub;
+        subOscGain.gain.value = params.oscSub * 0.5;
       }
     },
     start(t) {
@@ -166,7 +169,8 @@ export function createOscillatorsUnit(
       sub.disconnect();
       panL?.disconnect();
       panR?.disconnect();
-      mainOscGain.disconnect();
+      osc1Gain.disconnect();
+      osc2Gain?.disconnect();
       subOscGain.disconnect();
       outputNode.disconnect();
     },
