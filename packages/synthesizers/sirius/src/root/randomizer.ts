@@ -26,7 +26,7 @@ export function createRandomParameters(): Partial<SynthParameters> {
   return {
     patchOctave: randB(0.3) ? -1 : 0,
     oscWave: probably(0.2, 0, randChoice(oscWaveTypesForUi)),
-    oscDetune: probably(0.4, 0, randF()),
+    oscDetune: probably(0.4, 0, randRange(0, 0.8)),
     oscSub: probably(0.4, 0, randF()),
     oscDrift: probably(0.6, 0, randF()),
     filterCutoff: probably(0.3, 1, randRange(0.2, 1)),
