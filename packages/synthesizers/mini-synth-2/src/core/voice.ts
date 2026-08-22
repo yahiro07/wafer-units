@@ -128,7 +128,7 @@ export function createVoice(
       osc2.setPeriodicWave(nextWave);
     }
 
-    const nextDetuneCents = nextParams.oscDetune * 50;
+    const nextDetuneCents = nextParams.oscDetune ** 2 * 50;
     osc1.detune.setTargetAtTime(nextDetuneCents, updateTime, 0.01);
     osc2.detune.setTargetAtTime(-nextDetuneCents, updateTime, 0.01);
     lfoGain.gain.setTargetAtTime(nextParams.oscDrift * 30, updateTime, 0.01);
