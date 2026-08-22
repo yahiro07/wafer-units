@@ -1,6 +1,8 @@
 const INPUT_HEADROOM = 1.5;
 const CURVE_SIZE = 1024;
 
+//https://www.desmos.com/calculator/8t7xmvci0z
+
 function createSaturationCurve(): Float32Array<ArrayBuffer> {
   const curve = new Float32Array(CURVE_SIZE);
   for (let i = 0; i < CURVE_SIZE; i += 1) {
