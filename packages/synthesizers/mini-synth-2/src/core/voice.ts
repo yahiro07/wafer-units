@@ -41,9 +41,12 @@ const configs = {
 
 const helpers = {
   getDetuneCents: (detune: number) => detune ** 2 * configs.detuneCentsMax,
-  // Cutoff Mapping
-  // Frequency mapping: 0~1 => 20Hz ~ 10000Hz (exponential)
-  calcFilterBaseFreq: (cutoff: number) => 40 * Math.pow(10000 / 40, cutoff),
+  calcFilterBaseFreq: (cutoff: number, oscsBottomFreq: number) => {
+    //exponential filter frequency mapping
+    const topFreq = 10000;
+    const bottomFreq = oscsBottomFreq / 2;
+    return bottomFreq * Math.pow(topFreq / bottomFreq, cutoff);
+  },
   calcFilterQ: (peak: number) => 0.707 + peak * 16,
 };
 
@@ -122,9 +125,6 @@ export function createVoice(
 
   const filter = context.createBiquadFilter();
   filter.type = "lowpass";
-
-  const baseFreq = helpers.calcFilterBaseFreq(params.filterCutoff);
-  filter.frequency.value = baseFreq;
   filter.Q.value = helpers.calcFilterQ(params.filterPeak);
 
   mainOscGain.connect(filter);
@@ -137,6 +137,7 @@ export function createVoice(
   ampGain.connect(outputNode);
 
   let released = false;
+  let oscsBottomFreq = 1;
 
   function updateNodeParameters(nextParams: SynthParameters) {
     currentParams = nextParams;
@@ -154,7 +155,10 @@ export function createVoice(
     lfoGain.gain.setTargetAtTime(nextParams.oscDrift * 30, updateTime, 0.01);
     subOscGain.gain.setTargetAtTime(nextParams.oscSub, updateTime, 0.01);
 
-    const nextBaseFreq = helpers.calcFilterBaseFreq(nextParams.filterCutoff);
+    const nextBaseFreq = helpers.calcFilterBaseFreq(
+      nextParams.filterCutoff,
+      oscsBottomFreq,
+    );
     filter.frequency.setTargetAtTime(nextBaseFreq, updateTime, 0.01);
     const nextFilterQ = helpers.calcFilterQ(nextParams.filterPeak);
     filter.Q.setTargetAtTime(nextFilterQ, updateTime, 0.01);
@@ -168,6 +172,13 @@ export function createVoice(
       osc1.frequency.value = freq;
       if (osc2) osc2.frequency.value = freq;
       sub.frequency.value = freq / 2;
+      oscsBottomFreq = params.oscSub > 0 ? freq / 2 : freq;
+
+      const baseFreq = helpers.calcFilterBaseFreq(
+        params.filterCutoff,
+        oscsBottomFreq,
+      );
+      filter.frequency.value = baseFreq;
 
       // Amp Envelope
       const riseTime = 0.001;
