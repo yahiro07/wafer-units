@@ -1,7 +1,7 @@
 const INPUT_HEADROOM = 1.5;
 const CURVE_SIZE = 1024;
 
-function createTanhCurve(): Float32Array<ArrayBuffer> {
+function createSaturationCurve(): Float32Array<ArrayBuffer> {
   const curve = new Float32Array(CURVE_SIZE);
   for (let i = 0; i < CURVE_SIZE; i += 1) {
     const u = (i / (CURVE_SIZE - 1)) * 2 - 1;
@@ -27,7 +27,7 @@ export function createOutputSaturator(audioContext: AudioContext) {
   dryGain.gain.value = 1;
   preGain.gain.value = 1 / INPUT_HEADROOM;
   shaperNode.oversample = "2x";
-  shaperNode.curve = createTanhCurve();
+  shaperNode.curve = createSaturationCurve();
   wetGain.gain.value = 0;
   outputNode.gain.value = 1;
 
