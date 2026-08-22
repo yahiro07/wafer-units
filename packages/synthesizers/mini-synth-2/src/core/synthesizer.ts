@@ -4,8 +4,8 @@ import {
   ISynthesizerEngine,
   SynthParameters,
 } from "@/core/definitions";
+import { createOutputSaturator } from "@/core/output-saturator";
 import { createReverb2 } from "@/core/reverb2";
-import { createSoftClipper } from "@/core/soft-clipper";
 import { createVoice, Voice } from "@/core/voice";
 import { UnitInterface } from "wafer-host/unit-types";
 
@@ -19,14 +19,15 @@ export function createSynthesizerEngine(
   const voicesGain = audioContext.createGain();
   const chorus = createChorus2(audioContext);
   const reverb = createReverb2(audioContext);
-  const softClipper = createSoftClipper(audioContext);
+  // const softClipper = createSoftClipper(audioContext);
+  const softClipper = createOutputSaturator(audioContext);
   const masterGain = audioContext.createGain();
 
   voicesGain.connect(chorus.inputNode);
   chorus.outputNode.connect(reverb.inputNode);
-  reverb.outputNode.connect(softClipper.inputNode);
-  softClipper.outputNode.connect(masterGain);
-  masterGain.connect(destinationNode);
+  reverb.outputNode.connect(masterGain);
+  masterGain.connect(softClipper.inputNode);
+  softClipper.outputNode.connect(destinationNode);
 
   const state: {
     parameters: SynthParameters;
