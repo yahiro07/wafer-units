@@ -23,6 +23,7 @@ export function createRandomParameters(): Partial<SynthParameters> {
   return {
     waveMode: randI(numWaveModes),
     shape: randF(),
+    envRange: randI(2),
     envDecay: randF(),
     detune: probably(0.5, 0, randF()),
     sub: randB(0.5),

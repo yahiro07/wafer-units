@@ -1,4 +1,4 @@
-import { numWaveModes, WaveMode } from "@/defs/definitions";
+import { numWaveModes, ShapeEnvRange, WaveMode } from "@/defs/definitions";
 import { createInterpolator } from "@/logic/interpolator";
 import { phaseTweakers } from "@/logic/phase-tweakers";
 import { mapUnaryTo } from "@/logic/synth-math-utils";
@@ -31,6 +31,7 @@ type OscFn = (
   phase: number,
   envDecay: number,
   phaseInc: number,
+  envRange: ShapeEnvRange,
 ) => number;
 
 function processOscPD(shape: number, shapeEgValue: number, phase: number) {
@@ -143,15 +144,15 @@ function bindOscFunctionForExWaves(waveMode: WaveMode): OscFn {
     }
   }
 
-  return (shape, shapeEgValue, phase, envDecay, phaseInc) => {
-    if (1) {
+  return (shape, shapeEgValue, phase, envDecay, phaseInc, envRange) => {
+    if (envRange === ShapeEnvRange.High) {
+      const ptmLevel = mapUnaryTo(shapeEgValue, shape, 1) * ptmLevelScaling;
+      return getPtmWave2x(phase, ptmKind, ptmLevel, baseWaveKind, phaseInc);
+    } else {
       const ptmLevel =
         envDecay === 0
           ? shape
           : mapUnaryTo(shapeEgValue, 0, shape) * ptmLevelScaling;
-      return getPtmWave2x(phase, ptmKind, ptmLevel, baseWaveKind, phaseInc);
-    } else {
-      const ptmLevel = mapUnaryTo(shapeEgValue, shape, 1) * ptmLevelScaling;
       return getPtmWave2x(phase, ptmKind, ptmLevel, baseWaveKind, phaseInc);
     }
   };
@@ -218,6 +219,11 @@ function createSynthesizerCore() {
       const gate = parameters["gate"][0];
       const waveMode = Math.floor(parameters["waveMode"][0]) as WaveMode;
       const _shape = parameters["shape"][0];
+      const envRange = (
+        parameters["envRange"][0] > 0.5
+          ? ShapeEnvRange.High
+          : ShapeEnvRange.Low
+      );
       const _envDecay = parameters["envDecay"][0];
       const detune = parameters["detune"][0];
       const sub = parameters["sub"][0] > 0.5;
@@ -340,9 +346,17 @@ function createSynthesizerCore() {
           phase1,
           envDecay,
           f1 / sampleRate,
+          envRange,
         );
         const osc2Out = isDualOsc
-          ? oscFn(shape, shapeEgValue, phase2, envDecay, f2 / sampleRate)
+          ? oscFn(
+              shape,
+              shapeEgValue,
+              phase2,
+              envDecay,
+              f2 / sampleRate,
+              envRange,
+            )
           : 0.0;
 
         // Mix the main oscillators.
@@ -404,6 +418,7 @@ class SynthProcessor extends AudioWorkletProcessor {
         maxValue: numWaveModes - 1,
       },
       { name: "shape", defaultValue: 0.0, minValue: 0.0, maxValue: 1.0 },
+      { name: "envRange", defaultValue: 1.0, minValue: 0.0, maxValue: 1.0 },
       { name: "envDecay", defaultValue: 0.0, minValue: 0.0, maxValue: 1.0 },
       { name: "detune", defaultValue: 0.0, minValue: 0.0, maxValue: 1.0 },
       { name: "sub", defaultValue: 0.0, minValue: 0.0, maxValue: 1.0 },

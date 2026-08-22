@@ -1,4 +1,4 @@
-import { SynthParameters, WaveMode } from "@/defs/definitions";
+import { ShapeEnvRange, SynthParameters, WaveMode } from "@/defs/definitions";
 import { allPresetKeys, store } from "@/root/store";
 
 function paramToByte(value: number) {
@@ -27,6 +27,7 @@ const mappers = {
         pr.reverb,
         pr.master, //12
       ].map(paramToByte),
+      pr.envRange, //13: 0 or 1
     ];
   },
   deserializeParameters(bytes: number[]): SynthParameters {
@@ -45,6 +46,8 @@ const mappers = {
       delay: floatParams[10],
       reverb: floatParams[11],
       master: floatParams[12],
+      envRange:
+        bytes[13] === 0 ? ShapeEnvRange.Low : ShapeEnvRange.High,
     };
   },
   presetNameToIndex(presetName: string) {
@@ -65,7 +68,10 @@ export const persistence = {
     return new Uint8Array([formatRevision, presetIndex, ...paramBytes]);
   },
   applyStateBytes(bytes: Uint8Array) {
-    if (bytes.length === 2 + 13 && bytes[0] === formatRevision) {
+    if (
+      (bytes.length === 2 + 13 || bytes.length === 2 + 14) &&
+      bytes[0] === formatRevision
+    ) {
       const presetIndex = bytes[1];
       const presetKey = mappers.presetNameFromIndex(presetIndex);
       const parameters = mappers.deserializeParameters([...bytes.slice(2)]);

@@ -5,7 +5,11 @@ import { createPlainSelectorOptions } from "@/utils/selector-option";
 import { Selector } from "@/components/selector";
 import { allPresetKeys, store } from "@/root/store";
 import { actions } from "@/root/actions";
-import { numWaveModes, SynthLinearParameters } from "@/defs/definitions";
+import {
+  numWaveModes,
+  ShapeEnvRange,
+  SynthLinearParameters,
+} from "@/defs/definitions";
 import { cx } from "@twind/core";
 import { useSetupDrivers } from "@/root/drivers";
 
@@ -114,7 +118,13 @@ const ParametersSection = () => {
             steps={numWaveModes}
           />
           <ParameterKnob paramKey="shape" label="SHAPE" />
-          <ParameterKnob paramKey="envDecay" label="ENV" />
+          <ParameterKnob
+            paramKey="envDecay"
+            label={
+              parameters.envRange === ShapeEnvRange.High ? "ENV-H†" : "ENV-L†"
+            }
+            onLabelClick={actions.toggleShapeEnvRange}
+          />
           <ParameterKnob
             paramKey="detune"
             label={parameters.sub ? "SUB-DET†" : "DET†"}

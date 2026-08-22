@@ -8,6 +8,7 @@ export const automationInput: AutomationPort = {
     return [
       { id: "waveMode", steps: numWaveModes },
       { id: "shape" },
+      { id: "envRange", steps: 2 },
       { id: "envDecay" },
       { id: "detune" },
       { id: "sub", steps: 2 },
@@ -26,6 +27,8 @@ export const automationInput: AutomationPort = {
       return store.state.parameters.waveMode / numWaveModes;
     } else if (id === "sub") {
       return store.state.parameters.sub ? 1 : 0;
+    } else if (id === "envRange") {
+      return store.state.parameters.envRange;
     } else {
       return store.state.parameters[id as keyof SynthLinearParameters];
     }
@@ -35,6 +38,8 @@ export const automationInput: AutomationPort = {
       actions.setParameter("waveMode", Math.round(value * numWaveModes));
     } else if (id === "sub") {
       actions.setParameter("sub", value > 0.5);
+    } else if (id === "envRange") {
+      actions.setParameter("envRange", value > 0.5 ? 1 : 0);
     } else {
       actions.setParameter(id as keyof SynthParameters, value);
     }

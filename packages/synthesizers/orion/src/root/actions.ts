@@ -25,6 +25,10 @@ export const actions = {
   toggleBoolParameter<K extends "sub">(key: K) {
     store.patchParameters({ [key]: !store.state.parameters[key] });
   },
+  toggleShapeEnvRange() {
+    const next = store.state.parameters.envRange === 1 ? 0 : 1;
+    store.patchParameters({ envRange: next });
+  },
   randomizeParameters() {
     const paramAttrs = createRandomParameters();
     store.patchParameters(paramAttrs);

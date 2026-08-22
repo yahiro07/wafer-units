@@ -10,9 +10,15 @@ export enum WaveMode {
 }
 export const numWaveModes = 8;
 
+export enum ShapeEnvRange {
+  Low = 0,
+  High = 1, //default
+}
+
 export type SynthParameters = {
   waveMode: WaveMode;
   shape: number;
+  envRange: ShapeEnvRange;
   envDecay: number;
   detune: number;
   sub: boolean;
@@ -33,6 +39,7 @@ export type SynthLinearParameters = Omit<SynthParameters, "sub">;
 export const defaultSynthParameters: SynthParameters = {
   waveMode: WaveMode.PD,
   shape: 0,
+  envRange: ShapeEnvRange.High,
   envDecay: 0,
   detune: 0,
   sub: false,
