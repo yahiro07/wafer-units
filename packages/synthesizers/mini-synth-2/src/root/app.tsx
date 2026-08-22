@@ -5,7 +5,7 @@ import { createPlainSelectorOptions } from "@/utils/selector-option";
 import { Selector } from "@/components/selector";
 import { allPresetKeys, store } from "@/root/store";
 import { actions } from "@/root/actions";
-import { SynthParameters } from "@/core/definitions";
+import { numOscWaveTypes, SynthParameters } from "@/core/definitions";
 import { useEffect } from "preact/hooks";
 import { setupSynchronization, setupUnit } from "@/root/drivers";
 import { cx } from "@twind/core";
@@ -103,7 +103,11 @@ const ParametersSection = () => {
     <div class="flex-v gap-3">
       <div class="flex-h gap-3">
         <SectionFrame header="OSCILLATOR" className="w-[60%]">
-          <ParameterKnob paramKey="oscWave" label="wave" steps={3} />
+          <ParameterKnob
+            paramKey="oscWave"
+            label="wave"
+            steps={numOscWaveTypes}
+          />
           <ParameterKnob paramKey="oscDetune" label="detune" />
           <ParameterKnob paramKey="oscSub" label="sub" />
           <ParameterKnob paramKey="oscDrift" label="drift" />

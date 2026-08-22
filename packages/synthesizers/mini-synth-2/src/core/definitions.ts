@@ -1,5 +1,14 @@
+export enum OscWave {
+  sawtooth = 0,
+  pulse125,
+  pulse25,
+  square,
+  triangle,
+}
+export const numOscWaveTypes = 5;
+
 export type SynthParameters = {
-  oscWave: number; // 0, 1, 2 (saw, rect, pulse)
+  oscWave: OscWave;
   oscDetune: number; // 0~1
   oscSub: number; // 0~1
   oscDrift: number; // 0~1
@@ -15,7 +24,7 @@ export type SynthParameters = {
 };
 
 export const defaultSynthParameters: SynthParameters = {
-  oscWave: 0,
+  oscWave: OscWave.sawtooth,
   oscDetune: 0,
   oscSub: 0,
   oscDrift: 0,

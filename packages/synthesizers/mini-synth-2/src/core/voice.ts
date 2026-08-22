@@ -1,8 +1,8 @@
-import { SynthParameters } from "@/core/definitions";
+import { OscWave, SynthParameters } from "@/core/definitions";
 import { midiToFreq } from "./synthesis-utils";
 
 let pulse125Wave: PeriodicWave | null = null;
-let sawWave: PeriodicWave | null = null;
+let pulse25Wave: PeriodicWave | null = null;
 
 function getPulseWave(context: AudioContext, duty: number) {
   const terms = 64;
@@ -19,15 +19,17 @@ function getPulseWave(context: AudioContext, duty: number) {
   });
 }
 
-function getWave(context: AudioContext, waveParam: number) {
-  if (waveParam < 0.5) {
-    if (!sawWave) sawWave = getPulseWave(context, 1.0); // using standard sawtooth logic or periodic wave
+function getWave(context: AudioContext, wave: OscWave) {
+  if (wave === OscWave.sawtooth) {
     return "sawtooth";
-  } else if (waveParam < 1.5) {
+  } else if (wave === OscWave.square) {
     return "square";
+  } else if (wave === OscWave.triangle) {
+    return "triangle";
+  } else if (wave === OscWave.pulse125) {
+    return (pulse125Wave ??= getPulseWave(context, 0.125));
   } else {
-    if (!pulse125Wave) pulse125Wave = getPulseWave(context, 0.125);
-    return pulse125Wave;
+    return (pulse25Wave ??= getPulseWave(context, 0.25));
   }
 }
 
