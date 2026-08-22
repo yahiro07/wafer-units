@@ -33,6 +33,16 @@ function getWave(context: AudioContext, wave: OscWave) {
   }
 }
 
+const configs = {
+  detuneCentsMax: 40,
+  decayTimeMax: 3,
+  releaseTimeMax: 3,
+};
+
+const helpers = {
+  getDetuneCents: (detune: number) => detune ** 2 * configs.detuneCentsMax,
+};
+
 export type Voice = {
   outputNode: GainNode;
   updateNodeParameters: (params: SynthParameters) => void;
@@ -61,7 +71,6 @@ export function createVoice(
       osc.setPeriodicWave(wave);
     }
   };
-  const detuneCentsMax = 40;
 
   const wave = getWave(context, params.oscWave);
   applyWave(osc1, wave);
@@ -69,7 +78,7 @@ export function createVoice(
   applyWave(sub, wave);
 
   // Detune amount: 0~1 maps to 0 ~ 50 cents max (squared)
-  const detuneCents = params.oscDetune ** 2 * detuneCentsMax;
+  const detuneCents = helpers.getDetuneCents(params.oscDetune);
   if (osc2) {
     osc1.detune.value = detuneCents;
     osc2.detune.value = -detuneCents;
@@ -135,7 +144,7 @@ export function createVoice(
     applyWave(osc1, nextWave);
     if (osc2) applyWave(osc2, nextWave);
 
-    const nextDetuneCents = nextParams.oscDetune ** 2 * detuneCentsMax;
+    const nextDetuneCents = helpers.getDetuneCents(nextParams.oscDetune);
     if (osc2) {
       osc1.detune.setTargetAtTime(nextDetuneCents, updateTime, 0.01);
       osc2.detune.setTargetAtTime(-nextDetuneCents, updateTime, 0.01);
@@ -160,7 +169,9 @@ export function createVoice(
       // Amp Envelope
       const attackTime = 0.001;
       const decayTime =
-        params.ampDecay < 1 ? Math.max(0.01, params.ampDecay * 3) : 3;
+        params.ampDecay < 1
+          ? Math.max(0.01, params.ampDecay * configs.decayTimeMax)
+          : configs.decayTimeMax;
       const sustain = params.ampDecay === 1 ? 1 : 0;
       const t = time && time > context.currentTime ? time : context.currentTime;
       ampGain.gain.setValueAtTime(0, t);
@@ -199,7 +210,10 @@ export function createVoice(
       released = true;
       const tOff =
         time && time > context.currentTime ? time : context.currentTime;
-      const releaseTime = Math.max(0.01, currentParams.ampRelease * 3);
+      const releaseTime = Math.max(
+        0.01,
+        currentParams.ampRelease * configs.releaseTimeMax,
+      );
 
       ampGain.gain.cancelScheduledValues(tOff);
       ampGain.gain.setValueAtTime(ampGain.gain.value, tOff);
