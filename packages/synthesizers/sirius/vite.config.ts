@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [preact()],
   resolve: { tsconfigPaths: true },
   build: {
-    outDir: `../../../dist/mini-synth-2`,
+    outDir: `../../../dist/sirius`,
     emptyOutDir: true,
   },
   server: { port: 3000 },
