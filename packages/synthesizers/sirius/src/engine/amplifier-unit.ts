@@ -25,7 +25,7 @@ const helpers = {
     } else {
       return {
         ampDecay: linearInterpolate(prAmpDecay, th, 1, 0.2, 0),
-        sustain: linearInterpolate(prAmpDecay, th, 1, 0, 1) ** 2 * 0.8,
+        sustain: linearInterpolate(prAmpDecay, th, 1, 0, 1) ** 2,
       };
     }
   },
