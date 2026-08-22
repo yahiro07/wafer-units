@@ -16,7 +16,9 @@ const TitleText = () => {
   return (
     <div class="text-[18px]">
       <i class="ri-instance-line text-xl ml-[-2px]" />
-      <span class="ml-[2px]">Sirius</span>
+      <span class="ml-[2px]" onClick={actions.emitPresetData}>
+        Sirius
+      </span>
     </div>
   );
 };

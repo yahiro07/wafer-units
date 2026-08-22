@@ -25,4 +25,13 @@ export const actions = {
     const paramAttrs = createRandomParameters();
     store.patchParameters(paramAttrs);
   },
+  async emitPresetData() {
+    const { ...attrs } = store.state.parameters;
+    const jsonText = JSON.stringify(attrs, null, 2).replaceAll(
+      /\.(\d+)/g,
+      (_match, digits: string) => "." + digits.slice(0, 2),
+    );
+    await navigator.clipboard.writeText(jsonText);
+    console.log("Preset data copied to clipboard");
+  },
 };
