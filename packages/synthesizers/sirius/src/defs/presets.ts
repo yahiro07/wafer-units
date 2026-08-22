@@ -1,4 +1,4 @@
-import { SynthParameters } from "@/core/definitions";
+import { SynthParameters } from "@/defs/definitions";
 
 export const allPresets: Record<string, SynthParameters> = {
   Init: {

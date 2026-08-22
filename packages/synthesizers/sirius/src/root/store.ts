@@ -1,5 +1,5 @@
-import { SynthParameters, defaultSynthParameters } from "@/core/definitions";
-import { allPresets } from "@/core/presets";
+import { SynthParameters, defaultSynthParameters } from "@/defs/definitions";
+import { allPresets } from "@/defs/presets";
 import { createStore } from "snap-store";
 
 export const allPresetKeys = Object.keys(allPresets);

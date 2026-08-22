@@ -1,5 +1,5 @@
-import { SynthParameters } from "@/core/definitions";
-import { createSynthesizerEngine } from "@/core/synthesizer";
+import { SynthParameters } from "@/defs/definitions";
+import { createSynthesizerEngine } from "@/engine/synthesizer";
 import { actions } from "@/root/actions";
 import { persistence } from "@/root/persistence";
 import { store } from "@/root/store";

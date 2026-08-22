@@ -1,4 +1,4 @@
-import { SynthParameters } from "@/core/definitions";
+import { SynthParameters } from "@/defs/definitions";
 import { allPresetKeys, store } from "@/root/store";
 
 function paramToByte(value: number) {

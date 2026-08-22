@@ -1,4 +1,4 @@
-import { SynthParameters } from "@/core/definitions";
+import { SynthParameters } from "@/defs/definitions";
 import { linearInterpolate } from "@/utils/helpers";
 
 const configs = {

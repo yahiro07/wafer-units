@@ -1,4 +1,4 @@
-import { oscWaveTypesForUi, SynthParameters } from "@/core/definitions";
+import { oscWaveTypesForUi, SynthParameters } from "@/defs/definitions";
 
 const randF = Math.random;
 

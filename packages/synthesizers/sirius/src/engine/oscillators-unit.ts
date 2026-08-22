@@ -1,6 +1,6 @@
-import { OscWave, SynthParameters } from "@/core/definitions";
+import { OscWave, SynthParameters } from "@/defs/definitions";
 import { midiToFreq, tunableSigmoid } from "./synthesis-utils";
-import { getOscWaveformPdSaw } from "@/core/pd-saw";
+import { getOscWaveformPdSaw } from "@/engine/pd-saw";
 
 const periodicWaveCache: Partial<Record<OscWave, PeriodicWave | null>> = {};
 

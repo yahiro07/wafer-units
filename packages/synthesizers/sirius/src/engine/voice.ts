@@ -1,7 +1,7 @@
-import { SynthParameters } from "@/core/definitions";
-import { createAmplifierUnit } from "@/core/amplifier-unit";
-import { createFilterUnit } from "@/core/filter-unit";
-import { createOscillatorsUnit } from "@/core/oscillators-unit";
+import { SynthParameters } from "@/defs/definitions";
+import { createAmplifierUnit } from "@/engine/amplifier-unit";
+import { createFilterUnit } from "@/engine/filter-unit";
+import { createOscillatorsUnit } from "@/engine/oscillators-unit";
 
 export type Voice = {
   outputNode: GainNode;

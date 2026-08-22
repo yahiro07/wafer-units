@@ -1,4 +1,4 @@
-import { SynthParameters } from "@/core/definitions";
+import { SynthParameters } from "@/defs/definitions";
 
 const helpers = {
   calcFilterBaseFreq: (cutoff: number, oscsBottomFreq: number) => {

@@ -5,7 +5,7 @@ import { createPlainSelectorOptions } from "@/utils/selector-option";
 import { Selector } from "@/components/selector";
 import { allPresetKeys, store } from "@/root/store";
 import { actions } from "@/root/actions";
-import { oscWaveTypesForUi, SynthParameters } from "@/core/definitions";
+import { oscWaveTypesForUi, SynthParameters } from "@/defs/definitions";
 import { useEffect } from "preact/hooks";
 import { setupSynchronization, setupUnit } from "@/root/drivers";
 import { cx } from "@twind/core";

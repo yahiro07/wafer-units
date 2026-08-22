@@ -1,13 +1,13 @@
-import { createChorus2 } from "@/core/chorus2";
-import { mapVolumeControlCurveCenterUnity } from "@/core/curve";
+import { createChorus2 } from "@/engine/chorus2";
+import { mapVolumeControlCurveCenterUnity } from "@/engine/curve";
 import {
   defaultSynthParameters,
   ISynthesizerEngine,
   SynthParameters,
-} from "@/core/definitions";
-import { createOutputSaturator } from "@/core/output-saturator";
-import { createReverb2 } from "@/core/reverb2";
-import { createVoice, Voice } from "@/core/voice";
+} from "@/defs/definitions";
+import { createOutputSaturator } from "@/engine/output-saturator";
+import { createReverb2 } from "@/engine/reverb2";
+import { createVoice, Voice } from "@/engine/voice";
 import { UnitInterface } from "wafer-host/unit-types";
 
 export function createSynthesizerEngine(
