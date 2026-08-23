@@ -570,12 +570,6 @@ function createPitchDriftLfo() {
 function createSynthesizerCore() {
   const oscillators = createOscillators();
 
-  // Irregular LFO phase state for pitch drift.
-
-  // Sample-and-hold state for the lo-fi downsampling effect.
-  let sampleCount = 0;
-  let heldSample = 0.0;
-
   let previousGate = 0.0;
   const ampEg = createAmpEg();
   const shapeEg = createShapeEg();
@@ -591,8 +585,6 @@ function createSynthesizerCore() {
     ampEg.reset();
     shapeEg.reset();
     pitchDriftLfo.reset();
-    sampleCount = 0;
-    heldSample = 0.0;
   }
 
   return {
@@ -624,8 +616,6 @@ function createSynthesizerCore() {
       const decay = parameters["decay"][0];
       const release = parameters["release"][0];
       const driftAmount = parameters["drift"][0];
-      const _loFiAmount = parameters["loFi"][0];
-      const loFiAmount = _loFiAmount * _loFiAmount * 0.5;
 
       interpolators.shape.feed(_shape, bufferSize);
       interpolators.envDecay.feed(_envDecay, bufferSize);
@@ -676,7 +666,7 @@ function createSynthesizerCore() {
           (1.0 + detuneAmount) *
           (1.0 + pitchDrift);
 
-        let mainMix = oscillators.process({
+        const mainMix = oscillators.process({
           isDualOsc,
           f1,
           f2,
@@ -687,28 +677,6 @@ function createSynthesizerCore() {
           sampleRate,
         });
 
-        // -------------------------------------------------------------
-        // 6. Lo-fi processing on the main oscillator only
-        // -------------------------------------------------------------
-        if (loFiAmount > 0.005) {
-          // A. Bit crushing from 16-bit down to as low as 4-bit.
-          const bits = 16.0 - loFiAmount * 12.0;
-          const step = Math.pow(2, bits);
-          mainMix = Math.round(mainMix * step) / step;
-
-          // B. Downsampling via sample hold.
-          // Increase the hold interval with the lo-fi amount, up to 15 samples.
-          const sampleHoldInterval = Math.floor(1 + loFiAmount * 14);
-          if (sampleCount % sampleHoldInterval === 0) {
-            heldSample = mainMix;
-          }
-          mainMix = heldSample;
-          sampleCount++;
-        }
-
-        // -------------------------------------------------------------
-        // 7. Final amplitude envelope
-        // -------------------------------------------------------------
         const finalSample = mainMix * egValue;
 
         // Write the sample to the output channel.
@@ -750,7 +718,6 @@ class SynthProcessor extends AudioWorkletProcessor {
       { name: "decay", defaultValue: 0.5, minValue: 0.0, maxValue: 1.0 },
       { name: "release", defaultValue: 0.3, minValue: 0.0, maxValue: 1.0 },
       { name: "drift", defaultValue: 0.0, minValue: 0.0, maxValue: 1.0 },
-      { name: "loFi", defaultValue: 0.0, minValue: 0.0, maxValue: 1.0 },
     ];
   }
   private synthesizerCore = createSynthesizerCore();

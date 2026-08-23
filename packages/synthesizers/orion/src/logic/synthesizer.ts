@@ -1,6 +1,7 @@
 import { UnitInterface } from "wafer-host/unit-types";
 import workletUrl from "./worklet?worker&url";
-import { createEffectChain } from "@/logic/effect-chain";
+import lofiWorkletUrl from "./lofi-worklet?worker&url";
+import { createEffectChain, EffectChain } from "@/logic/effect-chain";
 import { defaultSynthParameters, SynthParameters } from "@/defs/definitions";
 import { midiToFrequency } from "@/logic/synth-math-utils";
 
@@ -82,7 +83,8 @@ function createVoice(
             key === "chorus" ||
             key === "delay" ||
             key === "reverb" ||
-            key === "master"
+            key === "master" ||
+            key === "loFi"
           ) {
             return;
           }
@@ -230,15 +232,27 @@ export function createSynthesizerEngine(
     synthParameters.master,
     audioCtx.currentTime,
   );
-  const effectChain = createEffectChain(audioCtx);
-  mainOutputNode.connect(effectChain.inputNode);
-  effectChain.outputNode.connect(destinationNode);
 
+  let effectChain: EffectChain | undefined;
   let voices: Voice[] = [];
   const activeVoices = new Map<number, Voice>();
+  let disposed = false;
 
   async function init(): Promise<void> {
-    await audioCtx.audioWorklet.addModule(workletUrl);
+    await Promise.all([
+      audioCtx.audioWorklet.addModule(workletUrl),
+      audioCtx.audioWorklet.addModule(lofiWorkletUrl),
+    ]);
+    if (disposed) return;
+    effectChain = createEffectChain(audioCtx);
+    mainOutputNode.connect(effectChain.inputNode);
+    effectChain.outputNode.connect(destinationNode);
+    effectChain.updateParameters({
+      loFi: synthParameters.loFi,
+      chorus: synthParameters.chorus,
+      delay: synthParameters.delay,
+      reverb: synthParameters.reverb,
+    });
     voices = Array.from({ length: MAX_VOICES }, () =>
       createVoice(audioCtx, mainOutputNode, synthParameters),
     );
@@ -258,7 +272,8 @@ export function createSynthesizerEngine(
       voices.forEach((voice) => {
         voice.applyParametersToNodes();
       });
-      effectChain.updateParameters({
+      effectChain?.updateParameters({
+        loFi: synthParameters.loFi,
         chorus: synthParameters.chorus,
         delay: synthParameters.delay,
         reverb: synthParameters.reverb,
@@ -304,16 +319,18 @@ export function createSynthesizerEngine(
     },
 
     setBpm(bpm) {
-      effectChain.setBpm(bpm);
+      effectChain?.setBpm(bpm);
     },
 
     cleanup() {
+      disposed = true;
       activeVoices.clear();
       voices.forEach((voice) => {
         voice.cleanup();
       });
       voices = [];
-      effectChain.cleanup();
+      effectChain?.cleanup();
+      effectChain = undefined;
       mainOutputNode.disconnect();
     },
   };
