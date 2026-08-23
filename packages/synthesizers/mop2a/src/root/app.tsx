@@ -46,13 +46,17 @@ function createVoice(audioContext: AudioContext, parameters: SynthParameters) {
 
   const modulatorGain = ac.createGain();
   modulator.connect(modulatorGain);
-  modulatorGain.connect(carrier.frequency);
+
+  const modulatorEgGain = ac.createGain();
+  const modulatorEg = createOperatorEg(modulatorEgGain.gain);
+  modulatorGain.connect(modulatorEgGain);
+  modulatorEgGain.connect(carrier.frequency);
 
   const feedbackGain = ac.createGain();
 
   const fbDelay = ac.createDelay(1 / ac.sampleRate);
   fbDelay.delayTime.value = 1 / ac.sampleRate;
-  modulator.connect(feedbackGain);
+  modulatorEgGain.connect(feedbackGain);
   feedbackGain.connect(fbDelay);
   fbDelay.connect(modulator.frequency);
 
@@ -69,6 +73,7 @@ function createVoice(audioContext: AudioContext, parameters: SynthParameters) {
       modulator.start();
       carrier.start();
       const now = audioContext.currentTime;
+      modulatorEg.trigger(now, pr.decay1 * 2);
       carrierEg.trigger(now, pr.decay2 * 2);
     },
     stop() {
