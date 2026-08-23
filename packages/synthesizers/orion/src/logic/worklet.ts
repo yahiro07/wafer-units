@@ -639,12 +639,13 @@ function createSynthesizerCore() {
       let decay = 0;
       let sustain = 1;
       let ampVolume = 1;
-      if (originalDecay > 0.6) {
-        sustain = linearInterpolate(originalDecay, 0.6, 1, 0, 1) ** 2;
-        decay = linearInterpolate(originalDecay, 0.6, 1, 1, 0);
-        ampVolume = linearInterpolate(originalDecay, 0.6, 1, 1, 0.7);
+      let egParamTh = 0.5;
+      if (originalDecay > egParamTh) {
+        sustain = linearInterpolate(originalDecay, egParamTh, 1, 0, 1) ** 2;
+        decay = linearInterpolate(originalDecay, egParamTh, 1, 1, 0);
+        ampVolume = linearInterpolate(originalDecay, egParamTh, 1, 1, 0.7);
       } else {
-        decay = originalDecay;
+        decay = linearInterpolate(originalDecay, 0, egParamTh, 0.05, 1);
         sustain = 0;
         ampVolume = 1;
       }
