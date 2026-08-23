@@ -1,0 +1,18 @@
+{
+  "name": "mop2a",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite dev",
+    "build": "vite build"
+  },
+  "devDependencies": {
+    "@preact/preset-vite": "catalog:",
+    "@unocss/preset-wind4": "^66.7.5",
+    "@unocss/vite": "^66.7.5",
+    "mini-css": "catalog:",
+    "preact": "catalog:",
+    "snap-store": "catalog:",
+    "unocss": "^66.7.5"
+  }
+}
