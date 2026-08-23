@@ -741,9 +741,9 @@ function createSynthesizerCore() {
 
         const gateOn = gate > 0.5;
         const isNaiveWave =
-          shape < 0.2 &&
-          (envRange === ShapeEnvRange.Low ||
-            (envRange === ShapeEnvRange.High && envDecay === 0));
+          (envRange === ShapeEnvRange.Low && shape < 0.2) ||
+          (envDecay === ShapeEnvRange.Low && envDecay < 0.1) ||
+          (envRange === ShapeEnvRange.High && shape < 0.2 && envDecay === 0);
         if (gateOn && previousGate <= 0.5) {
           // Rising gate edge: hard-reset voice state for pooled reuse / steal.
           voiceStealEgFix.reset(isNaiveWave);
