@@ -489,10 +489,11 @@ function createAmpEg() {
     process(args: {
       gateOn: boolean;
       decay: number;
+      sustain: number;
       release: number;
       sampleRate: number;
     }) {
-      const { gateOn, decay, release, sampleRate } = args;
+      const { gateOn, decay, sustain, release, sampleRate } = args;
 
       if (gateOn) {
         hasStarted = true;
@@ -503,8 +504,7 @@ function createAmpEg() {
         }
         // Decay phase with exponential falloff. Attack is intentionally instantaneous.
         egValue = Math.exp(-egTime / Math.max(0.01, decay));
-        const sustain =
-          decay < 0.75 ? 0 : linearInterpolate(decay, 0.75, 1, 0, 1);
+
         egValue = lowClip(egValue, sustain);
         egTime += 1.0 / sampleRate;
       } else if (hasStarted) {
@@ -627,7 +627,7 @@ function createSynthesizerCore() {
       const _envDecay = parameters["envDecay"][0];
       const detune = parameters["detune"][0];
       const sub = parameters["sub"][0] > 0.5;
-      const decay = parameters["decay"][0];
+      const originalDecay = parameters["decay"][0];
       const release = parameters["release"][0];
       const driftAmount = parameters["drift"][0];
 
@@ -635,6 +635,19 @@ function createSynthesizerCore() {
       interpolators.envDecay.feed(_envDecay, bufferSize);
 
       oscillators.setWaveMode(waveMode);
+
+      let decay = 0;
+      let sustain = 1;
+      let ampVolume = 1;
+      if (originalDecay > 0.6) {
+        sustain = linearInterpolate(originalDecay, 0.6, 1, 0, 1) ** 2;
+        decay = linearInterpolate(originalDecay, 0.6, 1, 1, 0);
+        ampVolume = linearInterpolate(originalDecay, 0.6, 1, 1, 0.7);
+      } else {
+        decay = originalDecay;
+        sustain = 0;
+        ampVolume = 1;
+      }
 
       // Process the current audio block.
       for (let i = 0; i < bufferSize; i++) {
@@ -651,12 +664,15 @@ function createSynthesizerCore() {
         }
         previousGate = gateOn ? 1.0 : 0.0;
 
-        const { hasStarted, egValue } = ampEg.process({
+        let { hasStarted, egValue } = ampEg.process({
           gateOn,
           decay,
+          sustain,
           release,
           sampleRate,
         });
+        egValue *= ampVolume;
+
         const shapeEgValue = shapeEg.process({
           hasStarted,
           envDecay,

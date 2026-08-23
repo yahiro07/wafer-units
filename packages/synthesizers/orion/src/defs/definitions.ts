@@ -61,7 +61,7 @@ export type SynthLinearParameters = Omit<SynthParameters, "sub">;
 
 export const defaultSynthParameters: SynthParameters = {
   waveMode: WaveMode.PD1,
-  shape: 0,
+  shape: 1,
   envRange: ShapeEnvRange.High,
   envDecay: 0,
   detune: 0,
