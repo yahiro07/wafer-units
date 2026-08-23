@@ -471,6 +471,8 @@ function createOscillators() {
   };
 }
 
+const DECLICK_ATTACK_SECONDS = 0.001;
+
 function createAmpEg() {
   let egValue = 0.0;
   let isReleased = false;
@@ -506,6 +508,11 @@ function createAmpEg() {
         egValue = Math.exp(-egTime / Math.max(0.01, decay));
 
         egValue = lowClip(egValue, sustain);
+        if (egTime < DECLICK_ATTACK_SECONDS) {
+          const t = egTime / DECLICK_ATTACK_SECONDS;
+          const riseCurve = 0.5 - 0.5 * Math.cos(Math.PI * t);
+          egValue *= riseCurve;
+        }
         egTime += 1.0 / sampleRate;
       } else if (hasStarted) {
         if (!isReleased) {
@@ -516,7 +523,7 @@ function createAmpEg() {
         }
         // Release phase.
         egValue =
-          releaseStartValue * Math.exp(-egTime / Math.max(0.01, release));
+          releaseStartValue * Math.exp(-egTime / Math.max(0.004, release));
         egTime += 1.0 / sampleRate;
       } else {
         egValue = 0.0;
