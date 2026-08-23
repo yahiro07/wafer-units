@@ -376,12 +376,90 @@ function bindOscFunctionForExWaves(waveMode: WaveMode): OscFn {
   };
 }
 
-function createSynthesizerCore() {
-  // Oscillator phase state for two main oscillators.
+function createOscillators() {
   let phase1 = 0.0;
   let phase2 = 0.0;
   const fmFeedbackSaw1 = createProcessOscFmFeedbackSaw();
   const fmFeedbackSaw2 = createProcessOscFmFeedbackSaw();
+  let waveMode: WaveMode;
+  let oscFn: OscFn;
+
+  return {
+    reset() {
+      phase1 = 0.0;
+      phase2 = 0.0;
+      fmFeedbackSaw1.reset();
+      fmFeedbackSaw2.reset();
+    },
+    setWaveMode(newWaveMode: WaveMode) {
+      waveMode = newWaveMode;
+      if (
+        (WaveMode.PD1 <= waveMode && waveMode <= WaveMode.PD7) ||
+        (WaveMode.PDM1 <= waveMode && waveMode <= WaveMode.PDM6)
+      ) {
+        oscFn = bindProcessOscPD(waveMode);
+      } else if (waveMode === WaveMode.FM1) {
+        oscFn = fmFeedbackSaw1;
+      } else if (waveMode === WaveMode.FM2) {
+        oscFn = processOscFM;
+      } else {
+        oscFn = bindOscFunctionForExWaves(waveMode);
+      }
+    },
+    process(args: {
+      isDualOsc: boolean;
+      f1: number;
+      f2: number;
+      shape: number;
+      shapeEgValue: number;
+      envRange: ShapeEnvRange;
+      envDecay: number;
+      sampleRate: number;
+    }) {
+      const {
+        isDualOsc,
+        f1,
+        f2,
+        shape,
+        shapeEgValue,
+        envRange,
+        envDecay,
+        sampleRate,
+      } = args;
+      phase1 += f1 / sampleRate;
+      if (phase1 >= 1.0) phase1 -= 1.0;
+
+      if (isDualOsc) {
+        phase2 += f2 / sampleRate;
+        if (phase2 >= 1.0) phase2 -= 1.0;
+      }
+
+      const osc1Out = oscFn(
+        shape,
+        shapeEgValue,
+        phase1,
+        envRange,
+        envDecay,
+        f1 / sampleRate,
+      );
+      const osc2Out = isDualOsc
+        ? (waveMode === WaveMode.FM1 ? fmFeedbackSaw2 : oscFn)(
+            shape,
+            shapeEgValue,
+            phase2,
+            envRange,
+            envDecay,
+            f2 / sampleRate,
+          )
+        : 0.0;
+
+      return isDualOsc ? (osc1Out + osc2Out) * 0.5 : osc1Out;
+    },
+  };
+}
+
+function createSynthesizerCore() {
+  const oscillators = createOscillators();
 
   // Irregular LFO phase state for pitch drift.
   let driftPhase1 = 0.0;
@@ -407,8 +485,7 @@ function createSynthesizerCore() {
   };
 
   function resetVoiceState() {
-    phase1 = 0.0;
-    phase2 = 0.0;
+    oscillators.reset();
     driftPhase1 = 0.0;
     driftPhase2 = 0.0;
     sampleCount = 0;
@@ -420,8 +497,6 @@ function createSynthesizerCore() {
     hasStarted = false;
     shapeEgValue = 0.0;
     shapeEgTime = 0.0;
-    fmFeedbackSaw1.reset();
-    fmFeedbackSaw2.reset();
   }
 
   return {
@@ -459,19 +534,7 @@ function createSynthesizerCore() {
       interpolators.shape.feed(_shape, bufferSize);
       interpolators.envDecay.feed(_envDecay, bufferSize);
 
-      let oscFn: OscFn;
-      if (
-        (WaveMode.PD1 <= waveMode && waveMode <= WaveMode.PD7) ||
-        (WaveMode.PDM1 <= waveMode && waveMode <= WaveMode.PDM6)
-      ) {
-        oscFn = bindProcessOscPD(waveMode);
-      } else if (waveMode === WaveMode.FM1) {
-        oscFn = fmFeedbackSaw1;
-      } else if (waveMode === WaveMode.FM2) {
-        oscFn = processOscFM;
-      } else {
-        oscFn = bindOscFunctionForExWaves(waveMode);
-      }
+      oscillators.setWaveMode(waveMode);
 
       // Process the current audio block.
       for (let i = 0; i < bufferSize; i++) {
@@ -551,44 +614,16 @@ function createSynthesizerCore() {
           (1.0 + detuneAmount) *
           (1.0 + pitchDrift);
 
-        // Advance oscillator phases.
-        phase1 += f1 / sampleRate;
-        if (phase1 >= 1.0) phase1 -= 1.0;
-
-        if (isDualOsc) {
-          phase2 += f2 / sampleRate;
-          if (phase2 >= 1.0) phase2 -= 1.0;
-        }
-
-        // -------------------------------------------------------------
-        // 4. Modulation value combination (knob + envelope modulation)
-        // -------------------------------------------------------------
-
-        // -------------------------------------------------------------
-        // 5. Waveform generation for each algorithm
-        // -------------------------------------------------------------
-
-        const osc1Out = oscFn(
+        let mainMix = oscillators.process({
+          isDualOsc,
+          f1,
+          f2,
           shape,
           shapeEgValue,
-          phase1,
           envRange,
           envDecay,
-          f1 / sampleRate,
-        );
-        const osc2Out = isDualOsc
-          ? (waveMode === WaveMode.FM1 ? fmFeedbackSaw2 : oscFn)(
-              shape,
-              shapeEgValue,
-              phase2,
-              envRange,
-              envDecay,
-              f2 / sampleRate,
-            )
-          : 0.0;
-
-        // Mix the main oscillators.
-        let mainMix = isDualOsc ? (osc1Out + osc2Out) * 0.5 : osc1Out;
+          sampleRate,
+        });
 
         // -------------------------------------------------------------
         // 6. Lo-fi processing on the main oscillator only
