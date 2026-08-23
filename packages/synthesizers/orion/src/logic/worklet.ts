@@ -1,7 +1,7 @@
 import { numWaveModes, ShapeEnvRange, WaveMode } from "@/defs/definitions";
 import { createInterpolator } from "@/logic/interpolator";
 import { phaseTweakers } from "@/logic/phase-tweakers";
-import { mapUnaryTo } from "@/logic/synth-math-utils";
+import { mapUnaryTo, power2 } from "@/logic/synth-math-utils";
 import { iife, linearInterpolate, lowClip } from "@/utils/helpers";
 
 const pi = Math.PI;
@@ -77,6 +77,20 @@ function computePdSpeedHann(pp: number, level: number): number {
   return (-Math.cos(twoPi * pp2) + 1) * win - 1;
 }
 
+function computePdAccelHann(pp: number, level: number): number {
+  let pp2 = 0;
+  const pivot = 0.5 - level * 0.45;
+  if (pp < pivot) {
+    pp2 = (pp / pivot) * 0.5;
+  } else {
+    const ppLatter = (pp - pivot) / (1 - pivot);
+    pp2 = fracPart(0.5 + power2(ppLatter) * level * 15);
+  }
+  const pivot2 = 0.5 + level * 0.4;
+  const win = pp < pivot2 ? 1 : fallInvCosine((pp - pivot2) / (1 - pivot2));
+  return (-Math.cos(twoPi * pp2) + 1) * win - 1;
+}
+
 const SHAPE_EG_MAX_SECONDS = 1.5;
 
 type OscFn = (
@@ -101,7 +115,8 @@ function processOscPD(
   // return computePD(phase, pdLevel);
   // return computePdPulse(phase, pdLevel);
   // return computePdDualCosine(phase, pdLevel);
-  return computePdSpeedHann(phase, pdLevel);
+  // return computePdSpeedHann(phase, pdLevel);
+  return computePdAccelHann(phase, pdLevel);
 }
 
 function processOscFM(
