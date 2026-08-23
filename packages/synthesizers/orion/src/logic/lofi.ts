@@ -5,7 +5,7 @@ export function createLoFi(audioContext: AudioContext) {
   const workletNode = new AudioWorkletNode(audioContext, "lofi-processor", {
     numberOfInputs: 1,
     numberOfOutputs: 1,
-    outputChannelCount: [1],
+    outputChannelCount: [2],
   });
 
   inputNode.connect(workletNode);

@@ -43,7 +43,7 @@ function createVoice(
   const workletNode = new AudioWorkletNode(audioCtx, "synth-processor", {
     numberOfInputs: 0,
     numberOfOutputs: 1,
-    outputChannelCount: [1],
+    outputChannelCount: [2],
   });
   const gateParam = workletNode.parameters.get("gate");
   if (!gateParam) {

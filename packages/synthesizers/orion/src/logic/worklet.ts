@@ -415,6 +415,7 @@ function createOscillators() {
       envRange: ShapeEnvRange;
       envDecay: number;
       sampleRate: number;
+      panWidth: number;
     }) {
       const {
         isDualOsc,
@@ -425,6 +426,7 @@ function createOscillators() {
         envRange,
         envDecay,
         sampleRate,
+        panWidth,
       } = args;
       phase1 += f1 / sampleRate;
       if (phase1 >= 1.0) phase1 -= 1.0;
@@ -453,7 +455,18 @@ function createOscillators() {
           )
         : 0.0;
 
-      return isDualOsc ? (osc1Out + osc2Out) * 0.5 : osc1Out;
+      let left: number;
+      let right: number;
+      if (isDualOsc) {
+        const pan1 = -panWidth;
+        const pan2 = panWidth;
+        left = osc1Out * (1.0 - pan1) * 0.5 + osc2Out * (1.0 - pan2) * 0.5;
+        right = osc1Out * (1.0 + pan1) * 0.5 + osc2Out * (1.0 + pan2) * 0.5;
+      } else {
+        left = osc1Out;
+        right = osc1Out;
+      }
+      return { left, right };
     },
   };
 }
@@ -595,9 +608,10 @@ function createSynthesizerCore() {
       parameters: Record<string, Float32Array>,
     ): boolean {
       const output = outputs[0];
-      const outputChannel = output[0]; // Mono output.
+      const leftChannel = output[0];
+      const rightChannel = output[1] ?? leftChannel;
       const sampleRate = globalThis.sampleRate; // Global value provided by the Web Audio API.
-      const bufferSize = outputChannel.length; // Usually fixed at 128 samples.
+      const bufferSize = leftChannel.length; // Usually fixed at 128 samples.
 
       // Capture steady parameter values once to reduce repeated array access overhead.
       let baseFreq = parameters["frequency"][0];
@@ -665,8 +679,9 @@ function createSynthesizerCore() {
           (sub ? 0.5 : 1.0) *
           (1.0 + detuneAmount) *
           (1.0 + pitchDrift);
+        const panWidth = Math.min(detune, 0.5);
 
-        const mainMix = oscillators.process({
+        const { left, right } = oscillators.process({
           isDualOsc,
           f1,
           f2,
@@ -675,16 +690,12 @@ function createSynthesizerCore() {
           envRange,
           envDecay,
           sampleRate,
+          panWidth,
         });
 
-        const finalSample = mainMix * egValue;
-
-        // Write the sample to the output channel.
-        outputChannel[i] = finalSample;
-
-        // Mirror the sample to the second channel when stereo output is present.
-        if (output.length > 1) {
-          output[1][i] = finalSample;
+        leftChannel[i] = left * egValue;
+        if (rightChannel !== leftChannel) {
+          rightChannel[i] = right * egValue;
         }
       }
 
