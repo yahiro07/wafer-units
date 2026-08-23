@@ -151,7 +151,7 @@ const ParametersSection = () => {
         </SectionFrame>
         <SectionFrame header="MASTER" className="grow">
           <ParameterKnob paramKey="drift" label="DRIFT" />
-          <ParameterKnob paramKey="master" label="VOLUME" />
+          <ParameterKnob paramKey="patchVolume" label="VOLUME" />
         </SectionFrame>
       </div>
     </div>

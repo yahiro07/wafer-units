@@ -83,7 +83,7 @@ function createVoice(
             key === "chorus" ||
             key === "delay" ||
             key === "reverb" ||
-            key === "master" ||
+            key === "patchVolume" ||
             key === "loFi"
           ) {
             return;
@@ -229,7 +229,7 @@ export function createSynthesizerEngine(
 
   const mainOutputNode = audioCtx.createGain();
   mainOutputNode.gain.setValueAtTime(
-    synthParameters.master,
+    synthParameters.patchVolume * 0.7,
     audioCtx.currentTime,
   );
 
@@ -265,7 +265,7 @@ export function createSynthesizerEngine(
 
       const now = audioCtx.currentTime;
       mainOutputNode.gain.setTargetAtTime(
-        synthParameters.master * 0.7,
+        synthParameters.patchVolume * 0.7,
         now,
         PARAM_SMOOTHING_SECONDS,
       );

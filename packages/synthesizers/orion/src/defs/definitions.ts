@@ -52,10 +52,10 @@ export type SynthParameters = {
   chorus: number;
   delay: number;
   reverb: number;
-  master: number;
+  patchVolume: number;
 };
 
-export type SynthPresetParameters = Omit<SynthParameters, "master">;
+export type SynthPresetParameters = SynthParameters;
 
 export type SynthLinearParameters = Omit<SynthParameters, "sub">;
 
@@ -73,7 +73,7 @@ export const defaultSynthParameters: SynthParameters = {
   chorus: 0,
   delay: 0,
   reverb: 0,
-  master: 0.5,
+  patchVolume: 0.5,
 };
 
 if (appEnvs.isDevelopment && 0) {

@@ -21,6 +21,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
     chorus: 0,
     delay: 0,
     reverb: 0,
+    patchVolume: 0.5,
   },
   brass: {
     waveMode: 0,
@@ -36,6 +37,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
     chorus: 0.53,
     delay: 0,
     reverb: 0.21,
+    patchVolume: 0.5,
   },
   lead1: {
     waveMode: 2,
@@ -51,6 +53,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
     chorus: 0,
     delay: 0,
     reverb: 0.29,
+    patchVolume: 0.5,
   },
   lead2: {
     waveMode: 2,
@@ -66,6 +69,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
     chorus: 0,
     delay: 0,
     reverb: 0.4,
+    patchVolume: 0.5,
   },
   lead3: {
     waveMode: 3,
@@ -81,6 +85,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
     chorus: 0,
     delay: 0,
     reverb: 0.31,
+    patchVolume: 0.5,
   },
   lead4: {
     waveMode: 3,
@@ -96,6 +101,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
     chorus: 0.33,
     delay: 0,
     reverb: 0.39,
+    patchVolume: 0.5,
   },
   lead5: {
     waveMode: 3,
@@ -111,6 +117,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
     chorus: 0,
     delay: 0.48,
     reverb: 0,
+    patchVolume: 0.5,
   },
   elepi: {
     waveMode: 0,
@@ -126,6 +133,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
     chorus: 0,
     delay: 0.0,
     reverb: 0,
+    patchVolume: 0.5,
   },
   ["steel-bell"]: {
     waveMode: 1,
@@ -141,6 +149,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
     chorus: 0,
     delay: 0,
     reverb: 0.26,
+    patchVolume: 0.5,
   },
   ["soft-bell"]: {
     waveMode: 1,
@@ -156,6 +165,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
     chorus: 0,
     delay: 0.53,
     reverb: 0.57,
+    patchVolume: 0.5,
   },
   bell3: {
     waveMode: 1,
@@ -171,6 +181,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
     chorus: 0.29,
     delay: 0.12,
     reverb: 0.2,
+    patchVolume: 0.5,
   },
   crystal: {
     waveMode: 1,
@@ -186,6 +197,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
     chorus: 0,
     delay: 0,
     reverb: 0,
+    patchVolume: 0.5,
   },
   ["glass-strings"]: {
     waveMode: 3,
@@ -201,6 +213,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
     chorus: 0.91,
     delay: 0,
     reverb: 0,
+    patchVolume: 0.5,
   },
   ["dist-guitar1"]: {
     waveMode: 3,
@@ -216,6 +229,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
     chorus: 0,
     delay: 0,
     reverb: 0,
+    patchVolume: 0.5,
   },
   ["dist-guitar2"]: {
     waveMode: 3,
@@ -231,6 +245,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
     chorus: 0,
     delay: 0,
     reverb: 0,
+    patchVolume: 0.5,
   },
   pad1: {
     waveMode: 0,
@@ -246,6 +261,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
     chorus: 0,
     delay: 0,
     reverb: 0.51,
+    patchVolume: 0.5,
   },
   pad2: {
     waveMode: 3,
@@ -261,6 +277,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
     chorus: 0.31,
     delay: 0.36,
     reverb: 0.6,
+    patchVolume: 0.5,
   },
   ["space-pad"]: {
     waveMode: 2,
@@ -276,6 +293,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
     chorus: 0.1,
     delay: 0,
     reverb: 0.07,
+    patchVolume: 0.5,
   },
   ["shiny-flow"]: {
     waveMode: 3,
@@ -291,6 +309,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
     chorus: 0.2,
     delay: 0.95,
     reverb: 0.7,
+    patchVolume: 0.5,
   },
   evening: {
     waveMode: 2,
@@ -306,6 +325,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
     chorus: 0.61,
     delay: 0.83,
     reverb: 0.77,
+    patchVolume: 0.5,
   },
   mystery: {
     waveMode: 3,
@@ -321,6 +341,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
     chorus: 0.95,
     delay: 0.78,
     reverb: 0.65,
+    patchVolume: 0.5,
   },
   ["nostalgic-pad"]: {
     waveMode: 0,
@@ -336,6 +357,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
     chorus: 0.6,
     delay: 0.41,
     reverb: 0.51,
+    patchVolume: 0.5,
   },
   metalic: {
     waveMode: 3,
@@ -351,6 +373,7 @@ export const allPresets: Record<string, SynthPresetParameters> = {
     chorus: 0,
     delay: 0,
     reverb: 0,
+    patchVolume: 0.5,
   },
   electric: {
     waveMode: 1,
@@ -366,5 +389,6 @@ export const allPresets: Record<string, SynthPresetParameters> = {
     chorus: 0.01,
     delay: 0.17,
     reverb: 0.18,
+    patchVolume: 0.5,
   },
 };

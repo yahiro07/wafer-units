@@ -35,6 +35,7 @@ export function createRandomParameters(): Partial<SynthParameters> {
       chorus: probably(0.5, 0, randF()),
       delay: 0,
       reverb: probably(0.5, 0, randRange(0, 0.7)),
+      patchVolume: 0.5,
     };
   }
 
@@ -53,5 +54,6 @@ export function createRandomParameters(): Partial<SynthParameters> {
     chorus: probably(0.5, 0, randF()),
     delay: probably(0.5, 0, randF()),
     reverb: probably(0.5, 0, randRange(0, 0.7)),
+    patchVolume: 0.5,
   };
 }

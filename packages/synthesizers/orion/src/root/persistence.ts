@@ -25,7 +25,7 @@ const mappers = {
         pr.chorus,
         pr.delay,
         pr.reverb,
-        pr.master, //12
+        pr.patchVolume, //12
       ].map(paramToByte),
       pr.envRange, //13: 0 or 1
     ];
@@ -45,9 +45,8 @@ const mappers = {
       chorus: floatParams[9],
       delay: floatParams[10],
       reverb: floatParams[11],
-      master: floatParams[12],
-      envRange:
-        bytes[13] === 0 ? ShapeEnvRange.Low : ShapeEnvRange.High,
+      patchVolume: floatParams[12],
+      envRange: bytes[13] === 0 ? ShapeEnvRange.Low : ShapeEnvRange.High,
     };
   },
   presetNameToIndex(presetName: string) {

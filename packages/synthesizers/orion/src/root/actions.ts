@@ -34,7 +34,7 @@ export const actions = {
     store.patchParameters(paramAttrs);
   },
   async emitPresetData() {
-    const { master: _, ...attrs } = store.state.parameters;
+    const { ...attrs } = store.state.parameters;
     const jsonText = JSON.stringify(attrs, null, 2).replaceAll(
       /\.(\d+)/g,
       (_match, digits: string) => "." + digits.slice(0, 2),
