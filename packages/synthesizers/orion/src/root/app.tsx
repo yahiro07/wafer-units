@@ -138,7 +138,11 @@ const ParametersSection = () => {
           className="grow"
           contentClassName="!px-3"
         >
-          <ParameterKnob paramKey="decay" label="DECAY" />
+          <ParameterKnob
+            paramKey="decay"
+            label={parameters.decayAltAttack ? "Attack†" : "DECAY†"}
+            onLabelClick={() => actions.toggleBoolParameter("decayAltAttack")}
+          />
           <ParameterKnob paramKey="release" label="RELEASE" />
         </SectionFrame>
       </div>

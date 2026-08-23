@@ -22,7 +22,7 @@ export const actions = {
   ) {
     store.patchParameters({ [key]: value });
   },
-  toggleBoolParameter<K extends "sub">(key: K) {
+  toggleBoolParameter<K extends "sub" | "decayAltAttack">(key: K) {
     store.patchParameters({ [key]: !store.state.parameters[key] });
   },
   toggleShapeEnvRange() {

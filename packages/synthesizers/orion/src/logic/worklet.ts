@@ -1,7 +1,7 @@
 import { numWaveModes, ShapeEnvRange, WaveMode } from "@/defs/definitions";
 import { createInterpolator } from "@/logic/interpolator";
 import { phaseTweakers } from "@/logic/phase-tweakers";
-import { mapUnaryTo, power2 } from "@/logic/synth-math-utils";
+import { mapUnaryFrom, mapUnaryTo, power2 } from "@/logic/synth-math-utils";
 import { iife, linearInterpolate, lowClip } from "@/utils/helpers";
 
 const pi = Math.PI;
@@ -471,9 +471,6 @@ function createOscillators() {
   };
 }
 
-const DECLICK_ATTACK_SECONDS = 0.001;
-const DECLICK_ATTACK_SECONDS_NAIVE_WAVE = 0.01;
-
 function createAmpEg() {
   let egValue = 0.0;
   let isReleased = false;
@@ -491,13 +488,22 @@ function createAmpEg() {
     },
     process(args: {
       gateOn: boolean;
+      attack: number;
       decay: number;
       sustain: number;
       release: number;
       sampleRate: number;
       isNaiveWave: boolean;
     }) {
-      const { gateOn, decay, sustain, release, sampleRate, isNaiveWave } = args;
+      const {
+        gateOn,
+        attack,
+        decay,
+        sustain,
+        release,
+        sampleRate,
+        isNaiveWave,
+      } = args;
 
       if (gateOn) {
         hasStarted = true;
@@ -506,17 +512,17 @@ function createAmpEg() {
           isReleased = false;
           egTime = 0.0;
         }
-        // Decay phase with exponential falloff. Attack is intentionally instantaneous.
-        egValue = Math.exp(-egTime / Math.max(0.01, decay));
-
-        egValue = lowClip(egValue, sustain);
-        const deClickTime = isNaiveWave
-          ? DECLICK_ATTACK_SECONDS_NAIVE_WAVE
-          : DECLICK_ATTACK_SECONDS;
+        if (attack > 0 && egTime < attack) {
+          egValue = egTime / attack;
+        } else {
+          const decayTime = Math.max(0, egTime - attack);
+          egValue = Math.exp(-decayTime / Math.max(0.001, decay));
+          egValue = lowClip(egValue, sustain);
+        }
+        const deClickTime = isNaiveWave ? 0.01 : 0.001;
         if (egTime < deClickTime) {
           const t = egTime / deClickTime;
-          const riseCurve = 0.5 - 0.5 * Math.cos(Math.PI * t);
-          egValue *= riseCurve;
+          egValue *= 0.5 - 0.5 * Math.cos(Math.PI * t);
         }
         egTime += 1.0 / sampleRate;
       } else if (hasStarted) {
@@ -527,8 +533,9 @@ function createAmpEg() {
           egTime = 0.0;
         }
         // Release phase.
+        const minRelease = isNaiveWave ? 0.01 : 0.001;
         egValue =
-          releaseStartValue * Math.exp(-egTime / Math.max(0.004, release));
+          releaseStartValue * Math.exp(-egTime / Math.max(minRelease, release));
         egTime += 1.0 / sampleRate;
       } else {
         egValue = 0.0;
@@ -631,10 +638,7 @@ function createVoiceStealEgFix() {
         const tailGain = 0.5 + 0.5 * Math.cos(Math.PI * (1.0 - stealTail));
         outLeft += stealHoldLeft * tailGain;
         outRight += stealHoldRight * tailGain;
-        stealTail = Math.max(
-          0,
-          stealTail - 1 / (DECLICK_ATTACK_SECONDS_NAIVE_WAVE * sampleRate),
-        );
+        stealTail = Math.max(0, stealTail - 1 / (0.01 * sampleRate));
       }
       lastLeft = outLeft;
       lastRight = outRight;
@@ -643,21 +647,45 @@ function createVoiceStealEgFix() {
   };
 }
 
-function deriveEgParameters(originalDecay: number) {
+function deriveEgParameters(originalDecay: number, decayAltAttack: boolean) {
+  const lerp2 = linearInterpolate;
+  let attack = 0;
   let decay = 0;
   let sustain = 1;
   let ampVolume = 1;
   let egParamTh = 0.5;
-  if (originalDecay > egParamTh) {
-    sustain = linearInterpolate(originalDecay, egParamTh, 1, 0, 1) ** 2;
-    decay = linearInterpolate(originalDecay, egParamTh, 1, 1, 0);
-    ampVolume = linearInterpolate(originalDecay, egParamTh, 1, 1, 0.7);
+  if (!decayAltAttack) {
+    //decay, decay-sustain
+    if (originalDecay < egParamTh) {
+      attack = 0;
+      decay = lerp2(originalDecay, 0, egParamTh, 0.05, 1);
+      sustain = 0;
+      ampVolume = 1;
+    } else {
+      attack = 0;
+      decay = lerp2(originalDecay, egParamTh, 1, 1, 0);
+      const p = mapUnaryFrom(originalDecay, egParamTh, 1);
+      sustain = mapUnaryTo(p ** 2, 0.1, 1);
+      ampVolume = lerp2(originalDecay, egParamTh, 1, 1, 0.7);
+    }
   } else {
-    decay = linearInterpolate(originalDecay, 0, egParamTh, 0.05, 1);
-    sustain = 0;
-    ampVolume = 1;
+    //attack-sustain, attack-decay-sustain
+    const originalAttack = originalDecay;
+    if (originalAttack < egParamTh) {
+      attack = lerp2(originalDecay, 0, egParamTh, 0, 0.5);
+      decay = 0;
+      sustain = 1;
+      ampVolume = 0.8;
+    } else {
+      decay = lerp2(originalAttack, egParamTh, 1, 0.5, 0);
+      attack = decay / 2;
+      const p = mapUnaryFrom(originalDecay, egParamTh, 1);
+      sustain = mapUnaryTo(p ** 2, 0.3, 1);
+      ampVolume = 0.8;
+    }
   }
-  return { decay, sustain, ampVolume };
+
+  return { attack, decay, sustain, ampVolume };
 }
 
 function createSynthesizerCore() {
@@ -716,6 +744,7 @@ function createSynthesizerCore() {
       const _envDecay = parameters["envDecay"][0];
       const _detune = parameters["detune"][0];
       const sub = parameters["sub"][0] > 0.5;
+      const decayAltAttack = parameters["decayAltAttack"][0] > 0.5;
       const _originalDecay = parameters["decay"][0];
       const _release = parameters["release"][0];
       const driftAmount = parameters["drift"][0];
@@ -740,9 +769,12 @@ function createSynthesizerCore() {
         // -------------------------------------------------------------
 
         const gateOn = gate > 0.5;
+        // const isNaiveWave =
+        //   (envRange === ShapeEnvRange.Low && shape < 0.2) ||
+        //   (envDecay === ShapeEnvRange.Low && envDecay < 0.1) ||
+        //   (envRange === ShapeEnvRange.High && shape < 0.2 && envDecay === 0);
         const isNaiveWave =
-          (envRange === ShapeEnvRange.Low && shape < 0.2) ||
-          (envDecay === ShapeEnvRange.Low && envDecay < 0.1) ||
+          envRange === ShapeEnvRange.Low ||
           (envRange === ShapeEnvRange.High && shape < 0.2 && envDecay === 0);
         if (gateOn && previousGate <= 0.5) {
           // Rising gate edge: hard-reset voice state for pooled reuse / steal.
@@ -751,10 +783,14 @@ function createSynthesizerCore() {
         }
         previousGate = gateOn ? 1.0 : 0.0;
 
-        const { decay, sustain, ampVolume } = deriveEgParameters(originalDecay);
+        const { attack, decay, sustain, ampVolume } = deriveEgParameters(
+          originalDecay,
+          decayAltAttack,
+        );
 
         let { hasStarted, egValue } = ampEg.process({
           gateOn,
+          attack,
           decay,
           sustain,
           release,
@@ -837,6 +873,12 @@ class SynthProcessor extends AudioWorkletProcessor {
       { name: "envDecay", defaultValue: 0.0, minValue: 0.0, maxValue: 1.0 },
       { name: "detune", defaultValue: 0.0, minValue: 0.0, maxValue: 1.0 },
       { name: "sub", defaultValue: 0.0, minValue: 0.0, maxValue: 1.0 },
+      {
+        name: "decayAltAttack",
+        defaultValue: 0.0,
+        minValue: 0.0,
+        maxValue: 1.0,
+      },
       { name: "decay", defaultValue: 0.5, minValue: 0.0, maxValue: 1.0 },
       { name: "release", defaultValue: 0.3, minValue: 0.0, maxValue: 1.0 },
       { name: "drift", defaultValue: 0.0, minValue: 0.0, maxValue: 1.0 },

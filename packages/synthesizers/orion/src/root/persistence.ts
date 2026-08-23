@@ -27,7 +27,8 @@ const mappers = {
         pr.reverb,
         pr.patchVolume, //12
       ].map(paramToByte),
-      pr.envRange, //13: 0 or 1
+      (pr.envRange === ShapeEnvRange.High ? 1 : 0) |
+        (pr.decayAltAttack ? 2 : 0), //13: bit0 envRange, bit1 decayAltAttack
     ];
   },
   deserializeParameters(bytes: number[]): SynthParameters {
@@ -46,7 +47,9 @@ const mappers = {
       delay: floatParams[10],
       reverb: floatParams[11],
       patchVolume: floatParams[12],
-      envRange: bytes[13] === 0 ? ShapeEnvRange.Low : ShapeEnvRange.High,
+      envRange:
+        (bytes[13] & 1) === 0 ? ShapeEnvRange.Low : ShapeEnvRange.High,
+      decayAltAttack: (bytes[13] & 2) !== 0,
     };
   },
   presetNameToIndex(presetName: string) {

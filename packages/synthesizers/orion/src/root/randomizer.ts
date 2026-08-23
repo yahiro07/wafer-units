@@ -28,7 +28,8 @@ export function createRandomParameters(): Partial<SynthParameters> {
       envDecay: randF(),
       detune: probably(0.5, 0, randF()),
       sub: randB(0.5),
-      decay: probably(0.3, 1, randF()),
+      decayAltAttack: randB(0.35),
+      decay: randF(),
       release: probably(0.3, 0, randF()),
       drift: 0,
       loFi: 0,
@@ -39,7 +40,6 @@ export function createRandomParameters(): Partial<SynthParameters> {
     };
   }
 
-  const fixDR = randB(0.5) ? "D" : "R";
   return {
     waveMode: randI(numWaveModes),
     shape: randF(),
@@ -47,8 +47,9 @@ export function createRandomParameters(): Partial<SynthParameters> {
     envDecay: randF(),
     detune: probably(0.5, 0, randF()),
     sub: randB(0.5),
-    decay: probably(fixDR === "D" ? 0.3 : 0, 1, randF()),
-    release: probably(fixDR === "R" ? 0.3 : 0, 0, randF()),
+    decayAltAttack: randB(0.35),
+    decay: randF(),
+    release: probably(0.3, 0, randF()),
     drift: probably(0.5, 0, randF()),
     loFi: probably(0.6, 0, randRange(0, 0.6)),
     chorus: probably(0.5, 0, randF()),

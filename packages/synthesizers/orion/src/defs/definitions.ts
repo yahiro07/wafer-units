@@ -45,6 +45,7 @@ export type SynthParameters = {
   envDecay: number;
   detune: number;
   sub: boolean;
+  decayAltAttack: boolean;
   decay: number;
   release: number;
   drift: number;
@@ -57,7 +58,10 @@ export type SynthParameters = {
 
 export type SynthPresetParameters = SynthParameters;
 
-export type SynthLinearParameters = Omit<SynthParameters, "sub">;
+export type SynthLinearParameters = Omit<
+  SynthParameters,
+  "sub" | "decayAltAttack"
+>;
 
 export const defaultSynthParameters: SynthParameters = {
   waveMode: WaveMode.PD1,
@@ -66,6 +70,7 @@ export const defaultSynthParameters: SynthParameters = {
   envDecay: 0,
   detune: 0,
   sub: false,
+  decayAltAttack: false,
   decay: 1,
   release: 0,
   drift: 0,
