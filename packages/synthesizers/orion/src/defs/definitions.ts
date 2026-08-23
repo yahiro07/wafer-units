@@ -43,7 +43,7 @@ export const defaultSynthParameters: SynthParameters = {
   envDecay: 0,
   detune: 0,
   sub: false,
-  decay: 0.5,
+  decay: 1,
   release: 0,
   drift: 0,
   loFi: 0,

@@ -2,7 +2,7 @@ import { numWaveModes, ShapeEnvRange, WaveMode } from "@/defs/definitions";
 import { createInterpolator } from "@/logic/interpolator";
 import { phaseTweakers } from "@/logic/phase-tweakers";
 import { mapUnaryTo } from "@/logic/synth-math-utils";
-import { linearInterpolate, lowClip } from "@/utils/helpers";
+import { iife, linearInterpolate, lowClip } from "@/utils/helpers";
 
 // PD (Phase Distortion) calculation
 function computePD(phase: number, amount: number): number {
@@ -21,6 +21,22 @@ function computePD(phase: number, amount: number): number {
   } else {
     return -Math.cos(2.0 * Math.PI * distortedPhase + Math.PI);
   }
+}
+
+function computePdPulse(phase: number, level: number): number {
+  let pp = phase;
+  const p0 = 0.5 - level * 0.45;
+  const p1 = 0.5 + level * 0.45;
+  const pp2 = iife(() => {
+    if (pp < p0) {
+      return linearInterpolate(pp, 0, p0, 0, 0.5);
+    } else if (pp < p1) {
+      return 0.5;
+    } else {
+      return linearInterpolate(pp, p1, 1, 0.5, 1);
+    }
+  });
+  return Math.cos(2.0 * Math.PI * pp2);
 }
 
 const SHAPE_EG_MAX_SECONDS = 1.5;
@@ -44,7 +60,8 @@ function processOscPD(
     envRange === ShapeEnvRange.High
       ? mapUnaryTo(shapeEgValue, shape, 1)
       : mapUnaryTo(shapeEgValue, 0, shape);
-  return computePD(phase, pdLevel);
+  // return computePD(phase, pdLevel);
+  return computePdPulse(phase, pdLevel);
 }
 
 function processOscFM(
