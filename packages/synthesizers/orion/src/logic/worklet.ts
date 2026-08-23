@@ -514,6 +514,32 @@ function createAmpEg() {
   };
 }
 
+function createShapeEg() {
+  let shapeEgValue = 0.0;
+  let shapeEgTime = 0.0;
+  return {
+    reset() {
+      shapeEgValue = 0.0;
+      shapeEgTime = 0.0;
+    },
+    process(args: {
+      hasStarted: boolean;
+      envDecay: number;
+      sampleRate: number;
+    }) {
+      const { hasStarted, envDecay, sampleRate } = args;
+      if (hasStarted && envDecay > 0) {
+        const tau = Math.max(0.01, envDecay ** 2 * SHAPE_EG_MAX_SECONDS);
+        shapeEgValue = Math.exp(-shapeEgTime / tau);
+        shapeEgTime += 1.0 / sampleRate;
+      } else {
+        shapeEgValue = 0.0;
+      }
+      return shapeEgValue;
+    },
+  };
+}
+
 function createSynthesizerCore() {
   const oscillators = createOscillators();
 
@@ -528,8 +554,7 @@ function createSynthesizerCore() {
   let previousGate = 0.0;
   const ampEg = createAmpEg();
 
-  let shapeEgValue = 0.0;
-  let shapeEgTime = 0.0;
+  const shapeEg = createShapeEg();
 
   const interpolators = {
     shape: createInterpolator(),
@@ -539,14 +564,11 @@ function createSynthesizerCore() {
   function resetVoiceState() {
     oscillators.reset();
     ampEg.reset();
-
+    shapeEg.reset();
     driftPhase1 = 0.0;
     driftPhase2 = 0.0;
     sampleCount = 0;
     heldSample = 0.0;
-
-    shapeEgValue = 0.0;
-    shapeEgTime = 0.0;
   }
 
   return {
@@ -607,14 +629,11 @@ function createSynthesizerCore() {
           release,
           sampleRate,
         });
-
-        if (hasStarted && envDecay > 0) {
-          const tau = Math.max(0.01, envDecay ** 2 * SHAPE_EG_MAX_SECONDS);
-          shapeEgValue = Math.exp(-shapeEgTime / tau);
-          shapeEgTime += 1.0 / sampleRate;
-        } else {
-          shapeEgValue = 0.0;
-        }
+        const shapeEgValue = shapeEg.process({
+          hasStarted,
+          envDecay,
+          sampleRate,
+        });
 
         // -------------------------------------------------------------
         // 2. Pitch drift calculation
