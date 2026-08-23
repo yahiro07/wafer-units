@@ -36,7 +36,24 @@ function computePdPulse(phase: number, level: number): number {
       return linearInterpolate(pp, p1, 1, 0.5, 1);
     }
   });
-  return Math.cos(2.0 * Math.PI * pp2);
+  return -Math.cos(2.0 * Math.PI * pp2);
+}
+
+function computePdDualCosine(pp: number, level: number): number {
+  const p0 = 0.5 - level * 0.45;
+  if (0) {
+    const pp2 =
+      pp < p0
+        ? linearInterpolate(pp, 0, p0, 0, 0.5)
+        : linearInterpolate(pp, p0, 1, 0.5, 1);
+    return -Math.cos(4.0 * Math.PI * pp2);
+  } else {
+    const pp2 =
+      pp < p0
+        ? linearInterpolate(pp, 0, p0, 0, 1)
+        : linearInterpolate(pp, p0, 1, 0, 1);
+    return -Math.cos(2.0 * Math.PI * pp2);
+  }
 }
 
 const SHAPE_EG_MAX_SECONDS = 1.5;
@@ -61,7 +78,8 @@ function processOscPD(
       ? mapUnaryTo(shapeEgValue, shape, 1)
       : mapUnaryTo(shapeEgValue, 0, shape);
   // return computePD(phase, pdLevel);
-  return computePdPulse(phase, pdLevel);
+  // return computePdPulse(phase, pdLevel);
+  return computePdDualCosine(phase, pdLevel);
 }
 
 function processOscFM(
@@ -248,7 +266,9 @@ function createSynthesizerCore() {
       const bufferSize = outputChannel.length; // Usually fixed at 128 samples.
 
       // Capture steady parameter values once to reduce repeated array access overhead.
-      const baseFreq = parameters["frequency"][0];
+      let baseFreq = parameters["frequency"][0];
+      baseFreq /= 2;
+
       const gate = parameters["gate"][0];
       const waveMode = Math.floor(parameters["waveMode"][0]) as WaveMode;
       const _shape = parameters["shape"][0];
