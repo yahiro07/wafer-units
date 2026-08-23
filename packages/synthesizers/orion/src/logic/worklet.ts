@@ -172,7 +172,7 @@ function bindProcessOscPD(waveMode: WaveMode): OscFn {
         : mapUnaryTo(shapeEgValue, 0, shape);
     const fn = (
       {
-        [WaveMode.PD]: computePD,
+        [WaveMode.PD1]: computePD,
         [WaveMode.PD2]: computePdSquare,
         [WaveMode.PD3]: computePdSpike,
         [WaveMode.PD4]: computePdHalfSaw,
@@ -186,23 +186,24 @@ function bindProcessOscPD(waveMode: WaveMode): OscFn {
       return fn(phase, pdLevel);
     }
 
-    if (waveMode === WaveMode.PD9) {
-      return computePdPtmHann(phase, pdLevel, "accel");
-    } else if (waveMode === WaveMode.PD10) {
+    if (waveMode === WaveMode.PDM1) {
       return computePdPtmHann(phase, pdLevel, "sfm");
-    } else if (waveMode === WaveMode.PD11) {
+    } else if (waveMode === WaveMode.PDM2) {
       return computePdPtmHann(phase, pdLevel, "sdm");
-    } else if (waveMode === WaveMode.PD12) {
-      return computePdPtmHann2(phase, pdLevel * 0.7, "squash");
-    } else if (waveMode === WaveMode.PD13) {
+    } else if (waveMode === WaveMode.PDM3) {
+      return computePdPtmHann(phase, pdLevel, "accel");
+    } else if (waveMode === WaveMode.PDM4) {
+      return computePdPtmHann2(phase, pdLevel * 0.55, "squash");
+    } else if (waveMode === WaveMode.PDM5) {
       return computePdPtmHann2(phase, pdLevel * 0.5, "sinus");
-    } else if (waveMode === WaveMode.PD14) {
+    } else if (waveMode === WaveMode.PDM6) {
       return computePdPtmHann2(phase, pdLevel * 0.6, "ridge");
-    } else if (waveMode === WaveMode.PD15) {
-      return computePdPtmHann(phase, pdLevel, "drill");
-    } else if (waveMode === WaveMode.PD16) {
-      return computePdPtmHann(phase, pdLevel, "screw");
     }
+    // else if (waveMode === WaveMode.PDM7) {
+    //   return computePdPtmHann(phase, pdLevel, "drill");
+    // } else if (waveMode === WaveMode.PDM8) {
+    //   return computePdPtmHann(phase, pdLevel, "screw");
+    // }
     return computePD(phase, pdLevel);
 
     // return computePD(phase, pdLevel);
@@ -336,13 +337,15 @@ function getPtmWave2x(
 }
 
 const ptmKindMap = {
-  [WaveMode.PTM2]: ["pw", "rect", 1],
-  [WaveMode.PTM3]: ["sub-pw", "saw", 1],
-  [WaveMode.PTM4]: ["sfm", "saw", 0.5],
-  [WaveMode.PTM5]: ["sdm", "sine", 0.7],
-  [WaveMode.PTM6]: ["screw", "saw", 1],
-  [WaveMode.PTM7]: ["squash", "saw", 0.6],
-  // [WaveMode.PTM7]: ["drill", "saw", 0.8],
+  [WaveMode.PTM1]: ["sfm", "saw", 0.5],
+  [WaveMode.PTM2]: ["sdm", "sine", 0.7],
+  // [WaveMode.PTM3]: ["speed", "saw", 0.7],
+  [WaveMode.PTM3]: ["accel", "saw", 0.7],
+  [WaveMode.PTM4]: ["squash", "saw", 0.6],
+  [WaveMode.PTM5]: ["screw", "saw", 1],
+  [WaveMode.PTM6]: ["sub-pw", "saw", 1],
+  // [WaveMode.PTM8]: ["pw", "rect", 1],
+  // [WaveMode.PTM9]: ["drill", "saw", 0.8],
 } satisfies { [key in WaveMode]?: [PtmKind, PtmBaseWaveKind, number] };
 
 let kindTextOut = "";
@@ -421,8 +424,6 @@ function createSynthesizerCore() {
     fmFeedbackSaw2.reset();
   }
 
-  let lastMode: WaveMode | null = null;
-
   return {
     reset: resetVoiceState,
     process(
@@ -458,21 +459,16 @@ function createSynthesizerCore() {
       interpolators.shape.feed(_shape, bufferSize);
       interpolators.envDecay.feed(_envDecay, bufferSize);
 
-      if (lastMode !== waveMode) {
-        lastMode = waveMode;
-        console.log("waveMode", waveMode);
-      }
-
       let oscFn: OscFn;
       if (
-        waveMode === WaveMode.PD ||
-        (WaveMode.PD2 <= waveMode && waveMode <= WaveMode.PD14)
+        (WaveMode.PD1 <= waveMode && waveMode <= WaveMode.PD7) ||
+        (WaveMode.PDM1 <= waveMode && waveMode <= WaveMode.PDM6)
       ) {
         oscFn = bindProcessOscPD(waveMode);
-      } else if (waveMode === WaveMode.FM) {
-        oscFn = processOscFM;
-      } else if (waveMode === WaveMode.FM2) {
+      } else if (waveMode === WaveMode.FM1) {
         oscFn = fmFeedbackSaw1;
+      } else if (waveMode === WaveMode.FM2) {
+        oscFn = processOscFM;
       } else {
         oscFn = bindOscFunctionForExWaves(waveMode);
       }
@@ -581,7 +577,7 @@ function createSynthesizerCore() {
           f1 / sampleRate,
         );
         const osc2Out = isDualOsc
-          ? (waveMode === WaveMode.FM2 ? fmFeedbackSaw2 : oscFn)(
+          ? (waveMode === WaveMode.FM1 ? fmFeedbackSaw2 : oscFn)(
               shape,
               shapeEgValue,
               phase2,

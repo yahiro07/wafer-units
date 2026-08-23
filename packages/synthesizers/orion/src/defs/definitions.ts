@@ -1,30 +1,37 @@
 import { appEnvs } from "@/defs/app-envs";
 
 export enum WaveMode {
-  PD,
-  FM,
-  PTM2,
-  PTM3,
-  PTM4,
-  PTM5,
-  PTM6,
-  PTM7,
-  FM2,
+  PD1,
   PD2,
   PD3,
   PD4,
   PD5,
   PD6,
   PD7,
-  PD8,
-  PD9,
-  PD10,
-  PD11,
-  PD12,
-  PD13,
-  PD14,
+  //
+  FM1,
+  FM2,
+  //
+  PTM1,
+  PTM2,
+  PTM3,
+  PTM4,
+  PTM5,
+  PTM6,
+  // PTM7,
+  // PTM8,
+  // PTM9,
+  //
+  PDM1,
+  PDM2,
+  PDM3,
+  PDM4,
+  PDM5,
+  PDM6,
+  // PDM7,
+  // PDM8,
 }
-export const numWaveModes = 22;
+export const numWaveModes = 21;
 
 export enum ShapeEnvRange {
   Low = 0,
@@ -53,7 +60,7 @@ export type SynthPresetParameters = Omit<SynthParameters, "master">;
 export type SynthLinearParameters = Omit<SynthParameters, "sub">;
 
 export const defaultSynthParameters: SynthParameters = {
-  waveMode: WaveMode.PD,
+  waveMode: WaveMode.PD1,
   shape: 0,
   envRange: ShapeEnvRange.High,
   envDecay: 0,

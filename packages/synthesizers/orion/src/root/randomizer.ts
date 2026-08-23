@@ -1,3 +1,4 @@
+import { appEnvs } from "@/defs/app-envs";
 import { numWaveModes, SynthParameters } from "@/defs/definitions";
 
 const randF = Math.random;
@@ -19,6 +20,24 @@ function randB(p: number) {
 }
 
 export function createRandomParameters(): Partial<SynthParameters> {
+  if (appEnvs.isDevelopment && 0) {
+    return {
+      waveMode: randI(numWaveModes),
+      shape: randF(),
+      envRange: randI(2),
+      envDecay: randF(),
+      detune: probably(0.5, 0, randF()),
+      sub: randB(0.5),
+      decay: probably(0.3, 1, randF()),
+      release: probably(0.3, 0, randF()),
+      drift: 0,
+      loFi: 0,
+      chorus: probably(0.5, 0, randF()),
+      delay: 0,
+      reverb: probably(0.5, 0, randRange(0, 0.7)),
+    };
+  }
+
   const fixDR = randB(0.5) ? "D" : "R";
   return {
     waveMode: randI(numWaveModes),

@@ -251,7 +251,7 @@ export function createSynthesizerEngine(
 
       const now = audioCtx.currentTime;
       mainOutputNode.gain.setTargetAtTime(
-        synthParameters.master,
+        synthParameters.master * 0.7,
         now,
         PARAM_SMOOTHING_SECONDS,
       );

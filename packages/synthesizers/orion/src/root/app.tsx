@@ -9,6 +9,7 @@ import {
   numWaveModes,
   ShapeEnvRange,
   SynthLinearParameters,
+  WaveMode,
 } from "@/defs/definitions";
 import { cx } from "@twind/core";
 import { useSetupDrivers } from "@/root/drivers";
@@ -108,13 +109,14 @@ const ParameterKnob = ({
 
 const ParametersSection = () => {
   const { parameters } = store.useSnapshot();
+  const waveName = WaveMode[parameters.waveMode];
   return (
     <div class="flex-v gap-3">
       <div class="flex-h gap-3">
         <SectionFrame header="OSCILLATOR" className="w-[65%]">
           <ParameterKnob
             paramKey="waveMode"
-            label="WAVE"
+            label={`WAVE:${waveName}`}
             steps={numWaveModes}
           />
           <ParameterKnob paramKey="shape" label="SHAPE" />
