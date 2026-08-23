@@ -1,16 +1,30 @@
 import { appEnvs } from "@/defs/app-envs";
 
 export enum WaveMode {
-  PD = 0,
-  FM = 1,
-  PTM2 = 2,
-  PTM3 = 3,
+  PD,
+  FM,
+  PTM2,
+  PTM3,
   PTM4,
   PTM5,
   PTM6,
   PTM7,
+  FM2,
+  PD2,
+  PD3,
+  PD4,
+  PD5,
+  PD6,
+  PD7,
+  PD8,
+  PD9,
+  PD10,
+  PD11,
+  PD12,
+  PD13,
+  PD14,
 }
-export const numWaveModes = 8;
+export const numWaveModes = 22;
 
 export enum ShapeEnvRange {
   Low = 0,

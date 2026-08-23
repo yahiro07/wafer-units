@@ -159,34 +159,72 @@ type OscFn = (
   phaseInc: number,
 ) => number;
 
-function processOscPD(
-  shape: number,
-  shapeEgValue: number,
-  phase: number,
-  envRange: ShapeEnvRange,
-) {
-  const pdLevel =
-    envRange === ShapeEnvRange.High
-      ? mapUnaryTo(shapeEgValue, shape, 1)
-      : mapUnaryTo(shapeEgValue, 0, shape);
-  // return computePD(phase, pdLevel);
-  // return computePdSquare(phase, pdLevel);
-  // return computePdSpike(phase, pdLevel);
-  return computePdHalfSaw(phase, pdLevel);
-  // return computePdDualCosine(phase, pdLevel);
-  // return computePdSpeedHann(phase, pdLevel);
-  // return computePdAccelHann(phase, pdLevel);
+function bindProcessOscPD(waveMode: WaveMode): OscFn {
+  function processOscPD(
+    shape: number,
+    shapeEgValue: number,
+    phase: number,
+    envRange: ShapeEnvRange,
+  ) {
+    const pdLevel =
+      envRange === ShapeEnvRange.High
+        ? mapUnaryTo(shapeEgValue, shape, 1)
+        : mapUnaryTo(shapeEgValue, 0, shape);
+    const fn = (
+      {
+        [WaveMode.PD]: computePD,
+        [WaveMode.PD2]: computePdSquare,
+        [WaveMode.PD3]: computePdSpike,
+        [WaveMode.PD4]: computePdHalfSaw,
+        [WaveMode.PD5]: computePdDualCosine,
+        [WaveMode.PD6]: computePdSpeedHann,
+        [WaveMode.PD7]: computePdAccelHann,
+        // [WaveMode.PD8]: computePdPtmHann,
+      } as any
+    )[waveMode];
+    if (fn) {
+      return fn(phase, pdLevel);
+    }
 
-  // return computePdPtmHann(phase, pdLevel, "accel");
-  // return computePdPtmHann(phase, pdLevel, "sfm");
-  // return computePdPtmHann(phase, pdLevel, "sdm");
-  // return computePdPtmHann2(phase, pdLevel * 0.7, "squash");
-  // return computePdPtmHann2(phase, pdLevel * 0.5, "sinus");
-  // return computePdPtmHann2(phase, pdLevel * 0.6, "ridge");
+    if (waveMode === WaveMode.PD9) {
+      return computePdPtmHann(phase, pdLevel, "accel");
+    } else if (waveMode === WaveMode.PD10) {
+      return computePdPtmHann(phase, pdLevel, "sfm");
+    } else if (waveMode === WaveMode.PD11) {
+      return computePdPtmHann(phase, pdLevel, "sdm");
+    } else if (waveMode === WaveMode.PD12) {
+      return computePdPtmHann2(phase, pdLevel * 0.7, "squash");
+    } else if (waveMode === WaveMode.PD13) {
+      return computePdPtmHann2(phase, pdLevel * 0.5, "sinus");
+    } else if (waveMode === WaveMode.PD14) {
+      return computePdPtmHann2(phase, pdLevel * 0.6, "ridge");
+    } else if (waveMode === WaveMode.PD15) {
+      return computePdPtmHann(phase, pdLevel, "drill");
+    } else if (waveMode === WaveMode.PD16) {
+      return computePdPtmHann(phase, pdLevel, "screw");
+    }
+    return computePD(phase, pdLevel);
 
-  // return computePdPtmHann(phase, pdLevel, "speed");
-  // return computePdPtmHann(phase, pdLevel, "drill");
-  // return computePdPtmHann2(phase, pdLevel, "screw");
+    // return computePD(phase, pdLevel);
+    // return computePdSquare(phase, pdLevel);
+    // return computePdSpike(phase, pdLevel);
+    // return computePdHalfSaw(phase, pdLevel);
+    // return computePdDualCosine(phase, pdLevel);
+    // return computePdSpeedHann(phase, pdLevel);
+    // return computePdAccelHann(phase, pdLevel);
+
+    // return computePdPtmHann(phase, pdLevel, "accel");
+    // return computePdPtmHann(phase, pdLevel, "sfm");
+    // return computePdPtmHann(phase, pdLevel, "sdm");
+    // return computePdPtmHann2(phase, pdLevel * 0.7, "squash");
+    // return computePdPtmHann2(phase, pdLevel * 0.5, "sinus");
+    // return computePdPtmHann2(phase, pdLevel * 0.6, "ridge");
+
+    // return computePdPtmHann(phase, pdLevel, "speed");
+    // return computePdPtmHann(phase, pdLevel, "drill");
+    // return computePdPtmHann2(phase, pdLevel, "screw");
+  }
+  return processOscPD;
 }
 
 function processOscFM(
@@ -383,6 +421,8 @@ function createSynthesizerCore() {
     fmFeedbackSaw2.reset();
   }
 
+  let lastMode: WaveMode | null = null;
+
   return {
     reset: resetVoiceState,
     process(
@@ -418,11 +458,20 @@ function createSynthesizerCore() {
       interpolators.shape.feed(_shape, bufferSize);
       interpolators.envDecay.feed(_envDecay, bufferSize);
 
+      if (lastMode !== waveMode) {
+        lastMode = waveMode;
+        console.log("waveMode", waveMode);
+      }
+
       let oscFn: OscFn;
-      if (waveMode === WaveMode.PD) {
-        oscFn = processOscPD;
+      if (
+        waveMode === WaveMode.PD ||
+        (WaveMode.PD2 <= waveMode && waveMode <= WaveMode.PD14)
+      ) {
+        oscFn = bindProcessOscPD(waveMode);
       } else if (waveMode === WaveMode.FM) {
-        // oscFn = processOscFM;
+        oscFn = processOscFM;
+      } else if (waveMode === WaveMode.FM2) {
         oscFn = fmFeedbackSaw1;
       } else {
         oscFn = bindOscFunctionForExWaves(waveMode);
@@ -532,7 +581,7 @@ function createSynthesizerCore() {
           f1 / sampleRate,
         );
         const osc2Out = isDualOsc
-          ? (waveMode === WaveMode.FM ? fmFeedbackSaw2 : oscFn)(
+          ? (waveMode === WaveMode.FM2 ? fmFeedbackSaw2 : oscFn)(
               shape,
               shapeEgValue,
               phase2,
