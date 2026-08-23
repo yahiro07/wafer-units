@@ -59,6 +59,9 @@ function computePdDualCosine(pp: number, level: number): number {
   }
 }
 
+function riseInvCosine(t: number) {
+  return Math.cos(-pi + pi * t) * 0.5 + 0.5;
+}
 function fallInvCosine(t: number) {
   return Math.cos(pi * t) * 0.5 + 0.5;
 }
@@ -91,6 +94,33 @@ function computePdAccelHann(pp: number, level: number): number {
   return (-Math.cos(twoPi * pp2) + 1) * win - 1;
 }
 
+function computePdPtmHann(
+  pp: number,
+  level: number,
+  ptmKey: keyof typeof phaseTweakers,
+): number {
+  const pp2 = phaseTweakers[ptmKey](pp, level)[0];
+  const pivot2 = 0.5 + level * 0.4;
+  const win = pp < pivot2 ? 1 : fallInvCosine((pp - pivot2) / (1 - pivot2));
+  return (-Math.cos(twoPi * pp2) + 1) * win - 1;
+}
+
+function computePdPtmHann2(
+  pp: number,
+  level: number,
+  ptmKey: keyof typeof phaseTweakers,
+): number {
+  const pp2 = phaseTweakers[ptmKey](pp, level)[0];
+  const win = iife(() => {
+    const p0 = 0.5 - level * 0.4;
+    const p1 = 0.5 + level * 0.4;
+    if (pp < p0) return riseInvCosine(pp / p0);
+    else if (pp < p1) return 1;
+    else return fallInvCosine((pp - p1) / (1 - p1));
+  });
+  return (-Math.cos(twoPi * pp2) + 1) * win - 1;
+}
+
 const SHAPE_EG_MAX_SECONDS = 1.5;
 
 type OscFn = (
@@ -112,11 +142,22 @@ function processOscPD(
     envRange === ShapeEnvRange.High
       ? mapUnaryTo(shapeEgValue, shape, 1)
       : mapUnaryTo(shapeEgValue, 0, shape);
-  // return computePD(phase, pdLevel);
+  return computePD(phase, pdLevel);
   // return computePdPulse(phase, pdLevel);
   // return computePdDualCosine(phase, pdLevel);
   // return computePdSpeedHann(phase, pdLevel);
-  return computePdAccelHann(phase, pdLevel);
+  // return computePdAccelHann(phase, pdLevel);
+
+  // return computePdPtmHann(phase, pdLevel, "accel");
+  // return computePdPtmHann(phase, pdLevel, "sfm");
+  // return computePdPtmHann(phase, pdLevel, "sdm");
+  // return computePdPtmHann2(phase, pdLevel * 0.7, "squash");
+  // return computePdPtmHann2(phase, pdLevel * 0.5, "sinus");
+  // return computePdPtmHann2(phase, pdLevel * 0.6, "ridge");
+
+  // return computePdPtmHann(phase, pdLevel, "speed");
+  // return computePdPtmHann(phase, pdLevel, "drill");
+  // return computePdPtmHann2(phase, pdLevel, "screw");
 }
 
 function processOscFM(

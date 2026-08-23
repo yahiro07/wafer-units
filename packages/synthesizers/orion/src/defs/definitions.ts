@@ -1,3 +1,5 @@
+import { appEnvs } from "@/defs/app-envs";
+
 export enum WaveMode {
   PD = 0,
   FM = 1,
@@ -52,3 +54,10 @@ export const defaultSynthParameters: SynthParameters = {
   reverb: 0,
   master: 0.5,
 };
+
+if (appEnvs.isDevelopment && 0) {
+  Object.assign(defaultSynthParameters, {
+    decay: 0.5,
+    release: 0.5,
+  });
+}
