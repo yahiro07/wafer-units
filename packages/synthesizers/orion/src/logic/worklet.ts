@@ -458,6 +458,62 @@ function createOscillators() {
   };
 }
 
+function createAmpEg() {
+  let egValue = 0.0;
+  let isReleased = false;
+  let releaseStartValue = 0.0;
+  let egTime = 0.0; // Elapsed seconds since note-on or note-off.
+  let hasStarted = false;
+
+  return {
+    reset() {
+      egValue = 0.0;
+      isReleased = false;
+      releaseStartValue = 0.0;
+      egTime = 0.0;
+      hasStarted = false;
+    },
+    process(args: {
+      gateOn: boolean;
+      decay: number;
+      release: number;
+      sampleRate: number;
+    }) {
+      const { gateOn, decay, release, sampleRate } = args;
+
+      if (gateOn) {
+        hasStarted = true;
+        if (isReleased) {
+          // Reset when a note is triggered again.
+          isReleased = false;
+          egTime = 0.0;
+        }
+        // Decay phase with exponential falloff. Attack is intentionally instantaneous.
+        egValue = Math.exp(-egTime / Math.max(0.01, decay));
+        const sustain =
+          decay < 0.75 ? 0 : linearInterpolate(decay, 0.75, 1, 0, 1);
+        egValue = lowClip(egValue, sustain);
+        egTime += 1.0 / sampleRate;
+      } else if (hasStarted) {
+        if (!isReleased) {
+          // Latch the envelope value at the moment note-off is triggered.
+          isReleased = true;
+          releaseStartValue = egValue;
+          egTime = 0.0;
+        }
+        // Release phase.
+        egValue =
+          releaseStartValue * Math.exp(-egTime / Math.max(0.01, release));
+        egTime += 1.0 / sampleRate;
+      } else {
+        egValue = 0.0;
+      }
+
+      return { hasStarted, egValue };
+    },
+  };
+}
+
 function createSynthesizerCore() {
   const oscillators = createOscillators();
 
@@ -469,13 +525,9 @@ function createSynthesizerCore() {
   let sampleCount = 0;
   let heldSample = 0.0;
 
-  // Envelope generator state.
-  let egValue = 0.0;
-  let isReleased = false;
-  let releaseStartValue = 0.0;
-  let egTime = 0.0; // Elapsed seconds since note-on or note-off.
-  let hasStarted = false;
   let previousGate = 0.0;
+  const ampEg = createAmpEg();
+
   let shapeEgValue = 0.0;
   let shapeEgTime = 0.0;
 
@@ -486,15 +538,13 @@ function createSynthesizerCore() {
 
   function resetVoiceState() {
     oscillators.reset();
+    ampEg.reset();
+
     driftPhase1 = 0.0;
     driftPhase2 = 0.0;
     sampleCount = 0;
     heldSample = 0.0;
-    egValue = 0.0;
-    isReleased = false;
-    releaseStartValue = 0.0;
-    egTime = 0.0;
-    hasStarted = false;
+
     shapeEgValue = 0.0;
     shapeEgTime = 0.0;
   }
@@ -543,6 +593,7 @@ function createSynthesizerCore() {
         // -------------------------------------------------------------
         // 1. Envelope update
         // -------------------------------------------------------------
+
         const gateOn = gate > 0.5;
         if (gateOn && previousGate <= 0.5) {
           // Rising gate edge: hard-reset voice state for pooled reuse / steal.
@@ -550,33 +601,12 @@ function createSynthesizerCore() {
         }
         previousGate = gateOn ? 1.0 : 0.0;
 
-        if (gateOn) {
-          hasStarted = true;
-          if (isReleased) {
-            // Reset when a note is triggered again.
-            isReleased = false;
-            egTime = 0.0;
-          }
-          // Decay phase with exponential falloff. Attack is intentionally instantaneous.
-          egValue = Math.exp(-egTime / Math.max(0.01, decay));
-          const sustain =
-            decay < 0.75 ? 0 : linearInterpolate(decay, 0.75, 1, 0, 1);
-          egValue = lowClip(egValue, sustain);
-          egTime += 1.0 / sampleRate;
-        } else if (hasStarted) {
-          if (!isReleased) {
-            // Latch the envelope value at the moment note-off is triggered.
-            isReleased = true;
-            releaseStartValue = egValue;
-            egTime = 0.0;
-          }
-          // Release phase.
-          egValue =
-            releaseStartValue * Math.exp(-egTime / Math.max(0.01, release));
-          egTime += 1.0 / sampleRate;
-        } else {
-          egValue = 0.0;
-        }
+        const { hasStarted, egValue } = ampEg.process({
+          gateOn,
+          decay,
+          release,
+          sampleRate,
+        });
 
         if (hasStarted && envDecay > 0) {
           const tau = Math.max(0.01, envDecay ** 2 * SHAPE_EG_MAX_SECONDS);
