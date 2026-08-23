@@ -643,6 +643,23 @@ function createVoiceStealEgFix() {
   };
 }
 
+function deriveEgParameters(originalDecay: number) {
+  let decay = 0;
+  let sustain = 1;
+  let ampVolume = 1;
+  let egParamTh = 0.5;
+  if (originalDecay > egParamTh) {
+    sustain = linearInterpolate(originalDecay, egParamTh, 1, 0, 1) ** 2;
+    decay = linearInterpolate(originalDecay, egParamTh, 1, 1, 0);
+    ampVolume = linearInterpolate(originalDecay, egParamTh, 1, 1, 0.7);
+  } else {
+    decay = linearInterpolate(originalDecay, 0, egParamTh, 0.05, 1);
+    sustain = 0;
+    ampVolume = 1;
+  }
+  return { decay, sustain, ampVolume };
+}
+
 function createSynthesizerCore() {
   const oscillators = createOscillators();
 
@@ -657,6 +674,9 @@ function createSynthesizerCore() {
   const interpolators = {
     shape: createInterpolator(),
     envDecay: createInterpolator(),
+    originalDecay: createInterpolator(),
+    release: createInterpolator(),
+    detune: createInterpolator(),
   };
 
   function resetVoiceState() {
@@ -694,47 +714,44 @@ function createSynthesizerCore() {
           ? ShapeEnvRange.High
           : ShapeEnvRange.Low;
       const _envDecay = parameters["envDecay"][0];
-      const detune = parameters["detune"][0];
+      const _detune = parameters["detune"][0];
       const sub = parameters["sub"][0] > 0.5;
-      const originalDecay = parameters["decay"][0];
-      const release = parameters["release"][0];
+      const _originalDecay = parameters["decay"][0];
+      const _release = parameters["release"][0];
       const driftAmount = parameters["drift"][0];
 
       interpolators.shape.feed(_shape, bufferSize);
       interpolators.envDecay.feed(_envDecay, bufferSize);
+      interpolators.originalDecay.feed(_originalDecay, bufferSize);
+      interpolators.release.feed(_release, bufferSize);
+      interpolators.detune.feed(_detune, bufferSize);
 
       oscillators.setWaveMode(waveMode);
-
-      let decay = 0;
-      let sustain = 1;
-      let ampVolume = 1;
-      let egParamTh = 0.5;
-      if (originalDecay > egParamTh) {
-        sustain = linearInterpolate(originalDecay, egParamTh, 1, 0, 1) ** 2;
-        decay = linearInterpolate(originalDecay, egParamTh, 1, 1, 0);
-        ampVolume = linearInterpolate(originalDecay, egParamTh, 1, 1, 0.7);
-      } else {
-        decay = linearInterpolate(originalDecay, 0, egParamTh, 0.05, 1);
-        sustain = 0;
-        ampVolume = 1;
-      }
 
       // Process the current audio block.
       for (let i = 0; i < bufferSize; i++) {
         const shape = interpolators.shape.advance();
         const envDecay = interpolators.envDecay.advance();
+        const originalDecay = interpolators.originalDecay.advance();
+        const release = interpolators.release.advance();
+        const detune = interpolators.detune.advance();
         // -------------------------------------------------------------
         // 1. Envelope update
         // -------------------------------------------------------------
 
         const gateOn = gate > 0.5;
-        const isNaiveWave = shape < 0.2 && envRange === ShapeEnvRange.Low;
+        const isNaiveWave =
+          shape < 0.2 &&
+          (envRange === ShapeEnvRange.Low ||
+            (envRange === ShapeEnvRange.High && envDecay === 0));
         if (gateOn && previousGate <= 0.5) {
           // Rising gate edge: hard-reset voice state for pooled reuse / steal.
           voiceStealEgFix.reset(isNaiveWave);
           resetVoiceState();
         }
         previousGate = gateOn ? 1.0 : 0.0;
+
+        const { decay, sustain, ampVolume } = deriveEgParameters(originalDecay);
 
         let { hasStarted, egValue } = ampEg.process({
           gateOn,
