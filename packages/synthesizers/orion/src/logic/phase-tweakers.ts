@@ -47,7 +47,7 @@ export const phaseTweakers = {
     const b = mapUnaryTo(a, 0.5, 0.05);
     const modPhase =
       phase < b ? (phase / b) * 0.5 : 0.5 + ((phase - b) / (1 - b)) * 0.5;
-    return [modPhase, 1];
+    return [modPhase, Math.max(0.5 / b, 0.5 / (1 - b))];
   },
   "sub-pw"(phase, prColor) {
     const bp = mapUnaryTo(prColor, 0.5, 0.05);
@@ -57,7 +57,7 @@ export const phaseTweakers = {
     } else {
       modPhase = linearInterpolate(phase, bp, 1, 0, 1);
     }
-    return [modPhase, 1];
+    return [modPhase, Math.max(1 / bp, 1 / (1 - bp))];
   },
   sdm(phase, prColor) {
     const speedRate = mapUnaryTo(prColor, 1, 100);

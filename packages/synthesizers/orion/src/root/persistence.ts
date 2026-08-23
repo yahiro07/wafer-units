@@ -1,4 +1,4 @@
-import { SynthParameters, WaveMode } from "@/defs/definitions";
+import { ShapeEnvRange, SynthParameters, WaveMode } from "@/defs/definitions";
 import { allPresetKeys, store } from "@/root/store";
 
 function paramToByte(value: number) {
@@ -15,9 +15,9 @@ const mappers = {
       pr.waveMode, //0
       ...[
         pr.shape, //1
-        pr.envMod,
+        pr.envDecay,
         pr.detune,
-        pr.sub,
+        pr.sub ? 1 : 0,
         pr.decay,
         pr.release,
         pr.drift,
@@ -25,8 +25,10 @@ const mappers = {
         pr.chorus,
         pr.delay,
         pr.reverb,
-        pr.master, //12
+        pr.patchVolume, //12
       ].map(paramToByte),
+      (pr.envRange === ShapeEnvRange.High ? 1 : 0) |
+        (pr.decayAltAttack ? 2 : 0), //13: bit0 envRange, bit1 decayAltAttack
     ];
   },
   deserializeParameters(bytes: number[]): SynthParameters {
@@ -34,9 +36,9 @@ const mappers = {
     return {
       waveMode: bytes[0] as WaveMode,
       shape: floatParams[1],
-      envMod: floatParams[2],
+      envDecay: floatParams[2],
       detune: floatParams[3],
-      sub: floatParams[4],
+      sub: bytes[4] !== 0,
       decay: floatParams[5],
       release: floatParams[6],
       drift: floatParams[7],
@@ -44,7 +46,10 @@ const mappers = {
       chorus: floatParams[9],
       delay: floatParams[10],
       reverb: floatParams[11],
-      master: floatParams[12],
+      patchVolume: floatParams[12],
+      envRange:
+        (bytes[13] & 1) === 0 ? ShapeEnvRange.Low : ShapeEnvRange.High,
+      decayAltAttack: (bytes[13] & 2) !== 0,
     };
   },
   presetNameToIndex(presetName: string) {
@@ -65,7 +70,10 @@ export const persistence = {
     return new Uint8Array([formatRevision, presetIndex, ...paramBytes]);
   },
   applyStateBytes(bytes: Uint8Array) {
-    if (bytes.length === 2 + 13 && bytes[0] === formatRevision) {
+    if (
+      (bytes.length === 2 + 13 || bytes.length === 2 + 14) &&
+      bytes[0] === formatRevision
+    ) {
       const presetIndex = bytes[1];
       const presetKey = mappers.presetNameFromIndex(presetIndex);
       const parameters = mappers.deserializeParameters([...bytes.slice(2)]);

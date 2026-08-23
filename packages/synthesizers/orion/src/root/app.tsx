@@ -5,7 +5,12 @@ import { createPlainSelectorOptions } from "@/utils/selector-option";
 import { Selector } from "@/components/selector";
 import { allPresetKeys, store } from "@/root/store";
 import { actions } from "@/root/actions";
-import { numWaveModes, SynthParameters } from "@/defs/definitions";
+import {
+  numWaveModes,
+  ShapeEnvRange,
+  SynthLinearParameters,
+  WaveMode,
+} from "@/defs/definitions";
 import { cx } from "@twind/core";
 import { useSetupDrivers } from "@/root/drivers";
 
@@ -77,10 +82,12 @@ const ParameterKnob = ({
   paramKey,
   label,
   steps,
+  onLabelClick,
 }: {
-  paramKey: keyof SynthParameters;
+  paramKey: keyof SynthLinearParameters;
   label: string;
   steps?: number;
+  onLabelClick?: () => void;
 }) => {
   const { parameters } = store.useSnapshot();
   const setParameter = actions.setParameter;
@@ -95,31 +102,47 @@ const ParameterKnob = ({
       max={max}
       step={step}
       onChange={(v) => setParameter(paramKey, v)}
+      onLabelClick={onLabelClick}
     />
   );
 };
 
 const ParametersSection = () => {
+  const { parameters } = store.useSnapshot();
+  const waveName = WaveMode[parameters.waveMode];
   return (
     <div class="flex-v gap-3">
       <div class="flex-h gap-3">
         <SectionFrame header="OSCILLATOR" className="w-[65%]">
           <ParameterKnob
             paramKey="waveMode"
-            label="WAVE"
+            label={`WAVE:${waveName}`}
             steps={numWaveModes}
           />
           <ParameterKnob paramKey="shape" label="SHAPE" />
-          <ParameterKnob paramKey="envMod" label="ENV" />
-          <ParameterKnob paramKey="sub" label="SUB" />
-          <ParameterKnob paramKey="detune" label="DETUNE" />
+          <ParameterKnob
+            paramKey="envDecay"
+            label={
+              parameters.envRange === ShapeEnvRange.High ? "ENV-H†" : "ENV-L†"
+            }
+            onLabelClick={actions.toggleShapeEnvRange}
+          />
+          <ParameterKnob
+            paramKey="detune"
+            label={parameters.sub ? "SUB-DET†" : "DET†"}
+            onLabelClick={() => actions.toggleBoolParameter("sub")}
+          />
         </SectionFrame>
         <SectionFrame
           header="AMPLIFIER"
           className="grow"
           contentClassName="!px-3"
         >
-          <ParameterKnob paramKey="decay" label="DECAY" />
+          <ParameterKnob
+            paramKey="decay"
+            label={parameters.decayAltAttack ? "Attack†" : "DECAY†"}
+            onLabelClick={() => actions.toggleBoolParameter("decayAltAttack")}
+          />
           <ParameterKnob paramKey="release" label="RELEASE" />
         </SectionFrame>
       </div>
@@ -132,7 +155,7 @@ const ParametersSection = () => {
         </SectionFrame>
         <SectionFrame header="MASTER" className="grow">
           <ParameterKnob paramKey="drift" label="DRIFT" />
-          <ParameterKnob paramKey="master" label="VOLUME" />
+          <ParameterKnob paramKey="patchVolume" label="VOLUME" />
         </SectionFrame>
       </div>
     </div>
