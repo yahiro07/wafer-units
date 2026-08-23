@@ -540,12 +540,37 @@ function createShapeEg() {
   };
 }
 
+function createPitchDriftLfo() {
+  let driftPhase1 = 0.0;
+  let driftPhase2 = 0.0;
+  return {
+    reset() {
+      driftPhase1 = 0.0;
+      driftPhase2 = 0.0;
+    },
+    process(args: { driftAmount: number; sampleRate: number }) {
+      const { driftAmount, sampleRate } = args;
+      let pitchDrift = 0.0;
+      if (driftAmount > 0.0) {
+        // Multiply LFOs with different rates to create less predictable drift.
+        driftPhase1 += (2.0 * Math.PI * 0.73) / sampleRate; // 0.73Hz
+        driftPhase2 += (2.0 * Math.PI * 3.14) / sampleRate; // 3.14Hz
+        if (driftPhase1 > 2.0 * Math.PI) driftPhase1 -= 2.0 * Math.PI;
+        if (driftPhase2 > 2.0 * Math.PI) driftPhase2 -= 2.0 * Math.PI;
+
+        const slowWobble = Math.sin(driftPhase1) * Math.sin(driftPhase2);
+        // Generate up to roughly 30 cents of pitch variation.
+        pitchDrift = slowWobble * driftAmount * 0.018;
+      }
+      return pitchDrift;
+    },
+  };
+}
+
 function createSynthesizerCore() {
   const oscillators = createOscillators();
 
   // Irregular LFO phase state for pitch drift.
-  let driftPhase1 = 0.0;
-  let driftPhase2 = 0.0;
 
   // Sample-and-hold state for the lo-fi downsampling effect.
   let sampleCount = 0;
@@ -553,8 +578,8 @@ function createSynthesizerCore() {
 
   let previousGate = 0.0;
   const ampEg = createAmpEg();
-
   const shapeEg = createShapeEg();
+  const pitchDriftLfo = createPitchDriftLfo();
 
   const interpolators = {
     shape: createInterpolator(),
@@ -565,8 +590,7 @@ function createSynthesizerCore() {
     oscillators.reset();
     ampEg.reset();
     shapeEg.reset();
-    driftPhase1 = 0.0;
-    driftPhase2 = 0.0;
+    pitchDriftLfo.reset();
     sampleCount = 0;
     heldSample = 0.0;
   }
@@ -635,21 +659,10 @@ function createSynthesizerCore() {
           sampleRate,
         });
 
-        // -------------------------------------------------------------
-        // 2. Pitch drift calculation
-        // -------------------------------------------------------------
-        let pitchDrift = 0.0;
-        if (driftAmount > 0.0) {
-          // Multiply LFOs with different rates to create less predictable drift.
-          driftPhase1 += (2.0 * Math.PI * 0.73) / sampleRate; // 0.73Hz
-          driftPhase2 += (2.0 * Math.PI * 3.14) / sampleRate; // 3.14Hz
-          if (driftPhase1 > 2.0 * Math.PI) driftPhase1 -= 2.0 * Math.PI;
-          if (driftPhase2 > 2.0 * Math.PI) driftPhase2 -= 2.0 * Math.PI;
-
-          const slowWobble = Math.sin(driftPhase1) * Math.sin(driftPhase2);
-          // Generate up to roughly 30 cents of pitch variation.
-          pitchDrift = slowWobble * driftAmount * 0.018;
-        }
+        const pitchDrift = pitchDriftLfo.process({
+          driftAmount,
+          sampleRate,
+        });
 
         // -------------------------------------------------------------
         // 3. Oscillator frequency setup with detune handling
