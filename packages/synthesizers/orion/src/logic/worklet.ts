@@ -472,6 +472,7 @@ function createOscillators() {
 }
 
 const DECLICK_ATTACK_SECONDS = 0.001;
+const DECLICK_ATTACK_SECONDS_NAIVE_WAVE = 0.01;
 
 function createAmpEg() {
   let egValue = 0.0;
@@ -494,8 +495,9 @@ function createAmpEg() {
       sustain: number;
       release: number;
       sampleRate: number;
+      isNaiveWave: boolean;
     }) {
-      const { gateOn, decay, sustain, release, sampleRate } = args;
+      const { gateOn, decay, sustain, release, sampleRate, isNaiveWave } = args;
 
       if (gateOn) {
         hasStarted = true;
@@ -508,8 +510,11 @@ function createAmpEg() {
         egValue = Math.exp(-egTime / Math.max(0.01, decay));
 
         egValue = lowClip(egValue, sustain);
-        if (egTime < DECLICK_ATTACK_SECONDS) {
-          const t = egTime / DECLICK_ATTACK_SECONDS;
+        const deClickTime = isNaiveWave
+          ? DECLICK_ATTACK_SECONDS_NAIVE_WAVE
+          : DECLICK_ATTACK_SECONDS;
+        if (egTime < deClickTime) {
+          const t = egTime / deClickTime;
           const riseCurve = 0.5 - 0.5 * Math.cos(Math.PI * t);
           egValue *= riseCurve;
         }
@@ -560,6 +565,21 @@ function createShapeEg() {
   };
 }
 
+const DC_BLOCK_CUTOFF_HZ = 12;
+
+function createOnePoleDcBlocker() {
+  let prevX = 0.0;
+  let prevY = 0.0;
+  return {
+    process(x: number, pole: number) {
+      const y = x - prevX + pole * prevY;
+      prevX = x;
+      prevY = y;
+      return y;
+    },
+  };
+}
+
 function createPitchDriftLfo() {
   let driftPhase1 = 0.0;
   let driftPhase2 = 0.0;
@@ -594,6 +614,8 @@ function createSynthesizerCore() {
   const ampEg = createAmpEg();
   const shapeEg = createShapeEg();
   const pitchDriftLfo = createPitchDriftLfo();
+  const dcBlockLeft = createOnePoleDcBlocker();
+  const dcBlockRight = createOnePoleDcBlocker();
 
   const interpolators = {
     shape: createInterpolator(),
@@ -619,6 +641,9 @@ function createSynthesizerCore() {
       const rightChannel = output[1] ?? leftChannel;
       const sampleRate = globalThis.sampleRate; // Global value provided by the Web Audio API.
       const bufferSize = leftChannel.length; // Usually fixed at 128 samples.
+      const dcBlockPole = Math.exp(
+        (-2.0 * Math.PI * DC_BLOCK_CUTOFF_HZ) / sampleRate,
+      );
 
       // Capture steady parameter values once to reduce repeated array access overhead.
       let baseFreq = parameters["frequency"][0];
@@ -672,12 +697,15 @@ function createSynthesizerCore() {
         }
         previousGate = gateOn ? 1.0 : 0.0;
 
+        const isNaiveWave = shape < 0.2 && envRange === ShapeEnvRange.Low;
+
         let { hasStarted, egValue } = ampEg.process({
           gateOn,
           decay,
           sustain,
           release,
           sampleRate,
+          isNaiveWave,
         });
         egValue *= ampVolume;
 
@@ -717,9 +745,9 @@ function createSynthesizerCore() {
           panWidth,
         });
 
-        leftChannel[i] = left * egValue;
+        leftChannel[i] = dcBlockLeft.process(left * egValue, dcBlockPole);
         if (rightChannel !== leftChannel) {
-          rightChannel[i] = right * egValue;
+          rightChannel[i] = dcBlockRight.process(right * egValue, dcBlockPole);
         }
       }
 

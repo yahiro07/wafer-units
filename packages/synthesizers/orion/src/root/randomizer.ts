@@ -20,7 +20,7 @@ function randB(p: number) {
 }
 
 export function createRandomParameters(): Partial<SynthParameters> {
-  if (appEnvs.isDevelopment && 0) {
+  if (appEnvs.isDevelopment && 1) {
     return {
       waveMode: randI(numWaveModes),
       shape: randF(),
