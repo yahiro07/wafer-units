@@ -8,19 +8,38 @@ type SynthParameters = {
   ratio: number;
   modDepth: number;
   feedback: number;
+  decay1: number;
+  decay2: number;
 };
 const defaultParameters: SynthParameters = {
   noteNumber: 57,
   ratio: 1,
   modDepth: 0.5,
   feedback: 0,
+  decay1: 1,
+  decay2: 1,
 };
 
+function createOperatorEg(destParam: AudioParam) {
+  return {
+    trigger(time: number, decayTime: number) {
+      destParam.setValueAtTime(1, time);
+      destParam.exponentialRampToValueAtTime(1e-3, time + decayTime);
+      destParam.linearRampToValueAtTime(0, time + decayTime + 0.01);
+    },
+  };
+}
+
 function createVoice(audioContext: AudioContext, parameters: SynthParameters) {
+  const pr = parameters;
+
   const ac = audioContext;
   const carrier = ac.createOscillator();
   carrier.type = "sine";
-  carrier.connect(ac.destination);
+  const carrierGain = ac.createGain();
+  const carrierEg = createOperatorEg(carrierGain.gain);
+  carrier.connect(carrierGain);
+  carrierGain.connect(ac.destination);
 
   const modulator = ac.createOscillator();
   modulator.type = "sine";
@@ -39,7 +58,6 @@ function createVoice(audioContext: AudioContext, parameters: SynthParameters) {
 
   return {
     affectParameters() {
-      const pr = parameters;
       const noteFrequency = 440 * 2 ** ((pr.noteNumber - 69) / 12);
       carrier.frequency.value = noteFrequency;
       const modulatorFrequency = noteFrequency * pr.ratio;
@@ -50,6 +68,8 @@ function createVoice(audioContext: AudioContext, parameters: SynthParameters) {
     start() {
       modulator.start();
       carrier.start();
+      const now = audioContext.currentTime;
+      carrierEg.trigger(now, pr.decay2 * 2);
     },
     stop() {
       modulator.stop();
@@ -85,12 +105,7 @@ const store = createStore<{
   parameters: SynthParameters;
   playing: boolean;
 }>({
-  parameters: {
-    noteNumber: 57,
-    ratio: 1,
-    modDepth: 0.5,
-    feedback: 0,
-  },
+  parameters: { ...defaultParameters },
   playing: false,
 });
 
@@ -132,13 +147,24 @@ export const App = () => {
           value={parameters.feedback}
           onChange={(value) => actions.patchParameter("feedback", value)}
         />
+        <LabeledKnob
+          label="Decay 1"
+          value={parameters.decay1}
+          onChange={(value) => actions.patchParameter("decay1", value)}
+        />
       </div>
-      <div class="flex-ha gap-2"></div>
-      <LabeledKnob
-        label="MOD"
-        value={parameters.modDepth}
-        onChange={(value) => actions.patchParameter("modDepth", value)}
-      />
+      <div class="flex-ha gap-2">
+        <LabeledKnob
+          label="MOD"
+          value={parameters.modDepth}
+          onChange={(value) => actions.patchParameter("modDepth", value)}
+        />
+        <LabeledKnob
+          label="Decay 2"
+          value={parameters.decay2}
+          onChange={(value) => actions.patchParameter("decay2", value)}
+        />
+      </div>
       <Button onClick={actions.togglePlaying} active={playing}>
         play
       </Button>
