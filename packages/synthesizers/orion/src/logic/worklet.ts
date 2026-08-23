@@ -206,6 +206,25 @@ function processOscFM(
   );
 }
 
+type OscFnWithReset = OscFn & { reset(): void };
+
+function createProcessOscFmFeedbackSaw(): OscFnWithReset {
+  let prev = 0;
+  const fn: OscFnWithReset = (shape, shapeEgValue, phase, envRange) => {
+    const level =
+      envRange === ShapeEnvRange.High
+        ? mapUnaryTo(shapeEgValue, shape, 1)
+        : mapUnaryTo(shapeEgValue, 0, shape);
+    const beta = level * Math.PI * 0.4;
+    prev = Math.sin(twoPi * phase + beta * prev);
+    return prev;
+  };
+  fn.reset = () => {
+    prev = 0;
+  };
+  return fn;
+}
+
 type PtmBaseWaveKind = "saw" | "sine" | "rect";
 type PtmKind = keyof typeof phaseTweakers;
 
@@ -320,6 +339,8 @@ function createSynthesizerCore() {
   // Oscillator phase state for two main oscillators.
   let phase1 = 0.0;
   let phase2 = 0.0;
+  const fmFeedbackSaw1 = createProcessOscFmFeedbackSaw();
+  const fmFeedbackSaw2 = createProcessOscFmFeedbackSaw();
 
   // Irregular LFO phase state for pitch drift.
   let driftPhase1 = 0.0;
@@ -358,6 +379,8 @@ function createSynthesizerCore() {
     hasStarted = false;
     shapeEgValue = 0.0;
     shapeEgTime = 0.0;
+    fmFeedbackSaw1.reset();
+    fmFeedbackSaw2.reset();
   }
 
   return {
@@ -399,7 +422,8 @@ function createSynthesizerCore() {
       if (waveMode === WaveMode.PD) {
         oscFn = processOscPD;
       } else if (waveMode === WaveMode.FM) {
-        oscFn = processOscFM;
+        // oscFn = processOscFM;
+        oscFn = fmFeedbackSaw1;
       } else {
         oscFn = bindOscFunctionForExWaves(waveMode);
       }
@@ -508,7 +532,7 @@ function createSynthesizerCore() {
           f1 / sampleRate,
         );
         const osc2Out = isDualOsc
-          ? oscFn(
+          ? (waveMode === WaveMode.FM ? fmFeedbackSaw2 : oscFn)(
               shape,
               shapeEgValue,
               phase2,
