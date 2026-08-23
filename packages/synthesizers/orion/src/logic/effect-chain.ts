@@ -1,5 +1,6 @@
 import { createChorus5 } from "@/logic/chorus5";
 import { createDelay } from "@/logic/delay-1a";
+import { createOutputSaturator } from "@/logic/output-saturator";
 import { createReverberator } from "@/logic/reverbrator";
 
 export interface EffectParameters {
@@ -22,11 +23,13 @@ export function createEffectChain(audioContext: AudioContext): EffectChain {
   const chorus = createChorus5(audioContext);
   const delay = createDelay(audioContext);
   const reverb = createReverberator(audioContext);
+  const saturator = createOutputSaturator(audioContext);
 
   inputNode.connect(chorus.inputNode);
   chorus.outputNode.connect(delay.inputNode);
   delay.outputNode.connect(reverb.inputNode);
-  reverb.outputNode.connect(outputNode);
+  reverb.outputNode.connect(saturator.inputNode);
+  saturator.outputNode.connect(outputNode);
 
   return {
     inputNode,
@@ -54,7 +57,7 @@ export function createEffectChain(audioContext: AudioContext): EffectChain {
       delay.cleanup();
       reverb.cleanup();
       inputNode.disconnect();
-      outputNode.disconnect();
+      saturator.cleanup();
     },
   };
 }
