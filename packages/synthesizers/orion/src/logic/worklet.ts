@@ -607,6 +607,42 @@ function createPitchDriftLfo() {
   };
 }
 
+function createVoiceStealEgFix() {
+  let lastLeft = 0.0;
+  let lastRight = 0.0;
+  let stealHoldLeft = 0.0;
+  let stealHoldRight = 0.0;
+  let stealTail = 0.0;
+
+  return {
+    reset(isNaiveWave: boolean) {
+      if (isNaiveWave) {
+        stealHoldLeft = lastLeft;
+        stealHoldRight = lastRight;
+        stealTail = 1.0;
+      } else {
+        stealTail = 0.0;
+      }
+    },
+    process(left: number, right: number, egValue: number, sampleRate: number) {
+      let outLeft = left * egValue;
+      let outRight = right * egValue;
+      if (stealTail > 0) {
+        const tailGain = 0.5 + 0.5 * Math.cos(Math.PI * (1.0 - stealTail));
+        outLeft += stealHoldLeft * tailGain;
+        outRight += stealHoldRight * tailGain;
+        stealTail = Math.max(
+          0,
+          stealTail - 1 / (DECLICK_ATTACK_SECONDS_NAIVE_WAVE * sampleRate),
+        );
+      }
+      lastLeft = outLeft;
+      lastRight = outRight;
+      return { outLeft, outRight };
+    },
+  };
+}
+
 function createSynthesizerCore() {
   const oscillators = createOscillators();
 
@@ -616,6 +652,7 @@ function createSynthesizerCore() {
   const pitchDriftLfo = createPitchDriftLfo();
   const dcBlockLeft = createOnePoleDcBlocker();
   const dcBlockRight = createOnePoleDcBlocker();
+  const voiceStealEgFix = createVoiceStealEgFix();
 
   const interpolators = {
     shape: createInterpolator(),
@@ -691,13 +728,13 @@ function createSynthesizerCore() {
         // -------------------------------------------------------------
 
         const gateOn = gate > 0.5;
+        const isNaiveWave = shape < 0.2 && envRange === ShapeEnvRange.Low;
         if (gateOn && previousGate <= 0.5) {
           // Rising gate edge: hard-reset voice state for pooled reuse / steal.
+          voiceStealEgFix.reset(isNaiveWave);
           resetVoiceState();
         }
         previousGate = gateOn ? 1.0 : 0.0;
-
-        const isNaiveWave = shape < 0.2 && envRange === ShapeEnvRange.Low;
 
         let { hasStarted, egValue } = ampEg.process({
           gateOn,
@@ -744,10 +781,15 @@ function createSynthesizerCore() {
           sampleRate,
           panWidth,
         });
-
-        leftChannel[i] = dcBlockLeft.process(left * egValue, dcBlockPole);
+        const { outLeft, outRight } = voiceStealEgFix.process(
+          left,
+          right,
+          egValue,
+          sampleRate,
+        );
+        leftChannel[i] = dcBlockLeft.process(outLeft, dcBlockPole);
         if (rightChannel !== leftChannel) {
-          rightChannel[i] = dcBlockRight.process(right * egValue, dcBlockPole);
+          rightChannel[i] = dcBlockRight.process(outRight, dcBlockPole);
         }
       }
 
