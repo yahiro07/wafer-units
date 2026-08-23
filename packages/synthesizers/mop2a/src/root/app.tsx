@@ -1,6 +1,7 @@
 import { Button } from "@/components/button";
 import { LabeledKnob } from "@/components/labeled-controls";
 import { createStore } from "snap-store";
+import { useEffect } from "preact/hooks";
 
 type SynthParameters = {
   noteNumber: number;
@@ -8,39 +9,73 @@ type SynthParameters = {
   modDepth: number;
   feedback: number;
 };
+const defaultParameters: SynthParameters = {
+  noteNumber: 57,
+  ratio: 1,
+  modDepth: 0.5,
+  feedback: 0,
+};
+
+function createVoice(audioContext: AudioContext, parameters: SynthParameters) {
+  const ac = audioContext;
+  const carrier = ac.createOscillator();
+  carrier.type = "sine";
+  carrier.connect(ac.destination);
+
+  const modulator = ac.createOscillator();
+  modulator.type = "sine";
+
+  const modulatorGain = ac.createGain();
+  modulator.connect(modulatorGain);
+  modulatorGain.connect(carrier.frequency);
+
+  const feedbackGain = ac.createGain();
+
+  const fbDelay = ac.createDelay(1 / ac.sampleRate);
+  fbDelay.delayTime.value = 1 / ac.sampleRate;
+  modulator.connect(feedbackGain);
+  feedbackGain.connect(fbDelay);
+  fbDelay.connect(modulator.frequency);
+
+  return {
+    affectParameters() {
+      const pr = parameters;
+      const noteFrequency = 440 * 2 ** ((pr.noteNumber - 69) / 12);
+      carrier.frequency.value = noteFrequency;
+      const modulatorFrequency = noteFrequency * pr.ratio;
+      modulator.frequency.value = modulatorFrequency;
+      modulatorGain.gain.value = pr.modDepth ** 2 * modulatorFrequency * 4;
+      feedbackGain.gain.value = pr.feedback * modulatorFrequency * 2;
+    },
+    start() {
+      modulator.start();
+      carrier.start();
+    },
+    stop() {
+      modulator.stop();
+      carrier.stop();
+    },
+  };
+}
+type Voice = ReturnType<typeof createVoice>;
 
 function createEngine() {
   const audioContext = new AudioContext();
+  const parameters = { ...defaultParameters };
+  let voice: Voice | null = null;
 
   return {
-    play(parameters: SynthParameters) {
-      const pr = parameters;
-      const noteFrequency = 440 * 2 ** ((pr.noteNumber - 69) / 12);
-
-      const ac = audioContext;
-      const modulator = ac.createOscillator();
-
-      const modulatorGain = ac.createGain();
-      modulator.type = "sine";
-      modulator.frequency.value = noteFrequency * pr.ratio;
-      modulator.connect(modulatorGain);
-
-      modulatorGain.gain.value = pr.modDepth * 1000;
-
-      const carrier = ac.createOscillator();
-      carrier.type = "sine";
-      carrier.frequency.value = noteFrequency;
-
-      modulatorGain.connect(carrier.frequency);
-
-      carrier.connect(ac.destination);
-      modulator.start();
-      carrier.start();
-
-      setTimeout(() => {
-        modulator.stop();
-        carrier.stop();
-      }, 1000);
+    applyParameters(newParameters: SynthParameters) {
+      Object.assign(parameters, newParameters);
+      voice?.affectParameters();
+    },
+    play() {
+      voice = createVoice(audioContext, parameters);
+      voice.affectParameters();
+      voice.start();
+      return () => {
+        voice?.stop();
+      };
     },
   };
 }
@@ -48,6 +83,7 @@ const engine = createEngine();
 
 const store = createStore<{
   parameters: SynthParameters;
+  playing: boolean;
 }>({
   parameters: {
     noteNumber: 57,
@@ -55,6 +91,7 @@ const store = createStore<{
     modDepth: 0.5,
     feedback: 0,
   },
+  playing: false,
 });
 
 const actions = {
@@ -64,13 +101,21 @@ const actions = {
   ) {
     store.patchParameters({ [key]: value });
   },
-  playTestTone() {
-    engine.play(store.state.parameters);
+  togglePlaying() {
+    store.togglePlaying();
   },
 };
 
 export const App = () => {
-  const { parameters } = store.useSnapshot();
+  const { parameters, playing } = store.useSnapshot();
+  useEffect(() => {
+    if (playing) {
+      return engine.play();
+    }
+  }, [playing]);
+  useEffect(() => {
+    engine.applyParameters(parameters);
+  }, [parameters]);
   return (
     <div class="flex-v gap-2">
       <div class="flex-ha gap-2">
@@ -88,13 +133,15 @@ export const App = () => {
           onChange={(value) => actions.patchParameter("feedback", value)}
         />
       </div>
-
+      <div class="flex-ha gap-2"></div>
       <LabeledKnob
         label="MOD"
         value={parameters.modDepth}
         onChange={(value) => actions.patchParameter("modDepth", value)}
       />
-      <Button onClick={actions.playTestTone}>play</Button>
+      <Button onClick={actions.togglePlaying} active={playing}>
+        play
+      </Button>
     </div>
   );
 };
