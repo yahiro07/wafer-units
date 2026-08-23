@@ -4,6 +4,15 @@ import { phaseTweakers } from "@/logic/phase-tweakers";
 import { mapUnaryTo } from "@/logic/synth-math-utils";
 import { iife, linearInterpolate, lowClip } from "@/utils/helpers";
 
+const pi = Math.PI;
+const twoPi = 2 * Math.PI;
+
+function fracPart(value: number) {
+  return value - Math.floor(value);
+}
+
+const lerp2 = linearInterpolate;
+
 // PD (Phase Distortion) calculation
 function computePD(phase: number, amount: number): number {
   // Shift the midpoint pivot forward based on the amount value.
@@ -17,9 +26,9 @@ function computePD(phase: number, amount: number): number {
   }
   // Feed the warped phase into a sine shape to morph toward a saw-like waveform.
   if (0) {
-    return Math.sin(2.0 * Math.PI * distortedPhase + Math.PI);
+    return Math.sin(twoPi * distortedPhase + pi);
   } else {
-    return -Math.cos(2.0 * Math.PI * distortedPhase + Math.PI);
+    return -Math.cos(twoPi * distortedPhase + pi);
   }
 }
 
@@ -29,31 +38,43 @@ function computePdPulse(phase: number, level: number): number {
   const p1 = 0.5 + level * 0.45;
   const pp2 = iife(() => {
     if (pp < p0) {
-      return linearInterpolate(pp, 0, p0, 0, 0.5);
+      return lerp2(pp, 0, p0, 0, 0.5);
     } else if (pp < p1) {
       return 0.5;
     } else {
-      return linearInterpolate(pp, p1, 1, 0.5, 1);
+      return lerp2(pp, p1, 1, 0.5, 1);
     }
   });
-  return -Math.cos(2.0 * Math.PI * pp2);
+  return -Math.cos(twoPi * pp2);
 }
 
 function computePdDualCosine(pp: number, level: number): number {
   const p0 = 0.5 - level * 0.45;
   if (0) {
-    const pp2 =
-      pp < p0
-        ? linearInterpolate(pp, 0, p0, 0, 0.5)
-        : linearInterpolate(pp, p0, 1, 0.5, 1);
-    return -Math.cos(4.0 * Math.PI * pp2);
+    const pp2 = pp < p0 ? lerp2(pp, 0, p0, 0, 0.5) : lerp2(pp, p0, 1, 0.5, 1);
+    return -Math.cos(4.0 * pi * pp2);
   } else {
-    const pp2 =
-      pp < p0
-        ? linearInterpolate(pp, 0, p0, 0, 1)
-        : linearInterpolate(pp, p0, 1, 0, 1);
-    return -Math.cos(2.0 * Math.PI * pp2);
+    const pp2 = pp < p0 ? lerp2(pp, 0, p0, 0, 1) : lerp2(pp, p0, 1, 0, 1);
+    return -Math.cos(2.0 * pi * pp2);
   }
+}
+
+function fallInvCosine(t: number) {
+  return Math.cos(pi * t) * 0.5 + 0.5;
+}
+
+function computePdSpeedHann(pp: number, level: number): number {
+  let pp2 = 0;
+  let win = 0;
+  const pivot = 0.5 - level * 0.4;
+  if (pp < pivot) {
+    pp2 = (pp / pivot) * 0.5;
+    win = 1;
+  } else {
+    pp2 = fracPart(0.5 + (pp - pivot) * (1 + level * 8));
+    win = fallInvCosine((pp - pivot) / (1 - pivot));
+  }
+  return (-Math.cos(twoPi * pp2) + 1) * win - 1;
 }
 
 const SHAPE_EG_MAX_SECONDS = 1.5;
@@ -79,7 +100,8 @@ function processOscPD(
       : mapUnaryTo(shapeEgValue, 0, shape);
   // return computePD(phase, pdLevel);
   // return computePdPulse(phase, pdLevel);
-  return computePdDualCosine(phase, pdLevel);
+  // return computePdDualCosine(phase, pdLevel);
+  return computePdSpeedHann(phase, pdLevel);
 }
 
 function processOscFM(
@@ -267,7 +289,7 @@ function createSynthesizerCore() {
 
       // Capture steady parameter values once to reduce repeated array access overhead.
       let baseFreq = parameters["frequency"][0];
-      baseFreq /= 2;
+      // baseFreq /= 2;
 
       const gate = parameters["gate"][0];
       const waveMode = Math.floor(parameters["waveMode"][0]) as WaveMode;
