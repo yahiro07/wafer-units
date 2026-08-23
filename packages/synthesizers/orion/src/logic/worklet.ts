@@ -32,7 +32,22 @@ function computePD(phase: number, amount: number): number {
   }
 }
 
-function computePdPulse(phase: number, level: number): number {
+function computePdSquare(phase: number, level: number): number {
+  let pp = phase;
+  const p0 = 0.5 - level * 0.45;
+  const p1 = 0.5;
+  const p2 = 1 - level * 0.45;
+  // const p3 = 1;
+  const pp2 = iife(() => {
+    if (pp < p0) return (pp / p0) * 0.5;
+    else if (pp < p1) return 0.5;
+    else if (pp < p2) return lerp2(pp, p1, p2, 0.5, 1);
+    else return 1;
+  });
+  return -Math.cos(twoPi * pp2);
+}
+
+function computePdSpike(phase: number, level: number): number {
   let pp = phase;
   const p0 = 0.5 - level * 0.45;
   const p1 = 0.5 + level * 0.45;
@@ -57,6 +72,18 @@ function computePdDualCosine(pp: number, level: number): number {
     const pp2 = pp < p0 ? lerp2(pp, 0, p0, 0, 1) : lerp2(pp, p0, 1, 0, 1);
     return -Math.cos(2.0 * pi * pp2);
   }
+}
+
+function computePdHalfSaw(phase: number, level: number): number {
+  let pp = phase;
+  const p1 = 0.5;
+  const p2 = 1 - level * 0.45;
+  const pp2 = iife(() => {
+    if (pp < p1) return (pp / p1) * 0.5;
+    else if (pp < p2) return lerp2(pp, p1, p2, 0.5, 1);
+    else return 1;
+  });
+  return -Math.cos(twoPi * pp2);
 }
 
 function riseInvCosine(t: number) {
@@ -142,8 +169,10 @@ function processOscPD(
     envRange === ShapeEnvRange.High
       ? mapUnaryTo(shapeEgValue, shape, 1)
       : mapUnaryTo(shapeEgValue, 0, shape);
-  return computePD(phase, pdLevel);
-  // return computePdPulse(phase, pdLevel);
+  // return computePD(phase, pdLevel);
+  // return computePdSquare(phase, pdLevel);
+  // return computePdSpike(phase, pdLevel);
+  return computePdHalfSaw(phase, pdLevel);
   // return computePdDualCosine(phase, pdLevel);
   // return computePdSpeedHann(phase, pdLevel);
   // return computePdAccelHann(phase, pdLevel);
