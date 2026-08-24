@@ -1,6 +1,7 @@
 import { LabeledKnob, LabeledSlider } from "@/components/labeled-controls";
 import { allOscWaveTypes, OscWaveType } from "@/defs/definitions";
 import { actions } from "@/root/actions";
+import { useSetupDrivers } from "@/root/drivers";
 import { store } from "@/root/store";
 
 const allRatios = [
@@ -57,7 +58,7 @@ const WaveSelectionSlider = ({
   );
 };
 
-export const App = () => {
+const ParametersSection = () => {
   const { parameters } = store.useSnapshot();
   return (
     <div class="flex-v gap-2">
@@ -120,6 +121,16 @@ export const App = () => {
           onChange={(value) => actions.patchParameter("patchVolume", value)}
         />
       </div>
+    </div>
+  );
+};
+
+export const App = () => {
+  useSetupDrivers();
+  return (
+    <div>
+      <div>mop2a synthesizer</div>
+      <ParametersSection />
     </div>
   );
 };

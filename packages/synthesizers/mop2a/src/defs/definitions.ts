@@ -44,8 +44,8 @@ export const defaultSynthParameters: SynthParameters = {
 };
 
 export type ISynthesizer = {
-  affectParameters: (parameters: Partial<SynthParameters>) => void;
-  noteOn: (noteNumber: number, time?: number) => void;
-  noteOff: (noteNumber: number, time?: number) => void;
-  cleanup: () => void;
+  applyParameters(parameters: Partial<SynthParameters>): void;
+  noteOn(noteNumber: number, time?: number): void;
+  noteOff(noteNumber: number, time?: number): void;
+  cleanup(): void;
 };
