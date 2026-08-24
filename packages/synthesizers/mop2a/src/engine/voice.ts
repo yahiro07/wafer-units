@@ -14,7 +14,7 @@ function createOscillatorAmplifier(ac: AudioContext) {
     gainNode,
     triggerAttack(time: number, prDecay: number) {
       if (prDecay < 1) {
-        const decayTime = prDecay * 2;
+        const decayTime = prDecay * 4;
         destParam.setValueAtTime(1, time);
         destParam.exponentialRampToValueAtTime(1e-3, time + decayTime);
         destParam.linearRampToValueAtTime(0, time + decayTime + 0.01);
@@ -39,7 +39,7 @@ function createVoiceAmplifier(ac: AudioContext) {
       prRelease: number,
       completeCallback: () => void,
     ) {
-      const releaseTime = prRelease * 2;
+      const releaseTime = prRelease * 4;
       destParam.setValueAtTime(1, time);
       destParam.exponentialRampToValueAtTime(1e-3, time + releaseTime);
       destParam.linearRampToValueAtTime(0, time + releaseTime + 0.01);

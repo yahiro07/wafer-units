@@ -3,6 +3,7 @@ import {
   ISynthesizer,
   SynthParameters,
 } from "@/defs/definitions";
+import { createEffectChain } from "@/engine/effect-chain";
 import { createVoice, Voice } from "@/engine/voice";
 import { UnitInterface } from "wafer-host/unit-types";
 
@@ -15,7 +16,10 @@ export function createSynthesizerEngine(
   const parameters = structuredClone(defaultSynthParameters);
 
   const voicesOutputNode = audioContext.createGain();
-  voicesOutputNode.connect(destinationNode);
+  const effectChain = createEffectChain(audioContext);
+
+  voicesOutputNode.connect(effectChain.inputNode);
+  effectChain.outputNode.connect(destinationNode);
 
   const voices: Map<number, Voice> = new Map();
 
@@ -25,7 +29,11 @@ export function createSynthesizerEngine(
       for (const voice of voices.values()) {
         voice.affectParameters();
       }
-      voicesOutputNode.gain.value = parameters.patchVolume * 2;
+      voicesOutputNode.gain.value = parameters.patchVolume * 2 * 0.4;
+      effectChain.update({
+        chorusLevel: !parameters.chorusAltReverb ? parameters.chorusLevel : 0,
+        reverbLevel: parameters.chorusAltReverb ? parameters.chorusLevel : 0,
+      });
     },
     noteOn(noteNumber: number, time?: number) {
       time ??= audioContext.currentTime;
@@ -49,6 +57,7 @@ export function createSynthesizerEngine(
     },
     cleanup() {
       voicesOutputNode.disconnect();
+      effectChain.cleanup();
     },
   };
 }
