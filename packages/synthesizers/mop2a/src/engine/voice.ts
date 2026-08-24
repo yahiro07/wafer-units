@@ -7,8 +7,11 @@ export type Voice = {
   stop(time: number): void;
 };
 
-function createOperatorEg(destParam: AudioParam) {
+function createOscillatorAmplifier(ac: AudioContext) {
+  const gainNode = ac.createGain();
+  const destParam = gainNode.gain;
   return {
+    gainNode,
     trigger(time: number, prDecay: number) {
       if (prDecay < 1) {
         const decayTime = prDecay * 2;
@@ -38,11 +41,10 @@ const defaultOscillatorUnitParameters: OscillatorUnitParameters = {
 
 function createOscillatorUnit(ac: AudioContext) {
   const oscNode = ac.createOscillator();
-  const gainNode = ac.createGain();
-  oscNode.connect(gainNode);
-  const eg = createOperatorEg(gainNode.gain);
+  const oscAmp = createOscillatorAmplifier(ac);
   const outputNode = ac.createGain();
-  gainNode.connect(outputNode);
+  oscNode.connect(oscAmp.gainNode);
+  oscAmp.gainNode.connect(outputNode);
 
   let params = defaultOscillatorUnitParameters;
   return {
@@ -58,7 +60,7 @@ function createOscillatorUnit(ac: AudioContext) {
     },
     start(time: number) {
       oscNode.start(time);
-      eg.trigger(time, params.decay);
+      oscAmp.trigger(time, params.decay);
     },
     stop(time: number) {
       oscNode.stop(time);
