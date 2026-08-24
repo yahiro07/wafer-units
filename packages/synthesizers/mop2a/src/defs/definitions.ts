@@ -42,7 +42,7 @@ export const defaultSynthParameters: SynthParameters = {
   chorusLevel: 0,
   chorusAltReverb: false,
   patchOctave: 0,
-  patchVolume: 1,
+  patchVolume: 0.5,
 };
 
 export type ISynthesizer = {

@@ -14,6 +14,9 @@ export function createSynthesizerEngine(
     unitInterface?.audioOutputNode ?? audioContext.destination;
   const parameters = structuredClone(defaultSynthParameters);
 
+  const voicesOutputNode = audioContext.createGain();
+  voicesOutputNode.connect(destinationNode);
+
   const voices: Map<number, Voice> = new Map();
 
   return {
@@ -22,12 +25,13 @@ export function createSynthesizerEngine(
       for (const voice of voices.values()) {
         voice.affectParameters();
       }
+      voicesOutputNode.gain.value = parameters.patchVolume * 2;
     },
     noteOn(noteNumber: number, time?: number) {
       time ??= audioContext.currentTime;
       const voice = createVoice(
         audioContext,
-        destinationNode,
+        voicesOutputNode,
         parameters,
         noteNumber,
       );
@@ -43,6 +47,8 @@ export function createSynthesizerEngine(
         voices.delete(noteNumber);
       }
     },
-    cleanup() {},
+    cleanup() {
+      voicesOutputNode.disconnect();
+    },
   };
 }
