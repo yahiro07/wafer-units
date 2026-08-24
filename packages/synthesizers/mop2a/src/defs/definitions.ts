@@ -1,13 +1,12 @@
 import { PickKeysForValueType } from "@/utils/utility-types";
 
-export type OscWaveType = "sine" | "triangle" | "square" | "sawtooth" | "noise";
+export type OscWaveType = "sine" | "triangle" | "square" | "sawtooth";
 
 export const allOscWaveTypes: OscWaveType[] = [
   "sine",
   "triangle",
   "square",
   "sawtooth",
-  "noise",
 ];
 
 export type SynthParameters = {

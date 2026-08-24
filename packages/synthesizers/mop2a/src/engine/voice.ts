@@ -80,9 +80,7 @@ function createOscillatorUnit(ac: AudioContext) {
     outputNode,
     update(pr: OscillatorUnitParameters) {
       params = pr;
-      if (pr.wave !== "noise") {
-        oscNode.type = pr.wave;
-      }
+      oscNode.type = pr.wave;
       oscNode.frequency.value = pr.frequency;
       outputNode.gain.value = pr.gain;
     },
