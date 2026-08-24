@@ -60,6 +60,7 @@ const WaveSelectionSlider = ({
 
 const ParametersSection = () => {
   const { parameters } = store.useSnapshot();
+  const mode = parameters.osc2ModAltMix ? "mix" : "fm";
   return (
     <div class="flex-v gap-2">
       <div class="flex-ha gap-5">
@@ -68,11 +69,23 @@ const ParametersSection = () => {
           value={parameters.osc1Wave}
           onChange={(wave) => actions.patchParameter("osc1Wave", wave)}
         />
-        <RatioSelectionKnob
-          label={`RATIO: ${parameters.osc1Ratio}`}
-          value={parameters.osc1Ratio}
-          onChange={(value) => actions.patchParameter("osc1Ratio", value)}
-        />
+        {mode === "fm" && (
+          <RatioSelectionKnob
+            label={`RATIO: ${parameters.osc1Ratio}`}
+            value={parameters.osc1Ratio}
+            onChange={(value) => actions.patchParameter("osc1Ratio", value)}
+          />
+        )}
+        {mode === "mix" && (
+          <LabeledKnob
+            label="OCTAVE"
+            value={parameters.osc1Octave}
+            onChange={(value) => actions.patchParameter("osc1Octave", value)}
+            min={-2}
+            max={2}
+            step={1}
+          />
+        )}
         <LabeledKnob
           label="DECAY1"
           value={parameters.osc1Decay}

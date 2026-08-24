@@ -12,6 +12,7 @@ export const allOscWaveTypes: OscWaveType[] = [
 
 export type SynthParameters = {
   osc1Wave: OscWaveType;
+  osc1Octave: number;
   osc1Ratio: number;
   osc1Decay: number;
   osc2Wave: OscWaveType;
@@ -30,6 +31,7 @@ export type BoolParameterKeys = PickKeysForValueType<SynthParameters, boolean>;
 
 export const defaultSynthParameters: SynthParameters = {
   osc1Wave: "sine",
+  osc1Octave: 0,
   osc1Ratio: 1,
   osc1Decay: 1,
   osc2Wave: "sine",

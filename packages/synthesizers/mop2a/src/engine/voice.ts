@@ -92,13 +92,15 @@ export function createVoice(
     },
     affectParameters() {
       const baseFreq = midiToFrequency(noteNumber);
-      const osc1Freq = baseFreq * pr.osc1Ratio;
+      let osc1Freq = 1;
       let osc1Gain = 0;
       let osc2Gain = 0;
       if (mode === "fm") {
+        osc1Freq = baseFreq * pr.osc1Ratio;
         osc1Gain = pr.osc2Mod ** 2 * osc1Freq * 4;
         osc2Gain = 1;
       } else {
+        osc1Freq = baseFreq * 2 ** pr.osc1Octave;
         const prMix = pr.osc2Mod;
         const sum = 1 + prMix;
         osc1Gain = prMix / sum;
