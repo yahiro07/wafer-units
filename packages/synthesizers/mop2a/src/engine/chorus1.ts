@@ -46,9 +46,10 @@ export function createChorus1(ctx: AudioContext) {
     inputNode,
     outputNode,
     setLevel(level: number): void {
-      wetGain.gain.value = level * 0.6;
-      lfoGainL.gain.value = level * 0.005;
-      lfoGainR.gain.value = level * 0.005;
+      const time = ctx.currentTime + 0.02;
+      wetGain.gain.linearRampToValueAtTime(level * 0.6, time);
+      lfoGainL.gain.linearRampToValueAtTime(level * 0.005, time);
+      lfoGainR.gain.linearRampToValueAtTime(level * 0.005, time);
     },
     cleanupNodes() {
       lfoL.stop();

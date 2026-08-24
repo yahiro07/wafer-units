@@ -12,15 +12,22 @@ function createOscillatorAmplifier(ac: AudioContext) {
   const destParam = gainNode.gain;
   return {
     gainNode,
-    triggerAttack(time: number, prDecay: number) {
+    triggerAttack(time: number, prDecay: number, isNaiveWave: boolean) {
+      const attackTime = isNaiveWave ? 0.01 : 0.001;
+      destParam.setValueAtTime(0, time);
+      destParam.linearRampToValueAtTime(1, time + attackTime);
       if (prDecay < 1) {
         const decayTime = prDecay * 4;
-        destParam.setValueAtTime(1, time);
-        destParam.exponentialRampToValueAtTime(1e-3, time + decayTime);
-        destParam.linearRampToValueAtTime(0, time + decayTime + 0.01);
+        destParam.exponentialRampToValueAtTime(
+          1e-3,
+          time + attackTime + decayTime,
+        );
+        destParam.linearRampToValueAtTime(
+          0,
+          time + attackTime + decayTime + 0.01,
+        );
       } else {
         //sustain
-        destParam.setValueAtTime(1, time);
       }
     },
   };
@@ -37,12 +44,19 @@ function createVoiceAmplifier(ac: AudioContext) {
     triggerRelease(
       time: number,
       prRelease: number,
+      isNaiveWave: boolean,
       completeCallback: () => void,
     ) {
+      const minReleaseTime = isNaiveWave ? 0.01 : 0.001;
       const releaseTime = prRelease * 4;
+
       destParam.setValueAtTime(1, time);
-      destParam.exponentialRampToValueAtTime(1e-3, time + releaseTime);
-      destParam.linearRampToValueAtTime(0, time + releaseTime + 0.01);
+      if (releaseTime > minReleaseTime) {
+        destParam.exponentialRampToValueAtTime(1e-3, time + releaseTime);
+        destParam.linearRampToValueAtTime(0, time + releaseTime + 0.01);
+      } else {
+        destParam.linearRampToValueAtTime(0, time + minReleaseTime);
+      }
 
       const waitingMs = time + releaseTime + 0.01 - ac.currentTime;
       if (waitingMs > 0) {
@@ -86,7 +100,8 @@ function createOscillatorUnit(ac: AudioContext) {
     },
     start(time: number) {
       oscNode.start(time);
-      oscAmp.triggerAttack(time, params.decay);
+      const isNaiveWave = params.wave === "sine" || params.wave === "triangle";
+      oscAmp.triggerAttack(time, params.decay, isNaiveWave);
     },
     stop(time: number) {
       oscNode.stop(time);
@@ -165,7 +180,9 @@ export function createVoice(
       voiceAmp.triggerAttack(time);
     },
     triggerRelease(time, completeCallback) {
-      voiceAmp.triggerRelease(time, pr.ampRelease, () => {
+      const isNaiveWave =
+        parameters.osc2Wave === "sine" || parameters.osc2Wave === "triangle";
+      voiceAmp.triggerRelease(time, pr.ampRelease, isNaiveWave, () => {
         osc1.stop(time);
         osc2.stop(time);
         osc1.outputNode.disconnect();

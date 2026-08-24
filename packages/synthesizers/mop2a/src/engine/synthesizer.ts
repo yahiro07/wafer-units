@@ -29,7 +29,10 @@ export function createSynthesizerEngine(
       for (const voice of voices.values()) {
         voice.affectParameters();
       }
-      voicesOutputNode.gain.value = parameters.patchVolume * 2 * 0.4;
+      voicesOutputNode.gain.linearRampToValueAtTime(
+        parameters.patchVolume * 2 * 0.3,
+        audioContext.currentTime + 0.02,
+      );
       effectChain.update({
         chorusLevel: !parameters.chorusAltReverb ? parameters.chorusLevel : 0,
         reverbLevel: parameters.chorusAltReverb ? parameters.chorusLevel : 0,
