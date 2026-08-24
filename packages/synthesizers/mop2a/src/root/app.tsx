@@ -1,5 +1,10 @@
+import { Button } from "@/components/button";
 import { LabeledKnob, LabeledSlider } from "@/components/labeled-controls";
-import { allOsc1Ratios, allOscWaveTypes, OscWaveType } from "@/defs/definitions";
+import {
+  allOsc1Ratios,
+  allOscWaveTypes,
+  OscWaveType,
+} from "@/defs/definitions";
 import { actions } from "@/root/actions";
 import { useSetupDrivers } from "@/root/drivers";
 import { store } from "@/root/store";
@@ -137,8 +142,20 @@ const ParametersSection = () => {
 export const App = () => {
   useSetupDrivers();
   return (
-    <div>
-      <div>mop2a synthesizer</div>
+    <div class="flex-v gap-2">
+      <div class="flex-h justify-between">
+        <h1 class="text-xl" onClick={actions.copyParametersToClipboard}>
+          mop2a synthesizer
+        </h1>
+        <div class="flex-ha gap-2">
+          <Button height={26} asr={2.5} onClick={actions.resetParameters}>
+            INIT
+          </Button>
+          <Button height={26} asr={2.5} onClick={actions.randomizeParameters}>
+            RND
+          </Button>
+        </div>
+      </div>
       <ParametersSection />
     </div>
   );
