@@ -1,6 +1,5 @@
-import { SynthParameters } from "@/defs/definitions";
 import { createSynthesizerEngine } from "@/engine/synthesizer";
-import { actions } from "@/root/actions";
+import { automationInput } from "@/root/automation";
 import { persistence } from "@/root/persistence";
 import { store } from "@/root/store";
 import { setupMidiKeyboardInput } from "@/utils/midi-keyboard-input";
@@ -24,38 +23,7 @@ export function setupUnit() {
           engine.noteOff(noteNumber, time ?? 0);
         },
       },
-      automationInput: {
-        getParameterSpecs() {
-          return [
-            { id: "oscWave", steps: 3 },
-            { id: "oscDetune" },
-            { id: "oscSub" },
-            { id: "oscDrift" },
-            { id: "fxChorus" },
-            { id: "fxReverb" },
-            { id: "filterCutoff" },
-            { id: "filterPeak" },
-            { id: "filterDecay" },
-            { id: "ampDecay" },
-            { id: "ampRelease" },
-            { id: "patchVolume" },
-          ];
-        },
-        getParameter(id) {
-          if (id === "oscWave") {
-            return store.state.parameters.oscWave / 2;
-          } else {
-            return store.state.parameters[id as keyof SynthParameters];
-          }
-        },
-        setParameter(id, value) {
-          if (id === "oscWave") {
-            actions.setParameter("oscWave", value * 2);
-          } else {
-            actions.setParameter(id as keyof SynthParameters, value);
-          }
-        },
-      },
+      automationInput,
       persistence,
       cleanup: engine.cleanup,
     });
