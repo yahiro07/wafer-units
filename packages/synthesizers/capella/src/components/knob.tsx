@@ -41,9 +41,6 @@ export const Knob = ({
 const styles = css({
   position: "relative",
   borderRadius: "50%",
-  "&:hover": {
-    opacity: 0.8,
-  },
   width: "80px",
   height: "80px",
   background: "linear-gradient(to bottom, #fff, #0004)",

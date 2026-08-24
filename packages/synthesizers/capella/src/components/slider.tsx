@@ -42,7 +42,7 @@ const styles = css({
   "> .tick": {
     width: "100%",
     height: "30px",
-    background: "#ddd",
+    background: "#eee",
     border: "outset 0.5px #666",
   },
 });

@@ -142,7 +142,7 @@ const ParametersSection = () => {
 export const App = () => {
   useSetupDrivers();
   return (
-    <div class="flex-v gap-2 bg-clPageBg pt-1.5">
+    <div class="flex-v gap-2 bg-clPageBg pt-1.5 text-clPageText">
       <div class="flex-h justify-between">
         <h1 class="text-xl" onClick={actions.copyParametersToClipboard}>
           Capella Synthesizer
