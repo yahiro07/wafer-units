@@ -1,4 +1,5 @@
 import { SynthParameters } from "@/defs/definitions";
+import { allPresets } from "@/defs/presets";
 import { createSynthesizerEngine } from "@/engine/synthesizer";
 import { automationInput } from "@/root/automation";
 import { persistence } from "@/root/persistence";
@@ -21,6 +22,15 @@ function setupUnit() {
       noteInput: {
         noteOn: engine.noteOn,
         noteOff: engine.noteOff,
+      },
+      presetProvider: {
+        getPresetNames() {
+          return Object.keys(allPresets);
+        },
+        applyPreset(presetName) {
+          const preset = allPresets[presetName];
+          store.patchParameters(preset);
+        },
       },
       automationInput,
       persistence,

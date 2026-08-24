@@ -142,10 +142,10 @@ const ParametersSection = () => {
 export const App = () => {
   useSetupDrivers();
   return (
-    <div class="flex-v gap-2 bg-clPageBg">
+    <div class="flex-v gap-2 bg-clPageBg pt-1.5">
       <div class="flex-h justify-between">
         <h1 class="text-xl" onClick={actions.copyParametersToClipboard}>
-          mop2a synthesizer
+          Capella Synthesizer
         </h1>
         <div class="flex-ha gap-2">
           <Button height={26} asr={2.5} onClick={actions.resetParameters}>
