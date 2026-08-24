@@ -7,7 +7,7 @@ export default defineConfig({
   plugins: [preact(), UnoCSS()],
   resolve: { tsconfigPaths: true },
   build: {
-    outDir: "../../../dist/mop2a",
+    outDir: "../../../dist/capella",
     emptyOutDir: true,
   },
   server: { port: 3000 },
