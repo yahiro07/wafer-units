@@ -142,7 +142,7 @@ const ParametersSection = () => {
 export const App = () => {
   useSetupDrivers();
   return (
-    <div class="flex-v gap-2">
+    <div class="flex-v gap-2 bg-clPageBg">
       <div class="flex-h justify-between">
         <h1 class="text-xl" onClick={actions.copyParametersToClipboard}>
           mop2a synthesizer
