@@ -54,3 +54,16 @@ export function pickObjectMembers<T extends {}, K extends keyof T>(
   }
   return resObject;
 }
+
+export function filterChangedFields<T extends object>(
+  curr: Partial<T>,
+  next: Partial<T>,
+): Partial<T> {
+  const changedAttrs: Partial<T> = {};
+  for (const key in next) {
+    if (next[key] !== curr[key]) {
+      changedAttrs[key] = next[key] as any;
+    }
+  }
+  return changedAttrs;
+}
