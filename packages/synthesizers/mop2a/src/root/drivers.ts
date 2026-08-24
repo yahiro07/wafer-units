@@ -16,7 +16,7 @@ function setupUnit() {
     unitInterface.completeSetup({
       unitAspects: {
         unitType: "instrument",
-        viewSize: [1048, 538],
+        viewSize: [400, 280],
       },
       noteInput: {
         noteOn: engine.noteOn,
