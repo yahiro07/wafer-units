@@ -51,14 +51,17 @@ function createVoiceAmplifier(ac: AudioContext) {
       const releaseTime = prRelease * 4;
 
       destParam.setValueAtTime(1, time);
+      let endTime = 0;
       if (releaseTime > minReleaseTime) {
         destParam.exponentialRampToValueAtTime(1e-3, time + releaseTime);
         destParam.linearRampToValueAtTime(0, time + releaseTime + 0.01);
+        endTime = time + releaseTime + 0.01;
       } else {
         destParam.linearRampToValueAtTime(0, time + minReleaseTime);
+        endTime = time + minReleaseTime + 0.01;
       }
 
-      const waitingMs = time + releaseTime + 0.01 - ac.currentTime;
+      const waitingMs = endTime - ac.currentTime;
       if (waitingMs > 0) {
         setTimeout(completeCallback, waitingMs * 1000);
       } else {
