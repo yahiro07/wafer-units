@@ -3,8 +3,8 @@ import { midiToFrequency } from "@/engine/synthesis-helper";
 
 export type Voice = {
   affectParameters(): void;
-  start(time: number): void;
-  stop(time: number): void;
+  triggerAttack(time: number): void;
+  triggerRelease(time: number, completeCallback?: () => void): void;
 };
 
 function createOscillatorAmplifier(ac: AudioContext) {
@@ -12,7 +12,7 @@ function createOscillatorAmplifier(ac: AudioContext) {
   const destParam = gainNode.gain;
   return {
     gainNode,
-    trigger(time: number, prDecay: number) {
+    triggerAttack(time: number, prDecay: number) {
       if (prDecay < 1) {
         const decayTime = prDecay * 2;
         destParam.setValueAtTime(1, time);
@@ -21,6 +21,34 @@ function createOscillatorAmplifier(ac: AudioContext) {
       } else {
         //sustain
         destParam.setValueAtTime(1, time);
+      }
+    },
+  };
+}
+
+function createVoiceAmplifier(ac: AudioContext) {
+  const gainNode = ac.createGain();
+  const destParam = gainNode.gain;
+  return {
+    gainNode,
+    triggerAttack(time: number) {
+      destParam.setValueAtTime(1, time);
+    },
+    triggerRelease(
+      time: number,
+      prRelease: number,
+      completeCallback: () => void,
+    ) {
+      const releaseTime = prRelease * 2;
+      destParam.setValueAtTime(1, time);
+      destParam.exponentialRampToValueAtTime(1e-3, time + releaseTime);
+      destParam.linearRampToValueAtTime(0, time + releaseTime + 0.01);
+
+      const waitingMs = time + releaseTime + 0.01 - ac.currentTime;
+      if (waitingMs > 0) {
+        setTimeout(completeCallback, waitingMs * 1000);
+      } else {
+        completeCallback();
       }
     },
   };
@@ -60,10 +88,12 @@ function createOscillatorUnit(ac: AudioContext) {
     },
     start(time: number) {
       oscNode.start(time);
-      oscAmp.trigger(time, params.decay);
+      oscAmp.triggerAttack(time, params.decay);
     },
     stop(time: number) {
       oscNode.stop(time);
+      oscNode.disconnect();
+      oscAmp.gainNode.disconnect();
     },
   };
 }
@@ -79,14 +109,18 @@ export function createVoice(
   const osc1 = createOscillatorUnit(ac);
   const osc2 = createOscillatorUnit(ac);
 
+  const voiceAmp = createVoiceAmplifier(ac);
+
   const mode = parameters.osc2ModAltMix ? "mix" : "fm";
   if (mode === "fm") {
     osc1.outputNode.connect(osc2.frequencyAudioParam);
-    osc2.outputNode.connect(destinationNode);
+    osc2.outputNode.connect(voiceAmp.gainNode);
   } else {
-    osc1.outputNode.connect(destinationNode);
-    osc2.outputNode.connect(destinationNode);
+    osc1.outputNode.connect(voiceAmp.gainNode);
+    osc2.outputNode.connect(voiceAmp.gainNode);
   }
+
+  voiceAmp.gainNode.connect(destinationNode);
 
   const internal = {
     getWiringMode() {
@@ -127,15 +161,20 @@ export function createVoice(
     affectParameters() {
       internal.affectParameters();
     },
-    start(time: number) {
+    triggerAttack(time) {
       osc1.start(time);
       osc2.start(time);
+      voiceAmp.triggerAttack(time);
     },
-    stop(time: number) {
-      osc1.stop(time);
-      osc2.stop(time);
-      osc1.outputNode.disconnect();
-      osc2.outputNode.disconnect();
+    triggerRelease(time, completeCallback) {
+      voiceAmp.triggerRelease(time, pr.ampRelease, () => {
+        osc1.stop(time);
+        osc2.stop(time);
+        osc1.outputNode.disconnect();
+        osc2.outputNode.disconnect();
+        voiceAmp.gainNode.disconnect();
+        completeCallback?.();
+      });
     },
   };
 }

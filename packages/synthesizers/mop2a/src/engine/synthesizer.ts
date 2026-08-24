@@ -32,14 +32,14 @@ export function createSynthesizerEngine(
         noteNumber,
       );
       voice.affectParameters();
-      voice.start(time);
+      voice.triggerAttack(time);
       voices.set(noteNumber, voice);
     },
     noteOff(noteNumber: number, time?: number) {
       time ??= audioContext.currentTime;
       const voice = voices.get(noteNumber);
       if (voice) {
-        voice.stop(time);
+        voice.triggerRelease(time);
         voices.delete(noteNumber);
       }
     },
