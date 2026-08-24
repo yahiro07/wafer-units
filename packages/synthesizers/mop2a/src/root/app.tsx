@@ -1,178 +1,125 @@
-import { Button } from "@/components/button";
-import { LabeledKnob } from "@/components/labeled-controls";
-import { createStore } from "snap-store";
-import { useEffect } from "preact/hooks";
+import { LabeledKnob, LabeledSlider } from "@/components/labeled-controls";
+import { allOscWaveTypes, OscWaveType } from "@/defs/definitions";
+import { actions } from "@/root/actions";
+import { store } from "@/root/store";
 
-type SynthParameters = {
-  noteNumber: number;
-  ratio: number;
-  modDepth: number;
-  feedback: number;
-  decay1: number;
-  decay2: number;
+const allRatios = [
+  0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13,
+];
+
+const RatioSelectionKnob = ({
+  label,
+  value,
+  onChange,
+}: {
+  label: string;
+  value: number;
+  onChange: (ratio: number) => void;
+}) => {
+  const index = allRatios.indexOf(value);
+  const handleChange = (newIndex: number) => {
+    onChange(allRatios[newIndex]);
+  };
+  return (
+    <LabeledKnob
+      label={label}
+      value={index}
+      onChange={handleChange}
+      min={0}
+      max={allRatios.length - 1}
+      step={1}
+    />
+  );
 };
-const defaultParameters: SynthParameters = {
-  noteNumber: 57,
-  ratio: 1,
-  modDepth: 0.5,
-  feedback: 0,
-  decay1: 1,
-  decay2: 1,
-};
 
-function createOperatorEg(destParam: AudioParam) {
-  return {
-    trigger(time: number, decayTime: number) {
-      destParam.setValueAtTime(1, time);
-      destParam.exponentialRampToValueAtTime(1e-3, time + decayTime);
-      destParam.linearRampToValueAtTime(0, time + decayTime + 0.01);
-    },
+const WaveSelectionSlider = ({
+  label,
+  value,
+  onChange,
+}: {
+  label: string;
+  value: OscWaveType;
+  onChange: (value: OscWaveType) => void;
+}) => {
+  const index = allOscWaveTypes.indexOf(value);
+  const handleChange = (newIndex: number) => {
+    onChange(allOscWaveTypes[newIndex]);
   };
-}
-
-function createVoice(audioContext: AudioContext, parameters: SynthParameters) {
-  const pr = parameters;
-
-  const ac = audioContext;
-  const carrier = ac.createOscillator();
-  carrier.type = "sine";
-  const carrierGain = ac.createGain();
-  const carrierEg = createOperatorEg(carrierGain.gain);
-  carrier.connect(carrierGain);
-  carrierGain.connect(ac.destination);
-
-  const modulator = ac.createOscillator();
-  modulator.type = "sine";
-
-  const modulatorGain = ac.createGain();
-  modulator.connect(modulatorGain);
-
-  const modulatorEgGain = ac.createGain();
-  const modulatorEg = createOperatorEg(modulatorEgGain.gain);
-  modulatorGain.connect(modulatorEgGain);
-  modulatorEgGain.connect(carrier.frequency);
-
-  const feedbackGain = ac.createGain();
-
-  const fbDelay = ac.createDelay(1 / ac.sampleRate);
-  fbDelay.delayTime.value = 1 / ac.sampleRate;
-  modulatorEgGain.connect(feedbackGain);
-  feedbackGain.connect(fbDelay);
-  fbDelay.connect(modulator.frequency);
-
-  return {
-    affectParameters() {
-      const noteFrequency = 440 * 2 ** ((pr.noteNumber - 69) / 12);
-      carrier.frequency.value = noteFrequency;
-      const modulatorFrequency = noteFrequency * pr.ratio;
-      modulator.frequency.value = modulatorFrequency;
-      modulatorGain.gain.value = pr.modDepth ** 2 * modulatorFrequency * 4;
-      feedbackGain.gain.value = pr.feedback * modulatorFrequency * 2;
-    },
-    start() {
-      modulator.start();
-      carrier.start();
-      const now = audioContext.currentTime;
-      modulatorEg.trigger(now, pr.decay1 * 2);
-      carrierEg.trigger(now, pr.decay2 * 2);
-    },
-    stop() {
-      modulator.stop();
-      carrier.stop();
-    },
-  };
-}
-type Voice = ReturnType<typeof createVoice>;
-
-function createEngine() {
-  const audioContext = new AudioContext();
-  const parameters = { ...defaultParameters };
-  let voice: Voice | null = null;
-
-  return {
-    applyParameters(newParameters: SynthParameters) {
-      Object.assign(parameters, newParameters);
-      voice?.affectParameters();
-    },
-    play() {
-      voice = createVoice(audioContext, parameters);
-      voice.affectParameters();
-      voice.start();
-      return () => {
-        voice?.stop();
-      };
-    },
-  };
-}
-const engine = createEngine();
-
-const store = createStore<{
-  parameters: SynthParameters;
-  playing: boolean;
-}>({
-  parameters: { ...defaultParameters },
-  playing: false,
-});
-
-const actions = {
-  patchParameter<K extends keyof SynthParameters>(
-    key: K,
-    value: SynthParameters[K],
-  ) {
-    store.patchParameters({ [key]: value });
-  },
-  togglePlaying() {
-    store.togglePlaying();
-  },
+  return (
+    <LabeledSlider
+      label={label}
+      value={index}
+      onChange={handleChange}
+      min={0}
+      max={allOscWaveTypes.length - 1}
+      step={1}
+    />
+  );
 };
 
 export const App = () => {
-  const { parameters, playing } = store.useSnapshot();
-  useEffect(() => {
-    if (playing) {
-      return engine.play();
-    }
-  }, [playing]);
-  useEffect(() => {
-    engine.applyParameters(parameters);
-  }, [parameters]);
+  const { parameters } = store.useSnapshot();
   return (
     <div class="flex-v gap-2">
-      <div class="flex-ha gap-2">
-        <LabeledKnob
-          label={`Ratio: ${parameters.ratio}`}
-          value={parameters.ratio}
-          onChange={(value) => actions.patchParameter("ratio", value)}
-          min={1}
-          max={10}
-          step={0.5}
+      <div class="flex-ha gap-5">
+        <WaveSelectionSlider
+          label="WAVE1"
+          value={parameters.osc1Wave}
+          onChange={(wave) => actions.patchParameter("osc1Wave", wave)}
+        />
+        <RatioSelectionKnob
+          label={`RATIO: ${parameters.osc1Ratio}`}
+          value={parameters.osc1Ratio}
+          onChange={(value) => actions.patchParameter("osc1Ratio", value)}
         />
         <LabeledKnob
-          label="FBK"
-          value={parameters.feedback}
-          onChange={(value) => actions.patchParameter("feedback", value)}
+          label="DECAY1"
+          value={parameters.osc1Decay}
+          onChange={(value) => actions.patchParameter("osc1Decay", value)}
         />
         <LabeledKnob
-          label="Decay 1"
-          value={parameters.decay1}
-          onChange={(value) => actions.patchParameter("decay1", value)}
+          label={parameters.chorusAltReverb ? "REVERB†" : "CHORUS†"}
+          value={parameters.chorusLevel}
+          onChange={(value) => actions.patchParameter("chorusLevel", value)}
+          onLabelClick={() => actions.toggleBoolParameter("chorusAltReverb")}
+        />
+        <LabeledSlider
+          label="OCT"
+          value={parameters.patchOctave}
+          onChange={(value) => actions.patchParameter("patchOctave", value)}
+          min={-2}
+          max={2}
+          step={1}
         />
       </div>
-      <div class="flex-ha gap-2">
-        <LabeledKnob
-          label="MOD"
-          value={parameters.modDepth}
-          onChange={(value) => actions.patchParameter("modDepth", value)}
+      <div class="flex-ha gap-5">
+        <WaveSelectionSlider
+          label="WAVE2"
+          value={parameters.osc2Wave}
+          onChange={(wave) => actions.patchParameter("osc2Wave", wave)}
         />
         <LabeledKnob
-          label="Decay 2"
-          value={parameters.decay2}
-          onChange={(value) => actions.patchParameter("decay2", value)}
+          label={parameters.osc2ModAltMix ? "MIX†" : "FM†"}
+          value={parameters.osc2Mod}
+          onChange={(value) => actions.patchParameter("osc2Mod", value)}
+          onLabelClick={() => actions.toggleBoolParameter("osc2ModAltMix")}
+        />
+        <LabeledKnob
+          label="DECAY2"
+          value={parameters.osc2Decay}
+          onChange={(value) => actions.patchParameter("osc2Decay", value)}
+        />
+        <LabeledKnob
+          label="RELEASE"
+          value={parameters.ampRelease}
+          onChange={(value) => actions.patchParameter("ampRelease", value)}
+        />
+        <LabeledSlider
+          label="VOL"
+          value={parameters.patchVolume}
+          onChange={(value) => actions.patchParameter("patchVolume", value)}
         />
       </div>
-      <Button onClick={actions.togglePlaying} active={playing}>
-        play
-      </Button>
     </div>
   );
 };
