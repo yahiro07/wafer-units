@@ -9,6 +9,10 @@ export const allOscWaveTypes: OscWaveType[] = [
   "sawtooth",
 ];
 
+export const allOsc1Ratios = [
+  0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 5, 6, 7, 8, 9, 11, 13,
+];
+
 export type SynthParameters = {
   osc1Wave: OscWaveType;
   osc1Octave: number;

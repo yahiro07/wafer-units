@@ -1,5 +1,7 @@
 import { SynthParameters } from "@/defs/definitions";
 import { createSynthesizerEngine } from "@/engine/synthesizer";
+import { automationInput } from "@/root/automation";
+import { persistence } from "@/root/persistence";
 import { store } from "@/root/store";
 import { filterChangedFields } from "@/utils/helpers";
 import { setupMidiKeyboardInput } from "@/utils/midi-keyboard-input";
@@ -20,8 +22,8 @@ function setupUnit() {
         noteOn: engine.noteOn,
         noteOff: engine.noteOff,
       },
-      // automationInput,
-      // persistence,
+      automationInput,
+      persistence,
       cleanup: engine.cleanup,
     });
   } else {

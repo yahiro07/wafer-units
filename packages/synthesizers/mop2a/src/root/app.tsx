@@ -1,10 +1,8 @@
 import { LabeledKnob, LabeledSlider } from "@/components/labeled-controls";
-import { allOscWaveTypes, OscWaveType } from "@/defs/definitions";
+import { allOsc1Ratios, allOscWaveTypes, OscWaveType } from "@/defs/definitions";
 import { actions } from "@/root/actions";
 import { useSetupDrivers } from "@/root/drivers";
 import { store } from "@/root/store";
-
-const allRatios = [0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 5, 6, 7, 8, 9, 11, 13];
 
 const RatioSelectionKnob = ({
   label,
@@ -15,9 +13,9 @@ const RatioSelectionKnob = ({
   value: number;
   onChange: (ratio: number) => void;
 }) => {
-  const index = allRatios.indexOf(value);
+  const index = allOsc1Ratios.indexOf(value);
   const handleChange = (newIndex: number) => {
-    onChange(allRatios[newIndex]);
+    onChange(allOsc1Ratios[newIndex]);
   };
   return (
     <LabeledKnob
@@ -25,7 +23,7 @@ const RatioSelectionKnob = ({
       value={index}
       onChange={handleChange}
       min={0}
-      max={allRatios.length - 1}
+      max={allOsc1Ratios.length - 1}
       step={1}
     />
   );
