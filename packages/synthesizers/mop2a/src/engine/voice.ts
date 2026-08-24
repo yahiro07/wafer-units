@@ -146,7 +146,7 @@ export function createVoice(
       let osc2Gain = 0;
       if (mode === "fm") {
         osc1Freq = baseFreq * pr.osc1Ratio * 2 ** pr.patchOctave;
-        osc1Gain = pr.osc2Mod ** 2 * osc1Freq * 4;
+        osc1Gain = pr.osc2Mod ** 2 * osc1Freq * 7;
         osc2Gain = 1;
       } else {
         osc1Freq = baseFreq * 2 ** (pr.osc1Octave + pr.patchOctave);

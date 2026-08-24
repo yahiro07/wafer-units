@@ -4,9 +4,7 @@ import { actions } from "@/root/actions";
 import { useSetupDrivers } from "@/root/drivers";
 import { store } from "@/root/store";
 
-const allRatios = [
-  0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13,
-];
+const allRatios = [0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 5, 6, 7, 8, 9, 11, 13];
 
 const RatioSelectionKnob = ({
   label,
