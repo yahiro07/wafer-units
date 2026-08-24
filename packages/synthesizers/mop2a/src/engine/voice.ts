@@ -1,4 +1,5 @@
-import { SynthParameters } from "@/defs/definitions";
+import { OscWaveType, SynthParameters } from "@/defs/definitions";
+import { midiToFrequency } from "@/engine/synthesis-helper";
 
 export type Voice = {
   affectParameters(): void;
@@ -22,6 +23,49 @@ function createOperatorEg(destParam: AudioParam) {
   };
 }
 
+type OscillatorUnitParameters = {
+  wave: OscWaveType;
+  decay: number;
+  frequency: number;
+  gain: number;
+};
+const defaultOscillatorUnitParameters: OscillatorUnitParameters = {
+  wave: "sine",
+  decay: 0,
+  frequency: 440,
+  gain: 1,
+};
+
+function createOscillatorUnit(ac: AudioContext) {
+  const oscNode = ac.createOscillator();
+  const gainNode = ac.createGain();
+  oscNode.connect(gainNode);
+  const eg = createOperatorEg(gainNode.gain);
+  const outputNode = ac.createGain();
+  gainNode.connect(outputNode);
+
+  let params = defaultOscillatorUnitParameters;
+  return {
+    frequencyAudioParam: oscNode.frequency,
+    outputNode,
+    update(pr: OscillatorUnitParameters) {
+      params = pr;
+      if (pr.wave !== "noise") {
+        oscNode.type = pr.wave;
+      }
+      oscNode.frequency.value = pr.frequency;
+      outputNode.gain.value = pr.gain;
+    },
+    start(time: number) {
+      oscNode.start(time);
+      eg.trigger(time, params.decay);
+    },
+    stop(time: number) {
+      oscNode.stop(time);
+    },
+  };
+}
+
 export function createVoice(
   audioContext: AudioContext,
   destinationNode: AudioNode,
@@ -30,45 +74,64 @@ export function createVoice(
 ): Voice {
   const ac = audioContext;
   const pr = parameters;
+  const osc1 = createOscillatorUnit(ac);
+  const osc2 = createOscillatorUnit(ac);
 
-  const carrier = ac.createOscillator();
-  const carrierGain = ac.createGain();
-  const carrierEg = createOperatorEg(carrierGain.gain);
-  carrier.connect(carrierGain);
-  carrierGain.connect(destinationNode);
+  const mode = parameters.osc2ModAltMix ? "mix" : "fm";
+  if (mode === "fm") {
+    osc1.outputNode.connect(osc2.frequencyAudioParam);
+    osc2.outputNode.connect(destinationNode);
+  } else {
+    osc1.outputNode.connect(destinationNode);
+    osc2.outputNode.connect(destinationNode);
+  }
 
-  const modulator = ac.createOscillator();
-  const modulatorGain = ac.createGain();
-  modulator.connect(modulatorGain);
-
-  const modulatorEgGain = ac.createGain();
-  const modulatorEg = createOperatorEg(modulatorEgGain.gain);
-  modulatorGain.connect(modulatorEgGain);
-  modulatorEgGain.connect(carrier.frequency);
+  const internal = {
+    getWiringMode() {
+      return parameters.osc2ModAltMix ? "mix" : "fm";
+    },
+    affectParameters() {
+      const baseFreq = midiToFrequency(noteNumber);
+      const osc1Freq = baseFreq * pr.osc1Ratio;
+      let osc1Gain = 0;
+      let osc2Gain = 0;
+      if (mode === "fm") {
+        osc1Gain = pr.osc2Mod ** 2 * osc1Freq * 4;
+        osc2Gain = 1;
+      } else {
+        const prMix = pr.osc2Mod;
+        const sum = 1 + prMix;
+        osc1Gain = prMix / sum;
+        osc2Gain = 1 / sum;
+      }
+      osc1.update({
+        wave: pr.osc1Wave,
+        decay: pr.osc1Decay,
+        frequency: osc1Freq,
+        gain: osc1Gain,
+      });
+      osc2.update({
+        wave: pr.osc2Wave,
+        decay: pr.osc2Decay,
+        frequency: baseFreq,
+        gain: osc2Gain,
+      });
+    },
+  };
 
   return {
     affectParameters() {
-      if (pr.osc1Wave !== "noise") {
-        modulator.type = pr.osc1Wave;
-      }
-      if (pr.osc2Wave !== "noise") {
-        carrier.type = pr.osc2Wave;
-      }
-      const noteFrequency = 440 * 2 ** ((noteNumber - 69) / 12);
-      carrier.frequency.value = noteFrequency;
-      const modulatorFrequency = noteFrequency * pr.osc1Ratio;
-      modulator.frequency.value = modulatorFrequency;
-      modulatorGain.gain.value = pr.osc2Mod ** 2 * modulatorFrequency * 4;
+      internal.affectParameters();
     },
     start(time: number) {
-      modulator.start(time);
-      carrier.start(time);
-      modulatorEg.trigger(time, pr.osc1Decay);
-      carrierEg.trigger(time, pr.osc2Decay);
+      osc1.start(time);
+      osc2.start(time);
     },
     stop(time: number) {
-      modulator.stop(time);
-      carrier.stop(time);
+      osc1.stop(time);
+      osc2.stop(time);
+      osc1.outputNode.disconnect();
+      osc2.outputNode.disconnect();
     },
   };
 }
