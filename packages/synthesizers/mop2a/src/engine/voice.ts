@@ -96,11 +96,11 @@ export function createVoice(
       let osc1Gain = 0;
       let osc2Gain = 0;
       if (mode === "fm") {
-        osc1Freq = baseFreq * pr.osc1Ratio;
+        osc1Freq = baseFreq * pr.osc1Ratio * 2 ** pr.patchOctave;
         osc1Gain = pr.osc2Mod ** 2 * osc1Freq * 4;
         osc2Gain = 1;
       } else {
-        osc1Freq = baseFreq * 2 ** pr.osc1Octave;
+        osc1Freq = baseFreq * 2 ** (pr.osc1Octave + pr.patchOctave);
         const prMix = pr.osc2Mod;
         const sum = 1 + prMix;
         osc1Gain = prMix / sum;
