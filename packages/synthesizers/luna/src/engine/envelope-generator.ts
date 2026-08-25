@@ -5,6 +5,7 @@ export function createEnvelopeGenerator(
     decaySec: number;
     releaseSec: number;
   },
+  secondDestParam?: AudioParam,
 ) {
   const egParams = {
     attack: 0,
@@ -33,13 +34,13 @@ export function createEnvelopeGenerator(
       }
       const topLevel = prDecay > 0 ? 1 : egParams.sustain;
 
-      destParam.cancelScheduledValues(time);
+      const startTime = time;
+      destParam.cancelScheduledValues(startTime);
+      destParam.setValueAtTime(0, startTime);
 
-      if (destParam.value > 0) {
-        const jumpTime = egParams.hasNaiveWave ? 0.03 : 0.005;
-        destParam.setValueAtTime(destParam.value, time);
-        destParam.linearRampToValueAtTime(0, time + jumpTime);
-        time += jumpTime;
+      if (secondDestParam) {
+        secondDestParam.cancelScheduledValues(startTime);
+        secondDestParam.setValueAtTime(1, startTime);
       }
 
       const jumpTime = egParams.hasNaiveWave ? 0.02 : 0.002;
@@ -59,15 +60,18 @@ export function createEnvelopeGenerator(
       return jumpTime + egParams.release * configs.releaseSec;
     },
     triggerRelease(time: number) {
-      const jumpTime = egParams.hasNaiveWave ? 0.02 : 0.005;
-      const releaseTime = jumpTime + egParams.release * configs.releaseSec;
-      destParam.cancelScheduledValues(time);
-      destParam.setValueAtTime(destParam.value, time);
-      if (releaseTime === jumpTime) {
-        destParam.linearRampToValueAtTime(0, time + releaseTime);
-      } else {
-        destParam.exponentialRampToValueAtTime(1e-4, time + releaseTime);
-        destParam.setValueAtTime(0, time + releaseTime);
+      if (secondDestParam) {
+        const targetParam = secondDestParam;
+        const jumpTime = egParams.hasNaiveWave ? 0.02 : 0.005;
+        const releaseTime = jumpTime + egParams.release * configs.releaseSec;
+        targetParam.cancelScheduledValues(time);
+        targetParam.setValueAtTime(1, time);
+        if (releaseTime === jumpTime) {
+          targetParam.linearRampToValueAtTime(0, time + releaseTime);
+        } else {
+          targetParam.exponentialRampToValueAtTime(1e-4, time + releaseTime);
+          targetParam.setValueAtTime(0, time + releaseTime);
+        }
       }
     },
   };

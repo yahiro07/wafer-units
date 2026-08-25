@@ -128,9 +128,11 @@ export function createPolyVoice(
   const noise2Gain = audioContext.createGain();
   const oscMix = audioContext.createGain();
   const amp = audioContext.createGain();
+  const amp2 = audioContext.createGain();
   const punchGain = audioContext.createGain();
   const punchAmount = audioContext.createGain();
   const envelope = audioContext.createConstantSource();
+  const envelope2 = audioContext.createConstantSource();
   const punchEnv = audioContext.createConstantSource();
   const pitchEg = audioContext.createConstantSource();
 
@@ -139,9 +141,11 @@ export function createPolyVoice(
   noise2Gain.gain.value = 0;
   oscMix.gain.value = 1;
   amp.gain.value = 0;
+  amp2.gain.value = 0;
   punchGain.gain.value = 1;
   punchAmount.gain.value = 0;
   envelope.offset.value = 0;
+  envelope2.offset.value = 1;
   punchEnv.offset.value = 0;
   pitchEg.offset.value = 0;
 
@@ -150,24 +154,31 @@ export function createPolyVoice(
   noise2Gain.connect(oscMix);
   superSaw.outputNode.connect(oscMix);
   oscMix.connect(amp);
-  amp.connect(punchGain);
+  amp.connect(amp2);
+  amp2.connect(punchGain);
   punchGain.connect(mix);
 
   envelope.connect(amp.gain);
+  envelope2.connect(amp2.gain);
   punchEnv.connect(punchAmount);
   punchAmount.connect(punchGain.gain);
   superSaw.connectPitchMod(pitchMod);
   superSaw.connectPitchMod(pitchEg);
 
   envelope.start();
+  envelope2.start();
   punchEnv.start();
   pitchEg.start();
 
-  const ampEnvelope = createEnvelopeGenerator(envelope.offset, {
-    attackSec: MAX_ATTACK_SECONDS,
-    decaySec: MAX_DECAY_SECONDS,
-    releaseSec: MAX_RELEASE_SECONDS,
-  });
+  const ampEnvelope = createEnvelopeGenerator(
+    envelope.offset,
+    {
+      attackSec: MAX_ATTACK_SECONDS,
+      decaySec: MAX_DECAY_SECONDS,
+      releaseSec: MAX_RELEASE_SECONDS,
+    },
+    envelope2.offset,
+  );
   const punchEnvelope = createEnvelopeGenerator(punchEnv.offset, {
     attackSec: 0,
     decaySec: MAX_PUNCH_DECAY_SECONDS,
@@ -467,6 +478,7 @@ export function createPolyVoice(
       stopVoiceSources();
       try {
         envelope.stop();
+        envelope2.stop();
         punchEnv.stop();
         pitchEg.stop();
       } catch {
@@ -480,9 +492,11 @@ export function createPolyVoice(
       noise2Gain.disconnect();
       oscMix.disconnect();
       amp.disconnect();
+      amp2.disconnect();
       punchGain.disconnect();
       punchAmount.disconnect();
       envelope.disconnect();
+      envelope2.disconnect();
       punchEnv.disconnect();
       pitchEg.disconnect();
       superSaw.cleanup();
