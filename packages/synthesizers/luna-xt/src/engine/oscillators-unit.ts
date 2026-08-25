@@ -1,6 +1,6 @@
-import { OscWave } from "@/defs/definitions";
 import { SynthesisBus } from "@/engine/engine-defs";
 import { createOscillatorUnit } from "@/engine/oscillator-unit";
+import { getCustomWaveform } from "@/engine/custom-waveforms";
 import { midiToFrequency } from "@/utils/synth-math-utils";
 
 type OscillatorsUnit = {
@@ -24,7 +24,7 @@ export function createOscillatorsUnit(
     applyParameters() {
       const frequency = midiToFrequency(noteNumber);
       osc.setFrequency(frequency);
-      osc.setWaveform(pr.osc1Wave === OscWave.Saw ? "sawtooth" : "square");
+      osc.setWaveform(getCustomWaveform(ac, pr.osc1Wave));
     },
   };
   return {

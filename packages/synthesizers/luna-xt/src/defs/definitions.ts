@@ -1,10 +1,14 @@
 import { PickKeysForValueType } from "@/utils/utility-types";
 
 export enum OscWave {
-  Saw = 0,
-  Rect,
+  sawtooth = 0,
+  sawtoothR,
+  pulse125,
+  pulse25,
+  ex1,
+  __num,
 }
-export const numOscWaveTypes = 2;
+export const numOscWaveTypes = OscWave.__num;
 
 export type SynthParameters = {
   osc1Wave: OscWave;
@@ -19,7 +23,7 @@ export type SynthParameters = {
 export type SynthPresetParameters = SynthParameters;
 
 export const defaultSynthParameters: SynthParameters = {
-  osc1Wave: OscWave.Saw,
+  osc1Wave: OscWave.sawtooth,
   osc1Decay: 0,
   ampHead: 0,
   ampRelease: 0,
