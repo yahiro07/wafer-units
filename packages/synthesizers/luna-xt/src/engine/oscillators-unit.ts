@@ -1,4 +1,5 @@
 import { SynthesisBus } from "@/engine/engine-defs";
+import { createOscillatorUnit } from "@/engine/oscillator-unit";
 import { midiToFrequency } from "@/utils/synth-math-utils";
 
 type OscillatorsUnit = {
@@ -14,23 +15,20 @@ export function createOscillatorsUnit(
 ): OscillatorsUnit {
   const ac = bus.audioContext;
   const outputNode = ac.createGain();
-
-  const osc = ac.createOscillator();
-  osc.type = "sawtooth";
-  osc.connect(outputNode);
-
+  const osc = createOscillatorUnit(ac, outputNode);
   return {
     outputNode,
     start(time) {
       const frequency = midiToFrequency(noteNumber);
-      osc.frequency.value = frequency;
+      osc.setFrequency(frequency);
+      osc.setWaveform("sawtooth");
       osc.start(time);
     },
     stop(time) {
       osc.stop(time);
     },
     cleanup() {
-      osc.disconnect();
+      osc.cleanup();
     },
   };
 }
