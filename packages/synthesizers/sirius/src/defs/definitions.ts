@@ -52,7 +52,7 @@ export const defaultSynthParameters: SynthParameters = {
 export type ISynthesizerEngine = {
   audioContext: AudioContext;
   setParameters: (parameters: SynthParameters) => void;
-  noteOn: (noteNumber: number, time: number, velocity: number) => void;
-  noteOff: (noteNumber: number, time: number) => void;
+  noteOn: (noteNumber: number, time?: number, velocity?: number) => void;
+  noteOff: (noteNumber: number, time?: number) => void;
   cleanup: () => void;
 };

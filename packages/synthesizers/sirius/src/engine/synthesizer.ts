@@ -81,11 +81,11 @@ export function createSynthesizerEngine(
       Object.assign(state.parameters, parameters);
       internal.applyParametersToVoices();
     },
-    noteOn(noteNumber, time, velocity) {
+    noteOn(noteNumber, time = audioContext.currentTime, velocity = 1) {
       internal.stopVoice(noteNumber, time);
       internal.wrapCreateVoice(noteNumber, time, velocity);
     },
-    noteOff(noteNumber, time) {
+    noteOff(noteNumber, time = audioContext.currentTime) {
       internal.stopVoice(noteNumber, time);
     },
     cleanup() {

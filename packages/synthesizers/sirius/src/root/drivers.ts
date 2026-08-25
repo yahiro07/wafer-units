@@ -16,12 +16,8 @@ export function setupUnit() {
         viewSize: [720, 440],
       },
       noteInput: {
-        noteOn(noteNumber, time = engine.audioContext.currentTime) {
-          engine.noteOn(noteNumber, time, 1);
-        },
-        noteOff(noteNumber, time = engine.audioContext.currentTime) {
-          engine.noteOff(noteNumber, time);
-        },
+        noteOn: engine.noteOn,
+        noteOff: engine.noteOff,
       },
       automationInput,
       persistence,
@@ -29,12 +25,8 @@ export function setupUnit() {
     });
   } else {
     return setupMidiKeyboardInput({
-      noteOn(noteNumber: number) {
-        engine.noteOn(noteNumber, 0, 1);
-      },
-      noteOff(noteNumber: number) {
-        engine.noteOff(noteNumber, 0);
-      },
+      noteOn: engine.noteOn,
+      noteOff: engine.noteOff,
     });
   }
 }
