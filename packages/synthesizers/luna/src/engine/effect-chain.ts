@@ -5,6 +5,7 @@ import { getVoicePitches } from "@/engine/poly-voice";
 import { createOutputSaturator } from "@/engine/output-saturator";
 import { createReverb } from "@/engine/reverb";
 import { createSineLfo } from "@/engine/sine-lfo";
+import { mapKnobCurveCenterUnity } from "@/utils/volume-curve";
 
 const MIN_CUTOFF_HZ = 20;
 const MAX_CUTOFF_HZ = 18000;
@@ -228,7 +229,8 @@ export function createEffectChain(
         presenceHigh.gain.setValueAtTime(tiltDb, time);
       }
       if (has(patch, "globalVolume")) {
-        globalGain.gain.setValueAtTime(clamp01(parameters.globalVolume), time);
+        const gain = mapKnobCurveCenterUnity(parameters.globalVolume) * 0.5;
+        globalGain.gain.setValueAtTime(gain, time);
       }
     },
     cleanup() {
