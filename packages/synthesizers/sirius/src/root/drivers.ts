@@ -16,11 +16,11 @@ export function setupUnit() {
         viewSize: [720, 440],
       },
       noteInput: {
-        noteOn(noteNumber, time) {
-          engine.noteOn(noteNumber, time ?? 0, 1);
+        noteOn(noteNumber, time = engine.audioContext.currentTime) {
+          engine.noteOn(noteNumber, time, 1);
         },
-        noteOff(noteNumber, time) {
-          engine.noteOff(noteNumber, time ?? 0);
+        noteOff(noteNumber, time = engine.audioContext.currentTime) {
+          engine.noteOff(noteNumber, time);
         },
       },
       automationInput,

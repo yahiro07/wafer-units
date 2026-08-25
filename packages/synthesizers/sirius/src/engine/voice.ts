@@ -26,11 +26,11 @@ export function createVoice(
 
   let released = false;
 
-  function cleanup() {
+  const cleanup = () => {
     oscillators.cleanup();
     filter.cleanup();
     amp.cleanup();
-  }
+  };
 
   return {
     outputNode: amp.outputNode,
@@ -46,13 +46,13 @@ export function createVoice(
       oscillators.start(t);
     },
     gateOff(time) {
-      if (released) return;
-      released = true;
-      const { tOff, releaseTime } = amp.release(time);
-      oscillators.stop(tOff + releaseTime + 0.1);
-
-      const delayMs = (tOff - context.currentTime + releaseTime + 0.2) * 1000;
-      setTimeout(cleanup, Math.max(0, delayMs));
+      if (!released) {
+        const { tOff, releaseTime } = amp.release(time);
+        oscillators.stop(tOff + releaseTime + 0.1);
+        const delayMs = (tOff + releaseTime + 0.2 - context.currentTime) * 1000;
+        setTimeout(cleanup, Math.max(0, delayMs));
+        released = true;
+      }
     },
   };
 }
