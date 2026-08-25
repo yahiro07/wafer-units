@@ -7,10 +7,14 @@ export function createOscillatorUnit(
 
   return {
     setFrequency(frequency: number) {
-      osc.frequency.value = frequency;
+      if (osc.frequency.value !== frequency) {
+        osc.frequency.value = frequency;
+      }
     },
     setWaveform(waveform: OscillatorType) {
-      osc.type = waveform;
+      if (osc.type !== waveform) {
+        osc.type = waveform;
+      }
     },
     start(time: number) {
       osc.start(time);

@@ -10,7 +10,7 @@ import { UnitInterface } from "wafer-host/unit-types";
 type Voice = {
   noteNumber: number;
   gateOnTime: number;
-  update(time?: number): void;
+  update(): void;
   gateOn(): void;
   gateOff(time: number, applyRelease: boolean): void;
   mute(time: number): void;
@@ -43,7 +43,9 @@ function createVoice(
   return {
     noteNumber,
     gateOnTime,
-    update(time) {},
+    update() {
+      oscUnit.update();
+    },
     gateOn() {
       const time = gateOnTime;
       oscUnit.start(time);
@@ -91,6 +93,9 @@ export function createSynthesizerEngine(
   return {
     affectParameters(_parameters) {
       Object.assign(bus.parameters, _parameters);
+      for (const voice of activeVoices) {
+        voice.update();
+      }
     },
     noteOn(noteNumber, time = ac.currentTime) {
       if (bus.parameters.ampReleaseLastOnly && releasingVoices.length > 0) {
