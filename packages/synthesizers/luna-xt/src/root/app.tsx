@@ -153,7 +153,7 @@ const PageRoot = () => {
       <div class="flex-ha gap-3 justify-between">
         <div class="flex-vc font-bold ">
           <h1 class="text-6xl" onClick={actions.emitPresetData}>
-            LUNA
+            LUNA XT
           </h1>
           <div class="text-[22px] mt-[-8px]">SYNTHESIZER</div>
         </div>
