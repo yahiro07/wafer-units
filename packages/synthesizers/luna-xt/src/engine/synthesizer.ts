@@ -22,6 +22,64 @@ type SynthesisBus = {
   parameters: SynthParameters;
 };
 
+type AmplifierUnit = {
+  inputNode: GainNode;
+  outputNode: GainNode;
+  gateOn(time: number): void;
+  gateOff(time: number, applyRelease: boolean): number;
+  mute(time: number): number;
+  cleanup(): void;
+};
+
+function createAmplifierUnit(bus: SynthesisBus): AmplifierUnit {
+  const ac = bus.audioContext;
+  const headNode = ac.createGain(); //automated for Head-A-D-S
+  headNode.gain.value = 0;
+
+  const tailNode = ac.createGain(); //automated for R
+  tailNode.gain.value = 1;
+  headNode.connect(tailNode);
+
+  return {
+    inputNode: headNode,
+    outputNode: tailNode,
+    gateOn(time) {
+      headNode.gain.setValueAtTime(1, time);
+    },
+    gateOff(time, applyRelease) {
+      tailNode.gain.setValueAtTime(1, time);
+
+      let releaseTime = 0;
+
+      if (bus.parameters.ampExponential) {
+        releaseTime = bottomLimit(
+          applyRelease ? bus.parameters.ampRelease ** 2 * 4 : 0,
+          0.001,
+        );
+        tailNode.gain.exponentialRampToValueAtTime(1e-4, time + releaseTime);
+      } else {
+        releaseTime = bottomLimit(
+          applyRelease ? bus.parameters.ampRelease ** 3 * 2 : 0,
+          0.001,
+        );
+        tailNode.gain.linearRampToValueAtTime(1e-4, time + releaseTime);
+      }
+      tailNode.gain.setValueAtTime(0, time + releaseTime);
+
+      return time + releaseTime;
+    },
+    mute(time) {
+      tailNode.gain.cancelScheduledValues(time);
+      tailNode.gain.linearRampToValueAtTime(0, time + 0.001);
+      tailNode.gain.setValueAtTime(0, time);
+      return time + 0.001;
+    },
+    cleanup() {
+      headNode.disconnect();
+    },
+  };
+}
+
 function createVoice(
   bus: SynthesisBus,
   voiceMixNode: AudioNode,
@@ -32,14 +90,16 @@ function createVoice(
   const osc = ac.createOscillator();
   osc.type = "sawtooth";
 
-  const oscGain = ac.createGain();
-  osc.connect(oscGain);
-  oscGain.connect(voiceMixNode);
   let endedCallback: (() => void) | undefined;
+
+  const amp = createAmplifierUnit(bus);
+  osc.connect(amp.inputNode);
+  amp.inputNode.connect(voiceMixNode);
 
   osc.onended = () => {
     osc.disconnect();
-    oscGain.disconnect();
+    amp.inputNode.disconnect();
+    amp.cleanup();
     endedCallback?.();
   };
 
@@ -52,34 +112,15 @@ function createVoice(
       const frequency = midiToFrequency(noteNumber);
       osc.frequency.value = frequency;
       osc.start(time);
-      oscGain.gain.setValueAtTime(1, time);
+      amp.gateOn(time);
     },
     gateOff(time, applyRelease) {
-      oscGain.gain.cancelScheduledValues(time);
-      oscGain.gain.setValueAtTime(1, time);
-
-      let releaseTime = 0;
-
-      if (bus.parameters.ampExponential) {
-        releaseTime = bottomLimit(
-          applyRelease ? bus.parameters.ampRelease ** 2 * 4 : 0,
-          0.001,
-        );
-        oscGain.gain.exponentialRampToValueAtTime(1e-4, time + releaseTime);
-      } else {
-        releaseTime = bottomLimit(
-          applyRelease ? bus.parameters.ampRelease ** 3 * 2 : 0,
-          0.001,
-        );
-        oscGain.gain.linearRampToValueAtTime(1e-4, time + releaseTime);
-      }
-      oscGain.gain.setValueAtTime(0, time + releaseTime);
-      osc.stop(time + releaseTime);
+      const tOff = amp.gateOff(time, applyRelease);
+      osc.stop(tOff);
     },
     mute(time) {
-      oscGain.gain.cancelScheduledValues(time);
-      oscGain.gain.setValueAtTime(0, time);
-      osc.stop(time);
+      const tOff = amp.mute(time);
+      osc.stop(tOff);
     },
     setEndedCallback(fn) {
       endedCallback = fn;
@@ -101,27 +142,12 @@ function createSharedFilterAmp(bus: SynthesisBus): SharedFilterAmp {
   const inputNode = ac.createGain();
   const outputNode = ac.createGain();
   inputNode.connect(outputNode);
-  // let isGateOn = false;
   return {
     inputNode,
     outputNode,
     update(time) {},
-    gateOn(time) {
-      // if (!isGateOn) {
-      //   inputNode.gain.cancelScheduledValues(time);
-      //   inputNode.gain.setValueAtTime(1, time);
-      //   isGateOn = true;
-      // }
-    },
-    gateOff(time) {
-      // if (isGateOn) {
-      //   isGateOn = false;
-      //   const releaseTime = bottomLimit(bus.parameters.ampRelease * 0.5, 0.001);
-      //   inputNode.gain.cancelScheduledValues(time);
-      //   inputNode.gain.setValueAtTime(1, time);
-      //   inputNode.gain.linearRampToValueAtTime(0, time + releaseTime);
-      // }
-    },
+    gateOn(time) {},
+    gateOff(time) {},
     cleanup() {
       inputNode.disconnect();
     },
