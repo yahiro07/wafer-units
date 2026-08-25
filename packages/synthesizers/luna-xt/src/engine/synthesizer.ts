@@ -1,9 +1,7 @@
-import {
-  defaultSynthParameters,
-  SynthesizerEngine,
-  SynthParameters,
-} from "@/defs/definitions";
-import { bottomLimit, removeArrayItem } from "@/utils/helpers";
+import { defaultSynthParameters, SynthesizerEngine } from "@/defs/definitions";
+import { createAmplifierUnit } from "@/engine/amplifier-unit";
+import { SynthesisBus } from "@/engine/engine-defs";
+import { removeArrayItem } from "@/utils/helpers";
 import { midiToFrequency } from "@/utils/synth-math-utils";
 import { UnitInterface } from "wafer-host/unit-types";
 
@@ -16,69 +14,6 @@ type Voice = {
   mute(time: number): void;
   setEndedCallback(fn: () => void): void;
 };
-
-type SynthesisBus = {
-  audioContext: AudioContext;
-  parameters: SynthParameters;
-};
-
-type AmplifierUnit = {
-  inputNode: GainNode;
-  outputNode: GainNode;
-  gateOn(time: number): void;
-  gateOff(time: number, applyRelease: boolean): number;
-  mute(time: number): number;
-  cleanup(): void;
-};
-
-function createAmplifierUnit(bus: SynthesisBus): AmplifierUnit {
-  const ac = bus.audioContext;
-  const headNode = ac.createGain(); //automated for Head-A-D-S
-  headNode.gain.value = 0;
-
-  const tailNode = ac.createGain(); //automated for R
-  tailNode.gain.value = 1;
-  headNode.connect(tailNode);
-
-  return {
-    inputNode: headNode,
-    outputNode: tailNode,
-    gateOn(time) {
-      headNode.gain.setValueAtTime(1, time);
-    },
-    gateOff(time, applyRelease) {
-      tailNode.gain.setValueAtTime(1, time);
-
-      let releaseTime = 0;
-
-      if (bus.parameters.ampExponential) {
-        releaseTime = bottomLimit(
-          applyRelease ? bus.parameters.ampRelease ** 2 * 4 : 0,
-          0.001,
-        );
-        tailNode.gain.exponentialRampToValueAtTime(1e-4, time + releaseTime);
-      } else {
-        releaseTime = bottomLimit(
-          applyRelease ? bus.parameters.ampRelease ** 3 * 2 : 0,
-          0.001,
-        );
-        tailNode.gain.linearRampToValueAtTime(1e-4, time + releaseTime);
-      }
-      tailNode.gain.setValueAtTime(0, time + releaseTime);
-
-      return time + releaseTime;
-    },
-    mute(time) {
-      tailNode.gain.cancelScheduledValues(time);
-      tailNode.gain.linearRampToValueAtTime(0, time + 0.001);
-      tailNode.gain.setValueAtTime(0, time);
-      return time + 0.001;
-    },
-    cleanup() {
-      headNode.disconnect();
-    },
-  };
-}
 
 function createVoice(
   bus: SynthesisBus,
