@@ -1,10 +1,10 @@
-import { automationInput } from "@/root/automation";
-import { persistence } from "@/root/persistence";
+import { automationInput } from "@/root/.local/automation";
+import { persistence } from "@/root/.local/persistence";
 import { store } from "@/root/store";
 import { setupMidiKeyboardInput } from "@/utils/midi-keyboard-input";
 import { queryUnitInterface } from "wafer-host/unit-types";
 import { useEffect } from "preact/hooks";
-import { createSynthesizerEngine } from "@/engine/synthsizer";
+import { createSynthesizerEngine } from "@/engine/synthesizer";
 
 const unitInterface = queryUnitInterface("wafer-v01");
 const engine = createSynthesizerEngine(unitInterface);
