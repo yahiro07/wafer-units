@@ -1,8 +1,8 @@
 import { SynthesisBus } from "@/engine/engine-defs";
 
 type AmplifierUnit = {
-  inputNode: GainNode;
-  outputNode: GainNode;
+  inputNode: AudioNode;
+  outputNode: AudioNode;
   gateOn(time: number): void;
   gateOff(time: number, applyRelease: boolean): number;
   mute(time: number): number;

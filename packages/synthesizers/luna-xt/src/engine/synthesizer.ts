@@ -2,9 +2,9 @@ import { defaultSynthParameters, SynthesizerEngine } from "@/defs/definitions";
 import { createAmplifierUnit } from "@/engine/amplifier-unit";
 import { createEffectChain } from "@/engine/effect-chain";
 import { SynthesisBus } from "@/engine/engine-defs";
+import { createOscillatorsUnit } from "@/engine/oscillators-unit";
 import { createSharedFilterUnit } from "@/engine/shared-filter-unit";
 import { removeArrayItem } from "@/utils/helpers";
-import { midiToFrequency } from "@/utils/synth-math-utils";
 import { UnitInterface } from "wafer-host/unit-types";
 
 type Voice = {
@@ -23,22 +23,19 @@ function createVoice(
   noteNumber: number,
   gateOnTime: number,
 ): Voice {
-  const ac = bus.audioContext;
-  const osc = ac.createOscillator();
-  osc.type = "sawtooth";
-
   let endedCallback: (() => void) | undefined;
 
-  const amp = createAmplifierUnit(bus);
-  osc.connect(amp.inputNode);
-  amp.inputNode.connect(voiceMixNode);
+  const oscUnit = createOscillatorsUnit(bus, noteNumber);
+  const ampUnit = createAmplifierUnit(bus);
+  oscUnit.outputNode.connect(ampUnit.inputNode);
+  ampUnit.inputNode.connect(voiceMixNode);
 
-  osc.onended = () => {
-    osc.disconnect();
-    amp.inputNode.disconnect();
-    amp.cleanup();
+  oscUnit.setEndedCallback(() => {
+    oscUnit.outputNode.disconnect();
+    ampUnit.inputNode.disconnect();
+    ampUnit.cleanup();
     endedCallback?.();
-  };
+  });
 
   return {
     noteNumber,
@@ -46,18 +43,16 @@ function createVoice(
     update(time) {},
     gateOn() {
       const time = gateOnTime;
-      const frequency = midiToFrequency(noteNumber);
-      osc.frequency.value = frequency;
-      osc.start(time);
-      amp.gateOn(time);
+      oscUnit.start(time);
+      ampUnit.gateOn(time);
     },
     gateOff(time, applyRelease) {
-      const tOff = amp.gateOff(time, applyRelease);
-      osc.stop(tOff);
+      const tOff = ampUnit.gateOff(time, applyRelease);
+      oscUnit.stop(tOff);
     },
     mute(time) {
-      const tOff = amp.mute(time);
-      osc.stop(tOff);
+      const tOff = ampUnit.mute(time);
+      oscUnit.stop(tOff);
     },
     setEndedCallback(fn) {
       endedCallback = fn;
