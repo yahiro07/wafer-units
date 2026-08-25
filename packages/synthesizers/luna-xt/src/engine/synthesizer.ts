@@ -1,6 +1,8 @@
 import { defaultSynthParameters, SynthesizerEngine } from "@/defs/definitions";
 import { createAmplifierUnit } from "@/engine/amplifier-unit";
+import { createEffectChain } from "@/engine/effect-chain";
 import { SynthesisBus } from "@/engine/engine-defs";
+import { createSharedFilterUnit } from "@/engine/shared-filter-unit";
 import { removeArrayItem } from "@/utils/helpers";
 import { midiToFrequency } from "@/utils/synth-math-utils";
 import { UnitInterface } from "wafer-host/unit-types";
@@ -63,53 +65,6 @@ function createVoice(
   };
 }
 
-type SharedFilterAmp = {
-  inputNode: AudioNode;
-  outputNode: AudioNode;
-  update(time?: number): void;
-  //for latest note
-  gateOn(time: number): void;
-  gateOff(time: number): void;
-  cleanup(): void;
-};
-function createSharedFilterAmp(bus: SynthesisBus): SharedFilterAmp {
-  const ac = bus.audioContext;
-  const inputNode = ac.createGain();
-  const outputNode = ac.createGain();
-  inputNode.connect(outputNode);
-  return {
-    inputNode,
-    outputNode,
-    update(time) {},
-    gateOn(time) {},
-    gateOff(time) {},
-    cleanup() {
-      inputNode.disconnect();
-    },
-  };
-}
-
-type EffectChain = {
-  inputNode: AudioNode;
-  outputNode: AudioNode;
-  update(time?: number): void;
-  cleanup(): void;
-};
-function createEffectChain(bus: SynthesisBus): EffectChain {
-  const ac = bus.audioContext;
-  const inputNode = ac.createGain();
-  const outputNode = ac.createGain();
-  inputNode.connect(outputNode);
-  return {
-    inputNode,
-    outputNode,
-    update(time) {},
-    cleanup() {
-      inputNode.disconnect();
-    },
-  };
-}
-
 export function createSynthesizerEngine(
   unitInterface: UnitInterface | undefined,
 ): SynthesizerEngine {
@@ -124,12 +79,12 @@ export function createSynthesizerEngine(
     parameters: { ...defaultSynthParameters },
     audioContext: ac,
   };
-  const sharedFilterAmp = createSharedFilterAmp(bus);
+  const sharedFilter = createSharedFilterUnit(bus);
   const effectChain = createEffectChain(bus);
 
   voiceMixNode.gain.value = 0.3;
-  voiceMixNode.connect(sharedFilterAmp.inputNode);
-  sharedFilterAmp.outputNode.connect(effectChain.inputNode);
+  voiceMixNode.connect(sharedFilter.inputNode);
+  sharedFilter.outputNode.connect(effectChain.inputNode);
   effectChain.outputNode.connect(destinationNode);
 
   return {
@@ -146,7 +101,7 @@ export function createSynthesizerEngine(
       const voice = createVoice(bus, voiceMixNode, noteNumber, time);
       voice.gateOn();
       activeVoices.push(voice);
-      sharedFilterAmp.gateOn(time);
+      sharedFilter.gateOn(time);
     },
     noteOff(noteNumber, time = ac.currentTime) {
       const voice = activeVoices.find((it) => it.noteNumber === noteNumber);
@@ -164,7 +119,7 @@ export function createSynthesizerEngine(
         voice.gateOff(time, applyRelease);
         removeArrayItem(activeVoices, voice);
       }
-      sharedFilterAmp.gateOff(time);
+      sharedFilter.gateOff(time);
     },
     cleanup() {
       voiceMixNode.disconnect();
