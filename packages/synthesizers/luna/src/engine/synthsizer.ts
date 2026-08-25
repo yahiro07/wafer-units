@@ -6,6 +6,7 @@ import {
 import { createEffectChain } from "@/engine/effect-chain";
 import { createPolyVoice, PolyVoice } from "@/engine/poly-voice";
 import { createSineLfo } from "@/engine/sine-lfo";
+import { invokeAtJustBefore } from "@/engine/voicing-helper";
 import { UnitInterface } from "wafer-host/unit-types";
 
 const MAX_POLY_VOICES = 4;
@@ -208,7 +209,10 @@ export function createSynthesizerEngine(
       const voice = voices.find((slot) => slot.noteNumber === noteNumber);
       if (!voice) return;
       voice.noteNumber = null;
-      voice.triggerRelease(resolveTime(time));
+      const time1 = resolveTime(time);
+      invokeAtJustBefore(audioContext, time1, () =>
+        voice.triggerRelease(time1),
+      );
     },
     cleanup() {
       for (const voice of voices) {
