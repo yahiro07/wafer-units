@@ -1,6 +1,9 @@
 import { OscWave, SynthParameters } from "@/defs/definitions";
 import { createEnvelopeGenerator } from "@/engine/envelope-generator";
-import { createSuperSawOscillator } from "@/engine/super-saw-oscillator";
+import {
+  createSuperSawOscillator,
+  SuperSawOscillator,
+} from "@/engine/super-saw-oscillator";
 
 const MAX_OSC_DETUNE_CENTS = 50;
 const MAX_ATTACK_SECONDS = 2;
@@ -122,7 +125,6 @@ export function createPolyVoice(
   noiseBuffer: AudioBuffer,
   pitchMod: AudioNode,
 ): PolyVoice {
-  const superSaw = createSuperSawOscillator(audioContext);
   const osc1Gain = audioContext.createGain();
   const osc2Gain = audioContext.createGain();
   const noise2Gain = audioContext.createGain();
@@ -152,7 +154,6 @@ export function createPolyVoice(
   osc1Gain.connect(oscMix);
   osc2Gain.connect(oscMix);
   noise2Gain.connect(oscMix);
-  superSaw.outputNode.connect(oscMix);
   oscMix.connect(amp);
   amp.connect(amp2);
   amp2.connect(punchGain);
@@ -162,8 +163,6 @@ export function createPolyVoice(
   envelope2.connect(amp2.gain);
   punchEnv.connect(punchAmount);
   punchAmount.connect(punchGain.gain);
-  superSaw.connectPitchMod(pitchMod);
-  superSaw.connectPitchMod(pitchEg);
 
   envelope.start();
   envelope2.start();
@@ -188,8 +187,8 @@ export function createPolyVoice(
   let osc1: OscillatorNode | null = null;
   let osc2: OscillatorNode | null = null;
   let noise2: AudioBufferSourceNode | null = null;
+  let superSaw: SuperSawOscillator | null = null;
   let playing = false;
-  let superSawRunning = false;
   let pitchedNote = 69;
   let sourcesStopAt: number | null = null;
 
@@ -217,9 +216,32 @@ export function createPolyVoice(
   }
 
   function stopSuperSaw(time?: number) {
-    if (!superSawRunning) return;
-    superSaw.setEnabled(false, time ?? audioContext.currentTime);
-    superSawRunning = false;
+    if (!superSaw) return;
+    const instance = superSaw;
+    superSaw = null;
+    if (time === undefined) {
+      instance.cleanup();
+    } else {
+      instance.stop(time);
+    }
+  }
+
+  function startSuperSaw(
+    frequencyHz: number,
+    unisonDetune: number,
+    time: number,
+    mixLevel: number,
+    randomizePhase: boolean,
+  ) {
+    const instance = createSuperSawOscillator(audioContext);
+    instance.outputNode.connect(oscMix);
+    instance.connectPitchMod(pitchMod);
+    instance.connectPitchMod(pitchEg);
+    instance.start(frequencyHz, unisonDetune, time, mixLevel, randomizePhase);
+    if (sourcesStopAt !== null) {
+      instance.stop(sourcesStopAt);
+    }
+    superSaw = instance;
   }
 
   function stopVoiceSources(time?: number) {
@@ -290,7 +312,7 @@ export function createPolyVoice(
       parameters,
     );
     if (isSuperSawWave(parameters.osc1Wave)) {
-      superSaw.setPitch(osc1Hz, parameters.oscDetune, time);
+      superSaw?.setPitch(osc1Hz, parameters.oscDetune, time);
     } else if (osc1) {
       osc1.frequency.setValueAtTime(osc1Hz, time);
       osc1.detune.setValueAtTime(-detuneCents, time);
@@ -341,16 +363,17 @@ export function createPolyVoice(
 
     if (osc1IsSuperSaw) {
       stopOsc1(time);
-      if (!superSawRunning) {
-        superSaw.retrigger(
+      if (!superSaw) {
+        startSuperSaw(
           osc1Hz,
           parameters.oscDetune,
           time,
+          osc1Level,
           shouldRandomizeSuperSawPhase(parameters),
         );
-        superSawRunning = true;
+      } else {
+        superSaw.setMixLevel(time, osc1Level);
       }
-      superSaw.setEnabled(true, time, osc1Level);
     } else {
       stopSuperSaw(time);
       if (!osc1) {
@@ -467,10 +490,7 @@ export function createPolyVoice(
       if (osc1) stopAudioSource(osc1, stopAt);
       if (osc2) stopAudioSource(osc2, stopAt);
       if (noise2) stopAudioSource(noise2, stopAt);
-      if (superSawRunning) {
-        superSaw.setEnabled(false, stopAt);
-        superSawRunning = false;
-      }
+      stopSuperSaw(stopAt);
     },
     stopSources() {
       sourcesStopAt = null;
@@ -499,7 +519,7 @@ export function createPolyVoice(
       envelope2.disconnect();
       punchEnv.disconnect();
       pitchEg.disconnect();
-      superSaw.cleanup();
+      superSaw?.cleanup();
     },
   };
 

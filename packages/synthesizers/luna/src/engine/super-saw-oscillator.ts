@@ -13,16 +13,38 @@ function unisonDetuneCents(ratio: number, unisonDetune: number): number {
   return ratio * clamp01(unisonDetune) ** 2 * 1500;
 }
 
-export function createSuperSawOscillator(audioContext: AudioContext) {
+export type SuperSawOscillator = {
+  outputNode: GainNode;
+  start: (
+    frequencyHz: number,
+    unisonDetune: number,
+    time: number,
+    mixLevel: number,
+    randomizePhase?: boolean,
+  ) => void;
+  stop: (time?: number) => void;
+  setPitch: (frequencyHz: number, unisonDetune: number, time: number) => void;
+  setMixLevel: (time: number, mixLevel: number) => void;
+  connectPitchMod: (source: AudioNode) => void;
+  cleanup: () => void;
+};
+
+export function createSuperSawOscillator(
+  audioContext: AudioContext,
+): SuperSawOscillator {
   const outputNode = audioContext.createGain();
   outputNode.gain.value = 0;
 
   const hasPanner = typeof audioContext.createStereoPanner === "function";
   const gains: GainNode[] = [];
   const panners: Array<StereoPannerNode | undefined> = [];
-  let oscillators: OscillatorNode[] = [];
-  let stopping: OscillatorNode[] = [];
+  const oscillators: OscillatorNode[] = [];
   const pitchMods: AudioNode[] = [];
+
+  let started = false;
+  let stopped = false;
+  let remaining = 0;
+  let graphDisconnected = false;
 
   for (let i = 0; i < VOICE_COUNT; i += 1) {
     const gainNode = audioContext.createGain();
@@ -41,67 +63,34 @@ export function createSuperSawOscillator(audioContext: AudioContext) {
     }
   }
 
-  function stopOscillators(time?: number) {
-    const previous = oscillators.concat(stopping);
-    oscillators = [];
-    stopping = [];
-    for (const osc of previous) {
-      osc.onended = () => {
-        osc.disconnect();
-      };
-      try {
-        if (time === undefined) {
-          osc.stop();
-        } else {
-          osc.stop(time);
-          stopping.push(osc);
-        }
-      } catch {
-        osc.disconnect();
-      }
+  function disconnectGraph() {
+    if (graphDisconnected) return;
+    graphDisconnected = true;
+    for (const gainNode of gains) {
+      gainNode.disconnect();
     }
+    for (const panner of panners) {
+      panner?.disconnect();
+    }
+    outputNode.disconnect();
   }
 
-  function applyPitch(frequencyHz: number, unisonDetune: number, time: number) {
-    for (let i = 0; i < oscillators.length; i += 1) {
-      const osc = oscillators[i];
-      osc.frequency.setValueAtTime(frequencyHz, time);
-      osc.detune.setValueAtTime(
-        unisonDetuneCents(DETUNE_RATIOS[i], unisonDetune),
-        time,
-      );
+  function finishOscillator(osc: OscillatorNode) {
+    osc.disconnect();
+    remaining -= 1;
+    if (remaining <= 0) {
+      disconnectGraph();
     }
   }
 
   return {
     outputNode,
-    setEnabled(enabled: boolean, time: number, mixLevel = 1) {
-      if (enabled) {
-        outputNode.gain.cancelScheduledValues(time);
-        outputNode.gain.setValueAtTime(mixLevel, time);
-        return;
-      }
-      stopOscillators(time);
-    },
-    setPitch(frequencyHz: number, unisonDetune: number, time: number) {
-      applyPitch(frequencyHz, unisonDetune, time);
-    },
-    connectPitchMod(source: AudioNode) {
-      if (!pitchMods.includes(source)) {
-        pitchMods.push(source);
-      }
-      for (const osc of oscillators) {
-        source.connect(osc.detune);
-      }
-    },
-    retrigger(
-      frequencyHz: number,
-      unisonDetune: number,
-      time: number,
-      randomizePhase = true,
-    ) {
+    start(frequencyHz, unisonDetune, time, mixLevel, randomizePhase = true) {
+      if (started) return;
+      started = true;
+      remaining = VOICE_COUNT;
       outputNode.gain.cancelScheduledValues(time);
-      stopOscillators(time);
+      outputNode.gain.setValueAtTime(mixLevel, time);
       for (let i = 0; i < VOICE_COUNT; i += 1) {
         const osc = audioContext.createOscillator();
         osc.type = "sawtooth";
@@ -114,21 +103,68 @@ export function createSuperSawOscillator(audioContext: AudioContext) {
         for (const source of pitchMods) {
           source.connect(osc.detune);
         }
+        osc.onended = () => {
+          finishOscillator(osc);
+        };
         const startDelay =
           randomizePhase && i !== 0 ? Math.random() * PHASE_RANDOM_MAX_SEC : 0;
         osc.start(time + startDelay);
         oscillators.push(osc);
       }
     },
+    stop(time?: number) {
+      if (stopped) return;
+      stopped = true;
+      for (const osc of oscillators) {
+        try {
+          if (time === undefined) {
+            osc.stop();
+          } else {
+            osc.stop(time);
+          }
+        } catch {
+          finishOscillator(osc);
+        }
+      }
+    },
+    setPitch(frequencyHz, unisonDetune, time) {
+      if (stopped) return;
+      for (let i = 0; i < oscillators.length; i += 1) {
+        const osc = oscillators[i];
+        osc.frequency.setValueAtTime(frequencyHz, time);
+        osc.detune.setValueAtTime(
+          unisonDetuneCents(DETUNE_RATIOS[i], unisonDetune),
+          time,
+        );
+      }
+    },
+    setMixLevel(time, mixLevel) {
+      if (stopped) return;
+      outputNode.gain.cancelScheduledValues(time);
+      outputNode.gain.setValueAtTime(mixLevel, time);
+    },
+    connectPitchMod(source) {
+      if (pitchMods.includes(source)) return;
+      pitchMods.push(source);
+      for (const osc of oscillators) {
+        source.connect(osc.detune);
+      }
+    },
     cleanup() {
-      stopOscillators();
-      for (const gainNode of gains) {
-        gainNode.disconnect();
+      if (!stopped) {
+        for (const osc of oscillators) {
+          osc.onended = null;
+          try {
+            osc.stop();
+          } catch {
+            // already stopped
+          }
+          osc.disconnect();
+        }
+        remaining = 0;
+        stopped = true;
       }
-      for (const panner of panners) {
-        panner?.disconnect();
-      }
-      outputNode.disconnect();
+      disconnectGraph();
     },
   };
 }
