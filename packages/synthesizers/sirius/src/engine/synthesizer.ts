@@ -76,7 +76,6 @@ export function createSynthesizerEngine(
   };
 
   return {
-    audioContext,
     setParameters(parameters) {
       Object.assign(state.parameters, parameters);
       internal.applyParametersToVoices();
