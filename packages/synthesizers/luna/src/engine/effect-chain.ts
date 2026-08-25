@@ -229,7 +229,7 @@ export function createEffectChain(
         presenceHigh.gain.setValueAtTime(tiltDb, time);
       }
       if (has(patch, "globalVolume")) {
-        const gain = mapKnobCurveCenterUnity(parameters.globalVolume) * 0.5;
+        const gain = mapKnobCurveCenterUnity(parameters.globalVolume) * 0.3;
         globalGain.gain.setValueAtTime(gain, time);
       }
     },
