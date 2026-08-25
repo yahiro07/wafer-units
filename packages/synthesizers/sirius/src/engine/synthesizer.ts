@@ -9,7 +9,6 @@ import { createReverb2 } from "@/engine/reverb2";
 import { createVoice, Voice } from "@/engine/voice";
 import { UnitInterface } from "wafer-host/unit-types";
 import { mapVolumeControlCurveCenterUnityBrokenLinear } from "@/engine/curve";
-import { invokeAtJustBefore } from "@/engine/voicing-helper";
 
 export function createSynthesizerEngine(
   unitInterface: UnitInterface | undefined,
@@ -55,7 +54,7 @@ export function createSynthesizerEngine(
     stopVoice(noteNumber: number, time: number) {
       const voice = state.activeVoices.get(noteNumber);
       if (voice) {
-        invokeAtJustBefore(audioContext, time, () => voice.gateOff(time));
+        voice.gateOff(time);
         state.activeVoices.delete(noteNumber);
       }
     },

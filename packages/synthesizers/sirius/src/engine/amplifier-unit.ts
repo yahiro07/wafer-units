@@ -36,10 +36,10 @@ export function createAmplifierUnit(
   params: SynthParameters,
   velocity: number,
 ): AmplifierUnit {
-  const inputNode = context.createGain();
+  const inputNode = context.createGain(); //automated for A-D-S
   inputNode.gain.value = 0;
 
-  const outputNode = context.createGain();
+  const outputNode = context.createGain(); //automated for R
   outputNode.gain.value = 1;
   inputNode.connect(outputNode);
 
@@ -70,11 +70,9 @@ export function createAmplifierUnit(
         0.01,
         params.ampRelease * configs.releaseTimeMax,
       );
-
-      inputNode.gain.cancelScheduledValues(tOff);
-      inputNode.gain.setValueAtTime(inputNode.gain.value, tOff);
-      inputNode.gain.exponentialRampToValueAtTime(0.001, tOff + releaseTime);
-
+      outputNode.gain.setValueAtTime(1, tOff);
+      outputNode.gain.exponentialRampToValueAtTime(1e-4, tOff + releaseTime);
+      outputNode.gain.setValueAtTime(0, tOff + releaseTime);
       return { tOff, releaseTime };
     },
     cleanup() {
