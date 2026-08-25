@@ -28,11 +28,11 @@ function createVoice(
   const oscUnit = createOscillatorsUnit(bus, noteNumber);
   const ampUnit = createAmplifierUnit(bus);
   oscUnit.outputNode.connect(ampUnit.inputNode);
-  ampUnit.inputNode.connect(voiceMixNode);
+  ampUnit.outputNode.connect(voiceMixNode);
 
   oscUnit.setEndedCallback(() => {
     oscUnit.outputNode.disconnect();
-    ampUnit.inputNode.disconnect();
+    ampUnit.outputNode.disconnect();
     ampUnit.cleanup();
     endedCallback?.();
   });
