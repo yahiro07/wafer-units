@@ -23,6 +23,7 @@ function createVoice(
   noteNumber: number,
   gateOnTime: number,
 ): Voice {
+  const ac = bus.audioContext;
   let endedCallback: (() => void) | undefined;
 
   const oscUnit = createOscillatorsUnit(bus, noteNumber);
@@ -30,12 +31,14 @@ function createVoice(
   oscUnit.outputNode.connect(ampUnit.inputNode);
   ampUnit.outputNode.connect(voiceMixNode);
 
-  oscUnit.setEndedCallback(() => {
+  const lifeSpanNode = ac.createConstantSource();
+
+  lifeSpanNode.onended = () => {
     oscUnit.outputNode.disconnect();
     ampUnit.outputNode.disconnect();
     ampUnit.cleanup();
     endedCallback?.();
-  });
+  };
 
   return {
     noteNumber,
@@ -45,14 +48,17 @@ function createVoice(
       const time = gateOnTime;
       oscUnit.start(time);
       ampUnit.gateOn(time);
+      lifeSpanNode.start(time);
     },
     gateOff(time, applyRelease) {
       const tOff = ampUnit.gateOff(time, applyRelease);
       oscUnit.stop(tOff);
+      lifeSpanNode.stop(tOff);
     },
     mute(time) {
       const tOff = ampUnit.mute(time);
       oscUnit.stop(tOff);
+      lifeSpanNode.stop(tOff);
     },
     setEndedCallback(fn) {
       endedCallback = fn;
