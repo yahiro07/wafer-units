@@ -11,6 +11,7 @@ export type SynthParameters = {
   osc1Decay: number;
   ampHead: number;
   ampRelease: number;
+  ampExponential: boolean;
   ampReleaseLastOnly: boolean;
   patchVolume: number;
 };
@@ -22,6 +23,7 @@ export const defaultSynthParameters: SynthParameters = {
   osc1Decay: 0,
   ampHead: 0,
   ampRelease: 0,
+  ampExponential: false,
   ampReleaseLastOnly: false,
   patchVolume: 0.5,
 };

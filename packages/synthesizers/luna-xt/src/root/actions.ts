@@ -10,6 +10,9 @@ export const actions = {
   ) {
     store.patchParameters({ [key]: value });
   },
+  setBoolParameter<K extends BoolParameterKeys>(key: K, value: boolean) {
+    store.patchParameters({ [key]: value });
+  },
   toggleBoolParameter<K extends BoolParameterKeys>(key: K) {
     store.patchParameters({ [key]: !store.state.parameters[key] });
   },

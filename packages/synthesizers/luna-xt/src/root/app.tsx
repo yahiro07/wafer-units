@@ -130,6 +130,22 @@ const SectionFrame = ({
   );
 };
 
+const TextButton = ({
+  label,
+  active,
+  onClick,
+}: {
+  label: string;
+  active: boolean;
+  onClick: () => void;
+}) => {
+  return (
+    <Button height={28} asr={1.6} onClick={onClick}>
+      <span class={cz(active ? "text-#08f" : "text-#888")}>{label}</span>
+    </Button>
+  );
+};
+
 const PageRoot = () => {
   const { parameters } = store.useSnapshot();
   return (
@@ -163,15 +179,37 @@ const PageRoot = () => {
             {/* <ParameterKnob label="DET" paramKey="osc1Detune" /> */}
           </SectionFrame>
 
-          <SectionFrame header="AMPLIFIER">
+          <SectionFrame header="AMP">
             <ParameterSlider label="HEAD" paramKey="ampHead" />
-            <ParameterKnob
+            <ParameterKnob label="RELEASE" paramKey="ampRelease" />
+            <div class="flex-v gap-1 self-start">
+              <TextButton
+                label="LIN"
+                active={!parameters.ampExponential}
+                onClick={() =>
+                  actions.setBoolParameter("ampExponential", false)
+                }
+              />
+              <TextButton
+                label="EXP"
+                active={parameters.ampExponential}
+                onClick={() => actions.setBoolParameter("ampExponential", true)}
+              />
+              <TextButton
+                label="LAST"
+                active={parameters.ampReleaseLastOnly}
+                onClick={() =>
+                  actions.toggleBoolParameter("ampReleaseLastOnly")
+                }
+              />
+            </div>
+            {/* <ParameterKnob
               label={parameters.ampReleaseLastOnly ? "R-LAST†" : "R†"}
               paramKey="ampRelease"
               onLabelClick={() =>
                 actions.toggleBoolParameter("ampReleaseLastOnly")
               }
-            />
+            /> */}
           </SectionFrame>
         </div>
       </div>

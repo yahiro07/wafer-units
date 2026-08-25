@@ -55,14 +55,24 @@ function createVoice(
       oscGain.gain.setValueAtTime(1, time);
     },
     gateOff(time, applyRelease) {
-      const releaseTime = bottomLimit(
-        applyRelease ? bus.parameters.ampRelease ** 2 * 4 : 0,
-        0.001,
-      );
       oscGain.gain.cancelScheduledValues(time);
       oscGain.gain.setValueAtTime(1, time);
-      // oscGain.gain.linearRampToValueAtTime(1e-4, time + releaseTime);
-      oscGain.gain.exponentialRampToValueAtTime(1e-4, time + releaseTime);
+
+      let releaseTime = 0;
+
+      if (bus.parameters.ampExponential) {
+        releaseTime = bottomLimit(
+          applyRelease ? bus.parameters.ampRelease ** 2 * 4 : 0,
+          0.001,
+        );
+        oscGain.gain.exponentialRampToValueAtTime(1e-4, time + releaseTime);
+      } else {
+        releaseTime = bottomLimit(
+          applyRelease ? bus.parameters.ampRelease ** 3 * 2 : 0,
+          0.001,
+        );
+        oscGain.gain.linearRampToValueAtTime(1e-4, time + releaseTime);
+      }
       oscGain.gain.setValueAtTime(0, time + releaseTime);
       osc.stop(time + releaseTime);
     },
