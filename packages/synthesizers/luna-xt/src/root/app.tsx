@@ -277,14 +277,21 @@ const PageRoot = () => {
         <OscSection oscId="osc2" />
         <SectionFrame header="CONTROL">
           <ParameterSlider label="MIX" paramKey="oscMix" invertY />
+          <ParameterSlider
+            label="SAT"
+            paramKey="_saturation"
+            min={0}
+            max={2}
+            step={1}
+          />
           <ParameterSlider label="PRESS" paramKey="_saturationPress" />
-          <div class="flex-v gap-1 self-start">
+          {/* <div class="flex-v gap-1 self-start">
             <TextButton
               label="SAT"
               active={parameters._saturation}
               onClick={() => actions.toggleBoolParameter("_saturation")}
             />
-          </div>
+          </div> */}
         </SectionFrame>
       </div>
 

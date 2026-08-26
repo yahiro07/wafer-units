@@ -1,63 +1,102 @@
-const INPUT_HEADROOM = 1.5;
-const CURVE_SIZE = 1024;
+export type SaturationType = "type1" | "type2";
 
-//https://www.desmos.com/calculator/8t7xmvci0z
+const configs = {
+  curveSize: 1024,
+};
 
-function createSaturationCurve(): Float32Array<ArrayBuffer> {
-  const curve = new Float32Array(CURVE_SIZE);
-  for (let i = 0; i < CURVE_SIZE; i += 1) {
-    const u = (i / (CURVE_SIZE - 1)) * 2 - 1;
-    const x = u * INPUT_HEADROOM;
-    if (Math.abs(x) <= 1.5) {
-      curve[i] = x - (x * x * x) / 6.66;
-    } else {
-      curve[i] = Math.sign(x);
-    }
+type SaturationSpec = {
+  inputHeadroom: number;
+  curve: Float32Array<ArrayBuffer>;
+};
+
+function createCurveBuffer(
+  fn: (u: number) => number,
+): Float32Array<ArrayBuffer> {
+  const { curveSize } = configs;
+  const curve = new Float32Array(curveSize);
+  for (let i = 0; i < curveSize; i += 1) {
+    const u = (i / (curveSize - 1)) * 2 - 1;
+    curve[i] = fn(u);
   }
   return curve;
 }
 
-export function createOutputSaturator(audioContext: AudioContext) {
-  const inputNode = audioContext.createGain();
-  const dryGain = audioContext.createGain();
-  const preGain = audioContext.createGain();
-  const shaperNode = audioContext.createWaveShaper();
-  const wetGain = audioContext.createGain();
-  const outputNode = audioContext.createGain();
+const saturationSpecFactories = {
+  type1() {
+    //tanh
+    const inputHeadroom = 4;
+    return {
+      inputHeadroom,
+      curve: createCurveBuffer((u) => {
+        const x = u * inputHeadroom;
+        return Math.tanh(x);
+      }),
+    };
+  },
+  type2() {
+    //x - x^3 / 6.66
+    //graph curve
+    //https://www.desmos.com/calculator/8t7xmvci0z
+    return {
+      inputHeadroom: 1.5,
+      curve: createCurveBuffer((u) => {
+        const x = u * 1.5;
+        if (Math.abs(x) <= 1.5) {
+          return x - (x * x * x) / 6.66;
+        } else {
+          return Math.sign(x);
+        }
+      }),
+    };
+  },
+};
 
-  inputNode.gain.value = 1;
-  dryGain.gain.value = 1;
-  preGain.gain.value = 1 / INPUT_HEADROOM;
+const saturationSpecCache: Record<SaturationType, SaturationSpec | undefined> =
+  {
+    type1: undefined,
+    type2: undefined,
+  };
+
+export function createOutputSaturator(ac: AudioContext) {
+  const inputNode = ac.createGain();
+  const shaperNode = ac.createWaveShaper();
+  const outputNode = ac.createGain();
   shaperNode.oversample = "2x";
-  shaperNode.curve = createSaturationCurve();
-  wetGain.gain.value = 0;
-  outputNode.gain.value = 1;
 
-  inputNode.connect(dryGain);
-  dryGain.connect(outputNode);
-  inputNode.connect(preGain);
-  preGain.connect(shaperNode);
-  shaperNode.connect(wetGain);
-  wetGain.connect(outputNode);
+  let currentType: SaturationType | null | undefined;
+
+  const internal = {
+    updateConnection(nextType: SaturationType | null) {
+      if (nextType !== currentType) {
+        if (currentType !== undefined) {
+          inputNode.disconnect();
+          shaperNode.disconnect();
+        }
+        if (nextType) {
+          inputNode.connect(shaperNode);
+          shaperNode.connect(outputNode);
+          const spec = (saturationSpecCache[nextType] ??=
+            saturationSpecFactories[nextType]());
+          shaperNode.curve = spec.curve;
+          inputNode.gain.value = 1 / spec.inputHeadroom;
+          outputNode.gain.value = 1;
+        } else {
+          inputNode.connect(outputNode);
+        }
+        currentType = nextType;
+      }
+    },
+  };
 
   return {
     inputNode,
     outputNode,
-    setEnabled(enabled: boolean, press: number) {
-      dryGain.gain.value = enabled ? 0 : 1;
-      wetGain.gain.value = enabled ? 1 : 0;
-      const sc = 1 + press * 3;
-      const sc2 = 1 + press * 1.5;
-      preGain.gain.value = (1 / INPUT_HEADROOM) * sc;
-      wetGain.gain.value = enabled ? 1 / sc2 : 0;
+    update(modeIndex: number) {
+      const type = ([null, "type1", "type2"] as const)[modeIndex];
+      internal.updateConnection(type);
     },
     cleanup() {
-      inputNode.disconnect();
-      dryGain.disconnect();
-      preGain.disconnect();
-      shaperNode.disconnect();
-      wetGain.disconnect();
-      outputNode.disconnect();
+      internal.updateConnection(null);
     },
   };
 }

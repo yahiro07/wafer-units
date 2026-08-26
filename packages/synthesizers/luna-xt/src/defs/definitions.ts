@@ -40,7 +40,7 @@ export type SynthParameters = {
   ampReleaseLastOnly: boolean;
   patchVolume: number;
   //
-  _saturation: boolean;
+  _saturation: number;
   _saturationPress: number;
 };
 
@@ -68,7 +68,7 @@ export const defaultSynthParameters: SynthParameters = {
   ampReleaseLastOnly: false,
   patchVolume: 0.5,
   //
-  _saturation: true,
+  _saturation: 0,
   _saturationPress: 0,
 };
 
