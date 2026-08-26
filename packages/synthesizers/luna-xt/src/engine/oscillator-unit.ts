@@ -26,7 +26,7 @@ export function createOscillatorUnit(
     start(time: number) {
       osc.start(time);
     },
-    stop(time: number) {
+    stop(time?: number) {
       osc.stop(time);
     },
     cleanup() {

@@ -1,4 +1,5 @@
-import { SynthesisBus } from "@/engine/engine-defs";
+import { OscId } from "@/defs/definitions";
+import { oscParameterKeys, SynthesisBus } from "@/engine/engine-defs";
 
 type AmplifierUnit = {
   inputNode: AudioNode;
@@ -30,7 +31,11 @@ const helpers = {
   },
 };
 
-export function createAmplifierUnit(bus: SynthesisBus): AmplifierUnit {
+export function createAmplifierUnit(
+  oscId: OscId,
+  bus: SynthesisBus,
+): AmplifierUnit {
+  const pk = oscParameterKeys[oscId];
   const ac = bus.audioContext;
   const headNode = ac.createGain(); //automated for Head-A-D-S
   headNode.gain.value = 0;
@@ -43,27 +48,24 @@ export function createAmplifierUnit(bus: SynthesisBus): AmplifierUnit {
     inputNode: headNode,
     outputNode: tailNode,
     gateOn(time) {
+      const pr = bus.parameters;
+      const prHead = pr.ampHead;
+      const prDecay = pr[pk.decay];
       headNode.gain.setValueAtTime(1, time);
     },
     gateOff(time, applyRelease) {
       const pr = bus.parameters;
+      const prExponential = pr.ampExponential;
+      const prRelease = pr.ampRelease;
       tailNode.gain.setValueAtTime(1, time);
 
       let releaseTime = 0;
 
-      if (pr.ampExponential) {
-        releaseTime = helpers.calcReleaseTime(
-          pr.ampRelease,
-          applyRelease,
-          true,
-        );
+      if (prExponential) {
+        releaseTime = helpers.calcReleaseTime(prRelease, applyRelease, true);
         tailNode.gain.exponentialRampToValueAtTime(1e-4, time + releaseTime);
       } else {
-        releaseTime = helpers.calcReleaseTime(
-          pr.ampRelease,
-          applyRelease,
-          false,
-        );
+        releaseTime = helpers.calcReleaseTime(prRelease, applyRelease, false);
         tailNode.gain.linearRampToValueAtTime(1e-4, time + releaseTime);
       }
       tailNode.gain.setValueAtTime(0, time + releaseTime);

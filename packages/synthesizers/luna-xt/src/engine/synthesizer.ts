@@ -26,17 +26,27 @@ function createVoice(
   const ac = bus.audioContext;
   let endedCallback: (() => void) | undefined;
 
-  const oscUnit = createOscillatorsUnit(bus, noteNumber);
-  const ampUnit = createAmplifierUnit(bus);
-  oscUnit.outputNode.connect(ampUnit.inputNode);
-  ampUnit.outputNode.connect(voiceMixNode);
+  const osc1 = createOscillatorsUnit("osc1", bus, noteNumber);
+  const osc2 = createOscillatorsUnit("osc2", bus, noteNumber);
+  const osc1Amp = createAmplifierUnit("osc1", bus);
+  const osc2Amp = createAmplifierUnit("osc2", bus);
+
+  osc1.outputNode.connect(osc1Amp.inputNode);
+  osc1Amp.outputNode.connect(voiceMixNode);
+  osc2.outputNode.connect(osc2Amp.inputNode);
+  osc2Amp.outputNode.connect(voiceMixNode);
 
   const lifeSpanNode = ac.createConstantSource();
 
   lifeSpanNode.onended = () => {
-    oscUnit.outputNode.disconnect();
-    ampUnit.outputNode.disconnect();
-    ampUnit.cleanup();
+    osc1.stop();
+    osc2.stop();
+    osc1.outputNode.disconnect();
+    osc1Amp.outputNode.disconnect();
+    osc2.outputNode.disconnect();
+    osc2Amp.outputNode.disconnect();
+    osc1Amp.cleanup();
+    osc2Amp.cleanup();
     endedCallback?.();
   };
 
@@ -44,22 +54,25 @@ function createVoice(
     noteNumber,
     gateOnTime,
     update() {
-      oscUnit.update();
+      osc1.update();
+      osc2.update();
     },
     gateOn() {
       const time = gateOnTime;
-      oscUnit.start(time);
-      ampUnit.gateOn(time);
+      osc1.start(time);
+      osc1Amp.gateOn(time);
+      osc2.start(time);
+      osc2Amp.gateOn(time);
       lifeSpanNode.start(time);
     },
     gateOff(time, applyRelease) {
-      const tOff = ampUnit.gateOff(time, applyRelease);
-      oscUnit.stop(tOff);
+      const tOff = osc1Amp.gateOff(time, applyRelease);
+      osc2Amp.gateOff(time, applyRelease);
       lifeSpanNode.stop(tOff);
     },
     mute(time) {
-      const tOff = ampUnit.mute(time);
-      oscUnit.stop(tOff);
+      const tOff = osc1Amp.mute(time);
+      osc2Amp.mute(time);
       lifeSpanNode.stop(tOff);
     },
     setEndedCallback(fn) {

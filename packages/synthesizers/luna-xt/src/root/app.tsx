@@ -4,6 +4,7 @@ import {
   BoolParameterKeys,
   LinearParameterKeys,
   numOscWaveTypes,
+  OscId,
 } from "@/defs/definitions";
 import { useSetupDrivers } from "@/root/drivers";
 import { allPresetKeys, store } from "@/root/store";
@@ -152,8 +153,6 @@ const TextButton = ({
     </Button>
   );
 };
-
-type OscId = "osc1" | "osc2";
 
 function useOscParamKeys(oscId: OscId): {
   octave: LinearParameterKeys;

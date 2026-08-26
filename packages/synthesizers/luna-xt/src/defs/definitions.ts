@@ -75,3 +75,5 @@ export type SynthesizerEngine = {
   noteOff: (noteNumber: number, time?: number) => void;
   cleanup: () => void;
 };
+
+export type OscId = "osc1" | "osc2";
