@@ -41,7 +41,7 @@ export type SynthParameters = {
   patchVolume: number;
   //
   _saturation: number;
-  _saturationPress: number;
+  press: number;
 };
 
 export type SynthPresetParameters = SynthParameters;
@@ -69,7 +69,7 @@ export const defaultSynthParameters: SynthParameters = {
   patchVolume: 0.5,
   //
   _saturation: 0,
-  _saturationPress: 0,
+  press: 0,
 };
 
 export type LinearParameterKeys = PickKeysForValueType<SynthParameters, number>;

@@ -284,7 +284,7 @@ const PageRoot = () => {
             max={2}
             step={1}
           />
-          <ParameterSlider label="PRESS" paramKey="_saturationPress" />
+          <ParameterSlider label="PRESS" paramKey="press" />
           {/* <div class="flex-v gap-1 self-start">
             <TextButton
               label="SAT"
