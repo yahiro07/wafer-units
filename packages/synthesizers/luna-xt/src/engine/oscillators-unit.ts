@@ -23,20 +23,14 @@ export function createOscillatorsUnit(
   const outputNode = ac.createGain();
   const osc = createOscillatorCore(ac, outputNode);
 
-  const internal = {
-    applyParameters() {
+  return {
+    outputNode,
+    update() {
       const frequency = midiToFrequency(noteNumber + pr[pk.octave] * 12);
       osc.setFrequency(frequency);
       osc.setWaveform(getCustomWaveform(ac, pr[pk.wave]));
     },
-  };
-  return {
-    outputNode,
-    update() {
-      internal.applyParameters();
-    },
     start(time) {
-      internal.applyParameters();
       osc.start(time);
     },
     stop(time) {
