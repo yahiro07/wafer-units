@@ -64,6 +64,8 @@ export function createAmplifierUnit(
       const prExponential = pr.ampExponential;
       headNode.gain.setValueAtTime(1, time);
 
+      if (prDecay === 1) return;
+
       let decayTime = 0;
       if (prExponential) {
         decayTime = helpers.calcDecayTime(prDecay, true);
