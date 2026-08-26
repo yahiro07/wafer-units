@@ -49,14 +49,14 @@ export const defaultSynthParameters: SynthParameters = {
   osc1Unison: 1,
   osc1Spread: true,
   osc1Detune: 0,
-  osc1Decay: 0,
+  osc1Decay: 1,
   //
   osc2Octave: 0,
   osc2Wave: OscWave.sawtooth,
   osc2Unison: 1,
   osc2Spread: true,
   osc2Detune: 0,
-  osc2Decay: 0,
+  osc2Decay: 1,
   //
   oscMix: 0,
   ampHead: 0,

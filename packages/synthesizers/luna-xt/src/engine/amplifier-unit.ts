@@ -11,11 +11,21 @@ type AmplifierUnit = {
 };
 
 const configs = {
+  expDecayTimeMax: 4,
+  linDecayTimeMax: 2,
   expReleaseTimeMax: 4,
   linReleaseTimeMax: 2,
 };
 
 const helpers = {
+  calcDecayTime(prDecay: number, isExponential: boolean) {
+    const minDecayTime = 0.01;
+    if (isExponential) {
+      return prDecay ** 2 * configs.expDecayTimeMax + minDecayTime;
+    } else {
+      return prDecay ** 3 * configs.linDecayTimeMax + minDecayTime;
+    }
+  },
   calcReleaseTime(
     prAmpRelease: number,
     applyRelease: boolean,
@@ -51,7 +61,18 @@ export function createAmplifierUnit(
       const pr = bus.parameters;
       const prHead = pr.ampHead;
       const prDecay = pr[pk.decay];
+      const prExponential = pr.ampExponential;
       headNode.gain.setValueAtTime(1, time);
+
+      let decayTime = 0;
+      if (prExponential) {
+        decayTime = helpers.calcDecayTime(prDecay, true);
+        headNode.gain.exponentialRampToValueAtTime(1e-4, time + decayTime);
+        headNode.gain.setValueAtTime(0, time + decayTime);
+      } else {
+        decayTime = helpers.calcDecayTime(prDecay, false);
+        headNode.gain.linearRampToValueAtTime(0, time + decayTime);
+      }
     },
     gateOff(time, applyRelease) {
       const pr = bus.parameters;
@@ -64,11 +85,11 @@ export function createAmplifierUnit(
       if (prExponential) {
         releaseTime = helpers.calcReleaseTime(prRelease, applyRelease, true);
         tailNode.gain.exponentialRampToValueAtTime(1e-4, time + releaseTime);
+        tailNode.gain.setValueAtTime(0, time + releaseTime);
       } else {
         releaseTime = helpers.calcReleaseTime(prRelease, applyRelease, false);
-        tailNode.gain.linearRampToValueAtTime(1e-4, time + releaseTime);
+        tailNode.gain.linearRampToValueAtTime(0, time + releaseTime);
       }
-      tailNode.gain.setValueAtTime(0, time + releaseTime);
 
       return time + releaseTime;
     },
