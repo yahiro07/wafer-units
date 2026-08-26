@@ -5,6 +5,7 @@ export enum OscWave {
   sawtoothR,
   pulse125,
   pulse25,
+  pulse40,
   ex1,
   ex2,
   ex3,
@@ -12,6 +13,7 @@ export enum OscWave {
   ex5,
   ex6,
   ex7,
+  ex8,
   __num,
 }
 export const numOscWaveTypes = OscWave.__num;

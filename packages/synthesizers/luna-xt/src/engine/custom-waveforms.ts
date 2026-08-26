@@ -118,6 +118,19 @@ const builders = {
       }
     });
   },
+  trapezoid(ctx: AudioContext) {
+    const p0 = 0.25;
+    const p1 = 0.5;
+    return makePeriodicWave(ctx, (pp) => {
+      let y = 0;
+      if (pp < p0) {
+        y = pp / p0;
+      } else if (pp < p1) {
+        y = 1;
+      }
+      return y * 2 - 1;
+    });
+  },
 };
 
 function getCustomWaveformCore(
@@ -132,6 +145,8 @@ function getCustomWaveformCore(
     return getPulseWave(ctx, 0.125);
   } else if (wave === OscWave.pulse25) {
     return getPulseWave(ctx, 0.25);
+  } else if (wave === OscWave.pulse40) {
+    return getPulseWave(ctx, 0.4);
   } else if (wave === OscWave.ex1) {
     return builders.pdSaw(ctx, 0.98);
   } else if (wave === OscWave.ex2) {
@@ -146,6 +161,8 @@ function getCustomWaveformCore(
     return builders.twoPulseSaw(ctx);
   } else if (wave === OscWave.ex7) {
     return builders.fourPulseSaw(ctx);
+  } else if (wave === OscWave.ex8) {
+    return builders.trapezoid(ctx);
   }
   return "sine"; //fallback, not used
 }
