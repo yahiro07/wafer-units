@@ -42,6 +42,7 @@ export type SynthParameters = {
   //
   _saturation: number;
   press: number;
+  density: number;
 };
 
 export type SynthPresetParameters = SynthParameters;
@@ -70,6 +71,7 @@ export const defaultSynthParameters: SynthParameters = {
   //
   _saturation: 0,
   press: 0,
+  density: 0,
 };
 
 export type LinearParameterKeys = PickKeysForValueType<SynthParameters, number>;

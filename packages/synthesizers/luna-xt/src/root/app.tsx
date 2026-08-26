@@ -285,6 +285,7 @@ const PageRoot = () => {
             step={1}
           />
           <ParameterSlider label="PRESS" paramKey="press" />
+          <ParameterSlider label="DENSE" paramKey="density" />
           {/* <div class="flex-v gap-1 self-start">
             <TextButton
               label="SAT"

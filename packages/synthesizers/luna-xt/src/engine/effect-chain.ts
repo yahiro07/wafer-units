@@ -1,6 +1,8 @@
 import { createCompressorUnit } from "@/engine/compressor-unit";
+import { createDensityShaper } from "@/engine/density-shaper";
 import { SynthesisBus } from "@/engine/engine-defs";
 import { createOutputSaturator } from "@/engine/output-saturator";
+import { connectNodes } from "@/engine/webaudio-helpers";
 import { mapKnobCurveCenterUnity } from "@/utils/volume-curve";
 
 type EffectChain = {
@@ -13,30 +15,36 @@ type EffectChain = {
 export function createEffectChain(bus: SynthesisBus): EffectChain {
   const ac = bus.audioContext;
   const inputNode = ac.createGain();
+  const voicesGain = ac.createGain();
+  const densityShaper = createDensityShaper(ac);
   const compressor = createCompressorUnit(ac);
   const patchGain = ac.createGain();
   const saturator = createOutputSaturator(ac);
   const outputNode = ac.createGain();
-  inputNode.connect(compressor.inputNode);
-  compressor.outputNode.connect(patchGain);
-  patchGain.connect(saturator.inputNode);
-  saturator.outputNode.connect(outputNode);
 
-  inputNode.gain.value = 0.3; //voice mix gain
+  const disconnects = connectNodes(
+    inputNode,
+    densityShaper,
+    voicesGain,
+    compressor,
+    patchGain,
+    saturator,
+    outputNode,
+  );
+
+  voicesGain.gain.value = 0.5;
   return {
     inputNode,
     outputNode,
     update() {
       const pr = bus.parameters;
-      patchGain.gain.value = mapKnobCurveCenterUnity(pr.patchVolume);
       compressor.update(pr.press);
+      densityShaper.update(pr.density);
+      patchGain.gain.value = mapKnobCurveCenterUnity(pr.patchVolume);
       saturator.update(pr._saturation);
     },
     cleanup() {
-      inputNode.disconnect();
-      patchGain.disconnect();
-      compressor.cleanup();
-      saturator.cleanup();
+      disconnects();
     },
   };
 }
