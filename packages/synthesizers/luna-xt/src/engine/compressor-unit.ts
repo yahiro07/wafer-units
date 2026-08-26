@@ -51,9 +51,9 @@ export function createCompressorUnit(ac: AudioContext) {
         compressor.threshold.value = invPower2(level) * -40;
         compressor.ratio.value = 1 + power2(level) * 5;
         compressor.knee.value = 8;
-        compressor.attack.value = 0.02;
+        compressor.attack.value = 0.005;
         compressor.release.value = 0.2;
-        const makeupGainValue = 1 + power2(level) * 2;
+        const makeupGainValue = 1 + power2(level) * 3;
         makeupGain.gain.value = makeupGainValue / scaler;
       }
     },

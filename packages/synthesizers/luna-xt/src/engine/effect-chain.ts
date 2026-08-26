@@ -13,13 +13,13 @@ type EffectChain = {
 export function createEffectChain(bus: SynthesisBus): EffectChain {
   const ac = bus.audioContext;
   const inputNode = ac.createGain();
-  const patchGain = ac.createGain();
   const compressor = createCompressorUnit(ac);
+  const patchGain = ac.createGain();
   const saturator = createOutputSaturator(ac);
   const outputNode = ac.createGain();
-  inputNode.connect(patchGain);
-  patchGain.connect(compressor.inputNode);
-  compressor.outputNode.connect(saturator.inputNode);
+  inputNode.connect(compressor.inputNode);
+  compressor.outputNode.connect(patchGain);
+  patchGain.connect(saturator.inputNode);
   saturator.outputNode.connect(outputNode);
 
   inputNode.gain.value = 0.3; //voice mix gain

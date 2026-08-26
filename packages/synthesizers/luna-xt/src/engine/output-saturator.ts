@@ -82,6 +82,8 @@ export function createOutputSaturator(ac: AudioContext) {
           outputNode.gain.value = 1;
         } else {
           inputNode.connect(outputNode);
+          inputNode.gain.value = 1;
+          outputNode.gain.value = 1;
         }
         currentType = nextType;
       }
