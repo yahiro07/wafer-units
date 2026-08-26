@@ -106,7 +106,7 @@ export function createSynthesizerEngine(
   const sharedFilter = createSharedFilterUnit(bus);
   const effectChain = createEffectChain(bus);
 
-  voiceMixNode.gain.value = 0.3;
+  voiceMixNode.gain.value = 0.5;
   voiceMixNode.connect(sharedFilter.inputNode);
   sharedFilter.outputNode.connect(effectChain.inputNode);
   effectChain.outputNode.connect(destinationNode);
