@@ -1,5 +1,6 @@
 import { OscWave } from "@/defs/definitions";
-import { tunableSigmoid } from "@/utils/synth-math-utils";
+import { topLimit } from "@/utils/helpers";
+import { fracPart, invPower2, tunableSigmoid } from "@/utils/synth-math-utils";
 
 function getPulseWave(context: AudioContext, duty: number) {
   const terms = 32;
@@ -10,6 +11,21 @@ function getPulseWave(context: AudioContext, duty: number) {
     const n = i;
     real[i] = (2 / (n * Math.PI)) * Math.sin(Math.PI * n * duty);
     imag[i] = 0;
+  }
+  return context.createPeriodicWave(real, imag, {
+    disableNormalization: false,
+  });
+}
+
+function getSawWaveEx(context: AudioContext, k: number) {
+  const terms = 32;
+  const real = new Float32Array(terms);
+  const imag = new Float32Array(terms);
+  real[0] = 0;
+  for (let i = 1; i < terms; i++) {
+    const n = i;
+    real[i] = 0;
+    imag[i] = -2 / (n ** k * Math.PI);
   }
   return context.createPeriodicWave(real, imag, {
     disableNormalization: false,
@@ -54,6 +70,54 @@ const builders = {
       return Math.sin(2 * Math.PI * Math.pow(pp, 1 - level));
     });
   },
+  expoSaw(ctx: AudioContext, k: number) {
+    return makePeriodicWave(ctx, (pp) => {
+      return 2 * pp ** k - 1;
+    });
+  },
+  syncSaw(ctx: AudioContext, speed: number) {
+    return makePeriodicWave(ctx, (pp) => {
+      if (1) {
+        const pp2 = fracPart(pp * speed);
+        return 2 * pp2 - 1;
+      } else {
+        const pivot = 1 / speed;
+        let pp2;
+        if (pp < pivot) {
+          pp2 = pp / pivot;
+        } else {
+          pp2 = (pp - pivot) / (1 - pivot);
+        }
+        return 2 * pp2 - 1;
+      }
+    });
+  },
+  pulseSaw(ctx: AudioContext, k: number) {
+    return makePeriodicWave(ctx, (pp) => {
+      const y = pp < k ? invPower2(pp / k) : 0;
+      return y * 2 - 1;
+    });
+  },
+  twoPulseSaw(ctx: AudioContext) {
+    return makePeriodicWave(ctx, (pp) => {
+      const pp2 = fracPart(pp * 3);
+      const y = pp < 2 / 3 ? pp2 : 0;
+      return y * 2 - 1;
+    });
+  },
+  fourPulseSaw(ctx: AudioContext) {
+    return makePeriodicWave(ctx, (pp) => {
+      if (1) {
+        const pp2 = fracPart(pp * 5);
+        const y = (pp < 4 / 5 ? pp2 : 0) * topLimit((pp * 5) / 4, 1);
+        return y * 2 - 1;
+      } else {
+        const pp2 = fracPart(pp * 4);
+        const y = pp < 3 / 4 ? pp2 : 0;
+        return y * 2 - 1;
+      }
+    });
+  },
 };
 
 function getCustomWaveformCore(
@@ -70,6 +134,18 @@ function getCustomWaveformCore(
     return getPulseWave(ctx, 0.25);
   } else if (wave === OscWave.ex1) {
     return builders.pdSaw(ctx, 0.98);
+  } else if (wave === OscWave.ex2) {
+    return getSawWaveEx(ctx, 0.8);
+  } else if (wave === OscWave.ex3) {
+    return builders.expoSaw(ctx, 0.3);
+  } else if (wave === OscWave.ex4) {
+    return builders.syncSaw(ctx, 1.5);
+  } else if (wave === OscWave.ex5) {
+    return builders.pulseSaw(ctx, 0.3);
+  } else if (wave === OscWave.ex6) {
+    return builders.twoPulseSaw(ctx);
+  } else if (wave === OscWave.ex7) {
+    return builders.fourPulseSaw(ctx);
   }
   return "sine"; //fallback, not used
 }
