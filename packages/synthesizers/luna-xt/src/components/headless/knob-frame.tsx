@@ -12,6 +12,7 @@ export function KnobFrame(props: {
   dragRange?: number;
   onClick?: () => void;
   dragDisabled?: boolean;
+  invertY?: boolean;
 }) {
   const handlePointerDown = (e0: PointerEvent) => {
     const min = props.min;
@@ -27,8 +28,11 @@ export function KnobFrame(props: {
       onMove(e) {
         if (props.dragDisabled) return;
 
-        const delta =
+        let delta =
           -(e.position.y - e.originalPosition.y) / (dragRange / (max - min));
+        if (props.invertY) {
+          delta = -delta;
+        }
         let newValue = originalValue + delta;
         if (step > 0) {
           newValue = Math.round(newValue / step) * step;

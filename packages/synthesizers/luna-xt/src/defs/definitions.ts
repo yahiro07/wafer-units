@@ -19,8 +19,21 @@ export enum OscWave {
 export const numOscWaveTypes = OscWave.__num;
 
 export type SynthParameters = {
-  osc1Wave: OscWave;
-  osc1Decay: number;
+  osc1Octave: number; //-2~2
+  osc1Wave: OscWave; //1~12
+  osc1Unison: number; //1~5
+  osc1Spread: boolean;
+  osc1Detune: number; //0~1
+  osc1Decay: number; //0~1
+  //
+  osc2Octave: number;
+  osc2Wave: OscWave;
+  osc2Unison: number;
+  osc2Spread: boolean;
+  osc2Detune: number;
+  osc2Decay: number;
+  //
+  oscMix: number;
   ampHead: number;
   ampRelease: number;
   ampExponential: boolean;
@@ -31,8 +44,21 @@ export type SynthParameters = {
 export type SynthPresetParameters = SynthParameters;
 
 export const defaultSynthParameters: SynthParameters = {
+  osc1Octave: 0,
   osc1Wave: OscWave.sawtooth,
+  osc1Unison: 1,
+  osc1Spread: true,
+  osc1Detune: 0,
   osc1Decay: 0,
+  //
+  osc2Octave: 0,
+  osc2Wave: OscWave.sawtooth,
+  osc2Unison: 1,
+  osc2Spread: true,
+  osc2Detune: 0,
+  osc2Decay: 0,
+  //
+  oscMix: 0,
   ampHead: 0,
   ampRelease: 0,
   ampExponential: false,

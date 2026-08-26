@@ -9,15 +9,20 @@ export const Slider = ({
   min = 0,
   max = 1,
   step = 0.01,
+  invertY,
 }: {
   value: number;
   onChange: (value: number) => void;
   min?: number;
   max?: number;
   step?: number;
+  invertY?: boolean;
 }) => {
   const d = 24.5;
-  const transY = linearInterpolate(value, min, max, d, -d);
+  let transY = linearInterpolate(value, min, max, d, -d);
+  if (invertY) {
+    transY *= -1;
+  }
   return (
     <KnobFrame
       value={value}
@@ -25,6 +30,7 @@ export const Slider = ({
       max={max}
       step={step}
       onChange={onChange}
+      invertY={invertY}
     >
       <div class={styles}>
         <div class="tick" style={{ transform: `translateY(${transY}px)` }} />

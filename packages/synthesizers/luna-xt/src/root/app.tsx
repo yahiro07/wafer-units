@@ -1,6 +1,10 @@
 import { LabeledBox } from "@/components/labeled-controls";
 import { actions } from "@/root/actions";
-import { LinearParameterKeys, numOscWaveTypes } from "@/defs/definitions";
+import {
+  BoolParameterKeys,
+  LinearParameterKeys,
+  numOscWaveTypes,
+} from "@/defs/definitions";
 import { useSetupDrivers } from "@/root/drivers";
 import { allPresetKeys, store } from "@/root/store";
 import { createPlainSelectorOptions } from "@/utils/selector-option";
@@ -80,6 +84,7 @@ const ParameterSlider = ({
   max,
   step,
   onLabelClick,
+  invertY,
 }: {
   paramKey: LinearParameterKeys;
   label: string;
@@ -87,6 +92,7 @@ const ParameterSlider = ({
   max?: number;
   step?: number;
   onLabelClick?: () => void;
+  invertY?: boolean;
 }) => {
   const { parameters } = store.useSnapshot();
   return (
@@ -97,6 +103,7 @@ const ParameterSlider = ({
         max={max}
         step={step}
         onChange={(v) => actions.setParameter(paramKey, v)}
+        invertY={invertY}
       />
     </LabeledBox>
   );
@@ -146,6 +153,72 @@ const TextButton = ({
   );
 };
 
+type OscId = "osc1" | "osc2";
+
+function useOscParamKeys(oscId: OscId): {
+  octave: LinearParameterKeys;
+  wave: LinearParameterKeys;
+  unison: LinearParameterKeys;
+  spread: BoolParameterKeys;
+  detune: LinearParameterKeys;
+  decay: LinearParameterKeys;
+} {
+  if (oscId === "osc1") {
+    return {
+      octave: "osc1Octave",
+      wave: "osc1Wave",
+      unison: "osc1Unison",
+      spread: "osc1Spread",
+      detune: "osc1Detune",
+      decay: "osc1Decay",
+    };
+  } else {
+    return {
+      octave: "osc2Octave",
+      wave: "osc2Wave",
+      unison: "osc2Unison",
+      spread: "osc2Spread",
+      detune: "osc2Detune",
+      decay: "osc2Decay",
+    };
+  }
+}
+
+const OscSection = ({ oscId }: { oscId: OscId }) => {
+  const { parameters } = store.useSnapshot();
+  const pk = useOscParamKeys(oscId);
+  return (
+    <SectionFrame header={oscId === "osc1" ? "OSCILLATOR 1" : "OSCILLATOR 2"}>
+      <ParameterSlider
+        label="OCT"
+        paramKey={pk.octave}
+        min={-2}
+        max={2}
+        step={1}
+      />
+      <ParameterSlider
+        label="UNI"
+        paramKey={pk.unison}
+        min={1}
+        max={5}
+        step={1}
+      />
+      <ParameterKnob
+        label="WAVE"
+        paramKey={pk.wave}
+        max={numOscWaveTypes - 1}
+        step={1}
+      />
+      <ParameterKnob
+        label={parameters[pk.spread] ? "DET-SP†" : "DET†"}
+        paramKey={pk.detune}
+        onLabelClick={() => actions.toggleBoolParameter(pk.spread)}
+      />
+      <ParameterKnob label="DECAY" paramKey={pk.decay} />
+    </SectionFrame>
+  );
+};
+
 const PageRoot = () => {
   const { parameters } = store.useSnapshot();
   return (
@@ -161,25 +234,13 @@ const PageRoot = () => {
           <PresetSelectionPart />
           <RandomizerButton />
         </div>
-        {/* <div class="self-start mt-1.5px">
-          <OctaveShiftContainer />
-        </div> */}
         <ParameterKnob label="VOLUME" paramKey="patchVolume" />
       </div>
       <div class="flex-h gap-8">
         <div class="flex-h gap-6">
-          <SectionFrame header="OSC1">
-            <ParameterKnob
-              label="WAVE1"
-              paramKey="osc1Wave"
-              max={numOscWaveTypes - 1}
-              step={1}
-            />
-            <ParameterKnob label="DECAY" paramKey="osc1Decay" />
-            {/* <ParameterKnob label="DET" paramKey="osc1Detune" /> */}
-          </SectionFrame>
+          <OscSection oscId="osc1" />
 
-          <SectionFrame header="AMP">
+          <SectionFrame header="AMPLIFIER">
             <ParameterSlider label="HEAD" paramKey="ampHead" />
             <ParameterKnob label="RELEASE" paramKey="ampRelease" />
             <div class="flex-v gap-1 self-start">
@@ -212,6 +273,12 @@ const PageRoot = () => {
             /> */}
           </SectionFrame>
         </div>
+      </div>
+      <div class="flex-h gap-6">
+        <OscSection oscId="osc2" />
+        <SectionFrame header="CONTROL">
+          <ParameterSlider label="MIX" paramKey="oscMix" invertY />
+        </SectionFrame>
       </div>
 
       <div class="flex-h gap-8 justify-between"></div>
