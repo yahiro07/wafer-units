@@ -27,8 +27,8 @@ function setupUnit() {
     });
   } else {
     return setupMidiKeyboardInput({
-      noteOn: engine.noteOn,
-      noteOff: engine.noteOff,
+      noteOn: (noteNumber) => engine.noteOn(noteNumber),
+      noteOff: (noteNumber) => engine.noteOff(noteNumber),
     });
   }
 }
