@@ -21,6 +21,7 @@ export function KnobFrame(props: {
     const dragRange = props.dragRange ?? 100;
 
     const originalValue = props.value;
+    let lastValue = originalValue;
 
     let moved = false;
     let totalDist = 0;
@@ -38,7 +39,10 @@ export function KnobFrame(props: {
           newValue = Math.round(newValue / step) * step;
         }
         newValue = clampValue(newValue, min, max);
-        props.onChange(newValue);
+        if (newValue !== lastValue) {
+          props.onChange(newValue);
+          lastValue = newValue;
+        }
         totalDist += Math.abs(e.position.y - e.originalPosition.y);
         if (totalDist > 4) {
           moved = true;
