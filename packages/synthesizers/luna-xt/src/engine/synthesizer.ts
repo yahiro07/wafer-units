@@ -30,11 +30,15 @@ function createVoice(
   const osc2 = createOscillatorsUnit("osc2", bus, noteNumber);
   const osc1Amp = createAmplifierUnit("osc1", bus);
   const osc2Amp = createAmplifierUnit("osc2", bus);
+  const osc1MixGain = ac.createGain();
+  const osc2MixGain = ac.createGain();
 
   osc1.outputNode.connect(osc1Amp.inputNode);
-  osc1Amp.outputNode.connect(voiceMixNode);
+  osc1Amp.outputNode.connect(osc1MixGain);
   osc2.outputNode.connect(osc2Amp.inputNode);
-  osc2Amp.outputNode.connect(voiceMixNode);
+  osc2Amp.outputNode.connect(osc2MixGain);
+  osc1MixGain.connect(voiceMixNode);
+  osc2MixGain.connect(voiceMixNode);
 
   const lifeSpanNode = ac.createConstantSource();
 
@@ -47,6 +51,8 @@ function createVoice(
     osc2Amp.outputNode.disconnect();
     osc1Amp.cleanup();
     osc2Amp.cleanup();
+    osc1MixGain.disconnect();
+    osc2MixGain.disconnect();
     endedCallback?.();
   };
 
@@ -56,6 +62,8 @@ function createVoice(
     update() {
       osc1.update();
       osc2.update();
+      osc1MixGain.gain.value = 1 - bus.parameters.oscMix;
+      osc2MixGain.gain.value = bus.parameters.oscMix;
     },
     gateOn() {
       const time = gateOnTime;
@@ -118,6 +126,7 @@ export function createSynthesizerEngine(
         releasingVoices.length = 0;
       }
       const voice = createVoice(bus, voiceMixNode, noteNumber, time);
+      voice.update();
       voice.gateOn();
       activeVoices.push(voice);
       sharedFilter.gateOn(time);

@@ -25,7 +25,7 @@ export function createOscillatorsUnit(
 
   const internal = {
     applyParameters() {
-      const frequency = midiToFrequency(noteNumber);
+      const frequency = midiToFrequency(noteNumber + pr[pk.octave] * 12);
       osc.setFrequency(frequency);
       osc.setWaveform(getCustomWaveform(ac, pr[pk.wave]));
     },
