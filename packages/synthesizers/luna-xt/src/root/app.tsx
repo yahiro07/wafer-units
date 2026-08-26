@@ -277,6 +277,7 @@ const PageRoot = () => {
         <OscSection oscId="osc2" />
         <SectionFrame header="CONTROL">
           <ParameterSlider label="MIX" paramKey="oscMix" invertY />
+          <ParameterSlider label="PRESS" paramKey="_saturationPress" />
           <div class="flex-v gap-1 self-start">
             <TextButton
               label="SAT"

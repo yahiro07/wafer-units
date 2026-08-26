@@ -23,7 +23,10 @@ export function createEffectChain(bus: SynthesisBus): EffectChain {
     outputNode,
     update() {
       gainNode.gain.value = mapKnobCurveCenterUnity(bus.parameters.patchVolume);
-      saturationNode.setEnabled(bus.parameters._saturation, ac.currentTime);
+      saturationNode.setEnabled(
+        bus.parameters._saturation,
+        bus.parameters._saturationPress,
+      );
     },
     cleanup() {
       inputNode.disconnect();

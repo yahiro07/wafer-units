@@ -43,9 +43,13 @@ export function createOutputSaturator(audioContext: AudioContext) {
   return {
     inputNode,
     outputNode,
-    setEnabled(enabled: boolean, time: number) {
-      dryGain.gain.setValueAtTime(enabled ? 0 : 1, time);
-      wetGain.gain.setValueAtTime(enabled ? 1 : 0, time);
+    setEnabled(enabled: boolean, press: number) {
+      dryGain.gain.value = enabled ? 0 : 1;
+      wetGain.gain.value = enabled ? 1 : 0;
+      const sc = 1 + press * 3;
+      const sc2 = 1 + press * 1.5;
+      preGain.gain.value = (1 / INPUT_HEADROOM) * sc;
+      wetGain.gain.value = enabled ? 1 / sc2 : 0;
     },
     cleanup() {
       inputNode.disconnect();
