@@ -39,6 +39,8 @@ export type SynthParameters = {
   ampExponential: boolean;
   ampReleaseLastOnly: boolean;
   patchVolume: number;
+  //
+  _saturation: boolean;
 };
 
 export type SynthPresetParameters = SynthParameters;
@@ -64,6 +66,8 @@ export const defaultSynthParameters: SynthParameters = {
   ampExponential: false,
   ampReleaseLastOnly: false,
   patchVolume: 0.5,
+  //
+  _saturation: true,
 };
 
 export type LinearParameterKeys = PickKeysForValueType<SynthParameters, number>;
