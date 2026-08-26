@@ -117,6 +117,7 @@ export function createSynthesizerEngine(
       for (const voice of activeVoices) {
         voice.update();
       }
+      effectChain.update();
     },
     noteOn(noteNumber, time = ac.currentTime) {
       if (bus.parameters.ampReleaseLastOnly && releasingVoices.length > 0) {

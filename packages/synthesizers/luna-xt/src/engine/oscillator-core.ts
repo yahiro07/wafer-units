@@ -1,36 +1,54 @@
+export type OscillatorCore = {
+  start(time: number): void;
+  stop(): void;
+  setFrequency(frequency: number): void;
+  setWaveform(waveform: OscillatorType | PeriodicWave): void;
+  setVolume(volume: number): void;
+  setPanning(panning: number): void;
+};
+
 export function createOscillatorCore(
   ac: AudioContext,
   destinationNode: AudioNode,
-) {
-  const osc = ac.createOscillator();
-  osc.connect(destinationNode);
+): OscillatorCore {
+  const oscNode = ac.createOscillator();
+  const gainNode = ac.createGain();
+  const pannerNode = ac.createStereoPanner();
+
+  oscNode.connect(gainNode).connect(pannerNode).connect(destinationNode);
 
   let lastWave: OscillatorType | PeriodicWave | undefined;
 
   return {
+    start(time: number) {
+      oscNode.start(time);
+    },
+    stop() {
+      oscNode.stop();
+      oscNode.disconnect();
+      gainNode.disconnect();
+      pannerNode.disconnect();
+    },
     setFrequency(frequency: number) {
-      if (osc.frequency.value !== frequency) {
-        osc.frequency.value = frequency;
+      if (oscNode.frequency.value !== frequency) {
+        oscNode.frequency.value = frequency;
       }
     },
     setWaveform(waveform: OscillatorType | PeriodicWave) {
       if (waveform !== lastWave) {
         if (waveform instanceof PeriodicWave) {
-          osc.setPeriodicWave(waveform);
+          oscNode.setPeriodicWave(waveform);
         } else {
-          osc.type = waveform;
+          oscNode.type = waveform;
         }
         lastWave = waveform;
       }
     },
-    start(time: number) {
-      osc.start(time);
+    setVolume(volume: number) {
+      gainNode.gain.value = volume;
     },
-    stop(time?: number) {
-      osc.stop(time);
-    },
-    cleanup() {
-      osc.disconnect();
+    setPanning(panning: number) {
+      pannerNode.pan.value = panning;
     },
   };
 }
