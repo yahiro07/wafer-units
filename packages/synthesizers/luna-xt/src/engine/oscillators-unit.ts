@@ -1,5 +1,5 @@
 import { oscParameterKeys, SynthesisBus } from "@/engine/engine-defs";
-import { createOscillatorUnit } from "@/engine/oscillator-unit";
+import { createOscillatorCore } from "@/engine/oscillator-core";
 import { getCustomWaveform } from "@/engine/custom-waveforms";
 import { midiToFrequency } from "@/utils/synth-math-utils";
 import { OscId } from "@/defs/definitions";
@@ -21,7 +21,7 @@ export function createOscillatorsUnit(
   const ac = bus.audioContext;
   const pr = bus.parameters;
   const outputNode = ac.createGain();
-  const osc = createOscillatorUnit(ac, outputNode);
+  const osc = createOscillatorCore(ac, outputNode);
 
   const internal = {
     applyParameters() {

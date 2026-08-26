@@ -1,4 +1,4 @@
-export function createOscillatorUnit(
+export function createOscillatorCore(
   ac: AudioContext,
   destinationNode: AudioNode,
 ) {
