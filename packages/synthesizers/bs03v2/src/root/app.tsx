@@ -2,37 +2,36 @@ import { LabeledBox } from "@/components/labeled-controls";
 import { actions } from "@/root/actions";
 import { LinearParameterKeys } from "@/defs/definitions";
 import { useSetupDrivers } from "@/root/drivers";
-import { allPresetKeys, store } from "@/root/store";
-import { createPlainSelectorOptions } from "@/utils/selector-option";
+import { store } from "@/root/store";
 import { Slider } from "@/components/slider";
 import { Knob } from "@/components/knob";
 import { ComponentChildren } from "preact";
 import { cz } from "@/common/css-realm";
 import { Button } from "@/components/button";
-import { Selector } from "@/components/selector";
 import { appEnvs } from "@/common/app-envs";
+import { PatternEditor } from "@/root/pattern-editor";
 
-const presetOptions = createPlainSelectorOptions(allPresetKeys);
+// const presetOptions = createPlainSelectorOptions(allPresetKeys);
 
-const PresetSelectionPart = () => {
-  const { presetKey } = store.useSnapshot();
-  return (
-    <div class="flex-ha gap-1.5">
-      <Button asr={1.3} onClick={() => actions.shiftPreset(-1)}>
-        <i class="ri-arrow-left-s-line text-2xl" />
-      </Button>
-      <Selector
-        value={presetKey}
-        onChange={actions.setPreset}
-        options={presetOptions}
-        height={44}
-      />
-      <Button asr={1.3} onClick={() => actions.shiftPreset(1)}>
-        <i class="ri-arrow-right-s-line text-2xl" />
-      </Button>
-    </div>
-  );
-};
+// const PresetSelectionPart = () => {
+//   const { presetKey } = store.useSnapshot();
+//   return (
+//     <div class="flex-ha gap-1.5">
+//       <Button asr={1.3} onClick={() => actions.shiftPreset(-1)}>
+//         <i class="ri-arrow-left-s-line text-2xl" />
+//       </Button>
+//       <Selector
+//         value={presetKey}
+//         onChange={actions.setPreset}
+//         options={presetOptions}
+//         height={44}
+//       />
+//       <Button asr={1.3} onClick={() => actions.shiftPreset(1)}>
+//         <i class="ri-arrow-right-s-line text-2xl" />
+//       </Button>
+//     </div>
+//   );
+// };
 
 const RandomizerButton = () => {
   return (
@@ -60,11 +59,11 @@ const ParameterKnob = ({
   step?: number;
   onLabelClick?: () => void;
 }) => {
-  const { parameters } = store.useSnapshot();
+  const { synthParameters } = store.useSnapshot();
   return (
     <LabeledBox label={label} onLabelClick={onLabelClick}>
       <Knob
-        value={parameters[paramKey]}
+        value={synthParameters[paramKey]}
         min={min}
         max={max}
         step={step}
@@ -91,11 +90,11 @@ const ParameterSlider = ({
   onLabelClick?: () => void;
   invertY?: boolean;
 }) => {
-  const { parameters } = store.useSnapshot();
+  const { synthParameters } = store.useSnapshot();
   return (
     <LabeledBox label={label} onLabelClick={onLabelClick}>
       <Slider
-        value={parameters[paramKey]}
+        value={synthParameters[paramKey]}
         min={min}
         max={max}
         step={step}
@@ -372,28 +371,35 @@ const HeaderTextButton = ({
 //   );
 // };
 
-const PageRoot = () => {
+const ParametersSection = () => {
   const isDebug = appEnvs.isDevelopment;
   return (
-    <div>
-      <div class="flex-h gap-8">
-        <ParameterSlider label="WAVE" paramKey="oscWave" max={1} step={1} />
-        <ParameterKnob label="CUTOFF" paramKey="filterCutoff" />
-        <ParameterKnob label="PEAK" paramKey="filterPeak" />
-        <ParameterKnob label="ENV MOD" paramKey="filterEnvMod" />
-        <ParameterKnob label="DECAY" paramKey="ampDecay" />
-        <ParameterKnob label="DRIVE" paramKey="density" />
-        <ParameterKnob label="VOLUME" paramKey="patchVolume" />
-        {isDebug && (
-          <ParameterSlider
-            label="SAT"
-            paramKey="_saturation"
-            min={0}
-            max={2}
-            step={1}
-          />
-        )}
-      </div>
+    <div class="flex-c gap-8">
+      <ParameterSlider label="WAVE" paramKey="oscWave" max={1} step={1} />
+      <ParameterKnob label="CUTOFF" paramKey="filterCutoff" />
+      <ParameterKnob label="PEAK" paramKey="filterPeak" />
+      <ParameterKnob label="ENV MOD" paramKey="filterEnvMod" />
+      <ParameterKnob label="DECAY" paramKey="ampDecay" />
+      <ParameterKnob label="DRIVE" paramKey="density" />
+      <ParameterKnob label="VOLUME" paramKey="patchVolume" />
+      {isDebug && (
+        <ParameterSlider
+          label="SAT"
+          paramKey="_saturation"
+          min={0}
+          max={2}
+          step={1}
+        />
+      )}
+    </div>
+  );
+};
+
+const PageRoot = () => {
+  return (
+    <div class="flex-v gap-3">
+      <ParametersSection />
+      <PatternEditor />
     </div>
   );
 };

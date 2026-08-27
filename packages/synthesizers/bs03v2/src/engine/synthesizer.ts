@@ -1,4 +1,5 @@
-import { defaultSynthParameters, SynthesizerEngine } from "@/defs/definitions";
+import { defaultSynthParameters } from "@/defs/definitions";
+import { ISynthesizer } from "@/defs/interfaces";
 import { createAmplifierUnit } from "@/engine/amplifier-unit";
 import { createEffectChain } from "@/engine/effect-chain";
 import { SynthesisBus } from "@/engine/engine-defs";
@@ -70,7 +71,7 @@ function createVoice(
 
 export function createSynthesizerEngine(
   unitInterface: UnitInterface | undefined,
-): SynthesizerEngine {
+): ISynthesizer {
   const ac = unitInterface?.audioContext ?? new AudioContext();
   const destinationNode = unitInterface?.audioOutputNode ?? ac.destination;
 
@@ -92,7 +93,7 @@ export function createSynthesizerEngine(
   let latestNoteNumber = 48;
 
   return {
-    affectParameters(_parameters) {
+    setParameters(_parameters) {
       Object.assign(bus.parameters, _parameters);
       for (const voice of activeVoices) {
         voice.update();

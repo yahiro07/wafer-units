@@ -40,19 +40,9 @@ function setupUnit() {
 }
 
 function setupSynchronization() {
-  // let latestParameters: Partial<SynthParameters> = {};
-  return store.subscribe(({ parameters }) => {
-    if (parameters) {
-      // const changedAttrs: Partial<SynthParameters> = {};
-      // for (const _key in parameters) {
-      //   const key = _key as keyof SynthParameters;
-      //   if (parameters[key] !== latestParameters[key]) {
-      //     changedAttrs[key] = parameters[key] as any;
-      //     latestParameters[key] = parameters[key] as any;
-      //   }
-      // }
-      // engine.affectParameters(changedAttrs);
-      engine.affectParameters(parameters);
+  return store.subscribe(({ synthParameters }) => {
+    if (synthParameters) {
+      engine.setParameters(synthParameters);
     }
   }, true);
 }
