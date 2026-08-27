@@ -202,7 +202,7 @@ const ButtonsRow = () => {
         <Button text="CLR" onClick={actions.clearStepNotes} />
       </div>
       <div class="flex-ha gap-2">
-        <div>notes preset: {pitchPresetIndex}</div>
+        <div>pitches preset: {pitchPresetIndex}</div>
         <Button text="V" onClick={actions.shiftPitchPreset} />
         {/* <Button text="R" onClick={actions.randomizePitchPreset} /> */}
         <Button
@@ -261,15 +261,40 @@ const ModifiersRow = () => {
   );
 };
 
+const PitchesSelectionRow = () => {
+  const { pitchIndices } = store.useSnapshot();
+  return (
+    <div class="flex-ha mt-1">
+      <div class="w-[70px] text-sm pl-3">Pitches</div>
+      <div class="flex-h grow">
+        {seqNumbers(25).map((i) => {
+          const active = pitchIndices.includes(i);
+          return (
+            <div
+              key={i}
+              class={cz(
+                "flex-1 bd-clGridBg flex-c h-[32px] cursor-pointer",
+                active && "bg-clHighlight",
+              )}
+              onClick={() => actions.togglePitchIndex(i)}
+            >
+              {i}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
 export const PatternEditor = () => {
   return (
     <div class="flex-c bg-clPageBg text-clPageText">
       <div class="flex-v gap-3">
-        <div class="flex-v gap-2">
-          <ButtonsRow />
-          <StepsGridRow />
-          <ModifiersRow />
-        </div>
+        <ButtonsRow />
+        <StepsGridRow />
+        <ModifiersRow />
+        <PitchesSelectionRow />
       </div>
     </div>
   );

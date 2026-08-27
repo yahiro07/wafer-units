@@ -71,6 +71,27 @@ export const actions = {
       prev.map((flag, i) => (i === stepIndex ? toggleBit(flag, 0) : flag)),
     );
   },
+  togglePitchIndex(pitchIndex: number) {
+    const pitches = [...store.state.pitchIndices];
+    const adding = !pitches.includes(pitchIndex);
+    const len = pitches.length;
+    if (adding) {
+      if (len >= 6) {
+        if (pitchIndex < 12) {
+          pitches.pop();
+        } else {
+          pitches.shift();
+        }
+      }
+    } else {
+      if (len <= 1) return;
+    }
+    const newPitchIndices = adding
+      ? [...pitches, pitchIndex]
+      : pitches.filter((p) => p !== pitchIndex);
+    newPitchIndices.sort((a, b) => a - b);
+    store.setPitchIndices(newPitchIndices);
+  },
   toggleAccent(stepIndex: number) {
     store.setStepModifierFlags((prev) =>
       prev.map((flag, i) => (i === stepIndex ? toggleBit(flag, 1) : flag)),
