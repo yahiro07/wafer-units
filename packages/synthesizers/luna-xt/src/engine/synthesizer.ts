@@ -62,8 +62,9 @@ function createVoice(
     update() {
       osc1.update();
       osc2.update();
-      osc1MixGain.gain.value = 1 - bus.parameters.oscMix;
-      osc2MixGain.gain.value = bus.parameters.oscMix;
+      const t = bus.parameters.oscMix;
+      osc1MixGain.gain.value = Math.sqrt(1 - t);
+      osc2MixGain.gain.value = Math.sqrt(t);
     },
     gateOn() {
       const time = gateOnTime;
