@@ -2,12 +2,13 @@ import { cz } from "@/common/css-realm";
 import { actions } from "@/root/actions";
 import { store } from "@/root/store";
 import { isBitSet } from "@/utils/bit-flag-helper";
-import { seqNumbers, iife } from "@/utils/helpers";
+import { seqNumbers, iife, topLimit } from "@/utils/helpers";
 import { npx } from "@/utils/utility-styles";
 import { ComponentChildren } from "preact";
 
 const uiConfigs = {
-  noteGaugeHeight: 220,
+  notesGridHeight: 220,
+  noteCellBaseHeight: 50,
   modifierStripCellHeight: 40,
 };
 
@@ -124,7 +125,7 @@ const ModifierCell = ({
 
 const ModifierStripIndex = ({ cellHeight }: { cellHeight: number }) => {
   return (
-    <div class="w-[70px] bd-clGridLine-0.5px text-sm">
+    <div class="w-[70px] text-sm">
       <ModifierCell height={cellHeight}>Slide</ModifierCell>
       <ModifierCell height={cellHeight}>Accent</ModifierCell>
     </div>
@@ -143,7 +144,7 @@ const ModifierStrip = ({
   const hasSlide = isBitSet(stepModifierFlag, 0);
   const hasAccent = isBitSet(stepModifierFlag, 1);
   return (
-    <div class="w-[56px] bg-clGridBg bd-clGridLine-0.5px">
+    <div class="w-[56px] bg-clGridBg">
       <ModifierCell
         height={cellHeight}
         className="cursor-pointer"
@@ -193,7 +194,7 @@ const Button = ({
 };
 
 export const PatternEditor = () => {
-  const { noteGaugeHeight, modifierStripCellHeight } = uiConfigs;
+  const { modifierStripCellHeight } = uiConfigs;
   const {
     stepNotes,
     stepModifierFlags,
@@ -202,6 +203,10 @@ export const PatternEditor = () => {
     lockPitchPreset,
   } = store.useSnapshot();
   const pitches = pitchIndices;
+  const noteGaugeHeight = topLimit(
+    pitches.length * uiConfigs.noteCellBaseHeight,
+    uiConfigs.notesGridHeight,
+  );
   return (
     <div class="flex-c bg-clPageBg text-clPageText">
       <div class="flex-v gap-3">
@@ -223,7 +228,10 @@ export const PatternEditor = () => {
             </div>
             <div class="grow" />
           </div>
-          <div class="flex-h">
+          <div
+            class="flex-c bd-clGridLine-0.5px bg-[#ccc]"
+            style={{ height: uiConfigs.notesGridHeight }}
+          >
             <NoteGaugeIndex pitches={pitches} height={noteGaugeHeight} />
             {stepNotes.map((note, i) => (
               <NoteGauge
