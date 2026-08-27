@@ -69,10 +69,11 @@ function createVoice(
   };
 }
 
-export function createSynthesizerEngine(
+export function createSynthesizer(
   unitInterface: UnitInterface | undefined,
+  audioContext: AudioContext,
 ): ISynthesizer {
-  const ac = unitInterface?.audioContext ?? new AudioContext();
+  const ac = audioContext;
   const destinationNode = unitInterface?.audioOutputNode ?? ac.destination;
 
   const voiceMixNode = ac.createGain();

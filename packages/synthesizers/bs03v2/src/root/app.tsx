@@ -372,9 +372,17 @@ const HeaderTextButton = ({
 // };
 
 const ParametersSection = () => {
+  const { standalonePlaying } = store.useSnapshot();
   const isDebug = appEnvs.isDevelopment;
   return (
     <div class="flex-c gap-8">
+      <Button
+        children="Play"
+        active={standalonePlaying}
+        onClick={store.toggleStandalonePlaying}
+        height={50}
+        asr={1.5}
+      />
       <ParameterSlider label="WAVE" paramKey="oscWave" max={1} step={1} />
       <ParameterKnob label="CUTOFF" paramKey="filterCutoff" />
       <ParameterKnob label="PEAK" paramKey="filterPeak" />

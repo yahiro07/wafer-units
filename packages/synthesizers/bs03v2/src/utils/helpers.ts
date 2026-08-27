@@ -67,6 +67,16 @@ export function pickObjectMembers<T extends {}, K extends keyof T>(
   return resObject;
 }
 
+export function filterObjectValuesNonUndefined<T extends object>(obj: T) {
+  const resObject: Partial<T> = {};
+  for (const key in obj) {
+    const value = obj[key];
+    if (value === undefined) continue;
+    resObject[key] = value;
+  }
+  return resObject;
+}
+
 export function removeArrayItem<T>(items: T[], item: T) {
   const index = items.indexOf(item);
   if (index >= 0) {
