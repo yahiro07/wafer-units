@@ -94,7 +94,7 @@ export function createSynthesizerEngine(
   unitInterface: UnitInterface | undefined,
 ): SynthesizerEngine {
   const ac = unitInterface?.audioContext ?? new AudioContext();
-  const destinationNode = unitInterface?.audioInputNode ?? ac.destination;
+  const destinationNode = unitInterface?.audioOutputNode ?? ac.destination;
 
   const voiceMixNode = ac.createGain();
   const activeVoices: Voice[] = [];
