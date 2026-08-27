@@ -79,7 +79,7 @@ export const defaultSynthParameters: SynthParameters = {
   oscMix: 0,
   ampHead: 0,
   ampRelease: 0,
-  ampExponential: false,
+  ampExponential: true,
   ampReleaseLastOnly: true,
   patchVolume: 0.5,
   //

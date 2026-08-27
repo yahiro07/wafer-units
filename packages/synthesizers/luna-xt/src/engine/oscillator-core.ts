@@ -36,7 +36,7 @@ export function createOscillatorCore(
     },
     setWaveform(waveform: OscillatorType | PeriodicWave) {
       if (waveform !== lastWave) {
-        if (waveform instanceof PeriodicWave) {
+        if (typeof waveform === "object") {
           oscNode.setPeriodicWave(waveform);
         } else {
           oscNode.type = waveform;
