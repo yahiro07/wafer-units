@@ -106,7 +106,9 @@ export const actions = {
   setBpm(bpm: number) {
     store.setBpm(bpm);
   },
-
+  togglePlayState() {
+    store.toggleStandalonePlaying();
+  },
   setParameter<K extends keyof SynthParameters>(
     key: K,
     value: SynthParameters[K],

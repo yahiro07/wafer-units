@@ -380,7 +380,7 @@ const ParametersSection = () => {
       <Button
         children="Play"
         active={standalonePlaying}
-        onClick={store.toggleStandalonePlaying}
+        onClick={actions.togglePlayState}
         height={50}
         asr={1.5}
       />
@@ -410,7 +410,7 @@ const ParametersSection = () => {
 
 const PageRoot = () => {
   return (
-    <div class="flex-v gap-3">
+    <div class="flex-v gap-3 bg-clPageBg text-clPageText p-8">
       <ParametersSection />
       <PatternEditor />
     </div>

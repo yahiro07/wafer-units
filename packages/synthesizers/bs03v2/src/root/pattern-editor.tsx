@@ -194,13 +194,16 @@ const Button = ({
 };
 
 const ButtonsRow = () => {
-  const { pitchPresetIndex, lockPitchPreset } = store.useSnapshot();
+  const { pitchPresetIndex, lockPitchPreset, standalonePlaying } =
+    store.useSnapshot();
   return (
-    <div class="flex-h gap-6">
-      <div class="flex-h gap-2">
-        <Button text="R" onClick={actions.randomizePatterns} />
-        <Button text="CLR" onClick={actions.clearStepNotes} />
-      </div>
+    <div class="flex-h  gap-6">
+      <Button
+        text="PLAY"
+        active={standalonePlaying}
+        onClick={actions.togglePlayState}
+      />
+      <div class="grow" />
       <div class="flex-ha gap-2">
         <div>pitches preset: {pitchPresetIndex}</div>
         <Button text="V" onClick={actions.shiftPitchPreset} />
@@ -211,7 +214,10 @@ const ButtonsRow = () => {
           onClick={actions.toggleLockPitchPreset}
         />
       </div>
-      <div class="grow" />
+      <div class="flex-h gap-2">
+        <Button text="CLR" onClick={actions.clearStepNotes} />
+        <Button text="RND" onClick={actions.randomizePatterns} />
+      </div>
     </div>
   );
 };
