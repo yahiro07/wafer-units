@@ -10,6 +10,7 @@ import { cz } from "@/common/css-realm";
 import { Button } from "@/components/button";
 import { appEnvs } from "@/common/app-envs";
 import { PatternEditor } from "@/root/pattern-editor";
+import { ScalerBoxSC } from "@/components/headless/scaler-box-sc";
 
 // const presetOptions = createPlainSelectorOptions(allPresetKeys);
 
@@ -383,22 +384,26 @@ const ParametersSection = () => {
         height={50}
         asr={1.5}
       />
-      <ParameterSlider label="WAVE" paramKey="oscWave" max={1} step={1} />
-      <ParameterKnob label="CUTOFF" paramKey="filterCutoff" />
-      <ParameterKnob label="PEAK" paramKey="filterPeak" />
-      <ParameterKnob label="ENV MOD" paramKey="filterEnvMod" />
-      <ParameterKnob label="DECAY" paramKey="ampDecay" />
-      <ParameterKnob label="DRIVE" paramKey="density" />
-      <ParameterKnob label="VOLUME" paramKey="patchVolume" />
-      {isDebug && (
-        <ParameterSlider
-          label="SAT"
-          paramKey="_saturation"
-          min={0}
-          max={2}
-          step={1}
-        />
-      )}
+      <ScalerBoxSC scale={0.9}>
+        <div class="flex-ha gap-8">
+          <ParameterSlider label="WAVE" paramKey="oscWave" max={1} step={1} />
+          <ParameterKnob label="CUTOFF" paramKey="filterCutoff" />
+          <ParameterKnob label="PEAK" paramKey="filterPeak" />
+          <ParameterKnob label="ENV MOD" paramKey="filterEnvMod" />
+          <ParameterKnob label="DECAY" paramKey="ampDecay" />
+          <ParameterKnob label="DRIVE" paramKey="density" />
+          <ParameterKnob label="VOLUME" paramKey="patchVolume" />
+          {isDebug && (
+            <ParameterSlider
+              label="SAT"
+              paramKey="_saturation"
+              min={0}
+              max={2}
+              step={1}
+            />
+          )}
+        </div>
+      </ScalerBoxSC>
     </div>
   );
 };
