@@ -74,7 +74,7 @@ export const defaultSynthParameters: SynthParameters = {
   ampReleaseLastOnly: false,
   patchVolume: 0.5,
   //
-  lpfCutoff: 0,
+  lpfCutoff: 1,
   lpfPeak: 0,
   lpfDecay: 0,
   //

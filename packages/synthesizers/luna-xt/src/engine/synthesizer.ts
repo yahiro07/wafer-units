@@ -116,6 +116,7 @@ export function createSynthesizerEngine(
       for (const voice of activeVoices) {
         voice.update();
       }
+      sharedFilter.update();
       effectChain.update();
     },
     noteOn(noteNumber, time = ac.currentTime) {
