@@ -1,5 +1,6 @@
 import { OscId } from "@/defs/definitions";
 import { oscParameterKeys, SynthesisBus } from "@/engine/engine-defs";
+import { mapUnaryFrom, mapUnaryTo } from "@/utils/synth-math-utils";
 
 type AmplifierUnit = {
   inputNode: AudioNode;
@@ -18,6 +19,18 @@ const configs = {
 };
 
 const helpers = {
+  mapDecaySustain(prDecayOriginal: number) {
+    if (prDecayOriginal < 0.5) {
+      const pos = mapUnaryFrom(prDecayOriginal, 0, 0.5);
+      return { decay: pos, sustain: 0 };
+    } else {
+      const pos = mapUnaryFrom(prDecayOriginal, 1, 0.5);
+      return {
+        decay: mapUnaryTo(pos, 0, 0.5),
+        sustain: mapUnaryTo(pos, 1, 0.2),
+      };
+    }
+  },
   calcDecayTime(prDecay: number, isExponential: boolean) {
     const minDecayTime = 0.01;
     if (isExponential) {
@@ -60,20 +73,20 @@ export function createAmplifierUnit(
     gateOn(time) {
       const pr = bus.parameters;
       const prHead = pr.ampHead;
-      const prDecay = pr[pk.decay];
+      const prDecayOriginal = pr[pk.decay];
+      const { decay, sustain } = helpers.mapDecaySustain(prDecayOriginal);
       const prExponential = pr.ampExponential;
       headNode.gain.setValueAtTime(1, time);
 
-      if (prDecay === 1) return;
+      if (decay === 1) return;
 
-      let decayTime = 0;
       if (prExponential) {
-        decayTime = helpers.calcDecayTime(prDecay, true);
+        const decayTime = helpers.calcDecayTime(decay, true);
         headNode.gain.exponentialRampToValueAtTime(1e-4, time + decayTime);
-        headNode.gain.setValueAtTime(0, time + decayTime);
+        headNode.gain.setValueAtTime(sustain, time + decayTime);
       } else {
-        decayTime = helpers.calcDecayTime(prDecay, false);
-        headNode.gain.linearRampToValueAtTime(0, time + decayTime);
+        const decayTime = helpers.calcDecayTime(decay, false);
+        headNode.gain.linearRampToValueAtTime(sustain, time + decayTime);
       }
     },
     gateOff(time, applyRelease) {
