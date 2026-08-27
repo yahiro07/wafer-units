@@ -193,68 +193,82 @@ const Button = ({
   );
 };
 
-export const PatternEditor = () => {
-  const { modifierStripCellHeight } = uiConfigs;
-  const {
-    stepNotes,
-    stepModifierFlags,
-    pitchIndices,
-    pitchPresetIndex,
-    lockPitchPreset,
-  } = store.useSnapshot();
+const ButtonsRow = () => {
+  const { pitchPresetIndex, lockPitchPreset } = store.useSnapshot();
+  return (
+    <div class="flex-h gap-6">
+      <div class="flex-h gap-2">
+        <Button text="R" onClick={actions.randomizePatterns} />
+        <Button text="CLR" onClick={actions.clearStepNotes} />
+      </div>
+      <div class="flex-ha gap-2">
+        <div>notes preset: {pitchPresetIndex}</div>
+        <Button text="V" onClick={actions.shiftPitchPreset} />
+        {/* <Button text="R" onClick={actions.randomizePitchPreset} /> */}
+        <Button
+          text="lock"
+          active={lockPitchPreset}
+          onClick={actions.toggleLockPitchPreset}
+        />
+      </div>
+      <div class="grow" />
+    </div>
+  );
+};
+
+const StepsGridRow = () => {
+  const { stepNotes, stepModifierFlags, pitchIndices } = store.useSnapshot();
   const pitches = pitchIndices;
   const noteGaugeHeight = topLimit(
     pitches.length * uiConfigs.noteCellBaseHeight,
     uiConfigs.notesGridHeight,
   );
   return (
+    <div
+      class="flex-c bd-clGridLine-0.5px bg-[#ccc]"
+      style={{ height: uiConfigs.notesGridHeight }}
+    >
+      <NoteGaugeIndex pitches={pitches} height={noteGaugeHeight} />
+      {stepNotes.map((note, i) => (
+        <NoteGauge
+          key={i}
+          height={noteGaugeHeight}
+          pitch={note}
+          pitches={pitches}
+          modifierFlag={stepModifierFlags[i]}
+          onChange={(p) => actions.setStepNote(i, p)}
+        />
+      ))}
+    </div>
+  );
+};
+
+const ModifiersRow = () => {
+  const { modifierStripCellHeight } = uiConfigs;
+  const { stepModifierFlags } = store.useSnapshot();
+  return (
+    <div class="flex-h">
+      <ModifierStripIndex cellHeight={modifierStripCellHeight} />
+      {stepModifierFlags.map((stepModifierFlag, i) => (
+        <ModifierStrip
+          key={i}
+          stepIndex={i}
+          cellHeight={modifierStripCellHeight}
+          stepModifierFlag={stepModifierFlag}
+        />
+      ))}
+    </div>
+  );
+};
+
+export const PatternEditor = () => {
+  return (
     <div class="flex-c bg-clPageBg text-clPageText">
       <div class="flex-v gap-3">
         <div class="flex-v gap-2">
-          <div class="flex-h gap-6">
-            <div class="flex-h gap-2">
-              <Button text="R" onClick={actions.randomizePatterns} />
-              <Button text="CLR" onClick={actions.clearStepNotes} />
-            </div>
-            <div class="flex-ha gap-2">
-              <div>notes preset: {pitchPresetIndex}</div>
-              <Button text="V" onClick={actions.shiftPitchPreset} />
-              {/* <Button text="R" onClick={actions.randomizePitchPreset} /> */}
-              <Button
-                text="lock"
-                active={lockPitchPreset}
-                onClick={actions.toggleLockPitchPreset}
-              />
-            </div>
-            <div class="grow" />
-          </div>
-          <div
-            class="flex-c bd-clGridLine-0.5px bg-[#ccc]"
-            style={{ height: uiConfigs.notesGridHeight }}
-          >
-            <NoteGaugeIndex pitches={pitches} height={noteGaugeHeight} />
-            {stepNotes.map((note, i) => (
-              <NoteGauge
-                key={i}
-                height={noteGaugeHeight}
-                pitch={note}
-                pitches={pitches}
-                modifierFlag={stepModifierFlags[i]}
-                onChange={(p) => actions.setStepNote(i, p)}
-              />
-            ))}
-          </div>
-          <div class="flex-h">
-            <ModifierStripIndex cellHeight={modifierStripCellHeight} />
-            {stepModifierFlags.map((stepModifierFlag, i) => (
-              <ModifierStrip
-                key={i}
-                stepIndex={i}
-                cellHeight={modifierStripCellHeight}
-                stepModifierFlag={stepModifierFlag}
-              />
-            ))}
-          </div>
+          <ButtonsRow />
+          <StepsGridRow />
+          <ModifiersRow />
         </div>
       </div>
     </div>
