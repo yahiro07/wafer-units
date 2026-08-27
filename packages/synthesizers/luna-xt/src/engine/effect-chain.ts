@@ -32,7 +32,7 @@ export function createEffectChain(bus: SynthesisBus): EffectChain {
     outputNode,
   );
 
-  voicesGain.gain.value = 0.5;
+  voicesGain.gain.value = 0.7;
   return {
     inputNode,
     outputNode,

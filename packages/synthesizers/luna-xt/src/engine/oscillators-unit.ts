@@ -20,7 +20,7 @@ type UnisonManager = {
 
 const configs = {
   phaseRandomMaxSec: 0.003,
-  detuneHalfMax: 0.7,
+  detuneHalfMax: 0.9,
 };
 
 function createUnisonManager(outputNode: AudioNode): UnisonManager {
@@ -81,6 +81,7 @@ function buildUnisonPartialSpecs(
   const prDetune = pr[pk.detune];
   const isStereo = pr[pk.spread];
 
+  const baseVolume = Math.sqrt(1 / numUnison) + numUnison * 0.04;
   return seqNumbers(numUnison).map((i) => {
     const pos = numUnison === 1 ? 0 : mapUnaryTo(i / numUnison, -1, 1);
     const isCenter = numUnison === 1 || i === Math.floor(numUnison / 2);
@@ -89,7 +90,7 @@ function buildUnisonPartialSpecs(
       octave: prOctave,
       detune,
       panning: isStereo ? pos : 0,
-      volume: isCenter ? 1 : 0.7,
+      volume: (isCenter ? 1 : 0.7) * baseVolume,
     };
   });
 }

@@ -24,7 +24,7 @@ function createCurveBuffer(
 const saturationSpecFactories = {
   type1() {
     //tanh
-    const inputHeadroom = 4;
+    const inputHeadroom = 8;
     return {
       inputHeadroom,
       curve: createCurveBuffer((u) => {
