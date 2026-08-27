@@ -26,6 +26,7 @@ const helpers = {
 
 export function createSharedFilterUnit(bus: SynthesisBus): SharedFilterUnit {
   const ac = bus.audioContext;
+  const pr = bus.parameters;
   const inputNode = ac.createGain();
   const lpf1 = ac.createBiquadFilter();
   const lpf2 = ac.createBiquadFilter();
@@ -39,7 +40,6 @@ export function createSharedFilterUnit(bus: SynthesisBus): SharedFilterUnit {
     inputNode,
     outputNode,
     update() {
-      const pr = bus.parameters;
       const cutoff = helpers.mapCutoff(pr.lpfCutoff);
       const q = helpers.mapQ(pr.lpfPeak);
       lpf1.frequency.value = cutoff;
@@ -47,8 +47,22 @@ export function createSharedFilterUnit(bus: SynthesisBus): SharedFilterUnit {
       lpf1.Q.value = q;
       lpf2.Q.value = q;
     },
-    gateOn(time) {},
-    gateOff(time) {},
+    gateOn(time) {
+      lpf1.detune.cancelScheduledValues(time);
+      lpf2.detune.cancelScheduledValues(time);
+      const prDecay = pr.lpfDecay;
+      if (prDecay > 0) {
+        const decayTime = pr.lpfDecay ** 2 * 2;
+        lpf1.detune.setValueAtTime(3600, time);
+        lpf1.detune.linearRampToValueAtTime(0, time + decayTime);
+        lpf2.detune.setValueAtTime(3600, time);
+        lpf2.detune.linearRampToValueAtTime(0, time + decayTime);
+      } else {
+        lpf1.detune.setValueAtTime(0, time);
+        lpf2.detune.setValueAtTime(0, time);
+      }
+    },
+    gateOff(_time) {},
     cleanup() {
       inputNode.disconnect();
       lpf1.disconnect();
