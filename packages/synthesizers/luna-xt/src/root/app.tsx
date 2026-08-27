@@ -15,6 +15,7 @@ import { ComponentChildren } from "preact";
 import { cz } from "@/common/css-realm";
 import { Button } from "@/components/button";
 import { Selector } from "@/components/selector";
+import { appEnvs } from "@/common/app-envs";
 
 const presetOptions = createPlainSelectorOptions(allPresetKeys);
 
@@ -220,6 +221,7 @@ const OscSection = ({ oscId }: { oscId: OscId }) => {
 
 const PageRoot = () => {
   const { parameters } = store.useSnapshot();
+  const isDebug = appEnvs.isDevelopment;
   return (
     <div class="flex-v gap-4 bg-clPageBg text-clPageText p-8">
       <div class="flex-ha gap-3 justify-between">
@@ -282,14 +284,16 @@ const PageRoot = () => {
         <OscSection oscId="osc2" />
         <SectionFrame header="CONTROL">
           <ParameterSlider label="MIX" paramKey="oscMix" invertY />
-          <ParameterSlider
-            label="SAT"
-            paramKey="_saturation"
-            min={0}
-            max={2}
-            step={1}
-          />
-          <ParameterSlider label="PRESS" paramKey="press" />
+          {isDebug && (
+            <ParameterSlider
+              label="SAT"
+              paramKey="_saturation"
+              min={0}
+              max={2}
+              step={1}
+            />
+          )}
+          {isDebug && <ParameterSlider label="PRESS" paramKey="press" />}
           <ParameterSlider label="DENSE" paramKey="density" />
           {/* <div class="flex-v gap-1 self-start">
             <TextButton

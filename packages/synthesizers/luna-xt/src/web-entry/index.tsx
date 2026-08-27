@@ -4,14 +4,14 @@ import { onIframeUnitUnloading } from "wafer-host/unit-types";
 import { cssRealm, cz } from "@/common/css-realm";
 import { App } from "@/root/app";
 import "virtual:uno.css";
-import { appConfig } from "@/common/app-config";
+import { appEnvs } from "@/common/app-envs";
 
 const root = document.getElementById("app")!;
 
 document.adoptedStyleSheets = [cssRealm.sheet];
 
 render(
-  <div class={cz("h-dvh flex-c", !appConfig.isDevelopment && "cl-pageBg")}>
+  <div class={cz("h-dvh flex-c", !appEnvs.isDevelopment && "cl-pageBg")}>
     <App />
   </div>,
   root,
