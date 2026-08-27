@@ -1,6 +1,6 @@
 import { OscId } from "@/defs/definitions";
 import { oscParameterKeys, SynthesisBus } from "@/engine/engine-defs";
-import { mapUnaryFrom, power2 } from "@/utils/synth-math-utils";
+import { mapUnaryFrom, mapUnaryTo, power2 } from "@/utils/synth-math-utils";
 
 type AmplifierUnit = {
   inputNode: AudioNode;
@@ -19,6 +19,12 @@ const configs = {
 };
 
 const helpers = {
+  mapHeadCorn(prHead: number) {
+    return {
+      height: mapUnaryTo(power2(prHead), 0, 4),
+      duration: mapUnaryTo(prHead, 0.02, 0.01),
+    };
+  },
   mapDecaySustain(prDecayOriginal: number) {
     if (prDecayOriginal < 0.5) {
       const u = mapUnaryFrom(prDecayOriginal, 0, 0.5);
@@ -61,12 +67,15 @@ export function createAmplifierUnit(
 ): AmplifierUnit {
   const pk = oscParameterKeys[oscId];
   const ac = bus.audioContext;
-  const headNode = ac.createGain(); //automated for Head-A-D-S
-  headNode.gain.value = 0;
+  const headNode = ac.createGain(); //automated for Punch
+  headNode.gain.value = 1;
+
+  const secondNode = ac.createGain(); //automated for A-D-S
+  secondNode.gain.value = 0;
 
   const tailNode = ac.createGain(); //automated for R
   tailNode.gain.value = 1;
-  headNode.connect(tailNode);
+  headNode.connect(secondNode).connect(tailNode);
 
   return {
     inputNode: headNode,
@@ -74,23 +83,28 @@ export function createAmplifierUnit(
     gateOn(time) {
       const pr = bus.parameters;
       const prHead = pr.ampHead;
+      if (prHead > 0) {
+        const { height, duration } = helpers.mapHeadCorn(prHead);
+        headNode.gain.setValueAtTime(1 + height, time);
+        headNode.gain.linearRampToValueAtTime(1, time + duration);
+      }
+
       const prDecayOriginal = pr[pk.decay];
       const { decay, sustain } = helpers.mapDecaySustain(prDecayOriginal);
       const prExponential = pr.ampExponential;
-      headNode.gain.setValueAtTime(1, time);
-
-      if (decay === 1) return;
-
-      if (prExponential) {
-        const decayTime = helpers.calcDecayTime(decay, true);
-        headNode.gain.exponentialRampToValueAtTime(
-          sustain + 1e-4,
-          time + decayTime,
-        );
-        headNode.gain.setValueAtTime(sustain, time + decayTime);
-      } else {
-        const decayTime = helpers.calcDecayTime(decay, false);
-        headNode.gain.linearRampToValueAtTime(sustain, time + decayTime);
+      secondNode.gain.setValueAtTime(1, time);
+      if (decay < 1) {
+        if (prExponential) {
+          const decayTime = helpers.calcDecayTime(decay, true);
+          secondNode.gain.exponentialRampToValueAtTime(
+            sustain + 1e-4,
+            time + decayTime,
+          );
+          secondNode.gain.setValueAtTime(sustain, time + decayTime);
+        } else {
+          const decayTime = helpers.calcDecayTime(decay, false);
+          secondNode.gain.linearRampToValueAtTime(sustain, time + decayTime);
+        }
       }
     },
     gateOff(time, applyRelease) {
@@ -120,6 +134,7 @@ export function createAmplifierUnit(
     },
     cleanup() {
       headNode.disconnect();
+      secondNode.disconnect();
     },
   };
 }

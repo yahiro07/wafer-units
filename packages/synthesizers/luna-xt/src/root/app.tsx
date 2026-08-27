@@ -309,7 +309,7 @@ const PageRoot = () => {
               </div>
             }
           >
-            <ParameterSlider label="HEAD" paramKey="ampHead" />
+            <ParameterSlider label="PUNCH" paramKey="ampHead" />
             <ParameterKnob label="RELEASE" paramKey="ampRelease" />
             {false && (
               <div class="flex-v gap-1 self-start">
