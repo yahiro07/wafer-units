@@ -358,8 +358,10 @@ const PageRoot = () => {
       <div class="flex-h gap-6">
         <OscSection oscId="osc2" />
         <SectionFrame header="CONTROL">
-          <ParameterSlider label="MIX" paramKey="oscMix" invertY />
-          <ParameterSlider label="DENSE" paramKey="density" />
+          <div class="flex-h gap-7">
+            <ParameterSlider label="OSCMIX" paramKey="oscMix" invertY />
+            <ParameterSlider label="DENSE" paramKey="density" />
+          </div>
         </SectionFrame>
         {isDebug && (
           <SectionFrame header="DEBUG">
