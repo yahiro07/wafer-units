@@ -25,6 +25,8 @@ export type SynthParameters = {
   osc1Spread: boolean;
   osc1Detune: number; //0~1
   osc1Decay: number; //0~1
+  osc1Sub: boolean;
+  osc1Mix: number; //0/1/2
   //
   osc2Octave: number;
   osc2Wave: OscWave;
@@ -32,6 +34,8 @@ export type SynthParameters = {
   osc2Spread: boolean;
   osc2Detune: number;
   osc2Decay: number;
+  osc2Sub: boolean;
+  osc2Mix: number;
   //
   oscMix: number;
   ampHead: number;
@@ -42,6 +46,7 @@ export type SynthParameters = {
   lpfCutoff: number;
   lpfPeak: number;
   lpfDecay: number;
+  lpfSteep: boolean;
   //
   patchVolume: number;
   //
@@ -59,6 +64,8 @@ export const defaultSynthParameters: SynthParameters = {
   osc1Spread: true,
   osc1Detune: 0,
   osc1Decay: 1,
+  osc1Sub: false,
+  osc1Mix: 0,
   //
   osc2Octave: 0,
   osc2Wave: OscWave.sawtooth,
@@ -66,17 +73,20 @@ export const defaultSynthParameters: SynthParameters = {
   osc2Spread: true,
   osc2Detune: 0,
   osc2Decay: 1,
+  osc2Sub: false,
+  osc2Mix: 0,
   //
   oscMix: 0,
   ampHead: 0,
   ampRelease: 0,
   ampExponential: false,
-  ampReleaseLastOnly: false,
+  ampReleaseLastOnly: true,
   patchVolume: 0.5,
   //
   lpfCutoff: 1,
   lpfPeak: 0,
   lpfDecay: 0,
+  lpfSteep: false,
   //
   _saturation: 1,
   press: 0,

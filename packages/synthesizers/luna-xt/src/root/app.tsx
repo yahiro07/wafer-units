@@ -115,24 +115,25 @@ const SectionFrame = ({
   header,
   children,
   onHeaderClick,
-  headerInnerContext,
+  headerInnerContent,
 }: {
   header: string;
   children: ComponentChildren;
   onHeaderClick?: () => void;
-  headerInnerContext?: ComponentChildren;
+  headerInnerContent?: ComponentChildren;
 }) => {
   return (
     <div class="flex-v gap-5">
       <div
         class={cz(
-          "flex-c text-xl bg-#79c text-white font-bold py-1 relative",
+          "flex-c text-xl bg-#79c text-white font-bold px-2 py-1",
+          headerInnerContent ? "justify-between" : undefined,
           onHeaderClick && "cursor-pointer",
         )}
         onClick={onHeaderClick}
       >
         {header}
-        {headerInnerContext}
+        {headerInnerContent}
       </div>
       <div class="flex-c gap-4">{children}</div>
     </div>
@@ -143,15 +144,42 @@ const TextButton = ({
   label,
   active,
   onClick,
+  asr = 1.6,
 }: {
   label: string;
   active: boolean;
   onClick: () => void;
+  asr?: number;
 }) => {
   return (
-    <Button height={28} asr={1.6} onClick={onClick}>
+    <Button height={28} asr={asr} onClick={onClick}>
       <span class={cz(active ? "text-#08f" : "text-#888")}>{label}</span>
     </Button>
+  );
+};
+
+const HeaderTextButton = ({
+  label,
+  active = true,
+  onClick,
+}: {
+  label: string;
+  active?: boolean;
+  onClick: () => void;
+}) => {
+  const height = 28;
+  return (
+    <button
+      onClick={onClick}
+      style={{ height }}
+      class={cz(
+        "text-[19px] font-500 cursor-pointer",
+        "hover:opacity-90",
+        active ? "text-#fff" : "text-#abc",
+      )}
+    >
+      <span>{label}</span>
+    </button>
   );
 };
 
@@ -162,6 +190,8 @@ function useOscParamKeys(oscId: OscId): {
   spread: BoolParameterKeys;
   detune: LinearParameterKeys;
   decay: LinearParameterKeys;
+  sub: BoolParameterKeys;
+  mix: LinearParameterKeys;
 } {
   if (oscId === "osc1") {
     return {
@@ -171,6 +201,8 @@ function useOscParamKeys(oscId: OscId): {
       spread: "osc1Spread",
       detune: "osc1Detune",
       decay: "osc1Decay",
+      sub: "osc1Sub",
+      mix: "osc1Mix",
     };
   } else {
     return {
@@ -180,6 +212,8 @@ function useOscParamKeys(oscId: OscId): {
       spread: "osc2Spread",
       detune: "osc2Detune",
       decay: "osc2Decay",
+      sub: "osc2Sub",
+      mix: "osc2Mix",
     };
   }
 }
@@ -187,8 +221,30 @@ function useOscParamKeys(oscId: OscId): {
 const OscSection = ({ oscId }: { oscId: OscId }) => {
   const { parameters } = store.useSnapshot();
   const pk = useOscParamKeys(oscId);
+  const mixLabel = { 0: "1", 1: "2", 2: "F" }[parameters[pk.mix]] ?? "";
+
   return (
-    <SectionFrame header={oscId === "osc1" ? "OSCILLATOR 1" : "OSCILLATOR 2"}>
+    <SectionFrame
+      header={oscId === "osc1" ? "OSCILLATOR 1" : "OSCILLATOR 2"}
+      headerInnerContent={
+        <div class="flex-ha gap-4">
+          <HeaderTextButton
+            label="SPR"
+            active={parameters[pk.spread]}
+            onClick={() => actions.toggleBoolParameter(pk.spread)}
+          />
+          <HeaderTextButton
+            label="SUB"
+            active={parameters[pk.sub]}
+            onClick={() => actions.toggleBoolParameter(pk.sub)}
+          />
+          <HeaderTextButton
+            label={`MIX-${mixLabel}`}
+            onClick={() => actions.shiftOscMix(oscId)}
+          />
+        </div>
+      }
+    >
       <ParameterSlider
         label="OCT"
         paramKey={pk.octave}
@@ -210,9 +266,10 @@ const OscSection = ({ oscId }: { oscId: OscId }) => {
         step={1}
       />
       <ParameterKnob
-        label={parameters[pk.spread] ? "DET-SP†" : "DET†"}
+        label="DETUNE"
+        // label={parameters[pk.spread] ? "DET-SP†" : "DET†"}
         paramKey={pk.detune}
-        onLabelClick={() => actions.toggleBoolParameter(pk.spread)}
+        // onLabelClick={() => actions.toggleBoolParameter(pk.spread)}
       />
       <ParameterKnob label="DECAY" paramKey={pk.decay} />
     </SectionFrame>
@@ -241,39 +298,57 @@ const PageRoot = () => {
         <div class="flex-h gap-6">
           <OscSection oscId="osc1" />
 
-          <SectionFrame header="AMPLIFIER">
+          <SectionFrame
+            header="AMP"
+            headerInnerContent={
+              <div class="flex-ha gap-3">
+                <HeaderTextButton
+                  label={parameters.ampExponential ? "EXP" : "LIN"}
+                  onClick={() => actions.toggleBoolParameter("ampExponential")}
+                />
+              </div>
+            }
+          >
             <ParameterSlider label="HEAD" paramKey="ampHead" />
             <ParameterKnob label="RELEASE" paramKey="ampRelease" />
-            <div class="flex-v gap-1 self-start">
-              <TextButton
-                label="LIN"
-                active={!parameters.ampExponential}
-                onClick={() =>
-                  actions.setBoolParameter("ampExponential", false)
-                }
-              />
-              <TextButton
-                label="EXP"
-                active={parameters.ampExponential}
-                onClick={() => actions.setBoolParameter("ampExponential", true)}
-              />
-              <TextButton
-                label="LAST"
-                active={parameters.ampReleaseLastOnly}
-                onClick={() =>
-                  actions.toggleBoolParameter("ampReleaseLastOnly")
-                }
-              />
-            </div>
-            {/* <ParameterKnob
-              label={parameters.ampReleaseLastOnly ? "R-LAST†" : "R†"}
-              paramKey="ampRelease"
-              onLabelClick={() =>
-                actions.toggleBoolParameter("ampReleaseLastOnly")
-              }
-            /> */}
+            {false && (
+              <div class="flex-v gap-1 self-start">
+                <TextButton
+                  label="LIN"
+                  active={!parameters.ampExponential}
+                  onClick={() =>
+                    actions.setBoolParameter("ampExponential", false)
+                  }
+                />
+                <TextButton
+                  label="EXP"
+                  active={parameters.ampExponential}
+                  onClick={() =>
+                    actions.setBoolParameter("ampExponential", true)
+                  }
+                />
+                <TextButton
+                  label="LAST"
+                  active={parameters.ampReleaseLastOnly}
+                  onClick={() =>
+                    actions.toggleBoolParameter("ampReleaseLastOnly")
+                  }
+                />
+              </div>
+            )}
           </SectionFrame>
-          <SectionFrame header="LPF">
+          <SectionFrame
+            header="FILTER"
+            headerInnerContent={
+              <div class="flex-ha gap-3">
+                <HeaderTextButton
+                  label={parameters.lpfSteep ? "LP24" : "LP12"}
+                  active
+                  onClick={() => actions.toggleBoolParameter("lpfSteep")}
+                />
+              </div>
+            }
+          >
             <ParameterKnob label="CUTOFF" paramKey="lpfCutoff" />
             <ParameterSlider label="Q" paramKey="lpfPeak" />
             <ParameterSlider label="DECAY" paramKey="lpfDecay" />
@@ -284,7 +359,10 @@ const PageRoot = () => {
         <OscSection oscId="osc2" />
         <SectionFrame header="CONTROL">
           <ParameterSlider label="MIX" paramKey="oscMix" invertY />
-          {isDebug && (
+          <ParameterSlider label="DENSE" paramKey="density" />
+        </SectionFrame>
+        {isDebug && (
+          <SectionFrame header="DEBUG">
             <ParameterSlider
               label="SAT"
               paramKey="_saturation"
@@ -292,17 +370,9 @@ const PageRoot = () => {
               max={2}
               step={1}
             />
-          )}
-          {isDebug && <ParameterSlider label="PRESS" paramKey="press" />}
-          <ParameterSlider label="DENSE" paramKey="density" />
-          {/* <div class="flex-v gap-1 self-start">
-            <TextButton
-              label="SAT"
-              active={parameters._saturation}
-              onClick={() => actions.toggleBoolParameter("_saturation")}
-            />
-          </div> */}
-        </SectionFrame>
+            <ParameterSlider label="PRESS" paramKey="press" />
+          </SectionFrame>
+        )}
       </div>
 
       <div class="flex-h gap-8 justify-between"></div>
