@@ -1,5 +1,4 @@
 import { automationInput } from "@/root/.local/automation";
-import { persistence } from "@/root/.local/persistence";
 import { store } from "@/root/store";
 import { setupMidiKeyboardInput } from "@/utils/midi-keyboard-input";
 import { queryUnitInterface } from "wafer-host/unit-types";
@@ -21,8 +20,16 @@ function setupUnit() {
         noteOff: engine.noteOff,
       },
       automationInput,
-      persistence,
+      // persistence,
       cleanup: engine.cleanup,
+      persistence: {
+        emitState() {
+          return store.state;
+        },
+        applyState(state) {
+          store.assign(state);
+        },
+      },
     });
   } else {
     return setupMidiKeyboardInput({
