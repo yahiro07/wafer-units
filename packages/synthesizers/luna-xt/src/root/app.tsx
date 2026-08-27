@@ -271,6 +271,11 @@ const PageRoot = () => {
               }
             /> */}
           </SectionFrame>
+          <SectionFrame header="LPF">
+            <ParameterKnob label="CUTOFF" paramKey="lpfCutoff" />
+            <ParameterSlider label="Q" paramKey="lpfPeak" />
+            <ParameterSlider label="DECAY" paramKey="lpfDecay" />
+          </SectionFrame>
         </div>
       </div>
       <div class="flex-h gap-6">

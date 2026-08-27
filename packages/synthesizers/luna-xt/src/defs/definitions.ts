@@ -38,6 +38,11 @@ export type SynthParameters = {
   ampRelease: number;
   ampExponential: boolean;
   ampReleaseLastOnly: boolean;
+  //
+  lpfCutoff: number;
+  lpfPeak: number;
+  lpfDecay: number;
+  //
   patchVolume: number;
   //
   _saturation: number;
@@ -68,6 +73,10 @@ export const defaultSynthParameters: SynthParameters = {
   ampExponential: false,
   ampReleaseLastOnly: false,
   patchVolume: 0.5,
+  //
+  lpfCutoff: 0,
+  lpfPeak: 0,
+  lpfDecay: 0,
   //
   _saturation: 0,
   press: 0,
