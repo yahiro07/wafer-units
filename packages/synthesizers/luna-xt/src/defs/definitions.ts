@@ -78,7 +78,7 @@ export const defaultSynthParameters: SynthParameters = {
   lpfPeak: 0,
   lpfDecay: 0,
   //
-  _saturation: 0,
+  _saturation: 1,
   press: 0,
   density: 0,
 };
