@@ -1,6 +1,11 @@
 import { fixedParameters } from "@/defs/definitions";
 import { SynthesisBus } from "@/engine/engine-defs";
-import { mapUnaryFrom, mapUnaryTo, power2 } from "@/utils/synth-math-utils";
+import {
+  invPower2,
+  mapUnaryFrom,
+  mapUnaryTo,
+  power2,
+} from "@/utils/synth-math-utils";
 
 type AmplifierUnit = {
   inputNode: AudioNode;
@@ -66,9 +71,9 @@ const helpers = {
     }
   },
   calcDecayTime(prDecay: number, isExponential: boolean) {
-    const minDecayTime = 0.1;
+    const minDecayTime = 0.4;
     if (isExponential) {
-      return prDecay * configs.expDecayTimeMax + minDecayTime;
+      return invPower2(prDecay) * configs.expDecayTimeMax + minDecayTime;
     } else {
       return prDecay ** 2 * configs.linDecayTimeMax + minDecayTime;
     }
@@ -81,7 +86,7 @@ const helpers = {
     const jumpTime = 0.001;
     if (!applyRelease) return jumpTime;
     if (isExponential) {
-      return prAmpRelease * configs.expReleaseTimeMax + jumpTime;
+      return invPower2(prAmpRelease) * configs.expReleaseTimeMax + jumpTime;
     } else {
       return prAmpRelease ** 3 * configs.linReleaseTimeMax + jumpTime;
     }

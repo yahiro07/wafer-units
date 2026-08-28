@@ -1,6 +1,6 @@
 import { SynthesisBus } from "@/engine/engine-defs";
 import { clampValue } from "@/utils/helpers";
-import { mapUnaryTo } from "@/utils/synth-math-utils";
+import { mapUnaryTo, power2 } from "@/utils/synth-math-utils";
 
 type SharedFilterUnit = {
   inputNode: AudioNode;
@@ -20,7 +20,7 @@ const helpers = {
     return clampValue(hz, min, max);
   },
   mapQ(prPeak: number) {
-    return mapUnaryTo(prPeak, 0.707, 10);
+    return mapUnaryTo(power2(prPeak), 0.707, 10);
   },
 };
 
@@ -52,10 +52,11 @@ export function createSharedFilterUnit(bus: SynthesisBus): SharedFilterUnit {
       lpf2.detune.cancelScheduledValues(time);
       const prDecay = pr.lpfDecay;
       if (prDecay > 0) {
-        const decayTime = pr.lpfDecay ** 2 * 2;
-        lpf1.detune.setValueAtTime(3600, time);
+        const decayTime = power2(prDecay) * 2 + 0.2;
+        const top = prDecay * 3600;
+        lpf1.detune.setValueAtTime(top, time);
         lpf1.detune.linearRampToValueAtTime(0, time + decayTime);
-        lpf2.detune.setValueAtTime(3600, time);
+        lpf2.detune.setValueAtTime(top, time);
         lpf2.detune.linearRampToValueAtTime(0, time + decayTime);
       } else {
         lpf1.detune.setValueAtTime(0, time);

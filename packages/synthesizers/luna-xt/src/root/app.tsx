@@ -316,7 +316,7 @@ const PageRoot = () => {
             // }
           >
             <ParameterKnob label="CUTOFF" paramKey="lpfCutoff" />
-            <ParameterSlider label="Q" paramKey="lpfPeak" />
+            <ParameterSlider label="PEAK" paramKey="lpfPeak" />
             <ParameterSlider label="DECAY" paramKey="lpfDecay" />
           </SectionFrame>
           <SectionFrame
