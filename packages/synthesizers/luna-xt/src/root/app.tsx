@@ -5,6 +5,7 @@ import {
   LinearParameterKeys,
   numOscWaveTypes,
   OscId,
+  OscWave,
 } from "@/defs/definitions";
 import { useSetupDrivers } from "@/root/drivers";
 import { allPresetKeys, store } from "@/root/store";
@@ -15,6 +16,7 @@ import { ComponentChildren } from "preact";
 import { cz } from "@/common/css-realm";
 import { Button } from "@/components/button";
 import { Selector } from "@/components/selector";
+import { appEnvs } from "@/common/app-envs";
 
 const presetOptions = createPlainSelectorOptions(allPresetKeys);
 
@@ -269,7 +271,7 @@ const OscSection = ({ oscId }: { oscId: OscId }) => {
 
 const PageRoot = () => {
   const { parameters } = store.useSnapshot();
-  // const isDebug = appEnvs.isDevelopment;
+  const isDebug = appEnvs.isDevelopment;
   return (
     <div class="flex-v gap-4 bg-clPageBg text-clPageText py-6 px-10">
       <div class="flex-ha gap-3 justify-between">
@@ -364,6 +366,7 @@ const PageRoot = () => {
           </SectionFrame>
         </div>
       </div>
+      {isDebug && <div>{OscWave[parameters.osc1Wave]}</div>}
       <div class="flex-h gap-6">
         <OscSection oscId="osc2" />
         <SectionFrame header="CONTROL">

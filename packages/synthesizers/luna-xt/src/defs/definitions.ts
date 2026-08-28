@@ -2,21 +2,20 @@ import { PickKeysForValueType } from "@/utils/utility-types";
 
 export enum OscWave {
   sawtooth = 0,
-  sawtoothR,
+  exp1,
+  pdSaw,
+  sawSig,
+  syncSaw,
+  fourPulseSaw,
   pulse125,
   pulse25,
   pulse40,
-  ex1,
-  ex2,
-  ex3,
-  ex4,
-  ex5,
-  ex6,
-  ex7,
-  ex8,
-  __num,
+  trapezoid,
+  //
+  shark,
+  twoPulseSaw,
 }
-export const numOscWaveTypes = OscWave.__num;
+export const numOscWaveTypes = OscWave.trapezoid + 1;
 
 export type SynthParameters = {
   osc1Octave: number; //-2~2

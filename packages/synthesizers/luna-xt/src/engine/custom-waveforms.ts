@@ -6,29 +6,15 @@ function getPulseWave(context: AudioContext, duty: number) {
   const terms = 32;
   const real = new Float32Array(terms);
   const imag = new Float32Array(terms);
-  real[0] = duty;
+  const g = 1.7;
+  real[0] = duty * g;
   for (let i = 1; i < terms; i++) {
     const n = i;
-    real[i] = (2 / (n * Math.PI)) * Math.sin(Math.PI * n * duty);
+    real[i] = (2 / (n * Math.PI)) * Math.sin(Math.PI * n * duty) * g;
     imag[i] = 0;
   }
   return context.createPeriodicWave(real, imag, {
-    disableNormalization: false,
-  });
-}
-
-function getSawWaveEx(context: AudioContext, k: number) {
-  const terms = 32;
-  const real = new Float32Array(terms);
-  const imag = new Float32Array(terms);
-  real[0] = 0;
-  for (let i = 1; i < terms; i++) {
-    const n = i;
-    real[i] = 0;
-    imag[i] = -2 / (n ** k * Math.PI);
-  }
-  return context.createPeriodicWave(real, imag, {
-    disableNormalization: false,
+    disableNormalization: true,
   });
 }
 
@@ -42,6 +28,7 @@ function makePeriodicWave(context: AudioContext, fn: (pp: number) => number) {
   }
   const real = new Float32Array(terms);
   const imag = new Float32Array(terms);
+  const g = 2;
   for (let h = 0; h < terms; h++) {
     let re = 0;
     let im = 0;
@@ -50,11 +37,11 @@ function makePeriodicWave(context: AudioContext, fn: (pp: number) => number) {
       re += ys[i] * Math.cos(phi);
       im += ys[i] * Math.sin(phi);
     }
-    real[h] = re / n;
-    imag[h] = im / n;
+    real[h] = (re / n) * g;
+    imag[h] = (im / n) * g;
   }
   return context.createPeriodicWave(real, imag, {
-    disableNormalization: false,
+    disableNormalization: true,
   });
 }
 
@@ -62,22 +49,28 @@ const builders = {
   saturatedSaw(ctx: AudioContext, k: number) {
     return makePeriodicWave(ctx, (pp) => {
       const y = 2 * pp - 1;
-      return tunableSigmoid(y, k);
+      return tunableSigmoid(y, k) * 0.8;
     });
   },
   pdSaw(ctx: AudioContext, level: number) {
     return makePeriodicWave(ctx, (pp) => {
-      return Math.sin(2 * Math.PI * Math.pow(pp, 1 - level));
+      return Math.sin(2 * Math.PI * Math.pow(pp, 1 - level)) * 1.6;
     });
   },
   expoSaw(ctx: AudioContext, k: number) {
     return makePeriodicWave(ctx, (pp) => {
-      return 2 * pp ** k - 1;
+      if (0) {
+        const y = 2 * pp - 1;
+        return Math.exp(y);
+      } else {
+        const y = 2 * pp - 1;
+        return tunableSigmoid(y, 0.7);
+      }
     });
   },
   syncSaw(ctx: AudioContext, speed: number) {
     return makePeriodicWave(ctx, (pp) => {
-      if (1) {
+      if (0) {
         const pp2 = fracPart(pp * speed);
         return 2 * pp2 - 1;
       } else {
@@ -95,7 +88,7 @@ const builders = {
   pulseSaw(ctx: AudioContext, k: number) {
     return makePeriodicWave(ctx, (pp) => {
       const y = pp < k ? invPower2(pp / k) : 0;
-      return y * 2 - 1;
+      return (y * 2 - 1) * 2;
     });
   },
   twoPulseSaw(ctx: AudioContext) {
@@ -139,29 +132,27 @@ function getCustomWaveformCore(
 ): OscillatorType | PeriodicWave {
   if (wave === OscWave.sawtooth) {
     return "sawtooth";
-  } else if (wave === OscWave.sawtoothR) {
-    return builders.saturatedSaw(ctx, -0.6);
+  } else if (wave === OscWave.sawSig) {
+    return builders.saturatedSaw(ctx, -0.5);
   } else if (wave === OscWave.pulse125) {
     return getPulseWave(ctx, 0.125);
   } else if (wave === OscWave.pulse25) {
     return getPulseWave(ctx, 0.25);
   } else if (wave === OscWave.pulse40) {
     return getPulseWave(ctx, 0.4);
-  } else if (wave === OscWave.ex1) {
-    return builders.pdSaw(ctx, 0.98);
-  } else if (wave === OscWave.ex2) {
-    return getSawWaveEx(ctx, 0.8);
-  } else if (wave === OscWave.ex3) {
+  } else if (wave === OscWave.pdSaw) {
+    return builders.pdSaw(ctx, 0.92);
+  } else if (wave === OscWave.exp1) {
     return builders.expoSaw(ctx, 0.3);
-  } else if (wave === OscWave.ex4) {
-    return builders.syncSaw(ctx, 1.5);
-  } else if (wave === OscWave.ex5) {
+  } else if (wave === OscWave.syncSaw) {
+    return builders.syncSaw(ctx, 1.7);
+  } else if (wave === OscWave.shark) {
     return builders.pulseSaw(ctx, 0.3);
-  } else if (wave === OscWave.ex6) {
+  } else if (wave === OscWave.twoPulseSaw) {
     return builders.twoPulseSaw(ctx);
-  } else if (wave === OscWave.ex7) {
+  } else if (wave === OscWave.fourPulseSaw) {
     return builders.fourPulseSaw(ctx);
-  } else if (wave === OscWave.ex8) {
+  } else if (wave === OscWave.trapezoid) {
     return builders.trapezoid(ctx);
   }
   return "sine"; //fallback, not used
