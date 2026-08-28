@@ -23,31 +23,64 @@ function randB(p: number) {
 }
 
 export function createRandomParameters(): SynthPresetParameters {
-  const res = {
+  const res: SynthPresetParameters = {
+    lane1On: true,
+    lane1Volume: randRange(0.5, 1),
+    lane2On: true,
+    lane2Volume: randRange(0.3, 1),
+    lane3On: true,
+    lane3Volume: randRange(0.3, 1),
+    //
     osc1Octave: randRangeI(-1, 1),
     osc1Wave: randI(numOscWaveTypes),
     osc1Unison: randRangeI(3, 5),
     osc1Spread: randB(0.7),
-    osc1Detune: randRange(0.2, 0.7),
-    osc1Sub: randB(0.5),
-    osc1Mix: randI(3),
+    osc1Detune: randRange(0.2, 0.9),
+    osc1Sub: randB(0.4),
+    osc1Mix: randRange(0.2, 1),
     //
     osc2Octave: randRangeI(-1, 1),
     osc2Wave: randI(numOscWaveTypes),
     osc2Unison: randRangeI(3, 5),
     osc2Spread: randB(0.7),
-    osc2Detune: randRange(0.2, 0.7),
-    osc2Sub: randB(0.5),
-    osc2Mix: randI(3),
+    osc2Detune: randRange(0.2, 0.9),
+    osc2Sub: randB(0.4),
+    osc2Mix: randRange(0.2, 1),
     //
-    oscMix: randF(),
-    ampDecayAltAttack: randB(0.5),
-    ampDecay: randF(),
-    ampRelease: randF(),
+    osc3Octave: randRangeI(-1, 1),
+    osc3Wave: randI(numOscWaveTypes),
+    osc3Unison: randRangeI(3, 5),
+    osc3Spread: randB(0.7),
+    osc3Detune: randRange(0.2, 0.9),
+    osc3Sub: randB(0.4),
+    osc3Mix: randRange(0.2, 1),
     //
-    lpfCutoff: probably(0.5, 1, randRange(0.4, 1)),
-    lpfPeak: randF(),
-    lpfDecay: randRange(0, 1),
+    filter1Type: 0,
+    filter1Cutoff: probably(0.5, 1, randRange(0.4, 1)),
+    filter1Peak: randF(),
+    filter1Env: randRange(0, 1),
+    //
+    filter2Type: 0,
+    filter2Cutoff: probably(0.5, 1, randRange(0.4, 1)),
+    filter2Peak: randF(),
+    filter2Env: randRange(0, 1),
+    //
+    filter3Type: 0,
+    filter3Cutoff: probably(0.5, 1, randRange(0.4, 1)),
+    filter3Peak: randF(),
+    filter3Env: randRange(0, 1),
+    //
+    amp1DecayAltAttack: randB(0.5),
+    amp1Decay: randF(),
+    amp1Release: randF(),
+    //
+    amp2DecayAltAttack: randB(0.5),
+    amp2Decay: randF(),
+    amp2Release: randF(),
+    //
+    amp3DecayAltAttack: randB(0.5),
+    amp3Decay: randF(),
+    amp3Release: randF(),
     //
     reverbTime: randF(),
     reverbTone: randF(),

@@ -44,6 +44,8 @@ export type SynthParameters = {
   lane1Volume: number;
   lane2On: boolean;
   lane2Volume: number;
+  lane3On: boolean;
+  lane3Volume: number;
   //
   osc1Octave: number; //-2~2
   osc1Wave: OscWave; //1~12
@@ -61,6 +63,14 @@ export type SynthParameters = {
   osc2Sub: boolean;
   osc2Mix: number;
   //
+  osc3Octave: number;
+  osc3Wave: OscWave;
+  osc3Unison: number;
+  osc3Spread: boolean;
+  osc3Detune: number;
+  osc3Sub: boolean;
+  osc3Mix: number;
+  //
   filter1Type: FilterType;
   filter1Cutoff: number;
   filter1Peak: number;
@@ -71,15 +81,22 @@ export type SynthParameters = {
   filter2Peak: number;
   filter2Env: number;
   //
+  filter3Type: FilterType;
+  filter3Cutoff: number;
+  filter3Peak: number;
+  filter3Env: number;
+  //
   amp1DecayAltAttack: boolean;
   amp1Decay: number;
   amp1Release: number;
-  // amp1Volume: number;
   //
   amp2DecayAltAttack: boolean;
   amp2Decay: number;
   amp2Release: number;
-  // amp2Volume: number;
+  //
+  amp3DecayAltAttack: boolean;
+  amp3Decay: number;
+  amp3Release: number;
   //
   reverbTime: number;
   reverbTone: number;
@@ -96,6 +113,8 @@ export const defaultSynthParameters: SynthParameters = {
   lane1Volume: 0.5,
   lane2On: false,
   lane2Volume: 0.5,
+  lane3On: false,
+  lane3Volume: 0.5,
   //
   osc1Octave: 0,
   osc1Wave: OscWave.sawtooth,
@@ -113,6 +132,14 @@ export const defaultSynthParameters: SynthParameters = {
   osc2Sub: false,
   osc2Mix: 0.5,
   //
+  osc3Octave: 0,
+  osc3Wave: OscWave.sawtooth,
+  osc3Unison: 1,
+  osc3Spread: true,
+  osc3Detune: 0,
+  osc3Sub: false,
+  osc3Mix: 0.5,
+  //
   amp1DecayAltAttack: false,
   amp1Decay: 1,
   amp1Release: 0,
@@ -120,6 +147,10 @@ export const defaultSynthParameters: SynthParameters = {
   amp2DecayAltAttack: false,
   amp2Decay: 1,
   amp2Release: 0,
+  //
+  amp3DecayAltAttack: false,
+  amp3Decay: 1,
+  amp3Release: 0,
   //
   filter1Type: FilterType.LP12,
   filter1Cutoff: 1,
@@ -130,6 +161,11 @@ export const defaultSynthParameters: SynthParameters = {
   filter2Cutoff: 1,
   filter2Peak: 0,
   filter2Env: 0,
+  //
+  filter3Type: FilterType.LP12,
+  filter3Cutoff: 1,
+  filter3Peak: 0,
+  filter3Env: 0,
   //
   reverbTime: 0.5,
   reverbTone: 0.5,
@@ -158,4 +194,4 @@ export type SynthesizerEngine = {
   cleanup: () => void;
 };
 
-export type LaneId = "lane1" | "lane2";
+export type LaneId = "lane1" | "lane2" | "lane3";

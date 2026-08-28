@@ -20,7 +20,7 @@ type UnisonManager = {
 
 const configs = {
   phaseRandomMaxSec: 0.003,
-  detuneHalfMax: 0.9,
+  detuneHalfMax: 1,
 };
 
 function createUnisonManager(outputNode: AudioNode): UnisonManager {

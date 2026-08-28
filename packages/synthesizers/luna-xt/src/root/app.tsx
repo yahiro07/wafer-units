@@ -212,7 +212,7 @@ const OscSection = ({ laneId }: { laneId: LaneId }) => {
 
   return (
     <SectionFrame
-      header={laneId === "lane1" ? "OSCILLATOR 1" : "OSCILLATOR 2"}
+      header={`OSCILLATOR ${laneId.replace("lane", "")}`}
       headerInnerContent={
         <div class="flex-ha gap-4">
           <HeaderTextButton
@@ -263,7 +263,7 @@ const FilterSection = ({ laneId }: { laneId: LaneId }) => {
   const pk = filterParameterKeys[laneId];
   return (
     <SectionFrame
-      header="FILTER"
+      header={`FILTER ${laneId.replace("lane", "")}`}
       // headerInnerContent={
       //   <div class="flex-ha gap-3">
       //     <HeaderTextButton
@@ -285,7 +285,7 @@ const AmplifierSection = ({ laneId }: { laneId: LaneId }) => {
   const { parameters } = store.useSnapshot();
   const pk = ampParameterKeys[laneId];
   return (
-    <SectionFrame header="AMPLIFIER">
+    <SectionFrame header={`AMPLIFIER ${laneId.replace("lane", "")}`}>
       <ParameterKnob
         label={parameters[pk.decayAltAttack] ? "ATTACK†" : "DECAY†"}
         paramKey={pk.decay}
@@ -304,7 +304,7 @@ const PageRoot = () => {
           <h1 class="text-5xl" onClick={actions.emitPresetData}>
             LUNA
           </h1>
-          <div class="text-4xl">TRS-MINI</div>
+          <div class="text-5xl">XT</div>
         </div>
         <div class="flex-ha gap-5">
           <PresetSelectionPart />
@@ -339,6 +339,12 @@ const PageRoot = () => {
             <ParameterSlider label="MIX" paramKey="reverbMix" />
           </div>
         </SectionFrame>
+      </div>
+      <div class="flex-h gap-6">
+        <LaneControlPart laneId="lane3" />
+        <OscSection laneId="lane3" />
+        <FilterSection laneId="lane3" />
+        <AmplifierSection laneId="lane3" />
       </div>
     </div>
   );
