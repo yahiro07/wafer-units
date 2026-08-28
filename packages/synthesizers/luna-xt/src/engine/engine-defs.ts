@@ -17,6 +17,8 @@ export const oscParameterKeys = {
     spread: "osc1Spread",
     detune: "osc1Detune",
     decay: "osc1Decay",
+    sub: "osc1Sub",
+    mix: "osc1Mix",
   },
   osc2: {
     octave: "osc2Octave",
@@ -25,5 +27,7 @@ export const oscParameterKeys = {
     spread: "osc2Spread",
     detune: "osc2Detune",
     decay: "osc2Decay",
+    sub: "osc2Sub",
+    mix: "osc2Mix",
   },
 } as const;

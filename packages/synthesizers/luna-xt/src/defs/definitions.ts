@@ -65,7 +65,7 @@ export const defaultSynthParameters: SynthParameters = {
   osc1Detune: 0,
   osc1Decay: 1,
   osc1Sub: false,
-  osc1Mix: 0,
+  osc1Mix: 1,
   //
   osc2Octave: 0,
   osc2Wave: OscWave.sawtooth,
@@ -74,13 +74,13 @@ export const defaultSynthParameters: SynthParameters = {
   osc2Detune: 0,
   osc2Decay: 1,
   osc2Sub: false,
-  osc2Mix: 0,
+  osc2Mix: 1,
   //
   oscMix: 0,
   ampHead: 0,
   ampRelease: 0,
   ampExponential: true,
-  ampReleaseLastOnly: true,
+  ampReleaseLastOnly: false,
   patchVolume: 0.5,
   //
   lpfCutoff: 1,

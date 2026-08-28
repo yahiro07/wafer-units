@@ -71,6 +71,29 @@ type UnisonPartialSpec = {
   volume: number;
 };
 
+const unisonBaseSpecs = {
+  [1]: {
+    coreIndices: [0],
+    subIndices: [] as number[],
+  },
+  [2]: {
+    coreIndices: [0],
+    subIndices: [1],
+  },
+  [3]: {
+    coreIndices: [1],
+    subIndices: [2],
+  },
+  [4]: {
+    coreIndices: [1],
+    subIndices: [0, 2],
+  },
+  [5]: {
+    coreIndices: [2],
+    subIndices: [0, 3],
+  },
+};
+
 function buildUnisonPartialSpecs(
   oscId: OscId,
   pr: SynthParameters,
@@ -80,19 +103,39 @@ function buildUnisonPartialSpecs(
   const numUnison = pr[pk.unison];
   const prDetune = pr[pk.detune];
   const isStereo = pr[pk.spread];
+  const mixLevel = pr[pk.mix];
+  const subEnabled = pr[pk.sub];
 
   const baseVolume = Math.sqrt(1 / numUnison) + numUnison * 0.04;
-  return seqNumbers(numUnison).map((i) => {
-    const pos = numUnison === 1 ? 0 : mapUnaryTo(i / numUnison, -1, 1);
-    const isCenter = numUnison === 1 || i === Math.floor(numUnison / 2);
+  const sideLevel = [0.2, 0.6, 1][mixLevel] ?? 1;
+  const baseSpec =
+    unisonBaseSpecs[numUnison as keyof typeof unisonBaseSpecs] ??
+    unisonBaseSpecs[1];
+
+  const specs = seqNumbers(numUnison).map((i) => {
+    const pos = numUnison === 1 ? 0 : mapUnaryTo(i / (numUnison - 1), -1, 1);
+    const isCore = baseSpec.coreIndices.includes(i);
+    const isSub = baseSpec.subIndices.includes(i);
     const detune = pos * prDetune ** 2 * configs.detuneHalfMax;
-    return {
-      octave: prOctave,
-      detune,
-      panning: isStereo ? pos : 0,
-      volume: (isCenter ? 1 : 0.7) * baseVolume,
-    };
+    const octave = subEnabled && isSub ? prOctave - 1 : prOctave;
+    let panning = isStereo ? pos : 0;
+    if (numUnison === 2) {
+      panning *= 0.5;
+    }
+    const volume = (isCore ? 1 : sideLevel) * baseVolume;
+    return { octave, detune, panning, volume };
   });
+  if (1) {
+    const rms = Math.sqrt(
+      specs.reduce((acc, spec) => acc + spec.volume * spec.volume, 0),
+    );
+    const scale = (rms > 0 ? 1 / rms : 1) * 0.707;
+    return specs.map((spec) => ({
+      ...spec,
+      volume: spec.volume * scale,
+    }));
+  }
+  return specs;
 }
 
 export function createOscillatorsUnit(
