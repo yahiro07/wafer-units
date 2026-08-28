@@ -54,7 +54,7 @@ const helpers = {
     const jumpTime = 0.001;
     if (!applyRelease) return jumpTime;
     if (isExponential) {
-      return prAmpRelease ** 2 * configs.expReleaseTimeMax + jumpTime;
+      return prAmpRelease * configs.expReleaseTimeMax + jumpTime;
     } else {
       return prAmpRelease ** 3 * configs.linReleaseTimeMax + jumpTime;
     }
