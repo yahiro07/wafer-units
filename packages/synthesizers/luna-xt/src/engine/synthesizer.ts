@@ -31,23 +31,20 @@ function createVoice(
   const ac = bus.audioContext;
   let endedCallback: (() => void) | undefined;
 
-  const osc1 = createOscillatorsUnit("osc1", bus, noteNumber);
-  const osc2 = createOscillatorsUnit("osc2", bus, noteNumber);
-  const amp1 = createAmplifierUnit(bus);
-  const amp2 = createAmplifierUnit(bus);
+  const osc1 = createOscillatorsUnit("lane1", bus, noteNumber);
+  const osc2 = createOscillatorsUnit("lane2", bus, noteNumber);
+  const amp1 = createAmplifierUnit(bus, "lane1");
+  const amp2 = createAmplifierUnit(bus, "lane2");
 
-  const osc1MixGain = ac.createGain();
-  const osc2MixGain = ac.createGain();
-
-  connectNodes(osc1, amp1, osc1MixGain, voiceMixNodes[0]);
-  connectNodes(osc2, amp2, osc2MixGain, voiceMixNodes[1]);
+  connectNodes(osc1, amp1, voiceMixNodes[0]);
+  connectNodes(osc2, amp2, voiceMixNodes[1]);
 
   const lifeSpanNode = ac.createConstantSource();
 
   lifeSpanNode.onended = () => {
     osc1.stop();
     osc2.stop();
-    disconnectNodes(osc1, amp1, osc1MixGain, osc2, amp2, osc2MixGain);
+    disconnectNodes(osc1, amp1, osc2, amp2);
     amp1.cleanup();
     amp2.cleanup();
     endedCallback?.();
@@ -59,9 +56,6 @@ function createVoice(
     update() {
       osc1.update();
       osc2.update();
-      const t = bus.parameters.oscMix;
-      osc1MixGain.gain.value = Math.sqrt(1 - t);
-      osc2MixGain.gain.value = Math.sqrt(t);
     },
     gateOn() {
       const time = gateOnTime;

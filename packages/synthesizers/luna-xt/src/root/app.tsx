@@ -1,10 +1,9 @@
 import { LabeledBox } from "@/components/labeled-controls";
 import { actions } from "@/root/actions";
 import {
-  BoolParameterKeys,
+  LaneId,
   LinearParameterKeys,
   numOscWaveTypes,
-  OscId,
   OscWave,
   oscWaveLabels,
 } from "@/defs/definitions";
@@ -18,6 +17,11 @@ import { cz } from "@/common/css-realm";
 import { Button } from "@/components/button";
 import { Selector } from "@/components/selector";
 import { appEnvs } from "@/common/app-envs";
+import {
+  ampParameterKeys,
+  filterParameterKeys,
+  oscParameterKeys,
+} from "@/engine/engine-defs";
 
 const presetOptions = createPlainSelectorOptions(allPresetKeys);
 
@@ -185,46 +189,15 @@ const HeaderTextButton = ({
   );
 };
 
-function useOscParamKeys(oscId: OscId): {
-  octave: LinearParameterKeys;
-  wave: LinearParameterKeys;
-  unison: LinearParameterKeys;
-  spread: BoolParameterKeys;
-  detune: LinearParameterKeys;
-  sub: BoolParameterKeys;
-  mix: LinearParameterKeys;
-} {
-  if (oscId === "osc1") {
-    return {
-      octave: "osc1Octave",
-      wave: "osc1Wave",
-      unison: "osc1Unison",
-      spread: "osc1Spread",
-      detune: "osc1Detune",
-      sub: "osc1Sub",
-      mix: "osc1Mix",
-    };
-  } else {
-    return {
-      octave: "osc2Octave",
-      wave: "osc2Wave",
-      unison: "osc2Unison",
-      spread: "osc2Spread",
-      detune: "osc2Detune",
-      sub: "osc2Sub",
-      mix: "osc2Mix",
-    };
-  }
-}
-
-const OscSection = ({ oscId }: { oscId: OscId }) => {
+const OscSection = ({ laneId }: { laneId: LaneId }) => {
   const { parameters } = store.useSnapshot();
-  const pk = useOscParamKeys(oscId);
+  const pk = oscParameterKeys[laneId];
+  // const pk = useOscParamKeys(oscId);
   const mixLabel = { 0: "1", 1: "2", 2: "F" }[parameters[pk.mix]] ?? "";
 
   return (
     <SectionFrame
-      header={oscId === "osc1" ? "OSCILLATOR 1" : "OSCILLATOR 2"}
+      header={laneId === "lane1" ? "OSCILLATOR 1" : "OSCILLATOR 2"}
       headerInnerContent={
         <div class="flex-ha gap-4">
           <HeaderTextButton
@@ -237,10 +210,10 @@ const OscSection = ({ oscId }: { oscId: OscId }) => {
             active={parameters[pk.sub]}
             onClick={() => actions.toggleBoolParameter(pk.sub)}
           />
-          <HeaderTextButton
+          {/* <HeaderTextButton
             label={`MIX-${mixLabel}`}
             onClick={() => actions.shiftOscMix(oscId)}
-          />
+          /> */}
         </div>
       }
     >
@@ -265,7 +238,46 @@ const OscSection = ({ oscId }: { oscId: OscId }) => {
         step={1}
       />
       <ParameterKnob label="DETUNE" paramKey={pk.detune} />
-      {/* <ParameterKnob label="DECAY" paramKey={pk.decay} /> */}
+      <ParameterSlider label="MIX" paramKey={pk.mix} />
+    </SectionFrame>
+  );
+};
+
+const FilterSection = ({ laneId }: { laneId: LaneId }) => {
+  // const { parameters } = store.useSnapshot();
+  const pk = filterParameterKeys[laneId];
+  return (
+    <SectionFrame
+      header="FILTER"
+      // headerInnerContent={
+      //   <div class="flex-ha gap-3">
+      //     <HeaderTextButton
+      //       label={parameters[pk.type] === FilterType.LP24 ? "LP24" : "LP12"}
+      //       active
+      //       onClick={() => actions.toggleBoolParameter("lpfSteep")}
+      //     />
+      //   </div>
+      // }
+    >
+      <ParameterKnob label="CUTOFF" paramKey={pk.cutoff} />
+      <ParameterSlider label="PEAK" paramKey={pk.peak} />
+      <ParameterSlider label="DECAY" paramKey={pk.env} />
+    </SectionFrame>
+  );
+};
+
+const AmplifierSection = ({ laneId }: { laneId: LaneId }) => {
+  const { parameters } = store.useSnapshot();
+  const pk = ampParameterKeys[laneId];
+  return (
+    <SectionFrame header="AMPLIFIER">
+      <ParameterKnob
+        label={parameters[pk.decayAltAttack] ? "ATTACK†" : "DECAY†"}
+        paramKey={pk.decay}
+        onLabelClick={() => actions.toggleBoolParameter(pk.decayAltAttack)}
+      />
+      <ParameterKnob label="RELEASE" paramKey={pk.release} />
+      <ParameterSlider label="LEVEL" paramKey={pk.volume} />
     </SectionFrame>
   );
 };
@@ -302,80 +314,19 @@ const PageRoot = () => {
       </div>
       <div class="flex-h gap-8">
         <div class="flex-h gap-6">
-          <OscSection oscId="osc1" />
-          <SectionFrame
-            header="FILTER"
-            // headerInnerContent={
-            //   <div class="flex-ha gap-3">
-            //     <HeaderTextButton
-            //       label={parameters.lpfSteep ? "LP24" : "LP12"}
-            //       active
-            //       onClick={() => actions.toggleBoolParameter("lpfSteep")}
-            //     />
-            //   </div>
-            // }
-          >
-            <ParameterKnob label="CUTOFF" paramKey="lpfCutoff" />
-            <ParameterSlider label="PEAK" paramKey="lpfPeak" />
-            <ParameterSlider label="DECAY" paramKey="lpfDecay" />
-          </SectionFrame>
-          <SectionFrame
-            header="AMPLIFIER"
-            // headerInnerContent={
-            //   <div class="flex-ha gap-3">
-            //     <HeaderTextButton
-            //       label={parameters.ampExponential ? "EXP" : "LIN"}
-            //       onClick={() => actions.toggleBoolParameter("ampExponential")}
-            //     />
-            //   </div>
-            // }
-          >
-            {/* <ParameterSlider label="PUNCH" paramKey="ampHead" /> */}
-            <ParameterKnob
-              label={parameters.ampDecayAltAttack ? "ATTACK†" : "DECAY†"}
-              paramKey="ampDecay"
-              onLabelClick={() =>
-                actions.toggleBoolParameter("ampDecayAltAttack")
-              }
-            />
-            <ParameterKnob label="RELEASE" paramKey="ampRelease" />
-            {/* {false && (
-              <div class="flex-v gap-1 self-start">
-                <TextButton
-                  label="LIN"
-                  active={!parameters.ampExponential}
-                  onClick={() =>
-                    actions.setBoolParameter("ampExponential", false)
-                  }
-                />
-                <TextButton
-                  label="EXP"
-                  active={parameters.ampExponential}
-                  onClick={() =>
-                    actions.setBoolParameter("ampExponential", true)
-                  }
-                />
-                <TextButton
-                  label="LAST"
-                  active={parameters.ampReleaseLastOnly}
-                  onClick={() =>
-                    actions.toggleBoolParameter("ampReleaseLastOnly")
-                  }
-                />
-              </div>
-            )} */}
-          </SectionFrame>
+          <OscSection laneId="lane1" />
+          <FilterSection laneId="lane1" />
+          <AmplifierSection laneId="lane1" />
         </div>
       </div>
-      {/* {isDebug && <div>{OscWave[parameters.osc1Wave]}</div>} */}
       <div class="flex-h gap-6">
-        <OscSection oscId="osc2" />
+        <OscSection laneId="lane2" />
+        <FilterSection laneId="lane2" />
+        <AmplifierSection laneId="lane2" />
         <SectionFrame header="CONTROL">
           <div class="flex-h gap-7">
-            <ParameterSlider label="OSCMIX" paramKey="oscMix" invertY />
             <ParameterSlider label="DENSE" paramKey="density" />
             <ParameterSlider label="VOLUME" paramKey="patchVolume" />
-            {/* <ParameterKnob label="VOLUME" paramKey="patchVolume" /> */}
           </div>
         </SectionFrame>
         <div class="grow" />

@@ -1,5 +1,6 @@
-import { fixedParameters } from "@/defs/definitions";
-import { SynthesisBus } from "@/engine/engine-defs";
+import { fixedParameters, LaneId } from "@/defs/definitions";
+import { ampParameterKeys, SynthesisBus } from "@/engine/engine-defs";
+import { connectNodes, disconnectNodes } from "@/engine/webaudio-helpers";
 import {
   invPower2,
   mapUnaryFrom,
@@ -93,57 +94,63 @@ const helpers = {
   },
 };
 
-export function createAmplifierUnit(bus: SynthesisBus): AmplifierUnit {
+export function createAmplifierUnit(
+  bus: SynthesisBus,
+  laneId: LaneId,
+): AmplifierUnit {
+  const pk = ampParameterKeys[laneId];
   const ac = bus.audioContext;
-  const headNode = ac.createGain(); //automated for Punch
-  headNode.gain.value = 1;
-
-  const secondNode = ac.createGain(); //automated for A-D-S
-  secondNode.gain.value = 0;
+  const headNode = ac.createGain(); //automated for A-D-S
+  headNode.gain.value = 0;
 
   const tailNode = ac.createGain(); //automated for R
   tailNode.gain.value = 1;
-  headNode.connect(secondNode).connect(tailNode);
+
+  const gainNode = ac.createGain(); //volume control
+  gainNode.gain.value = 1;
+
+  connectNodes(headNode, tailNode, gainNode);
 
   return {
     inputNode: headNode,
-    outputNode: tailNode,
+    outputNode: gainNode,
     gateOn(time) {
       const pr = bus.parameters;
       const prHead = fixedParameters.ampHead;
       if (prHead > 0) {
         const { height, duration } = helpers.mapHeadCorn(prHead);
-        headNode.gain.setValueAtTime(1 + height, time);
-        headNode.gain.linearRampToValueAtTime(1, time + duration);
+        gainNode.gain.setValueAtTime(1 + height, time);
+        gainNode.gain.linearRampToValueAtTime(1, time + duration);
       }
 
       const { attack, decay, sustain } = helpers.mapDecayParameterToADS(
-        pr.ampDecay,
-        pr.ampDecayAltAttack,
+        pr[pk.decay],
+        pr[pk.decayAltAttack],
       );
       const prExponential = fixedParameters.ampExponential;
       // if (decay < 1) {
       if (prExponential) {
         const attackTime = helpers.calcAttackTime(attack, true);
         const decayTime = helpers.calcDecayTime(decay, true);
-        secondNode.gain.setValueAtTime(0, time);
-        secondNode.gain.linearRampToValueAtTime(1, time + attackTime);
-        secondNode.gain.exponentialRampToValueAtTime(
+        headNode.gain.setValueAtTime(0, time);
+        headNode.gain.linearRampToValueAtTime(1, time + attackTime);
+        headNode.gain.exponentialRampToValueAtTime(
           sustain + 1e-4,
           time + attackTime + decayTime,
         );
-        secondNode.gain.setValueAtTime(sustain, time + attackTime + decayTime);
+        headNode.gain.setValueAtTime(sustain, time + attackTime + decayTime);
       } else {
-        secondNode.gain.setValueAtTime(1, time);
+        headNode.gain.setValueAtTime(1, time);
         const decayTime = helpers.calcDecayTime(decay, false);
-        secondNode.gain.linearRampToValueAtTime(sustain, time + decayTime);
+        headNode.gain.linearRampToValueAtTime(sustain, time + decayTime);
       }
       // }
+      gainNode.gain.value = pr[pk.volume];
     },
     gateOff(time, applyRelease) {
       const pr = bus.parameters;
       const prExponential = fixedParameters.ampExponential;
-      const prRelease = pr.ampRelease;
+      const prRelease = pr[pk.release];
       tailNode.gain.setValueAtTime(1, time);
 
       let releaseTime = 0;
@@ -166,8 +173,7 @@ export function createAmplifierUnit(bus: SynthesisBus): AmplifierUnit {
       return time + 0.001;
     },
     cleanup() {
-      headNode.disconnect();
-      secondNode.disconnect();
+      disconnectNodes(headNode, tailNode);
     },
   };
 }

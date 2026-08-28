@@ -2,7 +2,7 @@ import { oscParameterKeys, SynthesisBus } from "@/engine/engine-defs";
 import { createOscillatorCore, OscillatorCore } from "@/engine/oscillator-core";
 import { getCustomWaveform } from "@/engine/custom-waveforms";
 import { mapUnaryTo, midiToFrequency } from "@/utils/synth-math-utils";
-import { OscId, SynthParameters } from "@/defs/definitions";
+import { LaneId, SynthParameters } from "@/defs/definitions";
 import { seqNumbers } from "@/utils/helpers";
 
 type OscillatorsUnit = {
@@ -95,10 +95,10 @@ const unisonBaseSpecs = {
 };
 
 function buildUnisonPartialSpecs(
-  oscId: OscId,
+  laneId: LaneId,
   pr: SynthParameters,
 ): UnisonPartialSpec[] {
-  const pk = oscParameterKeys[oscId];
+  const pk = oscParameterKeys[laneId];
   const prOctave = pr[pk.octave];
   const numUnison = pr[pk.unison];
   const prDetune = pr[pk.detune];
@@ -139,11 +139,11 @@ function buildUnisonPartialSpecs(
 }
 
 export function createOscillatorsUnit(
-  oscId: OscId,
+  laneId: LaneId,
   bus: SynthesisBus,
   noteNumber: number,
 ): OscillatorsUnit {
-  const pk = oscParameterKeys[oscId];
+  const pk = oscParameterKeys[laneId];
   const ac = bus.audioContext;
   const pr = bus.parameters;
   const outputNode = ac.createGain();
@@ -154,7 +154,7 @@ export function createOscillatorsUnit(
     update() {
       const numUnison = pr[pk.unison];
       const oscPartials = unisonManager.preservePartials(numUnison, playing);
-      const unisonPartialSpecs = buildUnisonPartialSpecs(oscId, pr);
+      const unisonPartialSpecs = buildUnisonPartialSpecs(laneId, pr);
       const waveform = getCustomWaveform(ac, pr[pk.wave]);
 
       for (let i = 0; i < numUnison; i++) {
