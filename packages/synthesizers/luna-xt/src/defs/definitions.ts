@@ -31,6 +31,14 @@ export const oscWaveLabels: { [K in OscWave]?: string } = {
   [OscWave.pulse125]: "P4",
 };
 
+export enum FilterType {
+  LP12 = 0,
+  LP24,
+  BP,
+  HP,
+  NOTCH,
+}
+
 export type SynthParameters = {
   osc1Octave: number; //-2~2
   osc1Wave: OscWave; //1~12
@@ -48,14 +56,25 @@ export type SynthParameters = {
   osc2Sub: boolean;
   osc2Mix: number;
   //
-  oscMix: number;
-  ampDecayAltAttack: boolean;
-  ampDecay: number;
-  ampRelease: number;
+  filter1Type: FilterType;
+  filter1Cutoff: number;
+  filter1Peak: number;
+  filter1Env: number;
   //
-  lpfCutoff: number;
-  lpfPeak: number;
-  lpfDecay: number;
+  filter2Type: FilterType;
+  filter2Cutoff: number;
+  filter2Peak: number;
+  filter2Env: number;
+  //
+  amp1DecayAltAttack: boolean;
+  amp1Decay: number;
+  amp1Release: number;
+  amp1Volume: number;
+  //
+  amp2DecayAltAttack: boolean;
+  amp2Decay: number;
+  amp2Release: number;
+  amp2Volume: number;
   //
   reverbTime: number;
   reverbTone: number;
@@ -84,21 +103,32 @@ export const defaultSynthParameters: SynthParameters = {
   osc2Sub: false,
   osc2Mix: 1,
   //
-  oscMix: 0,
-  ampDecayAltAttack: false,
-  ampDecay: 1,
-  ampRelease: 0,
-  patchVolume: 0.5,
+  amp1DecayAltAttack: false,
+  amp1Decay: 1,
+  amp1Release: 0,
+  amp1Volume: 1,
   //
-  lpfCutoff: 1,
-  lpfPeak: 0,
-  lpfDecay: 0,
+  amp2DecayAltAttack: false,
+  amp2Decay: 1,
+  amp2Release: 0,
+  amp2Volume: 1,
+  //
+  filter1Type: FilterType.LP12,
+  filter1Cutoff: 1,
+  filter1Peak: 0,
+  filter1Env: 0,
+  //
+  filter2Type: FilterType.LP12,
+  filter2Cutoff: 1,
+  filter2Peak: 0,
+  filter2Env: 0,
   //
   reverbTime: 0.5,
   reverbTone: 0.5,
   reverbMix: 0,
   //
   density: 0,
+  patchVolume: 0.5,
 };
 
 export const fixedParameters = {
@@ -119,7 +149,5 @@ export type SynthesizerEngine = {
   noteOff: (noteNumber: number, time?: number) => void;
   cleanup: () => void;
 };
-
-export type OscId = "osc1" | "osc2";
 
 export type LaneId = "lane1" | "lane2";
