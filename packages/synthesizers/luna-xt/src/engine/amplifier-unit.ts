@@ -12,6 +12,7 @@ type AmplifierUnit = {
 };
 
 const configs = {
+  expAttackTimeMax: 2,
   expDecayTimeMax: 4,
   linDecayTimeMax: 2,
   expReleaseTimeMax: 4,
@@ -26,16 +27,42 @@ const helpers = {
     };
   },
   mapDecaySustain(prDecayOriginal: number) {
-    if (prDecayOriginal < 0.5) {
-      const u = mapUnaryFrom(prDecayOriginal, 0, 0.5);
-      return { decay: u, sustain: 0 };
+    if (0) {
+      //D, D-S
+      if (prDecayOriginal < 0.5) {
+        const u = mapUnaryFrom(prDecayOriginal, 0, 0.5);
+        return { attack: 0, decay: u, sustain: 0 };
+      } else {
+        const ex = mapUnaryFrom(prDecayOriginal, 1, 0.5);
+        const cx = 1 - ex;
+        return {
+          attack: 0,
+          decay: power2(ex) * 0.3,
+          sustain: 0.15 + power2(cx) * 0.85,
+        };
+      }
     } else {
-      const ex = mapUnaryFrom(prDecayOriginal, 1, 0.5);
-      const cx = 1 - ex;
-      return {
-        decay: power2(ex) * 0.3,
-        sustain: 0.15 + power2(cx) * 0.85,
-      };
+      //A, A-D-S
+      if (prDecayOriginal < 0.5) {
+        const u = mapUnaryFrom(prDecayOriginal, 0, 0.5);
+        return { attack: u, decay: 0, sustain: 1 };
+      } else {
+        const ex = mapUnaryFrom(prDecayOriginal, 1, 0.5);
+        const cx = 1 - ex;
+        return {
+          attack: power2(ex) * 0.1,
+          decay: power2(ex) * 0.2,
+          sustain: 0.15 + power2(cx) * 0.85,
+        };
+      }
+    }
+  },
+  calcAttackTime(prAttack: number, isExponential: boolean) {
+    const minAttackTime = 0.001;
+    if (isExponential) {
+      return prAttack * configs.expAttackTimeMax + minAttackTime;
+    } else {
+      return prAttack ** 2 * configs.expAttackTimeMax + minAttackTime;
     }
   },
   calcDecayTime(prDecay: number, isExponential: boolean) {
@@ -90,22 +117,26 @@ export function createAmplifierUnit(
       }
 
       const prDecayOriginal = pr[pk.decay];
-      const { decay, sustain } = helpers.mapDecaySustain(prDecayOriginal);
+      const { attack, decay, sustain } =
+        helpers.mapDecaySustain(prDecayOriginal);
       const prExponential = pr.ampExponential;
-      secondNode.gain.setValueAtTime(1, time);
-      if (decay < 1) {
-        if (prExponential) {
-          const decayTime = helpers.calcDecayTime(decay, true);
-          secondNode.gain.exponentialRampToValueAtTime(
-            sustain + 1e-4,
-            time + decayTime,
-          );
-          secondNode.gain.setValueAtTime(sustain, time + decayTime);
-        } else {
-          const decayTime = helpers.calcDecayTime(decay, false);
-          secondNode.gain.linearRampToValueAtTime(sustain, time + decayTime);
-        }
+      // if (decay < 1) {
+      if (prExponential) {
+        const attackTime = helpers.calcAttackTime(attack, true);
+        const decayTime = helpers.calcDecayTime(decay, true);
+        secondNode.gain.setValueAtTime(0, time);
+        secondNode.gain.linearRampToValueAtTime(1, time + attackTime);
+        secondNode.gain.exponentialRampToValueAtTime(
+          sustain + 1e-4,
+          time + attackTime + decayTime,
+        );
+        secondNode.gain.setValueAtTime(sustain, time + attackTime + decayTime);
+      } else {
+        secondNode.gain.setValueAtTime(1, time);
+        const decayTime = helpers.calcDecayTime(decay, false);
+        secondNode.gain.linearRampToValueAtTime(sustain, time + decayTime);
       }
+      // }
     },
     gateOff(time, applyRelease) {
       const pr = bus.parameters;
