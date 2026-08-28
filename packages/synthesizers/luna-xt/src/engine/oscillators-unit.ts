@@ -107,7 +107,7 @@ function buildUnisonPartialSpecs(
   const subEnabled = pr[pk.sub];
 
   const baseVolume = Math.sqrt(1 / numUnison) + numUnison * 0.04;
-  const sideLevel = [0.2, 0.6, 1][mixLevel] ?? 1;
+  const sideLevel = mixLevel;
   const baseSpec =
     unisonBaseSpecs[numUnison as keyof typeof unisonBaseSpecs] ??
     unisonBaseSpecs[1];
