@@ -271,7 +271,7 @@ const PageRoot = () => {
   const { parameters } = store.useSnapshot();
   // const isDebug = appEnvs.isDevelopment;
   return (
-    <div class="flex-v gap-4 bg-clPageBg text-clPageText p-8">
+    <div class="flex-v gap-4 bg-clPageBg text-clPageText py-6 px-10">
       <div class="flex-ha gap-3 justify-between">
         <div class="flex-ha font-bold gap-4">
           <h1 class="text-5xl" onClick={actions.emitPresetData}>
