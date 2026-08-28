@@ -296,6 +296,19 @@ const AmplifierSection = ({ laneId }: { laneId: LaneId }) => {
   );
 };
 
+const DebugSection = () => {
+  const { parameters } = store.useSnapshot();
+  return (
+    <div>
+      <TextButton
+        label="WALT"
+        active={parameters["_oscAltWaveMix"]}
+        onClick={() => actions.toggleBoolParameter("_oscAltWaveMix")}
+      />
+    </div>
+  );
+};
+
 const PageRoot = () => {
   return (
     <div class="flex-v gap-4 bg-clPageBg text-clPageText py-6 px-10">
@@ -345,6 +358,7 @@ const PageRoot = () => {
         <OscSection laneId="lane3" />
         <FilterSection laneId="lane3" />
         <AmplifierSection laneId="lane3" />
+        <DebugSection />
       </div>
     </div>
   );
