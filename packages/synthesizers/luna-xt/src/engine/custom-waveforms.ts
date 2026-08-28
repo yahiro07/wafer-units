@@ -3,7 +3,7 @@ import { topLimit } from "@/utils/helpers";
 import { fracPart, invPower2, tunableSigmoid } from "@/utils/synth-math-utils";
 
 function getPulseWave(context: AudioContext, duty: number) {
-  const terms = 32;
+  const terms = 64;
   const real = new Float32Array(terms);
   const imag = new Float32Array(terms);
   const g = 1.7;
@@ -20,7 +20,7 @@ function getPulseWave(context: AudioContext, duty: number) {
 
 function makePeriodicWave(context: AudioContext, fn: (pp: number) => number) {
   const n = 256;
-  const terms = 32;
+  const terms = 64;
   const ys = new Float32Array(n);
   for (let i = 0; i < n; i++) {
     const pp = i / n;
@@ -57,14 +57,14 @@ const builders = {
       return Math.sin(2 * Math.PI * Math.pow(pp, 1 - level)) * 1.6;
     });
   },
-  expoSaw(ctx: AudioContext, k: number) {
+  expoSaw(ctx: AudioContext) {
     return makePeriodicWave(ctx, (pp) => {
       if (0) {
         const y = 2 * pp - 1;
         return Math.exp(y);
       } else {
         const y = 2 * pp - 1;
-        return tunableSigmoid(y, 0.7);
+        return tunableSigmoid(y, 0.7) * 1.1;
       }
     });
   },
@@ -88,14 +88,14 @@ const builders = {
   pulseSaw(ctx: AudioContext, k: number) {
     return makePeriodicWave(ctx, (pp) => {
       const y = pp < k ? invPower2(pp / k) : 0;
-      return (y * 2 - 1) * 2;
+      return y * 2 - 1;
     });
   },
   twoPulseSaw(ctx: AudioContext) {
     return makePeriodicWave(ctx, (pp) => {
       const pp2 = fracPart(pp * 3);
       const y = pp < 2 / 3 ? pp2 : 0;
-      return y * 2 - 1;
+      return (y * 2 - 1) * 0.9;
     });
   },
   fourPulseSaw(ctx: AudioContext) {
@@ -133,17 +133,17 @@ function getCustomWaveformCore(
   if (wave === OscWave.sawtooth) {
     return "sawtooth";
   } else if (wave === OscWave.sawSig) {
-    return builders.saturatedSaw(ctx, -0.5);
+    return builders.saturatedSaw(ctx, -0.6);
   } else if (wave === OscWave.pulse125) {
     return getPulseWave(ctx, 0.125);
   } else if (wave === OscWave.pulse25) {
     return getPulseWave(ctx, 0.25);
   } else if (wave === OscWave.pulse40) {
-    return getPulseWave(ctx, 0.4);
+    return getPulseWave(ctx, 0.36);
   } else if (wave === OscWave.pdSaw) {
     return builders.pdSaw(ctx, 0.92);
   } else if (wave === OscWave.exp1) {
-    return builders.expoSaw(ctx, 0.3);
+    return builders.expoSaw(ctx);
   } else if (wave === OscWave.syncSaw) {
     return builders.syncSaw(ctx, 1.7);
   } else if (wave === OscWave.shark) {
@@ -154,6 +154,8 @@ function getCustomWaveformCore(
     return builders.fourPulseSaw(ctx);
   } else if (wave === OscWave.trapezoid) {
     return builders.trapezoid(ctx);
+  } else if (wave === OscWave.square) {
+    return "square";
   }
   return "sine"; //fallback, not used
 }

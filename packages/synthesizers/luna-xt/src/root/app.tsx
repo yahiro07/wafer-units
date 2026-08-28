@@ -6,6 +6,7 @@ import {
   numOscWaveTypes,
   OscId,
   OscWave,
+  oscWaveLabels,
 } from "@/defs/definitions";
 import { useSetupDrivers } from "@/root/drivers";
 import { allPresetKeys, store } from "@/root/store";
@@ -258,7 +259,7 @@ const OscSection = ({ oscId }: { oscId: OscId }) => {
         step={1}
       />
       <ParameterKnob
-        label="WAVE"
+        label={`WAVE:${oscWaveLabels[parameters[pk.wave] as OscWave]}`}
         paramKey={pk.wave}
         max={numOscWaveTypes - 1}
         step={1}
@@ -366,7 +367,7 @@ const PageRoot = () => {
           </SectionFrame>
         </div>
       </div>
-      {isDebug && <div>{OscWave[parameters.osc1Wave]}</div>}
+      {/* {isDebug && <div>{OscWave[parameters.osc1Wave]}</div>} */}
       <div class="flex-h gap-6">
         <OscSection oscId="osc2" />
         <SectionFrame header="CONTROL">
