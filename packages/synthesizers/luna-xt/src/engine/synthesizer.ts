@@ -8,6 +8,7 @@ import { createEffectChain } from "@/engine/effect-chain";
 import { SynthesisBus } from "@/engine/engine-defs";
 import { createOscillatorsUnit } from "@/engine/oscillators-unit";
 import { createSharedFilterUnit } from "@/engine/shared-filter-unit";
+import { connectNodes, disconnectNodes } from "@/engine/webaudio-helpers";
 import { removeArrayItem } from "@/utils/helpers";
 import { UnitInterface } from "wafer-host/unit-types";
 
@@ -23,7 +24,7 @@ type Voice = {
 
 function createVoice(
   bus: SynthesisBus,
-  voiceMixNode: AudioNode,
+  voiceMixNodes: AudioNode[],
   noteNumber: number,
   gateOnTime: number,
 ): Voice {
@@ -32,27 +33,23 @@ function createVoice(
 
   const osc1 = createOscillatorsUnit("osc1", bus, noteNumber);
   const osc2 = createOscillatorsUnit("osc2", bus, noteNumber);
-  const amp = createAmplifierUnit(bus);
+  const amp1 = createAmplifierUnit(bus);
+  const amp2 = createAmplifierUnit(bus);
+
   const osc1MixGain = ac.createGain();
   const osc2MixGain = ac.createGain();
 
-  osc1.outputNode.connect(osc1MixGain);
-  osc2.outputNode.connect(osc2MixGain);
-  osc1MixGain.connect(amp.inputNode);
-  osc2MixGain.connect(amp.inputNode);
-  amp.outputNode.connect(voiceMixNode);
+  connectNodes(osc1, amp1, osc1MixGain, voiceMixNodes[0]);
+  connectNodes(osc2, amp2, osc2MixGain, voiceMixNodes[1]);
 
   const lifeSpanNode = ac.createConstantSource();
 
   lifeSpanNode.onended = () => {
     osc1.stop();
     osc2.stop();
-    osc1.outputNode.disconnect();
-    osc2.outputNode.disconnect();
-    osc1MixGain.disconnect();
-    osc2MixGain.disconnect();
-    amp.outputNode.disconnect();
-    amp.cleanup();
+    disconnectNodes(osc1, amp1, osc1MixGain, osc2, amp2, osc2MixGain);
+    amp1.cleanup();
+    amp2.cleanup();
     endedCallback?.();
   };
 
@@ -70,15 +67,18 @@ function createVoice(
       const time = gateOnTime;
       osc1.start(time);
       osc2.start(time);
-      amp.gateOn(time);
+      amp1.gateOn(time);
+      amp2.gateOn(time);
       lifeSpanNode.start(time);
     },
     gateOff(time, applyRelease) {
-      const tOff = amp.gateOff(time, applyRelease);
+      const tOff = amp1.gateOff(time, applyRelease);
+      amp2.gateOff(time, applyRelease);
       lifeSpanNode.stop(tOff);
     },
     mute(time) {
-      const tOff = amp.mute(time);
+      const tOff = amp1.mute(time);
+      amp2.mute(time);
       lifeSpanNode.stop(tOff);
     },
     setEndedCallback(fn) {
@@ -93,7 +93,9 @@ export function createSynthesizerEngine(
   const ac = unitInterface?.audioContext ?? new AudioContext();
   const destinationNode = unitInterface?.audioOutputNode ?? ac.destination;
 
-  const voiceMixNode = ac.createGain();
+  const voiceMixNode1 = ac.createGain();
+  const voiceMixNode2 = ac.createGain();
+  const voiceMixNodes = [voiceMixNode1, voiceMixNode2];
   const activeVoices: Voice[] = [];
   const releasingVoices: Voice[] = [];
 
@@ -101,11 +103,15 @@ export function createSynthesizerEngine(
     parameters: { ...defaultSynthParameters },
     audioContext: ac,
   };
-  const sharedFilter = createSharedFilterUnit(bus);
+  const sharedFilter1 = createSharedFilterUnit(bus, "lane1");
+  const sharedFilter2 = createSharedFilterUnit(bus, "lane2");
+
   const effectChain = createEffectChain(bus);
 
-  voiceMixNode.connect(sharedFilter.inputNode);
-  sharedFilter.outputNode.connect(effectChain.inputNode);
+  voiceMixNode1.connect(sharedFilter1.inputNode);
+  voiceMixNode2.connect(sharedFilter2.inputNode);
+  sharedFilter1.outputNode.connect(effectChain.inputNode);
+  sharedFilter2.outputNode.connect(effectChain.inputNode);
   effectChain.outputNode.connect(destinationNode);
 
   return {
@@ -114,7 +120,8 @@ export function createSynthesizerEngine(
       for (const voice of activeVoices) {
         voice.update();
       }
-      sharedFilter.update();
+      sharedFilter1.update();
+      sharedFilter2.update();
       effectChain.update();
     },
     noteOn(noteNumber, time = ac.currentTime) {
@@ -124,11 +131,12 @@ export function createSynthesizerEngine(
         }
         releasingVoices.length = 0;
       }
-      const voice = createVoice(bus, voiceMixNode, noteNumber, time);
+      const voice = createVoice(bus, voiceMixNodes, noteNumber, time);
       voice.update();
       voice.gateOn();
       activeVoices.push(voice);
-      sharedFilter.gateOn(time);
+      sharedFilter1.gateOn(time);
+      sharedFilter2.gateOn(time);
     },
     noteOff(noteNumber, time = ac.currentTime) {
       const voice = activeVoices.find((it) => it.noteNumber === noteNumber);
@@ -146,10 +154,12 @@ export function createSynthesizerEngine(
         voice.gateOff(time, applyRelease);
         removeArrayItem(activeVoices, voice);
       }
-      sharedFilter.gateOff(time);
+      sharedFilter1.gateOff(time);
+      sharedFilter2.gateOff(time);
     },
     cleanup() {
-      voiceMixNode.disconnect();
+      voiceMixNode1.disconnect();
+      voiceMixNode2.disconnect();
       effectChain.outputNode.disconnect();
     },
   };

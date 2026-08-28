@@ -1,5 +1,5 @@
 type CustomUnit = {
-  inputNode: AudioNode;
+  inputNode?: AudioNode;
   outputNode: AudioNode;
 };
 
@@ -15,8 +15,12 @@ export function connectNodes(...units: (AudioNode | CustomUnit)[]) {
   for (let i = 1; i < units.length; i++) {
     const nextUnit = units[i];
     const src = "outputNode" in unit ? unit.outputNode : unit;
-    const dest = "inputNode" in nextUnit ? nextUnit.inputNode : nextUnit;
-    src.connect(dest);
+    const dest = (
+      "inputNode" in nextUnit ? nextUnit.inputNode : nextUnit
+    ) as AudioNode;
+    if (src && dest) {
+      src.connect(dest);
+    }
     unit = nextUnit;
   }
   return () => {

@@ -121,3 +121,5 @@ export type SynthesizerEngine = {
 };
 
 export type OscId = "osc1" | "osc2";
+
+export type LaneId = "lane1" | "lane2";
