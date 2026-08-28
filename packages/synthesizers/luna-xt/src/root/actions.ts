@@ -1,4 +1,4 @@
-import { BoolParameterKeys, OscId, SynthParameters } from "@/defs/definitions";
+import { BoolParameterKeys, SynthParameters } from "@/defs/definitions";
 import { allPresets } from "@/defs/presets";
 import { createRandomParameters } from "@/root/randomizer";
 import { allPresetKeys, store } from "@/root/store";
@@ -15,10 +15,6 @@ export const actions = {
   },
   toggleBoolParameter<K extends BoolParameterKeys>(key: K) {
     store.patchParameters({ [key]: !store.state.parameters[key] });
-  },
-  shiftOscMix(oscId: OscId) {
-    const mix = store.state.parameters[`${oscId}Mix`];
-    store.patchParameters({ [`${oscId}Mix`]: (mix + 1) % 3 });
   },
   setPreset(presetKey: string) {
     const preset = allPresets[presetKey];

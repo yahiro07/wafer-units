@@ -46,7 +46,7 @@ export type SynthParameters = {
   osc1Spread: boolean;
   osc1Detune: number; //0~1
   osc1Sub: boolean;
-  osc1Mix: number; //0/1/2
+  osc1Mix: number; //0~1
   //
   osc2Octave: number;
   osc2Wave: OscWave;
@@ -93,7 +93,7 @@ export const defaultSynthParameters: SynthParameters = {
   osc1Spread: true,
   osc1Detune: 0,
   osc1Sub: false,
-  osc1Mix: 1,
+  osc1Mix: 0.5,
   //
   osc2Octave: 0,
   osc2Wave: OscWave.sawtooth,
@@ -101,7 +101,7 @@ export const defaultSynthParameters: SynthParameters = {
   osc2Spread: true,
   osc2Detune: 0,
   osc2Sub: false,
-  osc2Mix: 1,
+  osc2Mix: 0.5,
   //
   amp1DecayAltAttack: false,
   amp1Decay: 1,
