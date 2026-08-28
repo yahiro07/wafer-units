@@ -372,6 +372,15 @@ const PageRoot = () => {
             <ParameterSlider label="OSCMIX" paramKey="oscMix" invertY />
             <ParameterSlider label="DENSE" paramKey="density" />
             <ParameterSlider label="VOLUME" paramKey="patchVolume" />
+            {/* <ParameterKnob label="VOLUME" paramKey="patchVolume" /> */}
+          </div>
+        </SectionFrame>
+        <div class="grow" />
+        <SectionFrame header="REVERB">
+          <div class="flex-h gap-5">
+            <ParameterSlider label="TIME" paramKey="reverbTime" />
+            <ParameterSlider label="TONE" paramKey="reverbTone" />
+            <ParameterSlider label="MIX" paramKey="reverbMix" />
           </div>
         </SectionFrame>
       </div>

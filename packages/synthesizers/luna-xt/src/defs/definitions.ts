@@ -48,6 +48,10 @@ export type SynthParameters = {
   lpfDecay: number;
   lpfSteep: boolean;
   //
+  reverbTime: number;
+  reverbTone: number;
+  reverbMix: number;
+  //
   patchVolume: number;
   //
   _saturation: number;
@@ -87,6 +91,10 @@ export const defaultSynthParameters: SynthParameters = {
   lpfPeak: 0,
   lpfDecay: 0,
   lpfSteep: false,
+  //
+  reverbTime: 0.5,
+  reverbTone: 0.5,
+  reverbMix: 0,
   //
   _saturation: 1,
   press: 0,
