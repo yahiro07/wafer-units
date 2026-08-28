@@ -40,6 +40,11 @@ export enum FilterType {
 }
 
 export type SynthParameters = {
+  lane1On: boolean;
+  lane1Volume: number;
+  lane2On: boolean;
+  lane2Volume: number;
+  //
   osc1Octave: number; //-2~2
   osc1Wave: OscWave; //1~12
   osc1Unison: number; //1~5
@@ -69,12 +74,12 @@ export type SynthParameters = {
   amp1DecayAltAttack: boolean;
   amp1Decay: number;
   amp1Release: number;
-  amp1Volume: number;
+  // amp1Volume: number;
   //
   amp2DecayAltAttack: boolean;
   amp2Decay: number;
   amp2Release: number;
-  amp2Volume: number;
+  // amp2Volume: number;
   //
   reverbTime: number;
   reverbTone: number;
@@ -87,6 +92,11 @@ export type SynthParameters = {
 export type SynthPresetParameters = SynthParameters;
 
 export const defaultSynthParameters: SynthParameters = {
+  lane1On: true,
+  lane1Volume: 0.5,
+  lane2On: false,
+  lane2Volume: 0.5,
+  //
   osc1Octave: 0,
   osc1Wave: OscWave.sawtooth,
   osc1Unison: 1,
@@ -106,12 +116,10 @@ export const defaultSynthParameters: SynthParameters = {
   amp1DecayAltAttack: false,
   amp1Decay: 1,
   amp1Release: 0,
-  amp1Volume: 1,
   //
   amp2DecayAltAttack: false,
   amp2Decay: 1,
   amp2Release: 0,
-  amp2Volume: 1,
   //
   filter1Type: FilterType.LP12,
   filter1Cutoff: 1,
