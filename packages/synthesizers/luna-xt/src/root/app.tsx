@@ -189,7 +189,6 @@ function useOscParamKeys(oscId: OscId): {
   unison: LinearParameterKeys;
   spread: BoolParameterKeys;
   detune: LinearParameterKeys;
-  decay: LinearParameterKeys;
   sub: BoolParameterKeys;
   mix: LinearParameterKeys;
 } {
@@ -200,7 +199,6 @@ function useOscParamKeys(oscId: OscId): {
       unison: "osc1Unison",
       spread: "osc1Spread",
       detune: "osc1Detune",
-      decay: "osc1Decay",
       sub: "osc1Sub",
       mix: "osc1Mix",
     };
@@ -211,7 +209,6 @@ function useOscParamKeys(oscId: OscId): {
       unison: "osc2Unison",
       spread: "osc2Spread",
       detune: "osc2Detune",
-      decay: "osc2Decay",
       sub: "osc2Sub",
       mix: "osc2Mix",
     };
@@ -287,25 +284,58 @@ const PageRoot = () => {
           <PresetSelectionPart />
           <RandomizerButton />
         </div>
-        <ParameterKnob label="VOLUME" paramKey="patchVolume" />
+        {/* <ParameterKnob label="VOLUME" paramKey="patchVolume" /> */}
+        {isDebug && (
+          <SectionFrame header="DEBUG">
+            <ParameterSlider
+              label="SAT"
+              paramKey="_saturation"
+              min={0}
+              max={2}
+              step={1}
+            />
+            <ParameterSlider label="PRESS" paramKey="press" />
+          </SectionFrame>
+        )}
       </div>
       <div class="flex-h gap-8">
         <div class="flex-h gap-6">
           <OscSection oscId="osc1" />
-
+          <SectionFrame
+            header="FILTER"
+            // headerInnerContent={
+            //   <div class="flex-ha gap-3">
+            //     <HeaderTextButton
+            //       label={parameters.lpfSteep ? "LP24" : "LP12"}
+            //       active
+            //       onClick={() => actions.toggleBoolParameter("lpfSteep")}
+            //     />
+            //   </div>
+            // }
+          >
+            <ParameterKnob label="CUTOFF" paramKey="lpfCutoff" />
+            <ParameterSlider label="Q" paramKey="lpfPeak" />
+            <ParameterSlider label="DECAY" paramKey="lpfDecay" />
+          </SectionFrame>
           <SectionFrame
             header="AMP"
-            headerInnerContent={
-              <div class="flex-ha gap-3">
-                <HeaderTextButton
-                  label={parameters.ampExponential ? "EXP" : "LIN"}
-                  onClick={() => actions.toggleBoolParameter("ampExponential")}
-                />
-              </div>
-            }
+            // headerInnerContent={
+            //   <div class="flex-ha gap-3">
+            //     <HeaderTextButton
+            //       label={parameters.ampExponential ? "EXP" : "LIN"}
+            //       onClick={() => actions.toggleBoolParameter("ampExponential")}
+            //     />
+            //   </div>
+            // }
           >
             {/* <ParameterSlider label="PUNCH" paramKey="ampHead" /> */}
-            <ParameterKnob label="DECAY" paramKey="osc1Decay" />
+            <ParameterKnob
+              label={parameters.ampDecayAltAttack ? "ATTACK†" : "DECAY†"}
+              paramKey="ampDecay"
+              onLabelClick={() =>
+                actions.toggleBoolParameter("ampDecayAltAttack")
+              }
+            />
             <ParameterKnob label="RELEASE" paramKey="ampRelease" />
             {false && (
               <div class="flex-v gap-1 self-start">
@@ -333,22 +363,6 @@ const PageRoot = () => {
               </div>
             )}
           </SectionFrame>
-          <SectionFrame
-            header="FILTER"
-            headerInnerContent={
-              <div class="flex-ha gap-3">
-                <HeaderTextButton
-                  label={parameters.lpfSteep ? "LP24" : "LP12"}
-                  active
-                  onClick={() => actions.toggleBoolParameter("lpfSteep")}
-                />
-              </div>
-            }
-          >
-            <ParameterKnob label="CUTOFF" paramKey="lpfCutoff" />
-            <ParameterSlider label="Q" paramKey="lpfPeak" />
-            {/* <ParameterSlider label="DECAY" paramKey="lpfDecay" /> */}
-          </SectionFrame>
         </div>
       </div>
       <div class="flex-h gap-6">
@@ -357,20 +371,9 @@ const PageRoot = () => {
           <div class="flex-h gap-7">
             <ParameterSlider label="OSCMIX" paramKey="oscMix" invertY />
             <ParameterSlider label="DENSE" paramKey="density" />
+            <ParameterSlider label="VOLUME" paramKey="patchVolume" />
           </div>
         </SectionFrame>
-        {isDebug && (
-          <SectionFrame header="DEBUG">
-            <ParameterSlider
-              label="SAT"
-              paramKey="_saturation"
-              min={0}
-              max={2}
-              step={1}
-            />
-            <ParameterSlider label="PRESS" paramKey="press" />
-          </SectionFrame>
-        )}
       </div>
 
       <div class="flex-h gap-8 justify-between"></div>

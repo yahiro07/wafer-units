@@ -24,7 +24,6 @@ export type SynthParameters = {
   osc1Unison: number; //1~5
   osc1Spread: boolean;
   osc1Detune: number; //0~1
-  osc1Decay: number; //0~1
   osc1Sub: boolean;
   osc1Mix: number; //0/1/2
   //
@@ -33,12 +32,13 @@ export type SynthParameters = {
   osc2Unison: number;
   osc2Spread: boolean;
   osc2Detune: number;
-  osc2Decay: number;
   osc2Sub: boolean;
   osc2Mix: number;
   //
   oscMix: number;
   ampHead: number;
+  ampDecayAltAttack: boolean;
+  ampDecay: number;
   ampRelease: number;
   ampExponential: boolean;
   ampReleaseLastOnly: boolean;
@@ -63,7 +63,6 @@ export const defaultSynthParameters: SynthParameters = {
   osc1Unison: 1,
   osc1Spread: true,
   osc1Detune: 0,
-  osc1Decay: 1,
   osc1Sub: false,
   osc1Mix: 1,
   //
@@ -72,12 +71,13 @@ export const defaultSynthParameters: SynthParameters = {
   osc2Unison: 1,
   osc2Spread: true,
   osc2Detune: 0,
-  osc2Decay: 1,
   osc2Sub: false,
   osc2Mix: 1,
   //
   oscMix: 0,
   ampHead: 0,
+  ampDecayAltAttack: false,
+  ampDecay: 1,
   ampRelease: 0,
   ampExponential: true,
   ampReleaseLastOnly: false,

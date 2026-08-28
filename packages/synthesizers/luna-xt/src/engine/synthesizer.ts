@@ -28,17 +28,15 @@ function createVoice(
 
   const osc1 = createOscillatorsUnit("osc1", bus, noteNumber);
   const osc2 = createOscillatorsUnit("osc2", bus, noteNumber);
-  const osc1Amp = createAmplifierUnit("osc1", bus);
-  const osc2Amp = createAmplifierUnit("osc2", bus);
+  const amp = createAmplifierUnit(bus);
   const osc1MixGain = ac.createGain();
   const osc2MixGain = ac.createGain();
 
-  osc1.outputNode.connect(osc1Amp.inputNode);
-  osc1Amp.outputNode.connect(osc1MixGain);
-  osc2.outputNode.connect(osc2Amp.inputNode);
-  osc2Amp.outputNode.connect(osc2MixGain);
-  osc1MixGain.connect(voiceMixNode);
-  osc2MixGain.connect(voiceMixNode);
+  osc1.outputNode.connect(osc1MixGain);
+  osc2.outputNode.connect(osc2MixGain);
+  osc1MixGain.connect(amp.inputNode);
+  osc2MixGain.connect(amp.inputNode);
+  amp.outputNode.connect(voiceMixNode);
 
   const lifeSpanNode = ac.createConstantSource();
 
@@ -46,13 +44,11 @@ function createVoice(
     osc1.stop();
     osc2.stop();
     osc1.outputNode.disconnect();
-    osc1Amp.outputNode.disconnect();
     osc2.outputNode.disconnect();
-    osc2Amp.outputNode.disconnect();
-    osc1Amp.cleanup();
-    osc2Amp.cleanup();
     osc1MixGain.disconnect();
     osc2MixGain.disconnect();
+    amp.outputNode.disconnect();
+    amp.cleanup();
     endedCallback?.();
   };
 
@@ -69,19 +65,16 @@ function createVoice(
     gateOn() {
       const time = gateOnTime;
       osc1.start(time);
-      osc1Amp.gateOn(time);
       osc2.start(time);
-      osc2Amp.gateOn(time);
+      amp.gateOn(time);
       lifeSpanNode.start(time);
     },
     gateOff(time, applyRelease) {
-      const tOff = osc1Amp.gateOff(time, applyRelease);
-      osc2Amp.gateOff(time, applyRelease);
+      const tOff = amp.gateOff(time, applyRelease);
       lifeSpanNode.stop(tOff);
     },
     mute(time) {
-      const tOff = osc1Amp.mute(time);
-      osc2Amp.mute(time);
+      const tOff = amp.mute(time);
       lifeSpanNode.stop(tOff);
     },
     setEndedCallback(fn) {

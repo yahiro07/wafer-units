@@ -1,5 +1,4 @@
-import { OscId } from "@/defs/definitions";
-import { oscParameterKeys, SynthesisBus } from "@/engine/engine-defs";
+import { SynthesisBus } from "@/engine/engine-defs";
 import { mapUnaryFrom, mapUnaryTo, power2 } from "@/utils/synth-math-utils";
 
 type AmplifierUnit = {
@@ -26,8 +25,8 @@ const helpers = {
       duration: mapUnaryTo(prHead, 0.02, 0.01),
     };
   },
-  mapDecaySustain(prDecayOriginal: number) {
-    if (0) {
+  mapDecayParameterToADS(prDecayOriginal: number, prDecayAltAttack: boolean) {
+    if (!prDecayAltAttack) {
       //D, D-S
       if (prDecayOriginal < 0.5) {
         const u = mapUnaryFrom(prDecayOriginal, 0, 0.5);
@@ -88,11 +87,7 @@ const helpers = {
   },
 };
 
-export function createAmplifierUnit(
-  oscId: OscId,
-  bus: SynthesisBus,
-): AmplifierUnit {
-  const pk = oscParameterKeys[oscId];
+export function createAmplifierUnit(bus: SynthesisBus): AmplifierUnit {
   const ac = bus.audioContext;
   const headNode = ac.createGain(); //automated for Punch
   headNode.gain.value = 1;
@@ -116,9 +111,10 @@ export function createAmplifierUnit(
         headNode.gain.linearRampToValueAtTime(1, time + duration);
       }
 
-      const prDecayOriginal = pr[pk.decay];
-      const { attack, decay, sustain } =
-        helpers.mapDecaySustain(prDecayOriginal);
+      const { attack, decay, sustain } = helpers.mapDecayParameterToADS(
+        pr.ampDecay,
+        pr.ampDecayAltAttack,
+      );
       const prExponential = pr.ampExponential;
       // if (decay < 1) {
       if (prExponential) {
