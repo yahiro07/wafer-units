@@ -15,7 +15,6 @@ import { ComponentChildren } from "preact";
 import { cz } from "@/common/css-realm";
 import { Button } from "@/components/button";
 import { Selector } from "@/components/selector";
-import { appEnvs } from "@/common/app-envs";
 
 const presetOptions = createPlainSelectorOptions(allPresetKeys);
 
@@ -270,15 +269,15 @@ const OscSection = ({ oscId }: { oscId: OscId }) => {
 
 const PageRoot = () => {
   const { parameters } = store.useSnapshot();
-  const isDebug = appEnvs.isDevelopment;
+  // const isDebug = appEnvs.isDevelopment;
   return (
     <div class="flex-v gap-4 bg-clPageBg text-clPageText p-8">
       <div class="flex-ha gap-3 justify-between">
-        <div class="flex-vc font-bold ">
+        <div class="flex-ha font-bold gap-4">
           <h1 class="text-5xl" onClick={actions.emitPresetData}>
             LUNA
           </h1>
-          <div class="text-[24px] mt-[-8px]">TRS-MINI</div>
+          <div class="text-4xl">TRS-MINI</div>
         </div>
         <div class="flex-ha gap-5">
           <PresetSelectionPart />
@@ -384,8 +383,6 @@ const PageRoot = () => {
           </div>
         </SectionFrame>
       </div>
-
-      <div class="flex-h gap-8 justify-between"></div>
     </div>
   );
 };
