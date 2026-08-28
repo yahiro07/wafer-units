@@ -48,9 +48,8 @@ export type SynthParameters = {
   reverbTone: number;
   reverbMix: number;
   //
-  patchVolume: number;
-  //
   density: number;
+  patchVolume: number;
 };
 
 export type SynthPresetParameters = SynthParameters;

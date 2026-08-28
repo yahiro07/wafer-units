@@ -60,7 +60,7 @@ const helpers = {
   calcAttackTime(prAttack: number, isExponential: boolean) {
     const minAttackTime = 0.001;
     if (isExponential) {
-      return prAttack * configs.expAttackTimeMax + minAttackTime;
+      return prAttack ** 2 * configs.expAttackTimeMax + minAttackTime;
     } else {
       return prAttack ** 2 * configs.expAttackTimeMax + minAttackTime;
     }

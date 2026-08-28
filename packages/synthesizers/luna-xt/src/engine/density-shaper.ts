@@ -51,6 +51,8 @@ export function createDensityShaper(audioContext: AudioContext) {
     inputNode,
     outputNode,
     update(level: number) {
+      level = level ** 2;
+
       const enabled = level > 0;
       if (enabled) {
         const steppedLevelKey = Math.floor(level * 10);

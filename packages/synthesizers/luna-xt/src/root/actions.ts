@@ -1,6 +1,6 @@
 import { BoolParameterKeys, OscId, SynthParameters } from "@/defs/definitions";
 import { allPresets } from "@/defs/presets";
-import { createRandomParameters } from "@/root/.local/randomizer";
+import { createRandomParameters } from "@/root/randomizer";
 import { allPresetKeys, store } from "@/root/store";
 
 export const actions = {
