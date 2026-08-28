@@ -71,7 +71,10 @@ type UnisonPartialSpec = {
   volume: number;
 };
 
-const unisonBaseSpecs = {
+const unisonBaseSpecs: Record<
+  1 | 2 | 3 | 4 | 5,
+  { coreIndices: number[]; subIndices: number[]; detuneMap?: number[] }
+> = {
   [1]: {
     coreIndices: [0],
     subIndices: [] as number[],
@@ -83,14 +86,17 @@ const unisonBaseSpecs = {
   [3]: {
     coreIndices: [1],
     subIndices: [2],
+    detuneMap: [-0.971, 0, 0.997],
   },
   [4]: {
     coreIndices: [1],
     subIndices: [0, 2],
+    detuneMap: [-0.971, -0.271, 0.278, 0.997],
   },
   [5]: {
     coreIndices: [2],
     subIndices: [0, 3],
+    detuneMap: [-0.971, -0.401, 0, 0.408, 0.997],
   },
 };
 
@@ -116,7 +122,8 @@ function buildUnisonPartialSpecs(
     const pos = numUnison === 1 ? 0 : mapUnaryTo(i / (numUnison - 1), -1, 1);
     const isCore = baseSpec.coreIndices.includes(i);
     const isSub = baseSpec.subIndices.includes(i);
-    const detune = pos * prDetune ** 2 * configs.detuneHalfMax;
+    const detunePos = baseSpec.detuneMap?.[i] ?? pos;
+    const detune = detunePos * prDetune ** 2 * configs.detuneHalfMax;
     const octave = subEnabled && isSub ? prOctave - 1 : prOctave;
     let panning = isStereo ? pos : 0;
     if (numUnison === 2) {

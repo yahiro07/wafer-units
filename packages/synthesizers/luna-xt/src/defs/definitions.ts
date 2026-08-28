@@ -110,7 +110,7 @@ export type SynthPresetParameters = SynthParameters;
 
 export const defaultSynthParameters: SynthParameters = {
   lane1On: true,
-  lane1Volume: 0.5,
+  lane1Volume: 1,
   lane2On: false,
   lane2Volume: 0.5,
   lane3On: false,
