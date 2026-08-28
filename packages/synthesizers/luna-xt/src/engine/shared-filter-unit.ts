@@ -1,3 +1,4 @@
+import { LaneId } from "@/defs/definitions";
 import { SynthesisBus } from "@/engine/engine-defs";
 import { clampValue } from "@/utils/helpers";
 import { mapUnaryTo, power2 } from "@/utils/synth-math-utils";
@@ -24,7 +25,10 @@ const helpers = {
   },
 };
 
-export function createSharedFilterUnit(bus: SynthesisBus): SharedFilterUnit {
+export function createSharedFilterUnit(
+  bus: SynthesisBus,
+  laneId: LaneId,
+): SharedFilterUnit {
   const ac = bus.audioContext;
   const pr = bus.parameters;
   const inputNode = ac.createGain();
@@ -40,8 +44,11 @@ export function createSharedFilterUnit(bus: SynthesisBus): SharedFilterUnit {
     inputNode,
     outputNode,
     update() {
-      const cutoff = helpers.mapCutoff(pr.lpfCutoff);
+      let cutoff = helpers.mapCutoff(pr.lpfCutoff);
       const q = helpers.mapQ(pr.lpfPeak);
+      if (laneId === "lane2") {
+        cutoff *= 0.5;
+      }
       lpf1.frequency.value = cutoff;
       lpf2.frequency.value = cutoff;
       lpf1.Q.value = q;
@@ -50,7 +57,10 @@ export function createSharedFilterUnit(bus: SynthesisBus): SharedFilterUnit {
     gateOn(time) {
       lpf1.detune.cancelScheduledValues(time);
       lpf2.detune.cancelScheduledValues(time);
-      const prDecay = pr.lpfDecay;
+      let prDecay = pr.lpfDecay;
+      if (laneId === "lane2") {
+        prDecay *= 0.5;
+      }
       if (prDecay > 0) {
         const decayTime = power2(prDecay) * 2 + 0.2;
         const top = prDecay * 3600;
