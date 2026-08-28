@@ -1,4 +1,8 @@
-import { defaultSynthParameters, SynthesizerEngine } from "@/defs/definitions";
+import {
+  defaultSynthParameters,
+  fixedParameters,
+  SynthesizerEngine,
+} from "@/defs/definitions";
 import { createAmplifierUnit } from "@/engine/amplifier-unit";
 import { createEffectChain } from "@/engine/effect-chain";
 import { SynthesisBus } from "@/engine/engine-defs";
@@ -114,7 +118,7 @@ export function createSynthesizerEngine(
       effectChain.update();
     },
     noteOn(noteNumber, time = ac.currentTime) {
-      if (bus.parameters.ampReleaseLastOnly && releasingVoices.length > 0) {
+      if (fixedParameters.ampReleaseLastOnly && releasingVoices.length > 0) {
         for (const voice of releasingVoices) {
           voice.mute(time);
         }
@@ -130,7 +134,7 @@ export function createSynthesizerEngine(
       const voice = activeVoices.find((it) => it.noteNumber === noteNumber);
       if (voice) {
         const isLastVoice = activeVoices.length === 1;
-        const applyRelease = bus.parameters.ampReleaseLastOnly
+        const applyRelease = fixedParameters.ampReleaseLastOnly
           ? isLastVoice
           : true;
         if (applyRelease) {

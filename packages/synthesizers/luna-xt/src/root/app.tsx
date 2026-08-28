@@ -285,7 +285,7 @@ const PageRoot = () => {
           <RandomizerButton />
         </div>
         {/* <ParameterKnob label="VOLUME" paramKey="patchVolume" /> */}
-        {isDebug && (
+        {/* {isDebug && (
           <SectionFrame header="DEBUG">
             <ParameterSlider
               label="SAT"
@@ -296,7 +296,7 @@ const PageRoot = () => {
             />
             <ParameterSlider label="PRESS" paramKey="press" />
           </SectionFrame>
-        )}
+        )} */}
       </div>
       <div class="flex-h gap-8">
         <div class="flex-h gap-6">
@@ -337,7 +337,7 @@ const PageRoot = () => {
               }
             />
             <ParameterKnob label="RELEASE" paramKey="ampRelease" />
-            {false && (
+            {/* {false && (
               <div class="flex-v gap-1 self-start">
                 <TextButton
                   label="LIN"
@@ -361,7 +361,7 @@ const PageRoot = () => {
                   }
                 />
               </div>
-            )}
+            )} */}
           </SectionFrame>
         </div>
       </div>

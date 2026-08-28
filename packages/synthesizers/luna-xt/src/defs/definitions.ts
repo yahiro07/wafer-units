@@ -36,17 +36,13 @@ export type SynthParameters = {
   osc2Mix: number;
   //
   oscMix: number;
-  ampHead: number;
   ampDecayAltAttack: boolean;
   ampDecay: number;
   ampRelease: number;
-  ampExponential: boolean;
-  ampReleaseLastOnly: boolean;
   //
   lpfCutoff: number;
   lpfPeak: number;
   lpfDecay: number;
-  lpfSteep: boolean;
   //
   reverbTime: number;
   reverbTone: number;
@@ -54,8 +50,6 @@ export type SynthParameters = {
   //
   patchVolume: number;
   //
-  _saturation: number;
-  press: number;
   density: number;
 };
 
@@ -79,26 +73,29 @@ export const defaultSynthParameters: SynthParameters = {
   osc2Mix: 1,
   //
   oscMix: 0,
-  ampHead: 0,
   ampDecayAltAttack: false,
   ampDecay: 1,
   ampRelease: 0,
-  ampExponential: true,
-  ampReleaseLastOnly: false,
   patchVolume: 0.5,
   //
   lpfCutoff: 1,
   lpfPeak: 0,
   lpfDecay: 0,
-  lpfSteep: false,
   //
   reverbTime: 0.5,
   reverbTone: 0.5,
   reverbMix: 0,
   //
-  _saturation: 1,
-  press: 0,
   density: 0,
+};
+
+export const fixedParameters = {
+  ampHead: 0,
+  ampExponential: true,
+  ampReleaseLastOnly: false,
+  lpfSteep: false,
+  saturation: 1,
+  press: 0,
 };
 
 export type LinearParameterKeys = PickKeysForValueType<SynthParameters, number>;

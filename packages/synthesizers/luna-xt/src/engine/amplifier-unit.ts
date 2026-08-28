@@ -1,3 +1,4 @@
+import { fixedParameters } from "@/defs/definitions";
 import { SynthesisBus } from "@/engine/engine-defs";
 import { mapUnaryFrom, mapUnaryTo, power2 } from "@/utils/synth-math-utils";
 
@@ -104,7 +105,7 @@ export function createAmplifierUnit(bus: SynthesisBus): AmplifierUnit {
     outputNode: tailNode,
     gateOn(time) {
       const pr = bus.parameters;
-      const prHead = pr.ampHead;
+      const prHead = fixedParameters.ampHead;
       if (prHead > 0) {
         const { height, duration } = helpers.mapHeadCorn(prHead);
         headNode.gain.setValueAtTime(1 + height, time);
@@ -115,7 +116,7 @@ export function createAmplifierUnit(bus: SynthesisBus): AmplifierUnit {
         pr.ampDecay,
         pr.ampDecayAltAttack,
       );
-      const prExponential = pr.ampExponential;
+      const prExponential = fixedParameters.ampExponential;
       // if (decay < 1) {
       if (prExponential) {
         const attackTime = helpers.calcAttackTime(attack, true);
@@ -136,7 +137,7 @@ export function createAmplifierUnit(bus: SynthesisBus): AmplifierUnit {
     },
     gateOff(time, applyRelease) {
       const pr = bus.parameters;
-      const prExponential = pr.ampExponential;
+      const prExponential = fixedParameters.ampExponential;
       const prRelease = pr.ampRelease;
       tailNode.gain.setValueAtTime(1, time);
 
