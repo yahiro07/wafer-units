@@ -30,6 +30,16 @@ export const oscParameterKeys = {
     sub: "osc2Sub",
     mix: "osc2Mix",
   },
+  lane3: {
+    octave: "osc3Octave",
+    wave: "osc3Wave",
+    unison: "osc3Unison",
+    spread: "osc3Spread",
+    detune: "osc3Detune",
+    decay: "osc3Decay",
+    sub: "osc3Sub",
+    mix: "osc3Mix",
+  },
 } as const;
 
 export const filterParameterKeys = {
@@ -45,6 +55,12 @@ export const filterParameterKeys = {
     peak: "filter2Peak",
     env: "filter2Env",
   },
+  lane3: {
+    type: "filter3Type",
+    cutoff: "filter3Cutoff",
+    peak: "filter3Peak",
+    env: "filter3Env",
+  },
 } as const;
 
 export const ampParameterKeys = {
@@ -58,6 +74,11 @@ export const ampParameterKeys = {
     decay: "amp2Decay",
     release: "amp2Release",
   },
+  lane3: {
+    decayAltAttack: "amp3DecayAltAttack",
+    decay: "amp3Decay",
+    release: "amp3Release",
+  },
 } as const;
 
 export const laneParameterKeys = {
@@ -68,5 +89,9 @@ export const laneParameterKeys = {
   lane2: {
     on: "lane2On",
     volume: "lane2Volume",
+  },
+  lane3: {
+    on: "lane3On",
+    volume: "lane3Volume",
   },
 } as const;
