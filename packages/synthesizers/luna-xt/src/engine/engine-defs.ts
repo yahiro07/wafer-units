@@ -52,12 +52,21 @@ export const ampParameterKeys = {
     decayAltAttack: "amp1DecayAltAttack",
     decay: "amp1Decay",
     release: "amp1Release",
-    volume: "amp1Volume",
   },
   lane2: {
     decayAltAttack: "amp2DecayAltAttack",
     decay: "amp2Decay",
     release: "amp2Release",
-    volume: "amp2Volume",
+  },
+} as const;
+
+export const laneParameterKeys = {
+  lane1: {
+    on: "lane1On",
+    volume: "lane1Volume",
+  },
+  lane2: {
+    on: "lane2On",
+    volume: "lane2Volume",
   },
 } as const;

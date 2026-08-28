@@ -16,10 +16,10 @@ import { ComponentChildren } from "preact";
 import { cz } from "@/common/css-realm";
 import { Button } from "@/components/button";
 import { Selector } from "@/components/selector";
-import { appEnvs } from "@/common/app-envs";
 import {
   ampParameterKeys,
   filterParameterKeys,
+  laneParameterKeys,
   oscParameterKeys,
 } from "@/engine/engine-defs";
 
@@ -189,6 +189,21 @@ const HeaderTextButton = ({
   );
 };
 
+const LaneControlPart = ({ laneId }: { laneId: LaneId }) => {
+  const { parameters } = store.useSnapshot();
+  const pk = laneParameterKeys[laneId];
+  return (
+    <div class="flex-v justify-between">
+      <TextButton
+        label="ON"
+        active={parameters[pk.on]}
+        onClick={() => actions.toggleBoolParameter(pk.on)}
+      />
+      <ParameterSlider label="VOLUME" paramKey={pk.volume} />
+    </div>
+  );
+};
+
 const OscSection = ({ laneId }: { laneId: LaneId }) => {
   const { parameters } = store.useSnapshot();
   const pk = oscParameterKeys[laneId];
@@ -277,14 +292,11 @@ const AmplifierSection = ({ laneId }: { laneId: LaneId }) => {
         onLabelClick={() => actions.toggleBoolParameter(pk.decayAltAttack)}
       />
       <ParameterKnob label="RELEASE" paramKey={pk.release} />
-      <ParameterSlider label="LEVEL" paramKey={pk.volume} />
     </SectionFrame>
   );
 };
 
 const PageRoot = () => {
-  const { parameters } = store.useSnapshot();
-  const isDebug = appEnvs.isDevelopment;
   return (
     <div class="flex-v gap-4 bg-clPageBg text-clPageText py-6 px-10">
       <div class="flex-ha gap-3 justify-between">
@@ -299,27 +311,17 @@ const PageRoot = () => {
           <RandomizerButton />
         </div>
         {/* <ParameterKnob label="VOLUME" paramKey="patchVolume" /> */}
-        {/* {isDebug && (
-          <SectionFrame header="DEBUG">
-            <ParameterSlider
-              label="SAT"
-              paramKey="_saturation"
-              min={0}
-              max={2}
-              step={1}
-            />
-            <ParameterSlider label="PRESS" paramKey="press" />
-          </SectionFrame>
-        )} */}
       </div>
       <div class="flex-h gap-8">
         <div class="flex-h gap-6">
+          <LaneControlPart laneId="lane1" />
           <OscSection laneId="lane1" />
           <FilterSection laneId="lane1" />
           <AmplifierSection laneId="lane1" />
         </div>
       </div>
       <div class="flex-h gap-6">
+        <LaneControlPart laneId="lane2" />
         <OscSection laneId="lane2" />
         <FilterSection laneId="lane2" />
         <AmplifierSection laneId="lane2" />
