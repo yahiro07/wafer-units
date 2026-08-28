@@ -318,7 +318,7 @@ const PageRoot = () => {
             <ParameterSlider label="DECAY" paramKey="lpfDecay" />
           </SectionFrame>
           <SectionFrame
-            header="AMP"
+            header="AMPLIFIER"
             // headerInnerContent={
             //   <div class="flex-ha gap-3">
             //     <HeaderTextButton
