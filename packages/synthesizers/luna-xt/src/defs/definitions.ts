@@ -31,6 +31,20 @@ export const oscWaveLabels: { [K in OscWave]?: string } = {
   [OscWave.pulse125]: "P4",
 };
 
+export const oscAltWaveMap: { [K in OscWave]?: OscWave } = {
+  [OscWave.sawtooth]: OscWave.shark,
+  [OscWave.exp1]: OscWave.syncSaw,
+  [OscWave.shark]: OscWave.pulse40,
+  [OscWave.twoPulseSaw]: OscWave.pulse25,
+  [OscWave.syncSaw]: OscWave.pulse40,
+  [OscWave.fourPulseSaw]: OscWave.pulse125,
+  //
+  [OscWave.square]: OscWave.pulse25,
+  [OscWave.pulse40]: OscWave.pulse125,
+  [OscWave.pulse25]: OscWave.syncSaw,
+  [OscWave.pulse125]: OscWave.shark,
+};
+
 export enum FilterType {
   LP12 = 0,
   LP24,
@@ -104,6 +118,7 @@ export type SynthParameters = {
   //
   density: number;
   patchVolume: number;
+  _oscAltWaveMix: boolean;
 };
 
 export type SynthPresetParameters = SynthParameters;
@@ -173,6 +188,7 @@ export const defaultSynthParameters: SynthParameters = {
   //
   density: 0,
   patchVolume: 0.5,
+  _oscAltWaveMix: false,
 };
 
 export const fixedParameters = {

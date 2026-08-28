@@ -2,7 +2,12 @@ import { oscParameterKeys, SynthesisBus } from "@/engine/engine-defs";
 import { createOscillatorCore, OscillatorCore } from "@/engine/oscillator-core";
 import { getCustomWaveform } from "@/engine/custom-waveforms";
 import { mapUnaryTo, midiToFrequency } from "@/utils/synth-math-utils";
-import { LaneId, SynthParameters } from "@/defs/definitions";
+import {
+  LaneId,
+  oscAltWaveMap,
+  OscWave,
+  SynthParameters,
+} from "@/defs/definitions";
 import { seqNumbers } from "@/utils/helpers";
 
 type OscillatorsUnit = {
@@ -69,34 +74,43 @@ type UnisonPartialSpec = {
   detune: number;
   panning: number;
   volume: number;
+  altWave: boolean;
 };
 
 const unisonBaseSpecs: Record<
   1 | 2 | 3 | 4 | 5,
-  { coreIndices: number[]; subIndices: number[]; detuneMap?: number[] }
+  {
+    coreIndex: number;
+    subIndices?: number[];
+    detuneMap?: number[];
+    altIndices?: number[];
+  }
 > = {
   [1]: {
-    coreIndices: [0],
-    subIndices: [] as number[],
+    coreIndex: 0,
   },
   [2]: {
-    coreIndices: [0],
+    coreIndex: 0,
     subIndices: [1],
+    altIndices: [0],
   },
   [3]: {
-    coreIndices: [1],
+    coreIndex: 1,
     subIndices: [2],
     detuneMap: [-0.971, 0, 0.997],
+    altIndices: [1],
   },
   [4]: {
-    coreIndices: [1],
+    coreIndex: 1,
     subIndices: [0, 2],
     detuneMap: [-0.971, -0.271, 0.278, 0.997],
+    altIndices: [1, 2],
   },
   [5]: {
-    coreIndices: [2],
+    coreIndex: 2,
     subIndices: [0, 3],
     detuneMap: [-0.971, -0.401, 0, 0.408, 0.997],
+    altIndices: [1, 2],
   },
 };
 
@@ -120,9 +134,9 @@ function buildUnisonPartialSpecs(
 
   const specs = seqNumbers(numUnison).map((i) => {
     const pos = numUnison === 1 ? 0 : mapUnaryTo(i / (numUnison - 1), -1, 1);
-    const isCore = baseSpec.coreIndices.includes(i);
-    const isSub = baseSpec.subIndices.includes(i);
-    const detunePos = baseSpec.detuneMap?.[i] ?? pos;
+    const isCore = i === baseSpec.coreIndex;
+    const isSub = baseSpec.subIndices?.includes(i);
+    const detunePos = true ? (baseSpec.detuneMap?.[i] ?? pos) : pos;
     const detune = detunePos * prDetune ** 2 * configs.detuneHalfMax;
     const octave = subEnabled && isSub ? prOctave - 1 : prOctave;
     let panning = isStereo ? pos : 0;
@@ -130,7 +144,9 @@ function buildUnisonPartialSpecs(
       panning *= 0.5;
     }
     const volume = (isCore ? 1 : sideLevel) * baseVolume;
-    return { octave, detune, panning, volume };
+    const altWave =
+      (pr._oscAltWaveMix && baseSpec.altIndices?.includes(i)) || false;
+    return { octave, detune, panning, volume, altWave };
   });
   if (1) {
     const rms = Math.sqrt(
@@ -162,7 +178,11 @@ export function createOscillatorsUnit(
       const numUnison = pr[pk.unison];
       const oscPartials = unisonManager.preservePartials(numUnison, playing);
       const unisonPartialSpecs = buildUnisonPartialSpecs(laneId, pr);
-      const waveform = getCustomWaveform(ac, pr[pk.wave]);
+
+      const prWave = pr[pk.wave];
+      const prWaveAlt = oscAltWaveMap[prWave] ?? OscWave.sawtooth;
+      const waveform = getCustomWaveform(ac, prWave);
+      const waveformAlt = getCustomWaveform(ac, prWaveAlt);
 
       for (let i = 0; i < numUnison; i++) {
         const osc = oscPartials[i];
@@ -171,7 +191,7 @@ export function createOscillatorsUnit(
           noteNumber + spec.octave * 12 + spec.detune,
         );
         osc.setFrequency(frequency);
-        osc.setWaveform(waveform);
+        osc.setWaveform(spec.altWave ? waveformAlt : waveform);
         osc.setVolume(spec.volume);
         osc.setPanning(spec.panning);
       }

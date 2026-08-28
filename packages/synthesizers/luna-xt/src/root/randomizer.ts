@@ -34,7 +34,7 @@ export function createRandomParameters(): SynthPresetParameters {
     osc1Octave: randRangeI(-1, 1),
     osc1Wave: randI(numOscWaveTypes),
     osc1Unison: randRangeI(3, 5),
-    osc1Spread: randB(0.7),
+    osc1Spread: randB(0.8),
     osc1Detune: randRange(0.2, 0.9),
     osc1Sub: randB(0.4),
     osc1Mix: randRange(0.2, 1),
@@ -42,7 +42,7 @@ export function createRandomParameters(): SynthPresetParameters {
     osc2Octave: randRangeI(-1, 1),
     osc2Wave: randI(numOscWaveTypes),
     osc2Unison: randRangeI(3, 5),
-    osc2Spread: randB(0.7),
+    osc2Spread: randB(0.8),
     osc2Detune: randRange(0.2, 0.9),
     osc2Sub: randB(0.4),
     osc2Mix: randRange(0.2, 1),
@@ -50,7 +50,7 @@ export function createRandomParameters(): SynthPresetParameters {
     osc3Octave: randRangeI(-1, 1),
     osc3Wave: randI(numOscWaveTypes),
     osc3Unison: randRangeI(3, 5),
-    osc3Spread: randB(0.7),
+    osc3Spread: randB(0.8),
     osc3Detune: randRange(0.2, 0.9),
     osc3Sub: randB(0.4),
     osc3Mix: randRange(0.2, 1),
@@ -88,6 +88,7 @@ export function createRandomParameters(): SynthPresetParameters {
     //
     density: probably(0.5, 0, randRange(0, 0.6)),
     patchVolume: 0.5,
+    _oscAltWaveMix: false,
   };
   if (res.osc1Octave === 1 && res.osc2Octave === 1) {
     res.osc2Octave = 0;
