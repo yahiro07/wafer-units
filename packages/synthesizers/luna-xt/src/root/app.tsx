@@ -265,13 +265,8 @@ const OscSection = ({ oscId }: { oscId: OscId }) => {
         max={numOscWaveTypes - 1}
         step={1}
       />
-      <ParameterKnob
-        label="DETUNE"
-        // label={parameters[pk.spread] ? "DET-SP†" : "DET†"}
-        paramKey={pk.detune}
-        // onLabelClick={() => actions.toggleBoolParameter(pk.spread)}
-      />
-      <ParameterKnob label="DECAY" paramKey={pk.decay} />
+      <ParameterKnob label="DETUNE" paramKey={pk.detune} />
+      {/* <ParameterKnob label="DECAY" paramKey={pk.decay} /> */}
     </SectionFrame>
   );
 };
@@ -283,10 +278,10 @@ const PageRoot = () => {
     <div class="flex-v gap-4 bg-clPageBg text-clPageText p-8">
       <div class="flex-ha gap-3 justify-between">
         <div class="flex-vc font-bold ">
-          <h1 class="text-6xl" onClick={actions.emitPresetData}>
-            LUNA XT
+          <h1 class="text-5xl" onClick={actions.emitPresetData}>
+            LUNA
           </h1>
-          <div class="text-[22px] mt-[-8px]">SYNTHESIZER</div>
+          <div class="text-[24px] mt-[-8px]">TRS-MINI</div>
         </div>
         <div class="flex-ha gap-5">
           <PresetSelectionPart />
@@ -309,7 +304,8 @@ const PageRoot = () => {
               </div>
             }
           >
-            <ParameterSlider label="PUNCH" paramKey="ampHead" />
+            {/* <ParameterSlider label="PUNCH" paramKey="ampHead" /> */}
+            <ParameterKnob label="DECAY" paramKey="osc1Decay" />
             <ParameterKnob label="RELEASE" paramKey="ampRelease" />
             {false && (
               <div class="flex-v gap-1 self-start">
@@ -351,7 +347,7 @@ const PageRoot = () => {
           >
             <ParameterKnob label="CUTOFF" paramKey="lpfCutoff" />
             <ParameterSlider label="Q" paramKey="lpfPeak" />
-            <ParameterSlider label="DECAY" paramKey="lpfDecay" />
+            {/* <ParameterSlider label="DECAY" paramKey="lpfDecay" /> */}
           </SectionFrame>
         </div>
       </div>
