@@ -55,7 +55,7 @@ export function createDensityShaper(audioContext: AudioContext) {
 
       const enabled = level > 0;
       if (enabled) {
-        const steppedLevelKey = Math.floor(level * 10);
+        const steppedLevelKey = Math.round(level * 10);
         const steppedLevel = steppedLevelKey / 10;
         const curve = densityShaperCurveBufferCache.getCached(
           steppedLevelKey,

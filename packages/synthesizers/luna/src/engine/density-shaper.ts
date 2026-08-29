@@ -5,7 +5,6 @@ const INPUT_HEADROOM = 4;
 
 function fillDensityShaperCurveBuffer(
   curveBuffer: Float32Array,
-  _wave: number,
   level: number,
 ) {
   const sz = curveBuffer.length;
@@ -46,17 +45,26 @@ export function createDensityShaper(audioContext: AudioContext) {
     inputNode.connect(outputNode);
   }
 
+  let lastSetCurve: Float32Array | null = null;
+
   return {
     inputNode,
     outputNode,
     updateNodeParameters(level: number) {
       const enabled = level > 0;
       if (enabled) {
-        const curve = densityShaperCurveBufferCache.update(-1, level);
-        if (shaperNode.curve !== curve) {
+        const steppedLevelKey = Math.round(level * 10);
+        const steppedLevel = steppedLevelKey / 10;
+        const curve = densityShaperCurveBufferCache.getCached(
+          steppedLevelKey,
+          steppedLevel,
+        );
+        if (curve !== lastSetCurve) {
           shaperNode.curve = curve;
+          lastSetCurve = curve;
         }
       }
+
       setShaperEnabled(enabled);
     },
     cleanup() {
