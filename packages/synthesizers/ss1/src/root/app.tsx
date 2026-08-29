@@ -188,7 +188,7 @@ const OscSection = ({ laneId }: { laneId: LaneId }) => {
 
   return (
     <SectionFrame
-      header={`OSCILLATOR ${laneId.replace("lane", "")}`}
+      header={`OSCILLATOR`}
       headerInnerContent={
         <div class="flex-ha gap-4">
           <HeaderTextButton
@@ -230,7 +230,7 @@ const FilterSection = ({ laneId }: { laneId: LaneId }) => {
   const pk = filterParameterKeys[laneId];
   return (
     <SectionFrame
-      header={`FILTER ${laneId.replace("lane", "")}`}
+      header={`FILTER`}
       // headerInnerContent={
       //   <div class="flex-ha gap-3">
       //     <HeaderTextButton
@@ -252,7 +252,7 @@ const AmplifierSection = ({ laneId }: { laneId: LaneId }) => {
   const { parameters } = store.useSnapshot();
   const pk = ampParameterKeys[laneId];
   return (
-    <SectionFrame header={`AMPLIFIER ${laneId.replace("lane", "")}`}>
+    <SectionFrame header={`AMPLIFIER`}>
       <ParameterKnob
         label={parameters[pk.decayAltAttack] ? "ATTACK†" : "DECAY†"}
         paramKey={pk.decay}
