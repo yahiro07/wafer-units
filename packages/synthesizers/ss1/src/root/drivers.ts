@@ -3,6 +3,7 @@ import { setupMidiKeyboardInput } from "@/utils/midi-keyboard-input";
 import { queryUnitInterface } from "wafer-host/unit-types";
 import { useEffect } from "preact/hooks";
 import { createSynthesizerEngine } from "@/engine/synthesizer";
+import { persistenceImpl } from "@/root/persistence";
 
 const unitInterface = queryUnitInterface("wafer-v01");
 const engine = createSynthesizerEngine(unitInterface);
@@ -19,16 +20,8 @@ function setupUnit() {
         noteOff: engine.noteOff,
       },
       // automationInput,
-      // persistence,
+      persistence: persistenceImpl,
       cleanup: engine.cleanup,
-      persistence: {
-        emitState() {
-          return store.state;
-        },
-        applyState(state) {
-          store.assign(state);
-        },
-      },
     });
   } else {
     return setupMidiKeyboardInput({
