@@ -753,7 +753,7 @@ importers:
         specifier: ^66.7.5
         version: 66.7.5(vite@8.2.0(@types/node@25.9.5)(jiti@2.7.0))
 
-  packages/synthesizers/luna-tsr-mini:
+  packages/synthesizers/luna-trs-mini:
     devDependencies:
       '@preact/preset-vite':
         specifier: 'catalog:'

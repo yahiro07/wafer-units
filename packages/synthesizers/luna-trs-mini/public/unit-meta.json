@@ -1,5 +1,5 @@
 {
-  "name": "luna-tsr-mini",
+  "name": "luna-trs-mini",
   "unitType": "instrument",
   "protocol": "wafer-v01",
   "integrationFormat": "iframe",

@@ -7,7 +7,7 @@ export default defineConfig({
   plugins: [preact(), UnoCSS()],
   resolve: { tsconfigPaths: true },
   build: {
-    outDir: "../../../dist/luna-tsr-mini",
+    outDir: "../../../dist/luna-trs-mini",
     emptyOutDir: true,
   },
   server: { port: 3000 },
