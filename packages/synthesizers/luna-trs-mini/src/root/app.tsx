@@ -1,7 +1,6 @@
 import { LabeledBox } from "@/components/labeled-controls";
 import { actions } from "@/root/actions";
 import {
-  BoolParameterKeys,
   LinearParameterKeys,
   numOscWaveTypes,
   OscId,
@@ -17,7 +16,7 @@ import { ComponentChildren } from "preact";
 import { cz } from "@/common/css-realm";
 import { Button } from "@/components/button";
 import { Selector } from "@/components/selector";
-import { appEnvs } from "@/common/app-envs";
+import { oscParameterKeys } from "@/engine/engine-defs";
 
 const presetOptions = createPlainSelectorOptions(allPresetKeys);
 
@@ -185,41 +184,9 @@ const HeaderTextButton = ({
   );
 };
 
-function useOscParamKeys(oscId: OscId): {
-  octave: LinearParameterKeys;
-  wave: LinearParameterKeys;
-  unison: LinearParameterKeys;
-  spread: BoolParameterKeys;
-  detune: LinearParameterKeys;
-  sub: BoolParameterKeys;
-  mix: LinearParameterKeys;
-} {
-  if (oscId === "osc1") {
-    return {
-      octave: "osc1Octave",
-      wave: "osc1Wave",
-      unison: "osc1Unison",
-      spread: "osc1Spread",
-      detune: "osc1Detune",
-      sub: "osc1Sub",
-      mix: "osc1Mix",
-    };
-  } else {
-    return {
-      octave: "osc2Octave",
-      wave: "osc2Wave",
-      unison: "osc2Unison",
-      spread: "osc2Spread",
-      detune: "osc2Detune",
-      sub: "osc2Sub",
-      mix: "osc2Mix",
-    };
-  }
-}
-
 const OscSection = ({ oscId }: { oscId: OscId }) => {
   const { parameters } = store.useSnapshot();
-  const pk = useOscParamKeys(oscId);
+  const pk = oscParameterKeys[oscId];
   const mixLabel = { 0: "1", 1: "2", 2: "F" }[parameters[pk.mix]] ?? "";
 
   return (
@@ -265,14 +232,12 @@ const OscSection = ({ oscId }: { oscId: OscId }) => {
         step={1}
       />
       <ParameterKnob label="DETUNE" paramKey={pk.detune} />
-      {/* <ParameterKnob label="DECAY" paramKey={pk.decay} /> */}
     </SectionFrame>
   );
 };
 
 const PageRoot = () => {
   const { parameters } = store.useSnapshot();
-  const isDebug = appEnvs.isDevelopment;
   return (
     <div class="flex-v gap-4 bg-clPageBg text-clPageText py-6 px-10">
       <div class="flex-ha gap-3 justify-between">
@@ -286,19 +251,6 @@ const PageRoot = () => {
           <PresetSelectionPart />
           <RandomizerButton />
         </div>
-        {/* <ParameterKnob label="VOLUME" paramKey="patchVolume" /> */}
-        {/* {isDebug && (
-          <SectionFrame header="DEBUG">
-            <ParameterSlider
-              label="SAT"
-              paramKey="_saturation"
-              min={0}
-              max={2}
-              step={1}
-            />
-            <ParameterSlider label="PRESS" paramKey="press" />
-          </SectionFrame>
-        )} */}
       </div>
       <div class="flex-h gap-8">
         <div class="flex-h gap-6">
@@ -319,17 +271,7 @@ const PageRoot = () => {
             <ParameterSlider label="PEAK" paramKey="lpfPeak" />
             <ParameterSlider label="DECAY" paramKey="lpfDecay" />
           </SectionFrame>
-          <SectionFrame
-            header="AMPLIFIER"
-            // headerInnerContent={
-            //   <div class="flex-ha gap-3">
-            //     <HeaderTextButton
-            //       label={parameters.ampExponential ? "EXP" : "LIN"}
-            //       onClick={() => actions.toggleBoolParameter("ampExponential")}
-            //     />
-            //   </div>
-            // }
-          >
+          <SectionFrame header="AMPLIFIER">
             {/* <ParameterSlider label="PUNCH" paramKey="ampHead" /> */}
             <ParameterKnob
               label={parameters.ampDecayAltAttack ? "ATTACK†" : "DECAY†"}
@@ -339,35 +281,9 @@ const PageRoot = () => {
               }
             />
             <ParameterKnob label="RELEASE" paramKey="ampRelease" />
-            {/* {false && (
-              <div class="flex-v gap-1 self-start">
-                <TextButton
-                  label="LIN"
-                  active={!parameters.ampExponential}
-                  onClick={() =>
-                    actions.setBoolParameter("ampExponential", false)
-                  }
-                />
-                <TextButton
-                  label="EXP"
-                  active={parameters.ampExponential}
-                  onClick={() =>
-                    actions.setBoolParameter("ampExponential", true)
-                  }
-                />
-                <TextButton
-                  label="LAST"
-                  active={parameters.ampReleaseLastOnly}
-                  onClick={() =>
-                    actions.toggleBoolParameter("ampReleaseLastOnly")
-                  }
-                />
-              </div>
-            )} */}
           </SectionFrame>
         </div>
       </div>
-      {/* {isDebug && <div>{OscWave[parameters.osc1Wave]}</div>} */}
       <div class="flex-h gap-6">
         <OscSection oscId="osc2" />
         <SectionFrame header="CONTROL">
