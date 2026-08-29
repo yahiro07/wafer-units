@@ -1,12 +1,17 @@
-import { automationInput } from "@/root/.local/automation";
 import { store } from "@/root/store";
 import { setupMidiKeyboardInput } from "@/utils/midi-keyboard-input";
 import { queryUnitInterface } from "wafer-host/unit-types";
 import { useEffect } from "preact/hooks";
 import { createSynthesizerEngine } from "@/engine/synthesizer";
+import { createAutomationInput } from "@/root/automation";
+import { persistenceImpl } from "@/root/persistence";
 
 const unitInterface = queryUnitInterface("wafer-v01");
-const engine = createSynthesizerEngine(unitInterface);
+const audioContext = unitInterface?.audioContext ?? new AudioContext();
+const destinationNode =
+  unitInterface?.audioOutputNode ?? audioContext.destination;
+
+const engine = createSynthesizerEngine(destinationNode);
 
 function setupUnit() {
   if (unitInterface) {
@@ -19,17 +24,9 @@ function setupUnit() {
         noteOn: engine.noteOn,
         noteOff: engine.noteOff,
       },
-      automationInput,
-      // persistence,
+      automationInput: createAutomationInput(audioContext),
       cleanup: engine.cleanup,
-      persistence: {
-        emitState() {
-          return store.state;
-        },
-        applyState(state) {
-          store.assign(state);
-        },
-      },
+      persistence: persistenceImpl,
     });
   } else {
     return setupMidiKeyboardInput({
@@ -40,18 +37,8 @@ function setupUnit() {
 }
 
 function setupSynchronization() {
-  // let latestParameters: Partial<SynthParameters> = {};
   return store.subscribe(({ parameters }) => {
     if (parameters) {
-      // const changedAttrs: Partial<SynthParameters> = {};
-      // for (const _key in parameters) {
-      //   const key = _key as keyof SynthParameters;
-      //   if (parameters[key] !== latestParameters[key]) {
-      //     changedAttrs[key] = parameters[key] as any;
-      //     latestParameters[key] = parameters[key] as any;
-      //   }
-      // }
-      // engine.affectParameters(changedAttrs);
       engine.affectParameters(parameters);
     }
   }, true);

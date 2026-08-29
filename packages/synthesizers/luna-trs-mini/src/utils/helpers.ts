@@ -22,6 +22,10 @@ export function clampValue(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), max);
 }
 
+export function inBetween(value: number, min: number, max: number) {
+  return value >= min && value <= max;
+}
+
 export function linearInterpolate(
   value: number,
   s0: number,
@@ -38,14 +42,6 @@ export function linearInterpolate(
     return clampValue(v, lo, hi);
   }
   return v;
-}
-
-export function unaryToByte(value: number): number {
-  return (value * 255) >>> 0;
-}
-
-export function unaryFromByte(byte: number): number {
-  return byte / 255;
 }
 
 export function pickObjectMembers<T extends {}, K extends keyof T>(

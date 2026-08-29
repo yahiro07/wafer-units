@@ -9,7 +9,6 @@ import { SynthesisBus } from "@/engine/engine-defs";
 import { createOscillatorsUnit } from "@/engine/oscillators-unit";
 import { createSharedFilterUnit } from "@/engine/shared-filter-unit";
 import { removeArrayItem } from "@/utils/helpers";
-import { UnitInterface } from "wafer-host/unit-types";
 
 type Voice = {
   noteNumber: number;
@@ -88,11 +87,9 @@ function createVoice(
 }
 
 export function createSynthesizerEngine(
-  unitInterface: UnitInterface | undefined,
+  destinationNode: AudioNode,
 ): SynthesizerEngine {
-  const ac = unitInterface?.audioContext ?? new AudioContext();
-  const destinationNode = unitInterface?.audioOutputNode ?? ac.destination;
-
+  const ac = destinationNode.context as AudioContext;
   const voiceMixNode = ac.createGain();
   const activeVoices: Voice[] = [];
   const releasingVoices: Voice[] = [];
