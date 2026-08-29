@@ -24,6 +24,7 @@ export function createAutomationInput(
     ) {
       const valid =
         exposedParameterKeys.includes(key as keyof SynthParameters) &&
+        typeof value === "number" &&
         inBetween(value, 0, 1);
       if (valid) {
         invokeAtAudioTime(audioContext, time, () => {
