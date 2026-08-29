@@ -11,7 +11,7 @@ export function setupUnit() {
   unitInterface?.completeSetup({
     unitAspects: {
       unitType: "sequencer",
-      viewSize: [420, 260],
+      viewSize: [775, 402],
     },
     hostCallbacks: {
       setKey(keySpec) {

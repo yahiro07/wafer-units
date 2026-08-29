@@ -26,5 +26,5 @@ function iconHoc(spec: string) {
 export const Icons = {
   CaretLeft: iconHoc("ri-arrow-left-s-line"),
   CaretRight: iconHoc("ri-arrow-right-s-line"),
-  Exchange: iconHoc("ri-arrow-left-right-line"),
+  Trash: iconHoc("ri-delete-bin-line"),
 };
