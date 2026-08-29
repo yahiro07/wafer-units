@@ -141,7 +141,7 @@ const SectionFrame = ({
   );
 };
 
-const TextButton = ({
+const _TextButton = ({
   label,
   active,
   onClick,
