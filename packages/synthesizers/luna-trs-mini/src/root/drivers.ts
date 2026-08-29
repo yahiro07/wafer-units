@@ -4,6 +4,7 @@ import { queryUnitInterface } from "wafer-host/unit-types";
 import { useEffect } from "preact/hooks";
 import { createSynthesizerEngine } from "@/engine/synthesizer";
 import { createAutomationInput } from "@/root/automation";
+import { persistenceImpl } from "@/root/persistence";
 
 const unitInterface = queryUnitInterface("wafer-v01");
 const audioContext = unitInterface?.audioContext ?? new AudioContext();
@@ -24,16 +25,8 @@ function setupUnit() {
         noteOff: engine.noteOff,
       },
       automationInput: createAutomationInput(audioContext),
-      // persistence,
       cleanup: engine.cleanup,
-      persistence: {
-        emitState() {
-          return store.state;
-        },
-        applyState(state) {
-          store.assign(state);
-        },
-      },
+      persistence: persistenceImpl,
     });
   } else {
     return setupMidiKeyboardInput({

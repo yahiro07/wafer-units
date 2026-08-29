@@ -33,7 +33,7 @@ export const oscWaveLabels: { [K in OscWave]?: string } = {
 
 export type SynthParameters = {
   osc1Octave: number; //-2~2
-  osc1Wave: OscWave; //1~12
+  osc1Wave: OscWave; //1~9
   osc1Unison: number; //1~5
   osc1Spread: boolean;
   osc1Detune: number; //0~1

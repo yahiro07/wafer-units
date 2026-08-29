@@ -44,14 +44,6 @@ export function linearInterpolate(
   return v;
 }
 
-export function unaryToByte(value: number): number {
-  return (value * 255) >>> 0;
-}
-
-export function unaryFromByte(byte: number): number {
-  return byte / 255;
-}
-
 export function pickObjectMembers<T extends {}, K extends keyof T>(
   obj: T,
   keys: K[] | Record<K, 1 | true>,
