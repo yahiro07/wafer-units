@@ -111,7 +111,7 @@ const noteEditActions = {
     );
     const position = sectionRange.offset + xi;
     const note = noteEditActions.addNote(position, yi);
-    noteEditActions.startAdjustDuration(e0, note);
+    noteEditActions.startAdjustDuration(e0, note, true);
   },
   startMoveNote(e0: PointerEvent, originalNote: Note) {
     let noteLatest = originalNote;
@@ -149,13 +149,21 @@ const noteEditActions = {
           );
         },
         onUpOrCancel() {
+          const tapped = noteLatest === originalNote;
+          if (tapped) {
+            noteEditActions.removeNote(noteLatest.id);
+          }
           store.setPreviewNotePitch(null);
         },
       },
       { coordinate: "page" },
     );
   },
-  startAdjustDuration(e0: PointerEvent, originalNote: Note) {
+  startAdjustDuration(
+    e0: PointerEvent,
+    originalNote: Note,
+    isNewNote: boolean,
+  ) {
     let noteLatest = originalNote;
     const baseEl = e0.currentTarget as HTMLElement;
     const originalCoord = mapPointerPositionToCell(
@@ -164,7 +172,6 @@ const noteEditActions = {
       e0.clientY,
     );
     store.setPreviewNotePitch(originalNote.pitch);
-    const noteId = originalNote.id;
 
     startDragSession(
       e0,
@@ -191,8 +198,9 @@ const noteEditActions = {
           );
         },
         onUp() {
-          if (noteLatest.duration <= 0) {
-            noteEditActions.removeNote(noteId);
+          const tapped = !isNewNote && noteLatest === originalNote;
+          if (noteLatest.duration <= 0 || tapped) {
+            noteEditActions.removeNote(noteLatest.id);
           }
           store.setPreviewNotePitch(null);
         },
@@ -219,7 +227,7 @@ const EditInputLayer = ({
     );
     const hitNoteInfo = hitTestNote(notes, sectionRange, xiFloat, yi);
     if (hitNoteInfo?.part === "tail") {
-      noteEditActions.startAdjustDuration(e, hitNoteInfo.note);
+      noteEditActions.startAdjustDuration(e, hitNoteInfo.note, false);
       setCursor("e-resize");
     } else if (hitNoteInfo?.part === "body") {
       noteEditActions.startMoveNote(e, hitNoteInfo.note);
