@@ -1,9 +1,5 @@
 import { fixedParameters, LaneId } from "@/defs/definitions";
-import {
-  ampParameterKeys,
-  laneParameterKeys,
-  SynthesisBus,
-} from "@/engine/engine-defs";
+import { ampParameterKeys, SynthesisBus } from "@/engine/engine-defs";
 import { connectNodes, disconnectNodes } from "@/engine/webaudio-helpers";
 import {
   invPower2,
@@ -103,7 +99,6 @@ export function createAmplifierUnit(
   laneId: LaneId,
 ): AmplifierUnit {
   const pk = ampParameterKeys[laneId];
-  const lpk = laneParameterKeys[laneId];
   const ac = bus.audioContext;
   const headNode = ac.createGain(); //automated for A-D-S
   headNode.gain.value = 0;
