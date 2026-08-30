@@ -1,5 +1,5 @@
 import { fixedParameters } from "@/defs/definitions";
-import { createDensityShaper } from "@/engine/density-shaper";
+import { createDensityShaper2 } from "@/engine/density-shaper-2";
 import { SynthesisBus } from "@/engine/engine-defs";
 import { createOutputSaturator } from "@/engine/output-saturator";
 import { createReverb } from "@/engine/reverb";
@@ -17,8 +17,8 @@ export function createEffectChain(bus: SynthesisBus): EffectChain {
   const ac = bus.audioContext;
   const inputNode = ac.createGain();
   const voicesGain = ac.createGain();
-  const densityShaper = createDensityShaper(ac);
-  // const compressor = createCompressorUnit(ac);
+  // const densityShaper = createDensityShaper(ac);
+  const densityShaper = createDensityShaper2(ac);
   const patchGain = ac.createGain();
   const saturator = createOutputSaturator(ac);
   const reverb = createReverb(ac);
@@ -28,7 +28,6 @@ export function createEffectChain(bus: SynthesisBus): EffectChain {
     inputNode,
     densityShaper,
     voicesGain,
-    // compressor,
     patchGain,
     saturator,
     reverb,
@@ -41,7 +40,6 @@ export function createEffectChain(bus: SynthesisBus): EffectChain {
     outputNode,
     update() {
       const pr = bus.parameters;
-      // compressor.update(fixedParameters.press);
       densityShaper.update(pr.density);
       const patchVolume = mapKnobCurveCenterUnity(pr.patchVolume);
       if (patchGain.gain.value !== patchVolume) {
