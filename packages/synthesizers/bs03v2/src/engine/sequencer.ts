@@ -6,7 +6,9 @@ import {
   ISequencer,
   ISequencerListener,
   ISynthesizer,
+  NoteModifierSpec,
 } from "@/defs/interfaces";
+import { isBitSet } from "@/utils/bit-flag-helper";
 
 export function createSequencer(
   audioContext: AudioContext,
@@ -20,8 +22,8 @@ export function createSequencer(
   let keyTranspose = 0;
 
   const internal = {
-    playNote(note: number, time: number) {
-      synthesizer.noteOn(note, time);
+    playNote(note: number, time: number, flags: NoteModifierSpec) {
+      synthesizer.noteOn(note, time, flags);
       noteLatest = note;
     },
     stopNote(time: number) {
@@ -41,12 +43,18 @@ export function createSequencer(
       return () => (listener = null);
     },
     start() {},
-    step(inputStepIndex, time, _unitDuration) {
+    step(inputStepIndex, time, unitDuration) {
+      const es = editState;
       const stepIndex = inputStepIndex % 16;
-      const pitch = editState.stepNotes[stepIndex];
+      const pitch = es.stepNotes[stepIndex];
+      const modFlags = es.stepModifierFlags[stepIndex];
+      const prevStepIndex = (stepIndex + 15) % 16;
+      const prevModFlags = es.stepModifierFlags[prevStepIndex];
+      const slide = isBitSet(prevModFlags, 0);
+      const accent = isBitSet(modFlags, 1);
       if (pitch !== undefined) {
         const note = pitch + 33 + keyTranspose;
-        internal.playNote(note, time);
+        internal.playNote(note, time, { slide, accent, unitDuration });
       } else {
         internal.stopNote(time);
       }

@@ -7,7 +7,7 @@ type FilterUnit = {
   inputNode: AudioNode;
   outputNode: AudioNode;
   update(noteNumber: number): void;
-  gateOn(time: number): void;
+  gateOn(time: number, accent?: boolean): void;
   gateOff(time: number): void;
   cleanup(): void;
 };
@@ -47,7 +47,7 @@ export function createFilterUnit(bus: SynthesisBus): FilterUnit {
       lpf.frequency.value = cutoff;
       lpf.Q.value = q;
     },
-    gateOn(time) {
+    gateOn(time, accent) {
       lpf.detune.cancelScheduledValues(time);
       const prDecay = pr.ampDecay;
       const prEnvMod = pr.filterEnvMod;

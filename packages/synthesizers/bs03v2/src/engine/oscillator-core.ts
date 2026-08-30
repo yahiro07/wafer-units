@@ -1,4 +1,5 @@
 export type OscillatorCore = {
+  oscNode: OscillatorNode;
   start(time: number): void;
   stop(): void;
   setFrequency(frequency: number): void;
@@ -20,6 +21,7 @@ export function createOscillatorCore(
   let lastWave: OscillatorType | PeriodicWave | undefined;
 
   return {
+    oscNode,
     start(time: number) {
       oscNode.start(time);
     },

@@ -3,7 +3,7 @@ import { calcDecayTime, SynthesisBus } from "@/engine/engine-defs";
 type AmplifierUnit = {
   inputNode: AudioNode;
   outputNode: AudioNode;
-  gateOn(time: number): void;
+  gateOn(time: number, accent?: boolean): void;
   gateOff(time: number): number;
   mute(time: number): number;
   cleanup(): void;
@@ -22,7 +22,7 @@ export function createAmplifierUnit(bus: SynthesisBus): AmplifierUnit {
   return {
     inputNode: headNode,
     outputNode: tailNode,
-    gateOn(time) {
+    gateOn(time, accent) {
       const pr = bus.parameters;
       const decay = pr.ampDecay;
       const decayTime = calcDecayTime(decay);

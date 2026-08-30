@@ -1,8 +1,14 @@
 import { SequencerEditState, SynthParameters } from "@/defs/definitions";
 
+export type NoteModifierSpec = {
+  slide: boolean;
+  accent: boolean;
+  unitDuration: number;
+};
+
 export type ISynthesizer = {
   setParameters(parameters: SynthParameters): void;
-  noteOn(noteNumber: number, time?: number): void;
+  noteOn(noteNumber: number, time?: number, modSpec?: NoteModifierSpec): void;
   noteOff(noteNumber: number, time?: number): void;
   cleanup(): void;
 };

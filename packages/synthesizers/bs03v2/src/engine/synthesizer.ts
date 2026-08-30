@@ -43,15 +43,20 @@ export function createSynthesizer(
       filter.update(latestNoteNumber);
       effectChain.update();
     },
-    noteOn(noteNumber, time = ac.currentTime) {
+    noteOn(noteNumber, time = ac.currentTime, modSpec) {
       if (!oscStarted) {
         osc.start(time);
         oscStarted = true;
       }
-      osc.update(noteNumber);
+      if (modSpec?.slide) {
+        osc.update(latestNoteNumber);
+        osc.slideTo(latestNoteNumber, noteNumber, time, time + 0.06);
+      } else {
+        osc.update(noteNumber);
+      }
       filter.update(noteNumber);
-      filter.gateOn(time);
-      amp.gateOn(time);
+      filter.gateOn(time, modSpec?.accent);
+      amp.gateOn(time, modSpec?.accent);
       latestNoteNumber = noteNumber;
     },
     noteOff(noteNumber, time = ac.currentTime) {

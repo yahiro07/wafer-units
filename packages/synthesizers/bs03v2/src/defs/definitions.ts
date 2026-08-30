@@ -60,10 +60,10 @@ export const defaultSequencerEditState: SequencerEditState = {
   alterPatternsEnabled: false,
   twiddleKnobsEnabled: false,
 };
-if (1) {
+if (0) {
   Object.assign(defaultSequencerEditState, {
     stepNotes: seqNumbers(16).map((i) => (i % 4) * 12),
-    stepModifierFlags: seqNumbers(16).map((i) => i % 3),
+    // stepModifierFlags: seqNumbers(16).map((i) => i % 3),
   });
 }
 
