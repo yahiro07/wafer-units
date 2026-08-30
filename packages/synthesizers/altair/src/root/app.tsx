@@ -302,14 +302,12 @@ const PageRoot = () => {
   return (
     <div class="flex-v gap-4 bg-clPageBg text-clPageText py-6 px-10">
       <div class="flex-ha gap-3 justify-between">
-        <div class="flex-ha font-bold gap-4">
-          <h1
-            class="text-5xl font-[var(--font-app-title)] font-400"
-            onClick={actions.emitPresetData}
-          >
-            Altair
-          </h1>
-        </div>
+        <h1
+          class="text-[48px] font-[var(--font-app-title)] font-400 line-height-1 mt-1"
+          onClick={actions.emitPresetData}
+        >
+          Altair
+        </h1>
         <div class="flex-ha gap-5">
           <PresetSelectionPart />
           <RandomizerButton />
