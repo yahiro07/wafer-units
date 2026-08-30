@@ -1,7 +1,12 @@
-import { BoolParameterKeys, SynthParameters } from "@/defs/definitions";
+import {
+  BoolParameterKeys,
+  defaultSynthParameters,
+  SynthParameters,
+} from "@/defs/definitions";
 import { allPresets } from "@/defs/presets";
 import { createRandomParameters } from "@/root/randomizer";
 import { allPresetKeys, store } from "@/root/store";
+import { pickObjectMembers } from "@/utils/helpers";
 
 export const actions = {
   setParameter<K extends keyof SynthParameters>(
@@ -20,7 +25,12 @@ export const actions = {
     const preset = allPresets[presetKey];
     if (preset) {
       store.setPresetKey(presetKey);
-      store.patchParameters(preset);
+      const data = JSON.parse(preset) as SynthParameters;
+      const attrs = pickObjectMembers(
+        data,
+        Object.keys(defaultSynthParameters) as (keyof SynthParameters)[],
+      );
+      store.patchParameters(attrs);
     }
   },
   shiftPreset(dir: 1 | -1) {
@@ -34,10 +44,13 @@ export const actions = {
   },
   async emitPresetData() {
     const { ...attrs } = store.state.parameters;
-    const jsonText = JSON.stringify(attrs, null, 2).replaceAll(
-      /\.(\d+)/g,
-      (_match, digits: string) => "." + digits.slice(0, 2),
-    );
+    const jsonText =
+      "`" +
+      JSON.stringify(attrs).replaceAll(
+        /\.(\d+)/g,
+        (_match, digits: string) => "." + digits.slice(0, 2),
+      ) +
+      "`,\n";
     await navigator.clipboard.writeText(jsonText);
     console.log("Preset data copied to clipboard");
   },
