@@ -7,7 +7,7 @@ type AmplifierUnit = {
   inputNode: AudioNode;
   outputNode: AudioNode;
   gateOn(time: number): void;
-  gateOff(time: number, applyRelease: boolean): number;
+  gateOff(time: number): number;
   mute(time: number): number;
   cleanup(): void;
 };
@@ -53,18 +53,9 @@ const helpers = {
     const minDecayTime = 0.4;
     return invPower2(prDecay) * configs.expDecayTimeMax + minDecayTime;
   },
-  calcReleaseTime(
-    prAmpRelease: number,
-    applyRelease: boolean,
-    isExponential: boolean,
-  ) {
+  calcReleaseTime(prAmpRelease: number) {
     const jumpTime = 0.001;
-    if (!applyRelease) return jumpTime;
-    if (isExponential) {
-      return invPower2(prAmpRelease) * configs.expReleaseTimeMax + jumpTime;
-    } else {
-      return prAmpRelease ** 3 * configs.linReleaseTimeMax + jumpTime;
-    }
+    return invPower2(prAmpRelease) * configs.expReleaseTimeMax + jumpTime;
   },
 };
 
@@ -115,13 +106,13 @@ export function createAmplifierUnit(
 
       gainNode.gain.value = 1;
     },
-    gateOff(time, applyRelease) {
+    gateOff(time) {
       const pr = bus.parameters;
       const prRelease = pr[pk.release];
       tailNode.gain.setValueAtTime(1, time);
 
       let releaseTime = 0;
-      releaseTime = helpers.calcReleaseTime(prRelease, applyRelease, true);
+      releaseTime = helpers.calcReleaseTime(prRelease);
       tailNode.gain.exponentialRampToValueAtTime(1e-4, time + releaseTime);
       tailNode.gain.setValueAtTime(0, time + releaseTime);
 

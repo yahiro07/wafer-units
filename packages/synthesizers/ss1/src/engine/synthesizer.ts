@@ -1,8 +1,4 @@
-import {
-  defaultSynthParameters,
-  fixedParameters,
-  SynthesizerEngine,
-} from "@/defs/definitions";
+import { defaultSynthParameters, SynthesizerEngine } from "@/defs/definitions";
 import { createAmplifierUnit } from "@/engine/amplifier-unit";
 import { createEffectChain } from "@/engine/effect-chain";
 import { SynthesisBus } from "@/engine/engine-defs";
@@ -17,8 +13,7 @@ type Voice = {
   gateOnTime: number;
   update(): void;
   gateOn(): void;
-  gateOff(time: number, applyRelease: boolean): void;
-  mute(time: number): void;
+  gateOff(time: number): void;
   setEndedCallback(fn: () => void): void;
 };
 
@@ -57,12 +52,8 @@ function createVoice(
       amp1.gateOn(time);
       lifeSpanNode.start(time);
     },
-    gateOff(time, applyRelease) {
-      const tOff = amp1.gateOff(time, applyRelease);
-      lifeSpanNode.stop(tOff);
-    },
-    mute(time) {
-      const tOff = amp1.mute(time);
+    gateOff(time) {
+      const tOff = amp1.gateOff(time);
       lifeSpanNode.stop(tOff);
     },
     setEndedCallback(fn) {
@@ -79,7 +70,6 @@ export function createSynthesizerEngine(
 
   const voiceMixNode1 = ac.createGain();
   const activeVoices: Voice[] = [];
-  const releasingVoices: Voice[] = [];
 
   const bus: SynthesisBus = {
     parameters: { ...defaultSynthParameters },
@@ -102,12 +92,6 @@ export function createSynthesizerEngine(
       effectChain.update();
     },
     noteOn(noteNumber, time = ac.currentTime) {
-      if (fixedParameters.ampReleaseLastOnly && releasingVoices.length > 0) {
-        for (const voice of releasingVoices) {
-          voice.mute(time);
-        }
-        releasingVoices.length = 0;
-      }
       const voice = createVoice(bus, voiceMixNode1, noteNumber, time);
       voice.update();
       voice.gateOn();
@@ -117,17 +101,7 @@ export function createSynthesizerEngine(
     noteOff(noteNumber, time = ac.currentTime) {
       const voice = activeVoices.find((it) => it.noteNumber === noteNumber);
       if (voice) {
-        const isLastVoice = activeVoices.length === 1;
-        const applyRelease = fixedParameters.ampReleaseLastOnly
-          ? isLastVoice
-          : true;
-        if (applyRelease) {
-          releasingVoices.push(voice);
-          voice.setEndedCallback(() => {
-            removeArrayItem(releasingVoices, voice);
-          });
-        }
-        voice.gateOff(time, applyRelease);
+        voice.gateOff(time);
         removeArrayItem(activeVoices, voice);
       }
       sharedFilter1.gateOff(time);
