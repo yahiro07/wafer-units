@@ -32,9 +32,11 @@ export function createRandomParameters(): SynthPresetParameters {
     osc1Sub: randB(0.4),
     osc1Mix: randRange(0.2, 1),
     //
+    filter1Type: randRangeI(0, 1),
     filter1Cutoff: probably(0.5, 1, randRange(0.4, 1)),
     filter1Peak: randF(),
     filter1Env: randF(),
+    filter1EnvRelease: randB(0.5),
     //
     amp1Full: randB(0.5),
     amp1Attack: probably(0.4, 0, randRange(0, 0.5)),

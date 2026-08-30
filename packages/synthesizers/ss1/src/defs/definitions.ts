@@ -2,6 +2,11 @@ import { PickKeysForValueType } from "@/utils/utility-types";
 
 export const oscShapeStep = 10;
 
+export enum FilterType {
+  LP12 = 0,
+  LP24,
+}
+
 export type SynthParameters = {
   //
   osc1Octave: number; //-2~2
@@ -12,6 +17,7 @@ export type SynthParameters = {
   osc1Sub: boolean;
   osc1Mix: number; //0~1
   //
+  filter1Type: FilterType;
   filter1Cutoff: number;
   filter1Peak: number;
   filter1Env: number;
@@ -49,6 +55,7 @@ export const defaultSynthParameters: SynthParameters = {
   amp1Sustain: 1,
   amp1Release: 0,
   //
+  filter1Type: FilterType.LP12,
   filter1Cutoff: 1,
   filter1Peak: 0,
   filter1Env: 0,
