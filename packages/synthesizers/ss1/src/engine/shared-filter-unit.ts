@@ -66,7 +66,7 @@ export function createSharedFilterUnit(
       env.gateOn(time);
     },
     gateOff(time) {
-      env.gateOff(time, false);
+      env.gateOff(time, pr[pk.envRelease]);
     },
     cleanup() {
       disconnectNodes(inputNode, lpf1, lpf2, outputNode);

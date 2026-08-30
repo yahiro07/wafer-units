@@ -15,6 +15,7 @@ export type SynthParameters = {
   filter1Cutoff: number;
   filter1Peak: number;
   filter1Env: number;
+  filter1EnvRelease: boolean;
   //
   amp1Full: boolean;
   amp1Attack: number;
@@ -51,6 +52,7 @@ export const defaultSynthParameters: SynthParameters = {
   filter1Cutoff: 1,
   filter1Peak: 0,
   filter1Env: 0,
+  filter1EnvRelease: false,
   //
   reverbTime: 0.5,
   reverbTone: 0.5,

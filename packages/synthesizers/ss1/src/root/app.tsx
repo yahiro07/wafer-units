@@ -226,20 +226,20 @@ const OscSection = ({ laneId }: { laneId: LaneId }) => {
 };
 
 const FilterSection = ({ laneId }: { laneId: LaneId }) => {
-  // const { parameters } = store.useSnapshot();
+  const { parameters } = store.useSnapshot();
   const pk = filterParameterKeys[laneId];
   return (
     <SectionFrame
       header={`FILTER`}
-      // headerInnerContent={
-      //   <div class="flex-ha gap-3">
-      //     <HeaderTextButton
-      //       label={parameters[pk.type] === FilterType.LP24 ? "LP24" : "LP12"}
-      //       active
-      //       onClick={() => actions.toggleBoolParameter("lpfSteep")}
-      //     />
-      //   </div>
-      // }
+      headerInnerContent={
+        <div class="flex-ha gap-3">
+          <HeaderTextButton
+            label="ENV-R"
+            active={parameters[pk.envRelease]}
+            onClick={() => actions.toggleBoolParameter(pk.envRelease)}
+          />
+        </div>
+      }
     >
       <ParameterKnob label="CUTOFF" paramKey={pk.cutoff} />
       <ParameterKnob label="PEAK" paramKey={pk.peak} />
