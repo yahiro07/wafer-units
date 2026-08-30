@@ -1,6 +1,6 @@
 export const uiColors = {
-  clPageBg: "#eee",
-  clPageText: "#457",
+  clPageBg: "#569",
+  clPageText: "#fff",
   clControlBg: "#ccc",
   clControlEdge: "#0f0",
   clAccent: "#f80",
@@ -8,5 +8,8 @@ export const uiColors = {
   clPrimary: "#8be",
   clButtonBg: "#ccc",
   clButtonText: "#667",
-  clKnobTick: "#08f",
+  clKnobTick: "#46a",
+  clHeaderBg: "#458",
+  clSectionBg: "#78849c",
+  clSectionText: "#fff",
 };

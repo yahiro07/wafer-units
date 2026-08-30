@@ -29,7 +29,6 @@ const PresetSelectionPart = () => {
         value={presetKey}
         onChange={actions.setPreset}
         options={presetOptions}
-        height={44}
       />
       <Button asr={1.3} onClick={() => actions.shiftPreset(1)}>
         <i class="ri-arrow-right-s-line text-2xl" />
@@ -115,17 +114,19 @@ const SectionFrame = ({
   children,
   onHeaderClick,
   headerInnerContent,
+  bodyClassName,
 }: {
   header: string;
   children: ComponentChildren;
   onHeaderClick?: () => void;
   headerInnerContent?: ComponentChildren;
+  bodyClassName?: string;
 }) => {
   return (
-    <div class="flex-v gap-5">
+    <div class="flex-v">
       <div
         class={cz(
-          "flex-c text-xl bg-#79c text-white font-bold px-2 py-1",
+          "flex-c text-xl bg-clHeaderBg text-white font-600 px-3 py-1",
           headerInnerContent ? "justify-between" : undefined,
           onHeaderClick && "cursor-pointer",
         )}
@@ -134,7 +135,16 @@ const SectionFrame = ({
         {header}
         {headerInnerContent}
       </div>
-      <div class="flex-c gap-4">{children}</div>
+      <div
+        class={cz(
+          "flex-c gap-7 bg-clSectionBg pt-6 px-7 pb-3",
+          "bd-clHeaderBg",
+          "text-clSectionText",
+          bodyClassName,
+        )}
+      >
+        {children}
+      </div>
     </div>
   );
 };
@@ -174,7 +184,7 @@ const HeaderTextButton = ({
       class={cz(
         "text-[19px] font-500 cursor-pointer",
         "hover:opacity-90",
-        active ? "text-#fff" : "text-#abc",
+        active ? "text-#fff" : "text-#789",
       )}
     >
       <span>{label}</span>
@@ -269,7 +279,7 @@ const AmplifierSection = ({ laneId }: { laneId: LaneId }) => {
         </div>
       }
     >
-      <div class="w-[180px] flex-h justify-between">
+      <div class="w-200px flex-h justify-between">
         {isFull ? (
           <>
             <ParameterSlider label="A" paramKey={pk.attack} />
@@ -293,8 +303,11 @@ const PageRoot = () => {
     <div class="flex-v gap-4 bg-clPageBg text-clPageText py-6 px-10">
       <div class="flex-ha gap-3 justify-between">
         <div class="flex-ha font-bold gap-4">
-          <h1 class="text-5xl" onClick={actions.emitPresetData}>
-            SS1
+          <h1
+            class="text-5xl font-[var(--font-app-title)] font-400"
+            onClick={actions.emitPresetData}
+          >
+            Altair
           </h1>
         </div>
         <div class="flex-ha gap-5">
@@ -303,27 +316,21 @@ const PageRoot = () => {
         </div>
         {/* <ParameterKnob label="VOLUME" paramKey="patchVolume" /> */}
       </div>
-      <div class="flex-h gap-8">
-        <div class="flex-h gap-6">
-          <OscSection laneId="lane1" />
-          <FilterSection laneId="lane1" />
-        </div>
+      <div class="flex-h gap-5">
+        <OscSection laneId="lane1" />
+        <FilterSection laneId="lane1" />
       </div>
-      <div class="flex-h gap-6 justify-between">
+      <div class="flex-h gap-4 justify-between">
         <AmplifierSection laneId="lane1" />
         {/* <DebugSection /> */}
         <SectionFrame header="REVERB">
-          <div class="flex-h gap-5">
-            <ParameterSlider label="TIME" paramKey="reverbTime" />
-            <ParameterSlider label="TONE" paramKey="reverbTone" />
-            <ParameterKnob label="MIX" paramKey="reverbMix" />
-          </div>
+          <ParameterSlider label="TIME" paramKey="reverbTime" />
+          <ParameterSlider label="TONE" paramKey="reverbTone" />
+          <ParameterKnob label="MIX" paramKey="reverbMix" />
         </SectionFrame>
         <SectionFrame header="OUTPUT">
-          <div class="flex-h gap-7">
-            <ParameterKnob label="DRIVE" paramKey="density" />
-            <ParameterKnob label="VOLUME" paramKey="patchVolume" />
-          </div>
+          <ParameterKnob label="DRIVE" paramKey="density" />
+          <ParameterKnob label="VOLUME" paramKey="patchVolume" />
         </SectionFrame>
       </div>
     </div>

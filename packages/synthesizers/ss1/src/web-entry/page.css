@@ -1,7 +1,7 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400..700&display=swap");
 @import url("https://cdn.jsdelivr.net/npm/remixicon@4.9.1/fonts/remixicon.min.css");
-/* @import url("https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@400;500;600&display=swap"); */
 @import url("https://fonts.googleapis.com/css2?family=Sofia+Sans+Condensed:wght@400..700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Goldman:wght@400;700&display=swap");
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -10,9 +10,11 @@
 
 body {
   font-family: "Sofia Sans Condensed", sans-serif;
-  font-weight: 500;
+  font-weight: 400;
   user-select: none;
   overflow: hidden;
+
+  --font-app-title: "Goldman", sans-serif;
 }
 
 img {
