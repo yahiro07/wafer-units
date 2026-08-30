@@ -34,8 +34,10 @@ export const filterParameterKeys = {
 
 export const ampParameterKeys = {
   lane1: {
-    decayAltAttack: "amp1DecayAltAttack",
+    full: "amp1Full",
+    attack: "amp1Attack",
     decay: "amp1Decay",
+    sustain: "amp1Sustain",
     release: "amp1Release",
   },
 } as const;

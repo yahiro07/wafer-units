@@ -16,8 +16,10 @@ export type SynthParameters = {
   filter1Peak: number;
   filter1Env: number;
   //
-  amp1DecayAltAttack: boolean;
+  amp1Full: boolean;
+  amp1Attack: number;
   amp1Decay: number;
+  amp1Sustain: number;
   amp1Release: number;
   //
   reverbTime: number;
@@ -40,8 +42,10 @@ export const defaultSynthParameters: SynthParameters = {
   osc1Sub: false,
   osc1Mix: 0.5,
   //
-  amp1DecayAltAttack: false,
+  amp1Full: false,
+  amp1Attack: 0,
   amp1Decay: 1,
+  amp1Sustain: 1,
   amp1Release: 0,
   //
   filter1Cutoff: 1,
@@ -58,9 +62,6 @@ export const defaultSynthParameters: SynthParameters = {
 
 export const fixedParameters = {
   ampHead: 0,
-  ampExponential: true,
-  ampReleaseLastOnly: false,
-  lpfSteep: false,
   saturation: 1,
   press: 0,
 };

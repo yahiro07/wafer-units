@@ -251,14 +251,35 @@ const FilterSection = ({ laneId }: { laneId: LaneId }) => {
 const AmplifierSection = ({ laneId }: { laneId: LaneId }) => {
   const { parameters } = store.useSnapshot();
   const pk = ampParameterKeys[laneId];
+  const isFull = parameters[pk.full];
   return (
-    <SectionFrame header={`AMPLIFIER`}>
-      <ParameterKnob
-        label={parameters[pk.decayAltAttack] ? "ATTACK†" : "DECAY†"}
-        paramKey={pk.decay}
-        onLabelClick={() => actions.toggleBoolParameter(pk.decayAltAttack)}
-      />
-      <ParameterKnob label="RELEASE" paramKey={pk.release} />
+    <SectionFrame
+      header={`AMPLIFIER`}
+      headerInnerContent={
+        <div class="flex-ha gap-3">
+          <HeaderTextButton
+            label="FULL"
+            active={isFull}
+            onClick={() => actions.toggleBoolParameter(pk.full)}
+          />
+        </div>
+      }
+    >
+      <div class="w-[180px] flex-h justify-between">
+        {isFull ? (
+          <>
+            <ParameterSlider label="A" paramKey={pk.attack} />
+            <ParameterSlider label="D" paramKey={pk.decay} />
+            <ParameterSlider label="S" paramKey={pk.sustain} />
+            <ParameterSlider label="R" paramKey={pk.release} />
+          </>
+        ) : (
+          <>
+            <ParameterKnob label="DECAY-SUS" paramKey={pk.decay} />
+            <ParameterKnob label="RELEASE" paramKey={pk.release} />
+          </>
+        )}
+      </div>
     </SectionFrame>
   );
 };
@@ -284,10 +305,9 @@ const PageRoot = () => {
           <FilterSection laneId="lane1" />
         </div>
       </div>
-      <div class="flex-h gap-6">
+      <div class="flex-h gap-6 justify-between">
         <AmplifierSection laneId="lane1" />
         {/* <DebugSection /> */}
-
         <SectionFrame header="REVERB">
           <div class="flex-h gap-5">
             <ParameterSlider label="TIME" paramKey="reverbTime" />
@@ -295,8 +315,6 @@ const PageRoot = () => {
             <ParameterKnob label="MIX" paramKey="reverbMix" />
           </div>
         </SectionFrame>
-        <div class="grow" />
-
         <SectionFrame header="OUTPUT">
           <div class="flex-h gap-7">
             <ParameterKnob label="DRIVE" paramKey="density" />

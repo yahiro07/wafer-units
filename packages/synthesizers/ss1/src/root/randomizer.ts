@@ -36,8 +36,10 @@ export function createRandomParameters(): SynthPresetParameters {
     filter1Peak: randF(),
     filter1Env: randF(),
     //
-    amp1DecayAltAttack: randB(0.2),
+    amp1Full: randB(0.5),
+    amp1Attack: probably(0.4, 0, randRange(0, 0.5)),
     amp1Decay: randF(),
+    amp1Sustain: randF(),
     amp1Release: randF(),
     //
     reverbTime: randF(),

@@ -1,12 +1,7 @@
 import { fixedParameters, LaneId } from "@/defs/definitions";
 import { ampParameterKeys, SynthesisBus } from "@/engine/engine-defs";
 import { connectNodes, disconnectNodes } from "@/engine/webaudio-helpers";
-import {
-  invPower2,
-  mapUnaryFrom,
-  mapUnaryTo,
-  power2,
-} from "@/utils/synth-math-utils";
+import { invPower2, mapUnaryTo, power2 } from "@/utils/synth-math-utils";
 
 type AmplifierUnit = {
   inputNode: AudioNode;
@@ -32,52 +27,31 @@ const helpers = {
       duration: mapUnaryTo(prHead, 0.02, 0.01),
     };
   },
-  mapDecayParameterToADS(prDecayOriginal: number, prDecayAltAttack: boolean) {
-    if (!prDecayAltAttack) {
-      //D, D-S
-      if (prDecayOriginal < 0.5) {
-        const u = mapUnaryFrom(prDecayOriginal, 0, 0.5);
-        return { attack: 0, decay: u, sustain: 0 };
-      } else {
-        const ex = mapUnaryFrom(prDecayOriginal, 1, 0.5);
-        const cx = 1 - ex;
-        return {
-          attack: 0,
-          decay: power2(ex) * 0.3,
-          sustain: 0.15 + power2(cx) * 0.85,
-        };
-      }
+  mapDecayParameterToADS(pr: {
+    attack: number;
+    decay: number;
+    sustain: number;
+    full: boolean;
+  }) {
+    if (pr.full) {
+      return { attack: pr.attack, decay: pr.decay, sustain: pr.sustain };
     } else {
-      //A, A-D-S
-      if (prDecayOriginal < 0.5) {
-        const u = mapUnaryFrom(prDecayOriginal, 0, 0.5);
-        return { attack: u, decay: 0, sustain: 1 };
-      } else {
-        const ex = mapUnaryFrom(prDecayOriginal, 1, 0.5);
-        const cx = 1 - ex;
-        return {
-          attack: power2(ex) * 0.1,
-          decay: power2(ex) * 0.2,
-          sustain: 0.15 + power2(cx) * 0.85,
-        };
-      }
+      //D-S
+      const originalDecay = pr.decay;
+      return {
+        attack: 0,
+        decay: mapUnaryTo(originalDecay, 0.3, 0),
+        sustain: mapUnaryTo(power2(originalDecay), 0, 1),
+      };
     }
   },
-  calcAttackTime(prAttack: number, isExponential: boolean) {
+  calcAttackTime(prAttack: number) {
     const minAttackTime = 0.001;
-    if (isExponential) {
-      return prAttack ** 2 * configs.expAttackTimeMax + minAttackTime;
-    } else {
-      return prAttack ** 2 * configs.expAttackTimeMax + minAttackTime;
-    }
+    return prAttack ** 2 * configs.expAttackTimeMax + minAttackTime;
   },
-  calcDecayTime(prDecay: number, isExponential: boolean) {
+  calcDecayTime(prDecay: number) {
     const minDecayTime = 0.4;
-    if (isExponential) {
-      return invPower2(prDecay) * configs.expDecayTimeMax + minDecayTime;
-    } else {
-      return prDecay ** 2 * configs.linDecayTimeMax + minDecayTime;
-    }
+    return invPower2(prDecay) * configs.expDecayTimeMax + minDecayTime;
   },
   calcReleaseTime(
     prAmpRelease: number,
@@ -123,46 +97,33 @@ export function createAmplifierUnit(
         gainNode.gain.linearRampToValueAtTime(1, time + duration);
       }
 
-      const { attack, decay, sustain } = helpers.mapDecayParameterToADS(
-        pr[pk.decay],
-        pr[pk.decayAltAttack],
+      const { attack, decay, sustain } = helpers.mapDecayParameterToADS({
+        attack: pr[pk.attack],
+        decay: pr[pk.decay],
+        sustain: pr[pk.sustain],
+        full: pr[pk.full],
+      });
+      const attackTime = helpers.calcAttackTime(attack);
+      const decayTime = helpers.calcDecayTime(decay);
+      headNode.gain.setValueAtTime(0, time);
+      headNode.gain.linearRampToValueAtTime(1, time + attackTime);
+      headNode.gain.exponentialRampToValueAtTime(
+        sustain + 1e-4,
+        time + attackTime + decayTime,
       );
-      const prExponential = fixedParameters.ampExponential;
-
-      if (prExponential) {
-        const attackTime = helpers.calcAttackTime(attack, true);
-        const decayTime = helpers.calcDecayTime(decay, true);
-        headNode.gain.setValueAtTime(0, time);
-        headNode.gain.linearRampToValueAtTime(1, time + attackTime);
-        headNode.gain.exponentialRampToValueAtTime(
-          sustain + 1e-4,
-          time + attackTime + decayTime,
-        );
-        headNode.gain.setValueAtTime(sustain, time + attackTime + decayTime);
-      } else {
-        headNode.gain.setValueAtTime(1, time);
-        const decayTime = helpers.calcDecayTime(decay, false);
-        headNode.gain.linearRampToValueAtTime(sustain, time + decayTime);
-      }
+      headNode.gain.setValueAtTime(sustain, time + attackTime + decayTime);
 
       gainNode.gain.value = 1;
     },
     gateOff(time, applyRelease) {
       const pr = bus.parameters;
-      const prExponential = fixedParameters.ampExponential;
       const prRelease = pr[pk.release];
       tailNode.gain.setValueAtTime(1, time);
 
       let releaseTime = 0;
-
-      if (prExponential) {
-        releaseTime = helpers.calcReleaseTime(prRelease, applyRelease, true);
-        tailNode.gain.exponentialRampToValueAtTime(1e-4, time + releaseTime);
-        tailNode.gain.setValueAtTime(0, time + releaseTime);
-      } else {
-        releaseTime = helpers.calcReleaseTime(prRelease, applyRelease, false);
-        tailNode.gain.linearRampToValueAtTime(0, time + releaseTime);
-      }
+      releaseTime = helpers.calcReleaseTime(prRelease, applyRelease, true);
+      tailNode.gain.exponentialRampToValueAtTime(1e-4, time + releaseTime);
+      tailNode.gain.setValueAtTime(0, time + releaseTime);
 
       return time + releaseTime;
     },
