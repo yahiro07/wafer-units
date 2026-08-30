@@ -690,6 +690,30 @@ importers:
         specifier: 'catalog:'
         version: 0.1.14(preact@10.29.8)(react@19.2.8)
 
+  packages/synthesizers/altair:
+    devDependencies:
+      '@preact/preset-vite':
+        specifier: 'catalog:'
+        version: 2.10.6(@babel/core@7.29.7)(preact@10.29.8)(vite@8.2.0(@types/node@25.9.5)(jiti@2.7.0))
+      '@unocss/preset-wind4':
+        specifier: ^66.7.5
+        version: 66.7.5
+      '@unocss/vite':
+        specifier: ^66.7.5
+        version: 66.7.5(vite@8.2.0(@types/node@25.9.5)(jiti@2.7.0))
+      mini-css:
+        specifier: 'catalog:'
+        version: '@yahiro07/mini-css@0.1.0'
+      preact:
+        specifier: 'catalog:'
+        version: 10.29.8
+      snap-store:
+        specifier: 'catalog:'
+        version: 0.1.14(preact@10.29.8)(react@19.2.8)
+      unocss:
+        specifier: ^66.7.5
+        version: 66.7.5(vite@8.2.0(@types/node@25.9.5)(jiti@2.7.0))
+
   packages/synthesizers/bs03:
     dependencies:
       '@preact/preset-vite':
@@ -968,30 +992,6 @@ importers:
       snap-store:
         specifier: 'catalog:'
         version: 0.1.14(preact@10.29.8)(react@19.2.8)
-
-  packages/synthesizers/ss1:
-    devDependencies:
-      '@preact/preset-vite':
-        specifier: 'catalog:'
-        version: 2.10.6(@babel/core@7.29.7)(preact@10.29.8)(vite@8.2.0(@types/node@25.9.5)(jiti@2.7.0))
-      '@unocss/preset-wind4':
-        specifier: ^66.7.5
-        version: 66.7.5
-      '@unocss/vite':
-        specifier: ^66.7.5
-        version: 66.7.5(vite@8.2.0(@types/node@25.9.5)(jiti@2.7.0))
-      mini-css:
-        specifier: 'catalog:'
-        version: '@yahiro07/mini-css@0.1.0'
-      preact:
-        specifier: 'catalog:'
-        version: 10.29.8
-      snap-store:
-        specifier: 'catalog:'
-        version: 0.1.14(preact@10.29.8)(react@19.2.8)
-      unocss:
-        specifier: ^66.7.5
-        version: 66.7.5(vite@8.2.0(@types/node@25.9.5)(jiti@2.7.0))
 
   packages/visualizers/specbar:
     devDependencies:
