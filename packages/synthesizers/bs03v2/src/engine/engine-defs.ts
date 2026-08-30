@@ -6,5 +6,5 @@ export type SynthesisBus = {
 };
 
 export function calcDecayTime(prDecay: number) {
-  return prDecay ** 2 * 8 + 0.2;
+  return prDecay * 6 + 0.2;
 }

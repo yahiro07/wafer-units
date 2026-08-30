@@ -1,6 +1,7 @@
 import { calcDecayTime, SynthesisBus } from "@/engine/engine-defs";
+import { connectNodes, disconnectNodes } from "@/engine/webaudio-helpers";
 import { clampValue } from "@/utils/helpers";
-import { mapUnaryTo, midiToFrequency } from "@/utils/synth-math-utils";
+import { mapUnaryTo, midiToFrequency, power2 } from "@/utils/synth-math-utils";
 
 type FilterUnit = {
   inputNode: AudioNode;
@@ -13,13 +14,13 @@ type FilterUnit = {
 
 const helpers = {
   mapCutoff(prCutoff: number, noteFreq: number) {
-    const max = 12000;
-    const min = noteFreq * 0.25;
-    const hz = min * (max / min) ** prCutoff;
+    const max = 18000;
+    const min = noteFreq / 4;
+    const hz = min * (max / min) ** power2(prCutoff);
     return clampValue(hz, min, max);
   },
   mapQ(prPeak: number) {
-    return mapUnaryTo(prPeak, 0.707, 18);
+    return mapUnaryTo(prPeak, 0.707, 20);
   },
 };
 
@@ -31,9 +32,10 @@ export function createFilterUnit(bus: SynthesisBus): FilterUnit {
   const lpf = ac.createBiquadFilter();
   const outputNode = ac.createGain();
   inputNode.connect(hpf).connect(lpf).connect(outputNode);
+  connectNodes(inputNode, hpf, lpf, outputNode);
 
   hpf.type = "highpass";
-  hpf.frequency.value = 80;
+  hpf.frequency.value = 20;
   lpf.type = "lowpass";
 
   return {
@@ -48,16 +50,15 @@ export function createFilterUnit(bus: SynthesisBus): FilterUnit {
     },
     gateOn(time) {
       lpf.detune.cancelScheduledValues(time);
-      const prDecay = 1 - pr.filterEnvMod * 0.5;
+      const prDecay = pr.ampDecay;
       const decayTime = calcDecayTime(prDecay);
-      const top = 1200 + pr.filterEnvMod * 3600;
+      const top = pr.filterEnvMod * 4800;
       lpf.detune.setValueAtTime(top, time);
-      lpf.detune.linearRampToValueAtTime(0, time + decayTime);
+      lpf.detune.exponentialRampToValueAtTime(1e-3, time + decayTime);
     },
     gateOff(_time) {},
     cleanup() {
-      inputNode.disconnect();
-      lpf.disconnect();
+      disconnectNodes(inputNode, lpf);
     },
   };
 }
