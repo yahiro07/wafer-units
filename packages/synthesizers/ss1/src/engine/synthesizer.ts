@@ -1,5 +1,5 @@
 import { defaultSynthParameters, SynthesizerEngine } from "@/defs/definitions";
-import { createAmplifierUnit } from "@/engine/amplifier-unit";
+import { createEnvelopeUnit } from "@/engine/envelope-unit";
 import { createEffectChain } from "@/engine/effect-chain";
 import { SynthesisBus } from "@/engine/engine-defs";
 import { createOscillatorsUnit } from "@/engine/oscillators-unit";
@@ -27,7 +27,10 @@ function createVoice(
   let endedCallback: (() => void) | undefined;
 
   const osc1 = createOscillatorsUnit("lane1", bus, noteNumber);
-  const amp1 = createAmplifierUnit(bus, "lane1");
+  const ampEg1 = createEnvelopeUnit(bus, "lane1");
+  const amp1 = ac.createGain();
+  amp1.gain.value = 0;
+  ampEg1.outputNode.connect(amp1.gain);
 
   connectNodes(osc1, amp1, voiceMixNode);
 
@@ -36,7 +39,9 @@ function createVoice(
   lifeSpanNode.onended = () => {
     osc1.stop();
     disconnectNodes(osc1, amp1);
-    amp1.cleanup();
+    ampEg1.outputNode.disconnect();
+    amp1.disconnect();
+    ampEg1.cleanup();
     endedCallback?.();
   };
 
@@ -49,11 +54,11 @@ function createVoice(
     gateOn() {
       const time = gateOnTime;
       osc1.start(time);
-      amp1.gateOn(time);
+      ampEg1.gateOn(time);
       lifeSpanNode.start(time);
     },
     gateOff(time) {
-      const tOff = amp1.gateOff(time);
+      const tOff = ampEg1.gateOff(time);
       lifeSpanNode.stop(tOff);
     },
     setEndedCallback(fn) {
