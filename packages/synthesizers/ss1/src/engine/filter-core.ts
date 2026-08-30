@@ -1,4 +1,8 @@
-import { connectNodes, disconnectNodes } from "@/engine/webaudio-helpers";
+import {
+  connectNodes,
+  createNodeParameterSetter,
+  disconnectNodes,
+} from "@/engine/webaudio-helpers";
 
 export type FilterCoreType = "lp12" | "lp24";
 
@@ -23,6 +27,13 @@ export function createFilterCore(ac: AudioContext): FilterCore {
 
   type WiringState = FilterCoreType | null | undefined;
   let wiring: WiringState = undefined;
+
+  const setters = {
+    lpf1Freq: createNodeParameterSetter(ac, lpf1.frequency, 0.02),
+    lpf2Freq: createNodeParameterSetter(ac, lpf2.frequency, 0.02),
+    lpf1Q: createNodeParameterSetter(ac, lpf1.Q, 0.02),
+    lpf2Q: createNodeParameterSetter(ac, lpf2.Q, 0.02),
+  };
 
   const internal = {
     updateWiring(nextWiring: WiringState) {
@@ -49,22 +60,12 @@ export function createFilterCore(ac: AudioContext): FilterCore {
       internal.updateWiring(filterType);
     },
     setCutoff(frequency) {
-      if (frequency !== lpf1.frequency.value) {
-        lpf1.frequency.linearRampToValueAtTime(
-          frequency,
-          ac.currentTime + 0.02,
-        );
-        lpf2.frequency.linearRampToValueAtTime(
-          frequency,
-          ac.currentTime + 0.02,
-        );
-      }
+      setters.lpf1Freq.set(frequency);
+      setters.lpf2Freq.set(frequency);
     },
     setQ(q) {
-      if (q !== lpf1.Q.value) {
-        lpf1.Q.linearRampToValueAtTime(q, ac.currentTime + 0.02);
-        lpf2.Q.linearRampToValueAtTime(q, ac.currentTime + 0.02);
-      }
+      setters.lpf1Q.set(q);
+      setters.lpf2Q.set(q);
     },
     cleanup() {
       internal.updateWiring(null);

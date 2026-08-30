@@ -1,4 +1,7 @@
-import { connectNodes } from "@/engine/webaudio-helpers";
+import {
+  connectNodes,
+  createNodeParameterSetter,
+} from "@/engine/webaudio-helpers";
 import { invPower2, mapUnaryTo, power2 } from "@/utils/synth-math-utils";
 
 function createCurveBuffer(
@@ -66,14 +69,22 @@ export function createDensityShaper2(ac: AudioContext) {
     wireState = nextWireState;
   };
 
+  const setters = {
+    inputGain: createNodeParameterSetter(ac, inputNode.gain, 0.03),
+    outputGain: createNodeParameterSetter(ac, outputNode.gain, 0.03),
+  };
+
   return {
     inputNode,
     outputNode,
     update(level: number) {
       let inGain = 1;
       let outGain = 1;
-      updateConnection(level > 0 ? true : false);
-      if (level > 0) {
+      const enabled = level > 0;
+      const isSwitching =
+        (!wireState && enabled) || (wireState && !enabled) || false;
+      updateConnection(enabled);
+      if (enabled) {
         level *= level;
         const scalerIn = mapUnaryTo(level, 1, 8);
         const scalerOut = mapUnaryTo(invPower2(level), 1, 3);
@@ -83,28 +94,8 @@ export function createDensityShaper2(ac: AudioContext) {
         inGain = 1;
         outGain = 1;
       }
-      if (inputNode.gain.value !== inGain) {
-        const t = ac.currentTime;
-        inputNode.gain.cancelScheduledValues(t);
-        const curr = inputNode.gain.value;
-        if (curr !== 1) {
-          inputNode.gain.setValueAtTime(curr, t);
-          inputNode.gain.linearRampToValueAtTime(inGain, t + 0.03);
-        } else {
-          inputNode.gain.value = inGain;
-        }
-      }
-      if (outputNode.gain.value !== outGain) {
-        const t = ac.currentTime;
-        outputNode.gain.cancelScheduledValues(t);
-        const curr = outputNode.gain.value;
-        if (curr !== 1) {
-          outputNode.gain.setValueAtTime(curr, t);
-          outputNode.gain.linearRampToValueAtTime(outGain, t + 0.03);
-        } else {
-          outputNode.gain.value = outGain;
-        }
-      }
+      setters.inputGain.set(inGain, isSwitching);
+      setters.outputGain.set(outGain, isSwitching);
     },
     cleanup() {
       updateConnection(null);
