@@ -22,10 +22,10 @@ const densityShaperCurveBufferCache = createShaperCurveBufferCache(
   fillDensityShaperCurveBuffer,
 );
 
-export function createDensityShaper(audioContext: AudioContext) {
-  const inputNode = audioContext.createGain();
-  const shaperNode = audioContext.createWaveShaper();
-  const outputNode = audioContext.createGain();
+export function createDensityShaper(ac: AudioContext) {
+  const inputNode = ac.createGain();
+  const shaperNode = ac.createWaveShaper();
+  const outputNode = ac.createGain();
   shaperNode.oversample = "2x";
   inputNode.connect(outputNode);
 
@@ -66,8 +66,18 @@ export function createDensityShaper(audioContext: AudioContext) {
           lastSetCurve = curve;
         }
         const scaler = mapUnaryTo(level, 0.1, 1);
-        inputNode.gain.value = (1 / INPUT_HEADROOM) * scaler;
-        outputNode.gain.value = INPUT_HEADROOM / scaler;
+        const inputGain = (1 / INPUT_HEADROOM) * scaler;
+        const outputGain = INPUT_HEADROOM / scaler;
+        if (inputNode.gain.value !== inputGain) {
+          inputNode.gain.linearRampToValueAtTime(
+            inputGain,
+            ac.currentTime + 0.03,
+          );
+          outputNode.gain.linearRampToValueAtTime(
+            outputGain,
+            ac.currentTime + 0.03,
+          );
+        }
       } else {
         inputNode.gain.value = 1;
         outputNode.gain.value = 1;

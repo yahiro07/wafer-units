@@ -43,7 +43,13 @@ export function createEffectChain(bus: SynthesisBus): EffectChain {
       const pr = bus.parameters;
       // compressor.update(fixedParameters.press);
       densityShaper.update(pr.density);
-      patchGain.gain.value = mapKnobCurveCenterUnity(pr.patchVolume);
+      const patchVolume = mapKnobCurveCenterUnity(pr.patchVolume);
+      if (patchGain.gain.value !== patchVolume) {
+        patchGain.gain.linearRampToValueAtTime(
+          patchVolume,
+          ac.currentTime + 0.03,
+        );
+      }
       saturator.update(fixedParameters.saturation);
       reverb.apply(
         { decay: pr.reverbTime, mix: pr.reverbMix, damp: pr.reverbTone },
