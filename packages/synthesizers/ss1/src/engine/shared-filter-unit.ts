@@ -60,9 +60,9 @@ export function createSharedFilterUnit(
         const decayTime = power2(prDecay) * 2 + 0.2;
         const top = prDecay * 3600;
         lpf1.detune.setValueAtTime(top, time);
-        lpf1.detune.linearRampToValueAtTime(0, time + decayTime);
+        lpf1.detune.exponentialRampToValueAtTime(1e-4, time + decayTime);
         lpf2.detune.setValueAtTime(top, time);
-        lpf2.detune.linearRampToValueAtTime(0, time + decayTime);
+        lpf2.detune.exponentialRampToValueAtTime(1e-4, time + decayTime);
       } else {
         lpf1.detune.setValueAtTime(0, time);
         lpf2.detune.setValueAtTime(0, time);
