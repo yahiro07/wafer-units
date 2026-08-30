@@ -4,22 +4,19 @@ import { midiToFrequency } from "@/utils/synth-math-utils";
 
 type OscillatorUnit = {
   outputNode: AudioNode;
-  update(): void;
+  update(noteNumber: number): void;
   start(time: number): void;
   stop(): void;
 };
 
-export function createOscillatorUnit(
-  bus: SynthesisBus,
-  noteNumber: number,
-): OscillatorUnit {
+export function createOscillatorUnit(bus: SynthesisBus): OscillatorUnit {
   const ac = bus.audioContext;
   const pr = bus.parameters;
   const outputNode = ac.createGain();
   const osc = createOscillatorCore(ac, outputNode);
   return {
     outputNode,
-    update() {
+    update(noteNumber: number) {
       const wave = pr.oscWave;
       const frequency = midiToFrequency(noteNumber);
       osc.setFrequency(frequency);

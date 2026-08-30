@@ -27,12 +27,16 @@ export function createAmplifierUnit(bus: SynthesisBus): AmplifierUnit {
       const decay = pr.ampDecay;
       const decayTime = calcDecayTime(decay);
 
+      headNode.gain.cancelScheduledValues(time);
       headNode.gain.setValueAtTime(1, time);
       headNode.gain.exponentialRampToValueAtTime(1e-4, time + decayTime);
       headNode.gain.setValueAtTime(0, time + decayTime);
+
+      tailNode.gain.setValueAtTime(1, time);
     },
     gateOff(time) {
       const releaseTime = 0.01;
+      tailNode.gain.cancelScheduledValues(time);
       tailNode.gain.setValueAtTime(1, time);
       tailNode.gain.exponentialRampToValueAtTime(1e-4, time + releaseTime);
       tailNode.gain.setValueAtTime(0, time + releaseTime);

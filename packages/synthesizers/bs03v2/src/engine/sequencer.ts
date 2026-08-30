@@ -44,7 +44,7 @@ export function createSequencer(
     step(inputStepIndex, time, _unitDuration) {
       const stepIndex = inputStepIndex % 16;
       const pitch = editState.stepNotes[stepIndex];
-      if (pitch) {
+      if (pitch !== undefined) {
         const note = pitch + 33 + keyTranspose;
         internal.playNote(note, time);
       } else {

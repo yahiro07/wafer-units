@@ -1,4 +1,5 @@
 import { SynthParameters } from "@/defs/definitions";
+import { power2 } from "@/utils/synth-math-utils";
 
 export type SynthesisBus = {
   audioContext: AudioContext;
@@ -6,5 +7,5 @@ export type SynthesisBus = {
 };
 
 export function calcDecayTime(prDecay: number) {
-  return prDecay * 6 + 0.2;
+  return power2(prDecay) * 8 + 0.2;
 }

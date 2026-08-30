@@ -31,7 +31,6 @@ export function createFilterUnit(bus: SynthesisBus): FilterUnit {
   const hpf = ac.createBiquadFilter();
   const lpf = ac.createBiquadFilter();
   const outputNode = ac.createGain();
-  inputNode.connect(hpf).connect(lpf).connect(outputNode);
   connectNodes(inputNode, hpf, lpf, outputNode);
 
   hpf.type = "highpass";
@@ -51,10 +50,15 @@ export function createFilterUnit(bus: SynthesisBus): FilterUnit {
     gateOn(time) {
       lpf.detune.cancelScheduledValues(time);
       const prDecay = pr.ampDecay;
+      const prEnvMod = pr.filterEnvMod;
       const decayTime = calcDecayTime(prDecay);
-      const top = pr.filterEnvMod * 4800;
-      lpf.detune.setValueAtTime(top, time);
-      lpf.detune.exponentialRampToValueAtTime(1e-3, time + decayTime);
+      if (prEnvMod > 0) {
+        const top = pr.filterEnvMod * 4800 + 1e-3;
+        lpf.detune.setValueAtTime(top, time);
+        lpf.detune.exponentialRampToValueAtTime(1e-3, time + decayTime);
+      } else {
+        lpf.detune.setValueAtTime(0, time);
+      }
     },
     gateOff(_time) {},
     cleanup() {
