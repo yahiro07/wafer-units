@@ -2,22 +2,6 @@ import { oscShapeStep } from "@/defs/definitions";
 import { linearInterpolate } from "@/utils/helpers";
 import { mapUnaryTo, tunableSigmoid } from "@/utils/synth-math-utils";
 
-// function getPulseWave(context: AudioContext, duty: number) {
-//   const terms = 64;
-//   const real = new Float32Array(terms);
-//   const imag = new Float32Array(terms);
-//   const g = 1.7;
-//   real[0] = duty * g;
-//   for (let i = 1; i < terms; i++) {
-//     const n = i;
-//     real[i] = (2 / (n * Math.PI)) * Math.sin(Math.PI * n * duty) * g;
-//     imag[i] = 0;
-//   }
-//   return context.createPeriodicWave(real, imag, {
-//     disableNormalization: true,
-//   });
-// }
-
 function makePeriodicWave(context: AudioContext, fn: (pp: number) => number) {
   const n = 256;
   const terms = 128;
@@ -71,11 +55,6 @@ function createWaveformKey(params: WaveformParams) {
   };
 }
 
-// type WaveformCache = {
-//   key: string;
-//   wave: PeriodicWave;
-// };
-// let waveformCache: WaveformCache | null = null;
 const waveformCache: Record<string, PeriodicWave> = {};
 
 export function getCustomWaveform(
@@ -84,7 +63,7 @@ export function getCustomWaveform(
 ): PeriodicWave {
   const { key, steppedParams } = createWaveformKey(params);
   if (!waveformCache[key]) {
-    console.log(`generating waveform for ${key}`);
+    // console.log(`generating waveform for ${key}`);
     waveformCache[key] = generateWaveform(ctx, steppedParams);
   }
   return waveformCache[key];
