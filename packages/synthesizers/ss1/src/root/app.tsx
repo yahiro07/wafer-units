@@ -243,7 +243,7 @@ const FilterSection = ({ laneId }: { laneId: LaneId }) => {
     >
       <ParameterKnob label="CUTOFF" paramKey={pk.cutoff} />
       <ParameterKnob label="PEAK" paramKey={pk.peak} />
-      <ParameterSlider label="DECAY" paramKey={pk.env} />
+      <ParameterSlider label="ENV" paramKey={pk.env} />
     </SectionFrame>
   );
 };

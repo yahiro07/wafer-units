@@ -1,5 +1,7 @@
 import { LaneId } from "@/defs/definitions";
 import { filterParameterKeys, SynthesisBus } from "@/engine/engine-defs";
+import { createEnvelopeUnit } from "@/engine/envelope-unit";
+import { connectNodes, disconnectNodes } from "@/engine/webaudio-helpers";
 import { clampValue } from "@/utils/helpers";
 import { mapUnaryTo, power2 } from "@/utils/synth-math-utils";
 
@@ -35,8 +37,15 @@ export function createSharedFilterUnit(
   const inputNode = ac.createGain();
   const lpf1 = ac.createBiquadFilter();
   const lpf2 = ac.createBiquadFilter();
+  const env = createEnvelopeUnit(bus, laneId);
+  const envScale = ac.createGain();
+  envScale.gain.value = 0;
+  env.outputNode.connect(envScale);
+  envScale.connect(lpf1.detune);
+  envScale.connect(lpf2.detune);
+
   const outputNode = ac.createGain();
-  inputNode.connect(lpf1).connect(lpf2).connect(outputNode);
+  connectNodes(inputNode, lpf1, lpf2, outputNode);
 
   lpf1.type = "lowpass";
   lpf2.type = "lowpass";
@@ -51,28 +60,19 @@ export function createSharedFilterUnit(
       lpf2.frequency.value = cutoff;
       lpf1.Q.value = q;
       lpf2.Q.value = q;
+      envScale.gain.value = pr[pk.env] * 4800;
     },
     gateOn(time) {
-      lpf1.detune.cancelScheduledValues(time);
-      lpf2.detune.cancelScheduledValues(time);
-      const prDecay = pr[pk.env];
-      if (prDecay > 0) {
-        const decayTime = power2(prDecay) * 2 + 0.2;
-        const top = prDecay * 3600;
-        lpf1.detune.setValueAtTime(top, time);
-        lpf1.detune.exponentialRampToValueAtTime(1e-4, time + decayTime);
-        lpf2.detune.setValueAtTime(top, time);
-        lpf2.detune.exponentialRampToValueAtTime(1e-4, time + decayTime);
-      } else {
-        lpf1.detune.setValueAtTime(0, time);
-        lpf2.detune.setValueAtTime(0, time);
-      }
+      env.gateOn(time);
     },
-    gateOff(_time) {},
+    gateOff(time) {
+      env.gateOff(time, false);
+    },
     cleanup() {
-      inputNode.disconnect();
-      lpf1.disconnect();
-      lpf2.disconnect();
+      disconnectNodes(inputNode, lpf1, lpf2, outputNode);
+      env.outputNode.disconnect();
+      envScale.disconnect();
+      env.cleanup();
     },
   };
 }

@@ -6,7 +6,7 @@ import { invPower2, mapUnaryTo, power2 } from "@/utils/synth-math-utils";
 type EnvelopeUnit = {
   outputNode: AudioNode; //DC, mostly 0~1
   gateOn(time: number): void;
-  gateOff(time: number): number;
+  gateOff(time: number, applyRelease: boolean): number;
   cleanup(): void;
 };
 
@@ -77,11 +77,14 @@ export function createEnvelopeUnit(
   gainNode.gain.value = 1;
 
   connectNodes(sourceNode, headNode, tailNode, gainNode);
+  sourceNode.start();
 
   return {
     outputNode: gainNode,
     gateOn(time) {
-      sourceNode.start(time);
+      headNode.gain.cancelScheduledValues(time);
+      tailNode.gain.cancelScheduledValues(time);
+      gainNode.gain.cancelScheduledValues(time);
 
       const pr = bus.parameters;
       const prHead = fixedParameters.ampHead;
@@ -108,18 +111,22 @@ export function createEnvelopeUnit(
         time + attackTime + decayTime,
       );
       headNode.gain.setValueAtTime(sustain, time + attackTime + decayTime);
-    },
-    gateOff(time) {
-      const pr = bus.parameters;
-      const prRelease = pr[pk.release];
+
       tailNode.gain.setValueAtTime(1, time);
-
-      let releaseTime = 0;
-      releaseTime = helpers.calcReleaseTime(prRelease);
-      tailNode.gain.exponentialRampToValueAtTime(1e-4, time + releaseTime);
-      tailNode.gain.setValueAtTime(0, time + releaseTime);
-
-      return time + releaseTime;
+    },
+    gateOff(time, applyRelease) {
+      tailNode.gain.setValueAtTime(1, time);
+      if (applyRelease) {
+        const pr = bus.parameters;
+        const prRelease = pr[pk.release];
+        let releaseTime = 0;
+        releaseTime = helpers.calcReleaseTime(prRelease);
+        tailNode.gain.exponentialRampToValueAtTime(1e-4, time + releaseTime);
+        tailNode.gain.setValueAtTime(0, time + releaseTime);
+        return time + releaseTime;
+      } else {
+        return time;
+      }
     },
     cleanup() {
       sourceNode.stop();

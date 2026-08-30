@@ -58,7 +58,7 @@ function createVoice(
       lifeSpanNode.start(time);
     },
     gateOff(time) {
-      const tOff = ampEg1.gateOff(time);
+      const tOff = ampEg1.gateOff(time, true);
       lifeSpanNode.stop(tOff);
     },
     setEndedCallback(fn) {
