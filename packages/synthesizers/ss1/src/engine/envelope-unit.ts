@@ -3,21 +3,17 @@ import { ampParameterKeys, SynthesisBus } from "@/engine/engine-defs";
 import { connectNodes, disconnectNodes } from "@/engine/webaudio-helpers";
 import { invPower2, mapUnaryTo, power2 } from "@/utils/synth-math-utils";
 
-type AmplifierUnit = {
-  inputNode: AudioNode;
-  outputNode: AudioNode;
+type EnvelopeUnit = {
+  outputNode: AudioNode; //DC, mostly 0~1
   gateOn(time: number): void;
-  gateOff(time: number): number;
-  mute(time: number): number;
+  gateOff(time: number, applyRelease: boolean): number;
   cleanup(): void;
 };
 
 const configs = {
   expAttackTimeMax: 2,
   expDecayTimeMax: 4,
-  linDecayTimeMax: 2,
   expReleaseTimeMax: 4,
-  linReleaseTimeMax: 2,
 };
 
 const helpers = {
@@ -50,7 +46,7 @@ const helpers = {
     return prAttack ** 2 * configs.expAttackTimeMax + minAttackTime;
   },
   calcDecayTime(prDecay: number) {
-    const minDecayTime = 0.4;
+    const minDecayTime = 0.2;
     return invPower2(prDecay) * configs.expDecayTimeMax + minDecayTime;
   },
   calcReleaseTime(prAmpRelease: number) {
@@ -59,12 +55,16 @@ const helpers = {
   },
 };
 
-export function createAmplifierUnit(
+export function createEnvelopeUnit(
   bus: SynthesisBus,
   laneId: LaneId,
-): AmplifierUnit {
+): EnvelopeUnit {
   const pk = ampParameterKeys[laneId];
   const ac = bus.audioContext;
+
+  const sourceNode = ac.createConstantSource();
+  sourceNode.offset.value = 1;
+
   const headNode = ac.createGain(); //automated for A-D-S
   headNode.gain.value = 0;
 
@@ -74,18 +74,24 @@ export function createAmplifierUnit(
   const gainNode = ac.createGain(); //volume control
   gainNode.gain.value = 1;
 
-  connectNodes(headNode, tailNode, gainNode);
+  connectNodes(sourceNode, headNode, tailNode, gainNode);
+  sourceNode.start();
 
   return {
-    inputNode: headNode,
     outputNode: gainNode,
     gateOn(time) {
+      headNode.gain.cancelScheduledValues(time);
+      tailNode.gain.cancelScheduledValues(time);
+      gainNode.gain.cancelScheduledValues(time);
+
       const pr = bus.parameters;
       const prHead = fixedParameters.ampHead;
       if (prHead > 0) {
         const { height, duration } = helpers.mapHeadCorn(prHead);
         gainNode.gain.setValueAtTime(1 + height, time);
         gainNode.gain.linearRampToValueAtTime(1, time + duration);
+      } else {
+        gainNode.gain.value = 1;
       }
 
       const { attack, decay, sustain } = helpers.mapDecayParameterToADS({
@@ -104,28 +110,25 @@ export function createAmplifierUnit(
       );
       headNode.gain.setValueAtTime(sustain, time + attackTime + decayTime);
 
-      gainNode.gain.value = 1;
-    },
-    gateOff(time) {
-      const pr = bus.parameters;
-      const prRelease = pr[pk.release];
       tailNode.gain.setValueAtTime(1, time);
-
-      let releaseTime = 0;
-      releaseTime = helpers.calcReleaseTime(prRelease);
-      tailNode.gain.exponentialRampToValueAtTime(1e-4, time + releaseTime);
-      tailNode.gain.setValueAtTime(0, time + releaseTime);
-
-      return time + releaseTime;
     },
-    mute(time) {
-      tailNode.gain.cancelScheduledValues(time);
-      tailNode.gain.linearRampToValueAtTime(0, time + 0.001);
-      tailNode.gain.setValueAtTime(0, time);
-      return time + 0.001;
+    gateOff(time, applyRelease) {
+      tailNode.gain.setValueAtTime(1, time);
+      if (applyRelease) {
+        const pr = bus.parameters;
+        const prRelease = pr[pk.release];
+        let releaseTime = 0;
+        releaseTime = helpers.calcReleaseTime(prRelease);
+        tailNode.gain.exponentialRampToValueAtTime(1e-4, time + releaseTime);
+        tailNode.gain.setValueAtTime(0, time + releaseTime);
+        return time + releaseTime;
+      } else {
+        return time;
+      }
     },
     cleanup() {
-      disconnectNodes(headNode, tailNode);
+      sourceNode.stop();
+      disconnectNodes(sourceNode, headNode, tailNode);
     },
   };
 }

@@ -1,9 +1,9 @@
-import { SynthParameters } from "@/defs/definitions";
+import { FilterType, SynthParameters } from "@/defs/definitions";
 import { allPresetKeys, store } from "@/root/store";
 import { clampValue } from "@/utils/helpers";
 
-const formatRevision = 2;
-const parameterByteCount = 20;
+const formatRevision = 3;
+const parameterByteCount = 22;
 
 const bytesSerializer = {
   float: (value: number) => (value * 255) >>> 0,
@@ -31,9 +31,11 @@ const mappers = {
       bs.bool(pr.osc1Sub),
       bs.float(pr.osc1Mix),
       //
+      bs.uint(pr.filter1Type),
       bs.float(pr.filter1Cutoff),
       bs.float(pr.filter1Peak),
       bs.float(pr.filter1Env),
+      bs.bool(pr.filter1EnvRelease),
       //
       bs.bool(pr.amp1Full),
       bs.float(pr.amp1Attack),
@@ -60,22 +62,24 @@ const mappers = {
       osc1Sub: bd.bool(bytes[5]),
       osc1Mix: bd.float(bytes[6]),
       //
-      filter1Cutoff: bd.float(bytes[7]),
-      filter1Peak: bd.float(bytes[8]),
-      filter1Env: bd.float(bytes[9]),
+      filter1Type: bd.uint(bytes[7], FilterType.LP12, FilterType.LP24),
+      filter1Cutoff: bd.float(bytes[8]),
+      filter1Peak: bd.float(bytes[9]),
+      filter1Env: bd.float(bytes[10]),
+      filter1EnvRelease: bd.bool(bytes[11]),
       //
-      amp1Full: bd.bool(bytes[10]),
-      amp1Attack: bd.float(bytes[11]),
-      amp1Decay: bd.float(bytes[12]),
-      amp1Sustain: bd.float(bytes[13]),
-      amp1Release: bd.float(bytes[14]),
+      amp1Full: bd.bool(bytes[12]),
+      amp1Attack: bd.float(bytes[13]),
+      amp1Decay: bd.float(bytes[14]),
+      amp1Sustain: bd.float(bytes[15]),
+      amp1Release: bd.float(bytes[16]),
       //
-      reverbTime: bd.float(bytes[15]),
-      reverbTone: bd.float(bytes[16]),
-      reverbMix: bd.float(bytes[17]),
+      reverbTime: bd.float(bytes[17]),
+      reverbTone: bd.float(bytes[18]),
+      reverbMix: bd.float(bytes[19]),
       //
-      density: bd.float(bytes[18]),
-      patchVolume: bd.float(bytes[19]),
+      density: bd.float(bytes[20]),
+      patchVolume: bd.float(bytes[21]),
     };
   },
 };

@@ -1,6 +1,7 @@
 import {
   BoolParameterKeys,
   defaultSynthParameters,
+  FilterType,
   SynthParameters,
 } from "@/defs/definitions";
 import { allPresets } from "@/defs/presets";
@@ -20,6 +21,12 @@ export const actions = {
   },
   toggleBoolParameter<K extends BoolParameterKeys>(key: K) {
     store.patchParameters({ [key]: !store.state.parameters[key] });
+  },
+  shiftFilterType() {
+    const currentType = store.state.parameters.filter1Type;
+    const nextType =
+      currentType === FilterType.LP24 ? FilterType.LP12 : FilterType.LP24;
+    actions.setParameter("filter1Type", nextType);
   },
   setPreset(presetKey: string) {
     const preset = allPresets[presetKey];

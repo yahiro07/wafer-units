@@ -29,6 +29,7 @@ export const filterParameterKeys = {
     cutoff: "filter1Cutoff",
     peak: "filter1Peak",
     env: "filter1Env",
+    envRelease: "filter1EnvRelease",
   },
 } as const;
 

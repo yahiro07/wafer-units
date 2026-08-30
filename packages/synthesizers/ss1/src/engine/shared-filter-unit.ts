@@ -1,5 +1,8 @@
-import { LaneId } from "@/defs/definitions";
+import { FilterType, LaneId } from "@/defs/definitions";
 import { filterParameterKeys, SynthesisBus } from "@/engine/engine-defs";
+import { createEnvelopeUnit } from "@/engine/envelope-unit";
+import { createFilterCore } from "@/engine/filter-core";
+import { connectNodes, disconnectNodes } from "@/engine/webaudio-helpers";
 import { clampValue } from "@/utils/helpers";
 import { mapUnaryTo, power2 } from "@/utils/synth-math-utils";
 
@@ -20,8 +23,9 @@ const helpers = {
     const hz = min * (max / min) ** prCutoff;
     return clampValue(hz, min, max);
   },
-  mapQ(prPeak: number) {
-    return mapUnaryTo(power2(prPeak), 0.707, 10);
+  mapQ(prPeak: number, filterType: FilterType) {
+    const topQ = filterType === FilterType.LP24 ? 5 : 10;
+    return mapUnaryTo(power2(prPeak), 0.707, topQ);
   },
 };
 
@@ -33,46 +37,41 @@ export function createSharedFilterUnit(
   const ac = bus.audioContext;
   const pr = bus.parameters;
   const inputNode = ac.createGain();
-  const lpf1 = ac.createBiquadFilter();
-  const lpf2 = ac.createBiquadFilter();
-  const outputNode = ac.createGain();
-  inputNode.connect(lpf1).connect(lpf2).connect(outputNode);
+  const lpf = createFilterCore(ac);
+  const env = createEnvelopeUnit(bus, laneId);
+  const envScale = ac.createGain();
+  envScale.gain.value = 0;
+  env.outputNode.connect(envScale);
+  envScale.connect(lpf.detuneInputNode);
 
-  lpf1.type = "lowpass";
-  lpf2.type = "lowpass";
+  const outputNode = ac.createGain();
+  connectNodes(inputNode, lpf, outputNode);
 
   return {
     inputNode,
     outputNode,
     update() {
-      const cutoff = helpers.mapCutoff(pr[pk.cutoff]);
-      const q = helpers.mapQ(pr[pk.peak]);
-      lpf1.frequency.value = cutoff;
-      lpf2.frequency.value = cutoff;
-      lpf1.Q.value = q;
-      lpf2.Q.value = q;
+      const prType = pr[pk.type];
+      const prCutoff = pr[pk.cutoff];
+      const prPeak = pr[pk.peak];
+      const cutoff = helpers.mapCutoff(prCutoff);
+      const q = helpers.mapQ(prPeak, prType);
+      lpf.setFilterType(prType === FilterType.LP24 ? "lp24" : "lp12");
+      lpf.setCutoff(cutoff);
+      lpf.setQ(q);
+      envScale.gain.value = pr[pk.env] * 3600;
     },
     gateOn(time) {
-      lpf1.detune.cancelScheduledValues(time);
-      lpf2.detune.cancelScheduledValues(time);
-      const prDecay = pr[pk.env];
-      if (prDecay > 0) {
-        const decayTime = power2(prDecay) * 2 + 0.2;
-        const top = prDecay * 3600;
-        lpf1.detune.setValueAtTime(top, time);
-        lpf1.detune.linearRampToValueAtTime(0, time + decayTime);
-        lpf2.detune.setValueAtTime(top, time);
-        lpf2.detune.linearRampToValueAtTime(0, time + decayTime);
-      } else {
-        lpf1.detune.setValueAtTime(0, time);
-        lpf2.detune.setValueAtTime(0, time);
-      }
+      env.gateOn(time);
     },
-    gateOff(_time) {},
+    gateOff(time) {
+      env.gateOff(time, pr[pk.envRelease]);
+    },
     cleanup() {
-      inputNode.disconnect();
-      lpf1.disconnect();
-      lpf2.disconnect();
+      disconnectNodes(inputNode, lpf, outputNode);
+      env.outputNode.disconnect();
+      envScale.disconnect();
+      env.cleanup();
     },
   };
 }

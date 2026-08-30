@@ -1,9 +1,12 @@
 import { fixedParameters } from "@/defs/definitions";
-import { createDensityShaper } from "@/engine/density-shaper";
+import { createDensityShaper2 } from "@/engine/density-shaper-2";
 import { SynthesisBus } from "@/engine/engine-defs";
 import { createOutputSaturator } from "@/engine/output-saturator";
 import { createReverb } from "@/engine/reverb";
-import { connectNodes } from "@/engine/webaudio-helpers";
+import {
+  connectNodes,
+  createNodeParameterSetter,
+} from "@/engine/webaudio-helpers";
 import { mapKnobCurveCenterUnity } from "@/utils/volume-curve";
 
 type EffectChain = {
@@ -17,8 +20,8 @@ export function createEffectChain(bus: SynthesisBus): EffectChain {
   const ac = bus.audioContext;
   const inputNode = ac.createGain();
   const voicesGain = ac.createGain();
-  const densityShaper = createDensityShaper(ac);
-  // const compressor = createCompressorUnit(ac);
+  // const densityShaper = createDensityShaper(ac);
+  const densityShaper = createDensityShaper2(ac);
   const patchGain = ac.createGain();
   const saturator = createOutputSaturator(ac);
   const reverb = createReverb(ac);
@@ -28,7 +31,6 @@ export function createEffectChain(bus: SynthesisBus): EffectChain {
     inputNode,
     densityShaper,
     voicesGain,
-    // compressor,
     patchGain,
     saturator,
     reverb,
@@ -36,20 +38,18 @@ export function createEffectChain(bus: SynthesisBus): EffectChain {
   );
 
   voicesGain.gain.value = 0.7;
+
+  const setters = {
+    voicesGain: createNodeParameterSetter(ac, voicesGain.gain, 0.03),
+  };
   return {
     inputNode,
     outputNode,
     update() {
       const pr = bus.parameters;
-      // compressor.update(fixedParameters.press);
       densityShaper.update(pr.density);
       const patchVolume = mapKnobCurveCenterUnity(pr.patchVolume);
-      if (patchGain.gain.value !== patchVolume) {
-        patchGain.gain.linearRampToValueAtTime(
-          patchVolume,
-          ac.currentTime + 0.03,
-        );
-      }
+      setters.voicesGain.set(patchVolume);
       saturator.update(fixedParameters.saturation);
       reverb.apply(
         { decay: pr.reverbTime, mix: pr.reverbMix, damp: pr.reverbTone },

@@ -1,6 +1,6 @@
 import { LabeledBox } from "@/components/labeled-controls";
 import { actions } from "@/root/actions";
-import { LaneId, LinearParameterKeys } from "@/defs/definitions";
+import { FilterType, LaneId, LinearParameterKeys } from "@/defs/definitions";
 import { useSetupDrivers } from "@/root/drivers";
 import { allPresetKeys, store } from "@/root/store";
 import { createPlainSelectorOptions } from "@/utils/selector-option";
@@ -226,24 +226,28 @@ const OscSection = ({ laneId }: { laneId: LaneId }) => {
 };
 
 const FilterSection = ({ laneId }: { laneId: LaneId }) => {
-  // const { parameters } = store.useSnapshot();
+  const { parameters } = store.useSnapshot();
   const pk = filterParameterKeys[laneId];
   return (
     <SectionFrame
       header={`FILTER`}
-      // headerInnerContent={
-      //   <div class="flex-ha gap-3">
-      //     <HeaderTextButton
-      //       label={parameters[pk.type] === FilterType.LP24 ? "LP24" : "LP12"}
-      //       active
-      //       onClick={() => actions.toggleBoolParameter("lpfSteep")}
-      //     />
-      //   </div>
-      // }
+      headerInnerContent={
+        <div class="flex-ha gap-3">
+          <HeaderTextButton
+            label={parameters[pk.type] === FilterType.LP24 ? "LP24" : "LP12"}
+            onClick={actions.shiftFilterType}
+          />
+          <HeaderTextButton
+            label="ENV-R"
+            active={parameters[pk.envRelease]}
+            onClick={() => actions.toggleBoolParameter(pk.envRelease)}
+          />
+        </div>
+      }
     >
       <ParameterKnob label="CUTOFF" paramKey={pk.cutoff} />
       <ParameterKnob label="PEAK" paramKey={pk.peak} />
-      <ParameterSlider label="DECAY" paramKey={pk.env} />
+      <ParameterSlider label="ENV" paramKey={pk.env} />
     </SectionFrame>
   );
 };
