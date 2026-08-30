@@ -7,7 +7,7 @@ export default defineConfig({
   plugins: [preact(), UnoCSS()],
   resolve: { tsconfigPaths: true },
   build: {
-    outDir: "../../../dist/ss1",
+    outDir: "../../../dist/altair",
     emptyOutDir: true,
   },
   server: { port: 3000 },

@@ -46,9 +46,9 @@ const styles = css({
   },
   width: "80px",
   height: "80px",
-  background: "linear-gradient(to bottom, #fff, #0004)",
+  background: "linear-gradient(to bottom, #fff, #0002)",
   padding: "7px",
-  border: "solid 0.5px #666",
+  border: "solid 0.5px #555",
   "> .inner": {
     width: "100%",
     height: "100%",

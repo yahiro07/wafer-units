@@ -43,12 +43,15 @@ const styles = css({
   height: "80px",
   ...flexC(),
   position: "relative",
-  background: "#a0a6b4",
+  background: "#9098a8",
   border: "inset 0.5px #222",
   "> .tick": {
     width: "100%",
     height: "30px",
     background: "#ddd",
     border: "outset 0.5px #666",
+  },
+  "&:hover": {
+    opacity: 0.8,
   },
 });

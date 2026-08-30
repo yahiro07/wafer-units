@@ -6,7 +6,7 @@ export const Selector = <T extends string | number>({
   onChange,
   options,
   width = 180,
-  height = 40,
+  height = 42,
 }: {
   value: string;
   onChange: (value: T) => void;
@@ -39,7 +39,7 @@ export const Selector = <T extends string | number>({
 const styles = {
   base: cz(
     "text-center outline-none cursor-pointer appearance-none rounded-[1px] bg-white",
-    "text-18px",
+    "text-20px text-#666",
     "hover:opacity-90",
   ),
 };
