@@ -13,9 +13,7 @@ type EnvelopeUnit = {
 const configs = {
   expAttackTimeMax: 2,
   expDecayTimeMax: 4,
-  linDecayTimeMax: 2,
   expReleaseTimeMax: 4,
-  linReleaseTimeMax: 2,
 };
 
 const helpers = {
@@ -48,7 +46,7 @@ const helpers = {
     return prAttack ** 2 * configs.expAttackTimeMax + minAttackTime;
   },
   calcDecayTime(prDecay: number) {
-    const minDecayTime = 0.4;
+    const minDecayTime = 0.2;
     return invPower2(prDecay) * configs.expDecayTimeMax + minDecayTime;
   },
   calcReleaseTime(prAmpRelease: number) {

@@ -60,7 +60,7 @@ export function createSharedFilterUnit(
       lpf2.frequency.value = cutoff;
       lpf1.Q.value = q;
       lpf2.Q.value = q;
-      envScale.gain.value = pr[pk.env] * 4800;
+      envScale.gain.value = pr[pk.env] * 3600;
     },
     gateOn(time) {
       env.gateOn(time);
