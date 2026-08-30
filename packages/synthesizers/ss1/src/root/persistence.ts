@@ -2,8 +2,8 @@ import { SynthParameters } from "@/defs/definitions";
 import { allPresetKeys, store } from "@/root/store";
 import { clampValue } from "@/utils/helpers";
 
-const formatRevision = 1;
-const parameterByteCount = 18;
+const formatRevision = 2;
+const parameterByteCount = 20;
 
 const bytesSerializer = {
   float: (value: number) => (value * 255) >>> 0,
@@ -35,8 +35,10 @@ const mappers = {
       bs.float(pr.filter1Peak),
       bs.float(pr.filter1Env),
       //
-      bs.bool(pr.amp1DecayAltAttack),
+      bs.bool(pr.amp1Full),
+      bs.float(pr.amp1Attack),
       bs.float(pr.amp1Decay),
+      bs.float(pr.amp1Sustain),
       bs.float(pr.amp1Release),
       //
       bs.float(pr.reverbTime),
@@ -62,16 +64,18 @@ const mappers = {
       filter1Peak: bd.float(bytes[8]),
       filter1Env: bd.float(bytes[9]),
       //
-      amp1DecayAltAttack: bd.bool(bytes[10]),
-      amp1Decay: bd.float(bytes[11]),
-      amp1Release: bd.float(bytes[12]),
+      amp1Full: bd.bool(bytes[10]),
+      amp1Attack: bd.float(bytes[11]),
+      amp1Decay: bd.float(bytes[12]),
+      amp1Sustain: bd.float(bytes[13]),
+      amp1Release: bd.float(bytes[14]),
       //
-      reverbTime: bd.float(bytes[13]),
-      reverbTone: bd.float(bytes[14]),
-      reverbMix: bd.float(bytes[15]),
+      reverbTime: bd.float(bytes[15]),
+      reverbTone: bd.float(bytes[16]),
+      reverbMix: bd.float(bytes[17]),
       //
-      density: bd.float(bytes[16]),
-      patchVolume: bd.float(bytes[17]),
+      density: bd.float(bytes[18]),
+      patchVolume: bd.float(bytes[19]),
     };
   },
 };
