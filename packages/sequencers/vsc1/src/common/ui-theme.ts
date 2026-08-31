@@ -5,15 +5,12 @@ export const uiColors = {
   clControlEdge: "#0f0",
   clAccent: "#f80",
   clPlayPos: "#fc0",
-  clPrimary: "#8be",
-  clButtonBg: "#ccc",
+  clPrimary: "#5bf",
+  clButtonBg: "#444",
   clButtonText: "#667",
   clKnobTick: "#08f",
   //
   clGridBg: "#eee",
-  clNote: "#8f8",
-  clSlide: "#fc8",
-  // clText: "#CCCCFF",
   clHighlight: "#8cf",
   clGridLine: "#444",
 };
