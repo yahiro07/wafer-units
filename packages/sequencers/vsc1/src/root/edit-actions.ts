@@ -15,7 +15,7 @@ export const editActions = {
   },
   duplicateSteps2x() {
     const { patternLength, notes } = store.state;
-    if (patternLength === 64) return;
+    if (patternLength === 128) return;
 
     const half = patternLength;
     const length = (half * 2) as PatternLength;
@@ -39,11 +39,11 @@ export const editActions = {
       patternLength: length,
       notes: [...remaining, ...copies],
     });
-    if (length === 32) {
-      store.setCurrentPageIndex(1);
-    } else if (length === 64) {
-      store.setCurrentPageIndex(2);
-    }
+    // if (length === 32) {
+    //   store.setCurrentPageIndex(1);
+    // } else if (length === 64) {
+    //   store.setCurrentPageIndex(2);
+    // }
   },
   clearNotes() {
     store.setNotes([]);

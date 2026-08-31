@@ -4,6 +4,8 @@ import { actions } from "@/root/actions";
 import { store } from "@/root/store";
 import { startDragSession } from "@/utils/drag-session";
 import { seqNumbers } from "@/utils/helpers";
+import { useInitialScrollCenter } from "@/utils/use-initial-scroll-center";
+import { useRef } from "preact/hooks";
 
 const pitchFromPoint = (x: number, y: number) => {
   const el = document.elementFromPoint(x, y);
@@ -33,30 +35,38 @@ const handlePitchCellPointerDown = (e0: PointerEvent, index: number) => {
 
 const maskSubIndices = [1, 3, 6, 8, 10];
 
-export const PitchPreviewColumn = () => {
+const PitchesList = () => {
   const { keyTranspose, pitchMode, keyMode, octaveShift } = store.useSnapshot();
   return (
-    <div class={styles.base}>
-      <div class={styles.list}>
-        {seqNumbers(37).map((_i) => {
-          const i = 36 - _i;
-          const tonic =
-            (i + (keyMode === "minor" ? 3 : 0)) % 12 === keyTranspose % 12;
-          const masked =
-            pitchMode === "diatonic" &&
-            maskSubIndices.includes((i + keyTranspose + 12) % 12);
-          return (
-            <div
-              key={i}
-              class={cz(tonic && "tonic", masked && "masked")}
-              data-pitch-index={i}
-              onPointerDown={(e) => handlePitchCellPointerDown(e, i)}
-            >
-              {i}. {mapPitchIndexToPitchName(i + octaveShift * 12)}
-            </div>
-          );
-        })}
-      </div>
+    <div class={styles.list}>
+      {seqNumbers(37).map((_i) => {
+        const i = 36 - _i;
+        const tonic =
+          (i + (keyMode === "minor" ? 3 : 0)) % 12 === keyTranspose % 12;
+        const masked =
+          pitchMode === "diatonic" &&
+          maskSubIndices.includes((i + keyTranspose + 12) % 12);
+        return (
+          <div
+            key={i}
+            class={cz(tonic && "tonic", masked && "masked")}
+            data-pitch-index={i}
+            onPointerDown={(e) => handlePitchCellPointerDown(e, i)}
+          >
+            {mapPitchIndexToPitchName(i + octaveShift * 12)}
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
+export const PitchPreviewColumn = () => {
+  const baseDivRef = useRef<HTMLDivElement>(null);
+  useInitialScrollCenter(baseDivRef);
+  return (
+    <div ref={baseDivRef} class={styles.base}>
+      <PitchesList />
     </div>
   );
 };

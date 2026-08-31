@@ -10,18 +10,18 @@ export function createSynthesizer(
   const ac = audioContext;
   const destinationNode = unitInterface?.audioOutputNode ?? ac.destination;
 
-  let stopFn: (() => void) | undefined;
+  let stopFn: ((time: number) => void) | undefined;
 
-  const stopNote = () => {
+  const stopNote = (time: number) => {
     if (stopFn) {
-      stopFn();
+      stopFn(time);
       stopFn = undefined;
     }
   };
 
   return {
     noteOn(noteNumber, time = ac.currentTime) {
-      stopNote();
+      stopNote(time);
       const osc = ac.createOscillator();
       const freq = midiToFrequency(noteNumber);
       osc.type = "sawtooth";
@@ -30,14 +30,16 @@ export function createSynthesizer(
       const amp = ac.createGain();
       amp.gain.value = 0.2;
       osc.connect(amp).connect(destinationNode);
-      stopFn = () => {
-        osc.stop(time);
+      osc.onended = () => {
         osc.disconnect();
         amp.disconnect();
       };
+      stopFn = (time: number) => {
+        osc.stop(time);
+      };
     },
     noteOff(noteNumber, time = ac.currentTime) {
-      stopNote();
+      stopNote(time);
     },
     cleanup() {},
   };

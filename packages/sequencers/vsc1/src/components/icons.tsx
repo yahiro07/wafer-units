@@ -28,4 +28,5 @@ export const Icons = {
   CaretRight: iconHoc("ri-arrow-right-s-line"),
   Exchange: iconHoc("ri-arrow-left-right-line"),
   Trash: iconHoc("ri-delete-bin-line"),
+  Play: iconHoc("ri-play-fill"),
 };

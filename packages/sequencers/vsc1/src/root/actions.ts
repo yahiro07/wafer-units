@@ -9,4 +9,7 @@ export const actions = {
       store.setTonePreviewPitchIndex(-1);
     }
   },
+  toggleStdPlaying() {
+    store.toggleStdPlaying();
+  },
 };

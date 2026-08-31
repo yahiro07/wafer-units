@@ -19,6 +19,7 @@ type StoreState = SequencerEditState & {
   keyTranspose: number;
   pitchMode: PitchMode;
   keyLabel: string;
+  stdPlaying: boolean;
 };
 
 export const store = createStore<StoreState>({
@@ -33,6 +34,7 @@ export const store = createStore<StoreState>({
   keyTranspose: 0,
   pitchMode: "chromatic",
   keyLabel: "C/Am",
+  stdPlaying: false,
 });
 
 if (appEnvs.isDevelopment && 0) {

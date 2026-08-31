@@ -80,10 +80,7 @@ function pitchFromDrag(startY: number, currentY: number, basePitch: number) {
   const rowHeight = 360 / numRows;
   const numPitchesY =
     uiConfigs.numPitches * (store.state.pitchMode === "diatonic" ? 7 / 12 : 1);
-  const pitchYDragStep = bottomLimit(
-    rowHeight / numPitchesY,
-    5,
-  );
+  const pitchYDragStep = bottomLimit(rowHeight / numPitchesY, 5);
   const delta = Math.round((startY - currentY) / pitchYDragStep);
   if (store.state.pitchMode !== "diatonic") {
     return clampPitch(basePitch + delta);
@@ -361,7 +358,6 @@ const NotesLayer = ({
             height: stepCellHeight,
           }}
         >
-          {note.pitch}.{" "}
           {mapPitchIndexToPitchName(note.pitch + octaveShift * 12)}
         </div>
       ))}
@@ -403,7 +399,7 @@ const StepsBarEditor = ({
 };
 
 const HeadIndicator = () => {
-  return <div class="w-16px h-40px bd-#888"></div>;
+  return <div class="w-18px h-44px bd-#888"></div>;
 };
 
 const StepsEditorRootInner = () => {

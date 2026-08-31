@@ -44,8 +44,11 @@ export function createSequencer(
       }
     },
     playNote(note: number, time: number, duration: number) {
-      noteOutputPort?.noteOn(note, time);
-      noteOutputPort?.noteOff(note, time + duration);
+      const dest = noteOutputPort ?? synthesizer;
+      if (dest) {
+        dest.noteOn(note, time);
+        dest.noteOff(note, time + duration);
+      }
     },
     getOutputNoteNumber(pitch: number) {
       const shift = editState.octaveShift;
@@ -53,23 +56,37 @@ export function createSequencer(
     },
   };
 
+  const stepShifts = {
+    "16th": 0,
+    "8th": 1,
+    "4th": 2,
+  };
+
+  let prevStepIndex = -1;
+
   return {
     setState(attrs: Partial<SequencerEditState>) {
       Object.assign(editState, attrs);
     },
-    start() {},
+    start() {
+      prevStepIndex = -1;
+    },
     processStep(stepIndex, time, unitDuration) {
-      const shift = editState.baseStep === "8th" ? 1 : 0;
+      const shift = stepShifts[editState.baseStep];
       stepIndex >>= shift;
-      const pos = stepIndex % editState.patternLength;
-      const notes = editState.notes.filter((note) => note.position === pos);
-      for (const note of notes) {
-        const duty = 0.2 + editState.stepDuty * 0.8;
-        const durationSec = note.duration * unitDuration * duty;
-        const noteNumber = internal.getOutputNoteNumber(note.pitch);
-        internal.playNote(noteNumber, time, durationSec);
+      unitDuration *= 1 << shift;
+      if (stepIndex !== prevStepIndex) {
+        const pos = stepIndex % editState.patternLength;
+        const notes = editState.notes.filter((note) => note.position === pos);
+        for (const note of notes) {
+          const duty = 0.2 + editState.stepDuty * 0.8;
+          const durationSec = note.duration * unitDuration * duty;
+          const noteNumber = internal.getOutputNoteNumber(note.pitch);
+          internal.playNote(noteNumber, time, durationSec);
+        }
+        listener?.onPlayStepPositionChanged(stepIndex);
+        prevStepIndex = stepIndex;
       }
-      listener?.onPlayStepPositionChanged(stepIndex);
     },
     stop() {
       listener?.onPlayStepPositionChanged(-1);

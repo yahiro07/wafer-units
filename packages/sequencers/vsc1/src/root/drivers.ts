@@ -7,6 +7,7 @@ import { createSynthesizer } from "@/engine/synthesizer";
 import { ISequencerListener } from "@/defs/interfaces";
 import { createSequencer } from "@/engine/sequencer";
 import { mapKeySpecToKeysName } from "@/utils/key-name-helper";
+import { createSequencerTickDriver } from "@/utils/sequencer-tick-driver";
 
 const unitInterface = queryUnitInterface("wafer-v01");
 const audioContext = unitInterface?.audioContext ?? new AudioContext();
@@ -14,6 +15,7 @@ const synthesizer =
   (!unitInterface && createSynthesizer(unitInterface, audioContext)) ||
   undefined;
 const sequencer = createSequencer(unitInterface, synthesizer);
+const sequencerTickDriver = createSequencerTickDriver(audioContext);
 
 function setupUnit() {
   unitInterface?.completeSetup({
@@ -22,6 +24,9 @@ function setupUnit() {
       viewSize: [828, 492],
     },
     hostCallbacks: {
+      setBpm(bpm) {
+        sequencerTickDriver.setBpm(bpm);
+      },
       setKey(keySpec) {
         store.setKeyLabel(mapKeySpecToKeysName(keySpec));
         store.setKeyTranspose(keySpec.keyTranspose);
@@ -53,9 +58,17 @@ function setupSynchronization() {
       sequencer.setState(editStateAttrs);
     }
 
-    const { tonePreviewPitchIndex } = attrs;
+    const { tonePreviewPitchIndex, stdPlaying } = attrs;
     if (tonePreviewPitchIndex !== undefined) {
       sequencer.setPreviewTone(tonePreviewPitchIndex);
+    }
+
+    if (stdPlaying !== undefined) {
+      if (stdPlaying) {
+        sequencerTickDriver.start(sequencer);
+      } else {
+        sequencerTickDriver.stop();
+      }
     }
   }, true);
 

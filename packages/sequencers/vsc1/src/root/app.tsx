@@ -16,6 +16,7 @@ import {
 } from "@/utils/selector-option";
 import { ShiftSelector } from "@/components/shift-selector";
 import { useMemo } from "preact/hooks";
+import { actions } from "@/root/actions";
 
 const octaveShiftOptions = createPlainSelectorOptions([-2, -1, 0, 1, 2]);
 
@@ -122,7 +123,7 @@ const PitchModeContainer = () => {
 
 const DoublerButtonContainer = () => {
   const { patternLength } = store.useSnapshot();
-  const enabled = patternLength !== 64;
+  const enabled = patternLength !== 128;
   return (
     <Button
       onClick={editActions.duplicateSteps2x}
@@ -143,6 +144,15 @@ const DeleteButtonContainer = () => {
   );
 };
 
+const PlayButtonContainer = () => {
+  const { stdPlaying } = store.useSnapshot();
+  return (
+    <Button asr={1.8} active={stdPlaying} onClick={actions.toggleStdPlaying}>
+      <Icons.Play />
+    </Button>
+  );
+};
+
 const TopControlBars = () => {
   return (
     <>
@@ -152,8 +162,9 @@ const TopControlBars = () => {
         <StepDutyContainer />
         <BaseStepContainer />
       </div>
-      <div class="flex-h gap-4 justify-between">
+      <div class="flex-ha gap-4 justify-between">
         {/* <ShiftEnableButtonContainer /> */}
+        <PlayButtonContainer />
         <PitchModeContainer />
         <PatternLengthContainer />
         <DoublerButtonContainer />
