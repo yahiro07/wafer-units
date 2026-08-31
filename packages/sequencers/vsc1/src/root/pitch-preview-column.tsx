@@ -1,6 +1,5 @@
 import { cz } from "@/common/css-realm";
 import { actions } from "@/root/actions";
-import { store } from "@/root/store";
 import { startDragSession } from "@/utils/drag-session";
 import { seqNumbers } from "@/utils/helpers";
 
@@ -33,13 +32,12 @@ const handlePitchCellPointerDown = (e0: PointerEvent, index: number) => {
 };
 
 export const PitchPreviewColumn = () => {
-  const { pitchIndices } = store.useSnapshot();
   return (
     <div class="flex-v mt-1">
       <div class="w-[70px] text-sm pl-3">Pitches</div>
       <div class="flex-v flex-col-reverse">
         {seqNumbers(25).map((i) => {
-          const active = pitchIndices.includes(i);
+          const active = false;
           return (
             <div
               key={i}

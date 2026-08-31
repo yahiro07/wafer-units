@@ -1,32 +1,28 @@
-import { appEnvs } from "@/common/app-envs";
-import { fillNumbers, seqNumbers } from "@/utils/helpers";
+export type BaseStep = "16th" | "8th";
+
+export type PatternLength = 4 | 8 | 16 | 32 | 64;
+
+export type Note = {
+  id: number;
+  pitch: number;
+  position: number;
+  duration: number;
+};
 
 export type SequencerEditState = {
-  pitchIndices: number[];
-  stepNotes: number[];
-  stepModifierFlags: number[];
-  alterPatternsEnabled: boolean;
-  twiddleKnobsEnabled: boolean;
+  baseStep: BaseStep;
+  octaveShift: number;
+  stepDuty: number;
+  shiftEnabled: boolean;
+  patternLength: PatternLength;
+  notes: Note[];
 };
 
 export const defaultSequencerEditState: SequencerEditState = {
-  pitchIndices: [0, 12, 24],
-  stepNotes: fillNumbers(16, 0),
-  stepModifierFlags: fillNumbers(16, 0),
-  alterPatternsEnabled: false,
-  twiddleKnobsEnabled: false,
+  baseStep: "16th",
+  octaveShift: 0,
+  stepDuty: 1,
+  shiftEnabled: true,
+  patternLength: 4,
+  notes: [],
 };
-if (0) {
-  Object.assign(defaultSequencerEditState, {
-    stepNotes: seqNumbers(16).map((i) => (i % 4) * 12),
-    // stepModifierFlags: seqNumbers(16).map((i) => i % 3),
-  });
-}
-
-export const pitchPresets = [
-  [0, 12, 24],
-  [0, 7, 12, 19, 24],
-];
-if (appEnvs.isDevelopment) {
-  pitchPresets.push([0]);
-}

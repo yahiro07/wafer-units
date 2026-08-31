@@ -1,66 +1,105 @@
 import {
-  defaultSequencerEditState,
-  SequencerEditState,
-} from "@/defs/definitions";
+  ClockHandlers,
+  NoteInputPort,
+  SongKeySpec,
+  UnitInterface,
+} from "wafer-host/unit-types";
+import { clampValue, seqNumbers } from "@/utils/helpers";
 import {
-  ISequencer,
-  ISequencerListener,
-  ISynthesizer,
-} from "@/defs/interfaces";
-import { UnitInterface } from "wafer-host/unit-types";
+  SequencerEditState,
+  defaultSequencerEditState,
+} from "@/defs/definitions";
+import { ISequencerListener } from "@/defs/interfaces";
 
-export function createSequencer(
-  unitInterface: UnitInterface | undefined,
-  synthesizer: ISynthesizer,
-  audioContext: AudioContext,
-): ISequencer {
+const majorSubDegrees = [0, 2, 4, 5, 7, 9, 11];
+const minorSubDegrees = [0, 2, 3, 5, 7, 8, 10];
+
+function createScaleNoteNumbers(keyRoot: number, mode: "major" | "minor") {
+  const subDegrees = mode === "major" ? majorSubDegrees : minorSubDegrees;
+  return seqNumbers(84).map((i) => {
+    const oct = (i / 7) >>> 0;
+    const sub = i % 7;
+    //if keyRoot is negative, this value could be negative,
+    //so it should be clamped to 0-127 before sending
+    return oct * 12 + subDegrees[sub] + keyRoot;
+  });
+}
+
+export function createSequencer(unitInterface: UnitInterface | undefined) {
+  const noteOutputPort = unitInterface?.createNoteOutputPort();
+
   const editState: SequencerEditState = structuredClone(
     defaultSequencerEditState,
   );
-  let listener: ISequencerListener | null;
-  let noteLatest = -1;
-  let keyTranspose = 0;
+
+  const state = {
+    scaleNoteNumbers: createScaleNoteNumbers(-3, "minor"), //default Am
+    inputRootNoteNumber: -1,
+  };
+  let listener: ISequencerListener | null = null;
 
   const internal = {
-    playNote(note: number, time: number) {
-      synthesizer.noteOn(note, time);
-      noteLatest = note;
+    playNote(note: number, time: number, duration: number) {
+      noteOutputPort?.noteOn(note, time);
+      noteOutputPort?.noteOff(note, time + duration);
     },
-    stopNote(time: number) {
-      if (noteLatest !== -1) {
-        synthesizer.noteOff(noteLatest, time);
-        noteLatest = -1;
+    getShiftingRootIndex() {
+      if (editState.shiftEnabled && state.inputRootNoteNumber !== -1) {
+        const index = state.scaleNoteNumbers.indexOf(state.inputRootNoteNumber);
+        if (index !== -1) return index - 7;
       }
+      return 28;
+    },
+    getOutputNoteNumber(root: number, pitch: number) {
+      return clampValue(
+        state.scaleNoteNumbers[
+          clampValue(root + pitch + editState.octaveShift * 7, 0, 83)
+        ],
+        0,
+        127,
+      );
     },
   };
 
-  return {
-    patchEditState(attrs) {
-      Object.assign(editState, attrs);
-    },
-    setListener(_listener) {
-      listener = _listener;
-      return () => (listener = null);
-    },
-    start() {},
-    step(inputStepIndex, time, _unitDuration) {
-      const es = editState;
-      const stepIndex = inputStepIndex % 16;
-      const pitch = es.stepNotes[stepIndex];
-      if (pitch !== undefined) {
-        const note = pitch + 33 + keyTranspose;
-        internal.playNote(note, time);
-      } else {
-        internal.stopNote(time);
+  const clockHandlers: ClockHandlers = {
+    processStep(stepIndex, time, unitDuration) {
+      const shift = editState.baseStep === "8th" ? 1 : 0;
+      stepIndex >>= shift;
+      const pos = stepIndex % editState.patternLength;
+      const notes = editState.notes.filter((note) => note.position === pos);
+      const root = internal.getShiftingRootIndex();
+      for (const note of notes) {
+        const duty = 0.2 + editState.stepDuty * 0.8;
+        const durationSec = note.duration * unitDuration * duty;
+        const noteNumber = internal.getOutputNoteNumber(root, note.pitch);
+        internal.playNote(noteNumber, time, durationSec);
       }
-      listener?.setPlayPosition(stepIndex);
+      listener?.onPlayStepPositionChanged(stepIndex);
     },
     stop() {
-      internal.stopNote(audioContext.currentTime);
+      listener?.onPlayStepPositionChanged(-1);
     },
-    setKeyTranspose(_keyTranspose: number) {
-      keyTranspose = _keyTranspose;
+  };
+
+  const noteInput: NoteInputPort = {
+    noteOn(noteNumber) {
+      state.inputRootNoteNumber = noteNumber;
     },
-    cleanup() {},
+    noteOff() {},
+  };
+
+  return {
+    setState(attrs: Partial<SequencerEditState>) {
+      Object.assign(editState, attrs);
+    },
+    setKey(keySpec: SongKeySpec) {
+      const { root, mode } = keySpec;
+      state.scaleNoteNumbers = createScaleNoteNumbers(root, mode);
+    },
+    clockHandlers,
+    noteInput,
+    setListener(_listener: ISequencerListener | null) {
+      listener = _listener;
+    },
   };
 }
