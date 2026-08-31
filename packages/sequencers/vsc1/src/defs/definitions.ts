@@ -31,7 +31,7 @@ export const defaultSequencerEditState: SequencerEditState = {
 
 if (appEnvs.isDevelopment) {
   Object.assign(defaultSequencerEditState, {
-    patternLength: 64,
+    patternLength: 128,
     notes: [
       { id: 0, position: 0, duration: 2, pitch: 0 },
       { id: 1, position: 2, duration: 2, pitch: 9 },

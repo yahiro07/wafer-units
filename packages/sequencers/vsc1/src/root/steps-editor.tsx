@@ -9,7 +9,7 @@ import { clampValue, seqNumbers } from "@/utils/helpers";
 import { useRef } from "preact/hooks";
 
 const uiConfigs = {
-  stepCellWidth: 44,
+  stepCellWidth: 48,
   stepCellHeight: 28,
   numPitches: 25,
   editorHeight: 42,
@@ -66,10 +66,7 @@ function pitchFromDrag(startY: number, currentY: number, basePitch: number) {
 function hitTestNote(notes: Note[], cell: Cell): Note | undefined {
   let hit: Note | undefined;
   for (const note of notes) {
-    if (
-      note.position <= cell.x &&
-      cell.x < note.position + note.duration
-    ) {
+    if (note.position <= cell.x && cell.x < note.position + note.duration) {
       hit = note;
     }
   }
