@@ -1,29 +1,85 @@
-import { cz } from "@/common/css-realm";
+import { ButtonsSelector } from "@/components/buttons-selector";
+import { SideLabelBox } from "@/components/labeled-controls";
+import { BaseStep } from "@/defs/definitions";
 import { useSetupDrivers } from "@/root/drivers";
+import { editActions } from "@/root/edit-actions";
 import { PitchPreviewColumn } from "@/root/pitch-preview-column";
 import { StepsEditorRoot } from "@/root/steps-editor";
-import { seqNumbers } from "@/utils/helpers";
+import { store } from "@/root/store";
+import {
+  createPlainSelectorOptions,
+  createSelectorOptions,
+} from "@/utils/selector-option";
 
-const StepsEditor2 = () => {
+const octaveShiftOptions = createPlainSelectorOptions([-2, -1, 0, 1, 2]);
+
+const OctaveShiftContainer = () => {
+  const { octaveShift } = store.useSnapshot();
   return (
-    <div class={styles.stepsRow}>
-      {seqNumbers(16).map((i) => (
-        <div key={i} class={styles.stepCell} data-step-index={i} />
-      ))}
-    </div>
+    <SideLabelBox label="OCTAVE">
+      <ButtonsSelector
+        options={octaveShiftOptions}
+        value={octaveShift}
+        onChange={store.setOctaveShift}
+      />
+    </SideLabelBox>
   );
 };
-const styles = {
-  stepsRow: cz("flex-h"),
-  stepCell: cz("w-36px h-32px bd-#888 flex-c"),
+
+const patternLengthOptions = createPlainSelectorOptions([16, 32, 64, 128]);
+
+const PatternLengthContainer = () => {
+  const { patternLength } = store.useSnapshot();
+  return (
+    <SideLabelBox label="STEPS">
+      <ButtonsSelector
+        options={patternLengthOptions}
+        value={patternLength}
+        onChange={editActions.setPatternLength}
+      />
+    </SideLabelBox>
+  );
+};
+
+const baseStepOptions = createSelectorOptions<BaseStep>([
+  ["16th", "/16"],
+  ["8th", "/8"],
+  ["4th", "/4"],
+]);
+
+const BaseStepContainer = () => {
+  const { baseStep } = store.useSnapshot();
+  return (
+    <SideLabelBox label="BASE">
+      <ButtonsSelector
+        options={baseStepOptions}
+        value={baseStep}
+        onChange={store.setBaseStep}
+      />
+    </SideLabelBox>
+  );
+};
+
+const TopControlBar = () => {
+  return (
+    <div class="flex-ha gap-4 justify-between">
+      <h1 class="text-2xl">VSC1</h1>
+      <OctaveShiftContainer />
+      <PatternLengthContainer />
+      <BaseStepContainer />
+    </div>
+  );
 };
 
 const PageRoot = () => {
   return (
-    <div class="flex-h gap-4">
-      <PitchPreviewColumn />
-      <StepsEditorRoot />
-      {/* <StepsEditor2 /> */}
+    <div class="flex-v gap-3">
+      <TopControlBar />
+      <div class="flex-h gap-4">
+        <PitchPreviewColumn />
+        <StepsEditorRoot />
+        {/* <StepsEditor2 /> */}
+      </div>
     </div>
   );
 };

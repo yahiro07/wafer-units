@@ -12,7 +12,6 @@ const uiConfigs = {
   stepCellWidth: 48,
   stepCellHeight: 28,
   numPitches: 25,
-  editorHeight: 42,
   pitchYDragStep: 4,
 };
 
@@ -337,10 +336,12 @@ const styleNotesLayer = {
 
 const StepsBarEditor = ({
   stepsRange,
+  height,
   bgInvert,
   isPrimaryNotes = false,
 }: {
   stepsRange: StepsRange;
+  height: number;
   bgInvert?: boolean;
   isPrimaryNotes?: boolean;
 }) => {
@@ -349,7 +350,7 @@ const StepsBarEditor = ({
   return (
     <div
       class="relative touch-none"
-      style={{ width: stepCellWidth * nx, height: uiConfigs.editorHeight }}
+      style={{ width: stepCellWidth * nx, height }}
       onPointerDown={(e) => handleStepsBarEditorPointerDown(e, stepsRange)}
     >
       <GridBackground nx={nx} ny={1} bgAlterStrideX={4} bgInvert={bgInvert} />
@@ -365,8 +366,9 @@ const HeadIndicator = () => {
 const StepsEditorRootInner = () => {
   const { patternLength } = store.useSnapshot();
   const numRows = (patternLength / 16) >>> 0;
+  const height = 360 / numRows;
   return (
-    <div class="flex-v gap-2">
+    <div class={cz("flex-v", numRows === 8 ? "gap-1" : "gap-2")}>
       {seqNumbers(numRows).map((i) => {
         return (
           <div class="flex-ha gap-2">
@@ -374,6 +376,7 @@ const StepsEditorRootInner = () => {
             <StepsBarEditor
               stepsRange={{ offset: i * 16, length: 16 }}
               isPrimaryNotes
+              height={height}
             />
           </div>
         );

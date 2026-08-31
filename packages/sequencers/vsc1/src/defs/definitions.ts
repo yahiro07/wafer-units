@@ -1,6 +1,6 @@
 import { appEnvs } from "@/common/app-envs";
 
-export type BaseStep = "16th" | "8th";
+export type BaseStep = "16th" | "8th" | "4th";
 
 export type PatternLength = 16 | 32 | 64 | 128 | 256;
 
@@ -31,7 +31,7 @@ export const defaultSequencerEditState: SequencerEditState = {
 
 if (appEnvs.isDevelopment) {
   Object.assign(defaultSequencerEditState, {
-    patternLength: 128,
+    patternLength: 32,
     notes: [
       { id: 0, position: 0, duration: 2, pitch: 0 },
       { id: 1, position: 2, duration: 2, pitch: 9 },
