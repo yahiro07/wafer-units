@@ -1,21 +1,18 @@
 import { cz } from "@/common/css-realm";
 import { GridBackground } from "@/components/grid-background";
-import { GridTonicHighlighter } from "@/components/grid-tonic-highlighter";
 import { Note } from "@/defs/definitions";
 
 import { store } from "@/root/store";
 import { startDragSession } from "@/utils/drag-session";
 import { clampValue, seqNumbers } from "@/utils/helpers";
-import { RefObject } from "preact";
-import { useEffect, useRef } from "preact/hooks";
+import { useRef } from "preact/hooks";
 
 const uiConfigs = {
   stepCellWidth: 44,
   stepCellHeight: 28,
-  numCellsY: 22,
-  editorHeight: 0,
+  numPitches: 25,
+  editorHeight: 42,
 };
-uiConfigs.editorHeight = uiConfigs.stepCellHeight * uiConfigs.numCellsY;
 
 const tapConfigs = {
   maxDistance: 8,
@@ -42,6 +39,10 @@ function rangeEndX(stepsRange: StepsRange) {
   return stepsRange.offset + stepsRange.length;
 }
 
+function clampPitch(y: number) {
+  return clampValue(y, 0, uiConfigs.numPitches - 1);
+}
+
 function cellFromPointer(
   pos: { x: number; y: number },
   stepsRange: StepsRange,
@@ -52,10 +53,8 @@ function cellFromPointer(
       rangeMinX(stepsRange),
       rangeMaxX(stepsRange),
     ),
-    y: clampValue(
+    y: clampPitch(
       Math.floor((uiConfigs.editorHeight - pos.y) / uiConfigs.stepCellHeight),
-      0,
-      uiConfigs.numCellsY - 1,
     ),
   };
 }
@@ -64,7 +63,7 @@ function hitTestNote(notes: Note[], cell: Cell): Note | undefined {
   let hit: Note | undefined;
   for (const note of notes) {
     if (
-      note.pitch === cell.y &&
+      // note.pitch === cell.y &&
       note.position <= cell.x &&
       cell.x < note.position + note.duration
     ) {
@@ -102,7 +101,7 @@ function makeCreatePreview(
     id,
     position: left,
     duration: right - left + 1,
-    pitch: clampValue(current.y, 0, uiConfigs.numCellsY - 1),
+    pitch: clampPitch(current.y),
   };
 }
 
@@ -122,11 +121,7 @@ function makeMovePreview(
   return {
     ...original,
     position,
-    pitch: clampValue(
-      original.pitch + (current.y - start.y),
-      0,
-      uiConfigs.numCellsY - 1,
-    ),
+    pitch: clampPitch(original.pitch + (current.y - start.y)),
   };
 }
 
@@ -144,7 +139,7 @@ function makeResizePreview(
   return {
     ...original,
     duration,
-    pitch: clampValue(current.y, 0, uiConfigs.numCellsY - 1),
+    pitch: clampPitch(current.y),
   };
 }
 
@@ -276,9 +271,9 @@ const NotesLayer = ({
   return (
     <div
       class={cz(
-        "absolute-full flex-h",
-        isPrimaryNotes && "[&>div]:(absolute flex-c bd-#4cf bg-#4cf8)",
-        !isPrimaryNotes && "[&>div]:(absolute flex-c bd-#9ab bg-#cde5)",
+        styleNotesLayer.base,
+        isPrimaryNotes && "primary",
+        !isPrimaryNotes && "secondary",
       )}
     >
       {displayNotes.map((note) => (
@@ -286,14 +281,24 @@ const NotesLayer = ({
           key={note.id}
           style={{
             left: (note.position - stepsRange.offset) * stepCellWidth,
-            bottom: note.pitch * stepCellHeight,
+            bottom: note.pitch * stepCellHeight * 0.02,
             width: note.duration * stepCellWidth,
             height: stepCellHeight,
           }}
-        />
+        >
+          {note.pitch}
+        </div>
       ))}
     </div>
   );
+};
+const styleNotesLayer = {
+  base: cz(
+    "absolute-full flex-h",
+    "[&>div]:(absolute flex-ha pl-1 text-white)",
+    "[&.primary>div]:(bd-#4cf bg-#4cf8)",
+    "[&.secondary>div]:(bd-#9ab bg-#cde5)",
+  ),
 };
 
 const StepsBarEditor = ({
@@ -306,96 +311,36 @@ const StepsBarEditor = ({
   isPrimaryNotes?: boolean;
 }) => {
   const nx = stepsRange.length;
-  const { stepCellWidth, numCellsY } = uiConfigs;
+  const { stepCellWidth } = uiConfigs;
   return (
     <div
       class="relative touch-none"
       style={{ width: stepCellWidth * nx, height: uiConfigs.editorHeight }}
       onPointerDown={(e) => handleStepsBarEditorPointerDown(e, stepsRange)}
     >
-      <GridBackground
-        nx={nx}
-        ny={numCellsY}
-        bgAlterStrideX={4}
-        bgInvert={bgInvert}
-      />
-      <GridTonicHighlighter ny={numCellsY} className="absolute-full" />
+      <GridBackground nx={nx} ny={1} bgAlterStrideX={4} bgInvert={bgInvert} />
       <NotesLayer stepsRange={stepsRange} isPrimaryNotes={isPrimaryNotes} />
     </div>
   );
 };
 
-const StepsEditorRootInner = () => {
-  const { patternLength, currentPageIndex } = store.useSnapshot();
-  if (patternLength === 4) {
-    return (
-      <div class="flex-h">
-        <StepsBarEditor stepsRange={{ offset: 0, length: 4 }} isPrimaryNotes />
-        <StepsBarEditor stepsRange={{ offset: 0, length: 4 }} bgInvert />
-        <StepsBarEditor stepsRange={{ offset: 0, length: 4 }} />
-        <StepsBarEditor stepsRange={{ offset: 0, length: 4 }} bgInvert />
-      </div>
-    );
-  } else if (patternLength === 8) {
-    return (
-      <div class="flex-h">
-        <StepsBarEditor stepsRange={{ offset: 0, length: 8 }} isPrimaryNotes />
-        <StepsBarEditor stepsRange={{ offset: 0, length: 8 }} />
-      </div>
-    );
-  } else if (patternLength === 16) {
-    return (
-      <StepsBarEditor stepsRange={{ offset: 0, length: 16 }} isPrimaryNotes />
-    );
-  } else if (patternLength === 32 || patternLength === 64) {
-    return (
-      <StepsBarEditor
-        stepsRange={{ offset: currentPageIndex * 16, length: 16 }}
-        isPrimaryNotes
-      />
-    );
-  }
+const HeadIndicator = () => {
+  return <div class="w-12px h-40px bd-#888"></div>;
 };
 
-function calculateNotesCenter(notes: Note[]) {
-  let minPitch = notes[0].pitch;
-  let maxPitch = notes[0].pitch;
-  for (const note of notes) {
-    if (note.pitch < minPitch) minPitch = note.pitch;
-    if (note.pitch > maxPitch) maxPitch = note.pitch;
-  }
-  const midPitch = (minPitch + maxPitch) / 2;
-  const { editorHeight, stepCellHeight } = uiConfigs;
-  return editorHeight - (midPitch + 0.5) * stepCellHeight;
-}
-
-function useSetInitialScrollPosition(baseDivRef: RefObject<HTMLDivElement>) {
-  const { stateLoadRevision, notes } = store.useSnapshot();
-  useEffect(() => {
-    const el = baseDivRef.current;
-    if (el) {
-      const centerY =
-        notes.length > 0 ? calculateNotesCenter(notes) : el.scrollHeight / 2;
-      el.scrollTop = centerY - el.clientHeight / 2;
-    }
-  }, [stateLoadRevision]);
-}
-
-const IndexColumn = () => {
+const StepsEditorRootInner = () => {
+  const { patternLength } = store.useSnapshot();
+  const numRows = (patternLength / 16) >>> 0;
   return (
-    <div
-      class={cz(
-        "w-44px h-full flex-v flex-col-reverse bg-neutral-600 bd-neutral-800",
-        "[&>div]:(flex-1 min-h-0 flex-c)",
-      )}
-      style={{ height: uiConfigs.editorHeight }}
-    >
-      {seqNumbers(uiConfigs.numCellsY).map((_, i) => {
-        const isTonic = i % 7 === 0;
-        const tonicIndex = Math.floor(i / 7) - 1;
+    <div class="flex-v gap-2">
+      {seqNumbers(numRows).map((i) => {
         return (
-          <div key={i}>
-            {isTonic ? `R${tonicIndex > 0 ? "+" : ""}${tonicIndex}` : undefined}
+          <div class="flex-ha gap-2">
+            <HeadIndicator />
+            <StepsBarEditor
+              stepsRange={{ offset: i * 16, length: 16 }}
+              isPrimaryNotes
+            />
           </div>
         );
       })}
@@ -405,18 +350,9 @@ const IndexColumn = () => {
 
 export const StepsEditorRoot = () => {
   const baseDivRef = useRef<HTMLDivElement>(null);
-  useSetInitialScrollPosition(baseDivRef);
   return (
-    <div
-      ref={baseDivRef}
-      class="h-[300px] overflow-x-hidden overflow-y-scroll"
-      onWheel={(e) => {
-        e.stopPropagation();
-        e.preventDefault();
-      }}
-    >
+    <div ref={baseDivRef}>
       <div className="flex-h">
-        <IndexColumn />
         <StepsEditorRootInner />
         <div class="border-0.5px border-#222" />
       </div>
