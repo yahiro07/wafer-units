@@ -101,4 +101,7 @@ export const actions = {
   togglePlayState() {
     store.toggleStandalonePlaying();
   },
+  setPreviewNoteNumber(noteNumber: number) {
+    store.setPreviewNoteNumber(noteNumber);
+  },
 };

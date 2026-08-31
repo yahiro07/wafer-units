@@ -11,6 +11,7 @@ type StoreState = SequencerEditState & {
   playPosition: number;
   pitchPresetIndex: number;
   lockPitchPreset: boolean;
+  previewNoteNumber: number;
 };
 
 export const store = createStore<StoreState>({
@@ -21,4 +22,5 @@ export const store = createStore<StoreState>({
   playPosition: -1,
   pitchPresetIndex: 0,
   lockPitchPreset: false,
+  previewNoteNumber: -1,
 });

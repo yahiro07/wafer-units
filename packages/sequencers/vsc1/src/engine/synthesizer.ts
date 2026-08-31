@@ -11,8 +11,16 @@ export function createSynthesizer(
 
   let stopFn: (() => void) | undefined;
 
+  const stopNote = () => {
+    if (stopFn) {
+      stopFn();
+      stopFn = undefined;
+    }
+  };
+
   return {
     noteOn(noteNumber, time = ac.currentTime) {
+      stopNote();
       const osc = ac.createOscillator();
       const freq = midiToFrequency(noteNumber);
       osc.type = "sawtooth";
@@ -28,7 +36,7 @@ export function createSynthesizer(
       };
     },
     noteOff(noteNumber, time = ac.currentTime) {
-      stopFn?.();
+      stopNote();
     },
     cleanup() {},
   };

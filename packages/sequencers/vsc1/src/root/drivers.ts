@@ -59,6 +59,7 @@ function setupSynchronization() {
       twiddleKnobsEnabled,
       bpm,
       standalonePlaying,
+      previewNoteNumber,
     } = attrs;
     const sequencerAttrs = filterObjectValuesNonUndefined({
       stepNotes,
@@ -72,6 +73,14 @@ function setupSynchronization() {
     if (bpm !== undefined) {
       // synthesizer.setBpm(bpm);
       sequencerTickDriver.setBpm(bpm);
+    }
+
+    if (previewNoteNumber !== undefined) {
+      if (previewNoteNumber >= 0) {
+        synthesizer.noteOn(previewNoteNumber);
+      } else {
+        synthesizer.noteOff(-1);
+      }
     }
 
     if (standalonePlaying !== undefined) {
