@@ -9,5 +9,5 @@ export const store = createStore<{
   playPos: number;
 }>({
   ...defaultSequencerEditState,
-  playPos: 0,
+  playPos: -1,
 });
