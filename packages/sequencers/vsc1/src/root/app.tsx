@@ -5,19 +5,36 @@ import { store } from "@/root/store";
 import { startDragSession } from "@/utils/drag-session";
 import { seqNumbers } from "@/utils/helpers";
 
+const pitchFromPoint = (x: number, y: number) => {
+  const el = document.elementFromPoint(x, y);
+  const cell = el?.closest("[data-pitch-index]");
+  if (cell instanceof HTMLElement) {
+    const n = Number(cell.dataset.pitchIndex);
+    return Number.isFinite(n) ? n : undefined;
+  }
+};
+
+const handlePitchCellPointerDown = (e0: PointerEvent, index: number) => {
+  let lastIndex = index;
+  startDragSession(e0, {
+    onDown() {
+      actions.setPreviewNoteNumber(48 + index);
+    },
+    onMove({ position }) {
+      const next = pitchFromPoint(position.x, position.y);
+      if (next && next !== lastIndex) {
+        actions.setPreviewNoteNumber(48 + next);
+        lastIndex = next;
+      }
+    },
+    onUpOrCancel() {
+      actions.setPreviewNoteNumber(-1);
+    },
+  });
+};
+
 const PitchPreviewColumn = () => {
   const { pitchIndices } = store.useSnapshot();
-
-  const handlePointerDown = (e0: PointerEvent, index: number) => {
-    startDragSession(e0, {
-      onDown() {
-        actions.setPreviewNoteNumber(48 + index);
-      },
-      onUpOrCancel(e) {
-        actions.setPreviewNoteNumber(-1);
-      },
-    });
-  };
   return (
     <div class="flex-v mt-1">
       <div class="w-[70px] text-sm pl-3">Pitches</div>
@@ -31,7 +48,8 @@ const PitchPreviewColumn = () => {
                 "flex-1 bd-clGridBg flex-c h-[32px] cursor-pointer",
                 active && "bg-clHighlight",
               )}
-              onPointerDown={(e) => handlePointerDown(e, i)}
+              data-pitch-index={i}
+              onPointerDown={(e) => handlePitchCellPointerDown(e, i)}
             >
               {i}
             </div>
