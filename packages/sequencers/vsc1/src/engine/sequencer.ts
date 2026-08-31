@@ -1,15 +1,10 @@
-import {
-  ClockHandlers,
-  NoteInputPort,
-  SongKeySpec,
-  UnitInterface,
-} from "wafer-host/unit-types";
+import { SongKeySpec, UnitInterface } from "wafer-host/unit-types";
 import { clampValue, seqNumbers } from "@/utils/helpers";
 import {
   SequencerEditState,
   defaultSequencerEditState,
 } from "@/defs/definitions";
-import { ISequencerListener } from "@/defs/interfaces";
+import { ISequencer, ISequencerListener } from "@/defs/interfaces";
 
 const majorSubDegrees = [0, 2, 4, 5, 7, 9, 11];
 const minorSubDegrees = [0, 2, 3, 5, 7, 8, 10];
@@ -25,7 +20,9 @@ function createScaleNoteNumbers(keyRoot: number, mode: "major" | "minor") {
   });
 }
 
-export function createSequencer(unitInterface: UnitInterface | undefined) {
+export function createSequencer(
+  unitInterface: UnitInterface | undefined,
+): ISequencer {
   const noteOutputPort = unitInterface?.createNoteOutputPort();
 
   const editState: SequencerEditState = structuredClone(
@@ -61,7 +58,15 @@ export function createSequencer(unitInterface: UnitInterface | undefined) {
     },
   };
 
-  const clockHandlers: ClockHandlers = {
+  return {
+    setState(attrs: Partial<SequencerEditState>) {
+      Object.assign(editState, attrs);
+    },
+    setKey(keySpec: SongKeySpec) {
+      const { root, mode } = keySpec;
+      state.scaleNoteNumbers = createScaleNoteNumbers(root, mode);
+    },
+    start() {},
     processStep(stepIndex, time, unitDuration) {
       const shift = editState.baseStep === "8th" ? 1 : 0;
       stepIndex >>= shift;
@@ -79,26 +84,7 @@ export function createSequencer(unitInterface: UnitInterface | undefined) {
     stop() {
       listener?.onPlayStepPositionChanged(-1);
     },
-  };
-
-  const noteInput: NoteInputPort = {
-    noteOn(noteNumber) {
-      state.inputRootNoteNumber = noteNumber;
-    },
-    noteOff() {},
-  };
-
-  return {
-    setState(attrs: Partial<SequencerEditState>) {
-      Object.assign(editState, attrs);
-    },
-    setKey(keySpec: SongKeySpec) {
-      const { root, mode } = keySpec;
-      state.scaleNoteNumbers = createScaleNoteNumbers(root, mode);
-    },
-    clockHandlers,
-    noteInput,
-    setListener(_listener: ISequencerListener | null) {
+    setListener(_listener) {
       listener = _listener;
     },
   };

@@ -21,8 +21,11 @@ function setupUnit() {
     hostCallbacks: {
       setKey: sequencer.setKey,
     },
-    clockHandlers: sequencer.clockHandlers,
-    noteInput: sequencer.noteInput,
+    clockHandlers: {
+      start: sequencer.start,
+      processStep: sequencer.processStep,
+      stop: sequencer.stop,
+    },
   });
 }
 
