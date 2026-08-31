@@ -1,4 +1,5 @@
 import { cz } from "@/common/css-realm";
+import { mapPitchIndexToPitchName } from "@/defs/pitch-names";
 import { actions } from "@/root/actions";
 import { store } from "@/root/store";
 import { startDragSession } from "@/utils/drag-session";
@@ -30,28 +31,41 @@ const handlePitchCellPointerDown = (e0: PointerEvent, index: number) => {
   });
 };
 
+const maskSubIndices = [1, 3, 6, 8, 10];
+
 export const PitchPreviewColumn = () => {
+  const { keyTranspose, pitchMode, keyMode } = store.useSnapshot();
   return (
-    <div class="h-360px overflow-y-scroll">
-      <div class="flex-v flex-col-reverse">
-        {seqNumbers(37).map((i) => {
-          const active = i % 12 === 0;
+    <div class={styles.base}>
+      <div class={styles.list}>
+        {seqNumbers(37).map((_i) => {
+          const i = 36 - _i;
+          const tonic =
+            (i + (keyMode === "minor" ? 3 : 0)) % 12 === keyTranspose % 12;
+          const masked =
+            pitchMode === "diatonic" &&
+            maskSubIndices.includes((i + keyTranspose + 12) % 12);
           return (
             <div
               key={i}
-              class={cz(
-                "flex-1 bd-[#333] flex-c w-70px h-32px cursor-pointer",
-                "text-white",
-                (active && "bg-clHighlight") || "bg-[#555] ",
-              )}
+              class={cz(tonic && "tonic", masked && "masked")}
               data-pitch-index={i}
               onPointerDown={(e) => handlePitchCellPointerDown(e, i)}
             >
-              {i}
+              {i}. {mapPitchIndexToPitchName(i)}
             </div>
           );
         })}
       </div>
     </div>
   );
+};
+const styles = {
+  base: cz("h-360px overflow-y-scroll"),
+  list: cz(
+    "flex-v flex-col",
+    "[&>div]:(flex-1 bd-#333 bg-#555 flex-c w-70px h-32px cursor-pointer text-white)",
+    "[&>div.tonic]:(bg-clHighlight)",
+    "[&>div.masked]:(hidden)",
+  ),
 };

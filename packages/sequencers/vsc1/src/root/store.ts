@@ -1,3 +1,4 @@
+import { appEnvs } from "@/common/app-envs";
 import {
   defaultSequencerEditState,
   Note,
@@ -5,6 +6,7 @@ import {
   SequencerEditState,
 } from "@/defs/definitions";
 import { createStore } from "snap-store";
+import { SongKeySpec } from "wafer-host/unit-types";
 
 type StoreState = SequencerEditState & {
   playStepIndex: number;
@@ -13,6 +15,7 @@ type StoreState = SequencerEditState & {
   currentPageIndex: number;
   tonePreviewPitchIndex: number;
   latestPitchIndex: number;
+  keyMode: SongKeySpec["mode"];
   keyTranspose: number;
   pitchMode: PitchMode;
   keyLabel: string;
@@ -26,7 +29,17 @@ export const store = createStore<StoreState>({
   currentPageIndex: 0,
   tonePreviewPitchIndex: -1,
   latestPitchIndex: 12,
+  keyMode: "major",
   keyTranspose: 0,
   pitchMode: "chromatic",
   keyLabel: "C/Am",
 });
+
+if (appEnvs.isDevelopment) {
+  store.assign({
+    keyMode: "minor",
+    keyLabel: "C#/A#m",
+    keyTranspose: 1,
+    pitchMode: "diatonic",
+  });
+}

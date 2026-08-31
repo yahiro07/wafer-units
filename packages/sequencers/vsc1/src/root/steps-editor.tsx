@@ -1,6 +1,7 @@
 import { cz } from "@/common/css-realm";
 import { GridBackground } from "@/components/grid-background";
 import { Note } from "@/defs/definitions";
+import { mapPitchIndexToPitchName } from "@/defs/pitch-names";
 
 import { actions } from "@/root/actions";
 import { store } from "@/root/store";
@@ -321,7 +322,7 @@ const NotesLayer = ({
             height: stepCellHeight,
           }}
         >
-          {note.pitch}
+          {note.pitch}. {mapPitchIndexToPitchName(note.pitch)}
         </div>
       ))}
     </div>

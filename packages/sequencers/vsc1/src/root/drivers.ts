@@ -25,6 +25,7 @@ function setupUnit() {
       setKey(keySpec) {
         sequencer.setKey(keySpec);
         store.setKeyLabel(mapKeySpecToKeysName(keySpec));
+        store.setKeyTranspose(keySpec.keyTranspose);
       },
     },
     clockHandlers: {

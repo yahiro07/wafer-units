@@ -97,7 +97,11 @@ const usePitchModeOptions = () => {
   return useMemo(() => {
     return createSelectorOptions<PitchMode>([
       ["chromatic", "chromatic"],
-      ["diatonic", `diatonic (${keyLabel})`],
+      [
+        "diatonic",
+        "diatonic",
+        //`diatonic (${keyLabel})`
+      ],
     ]);
   }, [keyLabel]);
 };
