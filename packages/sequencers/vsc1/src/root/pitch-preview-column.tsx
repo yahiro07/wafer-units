@@ -16,16 +16,16 @@ const pitchFromPoint = (x: number, y: number) => {
 const handlePitchCellPointerDown = (e0: PointerEvent, index: number) => {
   startDragSession(e0, {
     onDown() {
-      actions.setPreviewPitchIndex(index);
+      actions.previewTone(index);
     },
     onMove({ position }) {
       const next = pitchFromPoint(position.x, position.y);
       if (next && next !== store.state.latestPitchIndex) {
-        actions.setPreviewPitchIndex(next);
+        actions.previewTone(next);
       }
     },
     onUpOrCancel() {
-      actions.setPreviewPitchIndex(-1);
+      actions.previewTone(-1);
     },
   });
 };

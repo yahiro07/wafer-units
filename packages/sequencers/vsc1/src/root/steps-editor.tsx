@@ -2,6 +2,7 @@ import { cz } from "@/common/css-realm";
 import { GridBackground } from "@/components/grid-background";
 import { Note } from "@/defs/definitions";
 
+import { actions } from "@/root/actions";
 import { store } from "@/root/store";
 import { startDragSession } from "@/utils/drag-session";
 import { clampValue, seqNumbers } from "@/utils/helpers";
@@ -184,11 +185,13 @@ function handleStepsBarEditorPointerDown(
             duration: 1,
           };
           store.setPreviewNote(originalNote);
+          actions.previewTone(originalNote.pitch);
           return;
         }
         mode = isResizeGrab(hit, startCell) ? "resize" : "move";
         originalNote = hit;
         store.setPreviewNote({ ...hit });
+        actions.previewTone(hit.pitch);
       },
       onMove(ev) {
         if (!originalNote) return;
@@ -198,6 +201,9 @@ function handleStepsBarEditorPointerDown(
           ev.position.y,
           originalNote.pitch,
         );
+        if (pitch !== store.state.latestPitchIndex) {
+          actions.previewTone(pitch);
+        }
         if (mode === "create") {
           store.setPreviewNote(
             makeCreatePreview(
@@ -262,6 +268,9 @@ function handleStepsBarEditorPointerDown(
       },
       onCancel() {
         store.setPreviewNote(null);
+      },
+      onUpOrCancel() {
+        actions.previewTone(-1);
       },
     },
     { coordinate: "relative" },

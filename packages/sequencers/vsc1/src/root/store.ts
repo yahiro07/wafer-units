@@ -11,7 +11,7 @@ type StoreState = SequencerEditState & {
   stateLoadRevision: number;
   previewNote: Note | null;
   currentPageIndex: number;
-  previewNoteNumber: number;
+  tonePreviewNoteNumber: number;
   latestPitchIndex: number;
 };
 
@@ -22,6 +22,6 @@ export const store = createStore<StoreState>({
   stateLoadRevision: 0,
   previewNote: null,
   currentPageIndex: 0,
-  previewNoteNumber: -1,
+  tonePreviewNoteNumber: -1,
   latestPitchIndex: 12,
 });

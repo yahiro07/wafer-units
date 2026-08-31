@@ -47,10 +47,10 @@ function setupSynchronization() {
       sequencer.setState(editStateAttrs);
     }
 
-    const { previewNoteNumber } = attrs;
-    if (previewNoteNumber !== undefined) {
-      if (previewNoteNumber >= 0) {
-        synthesizer.noteOn(previewNoteNumber);
+    const { tonePreviewNoteNumber } = attrs;
+    if (tonePreviewNoteNumber !== undefined) {
+      if (tonePreviewNoteNumber >= 0) {
+        synthesizer.noteOn(tonePreviewNoteNumber);
       } else {
         synthesizer.noteOff(-1);
       }
