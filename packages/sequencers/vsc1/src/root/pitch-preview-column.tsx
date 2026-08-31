@@ -34,7 +34,7 @@ export const PitchPreviewColumn = () => {
   return (
     <div class="h-390px overflow-y-scroll">
       <div class="flex-v flex-col-reverse">
-        {seqNumbers(25).map((i) => {
+        {seqNumbers(37).map((i) => {
           const active = i % 12 === 0;
           return (
             <div
