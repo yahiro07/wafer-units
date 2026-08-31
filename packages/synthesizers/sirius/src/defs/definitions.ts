@@ -51,7 +51,7 @@ export const defaultSynthParameters: SynthParameters = {
 
 export type ISynthesizerEngine = {
   setParameters: (parameters: SynthParameters) => void;
-  noteOn: (noteNumber: number, time?: number, velocity?: number) => void;
+  noteOn: (noteNumber: number, time?: number) => void;
   noteOff: (noteNumber: number, time?: number) => void;
   cleanup: () => void;
 };

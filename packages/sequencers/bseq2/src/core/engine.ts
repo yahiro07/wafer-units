@@ -52,7 +52,7 @@ export function createEngine(unitInterface: UnitInterface | undefined) {
           0,
           127,
         );
-        noteOutputPort?.noteOn(noteNumber, time, 1);
+        noteOutputPort?.noteOn(noteNumber, time);
         noteOutputPort?.noteOff(noteNumber, time + durationSec);
       }
     },

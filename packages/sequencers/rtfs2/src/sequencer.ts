@@ -87,7 +87,7 @@ function createSequencer() {
         state.key = songKey;
       }
     },
-    inputNoteOn(note: number, _timeAt: number, _velocity: number) {
+    inputNoteOn(note: number, _timeAt: number) {
       state.chordRootNote = note;
       if (state.isClockInputActive) return;
       if (!state.isInternalTickRunning) {
