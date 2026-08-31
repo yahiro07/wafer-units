@@ -32,7 +32,7 @@ const handlePitchCellPointerDown = (e0: PointerEvent, index: number) => {
 
 export const PitchPreviewColumn = () => {
   return (
-    <div class="h-390px overflow-y-scroll">
+    <div class="h-360px overflow-y-scroll">
       <div class="flex-v flex-col-reverse">
         {seqNumbers(37).map((i) => {
           const active = i % 12 === 0;
@@ -40,8 +40,9 @@ export const PitchPreviewColumn = () => {
             <div
               key={i}
               class={cz(
-                "flex-1 bd-clGridBg flex-c w-70px h-32px cursor-pointer",
-                active && "bg-clHighlight",
+                "flex-1 bd-[#333] flex-c w-70px h-32px cursor-pointer",
+                "text-white",
+                (active && "bg-clHighlight") || "bg-[#555] ",
               )}
               data-pitch-index={i}
               onPointerDown={(e) => handlePitchCellPointerDown(e, i)}

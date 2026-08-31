@@ -1,6 +1,7 @@
 import { ISynthesizer } from "@/defs/interfaces";
-import { midiToFrequency } from "@/utils/synth-math-utils";
 import { UnitInterface } from "wafer-host/unit-types";
+
+const midiToFrequency = (note: number) => 440 * 2 ** ((note - 69) / 12);
 
 export function createSynthesizer(
   unitInterface: UnitInterface | undefined,

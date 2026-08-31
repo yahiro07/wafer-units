@@ -6,6 +6,7 @@ import { useEffect } from "preact/hooks";
 import { createSynthesizer } from "@/engine/synthesizer";
 import { ISequencerListener } from "@/defs/interfaces";
 import { createSequencer } from "@/engine/sequencer";
+import { mapKeySpecToKeysName } from "@/utils/key-name-helper";
 
 const unitInterface = queryUnitInterface("wafer-v01");
 const audioContext = unitInterface?.audioContext ?? new AudioContext();
@@ -21,7 +22,10 @@ function setupUnit() {
       viewSize: [828, 492],
     },
     hostCallbacks: {
-      setKey: sequencer.setKey,
+      setKey(keySpec) {
+        sequencer.setKey(keySpec);
+        store.setKeyLabel(mapKeySpecToKeysName(keySpec));
+      },
     },
     clockHandlers: {
       start: sequencer.start,

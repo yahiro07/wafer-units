@@ -4,7 +4,7 @@ import { IconButton } from "@/components/icon-button";
 import { Icons } from "@/components/icons";
 import { Knob } from "@/components/knob";
 import { SideLabelBox } from "@/components/labeled-controls";
-import { BaseStep } from "@/defs/definitions";
+import { BaseStep, PitchMode } from "@/defs/definitions";
 import { useSetupDrivers } from "@/root/drivers";
 import { editActions } from "@/root/edit-actions";
 import { PitchPreviewColumn } from "@/root/pitch-preview-column";
@@ -14,6 +14,8 @@ import {
   createPlainSelectorOptions,
   createSelectorOptions,
 } from "@/utils/selector-option";
+import { ShiftSelector } from "@/components/shift-selector";
+import { useMemo } from "preact/hooks";
 
 const octaveShiftOptions = createPlainSelectorOptions([-2, -1, 0, 1, 2]);
 
@@ -90,14 +92,27 @@ const FeatureHeader = ({
   );
 };
 
-const ShiftEnableButtonContainer = () => {
-  const { shiftEnabled } = store.useSnapshot();
+const usePitchModeOptions = () => {
+  const { keyLabel } = store.useSnapshot();
+  return useMemo(() => {
+    return createSelectorOptions<PitchMode>([
+      ["chromatic", "chromatic"],
+      ["diatonic", `diatonic (${keyLabel})`],
+    ]);
+  }, [keyLabel]);
+};
+const PitchModeContainer = () => {
+  const { pitchMode } = store.useSnapshot();
+  const pitchModeOptions = usePitchModeOptions();
   return (
-    <FeatureHeader
-      label="SHIFT"
-      active={shiftEnabled}
-      onClick={store.toggleShiftEnabled}
-    />
+    <SideLabelBox label="SCALE">
+      <ShiftSelector
+        width={140}
+        options={pitchModeOptions}
+        value={pitchMode}
+        onChange={store.setPitchMode}
+      />
+    </SideLabelBox>
   );
 };
 
@@ -134,7 +149,8 @@ const TopControlBars = () => {
         <BaseStepContainer />
       </div>
       <div class="flex-h gap-4 justify-between">
-        <ShiftEnableButtonContainer />
+        {/* <ShiftEnableButtonContainer /> */}
+        <PitchModeContainer />
         <PatternLengthContainer />
         <DoublerButtonContainer />
         <DeleteButtonContainer />

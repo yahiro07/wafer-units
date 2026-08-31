@@ -4,6 +4,8 @@ export type BaseStep = "16th" | "8th" | "4th";
 
 export type PatternLength = 16 | 32 | 64 | 128 | 256;
 
+export type PitchMode = "chromatic" | "diatonic";
+
 export type Note = {
   id: number;
   pitch: number;
