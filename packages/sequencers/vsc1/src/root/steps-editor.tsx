@@ -12,6 +12,7 @@ const uiConfigs = {
   stepCellHeight: 28,
   numPitches: 25,
   editorHeight: 42,
+  pitchYDragStep: 4,
 };
 
 const tapConfigs = {
@@ -24,7 +25,7 @@ type StepsRange = {
   length: number;
 };
 
-type Cell = { x: number; y: number };
+type Cell = { x: number };
 type EditMode = "create" | "move" | "resize";
 
 function rangeMinX(stepsRange: StepsRange) {
@@ -53,17 +54,18 @@ function cellFromPointer(
       rangeMinX(stepsRange),
       rangeMaxX(stepsRange),
     ),
-    y: clampPitch(
-      Math.floor((uiConfigs.editorHeight - pos.y) / uiConfigs.stepCellHeight),
-    ),
   };
+}
+
+function pitchFromDrag(startY: number, currentY: number, basePitch: number) {
+  const delta = Math.round((startY - currentY) / uiConfigs.pitchYDragStep);
+  return clampPitch(basePitch + delta);
 }
 
 function hitTestNote(notes: Note[], cell: Cell): Note | undefined {
   let hit: Note | undefined;
   for (const note of notes) {
     if (
-      // note.pitch === cell.y &&
       note.position <= cell.x &&
       cell.x < note.position + note.duration
     ) {
@@ -85,6 +87,7 @@ function makeCreatePreview(
   id: number,
   start: Cell,
   current: Cell,
+  pitch: number,
   stepsRange: StepsRange,
 ): Note {
   const left = clampValue(
@@ -101,7 +104,7 @@ function makeCreatePreview(
     id,
     position: left,
     duration: right - left + 1,
-    pitch: clampPitch(current.y),
+    pitch,
   };
 }
 
@@ -109,6 +112,7 @@ function makeMovePreview(
   original: Note,
   start: Cell,
   current: Cell,
+  pitch: number,
   stepsRange: StepsRange,
 ): Note {
   let position = original.position + (current.x - start.x);
@@ -121,7 +125,7 @@ function makeMovePreview(
   return {
     ...original,
     position,
-    pitch: clampPitch(original.pitch + (current.y - start.y)),
+    pitch,
   };
 }
 
@@ -129,6 +133,7 @@ function makeResizePreview(
   original: Note,
   start: Cell,
   current: Cell,
+  pitch: number,
   stepsRange: StepsRange,
 ): Note {
   let duration = original.duration + (current.x - start.x);
@@ -139,7 +144,7 @@ function makeResizePreview(
   return {
     ...original,
     duration,
-    pitch: clampPitch(current.y),
+    pitch,
   };
 }
 
@@ -161,7 +166,7 @@ function handleStepsBarEditorPointerDown(
 
   const t0 = performance.now();
   let mode: EditMode = "create";
-  let startCell: Cell = { x: 0, y: 0 };
+  let startCell: Cell = { x: 0 };
   let originalNote: Note | null = null;
 
   startDragSession(
@@ -175,7 +180,7 @@ function handleStepsBarEditorPointerDown(
           originalNote = {
             id: nextNoteId(store.state.notes),
             position: startCell.x,
-            pitch: startCell.y,
+            pitch: store.state.latestPitchIndex,
             duration: 1,
           };
           store.setPreviewNote(originalNote);
@@ -188,17 +193,40 @@ function handleStepsBarEditorPointerDown(
       onMove(ev) {
         if (!originalNote) return;
         const current = cellFromPointer(ev.position, stepsRange);
+        const pitch = pitchFromDrag(
+          ev.originalPosition.y,
+          ev.position.y,
+          originalNote.pitch,
+        );
         if (mode === "create") {
           store.setPreviewNote(
-            makeCreatePreview(originalNote.id, startCell, current, stepsRange),
+            makeCreatePreview(
+              originalNote.id,
+              startCell,
+              current,
+              pitch,
+              stepsRange,
+            ),
           );
         } else if (mode === "move") {
           store.setPreviewNote(
-            makeMovePreview(originalNote, startCell, current, stepsRange),
+            makeMovePreview(
+              originalNote,
+              startCell,
+              current,
+              pitch,
+              stepsRange,
+            ),
           );
         } else {
           store.setPreviewNote(
-            makeResizePreview(originalNote, startCell, current, stepsRange),
+            makeResizePreview(
+              originalNote,
+              startCell,
+              current,
+              pitch,
+              stepsRange,
+            ),
           );
         }
       },

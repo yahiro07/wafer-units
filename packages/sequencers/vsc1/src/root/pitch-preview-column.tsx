@@ -1,5 +1,6 @@
 import { cz } from "@/common/css-realm";
 import { actions } from "@/root/actions";
+import { store } from "@/root/store";
 import { startDragSession } from "@/utils/drag-session";
 import { seqNumbers } from "@/utils/helpers";
 
@@ -13,20 +14,18 @@ const pitchFromPoint = (x: number, y: number) => {
 };
 
 const handlePitchCellPointerDown = (e0: PointerEvent, index: number) => {
-  let lastIndex = index;
   startDragSession(e0, {
     onDown() {
-      actions.setPreviewNoteNumber(48 + index);
+      actions.setPreviewPitchIndex(index);
     },
     onMove({ position }) {
       const next = pitchFromPoint(position.x, position.y);
-      if (next && next !== lastIndex) {
-        actions.setPreviewNoteNumber(48 + next);
-        lastIndex = next;
+      if (next && next !== store.state.latestPitchIndex) {
+        actions.setPreviewPitchIndex(next);
       }
     },
     onUpOrCancel() {
-      actions.setPreviewNoteNumber(-1);
+      actions.setPreviewPitchIndex(-1);
     },
   });
 };
