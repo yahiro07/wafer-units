@@ -9,8 +9,10 @@ import { createSequencer } from "@/engine/sequencer";
 
 const unitInterface = queryUnitInterface("wafer-v01");
 const audioContext = unitInterface?.audioContext ?? new AudioContext();
-const synthesizer = createSynthesizer(unitInterface, audioContext);
-const sequencer = createSequencer(unitInterface);
+const synthesizer =
+  (!unitInterface && createSynthesizer(unitInterface, audioContext)) ||
+  undefined;
+const sequencer = createSequencer(unitInterface, synthesizer);
 
 function setupUnit() {
   unitInterface?.completeSetup({
@@ -47,13 +49,9 @@ function setupSynchronization() {
       sequencer.setState(editStateAttrs);
     }
 
-    const { tonePreviewNoteNumber } = attrs;
-    if (tonePreviewNoteNumber !== undefined) {
-      if (tonePreviewNoteNumber >= 0) {
-        synthesizer.noteOn(tonePreviewNoteNumber);
-      } else {
-        synthesizer.noteOff(-1);
-      }
+    const { tonePreviewPitchIndex } = attrs;
+    if (tonePreviewPitchIndex !== undefined) {
+      sequencer.setPreviewTone(tonePreviewPitchIndex);
     }
   }, true);
 

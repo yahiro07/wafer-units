@@ -1,5 +1,5 @@
 export const uiColors = {
-  clPageBg: "#eee",
+  clPageBg: "#aaa",
   clPageText: "#457",
   clControlBg: "#ccc",
   clControlEdge: "#0f0",

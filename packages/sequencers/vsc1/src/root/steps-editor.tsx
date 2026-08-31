@@ -5,14 +5,13 @@ import { Note } from "@/defs/definitions";
 import { actions } from "@/root/actions";
 import { store } from "@/root/store";
 import { startDragSession } from "@/utils/drag-session";
-import { clampValue, seqNumbers } from "@/utils/helpers";
+import { bottomLimit, clampValue, seqNumbers } from "@/utils/helpers";
 import { useRef } from "preact/hooks";
 
 const uiConfigs = {
   stepCellWidth: 48,
   stepCellHeight: 28,
   numPitches: 25,
-  pitchYDragStep: 4,
 };
 
 const tapConfigs = {
@@ -58,7 +57,10 @@ function cellFromPointer(
 }
 
 function pitchFromDrag(startY: number, currentY: number, basePitch: number) {
-  const delta = Math.round((startY - currentY) / uiConfigs.pitchYDragStep);
+  const numRows = (store.state.patternLength / 16) >>> 0;
+  const rowHeight = 360 / numRows;
+  const pitchYDragStep = bottomLimit(rowHeight / 24, 5);
+  const delta = Math.round((startY - currentY) / pitchYDragStep);
   return clampPitch(basePitch + delta);
 }
 
@@ -314,7 +316,7 @@ const NotesLayer = ({
           key={note.id}
           style={{
             left: (note.position - stepsRange.offset) * stepCellWidth,
-            bottom: note.pitch * stepCellHeight * 0.02,
+            bottom: `calc(${note.pitch} / 24 * (100% - ${stepCellHeight}px))`,
             width: note.duration * stepCellWidth,
             height: stepCellHeight,
           }}

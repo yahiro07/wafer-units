@@ -24,4 +24,5 @@ export type ISequencer = {
   start(): void;
   processStep(stepIndex: number, time: number, unitDuration: number): void;
   stop(): void;
+  setPreviewTone(pitchIndex: number): void;
 };

@@ -2,23 +2,32 @@ import { cz } from "@/common/css-realm";
 import { ComponentChildren } from "preact";
 
 export const Button = ({
+  className,
   children,
   onClick,
-  height = 42,
+  height = 36,
   asr = 1.25,
   active,
+  disabled,
 }: {
+  className?: string;
   children?: ComponentChildren;
   onClick?: () => void;
   height?: number;
   active?: boolean;
+  disabled?: boolean;
   asr?: number;
 }) => {
   const width = height * asr;
   return (
     <button
       onClick={onClick}
-      class={cz(styles.base, active && "active")}
+      class={cz(
+        styles.base,
+        active && "active",
+        disabled && "disabled",
+        className,
+      )}
       style={{ width, height }}
     >
       {children}
@@ -28,7 +37,7 @@ export const Button = ({
 const styles = {
   base: cz(
     "bg-clButtonBg rounded-[2px] flex-c cursor-pointer hover:opacity-90",
-    "text-clButtonText text-18px",
     "[&.active]:(bg-clPrimary text-black)",
+    "[&.disabled]:(opacity-40 pointer-events-none)",
   ),
 };

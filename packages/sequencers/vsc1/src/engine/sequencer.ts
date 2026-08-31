@@ -4,7 +4,11 @@ import {
   SequencerEditState,
   defaultSequencerEditState,
 } from "@/defs/definitions";
-import { ISequencer, ISequencerListener } from "@/defs/interfaces";
+import {
+  ISequencer,
+  ISequencerListener,
+  ISynthesizer,
+} from "@/defs/interfaces";
 
 const majorSubDegrees = [0, 2, 4, 5, 7, 9, 11];
 const minorSubDegrees = [0, 2, 3, 5, 7, 8, 10];
@@ -22,6 +26,7 @@ function createScaleNoteNumbers(keyRoot: number, mode: "major" | "minor") {
 
 export function createSequencer(
   unitInterface: UnitInterface | undefined,
+  synthesizer: ISynthesizer | undefined,
 ): ISequencer {
   const noteOutputPort = unitInterface?.createNoteOutputPort();
 
@@ -35,7 +40,27 @@ export function createSequencer(
   };
   let listener: ISequencerListener | null = null;
 
+  let previewToneNoteNumber = -1;
+
   const internal = {
+    emitPreviewTone(noteNumber: number, isOn: boolean) {
+      const dest = noteOutputPort ?? synthesizer;
+      if (isOn) {
+        dest?.noteOn(noteNumber);
+      } else {
+        dest?.noteOff(noteNumber);
+      }
+    },
+    playPreviewTone(noteNumber: number) {
+      internal.stopPreviewTone();
+      internal.emitPreviewTone(noteNumber, true);
+      previewToneNoteNumber = noteNumber;
+    },
+    stopPreviewTone() {
+      if (previewToneNoteNumber !== -1) {
+        internal.emitPreviewTone(previewToneNoteNumber, false);
+      }
+    },
     playNote(note: number, time: number, duration: number) {
       noteOutputPort?.noteOn(note, time);
       noteOutputPort?.noteOff(note, time + duration);
@@ -86,6 +111,15 @@ export function createSequencer(
     },
     setListener(_listener) {
       listener = _listener;
+    },
+    setPreviewTone(pitchIndex: number) {
+      if (pitchIndex !== -1) {
+        const root = internal.getShiftingRootIndex();
+        const noteNumber = internal.getOutputNoteNumber(root, pitchIndex);
+        internal.playPreviewTone(noteNumber);
+      } else {
+        internal.stopPreviewTone();
+      }
     },
   };
 }
