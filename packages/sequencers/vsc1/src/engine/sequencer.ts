@@ -1,4 +1,4 @@
-import { SongKeySpec, UnitInterface } from "wafer-host/unit-types";
+import { UnitInterface } from "wafer-host/unit-types";
 import { clampValue } from "@/utils/helpers";
 import {
   SequencerEditState,
@@ -48,7 +48,8 @@ export function createSequencer(
       noteOutputPort?.noteOff(note, time + duration);
     },
     getOutputNoteNumber(pitch: number) {
-      return clampValue(48 + pitch, 0, 127);
+      const shift = editState.octaveShift;
+      return clampValue(48 + pitch + shift * 12, 0, 127);
     },
   };
 
@@ -56,7 +57,6 @@ export function createSequencer(
     setState(attrs: Partial<SequencerEditState>) {
       Object.assign(editState, attrs);
     },
-    setKey(_keySpec: SongKeySpec) {},
     start() {},
     processStep(stepIndex, time, unitDuration) {
       const shift = editState.baseStep === "8th" ? 1 : 0;

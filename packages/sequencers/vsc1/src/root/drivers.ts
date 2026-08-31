@@ -23,7 +23,6 @@ function setupUnit() {
     },
     hostCallbacks: {
       setKey(keySpec) {
-        sequencer.setKey(keySpec);
         store.setKeyLabel(mapKeySpecToKeysName(keySpec));
         store.setKeyTranspose(keySpec.keyTranspose);
       },

@@ -1,5 +1,4 @@
 import { SequencerEditState } from "@/defs/definitions";
-import { SongKeySpec } from "wafer-host/unit-types";
 
 export type NoteModifierSpec = {
   slide: boolean;
@@ -19,7 +18,6 @@ export type ISequencerListener = {
 
 export type ISequencer = {
   setState(attrs: Partial<SequencerEditState>): void;
-  setKey(keySpec: SongKeySpec): void;
   setListener(listener: ISequencerListener | null): void;
   start(): void;
   processStep(stepIndex: number, time: number, unitDuration: number): void;

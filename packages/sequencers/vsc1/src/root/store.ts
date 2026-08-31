@@ -35,11 +35,11 @@ export const store = createStore<StoreState>({
   keyLabel: "C/Am",
 });
 
-if (appEnvs.isDevelopment) {
+if (appEnvs.isDevelopment && 0) {
   store.assign({
     keyMode: "minor",
-    keyLabel: "C#/A#m",
-    keyTranspose: 1,
+    keyLabel: "G/Em",
+    keyTranspose: 7,
     pitchMode: "diatonic",
   });
 }

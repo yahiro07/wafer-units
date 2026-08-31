@@ -57,12 +57,51 @@ function cellFromPointer(
   };
 }
 
+// function pitchFromDrag(startY: number, currentY: number, basePitch: number) {
+//   const numRows = (store.state.patternLength / 16) >>> 0;
+//   const rowHeight = 360 / numRows;
+//   const pitchYDragStep = bottomLimit(rowHeight / uiConfigs.numPitches, 5);
+//   const delta = Math.round((startY - currentY) / pitchYDragStep);
+//   return clampPitch(basePitch + delta);
+// }
+
+const maskSubIndices = [1, 3, 6, 8, 10];
+
+function isOutOfScale(pitch: number, keyTranspose: number) {
+  return maskSubIndices.includes((pitch + keyTranspose + 12) % 12);
+}
+function diatonicPitches(keyTranspose: number) {
+  return seqNumbers(uiConfigs.numPitches).filter(
+    (p) => !isOutOfScale(p, keyTranspose),
+  );
+}
 function pitchFromDrag(startY: number, currentY: number, basePitch: number) {
   const numRows = (store.state.patternLength / 16) >>> 0;
   const rowHeight = 360 / numRows;
-  const pitchYDragStep = bottomLimit(rowHeight / uiConfigs.numPitches, 5);
+  const numPitchesY =
+    uiConfigs.numPitches * (store.state.pitchMode === "diatonic" ? 7 / 12 : 1);
+  const pitchYDragStep = bottomLimit(
+    rowHeight / numPitchesY,
+    5,
+  );
   const delta = Math.round((startY - currentY) / pitchYDragStep);
-  return clampPitch(basePitch + delta);
+  if (store.state.pitchMode !== "diatonic") {
+    return clampPitch(basePitch + delta);
+  }
+  const allowed = diatonicPitches(store.state.keyTranspose);
+  let idx = allowed.indexOf(basePitch);
+  if (idx < 0) {
+    idx = 0;
+    let best = Infinity;
+    for (let i = 0; i < allowed.length; i++) {
+      const d = Math.abs(allowed[i] - basePitch);
+      if (d < best) {
+        best = d;
+        idx = i;
+      }
+    }
+  }
+  return allowed[clampValue(idx + delta, 0, allowed.length - 1)];
 }
 
 function hitTestNote(notes: Note[], cell: Cell): Note | undefined {
@@ -289,7 +328,7 @@ const NotesLayer = ({
   stepsRange: StepsRange;
   isPrimaryNotes: boolean;
 }) => {
-  const { notes, previewNote } = store.useSnapshot();
+  const { notes, previewNote, octaveShift } = store.useSnapshot();
   const { stepCellWidth, stepCellHeight } = uiConfigs;
   const visibleNotes = notes.filter(
     (note) =>
@@ -322,7 +361,8 @@ const NotesLayer = ({
             height: stepCellHeight,
           }}
         >
-          {note.pitch}. {mapPitchIndexToPitchName(note.pitch)}
+          {note.pitch}.{" "}
+          {mapPitchIndexToPitchName(note.pitch + octaveShift * 12)}
         </div>
       ))}
     </div>
@@ -363,7 +403,7 @@ const StepsBarEditor = ({
 };
 
 const HeadIndicator = () => {
-  return <div class="w-12px h-40px bd-#888"></div>;
+  return <div class="w-16px h-40px bd-#888"></div>;
 };
 
 const StepsEditorRootInner = () => {

@@ -15,6 +15,6 @@ const pitchNameSeries = [
 
 export function mapPitchIndexToPitchName(pitchIndex: number) {
   const octave = Math.floor(pitchIndex / 12) + 3;
-  const name = pitchNameSeries[pitchIndex % 12];
+  const name = pitchNameSeries[(pitchIndex + 120) % 12];
   return `${name}${octave}`;
 }

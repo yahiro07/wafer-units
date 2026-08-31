@@ -34,7 +34,7 @@ const handlePitchCellPointerDown = (e0: PointerEvent, index: number) => {
 const maskSubIndices = [1, 3, 6, 8, 10];
 
 export const PitchPreviewColumn = () => {
-  const { keyTranspose, pitchMode, keyMode } = store.useSnapshot();
+  const { keyTranspose, pitchMode, keyMode, octaveShift } = store.useSnapshot();
   return (
     <div class={styles.base}>
       <div class={styles.list}>
@@ -52,7 +52,7 @@ export const PitchPreviewColumn = () => {
               data-pitch-index={i}
               onPointerDown={(e) => handlePitchCellPointerDown(e, i)}
             >
-              {i}. {mapPitchIndexToPitchName(i)}
+              {i}. {mapPitchIndexToPitchName(i + octaveShift * 12)}
             </div>
           );
         })}

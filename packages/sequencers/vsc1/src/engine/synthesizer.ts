@@ -28,7 +28,7 @@ export function createSynthesizer(
       osc.frequency.value = freq;
       osc.start(time);
       const amp = ac.createGain();
-      amp.gain.value = 0.5;
+      amp.gain.value = 0.2;
       osc.connect(amp).connect(destinationNode);
       stopFn = () => {
         osc.stop(time);
