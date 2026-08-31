@@ -17,6 +17,7 @@
     "qulex",
     "oxlint",
     "preact",
-    "lerp"
+    "lerp",
+    "unocss"
   ]
 }

@@ -8,11 +8,11 @@
   },
   "devDependencies": {
     "@preact/preset-vite": "catalog:",
-    "@unocss/preset-wind4": "^66.7.5",
-    "@unocss/vite": "^66.7.5",
+    "@unocss/preset-wind4": "catalog:",
+    "@unocss/vite": "catalog:",
     "mini-css": "catalog:",
     "preact": "catalog:",
     "snap-store": "catalog:",
-    "unocss": "^66.7.5"
+    "unocss": "catalog:"
   }
 }
