@@ -24,6 +24,29 @@ function remapStepNotes(
   });
 }
 
+function nearestPitch(pitch: number, pitches: number[]): number {
+  let best = pitches[0];
+  let bestDist = Math.abs(pitch - best);
+  for (const p of pitches) {
+    const d = Math.abs(pitch - p);
+    if (d < bestDist) {
+      bestDist = d;
+      best = p;
+    }
+  }
+  return best;
+}
+
+function snapStepNotesToPitches(
+  stepNotes: number[],
+  pitches: number[],
+): number[] {
+  return stepNotes.map((note) => {
+    if (note < 0 || pitches.includes(note)) return note;
+    return nearestPitch(note, pitches);
+  });
+}
+
 const actionsInternal = {
   setPitchPresetIndex(nextIndex: number, remapNotes: boolean) {
     const currentIndex = store.state.pitchPresetIndex;
@@ -97,6 +120,9 @@ export const actions = {
       : pitches.filter((p) => p !== pitchIndex);
     newPitchIndices.sort((a, b) => a - b);
     store.setPitchIndices(newPitchIndices);
+    store.setStepNotes(
+      snapStepNotesToPitches(store.state.stepNotes, newPitchIndices),
+    );
   },
   toggleAccent(stepIndex: number) {
     store.setStepModifierFlags((prev) =>
