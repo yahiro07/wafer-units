@@ -17,6 +17,7 @@ import {
 import { ShiftSelector } from "@/components/shift-selector";
 import { useMemo } from "preact/hooks";
 import { actions } from "@/root/actions";
+import { mapKeySpecToKeyName } from "@/utils/key-name-helper";
 
 const octaveShiftOptions = createPlainSelectorOptions([-2, -1, 0, 1, 2]);
 
@@ -94,18 +95,17 @@ const FeatureHeader = ({
 };
 
 const useEditScaleModeOptions = () => {
-  // const { keyLabel } = store.useSnapshot();
+  const { keySpec } = store.useSnapshot();
   return useMemo(() => {
+    const keyName = mapKeySpecToKeyName(keySpec);
+    console.log({ keySpec, keyName });
     return createSelectorOptions<EditScaleMode>([
       ["chromatic", "chromatic"],
-      [
-        "diatonic",
-        "diatonic",
-        //`diatonic (${keyLabel})`
-      ],
+      ["diatonic", `diatonic (${keyName})`],
     ]);
-  }, []);
+  }, [keySpec]);
 };
+
 const PitchModeContainer = () => {
   const { editScaleMode: pitchMode } = store.useSnapshot();
   const editScaleModeOptions = useEditScaleModeOptions();

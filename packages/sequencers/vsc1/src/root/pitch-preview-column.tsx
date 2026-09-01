@@ -48,7 +48,10 @@ const PitchesList = () => {
     <div class={styles.list}>
       {seqNumbers(37).map((_i) => {
         const i = 36 - _i;
-        const isTonic = i % 12 === (keySpec.root + 12) % 12;
+        const isTonic =
+          editScaleMode === "diatonic"
+            ? i % 12 === (keySpec.root + 12) % 12
+            : i % 12 === 0;
         const isMasked = maskSubIndices?.includes((i - keySpec.root + 24) % 12);
         return (
           <div

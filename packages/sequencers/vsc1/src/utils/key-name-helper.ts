@@ -1,21 +1,21 @@
-import { SongKeySpec } from "wafer-host/unit-types";
+import { KeySpec } from "@/defs/definitions";
 
 const nameSeries = [
-  "C/Am",
-  "C#/Am#",
-  "D/Bm",
-  "D#/Cm",
-  "E/C#m",
-  "F/Dm",
-  "F#/D#m",
-  "G/Em",
-  "G#/Fm",
-  "A/F#m",
-  "A#/Gm",
-  "B/G#m",
+  "C",
+  "C#",
+  "D",
+  "D#",
+  "E",
+  "F",
+  "F#",
+  "G",
+  "G#",
+  "A",
+  "A#",
+  "B",
 ];
 
-export function mapKeySpecToKeysName(keySpec: SongKeySpec) {
-  const index = (keySpec.keyTranspose + 24) % 12;
-  return nameSeries[index];
+export function mapKeySpecToKeyName(keySpec: KeySpec) {
+  const index = (keySpec.root + 24) % 12;
+  return nameSeries[index] + (keySpec.mode === "minor" ? "m" : "");
 }
