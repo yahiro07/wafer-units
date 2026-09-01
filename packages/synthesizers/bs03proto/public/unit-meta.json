@@ -1,8 +1,6 @@
 {
-  "name": "bs03",
+  "name": "bs03proto",
   "unitType": "instrument",
-  "outputSignalTypes": "audio",
-  "inputSignalTypes": "note",
   "protocol": "wafer-v01",
   "integrationFormat": "iframe",
   "repositoryUrl": "https://github.com/yahiro07/wafer-units",

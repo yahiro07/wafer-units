@@ -11,6 +11,6 @@ export default defineConfig({
   optimizeDeps: {
     exclude: ["wafer-host", "snap-store"],
   },
-  build: { outDir: "../../../dist/bs03", emptyOutDir: true },
+  build: { outDir: "../../../dist/bs03proto", emptyOutDir: true },
   server: { port: 3000 },
 });
