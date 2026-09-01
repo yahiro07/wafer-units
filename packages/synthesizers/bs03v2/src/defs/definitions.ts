@@ -1,4 +1,3 @@
-import { appEnvs } from "@/common/app-envs";
 import { fillNumbers, seqNumbers } from "@/utils/helpers";
 import { PickKeysForValueType } from "@/utils/utility-types";
 
@@ -73,6 +72,3 @@ export const pitchPresets = [
   [0, 1, 7, 10],
   [0, 3, 7, 10, 11, 12],
 ];
-if (appEnvs.isDevelopment) {
-  pitchPresets.push([0]);
-}

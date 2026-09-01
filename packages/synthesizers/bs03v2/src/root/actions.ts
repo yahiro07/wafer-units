@@ -27,13 +27,15 @@ function remapStepNotes(
 const actionsInternal = {
   setPitchPresetIndex(nextIndex: number, remapNotes: boolean) {
     const currentIndex = store.state.pitchPresetIndex;
+    const currentPitches = pitchPresets[currentIndex];
+    const nextPitches = pitchPresets[nextIndex];
     store.setPitchPresetIndex(nextIndex);
-    store.setPitchIndices(pitchPresets[nextIndex]);
+    store.setPitchIndices(nextPitches);
     if (remapNotes) {
       const newNotes = remapStepNotes(
         store.state.stepNotes,
-        pitchPresets[currentIndex],
-        pitchPresets[nextIndex],
+        currentPitches,
+        nextPitches,
       );
       store.setStepNotes(newNotes);
     }
