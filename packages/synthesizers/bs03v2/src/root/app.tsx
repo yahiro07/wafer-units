@@ -65,6 +65,7 @@ const ParameterSlider = ({
         step={step}
         onChange={(v) => actions.setParameter(paramKey, v)}
         invertY={invertY}
+        toggleOnClick
       />
     </LabeledBox>
   );

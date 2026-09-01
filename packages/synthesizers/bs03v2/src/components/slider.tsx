@@ -10,6 +10,7 @@ export const Slider = ({
   max = 1,
   step = 0.01,
   invertY,
+  toggleOnClick,
 }: {
   value: number;
   onChange: (value: number) => void;
@@ -17,12 +18,20 @@ export const Slider = ({
   max?: number;
   step?: number;
   invertY?: boolean;
+  toggleOnClick?: boolean;
 }) => {
   const d = 24.5;
   let transY = linearInterpolate(value, min, max, d, -d);
   if (invertY) {
     transY *= -1;
   }
+  const toggle = () => {
+    if (value < (max - min) / 2) {
+      onChange(max);
+    } else {
+      onChange(min);
+    }
+  };
   return (
     <KnobFrame
       value={value}
@@ -31,9 +40,15 @@ export const Slider = ({
       step={step}
       onChange={onChange}
       invertY={invertY}
+      onClick={toggleOnClick ? toggle : undefined}
     >
       <div class={styles}>
-        <div class="tick" style={{ transform: `translateY(${transY}px)` }} />
+        <div
+          class="tick"
+          style={{
+            transform: `translateY(${transY}px)`,
+          }}
+        />
       </div>
     </KnobFrame>
   );
