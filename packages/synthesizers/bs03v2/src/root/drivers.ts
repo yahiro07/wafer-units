@@ -76,7 +76,6 @@ function setupSynchronization() {
       sequencer.patchEditState(sequencerAttrs);
     }
     if (bpm !== undefined) {
-      // synthesizer.setBpm(bpm);
       sequencerTickDriver.setBpm(bpm);
     }
 
