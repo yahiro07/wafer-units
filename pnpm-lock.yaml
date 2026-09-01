@@ -724,21 +724,6 @@ importers:
         version: 66.7.5(vite@8.2.2(@types/node@26.4.0)(jiti@2.7.0))
 
   packages/synthesizers/bs03:
-    dependencies:
-      '@preact/preset-vite':
-        specifier: 'catalog:'
-        version: 2.10.6(@babel/core@7.29.7)(preact@10.29.8)(vite@8.2.2(@types/node@26.4.0)(jiti@2.7.0))
-      preact:
-        specifier: 'catalog:'
-        version: 10.29.8
-      qulex:
-        specifier: 'catalog:'
-        version: '@yahiro07/qulex@0.1.7'
-      snap-store:
-        specifier: 'catalog:'
-        version: 0.1.14(preact@10.29.8)(react@19.2.8)
-
-  packages/synthesizers/bs03v2:
     devDependencies:
       '@preact/preset-vite':
         specifier: 'catalog:'
@@ -761,6 +746,21 @@ importers:
       unocss:
         specifier: 'catalog:'
         version: 66.7.5(vite@8.2.2(@types/node@26.4.0)(jiti@2.7.0))
+
+  packages/synthesizers/bs03proto:
+    dependencies:
+      '@preact/preset-vite':
+        specifier: 'catalog:'
+        version: 2.10.6(@babel/core@7.29.7)(preact@10.29.8)(vite@8.2.2(@types/node@26.4.0)(jiti@2.7.0))
+      preact:
+        specifier: 'catalog:'
+        version: 10.29.8
+      qulex:
+        specifier: 'catalog:'
+        version: '@yahiro07/qulex@0.1.7'
+      snap-store:
+        specifier: 'catalog:'
+        version: 0.1.14(preact@10.29.8)(react@19.2.8)
 
   packages/synthesizers/capella:
     devDependencies:
