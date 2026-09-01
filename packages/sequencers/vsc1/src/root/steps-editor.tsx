@@ -47,22 +47,22 @@ const rangeHelper = {
 };
 
 const cellHelper = {
+  pointerPos(e: PointerEvent) {
+    const el = e.currentTarget as HTMLElement;
+    const rect = el.getBoundingClientRect();
+    return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+  },
+  stepXFromPointer(pos: { x: number }, stepsRange: StepsRange) {
+    return stepsRange.offset + pos.x / uiConfigs.stepCellWidth;
+  },
   fromPointer(pos: { x: number; y: number }, stepsRange: StepsRange): Cell {
     return {
       x: clampValue(
-        stepsRange.offset + Math.floor(pos.x / uiConfigs.stepCellWidth),
+        Math.floor(cellHelper.stepXFromPointer(pos, stepsRange)),
         rangeHelper.minX(stepsRange),
         rangeHelper.maxX(stepsRange),
       ),
     };
-  },
-  fromEvent(e: PointerEvent, stepsRange: StepsRange): Cell {
-    const el = e.currentTarget as HTMLElement;
-    const rect = el.getBoundingClientRect();
-    return cellHelper.fromPointer(
-      { x: e.clientX - rect.left, y: e.clientY - rect.top },
-      stepsRange,
-    );
   },
 };
 
@@ -121,20 +121,28 @@ const pitchHelper = {
 };
 
 const hitHelper = {
-  noteAt(notes: Note[], cell: Cell): Note | undefined {
-    let hit: Note | undefined;
-    for (const note of notes) {
-      if (note.position <= cell.x && cell.x < note.position + note.duration) {
-        hit = note;
-      }
-    }
-    return hit;
-  },
   nextId(notes: Note[]) {
     return notes.length > 0 ? Math.max(...notes.map((note) => note.id)) + 1 : 0;
   },
-  isResizeGrab(note: Note, cell: Cell) {
-    return note.duration > 1 && cell.x === note.position + note.duration - 1;
+  hitTestNote(
+    notes: Note[],
+    cell: Cell,
+    stepX: number,
+  ): { note: Note; part: "body" | "tail" } | undefined {
+    let bodyHit: { note: Note; part: "body" } | undefined;
+    let tailHit: { note: Note; part: "tail" } | undefined;
+    for (const note of notes) {
+      const x = stepX - (note.position + note.duration);
+      if (-0.3 <= x && x <= 0.1) {
+        tailHit = { note, part: "tail" };
+      } else if (
+        note.position <= cell.x &&
+        cell.x < note.position + note.duration
+      ) {
+        bodyHit = { note, part: "body" };
+      }
+    }
+    return tailHit ?? bodyHit;
   },
 };
 
@@ -366,17 +374,25 @@ function handleStepsBarEditorPointerDown(
   stepsRange: StepsRange,
 ) {
   if (e.button !== 0) return;
-  const startCell = cellHelper.fromEvent(e, stepsRange);
-  const hit = hitHelper.noteAt(store.state.notes, startCell);
+  const pos = cellHelper.pointerPos(e);
+  const startCell = cellHelper.fromPointer(pos, stepsRange);
+  const hit = hitHelper.hitTestNote(
+    store.state.notes,
+    startCell,
+    cellHelper.stepXFromPointer(pos, stepsRange),
+  );
   if (!hit) {
     editModeHandlers.create(e, stepsRange, startCell);
     return;
   }
-  if (hitHelper.isResizeGrab(hit, startCell)) {
-    editModeHandlers.resize(e, stepsRange, startCell, hit);
-  } else {
-    editModeHandlers.move(e, stepsRange, startCell, hit);
+  if (hit.part === "tail") {
+    const lastCell = {
+      x: hit.note.position + hit.note.duration - 1,
+    };
+    editModeHandlers.resize(e, stepsRange, lastCell, hit.note);
+    return;
   }
+  editModeHandlers.move(e, stepsRange, startCell, hit.note);
 }
 
 const NotesLayer = ({
