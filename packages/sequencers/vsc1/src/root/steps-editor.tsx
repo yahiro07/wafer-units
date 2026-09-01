@@ -187,7 +187,6 @@ const previewHelper = {
     original: Note,
     start: Cell,
     current: Cell,
-    pitch: number,
     stepsRange: StepsRange,
   ): Note {
     let duration = original.duration + (current.x - start.x);
@@ -198,7 +197,6 @@ const previewHelper = {
     return {
       ...original,
       duration,
-      pitch,
     };
   },
   begin(note: Note) {
@@ -345,20 +343,8 @@ const editModeHandlers = {
         ...sharedDragCallbacks,
         onMove(ev) {
           const current = cellHelper.fromPointer(ev.position, stepsRange);
-          const pitch = pitchHelper.fromDrag(
-            ev.originalPosition.y,
-            ev.position.y,
-            originalNote.pitch,
-          );
-          pitchHelper.previewIfChanged(pitch);
           store.setPreviewNote(
-            previewHelper.resize(
-              originalNote,
-              startCell,
-              current,
-              pitch,
-              stepsRange,
-            ),
+            previewHelper.resize(originalNote, startCell, current, stepsRange),
           );
         },
         onUp(ev) {
