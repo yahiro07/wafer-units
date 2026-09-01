@@ -53,10 +53,10 @@ export function createSynthesizer(
         osc.slideTo(latestNoteNumber, noteNumber, time, time + 0.06);
       } else {
         osc.update(noteNumber);
+        filter.update(noteNumber);
+        filter.gateOn(time, modSpec?.accent);
+        amp.gateOn(time, modSpec?.accent);
       }
-      filter.update(noteNumber);
-      filter.gateOn(time, modSpec?.accent);
-      amp.gateOn(time, modSpec?.accent);
       latestNoteNumber = noteNumber;
     },
     noteOff(noteNumber, time = ac.currentTime) {
