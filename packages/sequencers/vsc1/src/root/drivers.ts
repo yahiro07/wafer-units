@@ -6,7 +6,6 @@ import { useEffect } from "preact/hooks";
 import { createSynthesizer } from "@/engine/synthesizer";
 import { ISequencerListener } from "@/defs/interfaces";
 import { createSequencer } from "@/engine/sequencer";
-import { mapKeySpecToKeysName } from "@/utils/key-name-helper";
 import { createSequencerTickDriver } from "@/utils/sequencer-tick-driver";
 
 const unitInterface = queryUnitInterface("wafer-v01");
@@ -27,9 +26,11 @@ function setupUnit() {
       setBpm(bpm) {
         sequencerTickDriver.setBpm(bpm);
       },
-      setKey(keySpec) {
-        store.setKeyLabel(mapKeySpecToKeysName(keySpec));
-        store.setKeyTranspose(keySpec.keyTranspose);
+      setKey(songKeySpec) {
+        store.setKeySpec({
+          mode: songKeySpec.mode,
+          root: songKeySpec.root,
+        });
       },
     },
     clockHandlers: {
@@ -46,7 +47,7 @@ function setupUnit() {
           shiftEnabled: 1,
           patternLength: 1,
           notes: 1,
-          pitchMode: 1,
+          editScaleMode: 1,
         });
       },
       applyState(state) {

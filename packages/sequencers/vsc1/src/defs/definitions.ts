@@ -4,7 +4,7 @@ export type BaseStep = "16th" | "8th" | "4th";
 
 export type PatternLength = 16 | 32 | 64 | 128 | 256;
 
-export type PitchMode = "chromatic" | "diatonic";
+export type EditScaleMode = "chromatic" | "diatonic";
 
 export type Note = {
   id: number;
@@ -44,3 +44,8 @@ if (appEnvs.isDevelopment) {
     ],
   });
 }
+
+export type KeySpec = {
+  root: number; //-12~12, C for 0
+  mode: "major" | "minor";
+};

@@ -65,27 +65,32 @@ function cellFromPointer(
 //   return clampPitch(basePitch + delta);
 // }
 
-const maskSubIndices = [1, 3, 6, 8, 10];
+const maskSubIndicesMajor = [1, 3, 6, 8, 10];
+const maskSubIndicesMinor = [1, 4, 6, 9, 11];
 
-function isOutOfScale(pitch: number, keyTranspose: number) {
-  return maskSubIndices.includes((pitch + keyTranspose + 12) % 12);
+function isOutOfScale(pitch: number, root: number, mode: "major" | "minor") {
+  const maskSubIndices =
+    mode === "major" ? maskSubIndicesMajor : maskSubIndicesMinor;
+  return maskSubIndices.includes((pitch - root + 24) % 12);
 }
-function diatonicPitches(keyTranspose: number) {
+function diatonicPitches(root: number, mode: "major" | "minor") {
   return seqNumbers(uiConfigs.numPitches).filter(
-    (p) => !isOutOfScale(p, keyTranspose),
+    (p) => !isOutOfScale(p, root, mode),
   );
 }
 function pitchFromDrag(startY: number, currentY: number, basePitch: number) {
   const numRows = (store.state.patternLength / 16) >>> 0;
   const rowHeight = 360 / numRows;
   const numPitchesY =
-    uiConfigs.numPitches * (store.state.pitchMode === "diatonic" ? 7 / 12 : 1);
+    uiConfigs.numPitches *
+    (store.state.editScaleMode === "diatonic" ? 7 / 12 : 1);
   const pitchYDragStep = bottomLimit(rowHeight / numPitchesY, 5);
   const delta = Math.round((startY - currentY) / pitchYDragStep);
-  if (store.state.pitchMode !== "diatonic") {
+  if (store.state.editScaleMode !== "diatonic") {
     return clampPitch(basePitch + delta);
   }
-  const allowed = diatonicPitches(store.state.keyTranspose);
+  const { root, mode } = store.state.keySpec;
+  const allowed = diatonicPitches(root, mode);
   let idx = allowed.indexOf(basePitch);
   if (idx < 0) {
     idx = 0;

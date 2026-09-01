@@ -33,23 +33,27 @@ const handlePitchCellPointerDown = (e0: PointerEvent, index: number) => {
   });
 };
 
-const maskSubIndices = [1, 3, 6, 8, 10];
+const maskSubIndicesMajor = [1, 3, 6, 8, 10];
+const maskSubIndicesMinor = [1, 4, 6, 9, 11];
 
 const PitchesList = () => {
-  const { keyTranspose, pitchMode, keyMode, octaveShift } = store.useSnapshot();
+  const { keySpec, editScaleMode, octaveShift } = store.useSnapshot();
+  const maskSubIndices =
+    editScaleMode === "diatonic"
+      ? keySpec.mode === "major"
+        ? maskSubIndicesMajor
+        : maskSubIndicesMinor
+      : undefined;
   return (
     <div class={styles.list}>
       {seqNumbers(37).map((_i) => {
         const i = 36 - _i;
-        const tonic =
-          (i + (keyMode === "minor" ? 3 : 0)) % 12 === keyTranspose % 12;
-        const masked =
-          pitchMode === "diatonic" &&
-          maskSubIndices.includes((i + keyTranspose + 12) % 12);
+        const isTonic = i % 12 === (keySpec.root + 12) % 12;
+        const isMasked = maskSubIndices?.includes((i - keySpec.root + 24) % 12);
         return (
           <div
             key={i}
-            class={cz(tonic && "tonic", masked && "masked")}
+            class={cz(isTonic && "tonic", isMasked && "masked")}
             data-pitch-index={i}
             onPointerDown={(e) => handlePitchCellPointerDown(e, i)}
           >

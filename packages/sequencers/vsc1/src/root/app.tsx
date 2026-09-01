@@ -4,7 +4,7 @@ import { IconButton } from "@/components/icon-button";
 import { Icons } from "@/components/icons";
 import { Knob } from "@/components/knob";
 import { SideLabelBox } from "@/components/labeled-controls";
-import { BaseStep, PitchMode } from "@/defs/definitions";
+import { BaseStep, EditScaleMode } from "@/defs/definitions";
 import { useSetupDrivers } from "@/root/drivers";
 import { editActions } from "@/root/edit-actions";
 import { PitchPreviewColumn } from "@/root/pitch-preview-column";
@@ -93,10 +93,10 @@ const FeatureHeader = ({
   );
 };
 
-const usePitchModeOptions = () => {
-  const { keyLabel } = store.useSnapshot();
+const useEditScaleModeOptions = () => {
+  // const { keyLabel } = store.useSnapshot();
   return useMemo(() => {
-    return createSelectorOptions<PitchMode>([
+    return createSelectorOptions<EditScaleMode>([
       ["chromatic", "chromatic"],
       [
         "diatonic",
@@ -104,18 +104,18 @@ const usePitchModeOptions = () => {
         //`diatonic (${keyLabel})`
       ],
     ]);
-  }, [keyLabel]);
+  }, []);
 };
 const PitchModeContainer = () => {
-  const { pitchMode } = store.useSnapshot();
-  const pitchModeOptions = usePitchModeOptions();
+  const { editScaleMode: pitchMode } = store.useSnapshot();
+  const editScaleModeOptions = useEditScaleModeOptions();
   return (
     <SideLabelBox label="SCALE">
       <ShiftSelector
         width={140}
-        options={pitchModeOptions}
+        options={editScaleModeOptions}
         value={pitchMode}
-        onChange={store.setPitchMode}
+        onChange={store.setEditScaleMode}
       />
     </SideLabelBox>
   );
