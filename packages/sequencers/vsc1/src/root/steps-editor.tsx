@@ -211,7 +211,7 @@ const previewHelper = {
       pitch,
     };
   },
-  resize(original: Note, start: Cell, current: Cell): Note {
+  resize(original: Note, start: Cell, current: Cell, pitch: number): Note {
     let duration = original.duration + (current.x - start.x);
     if (duration < 1) duration = 1;
     const maxEnd = store.state.patternLength;
@@ -221,6 +221,7 @@ const previewHelper = {
     return {
       ...original,
       duration,
+      pitch,
     };
   },
   begin(note: Note) {
@@ -392,8 +393,14 @@ const editModeHandlers = {
             stepsRange,
             "both",
           );
+          const pitch = pitchHelper.fromDrag(
+            ev.originalPosition.y,
+            ev.position.y,
+            originalNote.pitch,
+          );
+          pitchHelper.previewIfChanged(pitch);
           previewHelper.set(
-            previewHelper.resize(originalNote, startCell, current),
+            previewHelper.resize(originalNote, startCell, current, pitch),
           );
         },
         onUp(ev) {
