@@ -242,6 +242,15 @@ const tapHelper = {
   },
 };
 
+const cursorHelper = {
+  begin(cursor: "move" | "ew-resize") {
+    document.body.style.cursor = cursor;
+  },
+  end() {
+    document.body.style.cursor = "";
+  },
+};
+
 const dragSessionOptions = { coordinate: "relative" as const };
 
 const sharedDragCallbacks = {
@@ -249,6 +258,7 @@ const sharedDragCallbacks = {
     previewHelper.clear();
   },
   onUpOrCancel() {
+    cursorHelper.end();
     pitchHelper.stopPreview();
   },
 };
@@ -303,6 +313,7 @@ const editModeHandlers = {
   ) {
     const t0 = performance.now();
     previewHelper.begin({ ...originalNote });
+    cursorHelper.begin("move");
     startDragSession(
       e,
       {
@@ -345,6 +356,7 @@ const editModeHandlers = {
   ) {
     const t0 = performance.now();
     previewHelper.begin({ ...originalNote });
+    cursorHelper.begin("ew-resize");
     startDragSession(
       e,
       {
