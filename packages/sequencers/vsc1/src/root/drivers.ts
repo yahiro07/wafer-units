@@ -82,7 +82,13 @@ function setupSynchronization() {
 
     if (stdPlaying !== undefined) {
       if (stdPlaying) {
-        sequencerTickDriver.start(sequencer);
+        sequencerTickDriver.start({
+          start() {
+            sequencer.start(store.state.playHeadIndex * 16);
+          },
+          processStep: sequencer.processStep,
+          stop: sequencer.stop,
+        });
       } else {
         sequencerTickDriver.stop();
       }

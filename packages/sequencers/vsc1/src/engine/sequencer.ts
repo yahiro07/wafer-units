@@ -21,8 +21,17 @@ export function createSequencer(
   );
 
   let listener: ISequencerListener | null = null;
+  let startStepOffset = 0;
 
   let previewToneNoteNumber = -1;
+
+  const stepShifts = {
+    "16th": 0,
+    "8th": 1,
+    "4th": 2,
+  };
+
+  let prevStepIndex = -1;
 
   const internal = {
     emitPreviewTone(noteNumber: number, isOn: boolean) {
@@ -54,21 +63,25 @@ export function createSequencer(
       const shift = editState.octaveShift;
       return clampValue(48 + pitch + shift * 12, 0, 127);
     },
+    processStepInternal(stepIndex: number, time: number, unitDuration: number) {
+      const pos = stepIndex % editState.patternLength;
+      const notes = editState.notes.filter((note) => note.position === pos);
+      for (const note of notes) {
+        const duty = 0.2 + editState.stepDuty * 0.8;
+        const durationSec = note.duration * unitDuration * duty;
+        const noteNumber = internal.getOutputNoteNumber(note.pitch);
+        internal.playNote(noteNumber, time, durationSec);
+      }
+      listener?.onPlayStepPositionChanged(stepIndex);
+    },
   };
-
-  const stepShifts = {
-    "16th": 0,
-    "8th": 1,
-    "4th": 2,
-  };
-
-  let prevStepIndex = -1;
 
   return {
     setState(attrs: Partial<SequencerEditState>) {
       Object.assign(editState, attrs);
     },
-    start() {
+    start(stepOffset) {
+      startStepOffset = stepOffset ?? 0;
       prevStepIndex = -1;
     },
     processStep(stepIndex, time, unitDuration) {
@@ -76,15 +89,11 @@ export function createSequencer(
       stepIndex >>= shift;
       unitDuration *= 1 << shift;
       if (stepIndex !== prevStepIndex) {
-        const pos = stepIndex % editState.patternLength;
-        const notes = editState.notes.filter((note) => note.position === pos);
-        for (const note of notes) {
-          const duty = 0.2 + editState.stepDuty * 0.8;
-          const durationSec = note.duration * unitDuration * duty;
-          const noteNumber = internal.getOutputNoteNumber(note.pitch);
-          internal.playNote(noteNumber, time, durationSec);
-        }
-        listener?.onPlayStepPositionChanged(stepIndex);
+        internal.processStepInternal(
+          startStepOffset + stepIndex,
+          time,
+          unitDuration,
+        );
         prevStepIndex = stepIndex;
       }
     },

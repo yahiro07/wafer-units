@@ -19,7 +19,7 @@ export type ISequencerListener = {
 export type ISequencer = {
   setState(attrs: Partial<SequencerEditState>): void;
   setListener(listener: ISequencerListener | null): void;
-  start(): void;
+  start(stepOffset?: number): void;
   processStep(stepIndex: number, time: number, unitDuration: number): void;
   stop(): void;
   setPreviewTone(pitchIndex: number): void;

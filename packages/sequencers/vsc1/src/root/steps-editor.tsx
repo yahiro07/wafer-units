@@ -532,12 +532,23 @@ const StepsBarEditor = ({
   );
 };
 
-const HeadIndicator = () => {
-  return <div class="w-18px h-44px bd-#888"></div>;
+const HeadIndicator = ({
+  active,
+  onClick,
+}: {
+  active: boolean;
+  onClick: () => void;
+}) => {
+  return (
+    <div
+      class={cz("w-18px h-44px bd-#888 cursor-pointer", active && "bg-#6cf")}
+      onClick={onClick}
+    />
+  );
 };
 
 const StepsEditorRootInner = () => {
-  const { patternLength } = store.useSnapshot();
+  const { patternLength, playHeadIndex } = store.useSnapshot();
   const numRows = (patternLength / 16) >>> 0;
   const height = 360 / numRows;
   return (
@@ -545,7 +556,10 @@ const StepsEditorRootInner = () => {
       {seqNumbers(numRows).map((i) => {
         return (
           <div class="flex-ha gap-2">
-            <HeadIndicator />
+            <HeadIndicator
+              active={i === playHeadIndex}
+              onClick={() => store.setPlayHeadIndex(i)}
+            />
             <StepsBarEditor
               stepsRange={{ offset: i * 16, length: 16 }}
               isPrimaryNotes
