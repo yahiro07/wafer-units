@@ -194,6 +194,17 @@ const Button = ({
   );
 };
 
+export const ParametersLockButton = () => {
+  const { lockParameters } = store.useSnapshot();
+  return (
+    <Button
+      text="lock"
+      active={lockParameters}
+      onClick={actions.toggleLockParameters}
+    />
+  );
+};
+
 const ButtonsRow = () => {
   const { pitchPresetIndex, lockPitchPreset, standalonePlaying } =
     store.useSnapshot();

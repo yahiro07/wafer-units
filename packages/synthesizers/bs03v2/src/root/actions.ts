@@ -45,14 +45,14 @@ export const actions = {
     const nextIndex = (store.state.pitchPresetIndex + 1) % pitchPresets.length;
     actionsInternal.setPitchPresetIndex(nextIndex, true);
   },
-  randomizeParameters() {
-    const parameters = generateRandomParameters();
-    store.setSynthParameters(parameters);
-  },
   randomizePatterns() {
     if (!store.state.lockPitchPreset) {
       const nextIndex = Math.floor(Math.random() * pitchPresets.length);
       actionsInternal.setPitchPresetIndex(nextIndex, false);
+    }
+    if (!store.state.lockParameters) {
+      const parameters = generateRandomParameters();
+      store.setSynthParameters(parameters);
     }
     const { stepNotes, stepModifierFlags } = generateRandomStepPattern(
       store.state.pitchIndices,
@@ -104,6 +104,9 @@ export const actions = {
   toggleLockPitchPreset() {
     store.toggleLockPitchPreset();
   },
+  toggleLockParameters() {
+    store.toggleLockParameters();
+  },
   setSynthParameter(key: keyof SynthParameters, value: number) {
     store.patchSynthParameters({ [key]: value });
   },
@@ -125,18 +128,6 @@ export const actions = {
   toggleBoolParameter<K extends BoolParameterKeys>(key: K) {
     store.patchSynthParameters({ [key]: !store.state.synthParameters[key] });
   },
-  // setPreset(presetKey: string) {
-  //   const preset = allPresets[presetKey];
-  //   if (preset) {
-  //     store.setPresetKey(presetKey);
-  //     store.patchSynthParameters(preset);
-  //   }
-  // },
-  // shiftPreset(dir: 1 | -1) {
-  //   const idx = allPresetKeys.indexOf(store.state.presetKey);
-  //   const nextIdx = (idx + dir + allPresetKeys.length) % allPresetKeys.length;
-  //   actions.setPreset(allPresetKeys[nextIdx]);
-  // },
   async emitPresetData() {
     const { ...attrs } = store.state.synthParameters;
     const jsonText = JSON.stringify(attrs, null, 2).replaceAll(
