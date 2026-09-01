@@ -55,10 +55,21 @@ const cellHelper = {
   stepXFromPointer(pos: { x: number }, stepsRange: StepsRange) {
     return stepsRange.offset + pos.x / uiConfigs.stepCellWidth;
   },
-  fromPointer(pos: { x: number; y: number }, stepsRange: StepsRange): Cell {
+  fromPointer(
+    pos: { x: number; y: number },
+    stepsRange: StepsRange,
+    overflow?: "right" | "both",
+  ): Cell {
+    const x = Math.floor(cellHelper.stepXFromPointer(pos, stepsRange));
+    if (overflow === "both") {
+      return { x };
+    }
+    if (overflow === "right") {
+      return { x: Math.max(x, rangeHelper.minX(stepsRange)) };
+    }
     return {
       x: clampValue(
-        Math.floor(cellHelper.stepXFromPointer(pos, stepsRange)),
+        x,
         rangeHelper.minX(stepsRange),
         rangeHelper.maxX(stepsRange),
       ),
@@ -170,23 +181,10 @@ const hitHelper = {
 };
 
 const previewHelper = {
-  create(
-    id: number,
-    start: Cell,
-    current: Cell,
-    pitch: number,
-    stepsRange: StepsRange,
-  ): Note {
-    const left = clampValue(
-      Math.min(start.x, current.x),
-      rangeHelper.minX(stepsRange),
-      rangeHelper.maxX(stepsRange),
-    );
-    const right = clampValue(
-      Math.max(start.x, current.x),
-      rangeHelper.minX(stepsRange),
-      rangeHelper.maxX(stepsRange),
-    );
+  create(id: number, start: Cell, current: Cell, pitch: number): Note {
+    const patternMaxX = store.state.patternLength - 1;
+    const left = Math.max(0, Math.min(start.x, current.x));
+    const right = Math.min(patternMaxX, Math.max(start.x, current.x));
     return {
       id,
       position: left,
@@ -194,17 +192,10 @@ const previewHelper = {
       pitch,
     };
   },
-  move(
-    original: Note,
-    start: Cell,
-    current: Cell,
-    pitch: number,
-    stepsRange: StepsRange,
-  ): Note {
+  move(original: Note, start: Cell, current: Cell, pitch: number): Note {
     let position = original.position + (current.x - start.x);
-    const minX = rangeHelper.minX(stepsRange);
-    const maxEnd = rangeHelper.endX(stepsRange);
-    if (position < minX) position = minX;
+    if (position < 0) position = 0;
+    const maxEnd = store.state.patternLength;
     if (position + original.duration > maxEnd) {
       position = maxEnd - original.duration;
     }
@@ -214,14 +205,10 @@ const previewHelper = {
       pitch,
     };
   },
-  resize(
-    original: Note,
-    start: Cell,
-    current: Cell,
-    stepsRange: StepsRange,
-  ): Note {
+  resize(original: Note, start: Cell, current: Cell): Note {
     let duration = original.duration + (current.x - start.x);
-    const maxEnd = rangeHelper.endX(stepsRange);
+    if (duration < 1) duration = 1;
+    const maxEnd = store.state.patternLength;
     if (original.position + duration > maxEnd) {
       duration = maxEnd - original.position;
     }
@@ -305,7 +292,11 @@ const editModeHandlers = {
       {
         ...sharedDragCallbacks,
         onMove(ev) {
-          const current = cellHelper.fromPointer(ev.position, stepsRange);
+          const current = cellHelper.fromPointer(
+            ev.position,
+            stepsRange,
+            "right",
+          );
           const pitch = pitchHelper.fromDrag(
             ev.originalPosition.y,
             ev.position.y,
@@ -313,13 +304,7 @@ const editModeHandlers = {
           );
           pitchHelper.previewIfChanged(pitch);
           store.setPreviewNote(
-            previewHelper.create(
-              originalNote.id,
-              startCell,
-              current,
-              pitch,
-              stepsRange,
-            ),
+            previewHelper.create(originalNote.id, startCell, current, pitch),
           );
         },
         onUp() {
@@ -355,13 +340,7 @@ const editModeHandlers = {
           );
           pitchHelper.previewIfChanged(pitch);
           store.setPreviewNote(
-            previewHelper.move(
-              originalNote,
-              startCell,
-              current,
-              pitch,
-              stepsRange,
-            ),
+            previewHelper.move(originalNote, startCell, current, pitch),
           );
         },
         onUp(ev) {
@@ -390,9 +369,13 @@ const editModeHandlers = {
       {
         ...sharedDragCallbacks,
         onMove(ev) {
-          const current = cellHelper.fromPointer(ev.position, stepsRange);
+          const current = cellHelper.fromPointer(
+            ev.position,
+            stepsRange,
+            "both",
+          );
           store.setPreviewNote(
-            previewHelper.resize(originalNote, startCell, current, stepsRange),
+            previewHelper.resize(originalNote, startCell, current),
           );
         },
         onUp(ev) {
@@ -465,19 +448,26 @@ const NotesLayer = ({
         !isPrimaryNotes && "secondary",
       )}
     >
-      {displayNotes.map((note) => (
-        <div
-          key={note.id}
-          style={{
-            left: (note.position - stepsRange.offset) * stepCellWidth,
-            bottom: `calc(${note.pitch} / ${uiConfigs.numPitches - 1} * (100% - ${stepCellHeight}px))`,
-            width: note.duration * stepCellWidth,
-            height: stepCellHeight,
-          }}
-        >
-          {mapPitchIndexToPitchName(note.pitch + octaveShift * 12)}
-        </div>
-      ))}
+      {displayNotes.map((note) => {
+        const visStart = Math.max(note.position, stepsRange.offset);
+        const visEnd = Math.min(
+          note.position + note.duration,
+          rangeHelper.endX(stepsRange),
+        );
+        return (
+          <div
+            key={note.id}
+            style={{
+              left: (visStart - stepsRange.offset) * stepCellWidth,
+              bottom: `calc(${note.pitch} / ${uiConfigs.numPitches - 1} * (100% - ${stepCellHeight}px))`,
+              width: (visEnd - visStart) * stepCellWidth,
+              height: stepCellHeight,
+            }}
+          >
+            {mapPitchIndexToPitchName(note.pitch + octaveShift * 12)}
+          </div>
+        );
+      })}
     </div>
   );
 };
