@@ -2,6 +2,7 @@ import { createSequencer } from "@/engine/sequencer";
 import { createSequencerTickDriver } from "@/utils/sequencer-tick-driver";
 import { createSynthesizer } from "@/engine/synthesizer";
 import { actions } from "@/root/actions";
+import { createAutomationInput } from "@/root/automation";
 import { persistenceImpl } from "@/root/persistence";
 import { store } from "@/root/store";
 import { filterObjectValuesNonUndefined } from "@/utils/helpers";
@@ -30,6 +31,7 @@ function setupUnit() {
       },
     },
     persistence: persistenceImpl,
+    automationInput: createAutomationInput(audioContext),
     clockHandlers: {
       start() {
         store.setHostPlaying(true);
