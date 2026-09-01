@@ -114,6 +114,7 @@ function setupSynchronization() {
     unsubscribeStore();
     unsubscribeSequencer();
     unsubscribeMidiIn?.();
+    sequencerTickDriver.stop();
   };
 }
 

@@ -15,9 +15,12 @@ const randRangeI = (min: number, max: number) =>
 
 const randPick = <T>(arr: T[]) => arr[randI(arr.length)];
 
+const probably = (p: number, a: number, b: number) =>
+  Math.random() < p ? a : b;
+
 export function generateRandomParameters(): SynthPresetParameters {
   return {
-    oscWave: randI(2),
+    oscWave: probably(0.75, 0, 1),
     filterCutoff: randRange(0.3, 1),
     filterPeak: randF(),
     filterEnvMod: randF(),

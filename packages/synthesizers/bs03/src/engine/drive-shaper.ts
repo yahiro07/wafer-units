@@ -22,7 +22,7 @@ const densityShaperCurveBufferCache = createShaperCurveBufferCache(
   fillDensityShaperCurveBuffer,
 );
 
-export function createDensityShaper(audioContext: AudioContext) {
+export function createDriveShaper(audioContext: AudioContext) {
   const inputNode = audioContext.createGain();
   const shaperNode = audioContext.createWaveShaper();
   const outputNode = audioContext.createGain();

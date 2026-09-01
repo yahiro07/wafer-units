@@ -1,4 +1,4 @@
-import { createDensityShaper } from "@/engine/density-shaper";
+import { createDriveShaper } from "@/engine/drive-shaper";
 import { SynthesisBus } from "@/engine/engine-defs";
 import { createOutputSaturator } from "@/engine/output-saturator";
 import { connectNodes } from "@/engine/webaudio-helpers";
@@ -15,14 +15,14 @@ export function createEffectChain(bus: SynthesisBus): EffectChain {
   const ac = bus.audioContext;
   const inputNode = ac.createGain();
   const voicesGain = ac.createGain();
-  const densityShaper = createDensityShaper(ac);
+  const driveShaper = createDriveShaper(ac);
   const patchGain = ac.createGain();
   const saturator = createOutputSaturator(ac);
   const outputNode = ac.createGain();
 
   const disconnects = connectNodes(
     inputNode,
-    densityShaper,
+    driveShaper,
     voicesGain,
     patchGain,
     saturator,
@@ -35,9 +35,9 @@ export function createEffectChain(bus: SynthesisBus): EffectChain {
     outputNode,
     update() {
       const pr = bus.parameters;
-      densityShaper.update(pr.drive);
+      driveShaper.update(pr.drive);
       patchGain.gain.value = mapKnobCurveCenterUnity(pr.patchVolume);
-      saturator.update(1);
+      saturator.update(2);
     },
     cleanup() {
       disconnects();

@@ -25,7 +25,7 @@ export function createAmplifierUnit(bus: SynthesisBus): AmplifierUnit {
     gateOn(time, accent) {
       const pr = bus.parameters;
       const decay = pr.ampDecay;
-      const decayTime = calcDecayTime(decay);
+      const decayTime = calcDecayTime(decay, accent ?? false);
 
       headNode.gain.cancelScheduledValues(time);
       headNode.gain.setValueAtTime(accent ? 1.5 : 1, time);

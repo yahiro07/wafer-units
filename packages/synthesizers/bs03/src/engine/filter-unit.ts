@@ -1,7 +1,11 @@
 import { calcDecayTime, SynthesisBus } from "@/engine/engine-defs";
 import { connectNodes, disconnectNodes } from "@/engine/webaudio-helpers";
-import { clampValue } from "@/utils/helpers";
-import { mapUnaryTo, midiToFrequency } from "@/utils/synth-math-utils";
+import { bottomLimit } from "@/utils/helpers";
+import {
+  invPower2,
+  mapUnaryTo,
+  midiToFrequency,
+} from "@/utils/synth-math-utils";
 
 type FilterUnit = {
   inputNode: AudioNode;
@@ -15,12 +19,11 @@ type FilterUnit = {
 const helpers = {
   mapCutoff(prCutoff: number, noteFreq: number) {
     const max = 18000;
-    const min = noteFreq / 4;
-    const hz = min * (max / min) ** prCutoff;
-    return clampValue(hz, min, max);
+    const min = bottomLimit(noteFreq / 4, 80);
+    return min * (max / min) ** (prCutoff ** 1.3);
   },
   mapQ(prPeak: number, accent: boolean) {
-    return mapUnaryTo(prPeak, 0.707, 12) + (accent ? 8 : 0);
+    return prPeak * 20 + (accent ? 4 : 0);
   },
 };
 
@@ -49,10 +52,11 @@ export function createFilterUnit(bus: SynthesisBus): FilterUnit {
       lpf.detune.cancelScheduledValues(time);
       const prDecay = pr.ampDecay;
       const prEnvMod = pr.filterEnvMod;
-      const decayTime = calcDecayTime(prDecay);
+      const decayTime = calcDecayTime(prDecay, accent ?? false);
       if (prEnvMod > 0) {
-        const top = pr.filterEnvMod * (accent ? 4800 : 3600) + 1e-3;
-        lpf.detune.setValueAtTime(top, time);
+        const top =
+          pr.filterEnvMod * mapUnaryTo(invPower2(pr.filterPeak), 1800, 3600);
+        lpf.detune.setValueAtTime(top + 1e-3, time);
         lpf.detune.exponentialRampToValueAtTime(1e-3, time + decayTime);
       } else {
         lpf.detune.setValueAtTime(0, time);
