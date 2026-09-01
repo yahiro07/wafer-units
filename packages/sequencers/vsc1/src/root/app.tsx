@@ -163,7 +163,7 @@ const TopControlBars = () => {
         <StepDutyContainer />
       </div>
       <div class="flex-ha">
-        <div class="w-128px" />
+        {/* <div class="w-128px" /> */}
         <div class="grow flex-ha justify-between">
           <PlayButtonContainer />
           <PitchModeContainer />
