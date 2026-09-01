@@ -110,6 +110,29 @@ const pitchHelper = {
     }
     return allowed[clampValue(idx + delta, 0, allowed.length - 1)];
   },
+  nearestAllowed(pitch: number) {
+    const { root, mode } = store.state.keySpec;
+    const allowed = pitchHelper.diatonicPitches(root, mode);
+    let idx = 0;
+    let best = Infinity;
+    for (let i = 0; i < allowed.length; i++) {
+      const d = Math.abs(allowed[i] - pitch);
+      if (d < best) {
+        best = d;
+        idx = i;
+      }
+    }
+    return allowed[idx];
+  },
+  fromPointerY(y: number, height: number) {
+    const h = uiConfigs.stepCellHeight;
+    const n = uiConfigs.numPitches;
+    const pitch = pitchHelper.clamp(
+      Math.round(((height - y - h / 2) * (n - 1)) / (height - h)),
+    );
+    if (store.state.editScaleMode !== "diatonic") return pitch;
+    return pitchHelper.nearestAllowed(pitch);
+  },
   previewIfChanged(pitch: number) {
     if (pitch !== store.state.latestPitchIndex) {
       actions.previewTone(pitch);
@@ -133,7 +156,7 @@ const hitHelper = {
     let tailHit: { note: Note; part: "tail" } | undefined;
     for (const note of notes) {
       const x = stepX - (note.position + note.duration);
-      if (-0.3 <= x && x <= 0.1) {
+      if (-0.5 <= x && x <= 0) {
         tailHit = { note, part: "tail" };
       } else if (
         note.position <= cell.x &&
@@ -265,10 +288,15 @@ const sharedDragCallbacks = {
 
 const editModeHandlers = {
   create(e: PointerEvent, stepsRange: StepsRange, startCell: Cell) {
+    const pos = cellHelper.pointerPos(e);
+    const height = (e.currentTarget as HTMLElement).clientHeight;
     const originalNote: Note = {
       id: hitHelper.nextId(store.state.notes),
       position: startCell.x,
-      pitch: store.state.latestPitchIndex,
+      pitch:
+        store.state.patternLength === 128
+          ? store.state.latestPitchIndex
+          : pitchHelper.fromPointerY(pos.y, height),
       duration: 1,
     };
     previewHelper.begin(originalNote);
