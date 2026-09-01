@@ -65,7 +65,14 @@ export const PitchPreviewColumn = () => {
   const baseDivRef = useRef<HTMLDivElement>(null);
   useInitialScrollCenter(baseDivRef);
   return (
-    <div ref={baseDivRef} class={styles.base}>
+    <div
+      ref={baseDivRef}
+      class={styles.base}
+      onWheel={(e) => {
+        e.stopPropagation();
+        e.preventDefault();
+      }}
+    >
       <PitchesList />
     </div>
   );
