@@ -98,7 +98,6 @@ const useEditScaleModeOptions = () => {
   const { keySpec } = store.useSnapshot();
   return useMemo(() => {
     const keyName = mapKeySpecToKeyName(keySpec);
-    console.log({ keySpec, keyName });
     return createSelectorOptions<EditScaleMode>([
       ["chromatic", "chromatic"],
       ["diatonic", `diatonic (${keyName})`],
@@ -128,11 +127,11 @@ const DoublerButtonContainer = () => {
     <Button
       onClick={editActions.duplicateSteps2x}
       disabled={!enabled}
-      className="bg-#0000!"
+      className="bg-#0000! text-black!"
     >
-      <div class="flex-vc gap-1 text-[11px]">
+      <div class="flex-vc gap-1 text-[14px]">
         <span>COPY</span>
-        <span class="mt-[-6px]">2X</span>
+        <span class="mt-[-8px]">2X</span>
       </div>
     </Button>
   );
@@ -156,19 +155,22 @@ const PlayButtonContainer = () => {
 const TopControlBars = () => {
   return (
     <>
-      <div class="flex-ha gap-4 justify-between">
+      <div class="flex-ha gap-12">
         <h1 class="text-2xl">VSC1</h1>
+        <div class="grow" />
+        <BaseStepContainer />
         <OctaveShiftContainer />
         <StepDutyContainer />
-        <BaseStepContainer />
       </div>
-      <div class="flex-ha gap-4 justify-between">
-        {/* <ShiftEnableButtonContainer /> */}
-        <PlayButtonContainer />
-        <PitchModeContainer />
-        <PatternLengthContainer />
-        <DoublerButtonContainer />
-        <DeleteButtonContainer />
+      <div class="flex-ha">
+        <div class="w-128px" />
+        <div class="grow flex-ha justify-between">
+          <PlayButtonContainer />
+          <PitchModeContainer />
+          <PatternLengthContainer />
+          <DoublerButtonContainer />
+          <DeleteButtonContainer />
+        </div>
       </div>
     </>
   );
@@ -178,7 +180,7 @@ const PageRoot = () => {
   return (
     <div class="flex-v gap-3 bg-clPageBg p-8">
       <TopControlBars />
-      <div class="flex-h gap-4">
+      <div class="flex-ha gap-4">
         <PitchPreviewColumn />
         <StepsEditorRoot />
       </div>
