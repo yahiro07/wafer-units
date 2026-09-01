@@ -58,8 +58,6 @@ function setupSynchronization() {
       synthParameters,
       stepNotes,
       stepModifierFlags,
-      alterPatternsEnabled,
-      twiddleKnobsEnabled,
       bpm,
       standalonePlaying,
     } = attrs;
@@ -69,8 +67,6 @@ function setupSynchronization() {
     const sequencerAttrs = filterObjectValuesNonUndefined({
       stepNotes,
       stepModifierFlags,
-      alterPatternsEnabled,
-      twiddleKnobsEnabled,
     });
     if (Object.keys(sequencerAttrs).length > 0) {
       sequencer.patchEditState(sequencerAttrs);

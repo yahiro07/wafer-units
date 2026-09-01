@@ -44,16 +44,12 @@ export type SequencerEditState = {
   pitchIndices: number[];
   stepNotes: number[];
   stepModifierFlags: number[];
-  alterPatternsEnabled: boolean;
-  twiddleKnobsEnabled: boolean;
 };
 
 export const defaultSequencerEditState: SequencerEditState = {
   pitchIndices: [0, 12, 24],
   stepNotes: fillNumbers(16, -1),
   stepModifierFlags: fillNumbers(16, 0),
-  alterPatternsEnabled: false,
-  twiddleKnobsEnabled: false,
 };
 if (0) {
   Object.assign(defaultSequencerEditState, {
