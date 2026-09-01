@@ -35,9 +35,9 @@ export function createEffectChain(bus: SynthesisBus): EffectChain {
     outputNode,
     update() {
       const pr = bus.parameters;
-      densityShaper.update(pr.density);
+      densityShaper.update(pr.drive);
       patchGain.gain.value = mapKnobCurveCenterUnity(pr.patchVolume);
-      saturator.update(pr._saturation);
+      saturator.update(1);
     },
     cleanup() {
       disconnects();

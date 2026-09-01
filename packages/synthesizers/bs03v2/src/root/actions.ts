@@ -3,7 +3,10 @@ import {
   pitchPresets,
   SynthParameters,
 } from "@/defs/definitions";
-import { createRandomParameters } from "@/root/.local/randomizer";
+import {
+  generateRandomParameters,
+  generateRandomStepPattern,
+} from "@/root/randomizer";
 import { store } from "@/root/store";
 import { toggleBit } from "@/utils/bit-flag-helper";
 import { fillNumbers } from "@/utils/helpers";
@@ -22,38 +25,39 @@ function remapStepNotes(
 }
 
 const actionsInternal = {
-  setPitchPresetIndex(nextIndex: number) {
+  setPitchPresetIndex(nextIndex: number, remapNotes: boolean) {
     const currentIndex = store.state.pitchPresetIndex;
     store.setPitchPresetIndex(nextIndex);
-    const newNotes = remapStepNotes(
-      store.state.stepNotes,
-      pitchPresets[currentIndex],
-      pitchPresets[nextIndex],
-    );
-    store.setStepNotes(newNotes);
+    store.setPitchIndices(pitchPresets[nextIndex]);
+    if (remapNotes) {
+      const newNotes = remapStepNotes(
+        store.state.stepNotes,
+        pitchPresets[currentIndex],
+        pitchPresets[nextIndex],
+      );
+      store.setStepNotes(newNotes);
+    }
   },
 };
 
 export const actions = {
   shiftPitchPreset() {
     const nextIndex = (store.state.pitchPresetIndex + 1) % pitchPresets.length;
-    actionsInternal.setPitchPresetIndex(nextIndex);
-    store.setPitchIndices(pitchPresets[nextIndex]);
+    actionsInternal.setPitchPresetIndex(nextIndex, true);
   },
-  randomizePitchPreset() {
-    const nextIndex = Math.floor(Math.random() * pitchPresets.length);
-    actionsInternal.setPitchPresetIndex(nextIndex);
-  },
-  randomizeStepNotes() {
-    // const pitchPreset = pitchPresets[store.state.pitchPresetIndex];
-    // const { stepNotes, stepModifierFlags } = randomizePattern(pitchPreset);
-    // store.assign({ stepNotes, stepModifierFlags });
+  randomizeParameters() {
+    const parameters = generateRandomParameters();
+    store.setSynthParameters(parameters);
   },
   randomizePatterns() {
     if (!store.state.lockPitchPreset) {
-      actions.randomizePitchPreset();
+      const nextIndex = Math.floor(Math.random() * pitchPresets.length);
+      actionsInternal.setPitchPresetIndex(nextIndex, false);
     }
-    actions.randomizeStepNotes();
+    const { stepNotes, stepModifierFlags } = generateRandomStepPattern(
+      store.state.pitchIndices,
+    );
+    store.assign({ stepNotes, stepModifierFlags });
   },
   clearStepNotes() {
     store.assign({
@@ -133,10 +137,6 @@ export const actions = {
   //   const nextIdx = (idx + dir + allPresetKeys.length) % allPresetKeys.length;
   //   actions.setPreset(allPresetKeys[nextIdx]);
   // },
-  randomizeParameters() {
-    const paramAttrs = createRandomParameters();
-    store.patchSynthParameters(paramAttrs);
-  },
   async emitPresetData() {
     const { ...attrs } = store.state.synthParameters;
     const jsonText = JSON.stringify(attrs, null, 2).replaceAll(

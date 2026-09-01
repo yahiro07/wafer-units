@@ -14,10 +14,8 @@ export type SynthParameters = {
   filterPeak: number;
   filterEnvMod: number;
   ampDecay: number;
-  //
+  drive: number;
   patchVolume: number;
-  _saturation: number;
-  density: number;
 };
 
 export type SynthPresetParameters = SynthParameters;
@@ -28,10 +26,8 @@ export const defaultSynthParameters: SynthParameters = {
   filterPeak: 0,
   filterEnvMod: 0,
   ampDecay: 0.5,
-  //
+  drive: 0,
   patchVolume: 0.5,
-  _saturation: 1,
-  density: 0,
 };
 
 export type LinearParameterKeys = PickKeysForValueType<SynthParameters, number>;
@@ -55,7 +51,7 @@ export type SequencerEditState = {
 
 export const defaultSequencerEditState: SequencerEditState = {
   pitchIndices: [0, 12, 24],
-  stepNotes: fillNumbers(16, 0),
+  stepNotes: fillNumbers(16, -1),
   stepModifierFlags: fillNumbers(16, 0),
   alterPatternsEnabled: false,
   twiddleKnobsEnabled: false,
@@ -69,7 +65,13 @@ if (0) {
 
 export const pitchPresets = [
   [0, 12, 24],
+  [0, 12, 19, 24],
   [0, 7, 12, 19, 24],
+  [0, 10, 12, 19],
+  [0, 3, 5, 7, 9],
+  [0, 3, 5, 6, 7, 10],
+  [0, 1, 7, 10],
+  [0, 3, 7, 10, 11, 12],
 ];
 if (appEnvs.isDevelopment) {
   pitchPresets.push([0]);

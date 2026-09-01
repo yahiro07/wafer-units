@@ -1,4 +1,5 @@
 import { cz } from "@/common/css-realm";
+import { Icons } from "@/components/icons";
 import { actions } from "@/root/actions";
 import { store } from "@/root/store";
 import { isBitSet } from "@/utils/bit-flag-helper";
@@ -184,7 +185,7 @@ const Button = ({
   return (
     <button
       onClick={onClick}
-      class={cz("bd-[#888] flex-c", active && "bg-clHighlight")}
+      class={cz("bd-[#888] flex-c cursor-pointer", active && "bg-clHighlight")}
       style={{ width: w, height }}
     >
       {text}
@@ -205,8 +206,11 @@ const ButtonsRow = () => {
       />
       <div class="grow" />
       <div class="flex-ha gap-2">
-        <div>pitches preset: {pitchPresetIndex}</div>
-        <Button text="V" onClick={actions.shiftPitchPreset} />
+        <div>pitches preset: {pitchPresetIndex + 1}</div>
+        <Button
+          children={<Icons.ArrowDown />}
+          onClick={actions.shiftPitchPreset}
+        />
         {/* <Button text="R" onClick={actions.randomizePitchPreset} /> */}
         <Button
           text="lock"

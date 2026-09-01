@@ -394,16 +394,22 @@ const ParametersSection = () => {
           <span class="text-[20px] mt-[-8px]">ACID BASSLINE</span>
         </div>
 
-        <ScalerBoxSC scale={0.9}>
-          <div class="flex-ha gap-8">
-            <ParameterSlider label="WAVE" paramKey="oscWave" max={1} step={1} />
-            <ParameterKnob label="CUTOFF" paramKey="filterCutoff" />
-            <ParameterKnob label="PEAK" paramKey="filterPeak" />
-            <ParameterKnob label="ENV MOD" paramKey="filterEnvMod" />
-            <ParameterKnob label="DECAY" paramKey="ampDecay" />
-            <ParameterKnob label="DRIVE" paramKey="density" />
-            <ParameterKnob label="VOLUME" paramKey="patchVolume" />
-            {isDebug && (
+        <div class="flex-ha gap-7">
+          <ScalerBoxSC scale={0.9}>
+            <div class="flex-ha gap-8">
+              <ParameterSlider
+                label="WAVE"
+                paramKey="oscWave"
+                max={1}
+                step={1}
+              />
+              <ParameterKnob label="CUTOFF" paramKey="filterCutoff" />
+              <ParameterKnob label="PEAK" paramKey="filterPeak" />
+              <ParameterKnob label="ENV MOD" paramKey="filterEnvMod" />
+              <ParameterKnob label="DECAY" paramKey="ampDecay" />
+              <ParameterKnob label="DRIVE" paramKey="drive" />
+              <ParameterKnob label="VOLUME" paramKey="patchVolume" />
+              {/* {isDebug && (
               <ParameterSlider
                 label="SAT"
                 paramKey="_saturation"
@@ -411,11 +417,12 @@ const ParametersSection = () => {
                 max={2}
                 step={1}
               />
-            )}
+            )} */}
+            </div>
+          </ScalerBoxSC>
+          <div class="mb-4">
+            <Button onClick={actions.randomizeParameters}>RND</Button>
           </div>
-        </ScalerBoxSC>
-        <div>
-          <Button>RND</Button>
         </div>
       </div>
     </div>

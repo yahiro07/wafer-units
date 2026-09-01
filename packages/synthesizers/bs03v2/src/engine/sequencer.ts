@@ -47,16 +47,18 @@ export function createSequencer(
       const es = editState;
       const stepIndex = inputStepIndex % 16;
       const pitch = es.stepNotes[stepIndex];
-      const modFlags = es.stepModifierFlags[stepIndex];
-      const prevStepIndex = (stepIndex + 15) % 16;
-      const prevModFlags = es.stepModifierFlags[prevStepIndex];
-      const slide = isBitSet(prevModFlags, 0);
-      const accent = isBitSet(modFlags, 1);
-      if (pitch !== undefined) {
-        const note = pitch + 33 + keyTranspose;
-        internal.playNote(note, time, { slide, accent, unitDuration });
-      } else {
-        internal.stopNote(time);
+      if (pitch >= 0) {
+        const modFlags = es.stepModifierFlags[stepIndex];
+        const prevStepIndex = (stepIndex + 15) % 16;
+        const prevModFlags = es.stepModifierFlags[prevStepIndex];
+        const slide = isBitSet(prevModFlags, 0);
+        const accent = isBitSet(modFlags, 1);
+        if (pitch !== undefined) {
+          const note = pitch + 33 + keyTranspose;
+          internal.playNote(note, time, { slide, accent, unitDuration });
+        } else {
+          internal.stopNote(time);
+        }
       }
       listener?.setPlayPosition(stepIndex);
     },
