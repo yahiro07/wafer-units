@@ -1,7 +1,7 @@
 import { calcDecayTime, SynthesisBus } from "@/engine/engine-defs";
 import { connectNodes, disconnectNodes } from "@/engine/webaudio-helpers";
 import { clampValue } from "@/utils/helpers";
-import { mapUnaryTo, midiToFrequency, power2 } from "@/utils/synth-math-utils";
+import { mapUnaryTo, midiToFrequency } from "@/utils/synth-math-utils";
 
 type FilterUnit = {
   inputNode: AudioNode;
@@ -16,7 +16,7 @@ const helpers = {
   mapCutoff(prCutoff: number, noteFreq: number) {
     const max = 18000;
     const min = noteFreq / 4;
-    const hz = min * (max / min) ** power2(prCutoff);
+    const hz = min * (max / min) ** prCutoff;
     return clampValue(hz, min, max);
   },
   mapQ(prPeak: number, accent: boolean) {

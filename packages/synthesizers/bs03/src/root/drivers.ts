@@ -45,10 +45,10 @@ function setupUnit() {
         sequencer.stop();
       },
     },
-    noteInput: {
-      noteOn: synthesizer.noteOn,
-      noteOff: synthesizer.noteOff,
-    },
+    // noteInput: {
+    //   noteOn: synthesizer.noteOn,
+    //   noteOff: synthesizer.noteOff,
+    // },
     cleanup() {
       synthesizer.cleanup();
       sequencer.cleanup();
