@@ -44,6 +44,12 @@ const rangeHelper = {
       note.position < rangeEnd && note.position + note.duration > rangeStart
     );
   },
+  overlapX(a: Note, b: Note) {
+    return (
+      a.position < b.position + b.duration &&
+      a.position + a.duration > b.position
+    );
+  },
 };
 
 const cellHelper = {
@@ -218,20 +224,32 @@ const previewHelper = {
     };
   },
   begin(note: Note) {
-    store.setPreviewNote(note);
+    previewHelper.set(note);
     actions.previewTone(note.pitch);
+  },
+  set(note: Note) {
+    const previewOccludedNoteIds = store.state.notes
+      .filter((n) => n.id !== note.id && rangeHelper.overlapX(n, note))
+      .map((n) => n.id);
+    store.assign({ previewNote: note, previewOccludedNoteIds });
+  },
+  apply(preview: Note) {
+    store.setNotes((prev) => [
+      ...prev.filter(
+        (n) => n.id !== preview.id && !rangeHelper.overlapX(n, preview),
+      ),
+      preview,
+    ]);
   },
   commit(preview: Note | null, originalId: number) {
     if (!preview || preview.duration < 1) {
       store.setNotes((prev) => prev.filter((note) => note.id !== originalId));
     } else {
-      store.setNotes((prev) =>
-        prev.map((note) => (note.id === preview.id ? preview : note)),
-      );
+      previewHelper.apply(preview);
     }
   },
   clear() {
-    store.setPreviewNote(null);
+    store.assign({ previewNote: null, previewOccludedNoteIds: [] });
   },
 };
 
@@ -303,14 +321,14 @@ const editModeHandlers = {
             originalNote.pitch,
           );
           pitchHelper.previewIfChanged(pitch);
-          store.setPreviewNote(
+          previewHelper.set(
             previewHelper.create(originalNote.id, startCell, current, pitch),
           );
         },
         onUp() {
           const preview = store.state.previewNote;
           if (preview && preview.duration >= 1) {
-            store.setNotes((prev) => [...prev, preview]);
+            previewHelper.apply(preview);
           }
           previewHelper.clear();
         },
@@ -339,7 +357,7 @@ const editModeHandlers = {
             originalNote.pitch,
           );
           pitchHelper.previewIfChanged(pitch);
-          store.setPreviewNote(
+          previewHelper.set(
             previewHelper.move(originalNote, startCell, current, pitch),
           );
         },
@@ -374,7 +392,7 @@ const editModeHandlers = {
             stepsRange,
             "both",
           );
-          store.setPreviewNote(
+          previewHelper.set(
             previewHelper.resize(originalNote, startCell, current),
           );
         },
@@ -425,12 +443,14 @@ const NotesLayer = ({
   stepsRange: StepsRange;
   isPrimaryNotes: boolean;
 }) => {
-  const { notes, previewNote, octaveShift } = store.useSnapshot();
+  const { notes, previewNote, previewOccludedNoteIds, octaveShift } =
+    store.useSnapshot();
   const { stepCellWidth, stepCellHeight } = uiConfigs;
   const visibleNotes = notes.filter(
     (note) =>
       note.duration >= 1 &&
       note.id !== previewNote?.id &&
+      !previewOccludedNoteIds.includes(note.id) &&
       rangeHelper.noteOverlaps(note, stepsRange),
   );
   const displayNotes =
