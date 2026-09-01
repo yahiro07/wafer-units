@@ -21,7 +21,7 @@ function setupUnit() {
   unitInterface?.completeSetup({
     unitAspects: {
       unitType: "instrument",
-      viewSize: [1048, 538],
+      viewSize: [1048, 583],
     },
     hostCallbacks: {
       setBpm(bpm) {

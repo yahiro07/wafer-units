@@ -119,7 +119,7 @@ const ParametersSection = () => {
 
 const PageRoot = () => {
   return (
-    <div class="flex-v gap-3 bg-clPageBg text-clPageText p-8">
+    <div class="flex-v gap-3 bg-clPageBg text-clPageText px-10 py-8">
       <ParametersSection />
       <PatternEditor />
     </div>

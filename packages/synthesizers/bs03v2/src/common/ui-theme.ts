@@ -8,7 +8,7 @@ export const uiColors = {
   clPrimary: "#8be",
   clButtonBg: "#ccc",
   clButtonText: "#667",
-  clKnobTick: "#08f",
+  clKnobTick: "#777",
   //
   clGridBg: "#eee",
   clNote: "#8f8",
