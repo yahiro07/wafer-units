@@ -5,7 +5,7 @@ import { mapPitchIndexToPitchName } from "@/defs/pitch-names";
 
 import { actions } from "@/root/actions";
 import { store } from "@/root/store";
-import { startDragSession } from "@/utils/drag-session";
+import { DragHandlerEvent, startDragSession } from "@/utils/drag-session";
 import { bottomLimit, clampValue, seqNumbers } from "@/utils/helpers";
 import { useRef } from "preact/hooks";
 
@@ -26,227 +26,250 @@ type StepsRange = {
 };
 
 type Cell = { x: number };
-type EditMode = "create" | "move" | "resize";
 
-function rangeMinX(stepsRange: StepsRange) {
-  return stepsRange.offset;
-}
+const rangeHelper = {
+  minX(stepsRange: StepsRange) {
+    return stepsRange.offset;
+  },
+  maxX(stepsRange: StepsRange) {
+    return stepsRange.offset + stepsRange.length - 1;
+  },
+  endX(stepsRange: StepsRange) {
+    return stepsRange.offset + stepsRange.length;
+  },
+  noteOverlaps(note: Note, stepsRange: StepsRange) {
+    const rangeStart = stepsRange.offset;
+    const rangeEnd = rangeHelper.endX(stepsRange);
+    return (
+      note.position < rangeEnd && note.position + note.duration > rangeStart
+    );
+  },
+};
 
-function rangeMaxX(stepsRange: StepsRange) {
-  return stepsRange.offset + stepsRange.length - 1;
-}
-
-function rangeEndX(stepsRange: StepsRange) {
-  return stepsRange.offset + stepsRange.length;
-}
-
-function clampPitch(y: number) {
-  return clampValue(y, 0, uiConfigs.numPitches - 1);
-}
-
-function cellFromPointer(
-  pos: { x: number; y: number },
-  stepsRange: StepsRange,
-): Cell {
-  return {
-    x: clampValue(
-      stepsRange.offset + Math.floor(pos.x / uiConfigs.stepCellWidth),
-      rangeMinX(stepsRange),
-      rangeMaxX(stepsRange),
-    ),
-  };
-}
-
-// function pitchFromDrag(startY: number, currentY: number, basePitch: number) {
-//   const numRows = (store.state.patternLength / 16) >>> 0;
-//   const rowHeight = 360 / numRows;
-//   const pitchYDragStep = bottomLimit(rowHeight / uiConfigs.numPitches, 5);
-//   const delta = Math.round((startY - currentY) / pitchYDragStep);
-//   return clampPitch(basePitch + delta);
-// }
+const cellHelper = {
+  fromPointer(pos: { x: number; y: number }, stepsRange: StepsRange): Cell {
+    return {
+      x: clampValue(
+        stepsRange.offset + Math.floor(pos.x / uiConfigs.stepCellWidth),
+        rangeHelper.minX(stepsRange),
+        rangeHelper.maxX(stepsRange),
+      ),
+    };
+  },
+  fromEvent(e: PointerEvent, stepsRange: StepsRange): Cell {
+    const el = e.currentTarget as HTMLElement;
+    const rect = el.getBoundingClientRect();
+    return cellHelper.fromPointer(
+      { x: e.clientX - rect.left, y: e.clientY - rect.top },
+      stepsRange,
+    );
+  },
+};
 
 const maskSubIndicesMajor = [1, 3, 6, 8, 10];
 const maskSubIndicesMinor = [1, 4, 6, 9, 11];
 
-function isOutOfScale(pitch: number, root: number, mode: "major" | "minor") {
-  const maskSubIndices =
-    mode === "major" ? maskSubIndicesMajor : maskSubIndicesMinor;
-  return maskSubIndices.includes((pitch - root + 24) % 12);
-}
-function diatonicPitches(root: number, mode: "major" | "minor") {
-  return seqNumbers(uiConfigs.numPitches).filter(
-    (p) => !isOutOfScale(p, root, mode),
-  );
-}
-function pitchFromDrag(startY: number, currentY: number, basePitch: number) {
-  const numRows = (store.state.patternLength / 16) >>> 0;
-  const rowHeight = 360 / numRows;
-  const numPitchesY =
-    uiConfigs.numPitches *
-    (store.state.editScaleMode === "diatonic" ? 7 / 12 : 1);
-  const pitchYDragStep = bottomLimit(rowHeight / numPitchesY, 5);
-  const delta = Math.round((startY - currentY) / pitchYDragStep);
-  if (store.state.editScaleMode !== "diatonic") {
-    return clampPitch(basePitch + delta);
-  }
-  const { root, mode } = store.state.keySpec;
-  const allowed = diatonicPitches(root, mode);
-  let idx = allowed.indexOf(basePitch);
-  if (idx < 0) {
-    idx = 0;
-    let best = Infinity;
-    for (let i = 0; i < allowed.length; i++) {
-      const d = Math.abs(allowed[i] - basePitch);
-      if (d < best) {
-        best = d;
-        idx = i;
+const pitchHelper = {
+  clamp(y: number) {
+    return clampValue(y, 0, uiConfigs.numPitches - 1);
+  },
+  isOutOfScale(pitch: number, root: number, mode: "major" | "minor") {
+    const maskSubIndices =
+      mode === "major" ? maskSubIndicesMajor : maskSubIndicesMinor;
+    return maskSubIndices.includes((pitch - root + 24) % 12);
+  },
+  diatonicPitches(root: number, mode: "major" | "minor") {
+    return seqNumbers(uiConfigs.numPitches).filter(
+      (p) => !pitchHelper.isOutOfScale(p, root, mode),
+    );
+  },
+  fromDrag(startY: number, currentY: number, basePitch: number) {
+    const numRows = (store.state.patternLength / 16) >>> 0;
+    const rowHeight = 360 / numRows;
+    const numPitchesY =
+      uiConfigs.numPitches *
+      (store.state.editScaleMode === "diatonic" ? 7 / 12 : 1);
+    const pitchYDragStep = bottomLimit(rowHeight / numPitchesY, 5);
+    const delta = Math.round((startY - currentY) / pitchYDragStep);
+    if (store.state.editScaleMode !== "diatonic") {
+      return pitchHelper.clamp(basePitch + delta);
+    }
+    const { root, mode } = store.state.keySpec;
+    const allowed = pitchHelper.diatonicPitches(root, mode);
+    let idx = allowed.indexOf(basePitch);
+    if (idx < 0) {
+      idx = 0;
+      let best = Infinity;
+      for (let i = 0; i < allowed.length; i++) {
+        const d = Math.abs(allowed[i] - basePitch);
+        if (d < best) {
+          best = d;
+          idx = i;
+        }
       }
     }
-  }
-  return allowed[clampValue(idx + delta, 0, allowed.length - 1)];
-}
-
-function hitTestNote(notes: Note[], cell: Cell): Note | undefined {
-  let hit: Note | undefined;
-  for (const note of notes) {
-    if (note.position <= cell.x && cell.x < note.position + note.duration) {
-      hit = note;
+    return allowed[clampValue(idx + delta, 0, allowed.length - 1)];
+  },
+  previewIfChanged(pitch: number) {
+    if (pitch !== store.state.latestPitchIndex) {
+      actions.previewTone(pitch);
     }
-  }
-  return hit;
-}
+  },
+  stopPreview() {
+    actions.previewTone(-1);
+  },
+};
 
-function nextNoteId(notes: Note[]) {
-  return notes.length > 0 ? Math.max(...notes.map((note) => note.id)) + 1 : 0;
-}
+const hitHelper = {
+  noteAt(notes: Note[], cell: Cell): Note | undefined {
+    let hit: Note | undefined;
+    for (const note of notes) {
+      if (note.position <= cell.x && cell.x < note.position + note.duration) {
+        hit = note;
+      }
+    }
+    return hit;
+  },
+  nextId(notes: Note[]) {
+    return notes.length > 0 ? Math.max(...notes.map((note) => note.id)) + 1 : 0;
+  },
+  isResizeGrab(note: Note, cell: Cell) {
+    return note.duration > 1 && cell.x === note.position + note.duration - 1;
+  },
+};
 
-function isResizeGrab(note: Note, cell: Cell) {
-  return note.duration > 1 && cell.x === note.position + note.duration - 1;
-}
-
-function makeCreatePreview(
-  id: number,
-  start: Cell,
-  current: Cell,
-  pitch: number,
-  stepsRange: StepsRange,
-): Note {
-  const left = clampValue(
-    Math.min(start.x, current.x),
-    rangeMinX(stepsRange),
-    rangeMaxX(stepsRange),
-  );
-  const right = clampValue(
-    Math.max(start.x, current.x),
-    rangeMinX(stepsRange),
-    rangeMaxX(stepsRange),
-  );
-  return {
-    id,
-    position: left,
-    duration: right - left + 1,
-    pitch,
-  };
-}
-
-function makeMovePreview(
-  original: Note,
-  start: Cell,
-  current: Cell,
-  pitch: number,
-  stepsRange: StepsRange,
-): Note {
-  let position = original.position + (current.x - start.x);
-  const minX = rangeMinX(stepsRange);
-  const maxEnd = rangeEndX(stepsRange);
-  if (position < minX) position = minX;
-  if (position + original.duration > maxEnd) {
-    position = maxEnd - original.duration;
-  }
-  return {
-    ...original,
-    position,
-    pitch,
-  };
-}
-
-function makeResizePreview(
-  original: Note,
-  start: Cell,
-  current: Cell,
-  pitch: number,
-  stepsRange: StepsRange,
-): Note {
-  let duration = original.duration + (current.x - start.x);
-  const maxEnd = rangeEndX(stepsRange);
-  if (original.position + duration > maxEnd) {
-    duration = maxEnd - original.position;
-  }
-  return {
-    ...original,
-    duration,
-    pitch,
-  };
-}
-
-function commitEditedNote(preview: Note | null, originalId: number) {
-  if (!preview || preview.duration < 1) {
-    store.setNotes((prev) => prev.filter((note) => note.id !== originalId));
-  } else {
-    store.setNotes((prev) =>
-      prev.map((note) => (note.id === preview.id ? preview : note)),
+const previewHelper = {
+  create(
+    id: number,
+    start: Cell,
+    current: Cell,
+    pitch: number,
+    stepsRange: StepsRange,
+  ): Note {
+    const left = clampValue(
+      Math.min(start.x, current.x),
+      rangeHelper.minX(stepsRange),
+      rangeHelper.maxX(stepsRange),
     );
-  }
-}
+    const right = clampValue(
+      Math.max(start.x, current.x),
+      rangeHelper.minX(stepsRange),
+      rangeHelper.maxX(stepsRange),
+    );
+    return {
+      id,
+      position: left,
+      duration: right - left + 1,
+      pitch,
+    };
+  },
+  move(
+    original: Note,
+    start: Cell,
+    current: Cell,
+    pitch: number,
+    stepsRange: StepsRange,
+  ): Note {
+    let position = original.position + (current.x - start.x);
+    const minX = rangeHelper.minX(stepsRange);
+    const maxEnd = rangeHelper.endX(stepsRange);
+    if (position < minX) position = minX;
+    if (position + original.duration > maxEnd) {
+      position = maxEnd - original.duration;
+    }
+    return {
+      ...original,
+      position,
+      pitch,
+    };
+  },
+  resize(
+    original: Note,
+    start: Cell,
+    current: Cell,
+    pitch: number,
+    stepsRange: StepsRange,
+  ): Note {
+    let duration = original.duration + (current.x - start.x);
+    const maxEnd = rangeHelper.endX(stepsRange);
+    if (original.position + duration > maxEnd) {
+      duration = maxEnd - original.position;
+    }
+    return {
+      ...original,
+      duration,
+      pitch,
+    };
+  },
+  begin(note: Note) {
+    store.setPreviewNote(note);
+    actions.previewTone(note.pitch);
+  },
+  commit(preview: Note | null, originalId: number) {
+    if (!preview || preview.duration < 1) {
+      store.setNotes((prev) => prev.filter((note) => note.id !== originalId));
+    } else {
+      store.setNotes((prev) =>
+        prev.map((note) => (note.id === preview.id ? preview : note)),
+      );
+    }
+  },
+  clear() {
+    store.setPreviewNote(null);
+  },
+};
 
-function handleStepsBarEditorPointerDown(
-  e: PointerEvent,
-  stepsRange: StepsRange,
-) {
-  if (e.button !== 0) return;
+const tapHelper = {
+  isTap(ev: DragHandlerEvent, t0: number) {
+    const distance = Math.hypot(
+      ev.position.x - ev.originalPosition.x,
+      ev.position.y - ev.originalPosition.y,
+    );
+    const elapsed = performance.now() - t0;
+    return (
+      distance <= tapConfigs.maxDistance && elapsed <= tapConfigs.maxDurationMs
+    );
+  },
+  deleteNote(id: number) {
+    store.setNotes((prev) => prev.filter((note) => note.id !== id));
+    previewHelper.clear();
+  },
+};
 
-  const t0 = performance.now();
-  let mode: EditMode = "create";
-  let startCell: Cell = { x: 0 };
-  let originalNote: Note | null = null;
+const dragSessionOptions = { coordinate: "relative" as const };
 
-  startDragSession(
-    e,
-    {
-      onDown(ev) {
-        startCell = cellFromPointer(ev.position, stepsRange);
-        const hit = hitTestNote(store.state.notes, startCell);
-        if (!hit) {
-          mode = "create";
-          originalNote = {
-            id: nextNoteId(store.state.notes),
-            position: startCell.x,
-            pitch: store.state.latestPitchIndex,
-            duration: 1,
-          };
-          store.setPreviewNote(originalNote);
-          actions.previewTone(originalNote.pitch);
-          return;
-        }
-        mode = isResizeGrab(hit, startCell) ? "resize" : "move";
-        originalNote = hit;
-        store.setPreviewNote({ ...hit });
-        actions.previewTone(hit.pitch);
-      },
-      onMove(ev) {
-        if (!originalNote) return;
-        const current = cellFromPointer(ev.position, stepsRange);
-        const pitch = pitchFromDrag(
-          ev.originalPosition.y,
-          ev.position.y,
-          originalNote.pitch,
-        );
-        if (pitch !== store.state.latestPitchIndex) {
-          actions.previewTone(pitch);
-        }
-        if (mode === "create") {
+const sharedDragCallbacks = {
+  onCancel() {
+    previewHelper.clear();
+  },
+  onUpOrCancel() {
+    pitchHelper.stopPreview();
+  },
+};
+
+const editModeHandlers = {
+  create(e: PointerEvent, stepsRange: StepsRange, startCell: Cell) {
+    const originalNote: Note = {
+      id: hitHelper.nextId(store.state.notes),
+      position: startCell.x,
+      pitch: store.state.latestPitchIndex,
+      duration: 1,
+    };
+    previewHelper.begin(originalNote);
+    startDragSession(
+      e,
+      {
+        ...sharedDragCallbacks,
+        onMove(ev) {
+          const current = cellHelper.fromPointer(ev.position, stepsRange);
+          const pitch = pitchHelper.fromDrag(
+            ev.originalPosition.y,
+            ev.position.y,
+            originalNote.pitch,
+          );
+          pitchHelper.previewIfChanged(pitch);
           store.setPreviewNote(
-            makeCreatePreview(
+            previewHelper.create(
               originalNote.id,
               startCell,
               current,
@@ -254,73 +277,120 @@ function handleStepsBarEditorPointerDown(
               stepsRange,
             ),
           );
-        } else if (mode === "move") {
-          store.setPreviewNote(
-            makeMovePreview(
-              originalNote,
-              startCell,
-              current,
-              pitch,
-              stepsRange,
-            ),
-          );
-        } else {
-          store.setPreviewNote(
-            makeResizePreview(
-              originalNote,
-              startCell,
-              current,
-              pitch,
-              stepsRange,
-            ),
-          );
-        }
-      },
-      onUp(ev) {
-        const preview = store.state.previewNote;
-        if (mode === "create") {
+        },
+        onUp() {
+          const preview = store.state.previewNote;
           if (preview && preview.duration >= 1) {
             store.setNotes((prev) => [...prev, preview]);
           }
-          store.setPreviewNote(null);
-          return;
-        }
-        const distance = Math.hypot(
-          ev.position.x - ev.originalPosition.x,
-          ev.position.y - ev.originalPosition.y,
-        );
-        const elapsed = performance.now() - t0;
-        if (
-          originalNote &&
-          distance <= tapConfigs.maxDistance &&
-          elapsed <= tapConfigs.maxDurationMs
-        ) {
-          store.setNotes((prev) =>
-            prev.filter((note) => note.id !== originalNote!.id),
+          previewHelper.clear();
+        },
+      },
+      dragSessionOptions,
+    );
+  },
+  move(
+    e: PointerEvent,
+    stepsRange: StepsRange,
+    startCell: Cell,
+    originalNote: Note,
+  ) {
+    const t0 = performance.now();
+    previewHelper.begin({ ...originalNote });
+    startDragSession(
+      e,
+      {
+        ...sharedDragCallbacks,
+        onMove(ev) {
+          const current = cellHelper.fromPointer(ev.position, stepsRange);
+          const pitch = pitchHelper.fromDrag(
+            ev.originalPosition.y,
+            ev.position.y,
+            originalNote.pitch,
           );
-          store.setPreviewNote(null);
-          return;
-        }
-        if (originalNote) {
-          commitEditedNote(preview, originalNote.id);
-        }
-        store.setPreviewNote(null);
+          pitchHelper.previewIfChanged(pitch);
+          store.setPreviewNote(
+            previewHelper.move(
+              originalNote,
+              startCell,
+              current,
+              pitch,
+              stepsRange,
+            ),
+          );
+        },
+        onUp(ev) {
+          if (tapHelper.isTap(ev, t0)) {
+            tapHelper.deleteNote(originalNote.id);
+            return;
+          }
+          previewHelper.commit(store.state.previewNote, originalNote.id);
+          previewHelper.clear();
+        },
       },
-      onCancel() {
-        store.setPreviewNote(null);
+      dragSessionOptions,
+    );
+  },
+  resize(
+    e: PointerEvent,
+    stepsRange: StepsRange,
+    startCell: Cell,
+    originalNote: Note,
+  ) {
+    const t0 = performance.now();
+    previewHelper.begin({ ...originalNote });
+    startDragSession(
+      e,
+      {
+        ...sharedDragCallbacks,
+        onMove(ev) {
+          const current = cellHelper.fromPointer(ev.position, stepsRange);
+          const pitch = pitchHelper.fromDrag(
+            ev.originalPosition.y,
+            ev.position.y,
+            originalNote.pitch,
+          );
+          pitchHelper.previewIfChanged(pitch);
+          store.setPreviewNote(
+            previewHelper.resize(
+              originalNote,
+              startCell,
+              current,
+              pitch,
+              stepsRange,
+            ),
+          );
+        },
+        onUp(ev) {
+          if (tapHelper.isTap(ev, t0)) {
+            tapHelper.deleteNote(originalNote.id);
+            return;
+          }
+          previewHelper.commit(store.state.previewNote, originalNote.id);
+          previewHelper.clear();
+        },
       },
-      onUpOrCancel() {
-        actions.previewTone(-1);
-      },
-    },
-    { coordinate: "relative" },
-  );
-}
+      dragSessionOptions,
+    );
+  },
+};
 
-function noteOverlapsRange(note: Note, stepsRange: StepsRange) {
-  const rangeStart = stepsRange.offset;
-  const rangeEnd = rangeEndX(stepsRange);
-  return note.position < rangeEnd && note.position + note.duration > rangeStart;
+function handleStepsBarEditorPointerDown(
+  e: PointerEvent,
+  stepsRange: StepsRange,
+) {
+  if (e.button !== 0) return;
+  const startCell = cellHelper.fromEvent(e, stepsRange);
+  const hit = hitHelper.noteAt(store.state.notes, startCell);
+  if (!hit) {
+    editModeHandlers.create(e, stepsRange, startCell);
+    return;
+  }
+  if (hitHelper.isResizeGrab(hit, startCell)) {
+    editModeHandlers.resize(e, stepsRange, startCell, hit);
+  } else {
+    editModeHandlers.move(e, stepsRange, startCell, hit);
+  }
 }
 
 const NotesLayer = ({
@@ -336,12 +406,12 @@ const NotesLayer = ({
     (note) =>
       note.duration >= 1 &&
       note.id !== previewNote?.id &&
-      noteOverlapsRange(note, stepsRange),
+      rangeHelper.noteOverlaps(note, stepsRange),
   );
   const displayNotes =
     previewNote &&
     previewNote.duration >= 1 &&
-    noteOverlapsRange(previewNote, stepsRange)
+    rangeHelper.noteOverlaps(previewNote, stepsRange)
       ? [...visibleNotes, previewNote]
       : visibleNotes;
 
