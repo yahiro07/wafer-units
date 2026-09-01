@@ -294,7 +294,7 @@ const PitchesSelectionRow = () => {
             <div
               key={i}
               class={cz(
-                "flex-1 bd-clGridBg flex-c h-[32px] cursor-pointer",
+                "flex-1 flex-c h-[32px] cursor-pointer",
                 active && "bg-clHighlight",
               )}
               onClick={() => actions.togglePitchIndex(i)}

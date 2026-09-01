@@ -2,6 +2,7 @@ import { createSequencer } from "@/engine/sequencer";
 import { createSequencerTickDriver } from "@/utils/sequencer-tick-driver";
 import { createSynthesizer } from "@/engine/synthesizer";
 import { actions } from "@/root/actions";
+import { persistenceImpl } from "@/root/persistence";
 import { store } from "@/root/store";
 import { filterObjectValuesNonUndefined } from "@/utils/helpers";
 import { setupMidiKeyboardInput } from "@/utils/midi-keyboard-input";
@@ -28,6 +29,7 @@ function setupUnit() {
         actions.setBpm(bpm);
       },
     },
+    persistence: persistenceImpl,
     clockHandlers: {
       start() {
         store.setHostPlaying(true);
