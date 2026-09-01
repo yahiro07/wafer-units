@@ -37,6 +37,22 @@ function setupUnit() {
       processStep: sequencer.processStep,
       stop: sequencer.stop,
     },
+    persistence: {
+      emitState() {
+        return pickObjectMembers(store.state, {
+          baseStep: 1,
+          octaveShift: 1,
+          stepDuty: 1,
+          shiftEnabled: 1,
+          patternLength: 1,
+          notes: 1,
+          pitchMode: 1,
+        });
+      },
+      applyState(state) {
+        store.assign(state);
+      },
+    },
   });
 }
 
