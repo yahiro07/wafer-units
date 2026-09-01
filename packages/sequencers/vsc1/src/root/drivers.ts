@@ -20,7 +20,7 @@ function setupUnit() {
   unitInterface?.completeSetup({
     unitAspects: {
       unitType: "sequencer",
-      viewSize: [828, 492],
+      viewSize: [828, 540],
     },
     hostCallbacks: {
       setBpm(bpm) {
