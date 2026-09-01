@@ -19,8 +19,8 @@ const helpers = {
     const hz = min * (max / min) ** power2(prCutoff);
     return clampValue(hz, min, max);
   },
-  mapQ(prPeak: number) {
-    return mapUnaryTo(prPeak, 0.707, 20);
+  mapQ(prPeak: number, accent: boolean) {
+    return mapUnaryTo(prPeak, 0.707, 12) + (accent ? 8 : 0);
   },
 };
 
@@ -43,9 +43,7 @@ export function createFilterUnit(bus: SynthesisBus): FilterUnit {
     update(noteNumber: number) {
       const noteFreq = midiToFrequency(noteNumber);
       const cutoff = helpers.mapCutoff(pr.filterCutoff, noteFreq);
-      const q = helpers.mapQ(pr.filterPeak);
       lpf.frequency.value = cutoff;
-      lpf.Q.value = q;
     },
     gateOn(time, accent) {
       lpf.detune.cancelScheduledValues(time);
@@ -53,12 +51,14 @@ export function createFilterUnit(bus: SynthesisBus): FilterUnit {
       const prEnvMod = pr.filterEnvMod;
       const decayTime = calcDecayTime(prDecay);
       if (prEnvMod > 0) {
-        const top = pr.filterEnvMod * 4800 + 1e-3;
+        const top = pr.filterEnvMod * (accent ? 4800 : 3600) + 1e-3;
         lpf.detune.setValueAtTime(top, time);
         lpf.detune.exponentialRampToValueAtTime(1e-3, time + decayTime);
       } else {
         lpf.detune.setValueAtTime(0, time);
       }
+      const q = helpers.mapQ(pr.filterPeak, accent ?? false);
+      lpf.Q.setValueAtTime(q, time);
     },
     gateOff(_time) {},
     cleanup() {

@@ -28,7 +28,7 @@ export function createAmplifierUnit(bus: SynthesisBus): AmplifierUnit {
       const decayTime = calcDecayTime(decay);
 
       headNode.gain.cancelScheduledValues(time);
-      headNode.gain.setValueAtTime(1, time);
+      headNode.gain.setValueAtTime(accent ? 1.5 : 1, time);
       headNode.gain.exponentialRampToValueAtTime(1e-4, time + decayTime);
       headNode.gain.setValueAtTime(0, time + decayTime);
 
