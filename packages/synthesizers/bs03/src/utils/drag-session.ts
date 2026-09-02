@@ -49,6 +49,7 @@ export function startDragSession(
     });
   };
   const onMove = (e: PointerEvent) => {
+    if (e.pointerId !== e0.pointerId) return;
     const position = getPointerPosition(e);
     callbacks.onMove?.({
       position,

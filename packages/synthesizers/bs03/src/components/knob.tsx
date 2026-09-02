@@ -1,6 +1,8 @@
-import { qu } from "@/common/css-realm";
+import { css } from "@/common/css-realm";
+import { uiColors } from "@/common/ui-theme";
 import { KnobFrame } from "@/components/headless/knob-frame";
 import { linearInterpolate } from "@/utils/helpers";
+import { absoluteFull, flexVA } from "@/utils/utility-styles";
 
 export const Knob = ({
   value,
@@ -8,16 +10,12 @@ export const Knob = ({
   min = 0,
   max = 1,
   step = 0.01,
-  onClick,
-  disabled,
 }: {
   value: number;
   onChange: (value: number) => void;
   min?: number;
   max?: number;
   step?: number;
-  onClick?: () => void;
-  disabled?: boolean;
 }) => {
   const tickAngle = linearInterpolate(value, min, max, -135, 135);
   return (
@@ -27,20 +25,43 @@ export const Knob = ({
       max={max}
       step={step}
       onChange={onChange}
-      onClick={onClick}
-      dragDisabled={disabled}
     >
-      <div
-        sx={qu.wh(30, 30).rounded("100%").relative().bg("#888").bd("#444")}
-        style={{ opacity: disabled ? 0.5 : 1 }}
-      >
+      <div class={styles}>
+        <div class="inner"></div>
         <div
-          sx={qu.full().flexVA()}
+          class="tick-plane"
           style={{ transform: `rotate(${tickAngle}deg)` }}
         >
-          <div sx={qu.wh(2, 10).bg("#fff")} />
+          <div class="tick" />
         </div>
       </div>
     </KnobFrame>
   );
 };
+const styles = css({
+  position: "relative",
+  borderRadius: "50%",
+  "&:hover": {
+    opacity: 0.8,
+  },
+  width: "80px",
+  height: "80px",
+  background: "linear-gradient(to bottom, #fff, #0004)",
+  padding: "7px",
+  border: "solid 0.5px #666",
+  "> .inner": {
+    width: "100%",
+    height: "100%",
+    borderRadius: "50%",
+    background: "#eee",
+  },
+  "> .tick-plane": {
+    ...absoluteFull(),
+    ...flexVA(),
+    "> .tick": {
+      width: "4px",
+      height: "15px",
+      background: uiColors.clKnobTick,
+    },
+  },
+});

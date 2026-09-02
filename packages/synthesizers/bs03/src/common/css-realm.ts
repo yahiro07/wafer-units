@@ -1,3 +1,3 @@
-import { createCssRealm } from "qulex";
+import { createCssRealm } from "mini-css";
 
-export const { qu, cz, cssRealm } = createCssRealm();
+export const { css, cz, styled, cssRealm } = createCssRealm();

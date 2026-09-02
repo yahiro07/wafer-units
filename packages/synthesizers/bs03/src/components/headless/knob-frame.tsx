@@ -12,6 +12,7 @@ export function KnobFrame(props: {
   dragRange?: number;
   onClick?: () => void;
   dragDisabled?: boolean;
+  invertY?: boolean;
 }) {
   const handlePointerDown = (e0: PointerEvent) => {
     const min = props.min;
@@ -20,6 +21,7 @@ export function KnobFrame(props: {
     const dragRange = props.dragRange ?? 100;
 
     const originalValue = props.value;
+    let lastValue = originalValue;
 
     let moved = false;
     let totalDist = 0;
@@ -27,14 +29,20 @@ export function KnobFrame(props: {
       onMove(e) {
         if (props.dragDisabled) return;
 
-        const delta =
+        let delta =
           -(e.position.y - e.originalPosition.y) / (dragRange / (max - min));
+        if (props.invertY) {
+          delta = -delta;
+        }
         let newValue = originalValue + delta;
         if (step > 0) {
           newValue = Math.round(newValue / step) * step;
         }
         newValue = clampValue(newValue, min, max);
-        props.onChange(newValue);
+        if (newValue !== lastValue) {
+          props.onChange(newValue);
+          lastValue = newValue;
+        }
         totalDist += Math.abs(e.position.y - e.originalPosition.y);
         if (totalDist > 4) {
           moved = true;

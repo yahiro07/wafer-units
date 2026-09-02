@@ -1,5 +1,33 @@
+export function seqNumbers(n: number): number[] {
+  return new Array(n).fill(0).map((_, i) => i);
+}
+
+export function fillNumbers(n: number, value: number): number[] {
+  return new Array(n).fill(value);
+}
+
+export function fillArray<T>(n: number, value: T): T[] {
+  return new Array(n).fill(value);
+}
+
+export function iife<T>(fn: () => T): T {
+  return fn();
+}
+
+export function bottomLimit(value: number, lo: number) {
+  return Math.max(value, lo);
+}
+
+export function topLimit(value: number, hi: number) {
+  return Math.min(value, hi);
+}
+
 export function clampValue(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), max);
+}
+
+export function inBetween(value: number, min: number, max: number) {
+  return value >= min && value <= max;
 }
 
 export function linearInterpolate(
@@ -28,6 +56,42 @@ export function unaryFromByte(byte: number): number {
   return byte / 255;
 }
 
-export function npx(value: number) {
-  return `${value}px`;
+export function pickObjectMembers<T extends {}, K extends keyof T>(
+  obj: T,
+  keys: K[] | Record<K, 1 | true>,
+  options?: { ignoreUndefined?: boolean },
+): Pick<T, K> {
+  const keysArray = Array.isArray(keys) ? keys : (Object.keys(keys) as K[]);
+  const resObject: Pick<T, K> = {} as Pick<T, K>;
+  for (const key of keysArray) {
+    const value = obj[key];
+    if (value === undefined && options?.ignoreUndefined) continue;
+    resObject[key] = obj[key];
+  }
+  return resObject;
+}
+
+export function filterObjectValuesNonUndefined<T extends object>(obj: T) {
+  const resObject: Partial<T> = {};
+  for (const key in obj) {
+    const value = obj[key];
+    if (value === undefined) continue;
+    resObject[key] = value;
+  }
+  return resObject;
+}
+
+export function removeArrayItem<T>(items: T[], item: T) {
+  const index = items.indexOf(item);
+  if (index >= 0) {
+    items.splice(index, 1);
+  }
+}
+
+export function removeArrayItems<T>(items: T[], cond: (item: T) => boolean) {
+  for (let i = items.length - 1; i >= 0; i--) {
+    if (cond(items[i])) {
+      items.splice(i, 1);
+    }
+  }
 }
