@@ -3,13 +3,9 @@ import { KeyLabelMode, LoopBars } from "@/root/parameters";
 import { store } from "@/root/store";
 import { seqNumbers } from "@/utils/helpers";
 
-const keyLabelModes: KeyLabelMode[] = [
-  "doremi",
-  "degreeMajor",
-  "degreeMinor",
-];
+const keyLabelModes: KeyLabelMode[] = ["doremi", "degreeMajor", "degreeMinor"];
 
-const loopBarsValues: LoopBars[] = [1, 2, 4, 8];
+const loopBarsValues: LoopBars[] = [1, 2, 4, 8, 16];
 
 const EMPTY_NOTE = 255;
 

@@ -15,6 +15,7 @@ const LoopBarsOptions = createSelectorOptions<LoopBars>([
   [2, "2"],
   [4, "4"],
   [8, "8"],
+  [16, "16"],
 ]);
 
 function useKeyLabelModeOptions() {
@@ -90,7 +91,17 @@ const BeatDotCellContent = ({
   i: number;
   playStepIndex: number;
 }) => {
-  if (bars === 8) {
+  if (bars === 16) {
+    return (
+      <div sx={qu.flexC().gap(1.3)}>
+        {seqNumbers(4).map((j) => {
+          const si = i * 4 + j;
+          const active = playStepIndex >> 2 === si;
+          return <BeatDot key={j} active={active} />;
+        })}
+      </div>
+    );
+  } else if (bars === 8) {
     const stepIndex = i * bars;
     const active1 = playStepIndex >= 0 && stepIndex >> 2 === playStepIndex >> 2;
     const active2 =
