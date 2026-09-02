@@ -29,8 +29,8 @@ export function createAmplifierUnit(bus: SynthesisBus): AmplifierUnit {
 
       headNode.gain.cancelScheduledValues(time);
       headNode.gain.setValueAtTime(accent ? 1.5 : 1, time);
-      headNode.gain.exponentialRampToValueAtTime(1e-4, time + decayTime);
-      headNode.gain.setValueAtTime(0, time + decayTime);
+      headNode.gain.exponentialRampToValueAtTime(1e-2, time + decayTime);
+      headNode.gain.linearRampToValueAtTime(0, time + decayTime + 0.01);
 
       tailNode.gain.setValueAtTime(1, time);
     },
@@ -38,9 +38,7 @@ export function createAmplifierUnit(bus: SynthesisBus): AmplifierUnit {
       const releaseTime = 0.01;
       tailNode.gain.cancelScheduledValues(time);
       tailNode.gain.setValueAtTime(1, time);
-      tailNode.gain.exponentialRampToValueAtTime(1e-4, time + releaseTime);
-      tailNode.gain.setValueAtTime(0, time + releaseTime);
-
+      tailNode.gain.linearRampToValueAtTime(0, time + releaseTime);
       return time + releaseTime;
     },
     mute(time) {

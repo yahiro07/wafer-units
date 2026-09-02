@@ -5,6 +5,7 @@ import {
   invPower2,
   mapUnaryTo,
   midiToFrequency,
+  power2,
 } from "@/utils/synth-math-utils";
 
 type FilterUnit = {
@@ -18,12 +19,12 @@ type FilterUnit = {
 
 const helpers = {
   mapCutoff(prCutoff: number, noteFreq: number) {
-    const max = 18000;
-    const min = bottomLimit(noteFreq / 4, 80);
+    const max = 12000;
+    const min = bottomLimit(noteFreq / 4, 40);
     return min * (max / min) ** (prCutoff ** 1.3);
   },
   mapQ(prPeak: number, accent: boolean) {
-    return prPeak * 20 + (accent ? 4 : 0);
+    return power2(prPeak) * 25 + (accent ? 5 : 0);
   },
 };
 
@@ -55,9 +56,9 @@ export function createFilterUnit(bus: SynthesisBus): FilterUnit {
       const decayTime = calcDecayTime(prDecay, accent ?? false);
       if (prEnvMod > 0) {
         const top =
-          pr.filterEnvMod * mapUnaryTo(invPower2(pr.filterPeak), 1800, 3600);
-        lpf.detune.setValueAtTime(top + 1e-3, time);
-        lpf.detune.exponentialRampToValueAtTime(1e-3, time + decayTime);
+          pr.filterEnvMod * mapUnaryTo(invPower2(pr.filterPeak), 1800, 4800);
+        lpf.detune.setValueAtTime(top + 1e-2, time);
+        lpf.detune.exponentialRampToValueAtTime(1e-2, time + decayTime);
       } else {
         lpf.detune.setValueAtTime(0, time);
       }

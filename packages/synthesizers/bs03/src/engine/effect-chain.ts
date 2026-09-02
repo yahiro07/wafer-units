@@ -37,7 +37,7 @@ export function createEffectChain(bus: SynthesisBus): EffectChain {
       const pr = bus.parameters;
       driveShaper.update(pr.drive);
       patchGain.gain.value = mapKnobCurveCenterUnity(pr.patchVolume);
-      saturator.update(2);
+      saturator.update(1);
     },
     cleanup() {
       disconnects();
