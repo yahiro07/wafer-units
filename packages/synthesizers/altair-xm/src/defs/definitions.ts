@@ -68,6 +68,12 @@ export const defaultSynthParameters: SynthParameters = {
   density: 0,
   patchVolume: 0.5,
 };
+if (0) {
+  Object.assign(defaultSynthParameters, {
+    osc1Unison: 0,
+    amp1Full: true,
+  });
+}
 
 export const fixedParameters = {
   ampHead: 0,

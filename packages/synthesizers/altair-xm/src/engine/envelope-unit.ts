@@ -1,7 +1,8 @@
 import { fixedParameters, LaneId } from "@/defs/definitions";
+import { createCustomCurveBuilder } from "@/engine/custom-curve-builder";
 import { ampParameterKeys, SynthesisBus } from "@/engine/engine-defs";
 import { connectNodes, disconnectNodes } from "@/engine/webaudio-helpers";
-import { invPower2, mapUnaryTo, power2 } from "@/utils/synth-math-utils";
+import { mapUnaryTo, power2 } from "@/utils/synth-math-utils";
 
 type EnvelopeUnit = {
   outputNode: AudioNode; //DC, mostly 0~1
@@ -47,13 +48,15 @@ const helpers = {
   },
   calcDecayTime(prDecay: number) {
     const minDecayTime = 0.2;
-    return invPower2(prDecay) * configs.expDecayTimeMax + minDecayTime;
+    return prDecay * configs.expDecayTimeMax + minDecayTime;
   },
   calcReleaseTime(prAmpRelease: number) {
     const jumpTime = 0.001;
-    return invPower2(prAmpRelease) * configs.expReleaseTimeMax + jumpTime;
+    return prAmpRelease * configs.expReleaseTimeMax + jumpTime;
   },
 };
+
+const customCurve = createCustomCurveBuilder();
 
 export function createEnvelopeUnit(
   bus: SynthesisBus,
@@ -104,12 +107,11 @@ export function createEnvelopeUnit(
       const decayTime = helpers.calcDecayTime(decay);
       headNode.gain.setValueAtTime(0, time);
       headNode.gain.linearRampToValueAtTime(1, time + attackTime);
-      headNode.gain.exponentialRampToValueAtTime(
-        sustain + 1e-4,
-        time + attackTime + decayTime,
+      headNode.gain.setValueCurveAtTime(
+        customCurve.map(1, sustain, 0.03),
+        time + attackTime,
+        decayTime,
       );
-      headNode.gain.setValueAtTime(sustain, time + attackTime + decayTime);
-
       tailNode.gain.setValueAtTime(1, time);
     },
     gateOff(time, applyRelease) {
@@ -119,8 +121,11 @@ export function createEnvelopeUnit(
         const prRelease = pr[pk.release];
         let releaseTime = 0;
         releaseTime = helpers.calcReleaseTime(prRelease);
-        tailNode.gain.exponentialRampToValueAtTime(1e-4, time + releaseTime);
-        tailNode.gain.setValueAtTime(0, time + releaseTime);
+        tailNode.gain.setValueCurveAtTime(
+          customCurve.map(1, 0, 0.01),
+          time,
+          releaseTime,
+        );
         return time + releaseTime;
       } else {
         return time;
