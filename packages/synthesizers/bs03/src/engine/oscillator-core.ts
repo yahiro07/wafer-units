@@ -1,3 +1,5 @@
+import { connectNodes, disconnectNodes } from "@/engine/webaudio-helpers";
+
 export type OscillatorCore = {
   oscNode: OscillatorNode;
   start(time: number): void;
@@ -16,20 +18,23 @@ export function createOscillatorCore(
   const gainNode = ac.createGain();
   const pannerNode = ac.createStereoPanner();
 
-  oscNode.connect(gainNode).connect(pannerNode).connect(destinationNode);
+  connectNodes(oscNode, gainNode, pannerNode, destinationNode);
 
   let lastWave: OscillatorType | PeriodicWave | undefined;
+  let running = false;
 
   return {
     oscNode,
     start(time: number) {
       oscNode.start(time);
+      running = true;
     },
     stop() {
-      oscNode.stop();
-      oscNode.disconnect();
-      gainNode.disconnect();
-      pannerNode.disconnect();
+      if (running) {
+        oscNode.stop();
+        running = false;
+      }
+      disconnectNodes(oscNode, gainNode, pannerNode);
     },
     setFrequency(frequency: number) {
       if (oscNode.frequency.value !== frequency) {
