@@ -16,6 +16,6 @@ const nameSeries = [
 ];
 
 export function mapKeySpecToKeysName(keySpec: SongKeySpec) {
-  const index = (keySpec.keyTranspose + 24) % 12;
+  const index = (keySpec.relativeKeyTranspose + 24) % 12;
   return nameSeries[index];
 }

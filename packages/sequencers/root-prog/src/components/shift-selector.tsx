@@ -2,6 +2,7 @@ import { ComponentChildren } from "preact";
 import { cz, qu } from "@/common/css-realm";
 import { SelectorOption } from "@/utils/selector-option";
 import { Icons } from "@/components/icons";
+import { uiColors } from "@/common/ui-theme";
 
 export const ShifterFrame = ({
   children,
@@ -26,12 +27,12 @@ export const ShiftSelector = <T extends string | number>({
   options,
   value,
   onChange,
-  winWidth = 60,
+  minWidth = 60,
 }: {
   options: SelectorOption<T>[];
   value: T;
   onChange: (value: T) => void;
-  winWidth?: number;
+  minWidth?: number;
 }) => {
   const currentIndex = options.findIndex((option) => option.value === value);
   const currentOption = options[currentIndex];
@@ -48,8 +49,9 @@ export const ShiftSelector = <T extends string | number>({
     <ShifterFrame onShift={handleShift}>
       <div
         sx={[
-          qu.flexHA().fJustify("between").minW(winWidth).h(30).fontSize(14),
-          qu.bg("#ddd").cursor("pointer"),
+          qu.flexHA().fJustify("between").minW(minWidth).h(36).fontSize(16),
+          qu.bg(uiColors.selectorBg).bd(uiColors.clEdgeLine).cursor("pointer"),
+          qu.rounded(2),
         ]}
       >
         <Icons.CaretLeft

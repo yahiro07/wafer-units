@@ -1,8 +1,30 @@
+import {
+  defaultSequencerEditState,
+  defaultSynthesizerEditState,
+  SequencerEditState,
+  SynthesizerEditState,
+} from "@/defs/definitions";
 import { createStore } from "snap-store";
-import { defaultSynthParameters, SynthParameters } from "@/root/synth-common";
 
-export const store = createStore<{
-  parameters: SynthParameters;
-}>({
-  parameters: defaultSynthParameters,
+type StoreState = SequencerEditState &
+  SynthesizerEditState & {
+    standalonePlaying: boolean;
+    hostPlaying: boolean;
+    bpm: number;
+    playPosition: number;
+    pitchPresetIndex: number;
+    lockPitchPreset: boolean;
+    lockParameters: boolean;
+  };
+
+export const store = createStore<StoreState>({
+  ...defaultSequencerEditState,
+  ...defaultSynthesizerEditState,
+  standalonePlaying: false,
+  hostPlaying: false,
+  bpm: 120,
+  playPosition: -1,
+  pitchPresetIndex: 0,
+  lockPitchPreset: false,
+  lockParameters: false,
 });

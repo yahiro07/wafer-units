@@ -22,12 +22,19 @@ export const actions = {
   ) {
     store.patchParameters({ [key]: value });
   },
+  toggleBoolParameter<K extends "sub" | "decayAltAttack">(key: K) {
+    store.patchParameters({ [key]: !store.state.parameters[key] });
+  },
+  toggleShapeEnvRange() {
+    const next = store.state.parameters.envRange === 1 ? 0 : 1;
+    store.patchParameters({ envRange: next });
+  },
   randomizeParameters() {
     const paramAttrs = createRandomParameters();
     store.patchParameters(paramAttrs);
   },
   async emitPresetData() {
-    const { master: _, ...attrs } = store.state.parameters;
+    const { ...attrs } = store.state.parameters;
     const jsonText = JSON.stringify(attrs, null, 2).replaceAll(
       /\.(\d+)/g,
       (_match, digits: string) => "." + digits.slice(0, 2),

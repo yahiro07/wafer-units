@@ -4,14 +4,15 @@
   "type": "module",
   "scripts": {
     "dev": "vite dev",
-    "build": "vite build",
-    "watch": "vite build --watch",
-    "typecheck": "tsc"
+    "build": "vite build"
   },
-  "dependencies": {
+  "devDependencies": {
     "@preact/preset-vite": "catalog:",
+    "@unocss/preset-wind4": "catalog:",
+    "@unocss/vite": "catalog:",
+    "mini-css": "catalog:",
     "preact": "catalog:",
-    "qulex": "catalog:",
-    "snap-store": "catalog:"
+    "snap-store": "catalog:",
+    "unocss": "catalog:"
   }
 }

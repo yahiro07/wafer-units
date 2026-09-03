@@ -23,7 +23,7 @@ export const LabeledBox = ({
       style={width ? { width: npx(width) } : undefined}
     >
       <div
-        sx={qu.fontSize(11).weight("bold").h(13)}
+        sx={qu.fontSize(14).weight("bold").h(13)}
         style={{ textAlign: labelAlign }}
       >
         {label}

@@ -1,0 +1,28 @@
+export type BaseStep = "16th" | "8th";
+
+export type PatternLength = 4 | 8 | 16 | 32 | 64;
+
+export type Note = {
+  id: number;
+  pitch: number;
+  position: number;
+  duration: number;
+};
+
+export type SequencerEditState = {
+  baseStep: BaseStep;
+  octaveShift: number;
+  stepDuty: number;
+  shiftEnabled: boolean;
+  patternLength: PatternLength;
+  notes: Note[];
+};
+
+export const defaultSequencerEditState: SequencerEditState = {
+  baseStep: "16th",
+  octaveShift: 0,
+  stepDuty: 1,
+  shiftEnabled: true,
+  patternLength: 4,
+  notes: [],
+};

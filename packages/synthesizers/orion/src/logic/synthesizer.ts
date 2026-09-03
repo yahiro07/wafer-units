@@ -1,6 +1,7 @@
 import { UnitInterface } from "wafer-host/unit-types";
 import workletUrl from "./worklet?worker&url";
-import { createEffectChain } from "@/logic/effect-chain";
+import lofiWorkletUrl from "./lofi-worklet?worker&url";
+import { createEffectChain, EffectChain } from "@/logic/effect-chain";
 import { defaultSynthParameters, SynthParameters } from "@/defs/definitions";
 import { midiToFrequency } from "@/logic/synth-math-utils";
 
@@ -42,7 +43,7 @@ function createVoice(
   const workletNode = new AudioWorkletNode(audioCtx, "synth-processor", {
     numberOfInputs: 0,
     numberOfOutputs: 1,
-    outputChannelCount: [1],
+    outputChannelCount: [2],
   });
   const gateParam = workletNode.parameters.get("gate");
   if (!gateParam) {
@@ -82,11 +83,18 @@ function createVoice(
             key === "chorus" ||
             key === "delay" ||
             key === "reverb" ||
-            key === "master"
+            key === "patchVolume" ||
+            key === "loFi"
           ) {
             return;
           }
-          internal.setParamAtTime(key, synthParameters[key], time, smooth);
+          const value = synthParameters[key];
+          internal.setParamAtTime(
+            key,
+            typeof value === "boolean" ? (value ? 1 : 0) : value,
+            time,
+            smooth,
+          );
         },
       );
     },
@@ -221,18 +229,30 @@ export function createSynthesizerEngine(
 
   const mainOutputNode = audioCtx.createGain();
   mainOutputNode.gain.setValueAtTime(
-    synthParameters.master,
+    synthParameters.patchVolume * 0.7,
     audioCtx.currentTime,
   );
-  const effectChain = createEffectChain(audioCtx);
-  mainOutputNode.connect(effectChain.inputNode);
-  effectChain.outputNode.connect(destinationNode);
 
+  let effectChain: EffectChain | undefined;
   let voices: Voice[] = [];
   const activeVoices = new Map<number, Voice>();
+  let disposed = false;
 
   async function init(): Promise<void> {
-    await audioCtx.audioWorklet.addModule(workletUrl);
+    await Promise.all([
+      audioCtx.audioWorklet.addModule(workletUrl),
+      audioCtx.audioWorklet.addModule(lofiWorkletUrl),
+    ]);
+    if (disposed) return;
+    effectChain = createEffectChain(audioCtx);
+    mainOutputNode.connect(effectChain.inputNode);
+    effectChain.outputNode.connect(destinationNode);
+    effectChain.updateParameters({
+      loFi: synthParameters.loFi,
+      chorus: synthParameters.chorus,
+      delay: synthParameters.delay,
+      reverb: synthParameters.reverb,
+    });
     voices = Array.from({ length: MAX_VOICES }, () =>
       createVoice(audioCtx, mainOutputNode, synthParameters),
     );
@@ -245,14 +265,15 @@ export function createSynthesizerEngine(
 
       const now = audioCtx.currentTime;
       mainOutputNode.gain.setTargetAtTime(
-        synthParameters.master,
+        synthParameters.patchVolume * 0.7,
         now,
         PARAM_SMOOTHING_SECONDS,
       );
       voices.forEach((voice) => {
         voice.applyParametersToNodes();
       });
-      effectChain.updateParameters({
+      effectChain?.updateParameters({
+        loFi: synthParameters.loFi,
         chorus: synthParameters.chorus,
         delay: synthParameters.delay,
         reverb: synthParameters.reverb,
@@ -298,16 +319,18 @@ export function createSynthesizerEngine(
     },
 
     setBpm(bpm) {
-      effectChain.setBpm(bpm);
+      effectChain?.setBpm(bpm);
     },
 
     cleanup() {
+      disposed = true;
       activeVoices.clear();
       voices.forEach((voice) => {
         voice.cleanup();
       });
       voices = [];
-      effectChain.cleanup();
+      effectChain?.cleanup();
+      effectChain = undefined;
       mainOutputNode.disconnect();
     },
   };

@@ -18,7 +18,7 @@ function setupUnit() {
     },
     hostCallbacks: {
       setKey(keySpec) {
-        sequencer.setKeyTranspose(keySpec.keyTranspose);
+        sequencer.setKeyTranspose(keySpec.relativeKeyTranspose);
       },
     },
     clockHandlers: sequencer.clockHandlers,

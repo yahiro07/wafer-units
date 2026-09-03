@@ -16,6 +16,8 @@
     "qstyle",
     "qulex",
     "oxlint",
-    "preact"
+    "preact",
+    "lerp",
+    "unocss"
   ]
 }

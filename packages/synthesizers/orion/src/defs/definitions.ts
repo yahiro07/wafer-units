@@ -1,25 +1,51 @@
+import { appEnvs } from "@/defs/app-envs";
+
 export enum WaveMode {
-  PD = 0,
-  FM = 1,
-  PTM2 = 2,
-  PTM3 = 3,
-  PTM4 = 4,
-  PTM5 = 5,
-  PTM6 = 6,
-  PTM7 = 7,
-  PTM8 = 8,
-  PTM9 = 9,
-  PTM10 = 10,
-  PTM11 = 11,
-  NumWaveModes = 12,
+  PD1,
+  PD2,
+  PD3,
+  PD4,
+  PD5,
+  PD6,
+  PD7,
+  //
+  FM1,
+  FM2,
+  //
+  PTM1,
+  PTM2,
+  PTM3,
+  PTM4,
+  PTM5,
+  PTM6,
+  // PTM7,
+  // PTM8,
+  // PTM9,
+  //
+  PDM1,
+  PDM2,
+  PDM3,
+  PDM4,
+  PDM5,
+  PDM6,
+  // PDM7,
+  // PDM8,
+}
+export const numWaveModes = 21;
+
+export enum ShapeEnvRange {
+  Low = 0,
+  High = 1, //default
 }
 
 export type SynthParameters = {
   waveMode: WaveMode;
   shape: number;
-  envMod: number;
+  envRange: ShapeEnvRange;
+  envDecay: number;
   detune: number;
-  sub: number;
+  sub: boolean;
+  decayAltAttack: boolean;
   decay: number;
   release: number;
   drift: number;
@@ -27,23 +53,37 @@ export type SynthParameters = {
   chorus: number;
   delay: number;
   reverb: number;
-  master: number;
+  patchVolume: number;
 };
 
-export type SynthPresetParameters = Omit<SynthParameters, "master">;
+export type SynthPresetParameters = SynthParameters;
+
+export type SynthLinearParameters = Omit<
+  SynthParameters,
+  "sub" | "decayAltAttack"
+>;
 
 export const defaultSynthParameters: SynthParameters = {
-  waveMode: WaveMode.PD,
-  shape: 0,
-  envMod: 0,
+  waveMode: WaveMode.PD1,
+  shape: 1,
+  envRange: ShapeEnvRange.High,
+  envDecay: 0,
   detune: 0,
-  sub: 0,
-  decay: 0.5,
+  sub: false,
+  decayAltAttack: false,
+  decay: 1,
   release: 0,
   drift: 0,
   loFi: 0,
   chorus: 0,
   delay: 0,
   reverb: 0,
-  master: 0.5,
+  patchVolume: 0.5,
 };
+
+if (appEnvs.isDevelopment && 0) {
+  Object.assign(defaultSynthParameters, {
+    decay: 0.5,
+    release: 0.5,
+  });
+}

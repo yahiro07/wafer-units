@@ -57,7 +57,7 @@ function setupSynchronization() {
     },
     hostCallbacks: {
       setKey(keySpec) {
-        sequencer.setKeyTranspose(keySpec.keyTranspose);
+        sequencer.setKeyTranspose(keySpec.relativeKeyTranspose);
         const keysName = mapKeySpecToKeysName(keySpec);
         store.setCurrentKeysName(keysName);
       },

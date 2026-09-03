@@ -1,52 +1,124 @@
-import { queryUnitInterface } from "wafer-host/unit-types";
-import { createEngine } from "@/root/engine";
-import { persistence } from "@/root/persistence";
+import { createSequencer } from "@/engine/sequencer";
+import { createSequencerTickDriver } from "@/utils/sequencer-tick-driver";
+import { createSynthesizer } from "@/engine/synthesizer";
+import { actions } from "@/root/actions";
+import { createAutomationInput } from "@/root/automation";
+import { persistenceImpl } from "@/root/persistence";
 import { store } from "@/root/store";
+import { filterObjectValuesNonUndefined } from "@/utils/helpers";
 import { setupMidiKeyboardInput } from "@/utils/midi-keyboard-input";
+import { useEffect } from "preact/hooks";
+import { queryUnitInterface } from "wafer-host/unit-types";
 
 const unitInterface = queryUnitInterface("wafer-v01");
+const audioContext = unitInterface?.audioContext ?? new AudioContext();
 
-const engine = createEngine(unitInterface);
+const synthesizer = createSynthesizer(unitInterface, audioContext);
+const sequencer = createSequencer(audioContext, synthesizer);
+const sequencerTickDriver = createSequencerTickDriver(audioContext);
 
-export function setupUnit() {
-  engine.connects();
+synthesizer.setParameters(store.state.synthParameters);
 
-  if (unitInterface) {
-    unitInterface.completeSetup({
-      unitAspects: {
-        unitType: "effect",
-        viewSize: [300, 160],
+function setupUnit() {
+  unitInterface?.completeSetup({
+    unitAspects: {
+      unitType: "instrument",
+      viewSize: [1048, 583],
+    },
+    hostCallbacks: {
+      setBpm(bpm) {
+        actions.setBpm(bpm);
       },
-      noteInput: {
-        noteOn(noteNumber, time) {
-          engine.noteOn(noteNumber, time ?? 0);
-        },
-        noteOff(noteNumber, time) {
-          engine.noteOff(noteNumber, time ?? 0);
-        },
+    },
+    persistence: persistenceImpl,
+    automationInput: createAutomationInput(audioContext),
+    clockHandlers: {
+      start() {
+        store.setHostPlaying(true);
+        sequencer.start();
       },
-      hostCallbacks: {
-        setBpm: engine.setBpm,
+      processStep(stepIndex, time, unitDuration) {
+        sequencer.step(stepIndex, time, unitDuration);
       },
-      persistence,
-      cleanup: engine.disconnects,
+      stop() {
+        store.setHostPlaying(false);
+        sequencer.stop();
+      },
+    },
+    // noteInput: {
+    //   noteOn: synthesizer.noteOn,
+    //   noteOff: synthesizer.noteOff,
+    // },
+    cleanup() {
+      synthesizer.cleanup();
+      sequencer.cleanup();
+    },
+  });
+}
+
+function setupSynchronization() {
+  const unsubscribeStore = store.subscribe((attrs) => {
+    const {
+      synthParameters,
+      stepNotes,
+      stepModifierFlags,
+      bpm,
+      standalonePlaying,
+    } = attrs;
+    if (synthParameters !== undefined) {
+      synthesizer.setParameters(synthParameters);
+    }
+    const sequencerAttrs = filterObjectValuesNonUndefined({
+      stepNotes,
+      stepModifierFlags,
     });
-  } else {
-    setupMidiKeyboardInput({
-      noteOn(noteNumber: number) {
-        engine.noteOn(noteNumber, 0);
+    if (Object.keys(sequencerAttrs).length > 0) {
+      sequencer.patchEditState(sequencerAttrs);
+    }
+    if (bpm !== undefined) {
+      sequencerTickDriver.setBpm(bpm);
+    }
+
+    if (standalonePlaying !== undefined) {
+      if (standalonePlaying) {
+        sequencerTickDriver.start({
+          start: sequencer.start,
+          processStep: sequencer.step,
+          stop: sequencer.stop,
+        });
+      } else {
+        sequencerTickDriver.stop();
+      }
+    }
+  }, true);
+
+  const unsubscribeSequencer = sequencer.setListener({
+    setPlayPosition(stepIndex) {
+      store.setPlayPosition(stepIndex);
+    },
+  });
+
+  let unsubscribeMidiIn: (() => void) | undefined;
+
+  if (!unitInterface) {
+    unsubscribeMidiIn = setupMidiKeyboardInput({
+      noteOn(noteNumber) {
+        synthesizer.noteOn(noteNumber, audioContext.currentTime);
       },
-      noteOff(noteNumber: number) {
-        engine.noteOff(noteNumber, 0);
+      noteOff(noteNumber) {
+        synthesizer.noteOff(noteNumber, audioContext.currentTime);
       },
     });
   }
+  return () => {
+    unsubscribeStore();
+    unsubscribeSequencer();
+    unsubscribeMidiIn?.();
+    sequencerTickDriver.stop();
+  };
 }
 
-export function setupSynchronization() {
-  return store.subscribe(({ parameters }) => {
-    if (parameters) {
-      engine.setParameters(parameters);
-    }
-  }, true);
+export function useSetupDrivers() {
+  useEffect(setupUnit, []);
+  useEffect(setupSynchronization, []);
 }

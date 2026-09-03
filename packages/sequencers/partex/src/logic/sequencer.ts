@@ -1,5 +1,8 @@
 import { mapUnaryTo } from "mofur/ax";
-import { queryUnitInterfaceForModule } from "wafer-host/unit-types";
+import {
+  NoteAttributes,
+  queryUnitInterfaceForModule,
+} from "wafer-host/unit-types";
 import { resolveNotePitch } from "@/logic/resolve-note-pitch";
 import { createUnitInterfaceDebugDummy } from "@/logic/unit-interface-debug-dummy";
 
@@ -69,8 +72,8 @@ function createSequencer() {
     },
     processStep: core.processStep,
     allNotesOff() {},
-    inputNoteOn(note: number, time: number, velocity: number) {
-      noteOutputPort.noteOn(note, time, velocity);
+    inputNoteOn(note: number, time: number, attrs: NoteAttributes) {
+      noteOutputPort.noteOn(note, time, attrs);
     },
     inputNoteOff(note: number, time: number) {
       noteOutputPort.noteOff(note, time);
