@@ -1,7 +1,7 @@
 import { UnitInterface } from "wafer-host/unit-types";
 import { ChannelParameters, EffectParameters } from "@/core/definitions";
-import { mapUnaryFrom } from "@/utils/synth-math-utils";
-import { connectNodes } from "@/core/webaudio-helper";
+import { invPower2, mapUnaryFrom, mapUnaryTo } from "@/utils/synth-math-utils";
+import { connectNodes, disconnectNodes } from "@/core/webaudio-helper";
 import { mapKnobCurveCenterUnity } from "@/core/volume-curve";
 
 type ChannelStripLane = {
@@ -9,6 +9,7 @@ type ChannelStripLane = {
   mainOutputNode: AudioNode;
   auxOutputNode: AudioNode;
   update(params: ChannelParameters): void;
+  cleanup(): void;
 };
 
 type SwitchedFilter = {
@@ -16,10 +17,22 @@ type SwitchedFilter = {
   update(params: { prFreq: number; prQ: number }): void;
 };
 
-function mapCutoff(prFreqU: number): number {
-  const top = Math.log2(20000);
-  return Math.pow(2, prFreqU * top);
-}
+const cutoffHelper = {
+  _mapCutoff(prFreqU: number, minFreq: number, maxFreq: number): number {
+    const bottom = Math.log2(minFreq);
+    const top = Math.log2(maxFreq);
+    return Math.pow(2, mapUnaryTo(prFreqU, bottom, top));
+  },
+  mapCutoffLP(prFreqU: number): number {
+    return cutoffHelper._mapCutoff(prFreqU, 40, 20_000);
+  },
+  mapCutoffHP(prFreqU: number): number {
+    return cutoffHelper._mapCutoff(invPower2(prFreqU), 20, 14000);
+  },
+  mapCutoffTilt(prFreqU: number): number {
+    return cutoffHelper._mapCutoff(prFreqU, 100, 8_000);
+  },
+};
 
 function createSwitchedFilter(ac: AudioContext): SwitchedFilter {
   const filterNode = ac.createBiquadFilter();
@@ -29,13 +42,13 @@ function createSwitchedFilter(ac: AudioContext): SwitchedFilter {
       if (prFreq < 0.5) {
         filterNode.type = "lowpass";
         const prFreqU = mapUnaryFrom(prFreq, 0, 0.5);
-        filterNode.frequency.value = mapCutoff(prFreqU);
+        filterNode.frequency.value = cutoffHelper.mapCutoffLP(prFreqU);
       } else {
         filterNode.type = "highpass";
         const prFreqU = mapUnaryFrom(prFreq, 0.5, 1);
-        filterNode.frequency.value = mapCutoff(prFreqU);
+        filterNode.frequency.value = cutoffHelper.mapCutoffHP(prFreqU);
       }
-      filterNode.Q.value = prQ * 10;
+      filterNode.Q.value = 0.707 + prQ * 8;
     },
   };
 }
@@ -53,14 +66,16 @@ function createTiltingEq(ac: AudioContext): TiltingEq {
   filter1.connect(filter2);
   filter1.type = "lowshelf";
   filter2.type = "highshelf";
+  filter1.Q.value = 0.7;
+  filter2.Q.value = 0.7;
   return {
     inputNode: filter1,
     outputNode: filter2,
     update({ prFreq, prTilt }) {
-      const freq = mapCutoff(prFreq);
+      const freq = cutoffHelper.mapCutoffTilt(prFreq);
       filter1.frequency.value = freq;
       filter2.frequency.value = freq;
-      const tiltDb = prTilt * 8;
+      const tiltDb = (prTilt * 2 - 1) * 12;
       filter1.gain.value = -tiltDb;
       filter2.gain.value = tiltDb;
     },
@@ -78,7 +93,7 @@ function createChannelStripLane(ac: AudioContext): ChannelStripLane {
   const filter = createSwitchedFilter(ac);
   const eq = createTiltingEq(ac);
   const panner = ac.createStereoPanner();
-  connectNodes(inputNode, filter.node, eq.inputNode, panner);
+  connectNodes(inputNode, filter.node, eq, panner);
   panner.connect(mainOutputNode);
   panner.connect(auxOutputNode);
 
@@ -98,6 +113,10 @@ function createChannelStripLane(ac: AudioContext): ChannelStripLane {
       panner.pan.value = params.pan;
       mainOutputNode.gain.value = mapKnobCurveCenterUnity(params.levelMain);
       auxOutputNode.gain.value = mapKnobCurveCenterUnity(params.levelAux);
+    },
+    cleanup() {
+      disconnectNodes(inputNode, filter.node, eq);
+      eq.cleanup();
     },
   };
 }
