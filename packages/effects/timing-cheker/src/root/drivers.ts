@@ -3,6 +3,7 @@ import { queryUnitInterface } from "wafer-host/unit-types";
 import { createSchedulingPlotter } from "@/root/scheduling-plotter";
 import { store } from "@/root/store";
 import { createWavePlotter } from "@/root/wave-plotter";
+import { createNotesPlotter } from "@/root/notes-plotter";
 
 console.log("timing-checker 1212");
 
@@ -16,6 +17,7 @@ function mapTimeToBarPosition(time: number) {
 
 const schedulingPlotter = createSchedulingPlotter();
 const wavePlotter = createWavePlotter();
+const notesPlotter = createNotesPlotter();
 
 function setupUnit() {
   let startTime = 0;
@@ -67,6 +69,7 @@ function setupUnit() {
       start() {
         startTime = audioContext.currentTime;
         schedulingPlotter.hostStarted();
+        notesPlotter.hostStarted();
       },
       processScheduling(_timeFrom, barFrom, barTo, bpm) {
         if (bpm !== store.state.hostBpm) {
@@ -82,22 +85,57 @@ function setupUnit() {
         schedulingPlotter.addScheduleStepPoint(stepIndex, barPosition);
       },
     },
+    noteInput: {
+      noteOn(noteNumber, time = audioContext.currentTime) {
+        const timeFromStart = audioContext.currentTime - startTime;
+        const barScheduledAt = mapTimeToBarPosition(timeFromStart);
+        const noteTimeFromStart = time - startTime;
+        const barPoint = mapTimeToBarPosition(noteTimeFromStart);
+        notesPlotter.putNoteScheduleEvent(
+          barScheduledAt,
+          barPoint,
+          noteNumber,
+          true,
+        );
+      },
+      noteOff(noteNumber, time = audioContext.currentTime) {
+        const timeFromStart = audioContext.currentTime - startTime;
+        const barScheduledAt = mapTimeToBarPosition(timeFromStart);
+        const noteTimeFromStart = time - startTime;
+        const barPoint = mapTimeToBarPosition(noteTimeFromStart);
+        notesPlotter.putNoteScheduleEvent(
+          barScheduledAt,
+          barPoint,
+          noteNumber,
+          false,
+        );
+      },
+    },
     cleanup,
   });
 }
 
 function setupSynchronization() {
   return store.subscribe((attrs) => {
-    const { barLength, schedulingPlotterCanvas, wavePlotterCanvasCh1 } = attrs;
+    const {
+      barLength,
+      schedulingPlotterCanvas,
+      wavePlotterCanvasCh1,
+      notesPlotterCanvas,
+    } = attrs;
     if (barLength !== undefined) {
       schedulingPlotter.setBarLength(barLength);
       wavePlotter.setBarLength(barLength);
+      notesPlotter.setBarLength(barLength);
     }
     if (schedulingPlotterCanvas !== undefined) {
       schedulingPlotter.setCanvas(schedulingPlotterCanvas);
     }
     if (wavePlotterCanvasCh1 !== undefined) {
       wavePlotter.setCanvas(wavePlotterCanvasCh1);
+    }
+    if (notesPlotterCanvas !== undefined) {
+      notesPlotter.setCanvas(notesPlotterCanvas);
     }
   });
 }

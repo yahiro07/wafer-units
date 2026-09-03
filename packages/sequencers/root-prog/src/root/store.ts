@@ -11,7 +11,7 @@ type StoreState = {
 };
 
 export const store = createStore<StoreState>({
-  keyLabelMode: "doremi",
+  keyLabelMode: "degreeMinor",
   loopBars: 4,
   notes: seqNumbers(16).map(() => -1),
   keysName: "C/Am",

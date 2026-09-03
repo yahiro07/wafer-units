@@ -5,7 +5,7 @@ import { createSynthesizerEngine } from "@/synthesis";
 export const synthEngine = createSynthesizerEngine();
 
 export const uiActions = {
-  noteOn(noteNumber: number, time = 0, _velocity = 1) {
+  noteOn(noteNumber: number, time = 0) {
     synthEngine.noteOn(noteNumber, time);
     setAppState("notes", (prev) => [...prev, noteNumber]);
   },

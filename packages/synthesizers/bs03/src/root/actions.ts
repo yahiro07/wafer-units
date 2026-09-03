@@ -1,0 +1,168 @@
+import {
+  BoolParameterKeys,
+  pitchPresets,
+  SynthParameters,
+} from "@/defs/definitions";
+import {
+  generateRandomParameters,
+  generateRandomStepPattern,
+} from "@/root/randomizer";
+import { store } from "@/root/store";
+import { toggleBit } from "@/utils/bit-flag-helper";
+import { fillNumbers } from "@/utils/helpers";
+
+function remapStepNotes(
+  stepNotes: number[],
+  pitchesFrom: number[],
+  pitchesTo: number[],
+): number[] {
+  return stepNotes.map((note) => {
+    const index = pitchesFrom.indexOf(note);
+    const normalizedValue = index / (pitchesFrom.length - 1);
+    const newIndex = Math.round(normalizedValue * (pitchesTo.length - 1));
+    return pitchesTo[newIndex];
+  });
+}
+
+function nearestPitch(pitch: number, pitches: number[]): number {
+  let best = pitches[0];
+  let bestDist = Math.abs(pitch - best);
+  for (const p of pitches) {
+    const d = Math.abs(pitch - p);
+    if (d < bestDist) {
+      bestDist = d;
+      best = p;
+    }
+  }
+  return best;
+}
+
+function snapStepNotesToPitches(
+  stepNotes: number[],
+  pitches: number[],
+): number[] {
+  return stepNotes.map((note) => {
+    if (note < 0 || pitches.includes(note)) return note;
+    return nearestPitch(note, pitches);
+  });
+}
+
+const actionsInternal = {
+  setPitchPresetIndex(nextIndex: number, remapNotes: boolean) {
+    const currentIndex = store.state.pitchPresetIndex;
+    const currentPitches = pitchPresets[currentIndex];
+    const nextPitches = pitchPresets[nextIndex];
+    store.setPitchPresetIndex(nextIndex);
+    store.setPitchIndices(nextPitches);
+    if (remapNotes) {
+      const newNotes = remapStepNotes(
+        store.state.stepNotes,
+        currentPitches,
+        nextPitches,
+      );
+      store.setStepNotes(newNotes);
+    }
+  },
+};
+
+export const actions = {
+  shiftPitchPreset() {
+    const nextIndex = (store.state.pitchPresetIndex + 1) % pitchPresets.length;
+    actionsInternal.setPitchPresetIndex(nextIndex, true);
+  },
+  randomizePatterns() {
+    if (!store.state.lockPitchPreset) {
+      const nextIndex = Math.floor(Math.random() * pitchPresets.length);
+      actionsInternal.setPitchPresetIndex(nextIndex, false);
+    }
+    if (!store.state.lockParameters) {
+      const parameters = generateRandomParameters();
+      store.setSynthParameters(parameters);
+    }
+    const { stepNotes, stepModifierFlags } = generateRandomStepPattern(
+      store.state.pitchIndices,
+    );
+    store.assign({ stepNotes, stepModifierFlags });
+  },
+  clearStepNotes() {
+    store.assign({
+      stepNotes: fillNumbers(16, -1),
+      stepModifierFlags: fillNumbers(16, 0),
+    });
+  },
+  setStepNote(stepIndex: number, pitch: number) {
+    store.setStepNotes((prev) =>
+      prev.map((n, i) => (i === stepIndex ? pitch : n)),
+    );
+  },
+  toggleSlide(stepIndex: number) {
+    store.setStepModifierFlags((prev) =>
+      prev.map((flag, i) => (i === stepIndex ? toggleBit(flag, 0) : flag)),
+    );
+  },
+  togglePitchIndex(pitchIndex: number) {
+    const pitches = [...store.state.pitchIndices];
+    const adding = !pitches.includes(pitchIndex);
+    const len = pitches.length;
+    if (adding) {
+      if (len >= 6) {
+        if (pitchIndex < 12) {
+          pitches.pop();
+        } else {
+          pitches.shift();
+        }
+      }
+    } else {
+      if (len <= 1) return;
+    }
+    const newPitchIndices = adding
+      ? [...pitches, pitchIndex]
+      : pitches.filter((p) => p !== pitchIndex);
+    newPitchIndices.sort((a, b) => a - b);
+    store.setPitchIndices(newPitchIndices);
+    store.setStepNotes(
+      snapStepNotesToPitches(store.state.stepNotes, newPitchIndices),
+    );
+  },
+  toggleAccent(stepIndex: number) {
+    store.setStepModifierFlags((prev) =>
+      prev.map((flag, i) => (i === stepIndex ? toggleBit(flag, 1) : flag)),
+    );
+  },
+  toggleLockPitchPreset() {
+    store.toggleLockPitchPreset();
+  },
+  toggleLockParameters() {
+    store.toggleLockParameters();
+  },
+  setSynthParameter(key: keyof SynthParameters, value: number) {
+    store.patchSynthParameters({ [key]: value });
+  },
+  setBpm(bpm: number) {
+    store.setBpm(bpm);
+  },
+  togglePlayState() {
+    store.toggleStandalonePlaying();
+  },
+  setParameter<K extends keyof SynthParameters>(
+    key: K,
+    value: SynthParameters[K],
+  ) {
+    store.patchSynthParameters({ [key]: value });
+  },
+  setBoolParameter<K extends BoolParameterKeys>(key: K, value: boolean) {
+    store.patchSynthParameters({ [key]: value });
+  },
+  toggleBoolParameter<K extends BoolParameterKeys>(key: K) {
+    store.patchSynthParameters({ [key]: !store.state.synthParameters[key] });
+  },
+  async emitPresetData() {
+    const { ...attrs } = store.state.synthParameters;
+    const jsonText = JSON.stringify(attrs, null, 2).replaceAll(
+      /\.(\d+)/g,
+      (_match, digits: string) => "." + digits.slice(0, 2),
+    );
+    await navigator.clipboard.writeText(jsonText);
+    console.log("Preset data copied to clipboard");
+  },
+};

@@ -112,6 +112,18 @@ const ChannelLaneContainer = ({
   );
 };
 
+const NotesLaneContainer = ({ label }: { label: string }) => {
+  return (
+    <LaneBox label={label}>
+      <LayeredLayout>
+        <GridBackground nx={4} ny={1} />
+        <GraphBorderFrame />
+        <GraphCanvas canvasSetterFn={store.setNotesPlotterCanvas} />
+      </LayeredLayout>
+    </LaneBox>
+  );
+};
+
 const TimeSpanGauge = () => {
   const { barLength, hostBpm } = store.useSnapshot();
   const unitLength = barLength / 4;
@@ -165,6 +177,7 @@ export const App = () => {
       <ChannelLaneContainer channelId="ch1" label="audio" />
       {/* <ChannelLaneContainer channelId="ch2" /> */}
       {/* <ChannelLaneContainer channelId="ch3" /> */}
+      <NotesLaneContainer label="notes" />
     </div>
   );
 };

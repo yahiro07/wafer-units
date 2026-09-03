@@ -11,11 +11,11 @@ export function setupUnit() {
   unitInterface?.completeSetup({
     unitAspects: {
       unitType: "sequencer",
-      viewSize: [420, 260],
+      viewSize: [775, 402],
     },
     hostCallbacks: {
       setKey(keySpec) {
-        engine.setKeyTranspose(keySpec.keyTranspose);
+        engine.setKeyTranspose(keySpec.relativeKeyTranspose);
         const keysName = mapKeySpecToKeysName(keySpec);
         store.setKeysName(keysName);
       },

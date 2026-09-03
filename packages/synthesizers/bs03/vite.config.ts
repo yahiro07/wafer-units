@@ -1,16 +1,14 @@
 import preact from "@preact/preset-vite";
 import { defineConfig } from "vite";
+import UnoCSS from "unocss/vite";
 
 export default defineConfig({
   base: "./",
-  plugins: [preact({ jsxImportSource: "qulex" })],
-  resolve: {
-    tsconfigPaths: true,
-    dedupe: ["preact"],
+  plugins: [preact(), UnoCSS()],
+  resolve: { tsconfigPaths: true },
+  build: {
+    outDir: "../../../dist/bs03",
+    emptyOutDir: true,
   },
-  optimizeDeps: {
-    exclude: ["wafer-host", "snap-store"],
-  },
-  build: { outDir: "../../../dist/bs03", emptyOutDir: true },
   server: { port: 3000 },
 });

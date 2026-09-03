@@ -91,7 +91,8 @@ function createReverb(ctx: AudioContext) {
   const outputNode = ctx.createGain();
 
   const convolver = ctx.createConvolver();
-  convolver.buffer = generateImpulseResponse(ctx, 2.5, 1.8);
+  // convolver.buffer = generateImpulseResponse(ctx, 2.5, 1.8);
+  convolver.buffer = generateImpulseResponse(ctx, 1.5, 2);
 
   const dryGain = ctx.createGain();
   const wetGain = ctx.createGain();

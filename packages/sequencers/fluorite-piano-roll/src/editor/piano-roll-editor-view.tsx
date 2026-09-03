@@ -57,7 +57,7 @@ function hitTestNote(
       const relPos = note.position - sectionRange.offset;
       const dur = note.duration;
       const noteTailPos = relPos + dur;
-      if (xiFloat - 0.3 <= noteTailPos && noteTailPos <= xiFloat + 0.3) {
+      if (note.duration >= 2 && xi === noteTailPos - 1) {
         return { note, part: "tail" };
       } else if (relPos <= xi && xi < relPos + dur) {
         return { note, part: "body" };
@@ -65,8 +65,6 @@ function hitTestNote(
     }
   }
 }
-
-let gLastNoteDuration = 1;
 
 const noteEditActions = {
   addNote(position: number, yi: number) {
@@ -77,7 +75,7 @@ const noteEditActions = {
     const newNote: Note = {
       id: nextId,
       position,
-      duration: gLastNoteDuration,
+      duration: 1,
       pitch: yi,
     };
     store.setNotes((prev) => [...prev, newNote]);
@@ -95,6 +93,13 @@ const noteEditActions = {
     }
     return note;
   },
+  updateNoteXYD(note: Note, duration: number, pitch: number) {
+    if (!(note.duration === duration && note.pitch === pitch)) {
+      noteEditActions.setNoteAttrs(note.id, { duration, pitch });
+      return { ...note, duration, pitch };
+    }
+    return note;
+  },
   removeNote(noteId: number) {
     store.setNotes((prev) => prev.filter((note) => note.id !== noteId));
   },
@@ -106,7 +111,7 @@ const noteEditActions = {
     );
     const position = sectionRange.offset + xi;
     const note = noteEditActions.addNote(position, yi);
-    noteEditActions.startMoveNote(e0, note);
+    noteEditActions.startAdjustDuration(e0, note, true);
   },
   startMoveNote(e0: PointerEvent, originalNote: Note) {
     let noteLatest = originalNote;
@@ -144,22 +149,29 @@ const noteEditActions = {
           );
         },
         onUpOrCancel() {
+          const tapped = noteLatest === originalNote;
+          if (tapped) {
+            noteEditActions.removeNote(noteLatest.id);
+          }
           store.setPreviewNotePitch(null);
         },
       },
       { coordinate: "page" },
     );
   },
-  startAdjustDuration(e0: PointerEvent, originalNote: Note) {
+  startAdjustDuration(
+    e0: PointerEvent,
+    originalNote: Note,
+    isNewNote: boolean,
+  ) {
+    let noteLatest = originalNote;
     const baseEl = e0.currentTarget as HTMLElement;
     const originalCoord = mapPointerPositionToCell(
       baseEl,
       e0.clientX,
       e0.clientY,
     );
-    const noteId = originalNote.id;
-    let latestDuration = originalNote.duration;
-    let changed = false;
+    store.setPreviewNotePitch(originalNote.pitch);
 
     startDragSession(
       e0,
@@ -171,19 +183,26 @@ const noteEditActions = {
             e.position.y,
           );
           const deltaXi = movedCoord.xi - originalCoord.xi;
-          const dur = originalNote.duration + deltaXi;
-          if (dur !== latestDuration) {
-            noteEditActions.setNoteAttrs(noteId, { duration: dur });
-            latestDuration = dur;
-            changed = true;
+          const deltaYi = movedCoord.yi - originalCoord.yi;
+
+          const duration = originalNote.duration + deltaXi;
+          const pitch = originalNote.pitch + deltaYi;
+
+          if (pitch !== store.state.previewNotePitch) {
+            store.setPreviewNotePitch(pitch);
           }
+          noteLatest = noteEditActions.updateNoteXYD(
+            noteLatest,
+            duration,
+            pitch,
+          );
         },
         onUp() {
-          if (latestDuration <= 0) {
-            noteEditActions.removeNote(noteId);
-          } else if (changed) {
-            gLastNoteDuration = latestDuration;
+          const tapped = !isNewNote && noteLatest === originalNote;
+          if (noteLatest.duration <= 0 || tapped) {
+            noteEditActions.removeNote(noteLatest.id);
           }
+          store.setPreviewNotePitch(null);
         },
       },
       { coordinate: "page" },
@@ -198,46 +217,35 @@ const EditInputLayer = ({
   notes: Note[];
   sectionRange: SectionRange;
 }) => {
-  const [hitNoteInfo, setHitNoteInfo] = useState<HitNoteInfo | null>(null);
+  const [cursor, setCursor] = useState<string>("auto");
 
-  const handlePointerMove = (e: PointerEvent) => {
+  const handlePointerDown = (e: PointerEvent) => {
     const { xiFloat, yi } = mapPointerPositionToCell(
       e.currentTarget as HTMLElement,
       e.clientX,
       e.clientY,
     );
-    // console.log(xiFloat, yi);
-    const res = hitTestNote(notes, sectionRange, xiFloat, yi);
-    if (res?.part === "body" && hitNoteInfo?.part !== "body") {
-      setHitNoteInfo(res);
-    } else if (res?.part === "tail" && hitNoteInfo?.part !== "tail") {
-      setHitNoteInfo(res);
-    } else if (hitNoteInfo && !res) {
-      setHitNoteInfo(null);
-    }
-  };
-
-  const handlePointerDown = (e: PointerEvent) => {
+    const hitNoteInfo = hitTestNote(notes, sectionRange, xiFloat, yi);
     if (hitNoteInfo?.part === "tail") {
-      noteEditActions.startAdjustDuration(e, hitNoteInfo.note);
+      noteEditActions.startAdjustDuration(e, hitNoteInfo.note, false);
+      setCursor("e-resize");
     } else if (hitNoteInfo?.part === "body") {
       noteEditActions.startMoveNote(e, hitNoteInfo.note);
+      setCursor("move");
     } else {
       noteEditActions.startInsertNewNote(e, sectionRange);
+      setCursor("pointer");
     }
   };
 
-  let cursor = "auto";
-  if (hitNoteInfo?.part === "body") {
-    cursor = "move";
-  } else if (hitNoteInfo?.part === "tail") {
-    cursor = "e-resize";
-  }
+  const handlePointerUp = () => {
+    setCursor("auto");
+  };
   return (
     <div
       sx={qu.absoluteFull()}
       onPointerDown={handlePointerDown}
-      onPointerMove={handlePointerMove}
+      onPointerUp={handlePointerUp}
       style={{ cursor }}
     />
   );

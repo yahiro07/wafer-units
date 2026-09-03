@@ -15,3 +15,6 @@ catalog:
   "preact": "^10.29.2"
   "snap-store": "^0.1.14"
   "mini-css": "npm:@yahiro07/mini-css@^0.1.0"
+  "@unocss/preset-wind4": "^66.7.5"
+  "@unocss/vite": "^66.7.5"
+  "unocss": "^66.7.5"

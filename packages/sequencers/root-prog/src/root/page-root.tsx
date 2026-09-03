@@ -1,18 +1,21 @@
 import { useMemo } from "preact/hooks";
 import { qu } from "@/common/css-realm";
-import { EffectorBody, pageBgColor } from "@/components/effector-body";
+import { EffectorBody } from "@/components/effector-body";
 import { GridBackground } from "@/components/grid-background";
 import { ShiftSelector } from "@/components/shift-selector";
 import { KeyLabelMode, LoopBars } from "@/root/parameters";
 import { store } from "@/root/store";
 import { npx, seqNumbers } from "@/utils/helpers";
 import { createSelectorOptions } from "@/utils/selector-option";
+import { uiColors } from "@/common/ui-theme";
+import { Icons } from "@/components/icons";
 
 const LoopBarsOptions = createSelectorOptions<LoopBars>([
   [1, "1"],
   [2, "2"],
   [4, "4"],
   [8, "8"],
+  [16, "16"],
 ]);
 
 function useKeyLabelModeOptions() {
@@ -20,9 +23,9 @@ function useKeyLabelModeOptions() {
   return useMemo(() => {
     const [majorKey, minorKey] = keysName.split("/");
     return createSelectorOptions<KeyLabelMode>([
-      ["doremi", `${keysName} (doremi)`],
       ["degreeMajor", `${majorKey} (degree)`],
       ["degreeMinor", `${minorKey} (degree) `],
+      ["doremi", `${keysName} (doremi)`],
     ]);
   }, [keysName]);
 }
@@ -31,26 +34,35 @@ const ControlsPart = () => {
   const st = store.useSnapshot();
   const keyLabelModeOptions = useKeyLabelModeOptions();
   return (
-    <div>
+    <div
+      sx={[
+        // qu.css({ borderBottom: `solid 1px ${uiColors.clEdgeLine}` }),
+        qu.px(10),
+      ]}
+    >
       <div sx={qu.flexHA().gap(2).fJustify("between")}>
+        <div sx={qu.fontSize(20).weight("500")}>ROOT-PROG</div>
         <div sx={qu.flexHA().gap(2)}>
-          <div sx={qu.fontSize(14).weight("500")}>Key/Label</div>
+          <div sx={qu.fontSize(16).weight("500")}>KEY/LABEL</div>
           <ShiftSelector
             options={keyLabelModeOptions}
             value={st.keyLabelMode}
             onChange={store.setKeyLabelMode}
-            winWidth={120}
+            minWidth={160}
           />
         </div>
         <div sx={qu.flexHA().gap(2)}>
-          <div sx={qu.fontSize(14).weight("500")}>Bars</div>
+          <div sx={qu.fontSize(16).weight("500")}>BARS</div>
           <ShiftSelector
             options={LoopBarsOptions}
             value={st.loopBars}
             onChange={store.setLoopBars}
+            minWidth={80}
           />
         </div>
-        <div onClick={actions.clearNotes}>x</div>
+        <div onClick={actions.clearNotes} sx={qu.cursor("pointer")}>
+          <Icons.Trash size={20} />
+        </div>
       </div>
     </div>
   );
@@ -79,13 +91,23 @@ const BeatDotCellContent = ({
   i: number;
   playStepIndex: number;
 }) => {
-  if (bars === 8) {
+  if (bars === 16) {
+    return (
+      <div sx={qu.flexC().gap(1.3)}>
+        {seqNumbers(4).map((j) => {
+          const si = i * 4 + j;
+          const active = playStepIndex >> 2 === si;
+          return <BeatDot key={j} active={active} />;
+        })}
+      </div>
+    );
+  } else if (bars === 8) {
     const stepIndex = i * bars;
     const active1 = playStepIndex >= 0 && stepIndex >> 2 === playStepIndex >> 2;
     const active2 =
       playStepIndex >= 0 && (stepIndex + 4) >> 2 === playStepIndex >> 2;
     return (
-      <div sx={qu.flexC().gap(1.5)}>
+      <div sx={qu.flexC().gap(3.5)}>
         <BeatDot active={active1} />
         <BeatDot active={active2} />
       </div>
@@ -128,14 +150,15 @@ const PitchLabelsColumn = ({
   h: number;
 }) => {
   return (
-    <div>
+    <div sx={qu.flexV().gap(0.5).mb(0.75)}>
       {seqNumbers(9).map((i) => {
         const yi = 8 - i;
         return (
           <div
             sx={[
-              qu.wh(36, (h + 1) / 9).flexC(),
-              qu.bg("#fff").bd("#ccc").fontSize(12),
+              qu.wh(64, (h - 18) / 9).flexC(),
+              qu.bd(uiColors.clEdgeLine).fontSize(14),
+              qu.css({ borderWidth: "0.5px" }).rounded(2),
             ]}
           >
             {pitchLabels[yi]}
@@ -225,22 +248,27 @@ const NotesDisplayLayer = ({
               style={{
                 left: npx(xi * cellW),
                 bottom: npx(yi * cellH),
-                width: npx(cellW),
+                width: npx(cellW * dur),
                 height: npx(cellH),
               }}
             >
-              <div sx={qu.bg("#0cf").rounded("50%").wh(16, 16)} />
+              <div sx={qu.bg(uiColors.noteBar).w("full").h(8).rounded(1)} />
             </div>
             <div
               sx={qu.absolute().flexC()}
               style={{
                 left: npx(xi * cellW),
                 bottom: npx(yi * cellH),
-                width: npx(cellW * dur),
+                width: npx(cellW),
                 height: npx(cellH),
               }}
             >
-              <div sx={qu.bg("#0cf").w("full").h(8)} />
+              <div
+                sx={[
+                  qu.bg(uiColors.noteBar).rounded("50%").wh(20, 20),
+                  qu.css({ boxShadow: "0 0 0 1px #0004" }),
+                ]}
+              />
             </div>
           </div>
         );
@@ -250,14 +278,14 @@ const NotesDisplayLayer = ({
 };
 
 const Editor = () => {
-  const w = 300;
-  const h = 160;
+  const w = 620;
+  const h = 280;
   const st = store.useSnapshot();
   const pitchLabels = pitchLabelsSource[st.keyLabelMode];
   const bgAltStrideX = st.loopBars === 8 ? 2 : 4;
 
   return (
-    <div sx={qu.flexH().fAlign("end").gap(2)}>
+    <div sx={qu.flexH().fAlign("end").gap(2).px(10)}>
       <PitchLabelsColumn pitchLabels={pitchLabels} h={h} />
       <div sx={qu.flexV().gap(2)}>
         <BeatDotsRow w={w} bars={st.loopBars} />
@@ -283,9 +311,9 @@ const Editor = () => {
 
 export const PageRoot = () => {
   return (
-    <div sx={qu.h("dvh").bg(pageBgColor).flexC()}>
-      <EffectorBody sx={[qu.wh(420, 260), qu.flexC()]}>
-        <div sx={qu.flexV().gap(2)}>
+    <div sx={qu.h("dvh").bg(uiColors.clPageBg).flexC()}>
+      <EffectorBody sx={[qu.flexC()]}>
+        <div sx={qu.flexV().gap(5)}>
           {/* <div>root-prog</div> */}
           <ControlsPart />
           <Editor />

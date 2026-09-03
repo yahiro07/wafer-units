@@ -8,6 +8,7 @@ export const KnobBox = ({
   min = 0,
   max = 1,
   step = 0.01,
+  onLabelClick,
 }: {
   label: string;
   value: number;
@@ -15,15 +16,23 @@ export const KnobBox = ({
   min?: number;
   max?: number;
   step?: number;
+  onLabelClick?: () => void;
 }) => {
   return (
     <div class={styles.base}>
       <Knob value={value} onChange={onChange} min={min} max={max} step={step} />
-      <div class={styles.label}>{label}</div>
+      <div
+        class={tz(styles.label, onLabelClick && "cursor-pointer")}
+        onClick={onLabelClick}
+      >
+        {label}
+      </div>
     </div>
   );
 };
 const styles = {
   base: tz("flex-vc gap-1"),
-  label: tz("text-sm font-[600] text-clSectionText"),
+  label: tz(
+    "text-sm font-[600] text-clSectionText w-[16px] flex-c whitespace-nowrap",
+  ),
 };

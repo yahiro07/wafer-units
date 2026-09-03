@@ -124,7 +124,7 @@ export function createEngine(unitInterface: UnitInterface | undefined) {
             .shiftInScale(shiftAmountsInScale[i])
             .shiftOctave(octaveShift)
             .toAbsolute();
-          noteOutputPort?.noteOn(noteNumber, time, 1);
+          noteOutputPort?.noteOn(noteNumber, time);
           noteOutputPort?.noteOff(noteNumber, time + durationSec);
         }
       }

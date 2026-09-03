@@ -93,15 +93,14 @@ export function createSequencer(unitInterface: UnitInterface) {
           state.octaveShift,
         );
         const endTime = time + unitDuration * state.noteDuty;
-        noteOutputPort.noteOn(noteNumber, time, 1);
+        noteOutputPort.noteOn(noteNumber, time);
         noteOutputPort.noteOff(noteNumber, endTime);
       }
     },
   };
 
   return {
-    inputNoteOn(note: number, _timeAt: number, _velocity: number) {
-      // noteOutputPort.noteOn(note, timeAt, velocity);
+    inputNoteOn(note: number, _timeAt: number) {
       state.chordRootNote = note;
       if (!state.isClockInputActive) {
         sequencerTickDriver.setBpm(state.bpm);

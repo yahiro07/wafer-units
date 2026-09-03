@@ -7,12 +7,12 @@
     "lint": "oxlint --type-aware --type-check"
   },
   "devDependencies": {
-    "@types/node": "^25.7.0",
-    "oxfmt": "^0.61.0",
-    "oxlint": "^1.76.0",
+    "@types/node": "^26.4.0",
+    "oxfmt": "^0.65.0",
+    "oxlint": "^1.80.0",
     "oxlint-tsgolint": "^7.0.2001",
-    "typescript": "~6.0.3",
-    "vite": "^8.0.12",
-    "wafer-host": "^0.1.9"
+    "typescript": "~7.0.2",
+    "vite": "^8.2.2",
+    "wafer-host": "^0.1.11"
   }
 }
