@@ -88,10 +88,12 @@ function le(e) {
 var ue;
 function de() {
 	let e = m && m.running;
-	if (this.sources && (e ? this.tState : this.state)) if ((e ? this.tState : this.state) === u) x(this);
-	else {
-		let e = g;
-		g = null, C(() => w(this), !1), g = e;
+	if (this.sources && (e ? this.tState : this.state)) {
+		if ((e ? this.tState : this.state) === u) x(this);
+		else {
+			let e = g;
+			g = null, C(() => w(this), !1), g = e;
+		}
 	}
 	if (h) {
 		let e = this.observers;
@@ -558,15 +560,16 @@ function Pe(e, t, n) {
 				for (; e < a;) l.set(n[e], e++);
 			}
 			let r = l.get(t[o]);
-			if (r != null) if (s < r && r < a) {
-				let c = o, u = 1, d;
-				for (; ++c < i && c < a && (d = l.get(t[c])) != null && d === r + u;) u++;
-				if (u > r - s) {
-					let i = t[o];
-					for (; s < r;) e.insertBefore(n[s++], i);
-				} else e.replaceChild(n[s++], t[o++]);
-			} else o++;
-			else t[o++].remove();
+			if (r != null) {
+				if (s < r && r < a) {
+					let c = o, u = 1, d;
+					for (; ++c < i && c < a && (d = l.get(t[c])) != null && d === r + u;) u++;
+					if (u > r - s) {
+						let i = t[o];
+						for (; s < r;) e.insertBefore(n[s++], i);
+					} else e.replaceChild(n[s++], t[o++]);
+				} else o++;
+			} else t[o++].remove();
 		}
 	}
 }
@@ -804,15 +807,18 @@ function $e(e, t, n, r) {
 	let i = !1;
 	for (let a = 0, o = t.length; a < o; a++) {
 		let o = t[a], s = n && n[e.length], c;
-		if (o != null && o !== !0 && o !== !1) if ((c = typeof o) == "object" && o.nodeType) e.push(o);
-		else if (Array.isArray(o)) i = $e(e, o, s) || i;
-		else if (c === "function") if (r) {
-			for (; typeof o == "function";) o = o();
-			i = $e(e, Array.isArray(o) ? o : [o], Array.isArray(s) ? s : [s]) || i;
-		} else e.push(o), i = !0;
-		else {
-			let t = String(o);
-			s && s.nodeType === 3 && s.data === t ? e.push(s) : e.push(document.createTextNode(t));
+		if (o != null && o !== !0 && o !== !1) {
+			if ((c = typeof o) == "object" && o.nodeType) e.push(o);
+			else if (Array.isArray(o)) i = $e(e, o, s) || i;
+			else if (c === "function") {
+				if (r) {
+					for (; typeof o == "function";) o = o();
+					i = $e(e, Array.isArray(o) ? o : [o], Array.isArray(s) ? s : [s]) || i;
+				} else e.push(o), i = !0;
+			} else {
+				let t = String(o);
+				s && s.nodeType === 3 && s.data === t ? e.push(s) : e.push(document.createTextNode(t));
+			}
 		}
 	}
 	return i;
@@ -839,7 +845,7 @@ function F(e, t, n, r) {
 //#region ../../../node_modules/.pnpm/mofus@0.1.0_solid-js@1.9.14/node_modules/mofus/dist/ax-ui/utility-classes.css?inline
 var tt = ".flex-h{display:flex}.flex-hs{align-items:start;display:flex}.flex-ha{align-items:center;display:flex}.flex-v{flex-direction:column;display:flex}.flex-vl{flex-direction:column;align-items:flex-start;display:flex}.flex-va{flex-direction:column;align-items:center;display:flex}.flex-c{justify-content:center;align-items:center;display:flex}.flex-vc{flex-direction:column;justify-content:center;align-items:center;display:flex}.absolute-full{position:absolute;inset:0}.bd-red{border:1px solid red}.bd-blue{border:1px solid #00f}";
 //#endregion
-//#region ../../../node_modules/.pnpm/wafer-host@0.1.9_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/wafer-host/dist/unit-helper/index.js
+//#region ../../../node_modules/.pnpm/wafer-host@0.1.11_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/wafer-host/dist/unit-helper/index.js
 function nt(e) {
 	if (!Array.from(document.head.querySelectorAll("link[rel=\"stylesheet\"]")).some((t) => t.href === e)) {
 		console.log(`Inserting link tag for ${e}`);
@@ -1126,21 +1132,23 @@ function bt(e) {
 						n !== "ref" && n.slice(0, 2) !== "on" && typeof o[n].value == "function" ? (e.dynamicProperty(t, n), a = !0) : o[n].get && (a = !0);
 					}
 					a ? e.spread(r, t, r instanceof SVGElement, !!n.length) : e.assign(r, t, r instanceof SVGElement, !!n.length);
-				} else if (o === "function") if (r) {
-					for (; t[R];) t = t();
-					e.insert(r, t, a ? null : void 0);
-				} else {
-					let i, a = n[0];
-					(a == null || typeof a == "object" && !Array.isArray(a) && !(a instanceof Element)) && (i = n.shift()), i ||= {}, n.length && (i.children = n.length > 1 ? n : n[0]);
-					let o = Object.getOwnPropertyDescriptors(i);
-					for (let t in o) if (Array.isArray(o[t].value)) {
-						let n = o[t].value;
-						i[t] = () => {
-							for (let e = 0; e < n.length; e++) for (; n[e][R];) n[e] = n[e]();
-							return n;
-						}, e.dynamicProperty(i, t);
-					} else typeof o[t].value == "function" && !o[t].value.length && e.dynamicProperty(i, t);
-					r = e.createComponent(t, i), n = [];
+				} else if (o === "function") {
+					if (r) {
+						for (; t[R];) t = t();
+						e.insert(r, t, a ? null : void 0);
+					} else {
+						let i, a = n[0];
+						(a == null || typeof a == "object" && !Array.isArray(a) && !(a instanceof Element)) && (i = n.shift()), i ||= {}, n.length && (i.children = n.length > 1 ? n : n[0]);
+						let o = Object.getOwnPropertyDescriptors(i);
+						for (let t in o) if (Array.isArray(o[t].value)) {
+							let n = o[t].value;
+							i[t] = () => {
+								for (let e = 0; e < n.length; e++) for (; n[e][R];) n[e] = n[e]();
+								return n;
+							}, e.dynamicProperty(i, t);
+						} else typeof o[t].value == "function" && !o[t].value.length && e.dynamicProperty(i, t);
+						r = e.createComponent(t, i), n = [];
+					}
 				}
 			}
 		}
@@ -1633,7 +1641,7 @@ function an(...[e, t]) {
 	return [i, a];
 }
 //#endregion
-//#region ../../../node_modules/.pnpm/wafer-host@0.1.9_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/wafer-host/dist/unit-types/index.js
+//#region ../../../node_modules/.pnpm/wafer-host@0.1.11_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/wafer-host/dist/unit-types/index.js
 function on(e, t) {
 	return window?.queryUnitInterfaceForModule?.(e, t);
 }

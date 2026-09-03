@@ -104,12 +104,13 @@ function M(e, t, n) {
 }
 function re(e, t, n, r, i) {
 	var a, o;
-	n: if (t == "style") if (typeof n == "string") e.style.cssText = n;
-	else {
-		if (typeof r == "string" && (e.style.cssText = r = ""), r) for (t in r) n && t in n || M(e.style, t, "");
-		if (n) for (t in n) r && n[t] == r[t] || M(e.style, t, n[t]);
-	}
-	else if (t[0] == "o" && t[1] == "n") a = t != (t = t.replace(d, "$1")), o = t.toLowerCase(), t = o in e || t == "onFocusOut" || t == "onFocusIn" ? o.slice(2) : t.slice(2), e.l ||= {}, e.l[t + a] = n, n ? r ? n[u] = r[u] : (n[u] = f, e.addEventListener(t, a ? m : p, a)) : e.removeEventListener(t, a ? m : p, a);
+	n: if (t == "style") {
+		if (typeof n == "string") e.style.cssText = n;
+		else {
+			if (typeof r == "string" && (e.style.cssText = r = ""), r) for (t in r) n && t in n || M(e.style, t, "");
+			if (n) for (t in n) r && n[t] == r[t] || M(e.style, t, n[t]);
+		}
+	} else if (t[0] == "o" && t[1] == "n") a = t != (t = t.replace(d, "$1")), o = t.toLowerCase(), t = o in e || t == "onFocusOut" || t == "onFocusIn" ? o.slice(2) : t.slice(2), e.l ||= {}, e.l[t + a] = n, n ? r ? n[u] = r[u] : (n[u] = f, e.addEventListener(t, a ? m : p, a)) : e.removeEventListener(t, a ? m : p, a);
 	else {
 		if (i == "http://www.w3.org/2000/svg") t = t.replace(/xlink(H|:h)/, "h").replace(/sName$/, "s");
 		else if (t != "width" && t != "height" && t != "href" && t != "list" && t != "form" && t != "tabIndex" && t != "download" && t != "rowSpan" && t != "colSpan" && t != "role" && t != "popover" && t in e) try {
@@ -252,7 +253,7 @@ t = g.slice, n = { __e: function(e, t, n, r) {
 	return e.__v.__b - t.__v.__b;
 }, k.__r = 0, c = Math.random().toString(8), l = "__d" + c, u = "__a" + c, d = /(PointerCapture)$|Capture$/i, f = 0, p = ie(!1), m = ie(!0);
 //#endregion
-//#region ../../../node_modules/.pnpm/wafer-host@0.1.9_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/wafer-host/dist/unit-helper/index.js
+//#region ../../../node_modules/.pnpm/wafer-host@0.1.11_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/wafer-host/dist/unit-helper/index.js
 function me(e) {
 	if (!Array.from(document.head.querySelectorAll("link[rel=\"stylesheet\"]")).some((t) => t.href === e)) {
 		console.log(`Inserting link tag for ${e}`);
@@ -294,10 +295,12 @@ var ge = "/*! tailwindcss v4.3.3 | MIT License | https://tailwindcss.com */\n@la
 function _e(e) {
 	var t, n, r = "";
 	if (typeof e == "string" || typeof e == "number") r += e;
-	else if (typeof e == "object") if (Array.isArray(e)) {
-		var i = e.length;
-		for (t = 0; t < i; t++) e[t] && (n = _e(e[t])) && (r && (r += " "), r += n);
-	} else for (n in e) e[n] && (r && (r += " "), r += n);
+	else if (typeof e == "object") {
+		if (Array.isArray(e)) {
+			var i = e.length;
+			for (t = 0; t < i; t++) e[t] && (n = _e(e[t])) && (r && (r += " "), r += n);
+		} else for (n in e) e[n] && (r && (r += " "), r += n);
+	}
 	return r;
 }
 function ve() {
@@ -1452,12 +1455,13 @@ function Un(e) {
 			set: (t, r, i) => {
 				if (f) return g("set", r);
 				let a = !0, s = Y(t, p), c = !1, l = i;
-				if (ln(i)) if (c = !0, Tn(i, d)) {
-					if (Nn(i, p) === t[r]) return !0;
-					let e = Y(i, p);
-					Cn(r, s, e), Xt(e, s.keyPath.concat(r));
-				} else e = !1;
-				else if (Wt(i, d)) {
+				if (ln(i)) {
+					if (c = !0, Tn(i, d)) {
+						if (Nn(i, p) === t[r]) return !0;
+						let e = Y(i, p);
+						Cn(r, s, e), Xt(e, s.keyPath.concat(r));
+					} else e = !1;
+				} else if (Wt(i, d)) {
 					let { proxyVal: e, self: t, sourceId: n } = s.rootMeta, o = Z(i);
 					if (o.sourceId !== n) l = zn(i);
 					else {
@@ -2008,11 +2012,11 @@ function Ir(e) {
 		let { pattern: a } = t, o = a[e % a.length], s = Mr(t.key);
 		if (s && o !== void 0 && t.chordRootNote !== void 0) {
 			let e = Fr(o, s, t.chordRootNote, t.octaveShift), a = r + i * t.noteDuty;
-			n.noteOn(e, r, 1), n.noteOff(e, a);
+			n.noteOn(e, r), n.noteOff(e, a);
 		}
 	} };
 	return {
-		inputNoteOn(e, n, a) {
+		inputNoteOn(e, n) {
 			t.chordRootNote = e, t.isClockInputActive || (r.setBpm(t.bpm), r.start({ processStep: i.processStep }), t.isInternalTickRunning = !0);
 		},
 		inputNoteOff(e, n) {
@@ -2101,12 +2105,13 @@ function Gr(e, t, n, r) {
 	let i = Wr(e), a = 0, o = 1;
 	return ye(r).map((e) => {
 		let s = i[a];
-		if (a += o, a >= i.length) if (t === "upDown") o = -o, a -= 2;
-		else {
-			let t = r - e;
-			t <= i.length ? n === "bottom" ? a = 0 : n === "bottom1" ? a = 1 : n === "top1" ? a = i.length - t : n === "top" && (a = i.length - t + 1) : a = 0;
-		}
-		else a === 0 && (o = 1);
+		if (a += o, a >= i.length) {
+			if (t === "upDown") o = -o, a -= 2;
+			else {
+				let t = r - e;
+				t <= i.length ? n === "bottom" ? a = 0 : n === "bottom1" ? a = 1 : n === "top1" ? a = i.length - t : n === "top" && (a = i.length - t + 1) : a = 0;
+			}
+		} else a === 0 && (o = 1);
 		return s;
 	});
 }

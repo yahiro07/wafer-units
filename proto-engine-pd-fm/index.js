@@ -70,10 +70,12 @@ function b() {
 var [re, ie] = /*@__PURE__*/ _(!1);
 function ae() {
 	let e = f && f.running;
-	if (this.sources && (e ? this.tState : this.state)) if ((e ? this.tState : this.state) === c) x(this);
-	else {
-		let e = m;
-		m = null, C(() => w(this), !1), m = e;
+	if (this.sources && (e ? this.tState : this.state)) {
+		if ((e ? this.tState : this.state) === c) x(this);
+		else {
+			let e = m;
+			m = null, C(() => w(this), !1), m = e;
+		}
 	}
 	if (p) {
 		let e = this.observers;
@@ -291,15 +293,16 @@ function he(e, t, n) {
 				for (; e < a;) l.set(n[e], e++);
 			}
 			let r = l.get(t[o]);
-			if (r != null) if (s < r && r < a) {
-				let c = o, u = 1, d;
-				for (; ++c < i && c < a && (d = l.get(t[c])) != null && d === r + u;) u++;
-				if (u > r - s) {
-					let i = t[o];
-					for (; s < r;) e.insertBefore(n[s++], i);
-				} else e.replaceChild(n[s++], t[o++]);
-			} else o++;
-			else t[o++].remove();
+			if (r != null) {
+				if (s < r && r < a) {
+					let c = o, u = 1, d;
+					for (; ++c < i && c < a && (d = l.get(t[c])) != null && d === r + u;) u++;
+					if (u > r - s) {
+						let i = t[o];
+						for (; s < r;) e.insertBefore(n[s++], i);
+					} else e.replaceChild(n[s++], t[o++]);
+				} else o++;
+			} else t[o++].remove();
 		}
 	}
 }
@@ -437,15 +440,18 @@ function N(e, t, n, r) {
 	let i = !1;
 	for (let a = 0, o = t.length; a < o; a++) {
 		let o = t[a], s = n && n[e.length], c;
-		if (o != null && o !== !0 && o !== !1) if ((c = typeof o) == "object" && o.nodeType) e.push(o);
-		else if (Array.isArray(o)) i = N(e, o, s) || i;
-		else if (c === "function") if (r) {
-			for (; typeof o == "function";) o = o();
-			i = N(e, Array.isArray(o) ? o : [o], Array.isArray(s) ? s : [s]) || i;
-		} else e.push(o), i = !0;
-		else {
-			let t = String(o);
-			s && s.nodeType === 3 && s.data === t ? e.push(s) : e.push(document.createTextNode(t));
+		if (o != null && o !== !0 && o !== !1) {
+			if ((c = typeof o) == "object" && o.nodeType) e.push(o);
+			else if (Array.isArray(o)) i = N(e, o, s) || i;
+			else if (c === "function") {
+				if (r) {
+					for (; typeof o == "function";) o = o();
+					i = N(e, Array.isArray(o) ? o : [o], Array.isArray(s) ? s : [s]) || i;
+				} else e.push(o), i = !0;
+			} else {
+				let t = String(o);
+				s && s.nodeType === 3 && s.data === t ? e.push(s) : e.push(document.createTextNode(t));
+			}
 		}
 	}
 	return i;
@@ -469,7 +475,7 @@ function P(e, t, n, r) {
 	return [i];
 }
 //#endregion
-//#region ../../../node_modules/.pnpm/wafer-host@0.1.9_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/wafer-host/dist/unit-helper/index.js
+//#region ../../../node_modules/.pnpm/wafer-host@0.1.11_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/wafer-host/dist/unit-helper/index.js
 function Se(e) {
 	if (!Array.from(document.head.querySelectorAll("link[rel=\"stylesheet\"]")).some((t) => t.href === e)) {
 		console.log(`Inserting link tag for ${e}`);
@@ -503,7 +509,7 @@ function Ce(e, t) {
 	};
 }
 //#endregion
-//#region ../../../node_modules/.pnpm/wafer-host@0.1.9_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/wafer-host/dist/unit-types/index.js
+//#region ../../../node_modules/.pnpm/wafer-host@0.1.11_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/wafer-host/dist/unit-types/index.js
 function we(e, t) {
 	return window?.queryUnitInterfaceForModule?.(e, t);
 }

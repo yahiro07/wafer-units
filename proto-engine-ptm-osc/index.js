@@ -75,10 +75,12 @@ function ie() {
 var [ae, oe] = /*@__PURE__*/ te(!1);
 function se() {
 	let e = f && f.running;
-	if (this.sources && (e ? this.tState : this.state)) if ((e ? this.tState : this.state) === c) b(this);
-	else {
-		let e = m;
-		m = null, x(() => S(this), !1), m = e;
+	if (this.sources && (e ? this.tState : this.state)) {
+		if ((e ? this.tState : this.state) === c) b(this);
+		else {
+			let e = m;
+			m = null, x(() => S(this), !1), m = e;
+		}
 	}
 	if (p) {
 		let e = this.observers;
@@ -312,15 +314,16 @@ function Se(e, t, n) {
 				for (; e < a;) l.set(n[e], e++);
 			}
 			let r = l.get(t[o]);
-			if (r != null) if (s < r && r < a) {
-				let c = o, u = 1, d;
-				for (; ++c < i && c < a && (d = l.get(t[c])) != null && d === r + u;) u++;
-				if (u > r - s) {
-					let i = t[o];
-					for (; s < r;) e.insertBefore(n[s++], i);
-				} else e.replaceChild(n[s++], t[o++]);
-			} else o++;
-			else t[o++].remove();
+			if (r != null) {
+				if (s < r && r < a) {
+					let c = o, u = 1, d;
+					for (; ++c < i && c < a && (d = l.get(t[c])) != null && d === r + u;) u++;
+					if (u > r - s) {
+						let i = t[o];
+						for (; s < r;) e.insertBefore(n[s++], i);
+					} else e.replaceChild(n[s++], t[o++]);
+				} else o++;
+			} else t[o++].remove();
 		}
 	}
 }
@@ -458,15 +461,18 @@ function Ae(e, t, n, r) {
 	let i = !1;
 	for (let a = 0, o = t.length; a < o; a++) {
 		let o = t[a], s = n && n[e.length], c;
-		if (o != null && o !== !0 && o !== !1) if ((c = typeof o) == "object" && o.nodeType) e.push(o);
-		else if (Array.isArray(o)) i = Ae(e, o, s) || i;
-		else if (c === "function") if (r) {
-			for (; typeof o == "function";) o = o();
-			i = Ae(e, Array.isArray(o) ? o : [o], Array.isArray(s) ? s : [s]) || i;
-		} else e.push(o), i = !0;
-		else {
-			let t = String(o);
-			s && s.nodeType === 3 && s.data === t ? e.push(s) : e.push(document.createTextNode(t));
+		if (o != null && o !== !0 && o !== !1) {
+			if ((c = typeof o) == "object" && o.nodeType) e.push(o);
+			else if (Array.isArray(o)) i = Ae(e, o, s) || i;
+			else if (c === "function") {
+				if (r) {
+					for (; typeof o == "function";) o = o();
+					i = Ae(e, Array.isArray(o) ? o : [o], Array.isArray(s) ? s : [s]) || i;
+				} else e.push(o), i = !0;
+			} else {
+				let t = String(o);
+				s && s.nodeType === 3 && s.data === t ? e.push(s) : e.push(document.createTextNode(t));
+			}
 		}
 	}
 	return i;
@@ -493,7 +499,7 @@ function k(e, t, n, r) {
 //#region ../../../node_modules/.pnpm/mofus@0.1.0_solid-js@1.9.14/node_modules/mofus/dist/ax-ui/utility-classes.css?inline
 var Me = ".flex-h{display:flex}.flex-hs{align-items:start;display:flex}.flex-ha{align-items:center;display:flex}.flex-v{flex-direction:column;display:flex}.flex-vl{flex-direction:column;align-items:flex-start;display:flex}.flex-va{flex-direction:column;align-items:center;display:flex}.flex-c{justify-content:center;align-items:center;display:flex}.flex-vc{flex-direction:column;justify-content:center;align-items:center;display:flex}.absolute-full{position:absolute;inset:0}.bd-red{border:1px solid red}.bd-blue{border:1px solid #00f}";
 //#endregion
-//#region ../../../node_modules/.pnpm/wafer-host@0.1.9_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/wafer-host/dist/unit-helper/index.js
+//#region ../../../node_modules/.pnpm/wafer-host@0.1.11_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/wafer-host/dist/unit-helper/index.js
 function Ne(e) {
 	if (!Array.from(document.head.querySelectorAll("link[rel=\"stylesheet\"]")).some((t) => t.href === e)) {
 		console.log(`Inserting link tag for ${e}`);
@@ -828,7 +834,7 @@ function ot(e) {
 	return 440 * 2 ** ((e - 69) / 12);
 }
 //#endregion
-//#region ../../../node_modules/.pnpm/wafer-host@0.1.9_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/wafer-host/dist/unit-types/index.js
+//#region ../../../node_modules/.pnpm/wafer-host@0.1.11_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/wafer-host/dist/unit-types/index.js
 function st(e, t) {
 	return window?.queryUnitInterfaceForModule?.(e, t);
 }
@@ -1395,7 +1401,7 @@ function Bt() {
 //#endregion
 //#region src/actions.ts
 var Y = Bt(), X = {
-	noteOn(e, t = 0, n = 1) {
+	noteOn(e, t = 0) {
 		Y.noteOn(e, t), B("notes", (t) => [...t, e]);
 	},
 	noteOff(e, t = 0) {

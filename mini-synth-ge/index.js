@@ -91,10 +91,12 @@ function se(e) {
 var ce;
 function le() {
 	let e = m && m.running;
-	if (this.sources && (e ? this.tState : this.state)) if ((e ? this.tState : this.state) === u) w(this);
-	else {
-		let e = g;
-		g = null, E(() => D(this), !1), g = e;
+	if (this.sources && (e ? this.tState : this.state)) {
+		if ((e ? this.tState : this.state) === u) w(this);
+		else {
+			let e = g;
+			g = null, E(() => D(this), !1), g = e;
+		}
 	}
 	if (h) {
 		let e = this.observers;
@@ -561,15 +563,16 @@ function Me(e, t, n) {
 				for (; e < a;) l.set(n[e], e++);
 			}
 			let r = l.get(t[o]);
-			if (r != null) if (s < r && r < a) {
-				let c = o, u = 1, d;
-				for (; ++c < i && c < a && (d = l.get(t[c])) != null && d === r + u;) u++;
-				if (u > r - s) {
-					let i = t[o];
-					for (; s < r;) e.insertBefore(n[s++], i);
-				} else e.replaceChild(n[s++], t[o++]);
-			} else o++;
-			else t[o++].remove();
+			if (r != null) {
+				if (s < r && r < a) {
+					let c = o, u = 1, d;
+					for (; ++c < i && c < a && (d = l.get(t[c])) != null && d === r + u;) u++;
+					if (u > r - s) {
+						let i = t[o];
+						for (; s < r;) e.insertBefore(n[s++], i);
+					} else e.replaceChild(n[s++], t[o++]);
+				} else o++;
+			} else t[o++].remove();
 		}
 	}
 }
@@ -795,15 +798,18 @@ function Ye(e, t, n, r) {
 	let i = !1;
 	for (let a = 0, o = t.length; a < o; a++) {
 		let o = t[a], s = n && n[e.length], c;
-		if (o != null && o !== !0 && o !== !1) if ((c = typeof o) == "object" && o.nodeType) e.push(o);
-		else if (Array.isArray(o)) i = Ye(e, o, s) || i;
-		else if (c === "function") if (r) {
-			for (; typeof o == "function";) o = o();
-			i = Ye(e, Array.isArray(o) ? o : [o], Array.isArray(s) ? s : [s]) || i;
-		} else e.push(o), i = !0;
-		else {
-			let t = String(o);
-			s && s.nodeType === 3 && s.data === t ? e.push(s) : e.push(document.createTextNode(t));
+		if (o != null && o !== !0 && o !== !1) {
+			if ((c = typeof o) == "object" && o.nodeType) e.push(o);
+			else if (Array.isArray(o)) i = Ye(e, o, s) || i;
+			else if (c === "function") {
+				if (r) {
+					for (; typeof o == "function";) o = o();
+					i = Ye(e, Array.isArray(o) ? o : [o], Array.isArray(s) ? s : [s]) || i;
+				} else e.push(o), i = !0;
+			} else {
+				let t = String(o);
+				s && s.nodeType === 3 && s.data === t ? e.push(s) : e.push(document.createTextNode(t));
+			}
 		}
 	}
 	return i;
@@ -827,7 +833,7 @@ function L(e, t, n, r) {
 	return [i];
 }
 //#endregion
-//#region ../../../node_modules/.pnpm/wafer-host@0.1.9_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/wafer-host/dist/unit-helper/index.js
+//#region ../../../node_modules/.pnpm/wafer-host@0.1.11_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/wafer-host/dist/unit-helper/index.js
 function Ze(e) {
 	if (!Array.from(document.head.querySelectorAll("link[rel=\"stylesheet\"]")).some((t) => t.href === e)) {
 		console.log(`Inserting link tag for ${e}`);
@@ -861,7 +867,7 @@ function Qe(e, t) {
 	};
 }
 //#endregion
-//#region ../../../node_modules/.pnpm/wafer-host@0.1.9_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/wafer-host/dist/unit-types/index.js
+//#region ../../../node_modules/.pnpm/wafer-host@0.1.11_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/wafer-host/dist/unit-types/index.js
 function $e(e, t) {
 	return window?.queryUnitInterfaceForModule?.(e, t);
 }
@@ -1204,7 +1210,7 @@ function yt(e, t, n, r, i) {
 	g.gain.value = r.oscSub, c.connect(h), l.connect(h), u.connect(g);
 	let _ = e.createBiquadFilter();
 	_.type = "lowpass";
-	let v = 40 * (1e4 / 40) ** r.filterCutoff;
+	let v = 40 * 250 ** r.filterCutoff;
 	_.frequency.value = v, _.Q.value = r.filterPeak * 20, h.connect(_), g.connect(_);
 	let y = e.createGain();
 	y.gain.value = 0, _.connect(y), y.connect(o);
@@ -1219,7 +1225,7 @@ function yt(e, t, n, r, i) {
 		typeof r == "string" ? (c.type = r, l.type = r) : (c.setPeriodicWave(r), l.setPeriodicWave(r));
 		let i = t.oscDetune * 50;
 		c.detune.setTargetAtTime(i, n, .01), l.detune.setTargetAtTime(-i, n, .01), m.gain.setTargetAtTime(t.oscDrift * 30, n, .01), g.gain.setTargetAtTime(t.oscSub, n, .01);
-		let o = 40 * (1e4 / 40) ** t.filterCutoff;
+		let o = 40 * 250 ** t.filterCutoff;
 		_.frequency.setTargetAtTime(o, n, .01), _.Q.setTargetAtTime(t.filterPeak * 20, n, .01);
 	}
 	return {

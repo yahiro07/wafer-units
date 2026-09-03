@@ -163,9 +163,7 @@ function pe(e) {
 		case 40:
 			e === 41 && pe(e);
 			break;
-		case 92:
-			M();
-			break;
+		case 92: M();
 	}
 	return A;
 }
@@ -222,15 +220,17 @@ function _e(e, t, n, r, i, a, o, s, c) {
 					v == -1 && (k = y(k, /\f/g, "")), p > 0 && C(k) - d && T(p > 32 ? be(k + ";", r, n, d - 1) : be(y(k, " ", "") + ";", r, n, d - 2), c);
 					break;
 				case 59: k += ";";
-				default: if (T(O = ve(k, t, n, l, u, i, s, w, E = [], D = [], d), a), S === 123) if (u === 0) _e(k, t, O, O, E, a, d, s, D);
-				else switch (f === 99 && x(k, 3) === 110 ? 100 : f) {
-					case 100:
-					case 108:
-					case 109:
-					case 115:
-						_e(e, O, O, r && T(ve(e, O, O, 0, 0, i, s, w, i, E = [], d), D), i, D, d, s, r ? E : D);
-						break;
-					default: _e(k, O, O, O, [""], D, 0, s, D);
+				default: if (T(O = ve(k, t, n, l, u, i, s, w, E = [], D = [], d), a), S === 123) {
+					if (u === 0) _e(k, t, O, O, E, a, d, s, D);
+					else switch (f === 99 && x(k, 3) === 110 ? 100 : f) {
+						case 100:
+						case 108:
+						case 109:
+						case 115:
+							_e(e, O, O, r && T(ve(e, O, O, 0, 0, i, s, w, i, E = [], d), D), i, D, d, s, r ? E : D);
+							break;
+						default: _e(k, O, O, O, [""], D, 0, s, D);
+					}
 				}
 			}
 			l = u = p = 0, g = v = 1, w = k = "", d = o;
@@ -594,12 +594,13 @@ function ut(e, t, n) {
 }
 function dt(e, t, n, r, i) {
 	var a, o;
-	n: if (t == "style") if (typeof n == "string") e.style.cssText = n;
-	else {
-		if (typeof r == "string" && (e.style.cssText = r = ""), r) for (t in r) n && t in n || ut(e.style, t, "");
-		if (n) for (t in n) r && n[t] == r[t] || ut(e.style, t, n[t]);
-	}
-	else if (t[0] == "o" && t[1] == "n") a = t != (t = t.replace(Ue, "$1")), o = t.toLowerCase(), t = o in e || t == "onFocusOut" || t == "onFocusIn" ? o.slice(2) : t.slice(2), e.l ||= {}, e.l[t + a] = n, n ? r ? n[He] = r[He] : (n[He] = We, e.addEventListener(t, a ? Ke : Ge, a)) : e.removeEventListener(t, a ? Ke : Ge, a);
+	n: if (t == "style") {
+		if (typeof n == "string") e.style.cssText = n;
+		else {
+			if (typeof r == "string" && (e.style.cssText = r = ""), r) for (t in r) n && t in n || ut(e.style, t, "");
+			if (n) for (t in n) r && n[t] == r[t] || ut(e.style, t, n[t]);
+		}
+	} else if (t[0] == "o" && t[1] == "n") a = t != (t = t.replace(Ue, "$1")), o = t.toLowerCase(), t = o in e || t == "onFocusOut" || t == "onFocusIn" ? o.slice(2) : t.slice(2), e.l ||= {}, e.l[t + a] = n, n ? r ? n[He] = r[He] : (n[He] = We, e.addEventListener(t, a ? Ke : Ge, a)) : e.removeEventListener(t, a ? Ke : Ge, a);
 	else {
 		if (i == "http://www.w3.org/2000/svg") t = t.replace(/xlink(H|:h)/, "h").replace(/sName$/, "s");
 		else if (t != "width" && t != "height" && t != "href" && t != "list" && t != "form" && t != "tabIndex" && t != "download" && t != "rowSpan" && t != "colSpan" && t != "role" && t != "popover" && t in e) try {
@@ -1690,7 +1691,7 @@ function Cr() {
 //#region ../../../node_modules/.pnpm/mofur@0.1.1_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/mofur/dist/ax-ui/utility-classes.css?inline
 var wr = ".flex-h{display:flex}.flex-hs{align-items:start;display:flex}.flex-ha{align-items:center;display:flex}.flex-v{flex-direction:column;display:flex}.flex-vl{flex-direction:column;align-items:flex-start;display:flex}.flex-va{flex-direction:column;align-items:center;display:flex}.flex-c{justify-content:center;align-items:center;display:flex}.flex-vc{flex-direction:column;justify-content:center;align-items:center;display:flex}.absolute-full{position:absolute;inset:0}.bd-red{border:1px solid red}.bd-blue{border:1px solid #00f}";
 //#endregion
-//#region ../../../node_modules/.pnpm/wafer-host@0.1.9_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/wafer-host/dist/unit-helper/index.js
+//#region ../../../node_modules/.pnpm/wafer-host@0.1.11_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/wafer-host/dist/unit-helper/index.js
 function Tr(e) {
 	if (!Array.from(document.head.querySelectorAll("link[rel=\"stylesheet\"]")).some((t) => t.href === e)) {
 		console.log(`Inserting link tag for ${e}`);
@@ -2579,12 +2580,13 @@ function Ia(e) {
 			set: (t, r, i) => {
 				if (f) return g("set", r);
 				let a = !0, s = J(t, p), c = !1, l = i;
-				if ($i(i)) if (c = !0, _a(i, d)) {
-					if (Ta(i, p) === t[r]) return !0;
-					let e = J(i, p);
-					ha(r, s, e), Ri(e, s.keyPath.concat(r));
-				} else e = !1;
-				else if (Ai(i, d)) {
+				if ($i(i)) {
+					if (c = !0, _a(i, d)) {
+						if (Ta(i, p) === t[r]) return !0;
+						let e = J(i, p);
+						ha(r, s, e), Ri(e, s.keyPath.concat(r));
+					} else e = !1;
+				} else if (Ai(i, d)) {
 					let { proxyVal: e, self: t, sourceId: n } = s.rootMeta, o = aa(i);
 					if (o.sourceId !== n) l = ja(i);
 					else {
@@ -3177,10 +3179,12 @@ function Oo(e) {
 function ko(e) {
 	var t, n, r = "";
 	if (typeof e == "string" || typeof e == "number") r += e;
-	else if (typeof e == "object") if (Array.isArray(e)) {
-		var i = e.length;
-		for (t = 0; t < i; t++) e[t] && (n = ko(e[t])) && (r && (r += " "), r += n);
-	} else for (n in e) e[n] && (r && (r += " "), r += n);
+	else if (typeof e == "object") {
+		if (Array.isArray(e)) {
+			var i = e.length;
+			for (t = 0; t < i; t++) e[t] && (n = ko(e[t])) && (r && (r += " "), r += n);
+		} else for (n in e) e[n] && (r && (r += " "), r += n);
+	}
 	return r;
 }
 function Ao() {
@@ -3784,7 +3788,7 @@ var vs = (e) => {
 	});
 };
 //#endregion
-//#region ../../../node_modules/.pnpm/wafer-host@0.1.9_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/wafer-host/dist/unit-types/index.js
+//#region ../../../node_modules/.pnpm/wafer-host@0.1.11_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/wafer-host/dist/unit-types/index.js
 function Ss(e, t) {
 	return window?.queryUnitInterfaceForModule?.(e, t);
 }

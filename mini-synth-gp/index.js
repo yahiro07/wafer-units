@@ -75,10 +75,12 @@ function w() {
 var [te, ne] = /*@__PURE__*/ y(!1);
 function re() {
 	let e = p && p.running;
-	if (this.sources && (e ? this.tState : this.state)) if ((e ? this.tState : this.state) === l) T(this);
-	else {
-		let e = h;
-		h = null, E(() => D(this), !1), h = e;
+	if (this.sources && (e ? this.tState : this.state)) {
+		if ((e ? this.tState : this.state) === l) T(this);
+		else {
+			let e = h;
+			h = null, E(() => D(this), !1), h = e;
+		}
 	}
 	if (m) {
 		let e = this.observers;
@@ -567,15 +569,16 @@ function je(e, t, n) {
 				for (; e < a;) l.set(n[e], e++);
 			}
 			let r = l.get(t[o]);
-			if (r != null) if (s < r && r < a) {
-				let c = o, u = 1, d;
-				for (; ++c < i && c < a && (d = l.get(t[c])) != null && d === r + u;) u++;
-				if (u > r - s) {
-					let i = t[o];
-					for (; s < r;) e.insertBefore(n[s++], i);
-				} else e.replaceChild(n[s++], t[o++]);
-			} else o++;
-			else t[o++].remove();
+			if (r != null) {
+				if (s < r && r < a) {
+					let c = o, u = 1, d;
+					for (; ++c < i && c < a && (d = l.get(t[c])) != null && d === r + u;) u++;
+					if (u > r - s) {
+						let i = t[o];
+						for (; s < r;) e.insertBefore(n[s++], i);
+					} else e.replaceChild(n[s++], t[o++]);
+				} else o++;
+			} else t[o++].remove();
 		}
 	}
 }
@@ -801,15 +804,18 @@ function qe(e, t, n, r) {
 	let i = !1;
 	for (let a = 0, o = t.length; a < o; a++) {
 		let o = t[a], s = n && n[e.length], c;
-		if (o != null && o !== !0 && o !== !1) if ((c = typeof o) == "object" && o.nodeType) e.push(o);
-		else if (Array.isArray(o)) i = qe(e, o, s) || i;
-		else if (c === "function") if (r) {
-			for (; typeof o == "function";) o = o();
-			i = qe(e, Array.isArray(o) ? o : [o], Array.isArray(s) ? s : [s]) || i;
-		} else e.push(o), i = !0;
-		else {
-			let t = String(o);
-			s && s.nodeType === 3 && s.data === t ? e.push(s) : e.push(document.createTextNode(t));
+		if (o != null && o !== !0 && o !== !1) {
+			if ((c = typeof o) == "object" && o.nodeType) e.push(o);
+			else if (Array.isArray(o)) i = qe(e, o, s) || i;
+			else if (c === "function") {
+				if (r) {
+					for (; typeof o == "function";) o = o();
+					i = qe(e, Array.isArray(o) ? o : [o], Array.isArray(s) ? s : [s]) || i;
+				} else e.push(o), i = !0;
+			} else {
+				let t = String(o);
+				s && s.nodeType === 3 && s.data === t ? e.push(s) : e.push(document.createTextNode(t));
+			}
 		}
 	}
 	return i;
@@ -833,7 +839,7 @@ function L(e, t, n, r) {
 	return [i];
 }
 //#endregion
-//#region ../../../node_modules/.pnpm/wafer-host@0.1.9_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/wafer-host/dist/unit-helper/index.js
+//#region ../../../node_modules/.pnpm/wafer-host@0.1.11_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/wafer-host/dist/unit-helper/index.js
 function Ye(e) {
 	if (!Array.from(document.head.querySelectorAll("link[rel=\"stylesheet\"]")).some((t) => t.href === e)) {
 		console.log(`Inserting link tag for ${e}`);
@@ -1436,7 +1442,7 @@ var [J, Y] = Ot({
 	parameters: z(R)
 });
 //#endregion
-//#region ../../../node_modules/.pnpm/wafer-host@0.1.9_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/wafer-host/dist/unit-types/index.js
+//#region ../../../node_modules/.pnpm/wafer-host@0.1.11_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/wafer-host/dist/unit-types/index.js
 function kt(e, t) {
 	return window?.queryUnitInterfaceForModule?.(e, t);
 }
@@ -1729,35 +1735,37 @@ function tn(e) {
 //#region src/store/ui-actions.ts
 var Q = qt(), nn = !1, $ = {
 	initialize() {
-		if (!nn) if (nn = !0, Q.updateParameters(J.parameters), Pt) Pt.completeSetup({
-			unitAspects: {
-				unitType: "instrument",
-				categoryHint: "synthesizer",
-				viewSize: [640, 376],
-				preferJustSize: !0
-			},
-			noteInput: {
-				noteOn(e, t) {
-					Q.noteOn(e, 1, t);
+		if (!nn) {
+			if (nn = !0, Q.updateParameters(J.parameters), Pt) Pt.completeSetup({
+				unitAspects: {
+					unitType: "instrument",
+					categoryHint: "synthesizer",
+					viewSize: [640, 376],
+					preferJustSize: !0
 				},
-				noteOff(e, t) {
-					Q.noteOff(e, t);
+				noteInput: {
+					noteOn(e, t) {
+						Q.noteOn(e, 1, t);
+					},
+					noteOff(e, t) {
+						Q.noteOff(e, t);
+					}
+				},
+				persistence: Qt,
+				cleanup: Q.cleanup
+			});
+			else return tn({
+				connectionStateCallback(e) {
+					Y("midiConnected", e);
+				},
+				noteOn(e, t) {
+					Q.resumeIfNeeded(), Q.noteOn(e, t);
+				},
+				noteOff(e) {
+					Q.noteOff(e);
 				}
-			},
-			persistence: Qt,
-			cleanup: Q.cleanup
-		});
-		else return tn({
-			connectionStateCallback(e) {
-				Y("midiConnected", e);
-			},
-			noteOn(e, t) {
-				Q.resumeIfNeeded(), Q.noteOn(e, t);
-			},
-			noteOff(e) {
-				Q.noteOff(e);
-			}
-		});
+			});
+		}
 	},
 	setParameter(e, t) {
 		Y("parameters", e, e === "oscWave" ? Math.round(t) : t), Q.updateParameters(J.parameters);

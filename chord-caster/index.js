@@ -104,12 +104,13 @@ function M(e, t, n) {
 }
 function N(e, t, n, r, i) {
 	var a, o;
-	n: if (t == "style") if (typeof n == "string") e.style.cssText = n;
-	else {
-		if (typeof r == "string" && (e.style.cssText = r = ""), r) for (t in r) n && t in n || M(e.style, t, "");
-		if (n) for (t in n) r && n[t] == r[t] || M(e.style, t, n[t]);
-	}
-	else if (t[0] == "o" && t[1] == "n") a = t != (t = t.replace(u, "$1")), o = t.toLowerCase(), t = o in e || t == "onFocusOut" || t == "onFocusIn" ? o.slice(2) : t.slice(2), e.l ||= {}, e.l[t + a] = n, n ? r ? n[l] = r[l] : (n[l] = d, e.addEventListener(t, a ? p : f, a)) : e.removeEventListener(t, a ? p : f, a);
+	n: if (t == "style") {
+		if (typeof n == "string") e.style.cssText = n;
+		else {
+			if (typeof r == "string" && (e.style.cssText = r = ""), r) for (t in r) n && t in n || M(e.style, t, "");
+			if (n) for (t in n) r && n[t] == r[t] || M(e.style, t, n[t]);
+		}
+	} else if (t[0] == "o" && t[1] == "n") a = t != (t = t.replace(u, "$1")), o = t.toLowerCase(), t = o in e || t == "onFocusOut" || t == "onFocusIn" ? o.slice(2) : t.slice(2), e.l ||= {}, e.l[t + a] = n, n ? r ? n[l] = r[l] : (n[l] = d, e.addEventListener(t, a ? p : f, a)) : e.removeEventListener(t, a ? p : f, a);
 	else {
 		if (i == "http://www.w3.org/2000/svg") t = t.replace(/xlink(H|:h)/, "h").replace(/sName$/, "s");
 		else if (t != "width" && t != "height" && t != "href" && t != "list" && t != "form" && t != "tabIndex" && t != "download" && t != "rowSpan" && t != "colSpan" && t != "role" && t != "popover" && t in e) try {
@@ -252,7 +253,7 @@ e = h.slice, t = { __e: function(e, t, n, r) {
 	return e.__v.__b - t.__v.__b;
 }, D.__r = 0, s = Math.random().toString(8), c = "__d" + s, l = "__a" + s, u = /(PointerCapture)$|Capture$/i, d = 0, f = ne(!1), p = ne(!0);
 //#endregion
-//#region ../../../node_modules/.pnpm/wafer-host@0.1.9_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/wafer-host/dist/unit-helper/index.js
+//#region ../../../node_modules/.pnpm/wafer-host@0.1.11_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/wafer-host/dist/unit-helper/index.js
 function fe(e) {
 	if (!Array.from(document.head.querySelectorAll("link[rel=\"stylesheet\"]")).some((t) => t.href === e)) {
 		console.log(`Inserting link tag for ${e}`);
@@ -286,7 +287,7 @@ function pe(e, t) {
 	};
 }
 //#endregion
-//#region ../../../node_modules/.pnpm/wafer-host@0.1.9_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/wafer-host/dist/unit-types/index.js
+//#region ../../../node_modules/.pnpm/wafer-host@0.1.11_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/wafer-host/dist/unit-types/index.js
 function me(e, t) {
 	return window?.queryUnitInterfaceForModule?.(e, t);
 }
@@ -1310,12 +1311,13 @@ function jn(e) {
 			set: (t, r, i) => {
 				if (f) return g("set", r);
 				let a = !0, s = X(t, p), c = !1, l = i;
-				if (Xt(i)) if (c = !0, pn(i, d)) {
-					if (xn(i, p) === t[r]) return !0;
-					let e = X(i, p);
-					dn(r, s, e), Rt(e, s.keyPath.concat(r));
-				} else e = !1;
-				else if (Mt(i, d)) {
+				if (Xt(i)) {
+					if (c = !0, pn(i, d)) {
+						if (xn(i, p) === t[r]) return !0;
+						let e = X(i, p);
+						dn(r, s, e), Rt(e, s.keyPath.concat(r));
+					} else e = !1;
+				} else if (Mt(i, d)) {
 					let { proxyVal: e, self: t, sourceId: n } = s.rootMeta, o = Q(i);
 					if (o.sourceId !== n) l = Dn(i);
 					else {
