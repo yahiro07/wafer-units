@@ -15,7 +15,7 @@ export function setupUnit() {
     },
     hostCallbacks: {
       setKey(keySpec) {
-        engine.setKeyTranspose(keySpec.keyTranspose);
+        engine.setKeyTranspose(keySpec.relativeKeyTranspose);
         const keysName = mapKeySpecToKeysName(keySpec);
         store.setKeysName(keysName);
       },

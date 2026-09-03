@@ -48,7 +48,7 @@ export function setupUnit() {
     },
     hostCallbacks: {
       setKey(keySpec) {
-        engine.setKeyTranspose(keySpec.keyTranspose);
+        engine.setKeyTranspose(keySpec.relativeKeyTranspose);
       },
     },
     // persistence,
