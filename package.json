@@ -13,6 +13,6 @@
     "oxlint-tsgolint": "^7.0.2001",
     "typescript": "~7.0.2",
     "vite": "^8.2.2",
-    "wafer-host": "^0.1.10"
+    "wafer-host": "^0.1.11"
   }
 }
