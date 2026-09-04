@@ -14,7 +14,7 @@ function makeDriveCurve(drive: number): Float32Array<ArrayBuffer> {
     }
     return curve;
   }
-  const inputGain = 1 + amount * 8;
+  const inputGain = 1 + amount * 0.5;
   const outputGain = 1 / Math.sqrt(inputGain);
   for (let i = 0; i < n; i++) {
     const x = (i / (n - 1)) * 2 - 1;
