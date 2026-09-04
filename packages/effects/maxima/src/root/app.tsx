@@ -10,8 +10,8 @@ import { cz } from "@/utils/cz";
 type ParameterSpec = {
   key: keyof EffectParameters;
   label: string;
-  min: number;
-  max: number;
+  min?: number;
+  max?: number;
   step?: number;
   isSlider?: boolean;
   isBipolar?: boolean;
@@ -19,8 +19,9 @@ type ParameterSpec = {
 
 const KnobParams: ParameterSpec[] = [
   { key: "drive", label: "DRIVE", min: 0, max: 24 },
-  { key: "ceiling", label: "CEILING", min: -18, max: 0 },
+  { key: "ceiling", label: "CEILING", min: -12, max: 0 },
   { key: "lookahead", label: "LOOKAHEAD", min: 1, max: 50 },
+  { key: "outputGain", label: "OUTPUT" },
 ];
 
 const ParameterUis = ({
