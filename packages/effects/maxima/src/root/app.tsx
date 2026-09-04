@@ -19,6 +19,7 @@ type ParameterSpec = {
 
 const KnobParams: ParameterSpec[] = [
   { key: "drive", label: "DRIVE", min: 0, max: 24 },
+  { key: "curve", label: "CURVE" },
   { key: "ceiling", label: "CEILING", min: -12, max: 0 },
   { key: "lookahead", label: "LOOKAHEAD", min: 1, max: 50 },
   { key: "outputGain", label: "OUTPUT" },

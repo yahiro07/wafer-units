@@ -27,6 +27,13 @@ const parameterDescriptors = [
     automationRate: "k-rate" as const,
   },
   {
+    name: "curve",
+    defaultValue: 0,
+    minValue: 0,
+    maxValue: 1,
+    automationRate: "k-rate" as const,
+  },
+  {
     name: "ceiling",
     defaultValue: -1,
     minValue: -18,
@@ -57,6 +64,7 @@ function createMaximizer(maxBufferSamples: number) {
     if (!output) return true;
 
     const drive = clamp(parameters.drive[0] ?? 0, 0, 24);
+    const curve = clamp(parameters.curve[0] ?? 0, 0, 1);
     const ceiling = dbToGain(clamp(parameters.ceiling[0] ?? -1, -18, 0));
     const maxSpanSamples = Math.max(
       1,
@@ -71,14 +79,15 @@ function createMaximizer(maxBufferSamples: number) {
       if (!outputChannel) continue;
 
       const inputChannel = input?.[channel] ?? input?.[0];
-      const maximizer =
-        (channels[channel] ??= createChannelMaximizer(maxBufferSamples));
+      const maximizer = (channels[channel] ??=
+        createChannelMaximizer(maxBufferSamples));
 
       for (let i = 0; i < outputChannel.length; i++) {
         outputChannel[i] = maximizer.takeOutput();
         maximizer.pushInput(
           inputChannel?.[i] ?? 0,
           drive,
+          curve,
           ceiling,
           maxSpanSamples,
         );
@@ -110,6 +119,7 @@ function createChannelMaximizer(maxBufferSamples: number) {
   function pushInput(
     value: number,
     drive: number,
+    curve: number,
     ceiling: number,
     maxSpanSamples: number,
   ) {
@@ -120,7 +130,7 @@ function createChannelMaximizer(maxBufferSamples: number) {
       polarity !== lastPolarity &&
       spanLength > 0
     ) {
-      flush(drive, ceiling, maxSpanSamples);
+      flush(drive, curve, ceiling, maxSpanSamples);
     }
 
     span[spanLength] = value;
@@ -129,11 +139,16 @@ function createChannelMaximizer(maxBufferSamples: number) {
     if (polarity !== 0) lastPolarity = polarity;
 
     if (spanLength >= maxSpanSamples) {
-      flush(drive, ceiling, maxSpanSamples);
+      flush(drive, curve, ceiling, maxSpanSamples);
     }
   }
 
-  function flush(drive: number, ceiling: number, maxSpanSamples: number) {
+  function flush(
+    drive: number,
+    curve: number,
+    ceiling: number,
+    maxSpanSamples: number,
+  ) {
     if (spanLength === 0) return;
 
     const release = Math.exp(-spanLength / (sampleRate * 0.12));
@@ -145,7 +160,12 @@ function createChannelMaximizer(maxBufferSamples: number) {
       maxBoost,
       ceiling / Math.max(envelopePeak, 1e-9),
     );
-    const gain = Math.min(spanGain, Math.sqrt(spanGain * envelopeGain));
+    const gain = curveGain(
+      Math.min(spanGain, Math.sqrt(spanGain * envelopeGain)),
+      maxBoost,
+      curve,
+      ceiling / Math.max(spanPeak, 1e-9),
+    );
     const delay = Math.max(0, maxSpanSamples - spanLength);
     let writeIndex = (outputIndex + delay) % delayedOutput.length;
 
@@ -172,6 +192,24 @@ function clamp(value: number, min: number, max: number) {
 
 function dbToGain(decibels: number) {
   return 10 ** (decibels / 20);
+}
+
+function curveGain(
+  gain: number,
+  maxBoost: number,
+  curve: number,
+  peakLimit: number,
+) {
+  if (curve === 0 || gain <= 1 || maxBoost <= 1) return gain;
+  // if (curve === 0) return gain;
+
+  const normalizedGain = clamp(Math.log(gain) / Math.log(maxBoost), 0, 1);
+  const curvedGain = tunableSigmoid(normalizedGain, curve * -0.9);
+  return Math.min(maxBoost ** curvedGain, peakLimit);
+}
+
+function tunableSigmoid(value: number, curve: number) {
+  return (value - curve * value) / (curve - 2 * curve * Math.abs(value) + 1);
 }
 
 registerProcessor("maxima-processor", MaximaProcessor);
