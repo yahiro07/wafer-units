@@ -15,12 +15,13 @@ type ParameterSpec = {
 };
 
 const KnobParams: ParameterSpec[] = [
+  { key: "inputGain", label: "INPUT" },
   { key: "compThreshold", label: "COMP-TH" },
-  { key: "compRatio", label: "RATIO", isSlider: true },
-  { key: "compKnee", label: "KNEE", isSlider: true },
   { key: "compAttack", label: "ATK", isSlider: true },
   { key: "compRelease", label: "REL ", isSlider: true },
-  { key: "makeupGain", label: "MAKEUP" },
+  { key: "drive", label: "DRIVE" },
+  { key: "limit", label: "LIMIT" },
+  { key: "outputGain", label: "OUTPUT" },
 ];
 
 const ParameterUis = ({
