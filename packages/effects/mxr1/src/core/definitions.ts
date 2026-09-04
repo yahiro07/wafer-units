@@ -6,6 +6,11 @@ export type EffectParameters = {
   ch1EqFreq: number;
   ch1LevelMain: number;
   ch1LevelAux: number;
+  compThreshold: number;
+  compRatio: number;
+  compKnee: number;
+  compAttack: number;
+  compRelease: number;
   mainGain: number;
   auxGain: number;
 };
@@ -18,6 +23,11 @@ export const defaultEffectParameters: EffectParameters = {
   ch1EqFreq: 0.5,
   ch1LevelMain: 0.5,
   ch1LevelAux: 0.5,
+  compThreshold: 1,
+  compRatio: 0,
+  compKnee: 0,
+  compAttack: 0,
+  compRelease: 0,
   mainGain: 0.5,
   auxGain: 0.5,
 };
