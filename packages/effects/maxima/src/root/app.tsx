@@ -14,7 +14,11 @@ type ParameterSpec = {
   isBipolar?: boolean;
 };
 
-const KnobParams: ParameterSpec[] = [{ key: "level", label: "LEVEL" }];
+const KnobParams: ParameterSpec[] = [
+  { key: "drive", label: "DRIVE" },
+  { key: "ceiling", label: "CEILING" },
+  { key: "lookahead", label: "LOOKAHEAD" },
+];
 
 const ParameterUis = ({
   specs,

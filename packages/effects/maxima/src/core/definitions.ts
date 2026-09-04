@@ -1,9 +1,13 @@
 export type EffectParameters = {
-  level: number;
+  drive: number;
+  ceiling: number;
+  lookahead: number;
 };
 
 export const defaultEffectParameters: EffectParameters = {
-  level: 0,
+  drive: 0,
+  ceiling: -1,
+  lookahead: 5,
 };
 
 export type EffectEngine = {
