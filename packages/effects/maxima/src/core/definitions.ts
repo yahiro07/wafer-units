@@ -1,5 +1,6 @@
 export type EffectParameters = {
   drive: number;
+  curve: number;
   ceiling: number;
   lookahead: number;
   outputGain: number;
@@ -7,8 +8,9 @@ export type EffectParameters = {
 
 export const defaultEffectParameters: EffectParameters = {
   drive: 0,
+  curve: 0,
   ceiling: -1,
-  lookahead: 5,
+  lookahead: 25,
   outputGain: 0.5,
 };
 

@@ -49,6 +49,11 @@ export function createEngine(unitInterface: UnitInterface | undefined) {
         now,
       );
       setSmoothValue(
+        workletNode.parameters.get("curve"),
+        parameters.curve,
+        now,
+      );
+      setSmoothValue(
         workletNode.parameters.get("ceiling"),
         parameters.ceiling,
         now,
