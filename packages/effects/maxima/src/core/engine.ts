@@ -1,6 +1,7 @@
 import { UnitInterface } from "wafer-host/unit-types";
 import { defaultEffectParameters, EffectParameters } from "@/core/definitions";
 import workletUrl from "./maxima-processor?worker&url";
+import { mapKnobCurveCenterUnity } from "@/core/volume-curve";
 
 export function createEngine(unitInterface: UnitInterface | undefined) {
   const audioContext = unitInterface?.audioContext ?? new AudioContext();
@@ -12,24 +13,20 @@ export function createEngine(unitInterface: UnitInterface | undefined) {
   let isPassthroughConnected = false;
   let isWorkletModuleLoaded = false;
   let isDisposed = false;
+  const gainNode = audioContext.createGain();
 
   const createWorklet = () => {
-    if (
-      !isConnected ||
-      !isWorkletModuleLoaded ||
-      isDisposed ||
-      workletNode
-    ) {
+    if (!isConnected || !isWorkletModuleLoaded || isDisposed || workletNode) {
       return;
     }
 
     workletNode = new AudioWorkletNode(audioContext, "maxima-processor");
     if (isPassthroughConnected) {
-      inputNode.disconnect(outputNode);
+      inputNode.disconnect(gainNode);
       isPassthroughConnected = false;
     }
     inputNode.connect(workletNode);
-    workletNode.connect(outputNode);
+    workletNode.connect(gainNode);
     applyParameters();
   };
 
@@ -44,18 +41,27 @@ export function createEngine(unitInterface: UnitInterface | undefined) {
     });
 
   function applyParameters() {
-    if (!workletNode) return;
-
     const now = audioContext.currentTime;
-    setSmoothValue(workletNode.parameters.get("drive"), parameters.drive, now);
+    if (workletNode) {
+      setSmoothValue(
+        workletNode.parameters.get("drive"),
+        parameters.drive,
+        now,
+      );
+      setSmoothValue(
+        workletNode.parameters.get("ceiling"),
+        parameters.ceiling,
+        now,
+      );
+      setSmoothValue(
+        workletNode.parameters.get("lookahead"),
+        parameters.lookahead,
+        now,
+      );
+    }
     setSmoothValue(
-      workletNode.parameters.get("ceiling"),
-      parameters.ceiling,
-      now,
-    );
-    setSmoothValue(
-      workletNode.parameters.get("lookahead"),
-      parameters.lookahead,
+      gainNode.gain,
+      mapKnobCurveCenterUnity(parameters.outputGain),
       now,
     );
   }
@@ -64,7 +70,8 @@ export function createEngine(unitInterface: UnitInterface | undefined) {
     connects() {
       if (isConnected || isDisposed) return;
       isConnected = true;
-      inputNode.connect(outputNode);
+      inputNode.connect(gainNode);
+      gainNode.connect(outputNode);
       isPassthroughConnected = true;
       createWorklet();
     },
@@ -74,11 +81,12 @@ export function createEngine(unitInterface: UnitInterface | undefined) {
     },
     cleanup() {
       isDisposed = true;
-      if (isPassthroughConnected) inputNode.disconnect(outputNode);
+      if (isPassthroughConnected) inputNode.disconnect(gainNode);
       if (workletNode) {
         inputNode.disconnect(workletNode);
-        workletNode.disconnect(outputNode);
+        workletNode.disconnect(gainNode);
       }
+      gainNode.disconnect(outputNode);
       isPassthroughConnected = false;
       isConnected = false;
     },

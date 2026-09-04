@@ -1,34 +1,50 @@
 class MaximaProcessor extends AudioWorkletProcessor {
+  private readonly maximizer = createMaximizer();
+
   static get parameterDescriptors() {
-    return [
-      {
-        name: "drive",
-        defaultValue: 0,
-        minValue: 0,
-        maxValue: 24,
-        automationRate: "k-rate",
-      },
-      {
-        name: "ceiling",
-        defaultValue: -1,
-        minValue: -18,
-        maxValue: 0,
-        automationRate: "k-rate",
-      },
-      {
-        name: "lookahead",
-        defaultValue: 5,
-        minValue: 1,
-        maxValue: 50,
-        automationRate: "k-rate",
-      },
-    ];
+    return parameterDescriptors;
   }
 
-  private channels: ChannelState[] = [];
-  private maxSpanSamples = 0;
-
   process(
+    inputs: Float32Array[][],
+    outputs: Float32Array[][],
+    parameters: Record<string, Float32Array>,
+  ) {
+    return this.maximizer.process(inputs, outputs, parameters);
+  }
+}
+
+const parameterDescriptors = [
+  {
+    name: "drive",
+    defaultValue: 0,
+    minValue: 0,
+    maxValue: 24,
+    automationRate: "k-rate" as const,
+  },
+  {
+    name: "ceiling",
+    defaultValue: -1,
+    minValue: -18,
+    maxValue: 0,
+    automationRate: "k-rate" as const,
+  },
+  {
+    name: "lookahead",
+    defaultValue: 5,
+    minValue: 1,
+    maxValue: 50,
+    automationRate: "k-rate" as const,
+  },
+];
+
+function createMaximizer() {
+  let channels: ReturnType<typeof createChannelMaximizer>[] = [];
+  let maxSpanSamples = 0;
+
+  return { process };
+
+  function process(
     inputs: Float32Array[][],
     outputs: Float32Array[][],
     parameters: Record<string, Float32Array>,
@@ -39,16 +55,16 @@ class MaximaProcessor extends AudioWorkletProcessor {
 
     const drive = clamp(parameters.drive[0] ?? 0, 0, 24);
     const ceiling = dbToGain(clamp(parameters.ceiling[0] ?? -1, -18, 0));
-    const maxSpanSamples = Math.max(
+    const nextMaxSpanSamples = Math.max(
       1,
       Math.round(
         (clamp(parameters.lookahead[0] ?? 5, 1, 50) / 1000) * sampleRate,
       ),
     );
 
-    if (this.maxSpanSamples !== maxSpanSamples) {
-      this.maxSpanSamples = maxSpanSamples;
-      this.channels = [];
+    if (maxSpanSamples !== nextMaxSpanSamples) {
+      maxSpanSamples = nextMaxSpanSamples;
+      channels = [];
     }
 
     for (let channel = 0; channel < output.length; channel++) {
@@ -56,13 +72,12 @@ class MaximaProcessor extends AudioWorkletProcessor {
       if (!outputChannel) continue;
 
       const inputChannel = input?.[channel] ?? input?.[0];
-      const state = (this.channels[channel] ??= new ChannelState(
-        maxSpanSamples,
-      ));
+      const maximizer =
+        (channels[channel] ??= createChannelMaximizer(maxSpanSamples));
 
       for (let i = 0; i < outputChannel.length; i++) {
-        outputChannel[i] = state.takeOutput();
-        state.pushInput(inputChannel?.[i] ?? 0, drive, ceiling);
+        outputChannel[i] = maximizer.takeOutput();
+        maximizer.pushInput(inputChannel?.[i] ?? 0, drive, ceiling);
       }
     }
 
@@ -70,74 +85,66 @@ class MaximaProcessor extends AudioWorkletProcessor {
   }
 }
 
-class ChannelState {
-  private readonly span: Float32Array;
-  private readonly delayedOutput: Float32Array;
-  private spanLength = 0;
-  private spanPeak = 0;
-  private lastPolarity = 0;
-  private outputIndex = 0;
-  private envelopePeak = 0;
+function createChannelMaximizer(maxSpanSamples: number) {
+  const span = new Float32Array(maxSpanSamples);
+  const delayedOutput = new Float32Array(maxSpanSamples * 2 + 128);
+  let spanLength = 0;
+  let spanPeak = 0;
+  let lastPolarity = 0;
+  let outputIndex = 0;
+  let envelopePeak = 0;
 
-  constructor(private readonly maxSpanSamples: number) {
-    this.span = new Float32Array(maxSpanSamples);
-    this.delayedOutput = new Float32Array(maxSpanSamples * 2 + 128);
-  }
+  return { takeOutput, pushInput };
 
-  takeOutput() {
-    const value = this.delayedOutput[this.outputIndex] ?? 0;
-    this.delayedOutput[this.outputIndex] = 0;
-    this.outputIndex = (this.outputIndex + 1) % this.delayedOutput.length;
+  function takeOutput() {
+    const value = delayedOutput[outputIndex] ?? 0;
+    delayedOutput[outputIndex] = 0;
+    outputIndex = (outputIndex + 1) % delayedOutput.length;
     return value;
   }
 
-  pushInput(value: number, drive: number, ceiling: number) {
+  function pushInput(value: number, drive: number, ceiling: number) {
     const polarity = getPolarity(value);
     if (
       polarity !== 0 &&
-      this.lastPolarity !== 0 &&
-      polarity !== this.lastPolarity &&
-      this.spanLength > 0
+      lastPolarity !== 0 &&
+      polarity !== lastPolarity &&
+      spanLength > 0
     ) {
-      this.flush(drive, ceiling);
+      flush(drive, ceiling);
     }
 
-    this.span[this.spanLength] = value;
-    this.spanLength++;
-    this.spanPeak = Math.max(this.spanPeak, Math.abs(value));
-    if (polarity !== 0) this.lastPolarity = polarity;
+    span[spanLength] = value;
+    spanLength++;
+    spanPeak = Math.max(spanPeak, Math.abs(value));
+    if (polarity !== 0) lastPolarity = polarity;
 
-    if (this.spanLength >= this.maxSpanSamples) {
-      this.flush(drive, ceiling);
-    }
+    if (spanLength >= maxSpanSamples) flush(drive, ceiling);
   }
 
-  private flush(drive: number, ceiling: number) {
-    if (this.spanLength === 0) return;
+  function flush(drive: number, ceiling: number) {
+    if (spanLength === 0) return;
 
-    const release = Math.exp(-this.spanLength / (sampleRate * 0.12));
-    this.envelopePeak = Math.max(this.spanPeak, this.envelopePeak * release);
+    const release = Math.exp(-spanLength / (sampleRate * 0.12));
+    envelopePeak = Math.max(spanPeak, envelopePeak * release);
 
     const maxBoost = dbToGain(drive);
-    const spanGain = Math.min(
-      maxBoost,
-      ceiling / Math.max(this.spanPeak, 1e-9),
-    );
+    const spanGain = Math.min(maxBoost, ceiling / Math.max(spanPeak, 1e-9));
     const envelopeGain = Math.min(
       maxBoost,
-      ceiling / Math.max(this.envelopePeak, 1e-9),
+      ceiling / Math.max(envelopePeak, 1e-9),
     );
     const gain = Math.min(spanGain, Math.sqrt(spanGain * envelopeGain));
-    const delay = this.maxSpanSamples - this.spanLength;
-    let writeIndex = (this.outputIndex + delay) % this.delayedOutput.length;
+    const delay = maxSpanSamples - spanLength;
+    let writeIndex = (outputIndex + delay) % delayedOutput.length;
 
-    for (let i = 0; i < this.spanLength; i++) {
-      this.delayedOutput[writeIndex] = this.span[i] * gain;
-      writeIndex = (writeIndex + 1) % this.delayedOutput.length;
+    for (let i = 0; i < spanLength; i++) {
+      delayedOutput[writeIndex] = span[i] * gain;
+      writeIndex = (writeIndex + 1) % delayedOutput.length;
     }
 
-    this.spanLength = 0;
-    this.spanPeak = 0;
+    spanLength = 0;
+    spanPeak = 0;
   }
 }
 
