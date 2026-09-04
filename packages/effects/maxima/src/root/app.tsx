@@ -10,14 +10,17 @@ import { cz } from "@/utils/cz";
 type ParameterSpec = {
   key: keyof EffectParameters;
   label: string;
+  min: number;
+  max: number;
+  step?: number;
   isSlider?: boolean;
   isBipolar?: boolean;
 };
 
 const KnobParams: ParameterSpec[] = [
-  { key: "drive", label: "DRIVE" },
-  { key: "ceiling", label: "CEILING" },
-  { key: "lookahead", label: "LOOKAHEAD" },
+  { key: "drive", label: "DRIVE", min: 0, max: 24 },
+  { key: "ceiling", label: "CEILING", min: -18, max: 0 },
+  { key: "lookahead", label: "LOOKAHEAD", min: 1, max: 50 },
 ];
 
 const ParameterUis = ({
@@ -27,7 +30,7 @@ const ParameterUis = ({
   specs: ParameterSpec[];
   parameters: EffectParameters;
 }) => {
-  return specs.map(({ key, label, isSlider, isBipolar }) => (
+  return specs.map(({ key, label, min, max, step, isSlider, isBipolar }) => (
     <LabeledBox
       key={key}
       label={label}
@@ -37,12 +40,17 @@ const ParameterUis = ({
         <Slider
           value={parameters[key] as number}
           onChange={(value) => actions.setParameter(key, value)}
+          min={min}
+          max={max}
+          step={step}
         />
       ) : (
         <Knob
           value={parameters[key] as number}
           onChange={(value) => actions.setParameter(key, value)}
-          min={isBipolar ? -1 : 0}
+          min={isBipolar ? -1 : min}
+          max={max}
+          step={step}
         />
       )}
     </LabeledBox>

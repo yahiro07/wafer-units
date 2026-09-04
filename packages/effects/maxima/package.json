@@ -8,6 +8,7 @@
   },
   "devDependencies": {
     "@preact/preset-vite": "catalog:",
+    "@types/audioworklet": "catalog:",
     "@unocss/preset-wind4": "catalog:",
     "@unocss/vite": "catalog:",
     "mini-css": "catalog:",

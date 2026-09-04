@@ -188,6 +188,9 @@ importers:
       '@preact/preset-vite':
         specifier: 'catalog:'
         version: 2.10.6(@babel/core@7.29.7)(preact@10.29.8)(vite@8.2.2(@types/node@26.4.0)(jiti@2.7.0))
+      '@types/audioworklet':
+        specifier: 'catalog:'
+        version: 0.0.100
       '@unocss/preset-wind4':
         specifier: 'catalog:'
         version: 66.7.5
