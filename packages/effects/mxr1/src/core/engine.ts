@@ -27,10 +27,10 @@ const cutoffHelper = {
     return cutoffHelper._mapCutoff(prFreqU, 40, 20_000);
   },
   mapCutoffHP(prFreqU: number): number {
-    return cutoffHelper._mapCutoff(invPower2(prFreqU), 20, 14000);
+    return cutoffHelper._mapCutoff(invPower2(prFreqU), 20, 14_000);
   },
   mapCutoffTilt(prFreqU: number): number {
-    return cutoffHelper._mapCutoff(prFreqU, 100, 8_000);
+    return cutoffHelper._mapCutoff(prFreqU, 40, 14_000);
   },
 };
 
@@ -66,8 +66,6 @@ function createTiltingEq(ac: AudioContext): TiltingEq {
   filter1.connect(filter2);
   filter1.type = "lowshelf";
   filter2.type = "highshelf";
-  filter1.Q.value = 0.7;
-  filter2.Q.value = 0.7;
   return {
     inputNode: filter1,
     outputNode: filter2,
