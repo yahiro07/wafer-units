@@ -1,5 +1,5 @@
 import { ComponentChildren } from "preact";
-import { qu } from "@/common/css-realm";
+import { cz } from "@/utils/cz";
 
 export const Button = ({
   text,
@@ -16,15 +16,14 @@ export const Button = ({
 }) => {
   return (
     <div
-      sx={[
-        qu.flexC().wh(40, 30).bg("#888").weight("bold"),
-        qu.color("#fff").cursor("pointer"),
-        active && qu.bg("#48c"),
-        disabled && qu.opacity(0.4).pointerEvents("none"),
-      ]}
+      class={cz(
+        "flex-c w-[40px] h-[30px] bg-[#888] font-bold text-white cursor-pointer",
+        active && "bg-[#48c]",
+        disabled && "opacity-40 pointer-events-none",
+      )}
       onClick={onClick}
     >
-      {text && <div sx={qu.fontSize(9)}>{text}</div>}
+      {text && <div class="text-[9px]">{text}</div>}
       {children}
     </div>
   );

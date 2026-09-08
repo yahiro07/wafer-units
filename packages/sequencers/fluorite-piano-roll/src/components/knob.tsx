@@ -1,4 +1,3 @@
-import { qu } from "@/common/css-realm";
 import { KnobFrame } from "@/components/headless/knob-frame";
 import { linearInterpolate } from "@/utils/helpers";
 
@@ -31,14 +30,14 @@ export const Knob = ({
       dragDisabled={disabled}
     >
       <div
-        sx={qu.wh(30, 30).rounded("100%").relative().bg("#888")}
+        class="w-[30px] h-[30px] rounded-full relative bg-[#888]"
         style={{ opacity: disabled ? 0.5 : 1 }}
       >
         <div
-          sx={qu.full().flexVA()}
+          class="w-full h-full flex-va"
           style={{ transform: `rotate(${tickAngle}deg)` }}
         >
-          <div sx={qu.wh(2, 10).bg("#fff")} />
+          <div class="w-[2px] h-[10px] bg-white" />
         </div>
       </div>
     </KnobFrame>

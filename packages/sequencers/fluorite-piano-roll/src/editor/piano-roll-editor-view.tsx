@@ -1,9 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "preact/hooks";
-import { cz, qu } from "@/common/css-realm";
 import { LoopBarLength, Note } from "@/definitions/model";
 import { GridBackground } from "@/editor/grid-background";
 import { SideKeyboardColumn } from "@/editor/side-keyboard-column";
-import { colors } from "@/editor/theme";
 import { noteNameLabels, uiConfig } from "@/editor/ui-config";
 import { store } from "@/root/store";
 import { startDragSession } from "@/utils/drag-session";
@@ -257,7 +255,7 @@ const EditInputLayer = ({
   };
   return (
     <div
-      sx={qu.absoluteFull()}
+      class="absolute-full"
       onPointerDown={handlePointerDown}
       onPointerUp={handlePointerUp}
       style={{ cursor }}
@@ -286,19 +284,19 @@ const NoteView = ({
         height: npx(cellH),
       }}
     >
-      <div class={styleNoteView.label}>{noteNameLabels[yi]}</div>
+      <div
+        class={styleNoteView.label}
+        style={{ height: npx(uiConfig.cellH - 2) }}
+      >
+        {noteNameLabels[yi]}
+      </div>
     </div>
   );
 };
 const styleNoteView = {
-  base: cz(qu.absolute().flexC().cursor("pointer")),
-  label: cz(
-    qu.bg(colors.noteBg).w("full").flexHA(),
-    qu.h(uiConfig.cellH - 2).css({ border: "solid 0.5px #0004" }),
-    qu.rounded(2).pl(0.5),
-    qu.color("#0008").fontSize(10),
-    "font-monospace",
-  ),
+  base: "absolute flex-c cursor-pointer",
+  label:
+    "bg-clNoteBg w-full flex-ha rounded-[2px] pl-0.5 text-[#0008] text-[10px] font-monospace bd-[#0004]",
 };
 
 const NotesDisplayLayer = ({
@@ -309,7 +307,7 @@ const NotesDisplayLayer = ({
   sectionRange: SectionRange;
 }) => {
   return (
-    <div sx={qu.absoluteFull()}>
+    <div class="absolute-full">
       {notes
         .filter(
           (note) =>
@@ -335,10 +333,8 @@ const NoteLayerStrip = ({
   const editorW = cellW * sectionRange.duration;
   return (
     <div
-      sx={[
-        qu.relative().wh(editorW, editorH),
-        qu.overflow("hidden").css({ touchAction: "none" }),
-      ]}
+      class="relative overflow-hidden touch-none"
+      style={{ width: npx(editorW), height: npx(editorH) }}
     >
       <NotesDisplayLayer notes={notes} sectionRange={sectionRange} />
       <EditInputLayer notes={notes} sectionRange={sectionRange} />
@@ -357,7 +353,7 @@ const RepeatingNoteLayers = () => {
     [sectionOffset, sectionStride],
   );
   return (
-    <div sx={qu.absoluteFull().flexH()}>
+    <div class="absolute-full flex-h">
       {seqNumbers(nx).map((i) => {
         return (
           <NoteLayerStrip
@@ -381,17 +377,12 @@ const PlayPositionLineLayer = () => {
   return (
     <div
       class={stylePlayPositionLineLayer.base}
-      style={{ left: npx(localPos * cellW - barW) }}
+      style={{ left: npx(localPos * cellW - barW), width: npx(barW) }}
     />
   );
 };
 const stylePlayPositionLineLayer = {
-  base: cz(
-    qu.absolute().top(0).pointerEvents("none"),
-    qu.wh(uiConfig.cellW * 1.5, "full"),
-    qu.css({ borderRight: "solid 1px #0ff4" }),
-    qu.bg("linear-gradient(to right, #0cc0, #0ff3)"),
-  ),
+  base: "absolute top-0 pointer-events-none h-full border-r border-solid border-[#0ff4] bg-[linear-gradient(to_right,#0cc0,#0ff3)]",
 };
 
 function calculateNotesCenter(notes: Note[]) {
@@ -430,18 +421,17 @@ export const PianoRollEditorView = () => {
   return (
     <div
       ref={baseDivRef}
-      sx={[
-        qu.flexH().gap(0.5).h(340),
-        qu.overflowXY("hidden", "scroll"),
-        qu.css({ touchAction: "pan-y" }),
-      ]}
+      class="flex-h gap-0.5 h-[340px] overflow-x-hidden overflow-y-scroll touch-pan-y"
       onWheel={(e) => {
         e.stopPropagation();
         e.preventDefault();
       }}
     >
       <SideKeyboardColumn />
-      <div sx={qu.relative().wh(editorW, editorH).flexH()}>
+      <div
+        class="relative flex-h"
+        style={{ width: npx(editorW), height: npx(editorH) }}
+      >
         <GridBackground nx={32} ny={numKeys} width={editorW} height={editorH} />
         <RepeatingNoteLayers />
         <PlayPositionLineLayer />

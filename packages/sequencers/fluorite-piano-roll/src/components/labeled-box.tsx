@@ -1,5 +1,5 @@
 import { ComponentChildren } from "preact";
-import { qu } from "@/common/css-realm";
+import { cz } from "@/utils/cz";
 import { npx } from "@/utils/helpers";
 
 export const LabeledBox = ({
@@ -19,17 +19,18 @@ export const LabeledBox = ({
 }) => {
   return (
     <div
-      class={className}
-      sx={qu.flexV()}
+      class={cz("flex-v", className)}
       style={width ? { width: npx(width) } : undefined}
     >
       <div
-        sx={qu.fontSize(11).weight("bold").h(13)}
+        class="text-[11px] font-bold h-[13px]"
         style={{ textAlign: labelAlign }}
       >
         {label}
       </div>
-      <div sx={qu.flexC().h(contentHeight)}>{children}</div>
+      <div class="flex-c" style={{ height: npx(contentHeight) }}>
+        {children}
+      </div>
     </div>
   );
 };
