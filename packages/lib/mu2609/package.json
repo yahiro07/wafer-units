@@ -1,0 +1,8 @@
+{
+  "name": "@lib/mu2609",
+  "private": true,
+  "type": "module",
+  "devDependencies": {
+    "preact": "catalog:"
+  }
+}
