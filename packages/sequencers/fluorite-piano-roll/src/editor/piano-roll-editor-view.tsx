@@ -5,7 +5,7 @@ import { SideKeyboardColumn } from "@/editor/side-keyboard-column";
 import { noteNameLabels, uiConfig } from "@/editor/ui-config";
 import { store } from "@/root/store";
 import { startDragSession } from "@/utils/drag-session";
-import { npx, seqNumbers } from "@/utils/helpers";
+import { seqNumbers } from "@/utils/helpers";
 import { RefObject } from "preact";
 
 type SectionRange = {
@@ -278,16 +278,13 @@ const NoteView = ({
     <div
       class={styleNoteView.base}
       style={{
-        left: npx(pos * cellW),
-        bottom: npx(yi * cellH),
-        width: npx(cellW * dur - 0.5),
-        height: npx(cellH),
+        left: pos * cellW,
+        bottom: yi * cellH,
+        width: cellW * dur - 0.5,
+        height: cellH,
       }}
     >
-      <div
-        class={styleNoteView.label}
-        style={{ height: npx(uiConfig.cellH - 2) }}
-      >
+      <div class={styleNoteView.label} style={{ height: uiConfig.cellH - 2 }}>
         {noteNameLabels[yi]}
       </div>
     </div>
@@ -296,7 +293,7 @@ const NoteView = ({
 const styleNoteView = {
   base: "absolute flex-c cursor-pointer",
   label:
-    "bg-clNoteBg w-full flex-ha rounded-[2px] pl-0.5 text-[#0008] text-[10px] font-monospace bd-[#0004]",
+    "bg-clNoteBg w-full flex-ha rounded-2px pl-0.5 text-#0008 text-10px font-monospace bd-#0004",
 };
 
 const NotesDisplayLayer = ({
@@ -334,7 +331,7 @@ const NoteLayerStrip = ({
   return (
     <div
       class="relative overflow-hidden touch-none"
-      style={{ width: npx(editorW), height: npx(editorH) }}
+      style={{ width: editorW, height: editorH }}
     >
       <NotesDisplayLayer notes={notes} sectionRange={sectionRange} />
       <EditInputLayer notes={notes} sectionRange={sectionRange} />
@@ -377,12 +374,12 @@ const PlayPositionLineLayer = () => {
   return (
     <div
       class={stylePlayPositionLineLayer.base}
-      style={{ left: npx(localPos * cellW - barW), width: npx(barW) }}
+      style={{ left: localPos * cellW - barW, width: barW }}
     />
   );
 };
 const stylePlayPositionLineLayer = {
-  base: "absolute top-0 pointer-events-none h-full border-r border-solid border-[#0ff4] bg-[linear-gradient(to_right,#0cc0,#0ff3)]",
+  base: "absolute top-0 pointer-events-none h-full border-r border-solid border-#0ff4 bg-[linear-gradient(to_right,#0cc0,#0ff3)]",
 };
 
 function calculateNotesCenter(notes: Note[]) {
@@ -421,17 +418,14 @@ export const PianoRollEditorView = () => {
   return (
     <div
       ref={baseDivRef}
-      class="flex-h gap-0.5 h-[340px] overflow-x-hidden overflow-y-scroll touch-pan-y"
+      class="flex-h gap-0.5 h-340px overflow-x-hidden overflow-y-scroll touch-pan-y"
       onWheel={(e) => {
         e.stopPropagation();
         e.preventDefault();
       }}
     >
       <SideKeyboardColumn />
-      <div
-        class="relative flex-h"
-        style={{ width: npx(editorW), height: npx(editorH) }}
-      >
+      <div class="relative flex-h" style={{ width: editorW, height: editorH }}>
         <GridBackground nx={32} ny={numKeys} width={editorW} height={editorH} />
         <RepeatingNoteLayers />
         <PlayPositionLineLayer />

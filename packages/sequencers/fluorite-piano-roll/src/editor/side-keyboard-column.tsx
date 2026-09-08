@@ -90,12 +90,12 @@ const KeyboardKey = ({ yi }: { yi: number }) => {
   );
 };
 const keyboardKeyStyles = {
-  base: cz("w-[80px] relative pointer-events-none"),
+  base: cz("w-80px relative pointer-events-none"),
   inner: cz("absolute pointer-events-auto cursor-pointer"),
-  innerPressed: "bg-[#4dd]!",
+  innerPressed: "bg-#4dd!",
   label: cz(
     "flex-ha h-full justify-end p-1",
-    "text-[#666] text-[12px]",
+    "text-#666 text-12px",
     "font-monospace",
   ),
 };

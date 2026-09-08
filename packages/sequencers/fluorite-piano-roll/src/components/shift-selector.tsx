@@ -47,7 +47,7 @@ export const ShiftSelector = <T extends string | number>({
   return (
     <ShifterFrame onShift={handleShift}>
       <div
-        class="flex-ha justify-between h-[30px] bg-[#888] text-[14px] cursor-pointer"
+        class="flex-ha justify-between h-30px bg-#888 text-14px cursor-pointer"
         style={{ minWidth }}
       >
         <Icons.CaretLeft

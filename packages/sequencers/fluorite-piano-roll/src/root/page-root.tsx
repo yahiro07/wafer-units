@@ -74,7 +74,7 @@ const PagerContainer = () => {
         <Button disabled={!canShiftLeft} onClick={() => shiftPage(-1)}>
           <Icons.CaretLeft size={20} />
         </Button>
-        <div class="w-[50px] flex-c">
+        <div class="w-50px flex-c">
           {st.pageIndex + 1} / {totalPages}
         </div>
         <Button disabled={!canShiftRight} onClick={() => shiftPage(1)}>
@@ -98,7 +98,7 @@ const TopBar = () => {
   return (
     <div class="w-full flex-v gap-4">
       <div class="flex-ha justify-between">
-        <div class="font-bold text-[24px]">Fluorite Piano Roll</div>
+        <div class="font-bold text-24px">Fluorite Piano Roll</div>
         <div class="flex-ha gap-7">
           <div class="flex-ha gap-6">
             <TrashButtonContainer />
@@ -115,7 +115,7 @@ const TopBar = () => {
 
 export const PageRoot = () => {
   return (
-    <EffectorBody className="w-[800px] h-[450px] flex-c">
+    <EffectorBody className="w-800px h-450px flex-c">
       <div class="flex-v gap-2">
         <TopBar />
         <PianoRollEditorViewContainer />

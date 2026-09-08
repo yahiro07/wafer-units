@@ -21,8 +21,8 @@ export const GridBackground = ({
     <div
       class={styles.base}
       style={{
-        width: npx(width),
-        height: npx(height),
+        width,
+        height,
       }}
     >
       {Array.from({ length: nx * ny }).map((_, i) => {
@@ -49,10 +49,7 @@ export const GridBackground = ({
               isBlackKey && "--is-black-key",
               `--border-${borderStrength}`,
             )}
-            style={{
-              left: npx(x),
-              top: npx(y),
-            }}
+            style={{ left: x, top: y }}
           />
         );
       })}

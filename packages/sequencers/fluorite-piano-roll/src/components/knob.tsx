@@ -30,14 +30,14 @@ export const Knob = ({
       dragDisabled={disabled}
     >
       <div
-        class="w-[30px] h-[30px] rounded-full relative bg-[#888]"
+        class="w-30px h-30px rounded-full relative bg-#888"
         style={{ opacity: disabled ? 0.5 : 1 }}
       >
         <div
           class="w-full h-full flex-va"
           style={{ transform: `rotate(${tickAngle}deg)` }}
         >
-          <div class="w-[2px] h-[10px] bg-white" />
+          <div class="w-2px h-10px bg-white" />
         </div>
       </div>
     </KnobFrame>

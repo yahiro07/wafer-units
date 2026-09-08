@@ -1,6 +1,5 @@
 import { ComponentChildren } from "preact";
 import { cz } from "@/utils/cz";
-import { npx } from "@/utils/helpers";
 
 export const LabeledBox = ({
   className,
@@ -20,15 +19,15 @@ export const LabeledBox = ({
   return (
     <div
       class={cz("flex-v", className)}
-      style={width ? { width: npx(width) } : undefined}
+      style={width ? { width } : undefined}
     >
       <div
-        class="text-[11px] font-bold h-[13px]"
+        class="text-11px font-bold h-13px"
         style={{ textAlign: labelAlign }}
       >
         {label}
       </div>
-      <div class="flex-c" style={{ height: npx(contentHeight) }}>
+      <div class="flex-c" style={{ height: contentHeight }}>
         {children}
       </div>
     </div>
