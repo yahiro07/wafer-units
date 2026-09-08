@@ -1,6 +1,7 @@
 import { css } from "@/common/css-realm";
-import { colors } from "@/editor/theme";
+import { uiColors } from "@/common/ui-theme";
 import { uiConfig } from "@/editor/ui-config";
+import { cz } from "@/utils/cz";
 import { npx } from "@/utils/helpers";
 
 export const GridBackground = ({
@@ -20,8 +21,8 @@ export const GridBackground = ({
     <div
       class={styles.base}
       style={{
-        width: npx(width),
-        height: npx(height),
+        width,
+        height,
       }}
     >
       {Array.from({ length: nx * ny }).map((_, i) => {
@@ -43,15 +44,12 @@ export const GridBackground = ({
         return (
           <div
             key={`${xi}-${yi}`}
-            sx={[
+            class={cz(
               hasBottomBorder && "--has-bottom-border",
               isBlackKey && "--is-black-key",
               `--border-${borderStrength}`,
-            ]}
-            style={{
-              left: npx(x),
-              top: npx(y),
-            }}
+            )}
+            style={{ left: x, top: y }}
           />
         );
       })}
@@ -65,22 +63,22 @@ const styles = {
       position: "absolute",
       width: npx(uiConfig.cellW),
       height: npx(uiConfig.cellH),
-      background: colors.pianoRollBg,
+      background: uiColors.clPianoRollBg,
 
       "&.--is-black-key": {
-        background: colors.pianoRollBgBlackKey,
+        background: uiColors.clPianoRollBgBlackKey,
       },
 
       "&.--has-bottom-border": {
-        borderBottom: `solid 0.5px ${colors.gridStrong}`,
+        borderBottom: `solid 0.5px ${uiColors.clGridStrong}`,
       },
 
-      borderRight: `solid 0.5px ${colors.gridWeak2}`,
+      borderRight: `solid 0.5px ${uiColors.clGridWeak2}`,
       "&.--border-stronger1": {
-        borderRightColor: colors.gridStrong,
+        borderRightColor: uiColors.clGridStrong,
       },
       "&.--border-stronger2": {
-        borderRightColor: colors.gridStrong2,
+        borderRightColor: uiColors.clGridStrong2,
       },
     },
   }),
