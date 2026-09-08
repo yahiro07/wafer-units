@@ -1,0 +1,20 @@
+{
+  "name": "toner-compressor",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite dev",
+    "build": "vite build"
+  },
+  "devDependencies": {
+    "@lib/mu2609": "workspace:*",
+    "@lib/toner-ui": "workspace:*",
+    "@preact/preset-vite": "catalog:",
+    "@unocss/preset-wind4": "catalog:",
+    "@unocss/vite": "catalog:",
+    "mini-css": "catalog:",
+    "preact": "catalog:",
+    "snap-store": "catalog:",
+    "unocss": "catalog:"
+  }
+}
