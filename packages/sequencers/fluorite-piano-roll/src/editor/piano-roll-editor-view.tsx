@@ -66,6 +66,17 @@ function hitTestNote(
   }
 }
 
+function createTapChecker() {
+  const startTime = Date.now();
+  return {
+    check() {
+      const endTime = Date.now();
+      const duration = endTime - startTime;
+      return duration <= 100;
+    },
+  };
+}
+
 const noteEditActions = {
   addNote(position: number, yi: number) {
     const nextId =
@@ -123,6 +134,7 @@ const noteEditActions = {
     );
     store.setPreviewNotePitch(originalNote.pitch);
 
+    const tapChecker = createTapChecker();
     startDragSession(
       e0,
       {
@@ -149,7 +161,7 @@ const noteEditActions = {
           );
         },
         onUpOrCancel() {
-          const tapped = noteLatest === originalNote;
+          const tapped = tapChecker.check() && noteLatest === originalNote;
           if (tapped) {
             noteEditActions.removeNote(noteLatest.id);
           }
@@ -173,6 +185,7 @@ const noteEditActions = {
     );
     store.setPreviewNotePitch(originalNote.pitch);
 
+    const tapChecker = createTapChecker();
     startDragSession(
       e0,
       {
@@ -198,7 +211,8 @@ const noteEditActions = {
           );
         },
         onUp() {
-          const tapped = !isNewNote && noteLatest === originalNote;
+          const tapped =
+            !isNewNote && tapChecker.check() && noteLatest === originalNote;
           if (noteLatest.duration <= 0 || tapped) {
             noteEditActions.removeNote(noteLatest.id);
           }
