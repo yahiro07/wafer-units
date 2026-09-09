@@ -14,6 +14,7 @@ export const LabeledBox = ({
 }) => {
   return (
     <div class={cz("flex-vc", className)}>
+      <div>{children}</div>
       <div class="w-30px flex-c">
         <div
           class={cz(
@@ -25,7 +26,6 @@ export const LabeledBox = ({
           {label}
         </div>
       </div>
-      <div>{children}</div>
     </div>
   );
 };

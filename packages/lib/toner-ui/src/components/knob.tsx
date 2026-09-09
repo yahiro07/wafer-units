@@ -44,10 +44,10 @@ const styles = css({
   "&:hover": {
     opacity: 0.8,
   },
-  width: "55px",
-  height: "55px",
+  width: "50px",
+  height: "50px",
   background: "linear-gradient(to bottom, #fff, #0004)",
-  padding: "6px",
+  padding: "5px",
   border: "solid 0.5px #666",
   "> .inner": {
     width: "100%",

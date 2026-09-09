@@ -46,21 +46,18 @@ export function createEngine(unitInterface: UnitInterface | undefined) {
       );
 
       glueCompNode.threshold.setValueAtTime(
-        mapUnaryTo(pr.compThreshold, -40, 0),
+        mapUnaryTo(pr.threshold, -40, 0),
         now,
       );
       glueCompNode.attack.setValueAtTime(
-        mapUnaryTo(pr.compAttack, 0.001, 0.08),
+        mapUnaryTo(pr.attack, 0.001, 0.08),
         now,
       );
       glueCompNode.release.setValueAtTime(
-        mapUnaryTo(pr.compRelease, 0.05, 0.5),
+        mapUnaryTo(pr.release, 0.05, 0.5),
         now,
       );
-      glueMakeupNode.gain.setValueAtTime(
-        1 + power2(1 - pr.compThreshold) * 1,
-        now,
-      );
+      glueMakeupNode.gain.setValueAtTime(1 + power2(1 - pr.threshold) * 1, now);
     },
     cleanup() {
       disconnectNodes(

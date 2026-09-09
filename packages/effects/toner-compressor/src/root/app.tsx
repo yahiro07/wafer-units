@@ -13,11 +13,13 @@ type ParameterSpec = {
 };
 
 const KnobParams: ParameterSpec[] = [
-  { key: "inputGain", label: "INPUT" },
-  { key: "compThreshold", label: "THRESHOLD" },
-  { key: "compAttack", label: "ATTACK" },
-  { key: "compRelease", label: "RELEASE" },
-  { key: "outputGain", label: "OUTPUT" },
+  { key: "inputGain", label: "Input" },
+  { key: "threshold", label: "Threshold" },
+  { key: "ratio", label: "Ratio" },
+  { key: "knee", label: "Knee" },
+  { key: "attack", label: "Attack" },
+  { key: "release", label: "Release" },
+  { key: "outputGain", label: "Output" },
 ];
 
 const ParameterUis = ({
@@ -52,9 +54,9 @@ const ParameterUis = ({
 const PageRoot = () => {
   const { parameters } = store.useSnapshot();
   return (
-    <div class="flex-v bg-clControlBg bd-clControlEdge py-2 px-4 gap-3">
-      <div class="text-xl font-bold">COMPRESSOR</div>
-      <div class="flex-ha gap-6">
+    <div class="flex-v bg-clControlBg bd-clControlEdge pt-2 pb-1 px-4 gap-2">
+      <div class="text-xl font-bold">Toner Compressor</div>
+      <div class="flex-ha gap-4">
         <ParameterUis specs={KnobParams} parameters={parameters} />
       </div>
     </div>
