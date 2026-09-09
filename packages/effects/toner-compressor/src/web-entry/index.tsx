@@ -15,7 +15,6 @@ document.adoptedStyleSheets = [cssRealm.sheet, tonerUiCssRealm.sheet];
 render(
   <div class={cz("h-dvh flex-c", !appEnvs.isDevelopment && "cl-pageBg")}>
     <App />
-    {/* <Button>aa</Button> */}
   </div>,
   root,
 );

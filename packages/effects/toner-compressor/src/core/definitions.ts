@@ -1,16 +1,18 @@
 export type EffectParameters = {
-  drive: number;
-  curve: number;
-  ceiling: number;
-  lookahead: number;
+  inputGain: number;
+  compThreshold: number;
+  compAttack: number;
+  compRelease: number;
+  limit: number;
   outputGain: number;
 };
 
 export const defaultEffectParameters: EffectParameters = {
-  drive: 0,
-  curve: 0,
-  ceiling: -1,
-  lookahead: 25,
+  inputGain: 0.5,
+  compThreshold: 1,
+  compAttack: 0,
+  compRelease: 0,
+  limit: 0,
   outputGain: 0.5,
 };
 

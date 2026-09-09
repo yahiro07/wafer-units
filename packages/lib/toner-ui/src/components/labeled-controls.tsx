@@ -13,12 +13,11 @@ export const LabeledBox = ({
   onLabelClick?: () => void;
 }) => {
   return (
-    <div class={cz("flex-vc gap-0.5", className)}>
-      <div>{children}</div>
+    <div class={cz("flex-vc", className)}>
       <div class="w-30px flex-c">
         <div
           class={cz(
-            "text-lg font-bold whitespace-nowrap",
+            "text-lg whitespace-nowrap",
             onLabelClick && "cursor-pointer",
           )}
           onClick={onLabelClick}
@@ -26,6 +25,7 @@ export const LabeledBox = ({
           {label}
         </div>
       </div>
+      <div>{children}</div>
     </div>
   );
 };
