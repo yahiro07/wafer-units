@@ -3,7 +3,6 @@ export type EffectParameters = {
   compThreshold: number;
   compAttack: number;
   compRelease: number;
-  limit: number;
   outputGain: number;
 };
 
@@ -12,7 +11,6 @@ export const defaultEffectParameters: EffectParameters = {
   compThreshold: 1,
   compAttack: 0,
   compRelease: 0,
-  limit: 0,
   outputGain: 0.5,
 };
 
