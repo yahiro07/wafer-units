@@ -1,16 +1,20 @@
 export type EffectParameters = {
   inputGain: number;
-  compThreshold: number;
-  compAttack: number;
-  compRelease: number;
+  threshold: number;
+  ratio: number;
+  knee: number;
+  attack: number;
+  release: number;
   outputGain: number;
 };
 
 export const defaultEffectParameters: EffectParameters = {
   inputGain: 0.5,
-  compThreshold: 1,
-  compAttack: 0,
-  compRelease: 0,
+  threshold: 1,
+  ratio: 0,
+  knee: 0,
+  attack: 0,
+  release: 0,
   outputGain: 0.5,
 };
 
