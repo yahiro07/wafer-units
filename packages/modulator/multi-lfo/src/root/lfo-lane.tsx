@@ -1,4 +1,4 @@
-import { LfoSlot } from "@/base/types";
+import { LfoSlot } from "@/defs/types";
 import {
   IndicatorButton,
   Knob,

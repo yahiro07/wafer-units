@@ -1,5 +1,5 @@
 import { useMemo } from "preact/hooks";
-import { LfoWave } from "@/base/types";
+import { LfoWave } from "@/defs/types";
 import { seqNumbers } from "@/utils/helpers";
 
 const waveFns = {

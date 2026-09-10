@@ -1,4 +1,4 @@
-import { LfoSlot, LfoWave, YStep } from "@/base/types";
+import { LfoSlot, LfoWave, YStep } from "@/defs/types";
 import { store } from "@/root/store";
 import { AutomationInputPort } from "wafer-host/unit-types";
 

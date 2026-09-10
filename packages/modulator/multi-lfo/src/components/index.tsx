@@ -1,5 +1,5 @@
 import { ComponentChildren } from "preact";
-import { LfoWave, XStep, YStep } from "@/base/types";
+import { LfoWave, XStep, YStep } from "@/defs/types";
 import { KnobFrame } from "@/components/knob-frame";
 import { linearInterpolate, npx } from "@/utils/helpers";
 import { SelectorOption } from "@/utils/selector-option";
@@ -177,10 +177,7 @@ export const LabeledBox = ({
 }) => {
   return (
     <div class="flex-v" style={width ? { width: npx(width) } : undefined}>
-      <div
-        class="text-10px font-bold h-15px"
-        style={{ textAlign: labelAlign }}
-      >
+      <div class="text-10px font-bold h-15px" style={{ textAlign: labelAlign }}>
         {label}
       </div>
       <div class="flex-c h-40px">{children}</div>

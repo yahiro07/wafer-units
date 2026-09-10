@@ -1,5 +1,5 @@
 import { ClockHandlers, UnitInterface } from "wafer-host/unit-types";
-import { LfoSlot, LfoWave } from "@/base/types";
+import { LfoSlot, LfoWave } from "@/defs/types";
 import {
   clampValue,
   highClip,
