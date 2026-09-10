@@ -17,19 +17,19 @@ export function setupUnit() {
     },
     clockHandlers: sequencer.clockHandlers,
     unitCallbacks: {
-      onConnectedTo(_, linkedPortSubtypes) {
-        if (linkedPortSubtypes.includes("automation")) {
-          const parameterSpecs = automationOutputPort?.getParameterSpecs();
-          if (parameterSpecs) {
-            store.setParameterIds(parameterSpecs.map((spec) => spec.id));
-          }
-        }
-        store.setConnected(true);
-      },
-      onDisconnectedTo() {
-        store.setParameterIds([]);
-        store.setConnected(false);
-      },
+      // onConnectedTo(_, linkedPortSubtypes) {
+      //   if (linkedPortSubtypes.includes("automation")) {
+      //     const parameterSpecs = automationOutputPort?.getParameterSpecs();
+      //     if (parameterSpecs) {
+      //       store.setParameterIds(parameterSpecs.map((spec) => spec.id));
+      //     }
+      //   }
+      //   store.setConnected(true);
+      // },
+      // onDisconnectedTo() {
+      //   store.setParameterIds([]);
+      //   store.setConnected(false);
+      // },
     },
     persistence: {
       emitState() {
