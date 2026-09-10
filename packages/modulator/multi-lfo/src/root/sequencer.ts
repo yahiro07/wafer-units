@@ -1,8 +1,4 @@
-import {
-  AutomationPort,
-  ClockHandlers,
-  UnitInterface,
-} from "wafer-host/unit-types";
+import { ClockHandlers, UnitInterface } from "wafer-host/unit-types";
 import { LfoSlot, LfoWave } from "@/base/types";
 import {
   clampValue,
@@ -35,10 +31,9 @@ function getLfoValue(wave: LfoWave, phase: number, shifted: boolean) {
   return 0;
 }
 
-export function createSequencer(
-  _unitInterface: UnitInterface | undefined,
-  automationOutputPort: AutomationPort | undefined,
-) {
+export function createSequencer(unitInterface: UnitInterface | undefined) {
+  const automationOutputPort = unitInterface?.createAutomationOutputPort();
+
   const state = {
     lfoSlots: [] as LfoSlot[],
   };
@@ -63,7 +58,7 @@ export function createSequencer(
           }
           const value = clampValue(mapUnaryTo(y, lo, hi), 0, 1);
           if (value !== sentValues[slot.targetParameterId]) {
-            automationOutputPort?.setParameter(slot.targetParameterId, value);
+            automationOutputPort?.emitValue(value);
             sentValues[slot.targetParameterId] = value;
           }
         }
