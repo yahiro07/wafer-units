@@ -1,6 +1,6 @@
 import { LfoSlot, LfoWave, YStep } from "@/base/types";
 import { store } from "@/root/store";
-import { AutomationPort } from "wafer-host/unit-types";
+import { AutomationInputPort } from "wafer-host/unit-types";
 
 type SlotField = "center" | "wave" | "rate" | "depth" | "yStep";
 
@@ -30,7 +30,7 @@ function patchSlot(slotIndex: number, attrs: Partial<LfoSlot>) {
   );
 }
 
-export const automationInput: AutomationPort = {
+export const automationInput: AutomationInputPort = {
   getParameterSpecs() {
     return [1, 2].flatMap((n) => [
       { id: `center${n}` },
