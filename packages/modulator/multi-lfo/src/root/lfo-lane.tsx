@@ -1,4 +1,3 @@
-import { qu } from "@/base/css-realm";
 import { LfoSlot } from "@/base/types";
 import {
   IndicatorButton,
@@ -33,7 +32,7 @@ export const LfoLane = ({ slot }: { slot: LfoSlot }) => {
   };
   const parameterSelectorOptions = useParameterSelectorOptions();
   return (
-    <div sx={qu.flexHA().gap(3)}>
+    <div class="flex-ha gap-3">
       <LabeledBox label={`slot ${slot.id + 1}`} width={30}>
         <IndicatorButton
           active={slot.enabled}
@@ -63,7 +62,7 @@ export const LfoLane = ({ slot }: { slot: LfoSlot }) => {
         </ButtonFrame>
       </LabeledBox>
       <LabeledBox>
-        <div sx={qu.flexV().gap(1)}>
+        <div class="flex-v gap-1">
           <NarrowButton
             text="INV"
             active={slot.inverted}
