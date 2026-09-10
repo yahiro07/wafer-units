@@ -44,10 +44,10 @@ const styles = css({
   "&:hover": {
     opacity: 0.8,
   },
-  width: "80px",
-  height: "80px",
+  width: "60px",
+  height: "60px",
   background: "linear-gradient(to bottom, #fff, #0004)",
-  padding: "7px",
+  padding: "6px",
   border: "solid 0.5px #666",
   "> .inner": {
     width: "100%",
@@ -60,7 +60,7 @@ const styles = css({
     ...flexVA(),
     "> .tick": {
       width: "4px",
-      height: "18px",
+      height: "16px",
       background: uiColors.clKnobTick,
     },
   },
