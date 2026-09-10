@@ -2,7 +2,7 @@ import { LfoLane } from "@/root/lfo-lane";
 import { store } from "@/root/store";
 
 export const PageRoot = () => {
-  const { parameterIds, connected, slots } = store.useSnapshot();
+  const { slots } = store.useSnapshot();
   return (
     <div class="h-dvh flex-c">
       <div class="w-500px h-310px bg-#aaa p-4 text-#333">
@@ -10,11 +10,6 @@ export const PageRoot = () => {
           <div class="flex-h gap-2">
             <div>Multi LFO</div>
             <div class="grow" />
-            <div class="text-12px">
-              {connected
-                ? `Connected, ${parameterIds.length > 0 ? parameterIds.length : "no"} parameters available`
-                : "Disconnected"}
-            </div>
           </div>
           <div class="flex-vc gap-2">
             {slots.map((slot) => (
