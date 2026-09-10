@@ -32,7 +32,9 @@ function getLfoValue(wave: LfoWave, phase: number, shifted: boolean) {
 }
 
 export function createSequencer(unitInterface: UnitInterface | undefined) {
-  const automationOutputPort = unitInterface?.createAutomationOutputPort();
+  const automationOutputPorts = seqNumbers(4).map((i) =>
+    unitInterface?.createAutomationOutputPort(`ch${i + 1}`),
+  );
 
   const state = {
     lfoSlots: [] as LfoSlot[],
@@ -40,14 +42,14 @@ export function createSequencer(unitInterface: UnitInterface | undefined) {
 
   const speedRates = [1 / 16, 1 / 8, 1 / 4, 1 / 2, 1, 2, 4, 8, 16];
 
-  const sentValues: Record<string, number> = {};
+  const sentValues = seqNumbers(4).map(() => -1);
 
   const clockHandlers: ClockHandlers = {
     start() {},
     // processScheduling(timeFrom, barFrom, barTo, bpm) {},
     processStep(stepIndex, _time, _unitDuration) {
       for (const slot of state.lfoSlots) {
-        if (slot.enabled && slot.targetParameterId) {
+        if (slot.enabled) {
           const speedRate = mapUnaryToArray(slot.rate, speedRates);
           const hi = highClip(slot.centerValue + slot.depth / 2, 1);
           const lo = lowClip(slot.centerValue - slot.depth / 2, 0);
@@ -56,10 +58,11 @@ export function createSequencer(unitInterface: UnitInterface | undefined) {
           if (slot.inverted) {
             y = 1 - y;
           }
+          const ch = slot.id;
           const value = clampValue(mapUnaryTo(y, lo, hi), 0, 1);
-          if (value !== sentValues[slot.targetParameterId]) {
-            automationOutputPort?.emitValue(value);
-            sentValues[slot.targetParameterId] = value;
+          if (value !== sentValues[ch]) {
+            automationOutputPorts[ch]?.emitValue(value);
+            sentValues[ch] = value;
           }
         }
       }

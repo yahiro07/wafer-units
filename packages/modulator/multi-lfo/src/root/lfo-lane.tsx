@@ -4,25 +4,12 @@ import {
   Knob,
   LabeledBox,
   NarrowButton,
-  ParameterSelector,
   reteToStepText,
   YStepButton,
 } from "@/components";
 import { ButtonFrame } from "@/components/button-frame";
 import { UnitWaveView } from "@/components/unit-wave-view";
 import { store } from "@/root/store";
-import { createSelectorOptions } from "@/utils/selector-option";
-import { useMemo } from "preact/hooks";
-
-function useParameterSelectorOptions() {
-  const { parameterIds } = store.useSnapshot();
-  return useMemo(() => {
-    return createSelectorOptions([
-      ["", "--"],
-      ...(parameterIds.map((id) => [id, id]) as [string, string][]),
-    ]);
-  }, [parameterIds]);
-}
 
 export const LfoLane = ({ slot }: { slot: LfoSlot }) => {
   const patchSlot = (attrs: Partial<LfoSlot>) => {
@@ -30,20 +17,12 @@ export const LfoLane = ({ slot }: { slot: LfoSlot }) => {
       prev.map((s) => (s.id === slot.id ? { ...s, ...attrs } : s)),
     );
   };
-  const parameterSelectorOptions = useParameterSelectorOptions();
   return (
     <div class="flex-ha gap-3">
       <LabeledBox label={`slot ${slot.id + 1}`} width={30}>
         <IndicatorButton
           active={slot.enabled}
           onClick={() => patchSlot({ enabled: !slot.enabled })}
-        />
-      </LabeledBox>
-      <LabeledBox label="Target Parameter" labelAlign="left">
-        <ParameterSelector
-          value={slot.targetParameterId}
-          onChange={(value) => patchSlot({ targetParameterId: value })}
-          options={parameterSelectorOptions}
         />
       </LabeledBox>
       <LabeledBox label="Center">
