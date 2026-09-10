@@ -1,6 +1,13 @@
-export type Waveform = "ramp" | "tri" | "sine" | "rect" | "sh";
+export type Waveform = "ramp" | "ramp2" | "tri" | "sine" | "rect" | "sh";
 
-export const allWaveforms: Waveform[] = ["ramp", "tri", "sine", "rect", "sh"];
+export const allWaveforms: Waveform[] = [
+  "ramp",
+  "ramp2",
+  "tri",
+  "sine",
+  "rect",
+  "sh",
+];
 
 export type LoopBars = 0.125 | 0.25 | 0.5 | 1 | 2 | 4 | 8 | 16 | 32;
 
@@ -18,7 +25,7 @@ export type EffectParameters = {
 export const defaultEffectParameters: EffectParameters = {
   loopBars: 1,
   waveform: "ramp",
-  xOffset: 0,
+  xOffset: 0.5,
   curve: 0,
   v1: 0,
   v2: 1,
