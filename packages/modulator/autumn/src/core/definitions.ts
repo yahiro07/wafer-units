@@ -1,17 +1,27 @@
+export type Waveform = "ramp" | "tri" | "sine" | "rect" | "sh";
+
+export const allWaveforms: Waveform[] = ["ramp", "tri", "sine", "rect", "sh"];
+
+export type LoopBars = 0.125 | 0.25 | 0.5 | 1 | 2 | 4 | 8 | 16 | 32;
+
+export const allLoopBars: LoopBars[] = [0.125, 0.25, 0.5, 1, 2, 4, 8, 16, 32];
+
 export type EffectParameters = {
-  drive: number;
+  loopBars: LoopBars;
+  waveform: Waveform;
+  xOffset: number;
   curve: number;
-  ceiling: number;
-  lookahead: number;
-  outputGain: number;
+  v1: number;
+  v2: number;
 };
 
 export const defaultEffectParameters: EffectParameters = {
-  drive: 0,
+  loopBars: 1,
+  waveform: "ramp",
+  xOffset: 0,
   curve: 0,
-  ceiling: -1,
-  lookahead: 25,
-  outputGain: 0.5,
+  v1: 0,
+  v2: 1,
 };
 
 export type EffectEngine = {
