@@ -4,9 +4,8 @@ import { createSequencer } from "@/root/sequencer";
 import { store } from "@/root/store";
 
 const unitInterface = queryUnitInterface("wafer-v01");
-const automationOutputPort = unitInterface?.createAutomationOutputPort();
 
-const sequencer = createSequencer(unitInterface, automationOutputPort);
+const sequencer = createSequencer(unitInterface);
 
 export function setupUnit() {
   unitInterface?.completeSetup({
