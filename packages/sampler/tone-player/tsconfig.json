@@ -12,7 +12,8 @@
     "skipLibCheck": true,
     "preserveSymlinks": true,
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@lib/mu2609/*": ["../../lib/mu2609/src/*"]
     }
   },
   "include": ["src"]
