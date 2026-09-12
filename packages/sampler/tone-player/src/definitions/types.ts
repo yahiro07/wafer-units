@@ -27,7 +27,7 @@ export type SamplerEngine = {
   setSourceSpec(sourceSpec: AudioSourceSpec): void;
   setSlots(slots: SamplerSlot[]): void;
   setCommonParameters(commonParameters: CommonParameters): void;
-  loadLevels(audioIndex: number): Promise<number[]>;
+  loadLevels(uri: string): Promise<number[]>;
   trigger(audioIndex: number, skipIfNotLoaded?: boolean): void;
   cleanup(): void;
 };
