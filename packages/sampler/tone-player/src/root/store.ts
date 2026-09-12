@@ -1,8 +1,5 @@
 import { createStore } from "snap-store";
-import { defaultEffectParameters, SamplerParameters } from "@/core/definitions";
+import { StoreState } from "@/definitions/types";
+import { defaultStoreState } from "@/definitions/initial-states";
 
-export const store = createStore<{
-  parameters: SamplerParameters;
-}>({
-  parameters: defaultEffectParameters,
-});
+export const store = createStore<StoreState>(defaultStoreState);
