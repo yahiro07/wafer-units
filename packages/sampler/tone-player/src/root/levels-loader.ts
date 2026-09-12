@@ -14,13 +14,19 @@ export function createLevelsLoader(): LevelsLoader {
   let cancelled = false;
   return {
     async start(sourceSpec, engine, itemCallback) {
-      const count = Math.min(sourceSpec.audioPaths.length, 12);
-      for (let i = 0; i < count; i++) {
-        const levels = await engine.loadLevels(i);
-        if (cancelled) return;
-        itemCallback({ audioIndex: i, levels });
-        await delayMs(500);
-        if (cancelled) return;
+      try {
+        const count = Math.min(sourceSpec.audioPaths.length, 12);
+        for (let i = 0; i < count; i++) {
+          const audioPath = sourceSpec.audioPaths[i];
+          const url = `${sourceSpec.baseUrl}${audioPath}`;
+          const levels = await engine.loadLevels(url);
+          if (cancelled) return;
+          itemCallback({ audioIndex: i, levels });
+          await delayMs(500);
+          if (cancelled) return;
+        }
+      } catch (error) {
+        console.error(error);
       }
     },
     cancel() {
