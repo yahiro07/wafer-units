@@ -29,14 +29,17 @@ export const AutomationLane = ({
     });
   };
   return (
-    <div sx={qu.flexV().gap(5)}>
+    <div sx={qu.flexV().gap(2.5)}>
       <div sx={qu.flexHA().fJustify("between")}>
         <div sx={qu.flexHA().gap(2)}>
-          <LabeledBox width={30}>
-            <IndicatorButton
-              active={lane.enabled}
-              onClick={() => patchLane({ enabled: !lane.enabled })}
-            />
+          <LabeledBox>
+            <div sx={qu.flexHA().gap(2)}>
+              <IndicatorButton
+                active={lane.enabled}
+                onClick={() => patchLane({ enabled: !lane.enabled })}
+              />
+              <div>Step Automator</div>
+            </div>
           </LabeledBox>
         </div>
         <div sx={qu.flexHA().gap(3)}>
