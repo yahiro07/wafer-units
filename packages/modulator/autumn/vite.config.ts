@@ -6,6 +6,6 @@ export default defineConfig({
   base: "./",
   plugins: [preact(), UnoCSS()],
   resolve: { tsconfigPaths: true },
-  build: { outDir: "../../../dist/multi-lfo", emptyOutDir: true },
+  build: { outDir: "../../../dist/autumn", emptyOutDir: true },
   server: { port: 3000 },
 });

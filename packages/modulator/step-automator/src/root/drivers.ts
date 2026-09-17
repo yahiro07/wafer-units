@@ -3,15 +3,14 @@ import { createSequencer } from "@/root/sequencer";
 import { store } from "@/root/store";
 
 const unitInterface = queryUnitInterface("wafer-v01");
-const automationOutputPort = unitInterface?.createAutomationOutputPort();
 
-const sequencer = createSequencer(unitInterface, automationOutputPort);
+const sequencer = createSequencer(unitInterface);
 
 export function setupUnit() {
   unitInterface?.completeSetup({
     unitAspects: {
       unitType: "sequencer",
-      viewSize: [560, 300],
+      viewSize: [560, 220],
       preferJustSize: true,
     },
     clockHandlers: {
@@ -27,21 +26,6 @@ export function setupUnit() {
       },
       stop() {
         store.setPlaybackStepIndex(-1);
-      },
-    },
-    unitCallbacks: {
-      onConnectedTo(_, linkedPortSubtypes) {
-        if (linkedPortSubtypes.includes("automation")) {
-          const parameterSpecs = automationOutputPort?.getParameterSpecs();
-          if (parameterSpecs) {
-            store.setParameterIds(parameterSpecs.map((spec) => spec.id));
-          }
-        }
-        store.setConnected(true);
-      },
-      onDisconnectedTo() {
-        store.setParameterIds([]);
-        store.setConnected(false);
       },
     },
     persistence: {

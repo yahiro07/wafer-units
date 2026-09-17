@@ -1,12 +1,10 @@
 {
-  "name": "multi-lfo",
+  "name": "autumn",
   "private": true,
   "type": "module",
   "scripts": {
     "dev": "vite dev",
-    "build": "vite build",
-    "watch": "vite build --watch",
-    "typecheck": "tsc"
+    "build": "vite build"
   },
   "devDependencies": {
     "@lib/mu2609": "workspace:*",

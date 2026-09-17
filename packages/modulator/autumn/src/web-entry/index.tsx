@@ -4,13 +4,20 @@ import { onIframeUnitUnloading } from "wafer-host/unit-types";
 import { cssRealm } from "@/common/css-realm";
 import { App } from "@/root/app";
 import "virtual:uno.css";
+import { appEnvs } from "@/common/app-envs";
+import { cz } from "@lib/mu2609/utils/cz";
 
-const rootElement = document.getElementById("app")!;
+const root = document.getElementById("app")!;
 
 document.adoptedStyleSheets = [cssRealm.sheet];
 
-render(<App />, rootElement);
+render(
+  <div class={cz("h-dvh flex-c", !appEnvs.isDevelopment && "cl-pageBg")}>
+    <App />
+  </div>,
+  root,
+);
 
 onIframeUnitUnloading(() => {
-  render(null, rootElement);
+  render(null, root);
 });

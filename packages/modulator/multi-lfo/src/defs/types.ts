@@ -23,7 +23,6 @@ export enum YStep {
 export type LfoSlot = {
   id: number;
   enabled: boolean;
-  targetParameterId: string;
   wave: LfoWave;
   centerValue: number;
   rate: number;

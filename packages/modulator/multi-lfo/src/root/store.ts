@@ -1,5 +1,5 @@
 import { createStore } from "snap-store";
-import { LfoSlot, LfoWave, XStep, YStep } from "@/base/types";
+import { LfoSlot, LfoWave, XStep, YStep } from "@/defs/types";
 import { seqNumbers } from "@/utils/helpers";
 
 export const store = createStore<{
