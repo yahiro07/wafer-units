@@ -1,15 +1,10 @@
-import {
-  AutomationPort,
-  ClockHandlers,
-  UnitInterface,
-} from "wafer-host/unit-types";
+import { ClockHandlers, UnitInterface } from "wafer-host/unit-types";
 import { gaugeReferenceIndexMap } from "@/base/constants";
 import { AutomationLaneItem } from "@/base/types";
 
-export function createSequencer(
-  _unitInterface: UnitInterface | undefined,
-  automationOutputPort: AutomationPort | undefined,
-) {
+export function createSequencer(unitInterface: UnitInterface | undefined) {
+  const automationOutputPort = unitInterface?.createAutomationOutputPort();
+
   const state = {
     lanes: [] as AutomationLaneItem[],
   };
@@ -26,7 +21,7 @@ export function createSequencer(
           const value = lane.stepValues[referenceIndex];
           if (!Number.isFinite(value)) continue;
           if (value !== sentValues[lane.targetParameterId]) {
-            automationOutputPort?.setParameter(lane.targetParameterId, value);
+            automationOutputPort?.emitValue(value);
             sentValues[lane.targetParameterId] = value;
           }
         }

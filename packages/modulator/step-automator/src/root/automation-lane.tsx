@@ -4,24 +4,12 @@ import {
   patternRangeOptions,
 } from "@/base/constants";
 import { qu } from "@/base/css-realm";
-import { createSelectorOptions } from "@/base/selector-option";
 import { AutomationLaneItem } from "@/base/types";
-import { IndicatorButton, LabeledBox, ParameterSelector } from "@/components";
+import { IndicatorButton, LabeledBox } from "@/components";
 import { StepIndicatorLed } from "@/components/led";
 import { ParameterGauge } from "@/components/parameter-gauge";
 import { ShiftSelector } from "@/components/shift-selector";
 import { store } from "@/root/store";
-import { useMemo } from "preact/hooks";
-
-function useParameterSelectorOptions() {
-  const { parameterIds } = store.useSnapshot();
-  return useMemo(() => {
-    return createSelectorOptions([
-      ["", "--"],
-      ...(parameterIds.map((id) => [id, id]) as [string, string][]),
-    ]);
-  }, [parameterIds]);
-}
 
 export const AutomationLane = ({
   lane,
@@ -30,8 +18,6 @@ export const AutomationLane = ({
   lane: AutomationLaneItem;
   playbackStepIndex: number;
 }) => {
-  const parameterSelectorOptions = useParameterSelectorOptions();
-
   const patchLane = (attrs: Partial<AutomationLaneItem>) => {
     store.setLanes((prev) =>
       prev.map((s) => (s.id === lane.id ? { ...s, ...attrs } : s)),
@@ -50,13 +36,6 @@ export const AutomationLane = ({
             <IndicatorButton
               active={lane.enabled}
               onClick={() => patchLane({ enabled: !lane.enabled })}
-            />
-          </LabeledBox>
-          <LabeledBox label="target parameter" labelAlign="left">
-            <ParameterSelector
-              value={lane.targetParameterId}
-              onChange={(value) => patchLane({ targetParameterId: value })}
-              options={parameterSelectorOptions}
             />
           </LabeledBox>
         </div>
