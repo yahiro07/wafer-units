@@ -10,7 +10,6 @@ export const store = createStore<{
     {
       id: 0,
       enabled: true,
-      targetParameterId: "",
       stepValues: seqNumbers(16).map(() => 0.5),
       patternRange: 4,
       clockDivision: 1,

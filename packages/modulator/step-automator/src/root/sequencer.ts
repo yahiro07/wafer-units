@@ -14,15 +14,15 @@ export function createSequencer(unitInterface: UnitInterface | undefined) {
     start() {},
     processStep(stepIndexInput) {
       for (const lane of state.lanes) {
-        if (lane.enabled && lane.targetParameterId) {
+        if (lane.enabled) {
           const stepIndex = (stepIndexInput / lane.clockDivision) >>> 0;
           const referenceIndex =
             gaugeReferenceIndexMap[lane.patternRange][stepIndex % 16];
           const value = lane.stepValues[referenceIndex];
           if (!Number.isFinite(value)) continue;
-          if (value !== sentValues[lane.targetParameterId]) {
+          if (value !== sentValues[lane.id]) {
             automationOutputPort?.emitValue(value);
-            sentValues[lane.targetParameterId] = value;
+            sentValues[lane.id] = value;
           }
         }
       }
