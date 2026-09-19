@@ -1,4 +1,4 @@
-import { AutomationPort } from "wafer-host/unit-types";
+import { AutomationInputPort } from "wafer-host/unit-types";
 import { ChorusType } from "@/core/definitions";
 import { store } from "@/editor/store";
 
@@ -6,7 +6,7 @@ type AutomationParameterId = "isOn" | "chorusType" | "chorusLevel";
 
 const chorusTypeCount = 5;
 
-export const automationInput: AutomationPort = {
+export const automationInput: AutomationInputPort = {
   getParameterSpecs() {
     return [
       { id: "isOn", steps: 2 },

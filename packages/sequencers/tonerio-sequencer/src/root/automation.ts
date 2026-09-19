@@ -1,10 +1,10 @@
-import { AutomationPort } from "wafer-host/unit-types";
+import { AutomationInputPort } from "wafer-host/unit-types";
 import { store } from "@/root/store";
 import { mapUnaryFrom, mapUnaryTo } from "@/utils/helpers";
 
 type AutomationParameterId = "octave" | "duty";
 
-export const automationInput: AutomationPort = {
+export const automationInput: AutomationInputPort = {
   getParameterSpecs() {
     return [{ id: "octave" }, { id: "duty" }];
   },

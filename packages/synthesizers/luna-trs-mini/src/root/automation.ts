@@ -3,11 +3,11 @@ import { invokeAtAudioTime } from "@/engine/voicing-helper";
 import { actions } from "@/root/actions";
 import { store } from "@/root/store";
 import { inBetween } from "@/utils/helpers";
-import { AutomationPort } from "wafer-host/unit-types";
+import { AutomationInputPort } from "wafer-host/unit-types";
 
 export function createAutomationInput(
   audioContext: AudioContext,
-): AutomationPort {
+): AutomationInputPort {
   const exposedParameterKeys: (keyof SynthParameters)[] = [
     "oscMix",
     "lpfCutoff",

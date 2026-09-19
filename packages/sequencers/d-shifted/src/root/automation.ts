@@ -1,15 +1,12 @@
 import { store } from "@/root/store";
 import { linearInterpolate } from "@/utils/helpers";
-import { AutomationPort } from "wafer-host/unit-types";
+import { AutomationInputPort } from "wafer-host/unit-types";
 
 type AutomationParameterId = "octave" | "duty";
 
-export const automationInput: AutomationPort = {
+export const automationInput: AutomationInputPort = {
   getParameterSpecs() {
-    return [
-      { id: "octave", steps: 5 },
-      { id: "duty" },
-    ];
+    return [{ id: "octave", steps: 5 }, { id: "duty" }];
   },
   getParameter(id: AutomationParameterId) {
     if (id === "octave") {

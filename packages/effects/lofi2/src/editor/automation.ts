@@ -1,4 +1,4 @@
-import { AutomationPort } from "wafer-host/unit-types";
+import { AutomationInputPort } from "wafer-host/unit-types";
 import { store } from "@/editor/store";
 
 type AutomationParameterId =
@@ -11,7 +11,7 @@ type AutomationParameterId =
   | "wobble"
   | "mix";
 
-export const automationInput: AutomationPort = {
+export const automationInput: AutomationInputPort = {
   getParameterSpecs() {
     return [
       { id: "isOn", steps: 2 },

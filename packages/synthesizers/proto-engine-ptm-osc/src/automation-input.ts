@@ -1,5 +1,5 @@
 import { mapUnaryFrom, mapUnaryTo } from "mofus/ax";
-import { AutomationPort } from "wafer-host/unit-types";
+import { AutomationInputPort } from "wafer-host/unit-types";
 import { uiActions } from "@/actions";
 import {
   integerParametersRanges,
@@ -7,7 +7,7 @@ import {
 } from "@/definitions/parameters";
 import { appState } from "@/store";
 
-export function createAutomationInput(): AutomationPort {
+export function createAutomationInput(): AutomationInputPort {
   return {
     getParameterSpecs() {
       return [
