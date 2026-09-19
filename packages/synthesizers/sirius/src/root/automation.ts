@@ -1,9 +1,9 @@
-import { SynthParameters } from "@/defs/definitions";
+import { oscWaveTypesForUi, SynthParameters } from "@/defs/definitions";
 import { actions } from "@/root/actions";
 import { store } from "@/root/store";
-import { AutomationPort } from "wafer-host/unit-types";
+import { AutomationInputPort } from "wafer-host/unit-types";
 
-export const automationInput: AutomationPort = {
+export const automationInput: AutomationInputPort = {
   getParameterSpecs() {
     return [
       { id: "oscWave", steps: 3 },
@@ -22,14 +22,16 @@ export const automationInput: AutomationPort = {
   },
   getParameter(id) {
     if (id === "oscWave") {
-      return store.state.parameters.oscWave / 2;
+      const index = oscWaveTypesForUi.indexOf(store.state.parameters.oscWave);
+      return index / (oscWaveTypesForUi.length - 1);
     } else {
       return store.state.parameters[id as keyof SynthParameters];
     }
   },
   setParameter(id, value) {
     if (id === "oscWave") {
-      actions.setParameter("oscWave", value * 2);
+      const index = Math.round(value * (oscWaveTypesForUi.length - 1));
+      actions.setParameter("oscWave", oscWaveTypesForUi[index]);
     } else {
       actions.setParameter(id as keyof SynthParameters, value);
     }
