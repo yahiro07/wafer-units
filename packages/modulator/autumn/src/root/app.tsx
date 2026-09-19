@@ -22,7 +22,7 @@ type ParameterSpec = {
   isBipolar?: boolean;
 };
 
-const KnobParams: ParameterSpec[] = [
+const _KnobParams: ParameterSpec[] = [
   { key: "xOffset", label: "X OFFSET", step: 1 / 16 },
   { key: "curve", label: "CURVE" },
   { key: "v1", label: "V1" },
@@ -51,7 +51,7 @@ const LabeledKnob = ({
   );
 };
 
-const ParameterUis = ({
+const _ParameterUis = ({
   specs,
   parameters,
 }: {

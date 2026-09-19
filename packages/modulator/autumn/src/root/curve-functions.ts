@@ -31,7 +31,7 @@ const coreCurveFns: Record<Waveform, CoreCurveFn> = {
       return tunableSigmoid(y, k2) * 0.5 + 0.5;
     };
   },
-  tri(param1, param2) {
+  tri(param1, _param2) {
     const pivot = mapUnaryTo(param1, 0.005, 0.995);
     return (pp) => {
       if (pp < pivot) {

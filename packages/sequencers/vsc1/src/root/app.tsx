@@ -77,7 +77,7 @@ const StepDutyContainer = () => {
   );
 };
 
-const FeatureHeader = ({
+const _FeatureHeader = ({
   label,
   active,
   onClick,
