@@ -40,8 +40,8 @@ export function createAutomationInput(
     getParameter(id) {
       return store.state.synthParameters[id as keyof SynthParameters] as number;
     },
-    setParameter(id, value, time) {
-      internal.wrapSetParameter(id, value, time);
+    setParameter(id, value, options) {
+      internal.wrapSetParameter(id, value, options?.time);
     },
   };
 }
