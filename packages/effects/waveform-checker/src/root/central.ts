@@ -26,6 +26,11 @@ const store = createStore<{
 
 export const useStoreSnapshot = store.useSnapshot;
 
+function setViewActive(active: boolean) {
+  store.setViewActive(active);
+  engine.setDrawingActive(active);
+}
+
 function setupUnit() {
   engine.setup();
   engine.setBarLength(store.state.barLength);
@@ -46,12 +51,15 @@ function setupUnit() {
         start: engine.hostStarted,
       },
       unitCallbacks: {
-        setViewActive: store.setViewActive,
+        setViewActive,
       },
       cleanup: engine.cleanup,
     });
+    if (store.state.viewActive) {
+      setViewActive(true);
+    }
   } else {
-    store.setViewActive(true);
+    setViewActive(true);
   }
 }
 export function useSetupDrivers() {

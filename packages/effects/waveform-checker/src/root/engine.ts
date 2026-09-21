@@ -21,6 +21,7 @@ type MeterListener = (state: MeterState) => void;
 type AudioAnalysisEngine = {
   setup(): void;
   cleanup(): void;
+  setDrawingActive(active: boolean): void;
   setBpm(bpm: number): void;
   setBarLength(bars: number): void;
   setActiveChannel(id: ChannelId | null): void;
@@ -172,22 +173,27 @@ export function createAudioAnalysisEngine(
       internal.updateAnalysers();
       rafId = requestAnimationFrame(internal.tick);
     },
-  };
-
-  return {
-    setup() {
-      if (rafId !== undefined) return;
-      rafId = requestAnimationFrame(internal.tick);
-    },
-    cleanup() {
-      if (rafId !== undefined) {
+    setDrawingActive(active: boolean) {
+      if (active) {
+        if (rafId === undefined) {
+          rafId = requestAnimationFrame(internal.tick);
+        }
+      } else if (rafId !== undefined) {
         cancelAnimationFrame(rafId);
         rafId = undefined;
       }
+    },
+  };
+
+  return {
+    setup() {},
+    cleanup() {
+      internal.setDrawingActive(false);
       internal.applyOutputRoute(null);
       ch1Input.disconnect();
       ch2Input.disconnect();
     },
+    setDrawingActive: internal.setDrawingActive,
     setBpm(bpm) {
       hostBpm = bpm;
       for (const fn of uiListeners) {
@@ -231,6 +237,7 @@ export function createDummyEngine(): AudioAnalysisEngine {
   return {
     setup() {},
     cleanup() {},
+    setDrawingActive() {},
     setBpm() {},
     setBarLength() {},
     setActiveChannel() {},

@@ -49,11 +49,26 @@ function setupUnit() {
     }
   }
 
-  const timerId = setInterval(updateAnalyser, 20);
+  let timerId: ReturnType<typeof setInterval> | undefined;
+
+  function setViewActive(active: boolean) {
+    store.setViewActive(active);
+    if (active) {
+      if (timerId === undefined) {
+        timerId = setInterval(updateAnalyser, 20);
+      }
+    } else if (timerId !== undefined) {
+      clearInterval(timerId);
+      timerId = undefined;
+    }
+  }
 
   const cleanup = () => {
     unitInterface.audioInputNode.disconnect();
-    clearInterval(timerId);
+    if (timerId !== undefined) {
+      clearInterval(timerId);
+      timerId = undefined;
+    }
   };
 
   unitInterface.completeSetup({
@@ -69,6 +84,7 @@ function setupUnit() {
     clockHandlers: {
       start() {
         startTime = audioContext.currentTime;
+        if (!store.state.viewActive) return;
         schedulingPlotter.hostStarted();
         notesPlotter.hostStarted();
       },
@@ -76,21 +92,24 @@ function setupUnit() {
         if (bpm !== store.state.hostBpm) {
           store.setHostBpm(bpm);
         }
+        if (!store.state.viewActive) return;
         const timeFromStart = audioContext.currentTime - startTime;
         const barScheduledAt = mapTimeToBarPosition(timeFromStart);
         schedulingPlotter.hostScheduled(barScheduledAt, barFrom, barTo);
       },
       processStep(stepIndex, time) {
+        if (!store.state.viewActive) return;
         const timeFromStart = time - startTime;
         const barPosition = mapTimeToBarPosition(timeFromStart);
         schedulingPlotter.addScheduleStepPoint(stepIndex, barPosition);
       },
     },
     unitCallbacks: {
-      setViewActive: store.setViewActive,
+      setViewActive,
     },
     noteInput: {
       noteOn(noteNumber, time = audioContext.currentTime) {
+        if (!store.state.viewActive) return;
         const timeFromStart = audioContext.currentTime - startTime;
         const barScheduledAt = mapTimeToBarPosition(timeFromStart);
         const noteTimeFromStart = time - startTime;
@@ -103,6 +122,7 @@ function setupUnit() {
         );
       },
       noteOff(noteNumber, time = audioContext.currentTime) {
+        if (!store.state.viewActive) return;
         const timeFromStart = audioContext.currentTime - startTime;
         const barScheduledAt = mapTimeToBarPosition(timeFromStart);
         const noteTimeFromStart = time - startTime;
@@ -117,6 +137,10 @@ function setupUnit() {
     },
     cleanup,
   });
+
+  if (store.state.viewActive) {
+    setViewActive(true);
+  }
 }
 
 function setupSynchronization() {
