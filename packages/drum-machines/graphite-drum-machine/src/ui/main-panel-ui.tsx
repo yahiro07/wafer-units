@@ -151,7 +151,9 @@ const PieceRow = ({
 
 export const MainPanelUi = () => {
   const { store, actions } = useAppContext();
-  const { pieces, stepPosition, masterVolume } = store.useSnapshot();
+  const { pieces, stepPosition, masterVolume, viewActive } =
+    store.useSnapshot();
+  if (!viewActive) return null;
   return (
     <div className="w-full h-full flex-c bg-(--cl-panel-bg)">
       <PanelFrame>

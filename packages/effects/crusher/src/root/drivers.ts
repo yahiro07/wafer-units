@@ -8,14 +8,21 @@ const unitInterface = queryUnitInterface("wafer-v01");
 const engine = createEngine(unitInterface);
 
 export function setupUnit() {
-  unitInterface?.completeSetup({
-    unitAspects: {
-      unitType: "effect",
-      viewSize: [320, 180],
-    },
-    persistence: persistence,
-    automationInput: automationInput,
-  });
+  if (unitInterface) {
+    unitInterface.completeSetup({
+      unitAspects: {
+        unitType: "effect",
+        viewSize: [320, 180],
+      },
+      unitCallbacks: {
+        setViewActive: store.setViewActive,
+      },
+      persistence: persistence,
+      automationInput: automationInput,
+    });
+  } else {
+    store.setViewActive(true);
+  }
 }
 
 export function setupSynchronization() {

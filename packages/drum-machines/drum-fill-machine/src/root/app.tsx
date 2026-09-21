@@ -161,8 +161,7 @@ const BottomRow = () => {
   );
 };
 
-export const App = () => {
-  useSetupDrivers();
+const PageRoot = () => {
   return (
     <div class="h-[100dvh] flex-c">
       <div class="flex-v gap-3 w-[500px] bg-gray-300 px-8 py-5">
@@ -178,4 +177,11 @@ export const App = () => {
       </div>
     </div>
   );
+};
+
+export const App = () => {
+  const { viewActive } = store.useSnapshot();
+  useSetupDrivers();
+  if (!viewActive) return null;
+  return <PageRoot />;
 };

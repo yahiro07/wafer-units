@@ -6,7 +6,7 @@ import {
 } from "@/defs/definitions";
 import { actions } from "@/root/actions";
 import { store } from "@/root/store";
-import { AutomationPort } from "wafer-host/unit-types";
+import { AutomationInputPort } from "wafer-host/unit-types";
 
 const octaveMin = -2;
 const octaveMax = 2;
@@ -40,7 +40,7 @@ function ratioToNormalized(ratio: number) {
   return Math.max(index, 0) / (allOsc1Ratios.length - 1);
 }
 
-export const automationInput: AutomationPort = {
+export const automationInput: AutomationInputPort = {
   getParameterSpecs() {
     return [
       { id: "osc1Wave", steps: allOscWaveTypes.length },

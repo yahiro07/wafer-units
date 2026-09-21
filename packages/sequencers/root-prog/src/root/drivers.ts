@@ -8,34 +8,41 @@ const unitInterface = queryUnitInterface("wafer-v01");
 const engine = createSequencerEngine(unitInterface);
 
 export function setupUnit() {
-  unitInterface?.completeSetup({
-    unitAspects: {
-      unitType: "sequencer",
-      viewSize: [775, 402],
-    },
-    hostCallbacks: {
-      setKey(keySpec) {
-        engine.setKeyTranspose(keySpec.relativeKeyTranspose);
-        const keysName = mapKeySpecToKeysName(keySpec);
-        store.setKeysName(keysName);
+  if (unitInterface) {
+    unitInterface.completeSetup({
+      unitAspects: {
+        unitType: "sequencer",
+        viewSize: [775, 402],
       },
-    },
-    clockHandlers: {
-      start() {
-        engine.clockHandlers.start?.();
+      hostCallbacks: {
+        setKey(keySpec) {
+          engine.setKeyTranspose(keySpec.relativeKeyTranspose);
+          const keysName = mapKeySpecToKeysName(keySpec);
+          store.setKeysName(keysName);
+        },
       },
-      stop() {
-        engine.clockHandlers.stop?.();
-        store.setPlayStepIndex(-1);
+      clockHandlers: {
+        start() {
+          engine.clockHandlers.start?.();
+        },
+        stop() {
+          engine.clockHandlers.stop?.();
+          store.setPlayStepIndex(-1);
+        },
+        processStep(stepIndex, time, unitDuration) {
+          engine.clockHandlers.processStep?.(stepIndex, time, unitDuration);
+          const totalSteps = store.state.loopBars * 16;
+          store.setPlayStepIndex(stepIndex % totalSteps);
+        },
       },
-      processStep(stepIndex, time, unitDuration) {
-        engine.clockHandlers.processStep?.(stepIndex, time, unitDuration);
-        const totalSteps = store.state.loopBars * 16;
-        store.setPlayStepIndex(stepIndex % totalSteps);
+      unitCallbacks: {
+        setViewActive: store.setViewActive,
       },
-    },
-    persistence,
-  });
+      persistence,
+    });
+  } else {
+    store.setViewActive(true);
+  }
 }
 
 export function setupSynchronization() {

@@ -11,7 +11,7 @@ const root = document.getElementById("app")!;
 document.adoptedStyleSheets = [cssRealm.sheet];
 
 render(
-  <div class={cz("h-dvh flex-c", !appConfig.isDevelopment && "cl-pageBg")}>
+  <div class={cz("h-dvh flex-c", !appConfig.isDevelopment && "bg-clPageBg")}>
     <App />
   </div>,
   root,

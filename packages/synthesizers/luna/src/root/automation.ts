@@ -1,11 +1,7 @@
-import {
-  numOscWaveTypes,
-  OscWave,
-  SynthParameters,
-} from "@/defs/definitions";
+import { numOscWaveTypes, OscWave, SynthParameters } from "@/defs/definitions";
 import { actions } from "@/root/actions";
 import { store } from "@/root/store";
-import { AutomationPort } from "wafer-host/unit-types";
+import { AutomationInputPort } from "wafer-host/unit-types";
 
 const voiceOctaveMin = -2;
 const voiceOctaveMax = 2;
@@ -23,7 +19,7 @@ function denormalizeStepped(value: number, min: number, max: number) {
   return Math.round(value * (max - min)) + min;
 }
 
-export const automationInput: AutomationPort = {
+export const automationInput: AutomationInputPort = {
   getParameterSpecs() {
     return [
       { id: "voiceOctave", steps: voiceOctaveSteps },

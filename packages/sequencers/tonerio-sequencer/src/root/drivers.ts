@@ -9,37 +9,44 @@ const unitInterface = queryUnitInterface("wafer-v01");
 const engine = createEngine(unitInterface);
 
 export function setupUnit() {
-  unitInterface?.completeSetup({
-    unitAspects: {
-      unitType: "sequencer",
-      viewSize: [480, 280],
-    },
-    clockHandlers: {
-      start() {
-        engine.clockHandlers.start?.();
+  if (unitInterface) {
+    unitInterface.completeSetup({
+      unitAspects: {
+        unitType: "sequencer",
+        viewSize: [480, 280],
       },
-      processStep(inputStepIndex, time, unitDuration) {
-        engine.clockHandlers.processStep?.(inputStepIndex, time, unitDuration);
-        const stepIndex = inputStepIndex % 16;
-        store.setPlayPos(stepIndex);
+      clockHandlers: {
+        start() {
+          engine.clockHandlers.start?.();
+        },
+        processStep(inputStepIndex, time, unitDuration) {
+          engine.clockHandlers.processStep?.(inputStepIndex, time, unitDuration);
+          const stepIndex = inputStepIndex % 16;
+          store.setPlayPos(stepIndex);
+        },
+        stop() {
+          engine.clockHandlers.stop?.();
+          store.setPlayPos(-1);
+        },
       },
-      stop() {
-        engine.clockHandlers.stop?.();
-        store.setPlayPos(-1);
+      noteInput: {
+        noteOn(noteNumber) {
+          engine.setRootNote(noteNumber);
+        },
+        noteOff() {},
       },
-    },
-    noteInput: {
-      noteOn(noteNumber) {
-        engine.setRootNote(noteNumber);
+      hostCallbacks: {
+        setKey: engine.setKey,
       },
-      noteOff() {},
-    },
-    hostCallbacks: {
-      setKey: engine.setKey,
-    },
-    persistence: persistence,
-    automationInput: automationInput,
-  });
+      unitCallbacks: {
+        setViewActive: store.setViewActive,
+      },
+      persistence: persistence,
+      automationInput: automationInput,
+    });
+  } else {
+    store.setViewActive(true);
+  }
 }
 
 export function setupSynchronization() {

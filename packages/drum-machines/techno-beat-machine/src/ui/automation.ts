@@ -1,11 +1,7 @@
-import {
-  allPartKeys,
-  PartKey,
-  pitchTweakRangeMap,
-} from "@/model/defs";
+import { allPartKeys, PartKey, pitchTweakRangeMap } from "@/model/defs";
 import { store } from "@/ui/store/store";
 import { clampValue, linearInterpolate } from "@/utils/helpers";
-import { AutomationPort } from "wafer-host/unit-types";
+import { AutomationInputPort } from "wafer-host/unit-types";
 
 type PartParamKind = "pitch" | "vol";
 
@@ -39,7 +35,7 @@ function patchPart(
   });
 }
 
-export const automationInput: AutomationPort = {
+export const automationInput: AutomationInputPort = {
   getParameterSpecs() {
     return [
       ...allPartKeys.flatMap((partKey) => {

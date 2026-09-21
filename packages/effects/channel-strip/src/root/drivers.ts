@@ -10,15 +10,22 @@ const engine = createEngine(unitInterface);
 
 export function setupUnit() {
   engine.connects();
-  unitInterface?.completeSetup({
-    unitAspects: {
-      unitType: "effect",
-      viewSize: [300, 160],
-    },
-    persistence: persistence,
-    automationInput: automationInput,
-    cleanup: engine.disconnects,
-  });
+  if (unitInterface) {
+    unitInterface.completeSetup({
+      unitAspects: {
+        unitType: "effect",
+        viewSize: [300, 160],
+      },
+      unitCallbacks: {
+        setViewActive: store.setViewActive,
+      },
+      persistence: persistence,
+      automationInput: automationInput,
+      cleanup: engine.disconnects,
+    });
+  } else {
+    store.setViewActive(true);
+  }
 }
 
 export function setupSynchronization() {

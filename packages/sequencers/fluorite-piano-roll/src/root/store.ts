@@ -10,6 +10,7 @@ export const store = createStore<{
   notes: Note[];
   previewNotePitch: number | null;
   stateLoadRevision: number;
+  viewActive: boolean;
 }>({
   octave: 0,
   duty: 1,
@@ -19,6 +20,7 @@ export const store = createStore<{
   notes: [],
   previewNotePitch: null,
   stateLoadRevision: 0,
+  viewActive: false,
 });
 
 if (0) {

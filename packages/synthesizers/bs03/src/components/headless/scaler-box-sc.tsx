@@ -1,5 +1,6 @@
+import { useDomElementSize } from "@/utils/use-dom-element-size";
 import { ComponentChildren } from "preact";
-import { useEffect, useRef, useState } from "preact/hooks";
+import { useRef } from "preact/hooks";
 
 export const ScalerBoxSC = ({
   scale,
@@ -8,27 +9,25 @@ export const ScalerBoxSC = ({
   scale: number;
   children: ComponentChildren;
 }) => {
-  type Size = { w: number; h: number };
-
   const innerDivRef = useRef<HTMLDivElement>(null);
-  const [contentSize, setContentSize] = useState<Size | null>(null);
-
-  useEffect(() => {
-    const innerDiv = innerDivRef.current;
-    if (innerDiv) {
-      setContentSize({ w: innerDiv.scrollWidth, h: innerDiv.scrollHeight });
-    }
-  }, []);
+  const contentSize = useDomElementSize(innerDivRef);
   return (
     <div
       style={{
+        position: "relative",
         ...(contentSize
-          ? { width: contentSize.w * scale, height: contentSize.h * scale }
+          ? {
+              width: contentSize.width * scale,
+              height: contentSize.height * scale,
+            }
           : undefined),
       }}
     >
       <div
         style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
           transform: `scale(${scale})`,
           transformOrigin: "top left",
         }}

@@ -162,8 +162,7 @@ const ParametersSection = () => {
   );
 };
 
-export const App = () => {
-  useSetupDrivers();
+const PageRoot = () => {
   return (
     <div class="h-[100dvh] flex-c text-clText bg-clPanelBody">
       <div class="w-[700px] flex-v gap-3 shrink-0">
@@ -172,4 +171,11 @@ export const App = () => {
       </div>
     </div>
   );
+};
+
+export const App = () => {
+  const { viewActive } = store.useSnapshot();
+  useSetupDrivers();
+  if (!viewActive) return null;
+  return <PageRoot />;
 };

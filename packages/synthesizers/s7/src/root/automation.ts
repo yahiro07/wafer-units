@@ -1,5 +1,5 @@
 import { store } from "@/root/store";
-import { AutomationPort } from "wafer-host/unit-types";
+import { AutomationInputPort } from "wafer-host/unit-types";
 
 type AutomationParameterId =
   | "octave"
@@ -14,7 +14,7 @@ const octaveMin = -2;
 const octaveMax = 2;
 const octaveSteps = octaveMax - octaveMin + 1;
 
-export const automationInput: AutomationPort = {
+export const automationInput: AutomationInputPort = {
   getParameterSpecs() {
     return [
       { id: "octave", steps: octaveSteps },

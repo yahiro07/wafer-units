@@ -3,26 +3,19 @@ import { AutomationLaneItem } from "@/base/types";
 import { seqNumbers } from "@/utils/helpers";
 
 export const store = createStore<{
-  connected: boolean;
-  parameterIds: string[];
   lanes: AutomationLaneItem[];
   playbackStepIndex: number;
+  viewActive: boolean;
 }>({
-  connected: false,
-  parameterIds: [],
   lanes: [
     {
       id: 0,
       enabled: true,
-      targetParameterId: "",
       stepValues: seqNumbers(16).map(() => 0.5),
       patternRange: 4,
       clockDivision: 1,
     },
   ],
   playbackStepIndex: -1,
+  viewActive: false,
 });
-
-if (0) {
-  store.setParameterIds(["param1", "param2", "param3", "param4", "param5"]);
-}

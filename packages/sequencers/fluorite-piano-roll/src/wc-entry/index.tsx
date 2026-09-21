@@ -1,9 +1,9 @@
 import { render } from "preact";
 import { createCustomElementClass } from "wafer-host/unit-helper";
-import { cssRealm, qu } from "@/common/css-realm";
+import { cssRealm } from "@/common/css-realm";
 import { App } from "@/root/app";
 import cssText from "./page.css?inline";
-import { colors } from "@/editor/theme";
+import unoCss from "virtual:uno-inline";
 
 const webFontUrls = [
   "https://fonts.googleapis.com/css2?family=Inter:wght@400..700&display=swap",
@@ -25,7 +25,7 @@ export default createCustomElementClass(
     shadowRoot.appendChild(link);
 
     render(
-      <div sx={qu.bg(colors.panelBody).h("full").flexC()}>
+      <div class="bg-clPanelBody h-full flex-c">
         <App />
       </div>,
       shadowRoot,
@@ -35,7 +35,7 @@ export default createCustomElementClass(
     };
   },
   {
-    cssTexts: [cssText],
+    cssTexts: [cssText, unoCss],
     stylesheetUrls: webFontUrls,
     adoptedStyleSheets: [cssRealm.sheet],
   },

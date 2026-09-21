@@ -20,40 +20,47 @@ const sequencerTickDriver = createSequencerTickDriver(audioContext);
 synthesizer.setParameters(store.state.synthParameters);
 
 function setupUnit() {
-  unitInterface?.completeSetup({
-    unitAspects: {
-      unitType: "instrument",
-      viewSize: [1048, 583],
-    },
-    hostCallbacks: {
-      setBpm(bpm) {
-        actions.setBpm(bpm);
+  if (unitInterface) {
+    unitInterface.completeSetup({
+      unitAspects: {
+        unitType: "instrument",
+        viewSize: [1048, 583],
       },
-    },
-    persistence: persistenceImpl,
-    automationInput: createAutomationInput(audioContext),
-    clockHandlers: {
-      start() {
-        store.setHostPlaying(true);
-        sequencer.start();
+      hostCallbacks: {
+        setBpm(bpm) {
+          actions.setBpm(bpm);
+        },
       },
-      processStep(stepIndex, time, unitDuration) {
-        sequencer.step(stepIndex, time, unitDuration);
+      unitCallbacks: {
+        setViewActive: store.setViewActive,
       },
-      stop() {
-        store.setHostPlaying(false);
-        sequencer.stop();
+      persistence: persistenceImpl,
+      automationInput: createAutomationInput(audioContext),
+      clockHandlers: {
+        start() {
+          store.setHostPlaying(true);
+          sequencer.start();
+        },
+        processStep(stepIndex, time, unitDuration) {
+          sequencer.step(stepIndex, time, unitDuration);
+        },
+        stop() {
+          store.setHostPlaying(false);
+          sequencer.stop();
+        },
       },
-    },
-    // noteInput: {
-    //   noteOn: synthesizer.noteOn,
-    //   noteOff: synthesizer.noteOff,
-    // },
-    cleanup() {
-      synthesizer.cleanup();
-      sequencer.cleanup();
-    },
-  });
+      // noteInput: {
+      //   noteOn: synthesizer.noteOn,
+      //   noteOff: synthesizer.noteOff,
+      // },
+      cleanup() {
+        synthesizer.cleanup();
+        sequencer.cleanup();
+      },
+    });
+  } else {
+    store.setViewActive(true);
+  }
 }
 
 function setupSynchronization() {

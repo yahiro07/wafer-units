@@ -19,11 +19,15 @@ export function setupUnit() {
         noteOn: engine.noteOn,
         noteOff: engine.noteOff,
       },
+      unitCallbacks: {
+        setViewActive: store.setViewActive,
+      },
       automationInput,
       persistence,
       cleanup: engine.cleanup,
     });
   } else {
+    store.setViewActive(true);
     return setupMidiKeyboardInput({
       noteOn: (noteNumber) => engine.noteOn(noteNumber),
       noteOff: (noteNumber) => engine.noteOff(noteNumber),

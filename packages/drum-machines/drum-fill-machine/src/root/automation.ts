@@ -1,7 +1,7 @@
 import { PartItem } from "@/core/definitions";
 import { store } from "@/root/store";
 import { clampValue, linearInterpolate } from "@/utils/helpers";
-import { AutomationPort } from "wafer-host/unit-types";
+import { AutomationInputPort } from "wafer-host/unit-types";
 
 type AutomationPartId = "roll" | "crash";
 type ParamKind = "pitch" | "volume";
@@ -43,7 +43,7 @@ function patchPartItem(partId: AutomationPartId, attrs: Partial<PartItem>) {
   }
 }
 
-export const automationInput: AutomationPort = {
+export const automationInput: AutomationInputPort = {
   getParameterSpecs() {
     return [
       { id: "roll_pitch" },

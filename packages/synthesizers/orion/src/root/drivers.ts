@@ -27,11 +27,15 @@ function setupUnit() {
       hostCallbacks: {
         setBpm: engine.setBpm,
       },
+      unitCallbacks: {
+        setViewActive: store.setViewActive,
+      },
       automationInput,
       persistence,
       cleanup: engine.cleanup,
     });
   } else {
+    store.setViewActive(true);
     return setupMidiKeyboardInput({
       noteOn(noteNumber: number) {
         engine.noteOn(noteNumber, 0);

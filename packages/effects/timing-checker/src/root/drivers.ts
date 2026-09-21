@@ -1,0 +1,174 @@
+import { useEffect, useLayoutEffect } from "preact/hooks";
+import { queryUnitInterface } from "wafer-host/unit-types";
+import { createSchedulingPlotter } from "@/root/scheduling-plotter";
+import { store } from "@/root/store";
+import { createWavePlotter } from "@/root/wave-plotter";
+import { createNotesPlotter } from "@/root/notes-plotter";
+
+console.log("timing-checker 1212");
+
+const unitInterface = queryUnitInterface("wafer-v01");
+const audioContext = unitInterface?.audioContext ?? new AudioContext();
+
+function mapTimeToBarPosition(time: number) {
+  const barSeconds = 240 / store.state.hostBpm;
+  return time / barSeconds;
+}
+
+const schedulingPlotter = createSchedulingPlotter();
+const wavePlotter = createWavePlotter();
+const notesPlotter = createNotesPlotter();
+
+function setupUnit() {
+  let startTime = 0;
+
+  if (!unitInterface) {
+    store.setHostBpm(120);
+    store.setViewActive(true);
+    return;
+  }
+
+  const analyser = audioContext.createAnalyser();
+  unitInterface.audioInputNode.connect(analyser);
+
+  analyser.fftSize = 1024;
+  const timeDomainData = new Float32Array(1024);
+
+  function updateAnalyser() {
+    analyser.getFloatTimeDomainData(timeDomainData);
+    const { currentTime, sampleRate } = audioContext;
+    const dt = 1 / sampleRate;
+    const spanDuration = timeDomainData.length * dt;
+    let time = currentTime - startTime - spanDuration;
+    for (let i = 0; i < timeDomainData.length; i++) {
+      time += dt;
+      if (time < 0) continue;
+      const barPosition = mapTimeToBarPosition(time);
+      const value = timeDomainData[i];
+      wavePlotter.putWaveValue(barPosition, value);
+    }
+  }
+
+  let timerId: ReturnType<typeof setInterval> | undefined;
+
+  function setViewActive(active: boolean) {
+    store.setViewActive(active);
+    if (active) {
+      if (timerId === undefined) {
+        timerId = setInterval(updateAnalyser, 20);
+      }
+    } else if (timerId !== undefined) {
+      clearInterval(timerId);
+      timerId = undefined;
+    }
+  }
+
+  const cleanup = () => {
+    unitInterface.audioInputNode.disconnect();
+    if (timerId !== undefined) {
+      clearInterval(timerId);
+      timerId = undefined;
+    }
+  };
+
+  unitInterface.completeSetup({
+    unitAspects: {
+      unitType: "effect",
+      viewSize: [940, 460],
+    },
+    hostCallbacks: {
+      setBpm(bpm: number) {
+        store.setHostBpm(bpm);
+      },
+    },
+    clockHandlers: {
+      start() {
+        startTime = audioContext.currentTime;
+        if (!store.state.viewActive) return;
+        schedulingPlotter.hostStarted();
+        notesPlotter.hostStarted();
+      },
+      processScheduling(_timeFrom, barFrom, barTo, bpm) {
+        if (bpm !== store.state.hostBpm) {
+          store.setHostBpm(bpm);
+        }
+        if (!store.state.viewActive) return;
+        const timeFromStart = audioContext.currentTime - startTime;
+        const barScheduledAt = mapTimeToBarPosition(timeFromStart);
+        schedulingPlotter.hostScheduled(barScheduledAt, barFrom, barTo);
+      },
+      processStep(stepIndex, time) {
+        if (!store.state.viewActive) return;
+        const timeFromStart = time - startTime;
+        const barPosition = mapTimeToBarPosition(timeFromStart);
+        schedulingPlotter.addScheduleStepPoint(stepIndex, barPosition);
+      },
+    },
+    unitCallbacks: {
+      setViewActive,
+    },
+    noteInput: {
+      noteOn(noteNumber, time = audioContext.currentTime) {
+        if (!store.state.viewActive) return;
+        const timeFromStart = audioContext.currentTime - startTime;
+        const barScheduledAt = mapTimeToBarPosition(timeFromStart);
+        const noteTimeFromStart = time - startTime;
+        const barPoint = mapTimeToBarPosition(noteTimeFromStart);
+        notesPlotter.putNoteScheduleEvent(
+          barScheduledAt,
+          barPoint,
+          noteNumber,
+          true,
+        );
+      },
+      noteOff(noteNumber, time = audioContext.currentTime) {
+        if (!store.state.viewActive) return;
+        const timeFromStart = audioContext.currentTime - startTime;
+        const barScheduledAt = mapTimeToBarPosition(timeFromStart);
+        const noteTimeFromStart = time - startTime;
+        const barPoint = mapTimeToBarPosition(noteTimeFromStart);
+        notesPlotter.putNoteScheduleEvent(
+          barScheduledAt,
+          barPoint,
+          noteNumber,
+          false,
+        );
+      },
+    },
+    cleanup,
+  });
+
+  if (store.state.viewActive) {
+    setViewActive(true);
+  }
+}
+
+function setupSynchronization() {
+  return store.subscribe((attrs) => {
+    const {
+      barLength,
+      schedulingPlotterCanvas,
+      wavePlotterCanvasCh1,
+      notesPlotterCanvas,
+    } = attrs;
+    if (barLength !== undefined) {
+      schedulingPlotter.setBarLength(barLength);
+      wavePlotter.setBarLength(barLength);
+      notesPlotter.setBarLength(barLength);
+    }
+    if (schedulingPlotterCanvas !== undefined) {
+      schedulingPlotter.setCanvas(schedulingPlotterCanvas);
+    }
+    if (wavePlotterCanvasCh1 !== undefined) {
+      wavePlotter.setCanvas(wavePlotterCanvasCh1);
+    }
+    if (notesPlotterCanvas !== undefined) {
+      notesPlotter.setCanvas(notesPlotterCanvas);
+    }
+  });
+}
+
+export function useSetupDrivers() {
+  useLayoutEffect(setupSynchronization, []);
+  useEffect(setupUnit, []);
+}

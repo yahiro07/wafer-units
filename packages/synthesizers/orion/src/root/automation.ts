@@ -1,9 +1,13 @@
-import { numWaveModes, SynthLinearParameters, SynthParameters } from "@/defs/definitions";
+import {
+  numWaveModes,
+  SynthLinearParameters,
+  SynthParameters,
+} from "@/defs/definitions";
 import { actions } from "@/root/actions";
 import { store } from "@/root/store";
-import { AutomationPort } from "wafer-host/unit-types";
+import { AutomationInputPort } from "wafer-host/unit-types";
 
-export const automationInput: AutomationPort = {
+export const automationInput: AutomationInputPort = {
   getParameterSpecs() {
     return [
       { id: "waveMode", steps: numWaveModes },

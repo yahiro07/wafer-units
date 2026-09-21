@@ -7,7 +7,9 @@ export const store = createStore<{
   patternRange: PatternRange;
   stepBits: number;
   playPos: number;
+  viewActive: boolean;
 }>({
   ...defaultSequencerEditState,
   playPos: -1,
+  viewActive: false,
 });
