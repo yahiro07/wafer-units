@@ -9,35 +9,42 @@ const engine = createSequencerEngine(unitInterface);
 export function setupUnit() {
   const st = store.state;
 
-  unitInterface?.completeSetup({
-    unitAspects: {
-      unitType: "sequencer",
-      viewSize: [800, 450],
-    },
-    clockHandlers: {
-      start() {
-        engine.start();
+  if (unitInterface) {
+    unitInterface.completeSetup({
+      unitAspects: {
+        unitType: "sequencer",
+        viewSize: [800, 450],
       },
-      stop() {
-        engine.stop();
-        store.setPlayPos(null);
+      clockHandlers: {
+        start() {
+          engine.start();
+        },
+        stop() {
+          engine.stop();
+          store.setPlayPos(null);
+        },
+        processScheduling(_timeFrom, barFrom, _barTo, _bpm) {
+          const stepPos = barFrom * 16;
+          const playPosTotalSteps = Math.max(st.loopBars * 16, 32);
+          const playPos = stepPos % playPosTotalSteps;
+          store.setPlayPos(playPos);
+          const expectedPage = Math.floor(playPos / 32);
+          if (store.state.pageIndex !== expectedPage) {
+            store.setPageIndex(expectedPage);
+          }
+        },
+        processStep(stepIndex, time, unitDuration) {
+          engine.processStep(stepIndex, time, unitDuration);
+        },
       },
-      processScheduling(_timeFrom, barFrom, _barTo, _bpm) {
-        const stepPos = barFrom * 16;
-        const playPosTotalSteps = Math.max(st.loopBars * 16, 32);
-        const playPos = stepPos % playPosTotalSteps;
-        store.setPlayPos(playPos);
-        const expectedPage = Math.floor(playPos / 32);
-        if (store.state.pageIndex !== expectedPage) {
-          store.setPageIndex(expectedPage);
-        }
+      unitCallbacks: {
+        setViewActive: store.setViewActive,
       },
-      processStep(stepIndex, time, unitDuration) {
-        engine.processStep(stepIndex, time, unitDuration);
-      },
-    },
-    persistence: persistence,
-  });
+      persistence: persistence,
+    });
+  } else {
+    store.setViewActive(true);
+  }
 }
 
 export function setupSynchronization() {

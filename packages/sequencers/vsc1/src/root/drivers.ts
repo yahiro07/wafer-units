@@ -17,44 +17,51 @@ const sequencer = createSequencer(unitInterface, synthesizer);
 const sequencerTickDriver = createSequencerTickDriver(audioContext);
 
 function setupUnit() {
-  unitInterface?.completeSetup({
-    unitAspects: {
-      unitType: "sequencer",
-      viewSize: [960, 540],
-    },
-    hostCallbacks: {
-      setBpm(bpm) {
-        sequencerTickDriver.setBpm(bpm);
+  if (unitInterface) {
+    unitInterface.completeSetup({
+      unitAspects: {
+        unitType: "sequencer",
+        viewSize: [960, 540],
       },
-      setKey(songKeySpec) {
-        store.setKeySpec({
-          mode: songKeySpec.mode,
-          root: songKeySpec.root,
-        });
+      hostCallbacks: {
+        setBpm(bpm) {
+          sequencerTickDriver.setBpm(bpm);
+        },
+        setKey(songKeySpec) {
+          store.setKeySpec({
+            mode: songKeySpec.mode,
+            root: songKeySpec.root,
+          });
+        },
       },
-    },
-    clockHandlers: {
-      start: sequencer.start,
-      processStep: sequencer.processStep,
-      stop: sequencer.stop,
-    },
-    persistence: {
-      emitState() {
-        return pickObjectMembers(store.state, {
-          baseStep: 1,
-          octaveShift: 1,
-          stepDuty: 1,
-          shiftEnabled: 1,
-          patternLength: 1,
-          notes: 1,
-          editScaleMode: 1,
-        });
+      clockHandlers: {
+        start: sequencer.start,
+        processStep: sequencer.processStep,
+        stop: sequencer.stop,
       },
-      applyState(state) {
-        store.assign(state);
+      unitCallbacks: {
+        setViewActive: store.setViewActive,
       },
-    },
-  });
+      persistence: {
+        emitState() {
+          return pickObjectMembers(store.state, {
+            baseStep: 1,
+            octaveShift: 1,
+            stepDuty: 1,
+            shiftEnabled: 1,
+            patternLength: 1,
+            notes: 1,
+            editScaleMode: 1,
+          });
+        },
+        applyState(state) {
+          store.assign(state);
+        },
+      },
+    });
+  } else {
+    store.setViewActive(true);
+  }
 }
 
 function setupSynchronization() {

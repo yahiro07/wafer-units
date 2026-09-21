@@ -149,8 +149,7 @@ const SectionFrame = ({
   );
 };
 
-export const App = () => {
-  useSetupDrivers();
+const PageRoot = () => {
   const { parameters } = store.useSnapshot();
   return (
     <div class="flex-v gap-4 bg-clPageBg text-clPageText p-8">
@@ -266,4 +265,11 @@ export const App = () => {
       </div>
     </div>
   );
+};
+
+export const App = () => {
+  const { viewActive } = store.useSnapshot();
+  useSetupDrivers();
+  if (!viewActive) return null;
+  return <PageRoot />;
 };

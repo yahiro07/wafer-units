@@ -27,35 +27,42 @@ const driversInternal = {
 };
 export const drivers = {
   setupUnitInterface() {
-    unitInterface?.completeSetup({
-      unitAspects: {
-        unitType: "sequencer",
-        categoryHint: "stepSequencer",
-        viewSize: [494, 308],
-      },
-      noteInput: {
-        noteOn: actions.inputNoteOn,
-        noteOff: actions.inputNoteOff,
-      },
-      clockHandlers: {
-        start() {
-          actions.setExPlaying(true);
+    if (unitInterface) {
+      unitInterface.completeSetup({
+        unitAspects: {
+          unitType: "sequencer",
+          categoryHint: "stepSequencer",
+          viewSize: [494, 308],
         },
-        processStep(stepIndex) {
-          driversInternal.wrapProcessStep(stepIndex);
+        noteInput: {
+          noteOn: actions.inputNoteOn,
+          noteOff: actions.inputNoteOff,
         },
-        stop() {
-          actions.setExPlaying(false);
-          sequencerEngine.allNotesOff();
+        clockHandlers: {
+          start() {
+            actions.setExPlaying(true);
+          },
+          processStep(stepIndex) {
+            driversInternal.wrapProcessStep(stepIndex);
+          },
+          stop() {
+            actions.setExPlaying(false);
+            sequencerEngine.allNotesOff();
+          },
         },
-      },
-      persistence,
-      hostCallbacks: {
-        setBpm(bpm) {
-          actions.setBpm(bpm);
+        persistence,
+        hostCallbacks: {
+          setBpm(bpm) {
+            actions.setBpm(bpm);
+          },
         },
-      },
-    });
+        unitCallbacks: {
+          setViewActive: store.setViewActive,
+        },
+      });
+    } else {
+      store.setViewActive(true);
+    }
   },
   setupMidiKeyboardInput() {
     if (!unitInterface) {

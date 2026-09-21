@@ -6,9 +6,11 @@ export const store = createStore<{
   duty: number;
   stepBits: number[];
   playPos: number;
+  viewActive: boolean;
 }>({
   octave: defaultSequencerEditState.octave,
   duty: defaultSequencerEditState.duty,
   stepBits: defaultSequencerEditState.stepBits,
   playPos: -1,
+  viewActive: false,
 });

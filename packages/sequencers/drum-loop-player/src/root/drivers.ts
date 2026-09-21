@@ -7,20 +7,27 @@ const player = createLoopPlayerEngine();
 player.registerBeatSourceItems(beatSourceItems);
 
 export function setupUnit() {
-  player.unitInterface?.completeSetup({
-    unitAspects: {
-      unitType: "instrument",
-      viewSize: [880, 480],
-    },
-    hostCallbacks: {
-      setPlayState(playing) {
-        store.setHostPlaying(playing);
+  if (player.unitInterface) {
+    player.unitInterface.completeSetup({
+      unitAspects: {
+        unitType: "instrument",
+        viewSize: [880, 480],
       },
-      setBpm: player.setBpm,
-    },
-    clockHandlers: player.clockHandlers,
-    cleanup: player.cleanup,
-  });
+      hostCallbacks: {
+        setPlayState(playing) {
+          store.setHostPlaying(playing);
+        },
+        setBpm: player.setBpm,
+      },
+      clockHandlers: player.clockHandlers,
+      unitCallbacks: {
+        setViewActive: store.setViewActive,
+      },
+      cleanup: player.cleanup,
+    });
+  } else {
+    store.setViewActive(true);
+  }
 }
 
 export function useAffectStoreToEngine() {

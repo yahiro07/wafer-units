@@ -233,6 +233,8 @@ const PageRoot = () => {
 };
 
 export const App = () => {
+  const { viewActive } = useStoreSnapshot();
   useSetupDrivers();
+  if (!viewActive) return null;
   return <PageRoot />;
 };

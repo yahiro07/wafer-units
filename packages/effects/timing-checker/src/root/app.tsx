@@ -154,8 +154,7 @@ const cssTimeSpanGauge = css({
   },
 });
 
-export const App = () => {
-  useSetupDrivers();
+const PageRoot = () => {
   return (
     <div class={css(flexV(2))}>
       <div class={css(flexHA(4), { justifyContent: "space-between" })}>
@@ -180,4 +179,11 @@ export const App = () => {
       <NotesLaneContainer label="notes" />
     </div>
   );
+};
+
+export const App = () => {
+  const { viewActive } = store.useSnapshot();
+  useSetupDrivers();
+  if (!viewActive) return null;
+  return <PageRoot />;
 };

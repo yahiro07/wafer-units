@@ -107,6 +107,7 @@ export function createSchedulingPlotter(): SchedulingPlotter {
       rafId = undefined;
     },
     pushRenderingItem(item: RenderingItem) {
+      if (!canvas) return;
       renderingItemQueue.push(item);
       if (!rafId) {
         rafId = requestAnimationFrame(internal.flushRenderingItems);

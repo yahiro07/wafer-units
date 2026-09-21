@@ -20,6 +20,7 @@ type StoreState = SequencerEditState & {
   keySpec: KeySpec;
   stdPlaying: boolean;
   playHeadIndex: number;
+  viewActive: boolean;
 };
 
 export const store = createStore<StoreState>({
@@ -35,4 +36,5 @@ export const store = createStore<StoreState>({
   keySpec: { root: -3, mode: "minor" },
   stdPlaying: false,
   playHeadIndex: 0,
+  viewActive: false,
 });

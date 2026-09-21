@@ -8,38 +8,43 @@ const unitInterface = queryUnitInterface("wafer-v01");
 const sequencer = createSequencer(unitInterface);
 
 export function setupUnit() {
-  unitInterface?.completeSetup({
-    unitAspects: {
-      unitType: "sequencer",
-      viewSize: [500, 310],
-      preferJustSize: true,
-    },
-    clockHandlers: sequencer.clockHandlers,
-    unitCallbacks: {
-      // onConnectedTo(_, linkedPortSubtypes) {
-      //   if (linkedPortSubtypes.includes("automation")) {
-      //     const parameterSpecs = automationOutputPort?.getParameterSpecs();
-      //     if (parameterSpecs) {
-      //       store.setParameterIds(parameterSpecs.map((spec) => spec.id));
-      //     }
-      //   }
-      //   store.setConnected(true);
-      // },
-      // onDisconnectedTo() {
-      //   store.setParameterIds([]);
-      //   store.setConnected(false);
-      // },
-    },
-    persistence: {
-      emitState() {
-        return { slots: store.state.slots };
+  if (unitInterface) {
+    unitInterface.completeSetup({
+      unitAspects: {
+        unitType: "sequencer",
+        viewSize: [500, 310],
+        preferJustSize: true,
       },
-      applyState(data) {
-        store.setSlots(data.slots);
+      clockHandlers: sequencer.clockHandlers,
+      unitCallbacks: {
+        setViewActive: store.setViewActive,
+        // onConnectedTo(_, linkedPortSubtypes) {
+        //   if (linkedPortSubtypes.includes("automation")) {
+        //     const parameterSpecs = automationOutputPort?.getParameterSpecs();
+        //     if (parameterSpecs) {
+        //       store.setParameterIds(parameterSpecs.map((spec) => spec.id));
+        //     }
+        //   }
+        //   store.setConnected(true);
+        // },
+        // onDisconnectedTo() {
+        //   store.setParameterIds([]);
+        //   store.setConnected(false);
+        // },
       },
-    },
-    automationInput,
-  });
+      persistence: {
+        emitState() {
+          return { slots: store.state.slots };
+        },
+        applyState(data) {
+          store.setSlots(data.slots);
+        },
+      },
+      automationInput,
+    });
+  } else {
+    store.setViewActive(true);
+  }
 }
 
 export function setupSynchronization() {
