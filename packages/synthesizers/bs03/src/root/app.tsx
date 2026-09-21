@@ -127,6 +127,8 @@ const PageRoot = () => {
   );
 };
 export const App = () => {
+  const { viewActive } = store.useSnapshot();
   useSetupDrivers();
+  if (!viewActive) return null;
   return <PageRoot />;
 };

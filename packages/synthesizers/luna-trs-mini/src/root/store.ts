@@ -7,7 +7,9 @@ export const allPresetKeys = Object.keys(allPresets);
 export const store = createStore<{
   parameters: SynthParameters;
   presetKey: string;
+  viewActive: boolean;
 }>({
   parameters: defaultSynthParameters,
   presetKey: allPresetKeys[0],
+  viewActive: false,
 });

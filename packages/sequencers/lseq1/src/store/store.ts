@@ -16,6 +16,7 @@ type StoreState = {
   playPos: number;
   exPlaying: boolean;
   previewNote: number;
+  viewActive: boolean;
 };
 
 export type PersistState = {
@@ -40,4 +41,5 @@ export const store = createStore<StoreState>({
   playPos: 0,
   exPlaying: false,
   previewNote: -1,
+  viewActive: false,
 });

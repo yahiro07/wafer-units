@@ -1,4 +1,4 @@
-import { AutomationPort } from "wafer-host/unit-types";
+import { AutomationInputPort } from "wafer-host/unit-types";
 import { store } from "@/root/store";
 
 type AutomationParameterId =
@@ -11,7 +11,7 @@ type AutomationParameterId =
   | "eqHigh"
   | "compress";
 
-export const automationInput: AutomationPort = {
+export const automationInput: AutomationInputPort = {
   getParameterSpecs() {
     return [
       { id: "volume" },

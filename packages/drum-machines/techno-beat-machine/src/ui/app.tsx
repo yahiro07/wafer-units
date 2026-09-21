@@ -1,5 +1,6 @@
 import { colors } from "@/ui/common/colors";
 import { useSetupDrivers } from "@/ui/drivers";
+import { store } from "@/ui/store/store";
 import { MasterControlArea } from "@/ui/organisms/master-control-area";
 import { PartButtonsColumns } from "@/ui/organisms/part-control-area";
 import { PartEditAttributesArea } from "@/ui/organisms/part-edit-attributes-area";
@@ -26,6 +27,8 @@ const PageRoot = () => {
 };
 
 export const App = () => {
+  const { viewActive } = store.useSnapshot();
   useSetupDrivers();
+  if (!viewActive) return null;
   return <PageRoot />;
 };

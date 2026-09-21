@@ -1,4 +1,4 @@
-import { AutomationPort } from "wafer-host/unit-types";
+import { AutomationInputPort } from "wafer-host/unit-types";
 import { PieceId } from "@/base/type";
 import { Actions } from "@/store/actions";
 import { AppStore } from "@/store/store";
@@ -8,7 +8,7 @@ type PieceParameterType = "pitch" | "volume";
 export function createAutomationInput(
   store: AppStore,
   actions: Actions,
-): AutomationPort {
+): AutomationInputPort {
   function decodeParameterId(id: string): [PieceId, PieceParameterType] {
     const [pieceId, parameterType] = id.split("_");
     return [pieceId as PieceId, parameterType as PieceParameterType];

@@ -10,12 +10,14 @@ import { createStore } from "snap-store";
 type StoreState = SequencerEditState & {
   previewStepNotes: number[] | null;
   playStepIndex: number;
+  viewActive: boolean;
 };
 
 export const store = createStore<StoreState>({
   ...defaultSequencerEditState,
   previewStepNotes: null,
   playStepIndex: -1,
+  viewActive: false,
 });
 if (0) {
   //debug dummy notes

@@ -1,10 +1,10 @@
 import { ComponentChildren } from "preact";
-import { qu } from "@/base/css-realm";
-import { LfoWave, XStep, YStep } from "@/base/types";
+import { LfoWave, XStep, YStep } from "@/defs/types";
 import { KnobFrame } from "@/components/knob-frame";
 import { linearInterpolate, npx } from "@/utils/helpers";
 import { SelectorOption } from "@/utils/selector-option";
 import { GeneralSelector } from "@/components/general-selector";
+import { cz } from "@lib/mu2609/utils/cz";
 
 export const Knob = ({
   value,
@@ -35,14 +35,14 @@ export const Knob = ({
       dragDisabled={disabled}
     >
       <div
-        sx={qu.wh(28, 28).rounded(14).relative().bd("#444")}
+        class="w-28px h-28px rounded-14px relative bd-#444"
         style={{ opacity: disabled ? 0.5 : 1 }}
       >
         <div
-          sx={qu.full().flexVA()}
+          class="w-full h-full flex-va"
           style={{ transform: `rotate(${tickAngle}deg)` }}
         >
-          <div sx={qu.wh(2, 10).bg("#fff")} />
+          <div class="w-2px h-10px bg-#fff" />
         </div>
       </div>
     </KnobFrame>
@@ -58,10 +58,9 @@ export const IndicatorButton = ({
 }) => {
   return (
     <div
-      sx={qu.flexC().wh(20, 20)}
+      class="flex-c w-20px h-20px cursor-pointer"
       style={{
         background: active ? "#59e" : "#ddd",
-        cursor: "pointer",
       }}
       onClick={onClick}
     />
@@ -75,7 +74,11 @@ export const PlainCellContent = ({
   text: string;
   width: number;
 }) => {
-  return <div sx={qu.flexC().w(width)}>{text}</div>;
+  return (
+    <div class="flex-c" style={{ width: npx(width) }}>
+      {text}
+    </div>
+  );
 };
 
 export const WaveButton = ({
@@ -93,7 +96,7 @@ export const WaveButton = ({
     [LfoWave.SampleHold]: "◉",
   }[wave];
   return (
-    <div sx={qu.flexC().wh(40, 40).bg("#ddd")} onClick={onClick}>
+    <div class="flex-c w-40px h-40px bg-#ddd" onClick={onClick}>
       {text}
     </div>
   );
@@ -113,7 +116,7 @@ export const XStepButton = ({
     [XStep.div4]: "/4",
   }[xStep];
   return (
-    <div sx={qu.flexC().wh(40, 40).bg("#ddd")} onClick={onClick}>
+    <div class="flex-c w-40px h-40px bg-#ddd" onClick={onClick}>
       {text}
     </div>
   );
@@ -133,7 +136,7 @@ export const YStepButton = ({
     [YStep.step8]: "8",
   }[yStep];
   return (
-    <div sx={qu.flexC().wh(40, 40).bg("#ddd")} onClick={onClick}>
+    <div class="flex-c w-40px h-40px bg-#ddd" onClick={onClick}>
       {text}
     </div>
   );
@@ -155,7 +158,7 @@ export const SteppedButton = ({
   onClick?: () => void;
 }) => {
   return (
-    <div sx={qu.flexC().wh(40, 40).bg("#ddd")} onClick={onClick}>
+    <div class="flex-c w-40px h-40px bg-#ddd" onClick={onClick}>
       {active ? reteToStepText(rate) : "--"}
     </div>
   );
@@ -173,14 +176,11 @@ export const LabeledBox = ({
   width?: number;
 }) => {
   return (
-    <div sx={qu.flexV()} style={width ? { width: npx(width) } : undefined}>
-      <div
-        sx={qu.fontSize(10).weight("bold").h(15)}
-        style={{ textAlign: labelAlign }}
-      >
+    <div class="flex-v" style={width ? { width: npx(width) } : undefined}>
+      <div class="text-10px font-bold h-15px" style={{ textAlign: labelAlign }}>
         {label}
       </div>
-      <div sx={qu.flexC().h(40)}>{children}</div>
+      <div class="flex-c h-40px">{children}</div>
     </div>
   );
 };
@@ -198,13 +198,13 @@ export const NarrowButton = ({
 }) => {
   return (
     <div
-      sx={[
-        qu.flexC().wh(40, 20).bg("#ddd").weight("bold").cursor("pointer"),
-        active && qu.bg("#48c").color("#fff"),
-      ]}
+      class={cz(
+        "flex-c w-40px h-20px bg-#ddd font-bold cursor-pointer",
+        active && "bg-#48c text-#fff",
+      )}
       onClick={onClick}
     >
-      {text && <div sx={qu.fontSize(9)}>{text}</div>}
+      {text && <div class="text-9px">{text}</div>}
       {children}
     </div>
   );
@@ -221,7 +221,7 @@ export const ParameterSelector = <T extends string | number>({
 }) => {
   return (
     <GeneralSelector
-      sx={qu.flexC().wh(100, 40).bg("#ddd").pl(1).fontSize(12)}
+      className="flex-c w-100px h-40px bg-#ddd pl-1 text-12px"
       options={options}
       value={value}
       onChange={onChange}

@@ -23,20 +23,27 @@ export function createApp(unitInterface: UnitInterface | undefined) {
   const persistence = createPersistence(store, sequencer);
   const automationInput = createAutomationInput(store, actions);
 
-  unitInterface?.completeSetup({
-    unitAspects: {
-      unitType: "instrument",
-      categoryHint: "drumMachine",
-      viewSize: [840, 380],
-    },
-    clockHandlers: {
-      start: actions.start,
-      processStep: actions.processStep,
-      stop: actions.stop,
-    },
-    persistence,
-    automationInput,
-  });
+  if (unitInterface) {
+    unitInterface.completeSetup({
+      unitAspects: {
+        unitType: "instrument",
+        categoryHint: "drumMachine",
+        viewSize: [840, 380],
+      },
+      clockHandlers: {
+        start: actions.start,
+        processStep: actions.processStep,
+        stop: actions.stop,
+      },
+      unitCallbacks: {
+        setViewActive: store.setViewActive,
+      },
+      persistence,
+      automationInput,
+    });
+  } else {
+    store.setViewActive(true);
+  }
 
   const Render = () => {
     return (

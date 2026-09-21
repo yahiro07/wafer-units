@@ -1,5 +1,5 @@
 import { useState } from "preact/hooks";
-import { cz, qu } from "@/common/css-realm";
+import { cz } from "@/utils/cz";
 import { noteNameLabels, uiConfig } from "@/editor/ui-config";
 import { store } from "@/root/store";
 import { startDragSession } from "@/utils/drag-session";
@@ -78,9 +78,9 @@ const KeyboardKey = ({ yi }: { yi: number }) => {
 
   const styles = keyboardKeyStyles;
   return (
-    <div class={styles.base}>
+    <div class={styles.base} style={{ height: cellH }}>
       <div
-        sx={[styles.inner, pressed && styles.innerPressed]}
+        class={cz(styles.inner, pressed && styles.innerPressed)}
         style={keyStyle}
         onPointerDown={handlePointerDown}
       >
@@ -90,12 +90,12 @@ const KeyboardKey = ({ yi }: { yi: number }) => {
   );
 };
 const keyboardKeyStyles = {
-  base: cz(qu.wh(80, uiConfig.cellH).relative().pointerEvents("none")),
-  inner: cz(qu.absolute(), qu.pointerEvents("auto").cursor("pointer")),
-  innerPressed: qu.bg("#4dd!important"),
+  base: cz("w-80px relative pointer-events-none"),
+  inner: cz("absolute pointer-events-auto cursor-pointer"),
+  innerPressed: "bg-#4dd!",
   label: cz(
-    qu.flexHA().h("full").fJustify("end").p(1),
-    qu.color("#666").fontSize(12),
+    "flex-ha h-full justify-end p-1",
+    "text-#666 text-12px",
     "font-monospace",
   ),
 };

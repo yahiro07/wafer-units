@@ -1,4 +1,4 @@
-import { AutomationPort } from "wafer-host/unit-types";
+import { AutomationInputPort } from "wafer-host/unit-types";
 import { delayTimeValues } from "@/common/constants";
 import { store } from "@/root/store";
 
@@ -11,7 +11,7 @@ type AutomationParameterId =
   | "lfoDepth"
   | "safety";
 
-export const automationInput: AutomationPort = {
+export const automationInput: AutomationInputPort = {
   getParameterSpecs() {
     return [
       { id: "time" },

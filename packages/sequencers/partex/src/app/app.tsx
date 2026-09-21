@@ -37,69 +37,76 @@ function setupSynchronization() {
     }
   });
 
-  unitInterface?.completeSetup({
-    unitAspects: {
-      unitType: "sequencer",
-      viewSize: [620, 380],
-    },
-    noteInput: {
-      noteOn: sequencer.inputNoteOn,
-      noteOff: sequencer.inputNoteOff,
-    },
-    clockHandlers: {
-      start() {},
-      stop() {
-        sequencer.allNotesOff();
+  if (unitInterface) {
+    unitInterface.completeSetup({
+      unitAspects: {
+        unitType: "sequencer",
+        viewSize: [620, 380],
       },
-      processStep(stepIndex, time, unitDurationSec) {
-        sequencer.processStep(stepIndex, time, unitDurationSec);
+      noteInput: {
+        noteOn: sequencer.inputNoteOn,
+        noteOff: sequencer.inputNoteOff,
       },
-    },
-    hostCallbacks: {
-      setKey(keySpec) {
-        sequencer.setKeyTranspose(keySpec.relativeKeyTranspose);
-        const keysName = mapKeySpecToKeysName(keySpec);
-        store.setCurrentKeysName(keysName);
+      clockHandlers: {
+        start() {},
+        stop() {
+          sequencer.allNotesOff();
+        },
+        processStep(stepIndex, time, unitDurationSec) {
+          sequencer.processStep(stepIndex, time, unitDurationSec);
+        },
       },
-    },
-    persistence: {
-      emitStateBytes() {
-        const state = pickObjectMembers(store.state, {
-          inputNotes: 1,
-          noteDuty: 1,
-          octaveShift: 1,
-          loopBars: 1,
-          patternBars: 1,
-          patternMode: 1,
-          ghostEnabled: 1,
-          realized: 1,
-          keysMode: 1,
-        });
-        return serializePersistState(state);
+      hostCallbacks: {
+        setKey(keySpec) {
+          sequencer.setKeyTranspose(keySpec.relativeKeyTranspose);
+          const keysName = mapKeySpecToKeysName(keySpec);
+          store.setCurrentKeysName(keysName);
+        },
       },
-      applyStateBytes(bytes) {
-        const state = deserializePersistState(bytes);
-        // console.log(`applyStateBytes`, bytes, state);
-        if (!state) return;
-        //to support state swapping at bar boundary while playing,
-        //generated mapped notes here and affect it to sequencer in advance
-        const { inputNotes, loopBars, patternBars, ghostEnabled, patternMode } =
-          state;
-        const mappedNotes = ghostEnabled
-          ? generateMappedNotes(inputNotes, {
-              loopBars,
-              patternBars,
-              patternMode,
-            })
-          : inputNotes;
-        sequencer.setStepNotes(mappedNotes);
+      unitCallbacks: {
+        setViewActive: store.setViewActive,
+      },
+      persistence: {
+        emitStateBytes() {
+          const state = pickObjectMembers(store.state, {
+            inputNotes: 1,
+            noteDuty: 1,
+            octaveShift: 1,
+            loopBars: 1,
+            patternBars: 1,
+            patternMode: 1,
+            ghostEnabled: 1,
+            realized: 1,
+            keysMode: 1,
+          });
+          return serializePersistState(state);
+        },
+        applyStateBytes(bytes) {
+          const state = deserializePersistState(bytes);
+          // console.log(`applyStateBytes`, bytes, state);
+          if (!state) return;
+          //to support state swapping at bar boundary while playing,
+          //generated mapped notes here and affect it to sequencer in advance
+          const { inputNotes, loopBars, patternBars, ghostEnabled, patternMode } =
+            state;
+          const mappedNotes = ghostEnabled
+            ? generateMappedNotes(inputNotes, {
+                loopBars,
+                patternBars,
+                patternMode,
+              })
+            : inputNotes;
+          sequencer.setStepNotes(mappedNotes);
 
-        //this also triggers mapped notes generation but it's asynchronous and delayed
-        store.assign(state);
-        store.setStateLoadRevision((prev) => prev + 1);
+          //this also triggers mapped notes generation but it's asynchronous and delayed
+          store.assign(state);
+          store.setStateLoadRevision((prev) => prev + 1);
+        },
       },
-    },
-  });
+    });
+  } else {
+    store.setViewActive(true);
+  }
 
   return unsubscribeStore;
 }
@@ -132,8 +139,10 @@ export function PageRoot() {
 }
 
 export const App = () => {
+  const { viewActive } = store.useSnapshot();
   useEffect(setupSynchronization, []);
   useGenerateMappedNotes();
+  if (!viewActive) return null;
   return (
     <CssVariablesFrame>
       <PageRoot />

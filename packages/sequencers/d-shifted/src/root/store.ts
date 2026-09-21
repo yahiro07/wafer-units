@@ -13,6 +13,7 @@ type StoreState = SequencerEditState & {
   stateLoadRevision: number;
   previewNote: Note | null;
   currentPageIndex: number;
+  viewActive: boolean;
 };
 
 export const store = createStore<StoreState>({
@@ -22,6 +23,7 @@ export const store = createStore<StoreState>({
   stateLoadRevision: 0,
   previewNote: null,
   currentPageIndex: 0,
+  viewActive: false,
 });
 if (0) {
   store.setPatternLength(8);

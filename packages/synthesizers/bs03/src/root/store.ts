@@ -15,6 +15,7 @@ type StoreState = SequencerEditState &
     pitchPresetIndex: number;
     lockPitchPreset: boolean;
     lockParameters: boolean;
+    viewActive: boolean;
   };
 
 export const store = createStore<StoreState>({
@@ -27,4 +28,5 @@ export const store = createStore<StoreState>({
   pitchPresetIndex: 0,
   lockPitchPreset: false,
   lockParameters: false,
+  viewActive: false,
 });

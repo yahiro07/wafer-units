@@ -1,11 +1,12 @@
 import { createStore } from "snap-store";
-import { LfoSlot, LfoWave, XStep, YStep } from "@/base/types";
+import { LfoSlot, LfoWave, XStep, YStep } from "@/defs/types";
 import { seqNumbers } from "@/utils/helpers";
 
 export const store = createStore<{
   connected: boolean;
   parameterIds: string[];
   slots: LfoSlot[];
+  viewActive: boolean;
 }>({
   connected: false,
   parameterIds: [],
@@ -23,6 +24,7 @@ export const store = createStore<{
     inverted: false,
     shifted: false,
   })),
+  viewActive: false,
 });
 
 if (import.meta.env.DEV) {

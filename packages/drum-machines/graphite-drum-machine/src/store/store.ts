@@ -5,6 +5,7 @@ type StoreState = {
   pieces: PieceItem[];
   stepPosition: number;
   masterVolume: number;
+  viewActive: boolean;
 };
 
 export type AppStore = Store<StoreState>;
@@ -14,5 +15,6 @@ export function createAppStore(pieces: PieceItem[]): AppStore {
     pieces,
     stepPosition: -1,
     masterVolume: 0.5,
+    viewActive: false,
   });
 }

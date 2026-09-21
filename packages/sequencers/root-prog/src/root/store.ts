@@ -8,6 +8,7 @@ type StoreState = {
   notes: number[];
   keysName: string;
   playStepIndex: number;
+  viewActive: boolean;
 };
 
 export const store = createStore<StoreState>({
@@ -16,4 +17,5 @@ export const store = createStore<StoreState>({
   notes: seqNumbers(16).map(() => -1),
   keysName: "C/Am",
   playStepIndex: -1,
+  viewActive: false,
 });
