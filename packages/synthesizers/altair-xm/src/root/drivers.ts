@@ -5,6 +5,8 @@ import { useEffect } from "preact/hooks";
 import { createSynthesizerEngine } from "@/engine/synthesizer";
 import { persistenceImpl } from "@/root/persistence";
 
+console.log("altair 1929");
+
 const unitInterface = queryUnitInterface("wafer-v01");
 const engine = createSynthesizerEngine(unitInterface);
 
@@ -19,11 +21,15 @@ function setupUnit() {
         noteOn: engine.noteOn,
         noteOff: engine.noteOff,
       },
+      unitCallbacks: {
+        setViewActive: store.setViewActive,
+      },
       // automationInput,
       persistence: persistenceImpl,
       cleanup: engine.cleanup,
     });
   } else {
+    store.setViewActive(true);
     return setupMidiKeyboardInput({
       noteOn: (noteNumber) => engine.noteOn(noteNumber),
       noteOff: (noteNumber) => engine.noteOff(noteNumber),
