@@ -1,0 +1,35 @@
+import { RefObject } from "preact";
+import { useState, useLayoutEffect } from "preact/hooks";
+
+type Size = { width: number; height: number };
+
+function setupDomSizeAffecter(
+  element: HTMLElement,
+  destFn: (size: Size) => void,
+) {
+  const observer = new ResizeObserver((entries) => {
+    const entry = entries[0];
+    if (entry) {
+      const { width, height } = entry.contentRect;
+      setTimeout(() => destFn({ width, height }), 1);
+    }
+  });
+  observer.observe(element);
+  return () => {
+    observer.unobserve(element);
+    observer.disconnect();
+  };
+}
+
+export function useDomElementSize(
+  ref: RefObject<HTMLElement | null>,
+): Size | undefined {
+  const [size, setSize] = useState<Size | undefined>();
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (el) {
+      return setupDomSizeAffecter(el, setSize);
+    }
+  }, [ref]);
+  return size;
+}
