@@ -24,6 +24,7 @@ function setupUnit() {
 
   if (!unitInterface) {
     store.setHostBpm(120);
+    store.setViewActive(true);
     return;
   }
 
@@ -84,6 +85,9 @@ function setupUnit() {
         const barPosition = mapTimeToBarPosition(timeFromStart);
         schedulingPlotter.addScheduleStepPoint(stepIndex, barPosition);
       },
+    },
+    unitCallbacks: {
+      setViewActive: store.setViewActive,
     },
     noteInput: {
       noteOn(noteNumber, time = audioContext.currentTime) {

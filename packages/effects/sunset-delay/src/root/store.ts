@@ -4,6 +4,8 @@ import { EffectParameters } from "@/common/types";
 
 export const store = createStore<{
   parameters: EffectParameters;
+  viewActive: boolean;
 }>({
   parameters: defaultParameters,
+  viewActive: false,
 });

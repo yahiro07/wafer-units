@@ -6,6 +6,7 @@ export const store = createStore<{
   connected: boolean;
   parameterIds: string[];
   slots: LfoSlot[];
+  viewActive: boolean;
 }>({
   connected: false,
   parameterIds: [],
@@ -23,6 +24,7 @@ export const store = createStore<{
     inverted: false,
     shifted: false,
   })),
+  viewActive: false,
 });
 
 if (import.meta.env.DEV) {

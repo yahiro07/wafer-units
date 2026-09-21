@@ -5,6 +5,7 @@ import { seqNumbers } from "@/utils/helpers";
 export const store = createStore<{
   lanes: AutomationLaneItem[];
   playbackStepIndex: number;
+  viewActive: boolean;
 }>({
   lanes: [
     {
@@ -16,4 +17,5 @@ export const store = createStore<{
     },
   ],
   playbackStepIndex: -1,
+  viewActive: false,
 });

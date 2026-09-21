@@ -9,18 +9,25 @@ const engine = createEngine(unitInterface);
 
 export function setupUnit() {
   engine.setup();
-  unitInterface?.completeSetup({
-    unitAspects: {
-      unitType: "effect",
-      viewSize: [320, 210],
-    },
-    hostCallbacks: {
-      setBpm: engine.setBpm,
-    },
-    persistence,
-    automationInput,
-    cleanup: () => engine.teardown(),
-  });
+  if (unitInterface) {
+    unitInterface.completeSetup({
+      unitAspects: {
+        unitType: "effect",
+        viewSize: [320, 210],
+      },
+      hostCallbacks: {
+        setBpm: engine.setBpm,
+      },
+      unitCallbacks: {
+        setViewActive: store.setViewActive,
+      },
+      persistence,
+      automationInput,
+      cleanup: () => engine.teardown(),
+    });
+  } else {
+    store.setViewActive(true);
+  }
 }
 
 export function setupSynchronization() {

@@ -108,8 +108,7 @@ const ChordButtonsContainer = () => {
   );
 };
 
-export const App = () => {
-  useSetupDrivers();
+const PageRoot = () => {
   return (
     <div class="flex-v gap-4 bg-clPageBg p-8 text-white">
       <div class="flex-ha gap-2 justify-between">
@@ -133,4 +132,11 @@ export const App = () => {
       </div>
     </div>
   );
+};
+
+export const App = () => {
+  const { viewActive } = store.useSnapshot();
+  useSetupDrivers();
+  if (!viewActive) return null;
+  return <PageRoot />;
 };

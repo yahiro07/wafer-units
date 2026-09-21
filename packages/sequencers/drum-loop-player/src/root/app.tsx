@@ -112,10 +112,7 @@ const PregeneratePreviewDataButton = () => {
   );
 };
 
-export const App = () => {
-  useEffect(setupUnit, []);
-  // useEffect(setupSynchronization, []);
-  useAffectStoreToEngine();
+const PageRoot = () => {
   return (
     <>
       <div className={css(flexV(16))}>
@@ -143,4 +140,13 @@ export const App = () => {
       {appConfig.isDevelopment && <PregeneratePreviewDataButton />}
     </>
   );
+};
+
+export const App = () => {
+  const { viewActive } = store.useSnapshot();
+  useEffect(setupUnit, []);
+  // useEffect(setupSynchronization, []);
+  useAffectStoreToEngine();
+  if (!viewActive) return null;
+  return <PageRoot />;
 };

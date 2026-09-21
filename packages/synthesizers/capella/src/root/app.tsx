@@ -139,8 +139,7 @@ const ParametersSection = () => {
   );
 };
 
-export const App = () => {
-  useSetupDrivers();
+const PageRoot = () => {
   return (
     <div class="flex-v gap-2 bg-clPageBg pt-1.5 text-clPageText">
       <div class="flex-h justify-between">
@@ -159,4 +158,11 @@ export const App = () => {
       <ParametersSection />
     </div>
   );
+};
+
+export const App = () => {
+  const { viewActive } = store.useSnapshot();
+  useSetupDrivers();
+  if (!viewActive) return null;
+  return <PageRoot />;
 };

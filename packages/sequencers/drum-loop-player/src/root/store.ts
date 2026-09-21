@@ -5,8 +5,10 @@ export const store = createStore<{
   selectedLoopKey: LoopKey | null;
   previewLoopKey: LoopKey | null;
   hostPlaying: boolean;
+  viewActive: boolean;
 }>({
   selectedLoopKey: null,
   previewLoopKey: null,
   hostPlaying: false,
+  viewActive: false,
 });

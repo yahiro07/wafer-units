@@ -11,19 +11,26 @@ const unitInterface = queryUnitInterface("wafer-v01");
 const sequencer = createSequencer(unitInterface);
 
 function setupUnit() {
-  unitInterface?.completeSetup({
-    unitAspects: {
-      unitType: "sequencer",
-      viewSize: [828, 492],
-    },
-    hostCallbacks: {
-      setKey: sequencer.setKey,
-    },
-    clockHandlers: sequencer.clockHandlers,
-    noteInput: sequencer.noteInput,
-    persistence,
-    automationInput,
-  });
+  if (unitInterface) {
+    unitInterface.completeSetup({
+      unitAspects: {
+        unitType: "sequencer",
+        viewSize: [828, 492],
+      },
+      hostCallbacks: {
+        setKey: sequencer.setKey,
+      },
+      clockHandlers: sequencer.clockHandlers,
+      noteInput: sequencer.noteInput,
+      unitCallbacks: {
+        setViewActive: store.setViewActive,
+      },
+      persistence,
+      automationInput,
+    });
+  } else {
+    store.setViewActive(true);
+  }
 }
 
 function setupSynchronization() {

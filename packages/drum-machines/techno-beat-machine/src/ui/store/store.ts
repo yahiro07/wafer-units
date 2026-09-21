@@ -10,6 +10,7 @@ type StoreState = {
   partItems: PartItem[];
   masterVolume: number;
   partHitCounts: { [key in PartKey]?: number };
+  viewActive: boolean;
 };
 
 export const store = createStore<StoreState>({
@@ -19,6 +20,7 @@ export const store = createStore<StoreState>({
   partItems: allPartKeys.map(createDefaultPartItem),
   masterVolume: 0.5,
   partHitCounts: {},
+  viewActive: false,
 });
 
 if (1) {

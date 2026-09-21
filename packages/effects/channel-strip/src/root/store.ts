@@ -6,6 +6,8 @@ import {
 
 export const store = createStore<{
   parameters: EffectParameters;
+  viewActive: boolean;
 }>({
   parameters: defaultEffectParameters,
+  viewActive: false,
 });

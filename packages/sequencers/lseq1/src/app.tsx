@@ -236,6 +236,8 @@ const PageRoot = () => {
 };
 
 export function App() {
+  const { viewActive } = store.useSnapshot();
   useEffect(drivers.setupAll, []);
+  if (!viewActive) return null;
   return <PageRoot />;
 }

@@ -11,58 +11,65 @@ const unitInterface = queryUnitInterface("wafer-v01");
 const engine = createEngine(unitInterface);
 
 export function setupUnit() {
-  unitInterface?.completeSetup({
-    unitAspects: {
-      unitType: "sequencer",
-      viewSize: [480, 200],
-    },
-    noteInput: engine.noteInput,
-    clockHandlers: {
-      start() {
-        engine.clockHandlers.start?.();
+  if (unitInterface) {
+    unitInterface.completeSetup({
+      unitAspects: {
+        unitType: "sequencer",
+        viewSize: [480, 200],
       },
-      processStep(inputStepIndex, time, unitDuration) {
-        engine.clockHandlers.processStep?.(inputStepIndex, time, unitDuration);
-        const stepIndex = inputStepIndex % 16;
-        store.setPlayPos(stepIndex);
+      noteInput: engine.noteInput,
+      clockHandlers: {
+        start() {
+          engine.clockHandlers.start?.();
+        },
+        processStep(inputStepIndex, time, unitDuration) {
+          engine.clockHandlers.processStep?.(inputStepIndex, time, unitDuration);
+          const stepIndex = inputStepIndex % 16;
+          store.setPlayPos(stepIndex);
+        },
+        stop() {
+          engine.clockHandlers.stop?.();
+          store.setPlayPos(-1);
+        },
       },
-      stop() {
-        engine.clockHandlers.stop?.();
-        store.setPlayPos(-1);
-      },
-    },
-    presetProvider: {
-      getCommandNames() {
-        return ["clear", "rand", "rand-t"];
-      },
-      applyCommand(commandName) {
-        if (commandName === "clear") {
-          store.setStepBits(0);
-        } else if (commandName === "rand") {
-          const res = generateRandomPattern(false);
-          store.assign(res);
-        } else if (commandName === "rand-t") {
-          const res = generateRandomPattern(true);
-          store.assign(res);
-        }
-      },
-      getPresetNames() {
-        return Object.keys(presets);
-      },
-      applyPreset(presetName: string) {
-        const pattern = presets[presetName as keyof typeof presets];
-        if (pattern) {
-          const res = decodePreset(pattern);
-          if (res) {
-            const { stepBits, patternRange } = res;
-            store.assign({ stepBits, patternRange });
+      presetProvider: {
+        getCommandNames() {
+          return ["clear", "rand", "rand-t"];
+        },
+        applyCommand(commandName) {
+          if (commandName === "clear") {
+            store.setStepBits(0);
+          } else if (commandName === "rand") {
+            const res = generateRandomPattern(false);
+            store.assign(res);
+          } else if (commandName === "rand-t") {
+            const res = generateRandomPattern(true);
+            store.assign(res);
           }
-        }
+        },
+        getPresetNames() {
+          return Object.keys(presets);
+        },
+        applyPreset(presetName: string) {
+          const pattern = presets[presetName as keyof typeof presets];
+          if (pattern) {
+            const res = decodePreset(pattern);
+            if (res) {
+              const { stepBits, patternRange } = res;
+              store.assign({ stepBits, patternRange });
+            }
+          }
+        },
       },
-    },
-    persistence: persistence,
-    automationInput: automationInput,
-  });
+      unitCallbacks: {
+        setViewActive: store.setViewActive,
+      },
+      persistence: persistence,
+      automationInput: automationInput,
+    });
+  } else {
+    store.setViewActive(true);
+  }
 }
 
 export function setupSynchronization() {

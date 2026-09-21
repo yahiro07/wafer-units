@@ -14,23 +14,30 @@ sequencer.registerPartEntries(allPartKeys);
 sequencer.registerSampleEntries(allSampleKeys);
 
 function setupUnit() {
-  unitInterface?.completeSetup({
-    unitAspects: {
-      unitType: "instrument",
-      viewSize: [900, 500],
-    },
-    hostCallbacks: {
-      setBpm: sequencer.setBpm,
-    },
-    clockHandlers: {
-      start: sequencer.onHostStart,
-      processStep: sequencer.onHostStep,
-      stop: sequencer.onHostStop,
-    },
-    persistence,
-    automationInput,
-    cleanup: sequencer.cleanup,
-  });
+  if (unitInterface) {
+    unitInterface.completeSetup({
+      unitAspects: {
+        unitType: "instrument",
+        viewSize: [900, 500],
+      },
+      hostCallbacks: {
+        setBpm: sequencer.setBpm,
+      },
+      clockHandlers: {
+        start: sequencer.onHostStart,
+        processStep: sequencer.onHostStep,
+        stop: sequencer.onHostStop,
+      },
+      unitCallbacks: {
+        setViewActive: store.setViewActive,
+      },
+      persistence,
+      automationInput,
+      cleanup: sequencer.cleanup,
+    });
+  } else {
+    store.setViewActive(true);
+  }
 }
 
 function useSetupSynchronization() {
