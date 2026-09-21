@@ -57,8 +57,8 @@ importers:
         specifier: ^8.3.0
         version: 8.3.0(@types/node@26.4.0)(jiti@2.7.0)
       wafer-host:
-        specifier: link:../wafer/lib/wafer-host
-        version: link:../wafer/lib/wafer-host
+        specifier: ^0.1.16
+        version: 0.1.16(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
 
   packages/drum-machines/drum-fill-machine:
     devDependencies:
@@ -243,7 +243,7 @@ importers:
         specifier: 'catalog:'
         version: 0.1.14(preact@10.29.8)(react@19.2.8)
 
-  packages/effects/timing-cheker:
+  packages/effects/timing-checker:
     dependencies:
       '@preact/preset-vite':
         specifier: 'catalog:'
@@ -3077,6 +3077,17 @@ packages:
       vite:
         optional: true
 
+  wafer-host@0.1.16:
+    resolution: {integrity: sha512-g8r0WBycZg/AndCth+3rnZM21v2NP4HTtAADtE6wxDnYIQjbuir+kE+qoT8OrCh251qOJlTg8pjw2ilXAzk5dA==}
+    peerDependencies:
+      react: ^19.2.6
+      react-dom: ^19.2.6
+    peerDependenciesMeta:
+      react:
+        optional: true
+      react-dom:
+        optional: true
+
   webpack-virtual-modules@0.6.2:
     resolution: {integrity: sha512-66/V2i5hQanC51vBQKPH4aI8NMAcBW59FVBs+rC7eGHupMyfn34q7rZIE+ETlJ+XTevqfUhVVBgSUNSW2flEUQ==}
 
@@ -4754,6 +4765,11 @@ snapshots:
   vitefu@1.1.3(vite@8.3.0(@types/node@26.4.0)(jiti@2.7.0)):
     optionalDependencies:
       vite: 8.3.0(@types/node@26.4.0)(jiti@2.7.0)
+
+  wafer-host@0.1.16(react-dom@19.2.8(react@19.2.8))(react@19.2.8):
+    optionalDependencies:
+      react: 19.2.8
+      react-dom: 19.2.8(react@19.2.8)
 
   webpack-virtual-modules@0.6.2: {}
 
