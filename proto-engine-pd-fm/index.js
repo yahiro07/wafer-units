@@ -475,7 +475,7 @@ function P(e, t, n, r) {
 	return [i];
 }
 //#endregion
-//#region ../../../node_modules/.pnpm/wafer-host@0.1.11_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/wafer-host/dist/unit-helper/index.js
+//#region ../../../node_modules/.pnpm/wafer-host@0.1.16_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/wafer-host/dist/unit-helper/index.js
 function Se(e) {
 	if (!Array.from(document.head.querySelectorAll("link[rel=\"stylesheet\"]")).some((t) => t.href === e)) {
 		console.log(`Inserting link tag for ${e}`);
@@ -509,7 +509,7 @@ function Ce(e, t) {
 	};
 }
 //#endregion
-//#region ../../../node_modules/.pnpm/wafer-host@0.1.11_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/wafer-host/dist/unit-types/index.js
+//#region ../../../node_modules/.pnpm/wafer-host@0.1.16_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/wafer-host/dist/unit-types/index.js
 function we(e, t) {
 	return window?.queryUnitInterfaceForModule?.(e, t);
 }
@@ -610,7 +610,7 @@ function Me() {
 }
 //#endregion
 //#region src/audio/worklet.ts?worker&url
-var Ne = "" + new URL("assets/worklet-8M-ynVVK.js", import.meta.url).href, F = we("wafer-v01", import.meta.url), Pe = (e) => 440 * 2 ** ((e - 69) / 12), Fe = 4, Ie = .001, Le = .1, I = .005;
+var Ne = new URL("assets/worklet-8M-ynVVK.js", import.meta.url).href, F = we("wafer-v01", import.meta.url), Pe = (e) => 440 * 2 ** ((e - 69) / 12), Fe = 4, Ie = .001, Le = .1, I = .005;
 function Re() {
 	let e = null, t = null, n, r = [], i = /* @__PURE__ */ new Map(), a = { ...je };
 	function o(e, t, n, r, i) {

@@ -1691,7 +1691,7 @@ function Er() {
 //#region ../../../node_modules/.pnpm/mofur@0.1.1_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/mofur/dist/ax-ui/utility-classes.css?inline
 var Dr = ".flex-h{display:flex}.flex-hs{align-items:start;display:flex}.flex-ha{align-items:center;display:flex}.flex-v{flex-direction:column;display:flex}.flex-vl{flex-direction:column;align-items:flex-start;display:flex}.flex-va{flex-direction:column;align-items:center;display:flex}.flex-c{justify-content:center;align-items:center;display:flex}.flex-vc{flex-direction:column;justify-content:center;align-items:center;display:flex}.absolute-full{position:absolute;inset:0}.bd-red{border:1px solid red}.bd-blue{border:1px solid #00f}";
 //#endregion
-//#region ../../../node_modules/.pnpm/wafer-host@0.1.11_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/wafer-host/dist/unit-helper/index.js
+//#region ../../../node_modules/.pnpm/wafer-host@0.1.16_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/wafer-host/dist/unit-helper/index.js
 function Or(e) {
 	if (!Array.from(document.head.querySelectorAll("link[rel=\"stylesheet\"]")).some((t) => t.href === e)) {
 		console.log(`Inserting link tag for ${e}`);
@@ -2560,7 +2560,7 @@ function sa(e) {
 	return oa[(e.relativeKeyTranspose + 24) % 12];
 }
 //#endregion
-//#region ../../../node_modules/.pnpm/wafer-host@0.1.11_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/wafer-host/dist/unit-types/index.js
+//#region ../../../node_modules/.pnpm/wafer-host@0.1.16_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/wafer-host/dist/unit-types/index.js
 function ca(e, t) {
 	return window?.queryUnitInterfaceForModule?.(e, t);
 }
@@ -3725,7 +3725,8 @@ var Z = js({
 	mappedNotes: [],
 	backupInputNotes: null,
 	currentKeysName: "C/Am",
-	stateLoadRevision: 0
+	stateLoadRevision: 0,
+	viewActive: !1
 });
 //#endregion
 //#region src/components/selector-option.ts
@@ -4247,7 +4248,7 @@ function lc() {
 			"loopBars"
 		]));
 	});
-	return fa?.completeSetup({
+	return fa ? fa.completeSetup({
 		unitAspects: {
 			unitType: "sequencer",
 			viewSize: [620, 380]
@@ -4270,6 +4271,7 @@ function lc() {
 			let t = sa(e);
 			Z.setCurrentKeysName(t);
 		} },
+		unitCallbacks: { setViewActive: Z.setViewActive },
 		persistence: {
 			emitStateBytes() {
 				return Br(zr(Z.state, {
@@ -4295,7 +4297,7 @@ function lc() {
 				Y.setStepNotes(s), Z.assign(t), Z.setStateLoadRevision((e) => e + 1);
 			}
 		}
-	}), e;
+	}) : Z.setViewActive(!0), e;
 }
 function uc() {
 	let { inputNotes: e, loopBars: t, patternBars: n, ghostEnabled: r, patternMode: i } = Z.useSnapshot();
@@ -4329,7 +4331,10 @@ function dc() {
 		})
 	});
 }
-var fc = () => (Rt(lc, []), uc(), /* @__PURE__ */ K(Vi, { children: /* @__PURE__ */ K(dc, {}) })), pc = kr((e) => (xt(/* @__PURE__ */ K(_r, {
+var fc = () => {
+	let { viewActive: e } = Z.useSnapshot();
+	return Rt(lc, []), uc(), e ? /* @__PURE__ */ K(Vi, { children: /* @__PURE__ */ K(dc, {}) }) : null;
+}, pc = kr((e) => (xt(/* @__PURE__ */ K(_r, {
 	value: Pe({
 		key: "cs",
 		container: e

@@ -271,7 +271,7 @@ t = _.slice, n = { __e: function(e, t, n, r) {
 	return e.__v.__b - t.__v.__b;
 }, O.__r = 0, c = Math.random().toString(8), l = "__d" + c, u = "__a" + c, d = /(PointerCapture)$|Capture$/i, f = 0, p = oe(!1), m = oe(!0), h = 0;
 //#endregion
-//#region ../../../node_modules/.pnpm/wafer-host@0.1.11_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/wafer-host/dist/unit-helper/index.js
+//#region ../../../node_modules/.pnpm/wafer-host@0.1.16_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/wafer-host/dist/unit-helper/index.js
 function _e(e) {
 	if (!Array.from(document.head.querySelectorAll("link[rel=\"stylesheet\"]")).some((t) => t.href === e)) {
 		console.log(`Inserting link tag for ${e}`);
@@ -305,7 +305,7 @@ function ve(e, t) {
 	};
 }
 //#endregion
-//#region ../../../node_modules/.pnpm/wafer-host@0.1.11_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/wafer-host/dist/unit-types/index.js
+//#region ../../../node_modules/.pnpm/wafer-host@0.1.16_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/wafer-host/dist/unit-types/index.js
 function ye(e, t) {
 	return window?.queryUnitInterfaceForModule?.(e, t);
 }
@@ -2318,7 +2318,8 @@ function $r(e) {
 	return Qr({
 		pieces: e,
 		stepPosition: -1,
-		masterVolume: .5
+		masterVolume: .5,
+		viewActive: !1
 	});
 }
 //#endregion
@@ -2443,8 +2444,8 @@ var ai = { Exchange: ii("ri-arrow-left-right-line") }, oi = ({ piece: e, stepInd
 		stepPosition: t
 	})
 }), ui = () => {
-	let { store: e, actions: t } = H(), { pieces: n, stepPosition: r, masterVolume: i } = e.useSnapshot();
-	return /* @__PURE__ */ I("div", {
+	let { store: e, actions: t } = H(), { pieces: n, stepPosition: r, masterVolume: i, viewActive: a } = e.useSnapshot();
+	return a ? /* @__PURE__ */ I("div", {
 		className: "w-full h-full flex-c bg-(--cl-panel-bg)",
 		children: /* @__PURE__ */ I(pt, { children: /* @__PURE__ */ I("div", {
 			className: "flex-v gap-2",
@@ -2492,7 +2493,7 @@ var ai = { Exchange: ii("ri-arrow-left-right-line") }, oi = ({ piece: e, stepInd
 				}, e.id))
 			})]
 		}) })
-	});
+	}) : null;
 };
 //#endregion
 //#region src/ui/app.tsx
@@ -2500,7 +2501,7 @@ function di(e) {
 	let t = Ne(e, Be.pieceItems), n = $r(Be.pieceItems), r = mt(n, t);
 	t.preloadFirst(), t.setMasterVolume(n.state.masterVolume);
 	let i = Wt(n, t), a = Vt(n, r);
-	return e?.completeSetup({
+	return e ? e.completeSetup({
 		unitAspects: {
 			unitType: "instrument",
 			categoryHint: "drumMachine",
@@ -2511,9 +2512,10 @@ function di(e) {
 			processStep: r.processStep,
 			stop: r.stop
 		},
+		unitCallbacks: { setViewActive: n.setViewActive },
 		persistence: i,
 		automationInput: a
-	}), { Render: () => /* @__PURE__ */ I(Bt, {
+	}) : n.setViewActive(!0), { Render: () => /* @__PURE__ */ I(Bt, {
 		store: n,
 		actions: r,
 		children: /* @__PURE__ */ I(it, { children: [/* @__PURE__ */ I(ui, {}), Pe.isDevelopment && /* @__PURE__ */ I(ni, {})] })

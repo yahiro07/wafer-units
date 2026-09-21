@@ -253,7 +253,7 @@ e = h.slice, t = { __e: function(e, t, n, r) {
 	return e.__v.__b - t.__v.__b;
 }, D.__r = 0, s = Math.random().toString(8), c = "__d" + s, l = "__a" + s, u = /(PointerCapture)$|Capture$/i, d = 0, f = re(!1), p = re(!0);
 //#endregion
-//#region ../../../node_modules/.pnpm/wafer-host@0.1.11_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/wafer-host/dist/unit-helper/index.js
+//#region ../../../node_modules/.pnpm/wafer-host@0.1.16_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/wafer-host/dist/unit-helper/index.js
 function pe(e) {
 	if (!Array.from(document.head.querySelectorAll("link[rel=\"stylesheet\"]")).some((t) => t.href === e)) {
 		console.log(`Inserting link tag for ${e}`);
@@ -638,7 +638,7 @@ function tt(e, t) {
 	return typeof t == "function" ? t(e) : t;
 }
 //#endregion
-//#region ../../../node_modules/.pnpm/wafer-host@0.1.11_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/wafer-host/dist/unit-types/index.js
+//#region ../../../node_modules/.pnpm/wafer-host@0.1.16_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/wafer-host/dist/unit-types/index.js
 function nt(e, t) {
 	return window?.queryUnitInterfaceForModule?.(e, t);
 }
@@ -1939,7 +1939,10 @@ function Lr(e) {
 }
 //#endregion
 //#region src/root/store.ts
-var Y = Lr({ parameters: at }), Rr = {
+var Y = Lr({
+	parameters: at,
+	viewActive: !1
+}), Rr = {
 	getParameterSpecs() {
 		return [
 			{ id: "time" },
@@ -2092,16 +2095,17 @@ var Wr = {
 	}
 }, Gr = nt("wafer-v01", import.meta.url), Kr = Br(Gr);
 function qr() {
-	Kr.setup(), Gr?.completeSetup({
+	Kr.setup(), Gr ? Gr.completeSetup({
 		unitAspects: {
 			unitType: "effect",
 			viewSize: [320, 210]
 		},
 		hostCallbacks: { setBpm: Kr.setBpm },
+		unitCallbacks: { setViewActive: Y.setViewActive },
 		persistence: Wr,
 		automationInput: Rr,
 		cleanup: () => Kr.teardown()
-	});
+	}) : Y.setViewActive(!0);
 }
 function Jr() {
 	return Y.subscribe(({ parameters: e }) => {
@@ -2424,7 +2428,10 @@ var Q = ({ value: e, onChange: t, min: n = 0, max: r = 1, step: i = .01, onClick
 //#endregion
 //#region src/root/app.tsx
 qr();
-var ci = () => (Ke(Jr, []), /* @__PURE__ */ X(si, {})), li = me((e) => (fe(/* @__PURE__ */ X(ci, {}), e), () => {
+var ci = () => {
+	let { viewActive: e } = Y.useSnapshot();
+	return Ke(Jr, []), e ? /* @__PURE__ */ X(si, {}) : null;
+}, li = me((e) => (fe(/* @__PURE__ */ X(ci, {}), e), () => {
 	fe(null, e);
 }), {
 	cssTexts: ["*{box-sizing:border-box;margin:0;padding:0}body{-webkit-user-select:none;user-select:none;font-family:Inter,sans-serif}img{-webkit-user-drag:none}"],

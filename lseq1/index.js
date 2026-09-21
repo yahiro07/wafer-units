@@ -8626,7 +8626,7 @@ function Be(e) {
 	};
 }
 //#endregion
-//#region ../../../node_modules/.pnpm/wafer-host@0.1.11_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/wafer-host/dist/unit-types/index.js
+//#region ../../../node_modules/.pnpm/wafer-host@0.1.16_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/wafer-host/dist/unit-types/index.js
 function Ve(e, t) {
 	return window?.queryUnitInterfaceForModule?.(e, t);
 }
@@ -9736,7 +9736,8 @@ var k = cr({
 	editPos: 0,
 	playPos: 0,
 	exPlaying: !1,
-	previewNote: -1
+	previewNote: -1,
+	viewActive: !1
 }), lr = { resumeAudioContextFn: void 0 }, A = {
 	setPlayPos(e) {
 		k.setPlayPos(e);
@@ -9852,7 +9853,7 @@ var k = cr({
 	A.setPlayPos(e % t);
 } }, vr = {
 	setupUnitInterface() {
-		He?.completeSetup({
+		He ? He.completeSetup({
 			unitAspects: {
 				unitType: "sequencer",
 				categoryHint: "stepSequencer",
@@ -9876,8 +9877,9 @@ var k = cr({
 			persistence: pr,
 			hostCallbacks: { setBpm(e) {
 				A.setBpm(e);
-			} }
-		});
+			} },
+			unitCallbacks: { setViewActive: k.setViewActive }
+		}) : k.setViewActive(!0);
 	},
 	setupMidiKeyboardInput() {
 		if (!He) return De({
@@ -10194,7 +10196,8 @@ var Er = ({ offset: e }) => {
 	})
 });
 function Nr() {
-	return (0, te.useEffect)(vr.setupAll, []), /* @__PURE__ */ (0, w.jsx)(Mr, {});
+	let { viewActive: e } = k.useSnapshot();
+	return (0, te.useEffect)(vr.setupAll, []), e ? /* @__PURE__ */ (0, w.jsx)(Mr, {}) : null;
 }
 var Pr = y((e) => {
 	let t = (0, _.createRoot)(e);
