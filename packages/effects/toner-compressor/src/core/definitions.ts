@@ -1,3 +1,5 @@
+export type ChannelId = "ch1" | "ch2";
+
 export type EffectParameters = {
   inputGain: number;
   threshold: number;
@@ -16,9 +18,4 @@ export const defaultEffectParameters: EffectParameters = {
   attack: 0,
   release: 0,
   outputGain: 0.5,
-};
-
-export type EffectEngine = {
-  setParameters(parameters: EffectParameters): void;
-  cleanup(): void;
 };

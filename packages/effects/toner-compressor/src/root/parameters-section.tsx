@@ -1,0 +1,63 @@
+import { EffectParameters } from "@/core/definitions";
+import { store } from "@/root/store";
+import { actions } from "@/root/actions";
+import { LabeledBox, Knob, Slider } from "@lib/toner-ui";
+import { cz } from "@lib/mu2609/utils/cz";
+
+type ParameterSpec = {
+  key: keyof EffectParameters;
+  label: string;
+  isSlider?: boolean;
+  isBipolar?: boolean;
+};
+
+const KnobParams: ParameterSpec[] = [
+  { key: "inputGain", label: "Input" },
+  { key: "threshold", label: "Threshold" },
+  { key: "ratio", label: "Ratio" },
+  { key: "knee", label: "Knee" },
+  { key: "attack", label: "Attack" },
+  { key: "release", label: "Release" },
+  { key: "outputGain", label: "Output" },
+];
+
+const ParameterUis = ({
+  specs,
+  parameters,
+}: {
+  specs: ParameterSpec[];
+  parameters: EffectParameters;
+}) => {
+  return specs.map(({ key, label, isSlider, isBipolar }) => (
+    <LabeledBox
+      key={key}
+      label={label}
+      className={cz(isSlider && "ml-[-14px]")}
+    >
+      {isSlider ? (
+        <Slider
+          value={parameters[key] as number}
+          onChange={(value) => actions.setParameter(key, value)}
+        />
+      ) : (
+        <Knob
+          value={parameters[key] as number}
+          onChange={(value) => actions.setParameter(key, value)}
+          min={isBipolar ? -1 : 0}
+        />
+      )}
+    </LabeledBox>
+  ));
+};
+
+export const ParametersSection = () => {
+  const { parameters } = store.useSnapshot();
+  return (
+    <div class="flex-v bg-clControlBg bd-clControlEdge pt-2 pb-1 px-4 gap-2">
+      <div class="text-xl font-bold">Toner Compressor</div>
+      <div class="flex-ha gap-4">
+        <ParameterUis specs={KnobParams} parameters={parameters} />
+      </div>
+    </div>
+  );
+};

@@ -7,7 +7,7 @@ import {
 } from "@lib/mu2609/utils/webaudio-helper";
 import { mapKnobCurveCenterUnity } from "@lib/mu2609/utils/volume-curve";
 
-export function createEngine(unitInterface: UnitInterface | undefined) {
+export function createEffectEngine(unitInterface: UnitInterface | undefined) {
   const ac = unitInterface?.audioContext ?? new AudioContext();
   const inputNode = unitInterface?.audioInputNode ?? ac.createGain();
   const outputNode = unitInterface?.audioOutputNode ?? ac.destination;

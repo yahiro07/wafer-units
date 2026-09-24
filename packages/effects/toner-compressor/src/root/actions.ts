@@ -1,4 +1,5 @@
-import { EffectParameters } from "@/core/definitions";
+import { ChannelId, EffectParameters } from "@/core/definitions";
+import { analyzerEngine } from "@/core/engine-instances";
 import { store } from "@/root/store";
 
 export const actions = {
@@ -7,5 +8,16 @@ export const actions = {
     value: EffectParameters[K],
   ) => {
     store.patchParameters({ [key]: value });
+  },
+  setActiveChannelId(channelId: ChannelId) {
+    store.setActiveChannelId(channelId);
+    analyzerEngine.setActiveChannel(channelId);
+  },
+  toggleMetersLayout() {
+    store.toggleAltMetersLayout();
+  },
+  setBarLength(barLength: number) {
+    store.setBarLength(barLength);
+    analyzerEngine.setBarLength(barLength);
   },
 };
