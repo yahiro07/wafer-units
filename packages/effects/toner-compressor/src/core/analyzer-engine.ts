@@ -71,8 +71,6 @@ export function createAudioAnalysisEngine(
   unitInterface: UnitInterface,
 ): AudioAnalysisEngine {
   const { audioContext } = unitInterface;
-
-  const destinationNode = unitInterface.audioOutputNode;
   const ch1Input = unitInterface.createAdditionalAudioInputNode("1");
   const ch2Input = unitInterface.createAdditionalAudioInputNode("2");
 
@@ -86,7 +84,6 @@ export function createAudioAnalysisEngine(
 
   let hostBpm = 120;
   let startTime = 0;
-  let routedChannelId: ChannelId | null = null;
   let rafId: number | undefined;
   const uiListeners = new Set<(patch: { hostBpm?: number }) => void>();
   const meterListeners: Record<ChannelId, Set<MeterListener>> = {
@@ -102,22 +99,6 @@ export function createAudioAnalysisEngine(
     mapTimeToBarPosition(time: number) {
       const barSeconds = 240 / hostBpm;
       return time / barSeconds;
-    },
-    applyOutputRoute(channelId: ChannelId | null) {
-      if (channelId === routedChannelId) return;
-      if (routedChannelId === "ch1") {
-        ch1Input.disconnect(destinationNode);
-      } else if (routedChannelId === "ch2") {
-        ch2Input.disconnect(destinationNode);
-      }
-      routedChannelId = null;
-      if (channelId === "ch1") {
-        ch1Input.connect(destinationNode);
-        routedChannelId = "ch1";
-      } else if (channelId === "ch2") {
-        ch2Input.connect(destinationNode);
-        routedChannelId = "ch2";
-      }
     },
     feedWavePlotter(
       { analyser, timeDomainData }: typeof ch1Analyser,
@@ -181,7 +162,6 @@ export function createAudioAnalysisEngine(
     setup() {},
     cleanup() {
       internal.setDrawingActive(false);
-      internal.applyOutputRoute(null);
       ch1Input.disconnect();
       ch2Input.disconnect();
     },
@@ -195,9 +175,6 @@ export function createAudioAnalysisEngine(
     setBarLength(bars) {
       wavePlotterCh1.setBarLength(bars);
       wavePlotterCh2.setBarLength(bars);
-    },
-    setActiveChannel(id) {
-      internal.applyOutputRoute(id);
     },
     setWaveCanvas(id, canvas) {
       if (id === "ch1") {
@@ -232,7 +209,6 @@ export function createDummyEngine(): AudioAnalysisEngine {
     setDrawingActive() {},
     setBpm() {},
     setBarLength() {},
-    setActiveChannel() {},
     setWaveCanvas() {},
     subscribeUi() {
       return () => {};

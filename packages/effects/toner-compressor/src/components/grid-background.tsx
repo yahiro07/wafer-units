@@ -1,4 +1,5 @@
 import { css } from "@/common/css-realm";
+import { uiColors } from "@/common/ui-theme";
 
 export const GridBackground = ({
   className,
@@ -13,18 +14,15 @@ export const GridBackground = ({
     <div
       className={css(
         {
-          // position: "absolute",
-          // left: 0,
-          // top: 0,
           position: "relative",
           width: "100%",
           height: "100%",
-          border: "solid 0.5px #d4d4d4",
+          border: `solid 0.5px ${uiColors.clGridLine}`,
           "& > div": {
             position: "absolute",
             width: `${100 / nx}%`,
             height: `${100 / ny}%`,
-            border: "solid 0.5px #d4d4d4",
+            border: `solid 0.5px ${uiColors.clGridLine}`,
           },
         },
         className,
@@ -39,7 +37,7 @@ export const GridBackground = ({
             style={{
               left: `${(xi * 100) / nx}%`,
               top: `${(yi * 100) / ny}%`,
-              background: "#f0f0f0",
+              background: uiColors.clGridBackground,
             }}
           />
         );

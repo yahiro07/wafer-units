@@ -1,0 +1,67 @@
+import { css } from "../common/css-realm";
+import { uiColors } from "../common/ui-theme";
+import { linearInterpolate } from "@lib/mu2609/utils/helpers";
+import { KnobFrame } from "@lib/mu2609/components/headless/knob-frame";
+import { absoluteFull, flexVA } from "@lib/mu2609/utils/utility-styles";
+
+export const Knob = ({
+  value,
+  onChange,
+  min = 0,
+  max = 1,
+  step = 0.01,
+}: {
+  value: number;
+  onChange: (value: number) => void;
+  min?: number;
+  max?: number;
+  step?: number;
+}) => {
+  const tickAngle = linearInterpolate(value, min, max, -135, 135);
+  return (
+    <KnobFrame
+      value={value}
+      min={min}
+      max={max}
+      step={step}
+      onChange={onChange}
+    >
+      <div class={styles}>
+        <div class="inner"></div>
+        <div
+          class="tick-plane"
+          style={{ transform: `rotate(${tickAngle}deg)` }}
+        >
+          <div class="tick" />
+        </div>
+      </div>
+    </KnobFrame>
+  );
+};
+const styles = css({
+  position: "relative",
+  borderRadius: "50%",
+  "&:hover": {
+    opacity: 0.8,
+  },
+  width: "48px",
+  height: "48px",
+  background: "linear-gradient(to bottom, #fff, #8884)",
+  padding: "5px",
+  border: "solid 0.5px #333",
+  "> .inner": {
+    width: "100%",
+    height: "100%",
+    borderRadius: "50%",
+    background: "#eee",
+  },
+  "> .tick-plane": {
+    ...absoluteFull(),
+    ...flexVA(),
+    "> .tick": {
+      width: "3.5px",
+      height: "15px",
+      background: uiColors.clKnobTick,
+    },
+  },
+});

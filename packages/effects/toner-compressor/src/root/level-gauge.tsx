@@ -33,8 +33,8 @@ export const LevelGauge = ({ channelId }: { channelId: ChannelId }) => {
   const holdPct = dbToPercent(meterState.holdDb);
 
   return (
-    <div class="flex-ha gap-1 h-200px">
-      <div class="relative w-30px h-full bd-#888 bg-#eee overflow-hidden">
+    <div class="flex-ha gap-1 h-180px">
+      <div class="relative w-30px h-full bd-#333 bg-#222 overflow-hidden">
         <div
           class="absolute bottom-0 w-full bg-#7bf"
           style={{ height: `${rmsPct * 0.995}%` }}

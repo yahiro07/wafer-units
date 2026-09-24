@@ -7,11 +7,17 @@ import { LayeredLayout } from "@/components/layered-layout";
 import { LevelGauge } from "@/root/level-gauge";
 import { cz } from "@lib/mu2609/utils/cz";
 import { createSelectorOptions } from "@lib/mu2609/utils/selector-option";
-import { flexC } from "@lib/mu2609/utils/utility-styles";
+import { flexC, npx } from "@lib/mu2609/utils/utility-styles";
 import { ChannelId } from "@/core/definitions";
 import { useStoreSnapshot } from "@/root/store";
 import { analyzerEngine } from "@/core/engine-instances";
 import { actions } from "@/root/actions";
+import { Button } from "@/components/button";
+
+const configs = {
+  graphWidth: 600,
+  graphHeight: 140,
+};
 
 const barLengthOptions = createSelectorOptions([
   [0.0625, "1/16"],
@@ -37,9 +43,7 @@ const LaneBox = ({
   return (
     <div class="flex-h gap-1">
       {labelContent}
-      <div class={cz("w-800px", height === 200 ? "h-200px" : "h-100px")}>
-        {children}
-      </div>
+      <div style={{ width: configs.graphWidth, height }}>{children}</div>
     </div>
   );
 };
@@ -71,25 +75,19 @@ const GraphCanvas = ({
 const GraphBorderFrame = styled.div({
   width: "100%",
   height: "100%",
-  border: "solid 1px #aaa",
+  border: "solid 1px #333",
 });
 
 const LaneLabel = ({
   label,
-  labelBold,
   onClick,
 }: {
   label: string;
-  labelBold?: boolean;
   onClick?: () => void;
 }) => {
   return (
     <div
-      class={cz(
-        "flex-c w-40px",
-        labelBold && "font-bold",
-        onClick && "cursor-pointer",
-      )}
+      class={cz("flex-ha w-50px font-500 text-sm", onClick && "cursor-pointer")}
       onClick={onClick}
     >
       {label}
@@ -97,15 +95,15 @@ const LaneLabel = ({
   );
 };
 
-const ChannelLaneContainer = ({
-  channelId,
-  labelContent,
-}: {
-  channelId: ChannelId;
-  labelContent: ComponentChildren;
-}) => {
+const ChannelLaneContainer = ({ channelId }: { channelId: ChannelId }) => {
+  const height = channelId === "ch3" ? 50 : 120;
+  const label = {
+    ch1: "INPUT",
+    ch2: "OUTPUT",
+    ch3: "SC-INPUT",
+  }[channelId];
   return (
-    <LaneBox height={200} labelContent={labelContent}>
+    <LaneBox height={height} labelContent={<LaneLabel label={label} />}>
       <LayeredLayout>
         <GridBackground nx={4} ny={1} />
         <GraphBorderFrame />
@@ -139,12 +137,12 @@ const TimeSpanGauge = () => {
   );
 };
 const cssTimeSpanGauge = css({
-  paddingLeft: "44px",
+  paddingLeft: "54px",
   "> div": {
-    width: "201px",
+    width: npx(configs.graphWidth / 4 + 1),
     height: "28px",
-    border: "solid 1px #aaa",
-    background: "#eee",
+    border: "solid 1px #333",
+    background: "#444",
     ...flexC(),
     justifyContent: "space-between",
   },
@@ -172,58 +170,33 @@ const TopControlBar = () => {
 };
 
 const LevelMeterSection = () => {
-  const { altMetersLayout } = useStoreSnapshot();
   return (
-    <div onClick={actions.toggleMetersLayout} class="flex-c">
-      {!altMetersLayout && (
-        <div class="flex-vc gap-2">
+    <div class="flex-va gap-2 mt-1 -mr-2">
+      <Button className="-ml-6" children="BYPASS" asr={2} />
+      <div class="flex-c gap-2">
+        <div>
+          <div className="text-sm">INPUT</div>
           <LevelGauge channelId="ch1" />
+        </div>
+        <div>
+          <div className="text-sm">OUTPUT</div>
           <LevelGauge channelId="ch2" />
         </div>
-      )}
-      {altMetersLayout && (
-        <div class="flex-c gap-2">
-          <div>
-            <div class="ml-2.25">A</div>
-            <LevelGauge channelId="ch1" />
-          </div>
-          <div>
-            <div class="ml-2.25">B</div>
-            <LevelGauge channelId="ch2" />
-          </div>
-        </div>
-      )}
+      </div>
+      <Button className="mt-1 -mb-4 -ml-6" children="SIDE-CHAIN" asr={2} />
     </div>
   );
 };
 
 export const PlottingSection = () => {
-  const { activeChannelId } = useStoreSnapshot();
   return (
-    <div class="flex-v gap-2 bg-#ddd p-6">
+    <div class="flex-v gap-1">
       <TopControlBar />
-      <div class="flex-h gap-2">
-        <div class="flex-v gap-2">
-          <ChannelLaneContainer
-            channelId="ch1"
-            labelContent={
-              <LaneLabel
-                label="A"
-                onClick={() => actions.setActiveChannelId("ch1")}
-                labelBold={activeChannelId === "ch1"}
-              />
-            }
-          />
-          <ChannelLaneContainer
-            channelId="ch2"
-            labelContent={
-              <LaneLabel
-                label="B"
-                onClick={() => actions.setActiveChannelId("ch2")}
-                labelBold={activeChannelId === "ch2"}
-              />
-            }
-          />
+      <div class="flex-h gap-7">
+        <div class="flex-v gap-1">
+          <ChannelLaneContainer channelId="ch1" />
+          <ChannelLaneContainer channelId="ch2" />
+          <ChannelLaneContainer channelId="ch3" />
         </div>
         <LevelMeterSection />
       </div>

@@ -19,7 +19,6 @@ export type AudioAnalysisEngine = {
   setDrawingActive(active: boolean): void;
   setBpm(bpm: number): void;
   setBarLength(bars: number): void;
-  setActiveChannel(id: ChannelId | null): void;
   setWaveCanvas(id: ChannelId, canvas: HTMLCanvasElement | null): void;
   subscribeUi(fn: (patch: { hostBpm?: number }) => void): () => void;
   hostStarted(): void;

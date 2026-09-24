@@ -32,7 +32,7 @@ export function GeneralSelector<T extends string | number>({
   };
   return (
     <select
-      class={cz("bd-#aaa bg-#eee", className)}
+      class={cz("bd-#333 bg-#444", className)}
       value={value}
       onChange={wrapOnChange}
     >

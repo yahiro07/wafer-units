@@ -9,7 +9,6 @@ import {
 function setupUnit() {
   analyzerEngine.setup();
   analyzerEngine.setBarLength(store.state.barLength);
-  analyzerEngine.setActiveChannel(store.state.activeChannelId);
 
   function setViewActive(active: boolean) {
     store.setViewActive(active);

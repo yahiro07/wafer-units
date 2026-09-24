@@ -1,4 +1,4 @@
-export type ChannelId = "ch1" | "ch2";
+export type ChannelId = "ch1" | "ch2" | "ch3";
 
 export type EffectParameters = {
   inputGain: number;
