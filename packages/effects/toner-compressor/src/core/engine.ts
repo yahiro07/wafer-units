@@ -1,6 +1,6 @@
 import { UnitInterface } from "wafer-host/unit-types";
 import { EffectParameters } from "@/core/definitions";
-import { mapUnaryTo, power2 } from "@lib/mu2609/utils/synth-math-utils";
+import { mapUnaryTo } from "@lib/mu2609/utils/synth-math-utils";
 import {
   connectNodes,
   disconnectNodes,
@@ -13,22 +13,13 @@ export function createEngine(unitInterface: UnitInterface | undefined) {
   const outputNode = unitInterface?.audioOutputNode ?? ac.destination;
 
   const inputGainNode = ac.createGain();
-  const glueCompNode = ac.createDynamicsCompressor();
-  const glueMakeupNode = ac.createGain();
-  const limitCompNode = ac.createDynamicsCompressor();
+  const compressorNode = ac.createDynamicsCompressor();
   const outputGainNode = ac.createGain();
-
-  glueCompNode.ratio.value = 4;
-  glueCompNode.knee.value = 8;
-  limitCompNode.knee.value = 0;
-  limitCompNode.attack.value = 0.002;
 
   connectNodes(
     inputNode,
     inputGainNode,
-    glueCompNode,
-    glueMakeupNode,
-    limitCompNode,
+    compressorNode,
     outputGainNode,
     outputNode,
   );
@@ -45,28 +36,23 @@ export function createEngine(unitInterface: UnitInterface | undefined) {
         now,
       );
 
-      glueCompNode.threshold.setValueAtTime(
+      compressorNode.threshold.setValueAtTime(
         mapUnaryTo(pr.threshold, -40, 0),
         now,
       );
-      glueCompNode.attack.setValueAtTime(
+      compressorNode.ratio.setValueAtTime(mapUnaryTo(pr.ratio, 1, 20), now);
+      compressorNode.knee.setValueAtTime(mapUnaryTo(pr.knee, 0, 40), now);
+      compressorNode.attack.setValueAtTime(
         mapUnaryTo(pr.attack, 0.001, 0.08),
         now,
       );
-      glueCompNode.release.setValueAtTime(
+      compressorNode.release.setValueAtTime(
         mapUnaryTo(pr.release, 0.05, 0.5),
         now,
       );
-      glueMakeupNode.gain.setValueAtTime(1 + power2(1 - pr.threshold) * 1, now);
     },
     cleanup() {
-      disconnectNodes(
-        inputNode,
-        inputGainNode,
-        glueCompNode,
-        limitCompNode,
-        outputGainNode,
-      );
+      disconnectNodes(inputNode, inputGainNode, compressorNode, outputGainNode);
     },
   };
 }
