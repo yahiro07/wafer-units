@@ -6,6 +6,6 @@ export default defineConfig({
   base: "./",
   plugins: [preact(), UnoCSS()],
   resolve: { tsconfigPaths: true },
-  build: { outDir: "../../../dist/panner", emptyOutDir: true },
+  build: { outDir: "../../../dist/toner-panner", emptyOutDir: true },
   server: { port: 3000 },
 });
