@@ -30,6 +30,7 @@ export function createEffectEngine(
         inputNode,
         inputGainNode,
         compressorNode,
+        outputGainNode,
         outputNode,
       );
     } else {
@@ -40,6 +41,7 @@ export function createEffectEngine(
   updateConnection();
 
   return {
+    ioNodeSuit: { inputNode, sideChainInputNode, outputNode },
     setParameters(pr) {
       const now = ac.currentTime;
       inputGainNode.gain.setValueAtTime(
@@ -66,8 +68,8 @@ export function createEffectEngine(
         now,
       );
     },
-    setBypass(bypass) {
-      flags.effectEnabled = !bypass;
+    setEnabled(enabled) {
+      flags.effectEnabled = enabled;
       updateConnection();
     },
     setSideChain(sideChain) {

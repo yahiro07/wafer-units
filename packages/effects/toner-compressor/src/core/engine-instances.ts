@@ -10,5 +10,5 @@ export const unitInterface = queryUnitInterface("wafer-v01");
 export const effectEngine = createEffectEngine(unitInterface);
 
 export const analyzerEngine = unitInterface
-  ? createAudioAnalysisEngine(unitInterface)
+  ? createAudioAnalysisEngine(unitInterface, effectEngine.ioNodeSuit)
   : createDummyEngine();

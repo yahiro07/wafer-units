@@ -12,7 +12,7 @@ const root = document.getElementById("app")!;
 document.adoptedStyleSheets = [cssRealm.sheet];
 
 render(
-  <div class={cz("h-dvh flex-c", !appEnvs.isDevelopment && "cl-panelBg")}>
+  <div class={cz("h-dvh flex-c", !appEnvs.isDevelopment && "bg-clPanelBg")}>
     <App />
   </div>,
   root,

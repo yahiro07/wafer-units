@@ -4,9 +4,16 @@ import {
   MeterChannelId,
 } from "@/core/definitions";
 
+export type EngineIoNodeSuit = {
+  inputNode: AudioNode;
+  sideChainInputNode: AudioNode;
+  outputNode: AudioNode;
+};
+
 export type EffectEngine = {
+  ioNodeSuit: EngineIoNodeSuit;
   setParameters(parameters: EffectParameters): void;
-  setBypass(bypass: boolean): void;
+  setEnabled(enabled: boolean): void;
   setSideChain(sideChain: boolean): void;
   cleanup(): void;
 };

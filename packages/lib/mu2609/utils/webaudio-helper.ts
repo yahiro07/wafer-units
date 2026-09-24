@@ -6,9 +6,17 @@ type CustomUnit = {
 type IUnit = AudioNode | CustomUnit;
 
 export function disconnectNodes(...units: IUnit[]) {
-  for (const unit of units) {
-    const port = "outputNode" in unit ? unit.outputNode : unit;
-    port.disconnect();
+  let unit = units[0];
+  for (let i = 1; i < units.length; i++) {
+    const nextUnit = units[i];
+    const src = "outputNode" in unit ? unit.outputNode : unit;
+    const dest = (
+      "inputNode" in nextUnit ? nextUnit.inputNode : nextUnit
+    ) as AudioNode;
+    if (src && dest) {
+      src.disconnect(dest);
+    }
+    unit = nextUnit;
   }
 }
 

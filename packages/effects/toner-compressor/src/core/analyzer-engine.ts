@@ -3,6 +3,7 @@ import {
   MeterState,
   AudioAnalysisEngine,
   MeterListener,
+  EngineIoNodeSuit,
 } from "@/core/interfaces";
 import { createWavePlotter } from "@/root/wave-plotter";
 import { UnitInterface } from "wafer-host/unit-types";
@@ -69,11 +70,11 @@ function createMeterTracker() {
 
 export function createAudioAnalysisEngine(
   unitInterface: UnitInterface,
+  ioNodeSuit: EngineIoNodeSuit,
 ): AudioAnalysisEngine {
   const { audioContext } = unitInterface;
-  const ch1Input = unitInterface.createAdditionalAudioInputNode("1");
-  const ch2Input = unitInterface.createAdditionalAudioInputNode("2");
-
+  const ch1Input = ioNodeSuit.inputNode;
+  const ch2Input = ioNodeSuit.outputNode;
   const ch1Analyser = createChannelAnalyser(ch1Input);
   const ch2Analyser = createChannelAnalyser(ch2Input);
 

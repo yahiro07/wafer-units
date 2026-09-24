@@ -19,7 +19,7 @@ function setupUnit() {
     unitInterface.completeSetup({
       unitAspects: {
         unitType: "effect",
-        viewSize: [1024, 492],
+        viewSize: [832, 448],
       },
       hostCallbacks: {
         setBpm(bpm: number) {
@@ -47,9 +47,15 @@ function setupUnit() {
 }
 
 function setupSynchronization() {
-  return store.subscribe(({ parameters }) => {
+  return store.subscribe(({ parameters, effectEnabled, sideChain }) => {
     if (parameters) {
       effectEngine.setParameters(parameters);
+    }
+    if (effectEnabled !== undefined) {
+      effectEngine.setEnabled(effectEnabled);
+    }
+    if (sideChain !== undefined) {
+      effectEngine.setSideChain(sideChain);
     }
   }, true);
 }
