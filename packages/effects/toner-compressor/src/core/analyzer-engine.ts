@@ -1,4 +1,4 @@
-import { ChannelId } from "@/core/definitions";
+import { MeterChannelId } from "@/core/definitions";
 import {
   MeterState,
   AudioAnalysisEngine,
@@ -86,11 +86,11 @@ export function createAudioAnalysisEngine(
   let startTime = 0;
   let rafId: number | undefined;
   const uiListeners = new Set<(patch: { hostBpm?: number }) => void>();
-  const meterListeners: Record<ChannelId, Set<MeterListener>> = {
+  const meterListeners: Record<MeterChannelId, Set<MeterListener>> = {
     ch1: new Set(),
     ch2: new Set(),
   };
-  const meterState: Record<ChannelId, MeterState> = {
+  const meterState: Record<MeterChannelId, MeterState> = {
     ch1: silentMeterState,
     ch2: silentMeterState,
   };
@@ -117,7 +117,7 @@ export function createAudioAnalysisEngine(
       }
     },
     updateChannelMeter(
-      channelId: ChannelId,
+      channelId: MeterChannelId,
       timeDomainData: Float32Array,
       tracker: ReturnType<typeof createMeterTracker>,
     ) {

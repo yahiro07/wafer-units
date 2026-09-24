@@ -1,4 +1,8 @@
-import { ChannelId, EffectParameters } from "@/core/definitions";
+import {
+  ChannelId,
+  EffectParameters,
+  MeterChannelId,
+} from "@/core/definitions";
 
 export type EffectEngine = {
   setParameters(parameters: EffectParameters): void;
@@ -22,5 +26,5 @@ export type AudioAnalysisEngine = {
   setWaveCanvas(id: ChannelId, canvas: HTMLCanvasElement | null): void;
   subscribeUi(fn: (patch: { hostBpm?: number }) => void): () => void;
   hostStarted(): void;
-  subscribeMeter(id: ChannelId, fn: MeterListener): () => void;
+  subscribeMeter(id: MeterChannelId, fn: MeterListener): () => void;
 };

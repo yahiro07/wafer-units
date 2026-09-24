@@ -9,11 +9,14 @@ export const actions = {
   ) => {
     store.patchParameters({ [key]: value });
   },
-  toggleMetersLayout() {
-    store.toggleAltMetersLayout();
-  },
   setBarLength(barLength: number) {
     store.setBarLength(barLength);
     analyzerEngine.setBarLength(barLength);
+  },
+  toggleBypass() {
+    store.toggleBypass();
+  },
+  toggleSideChain() {
+    store.toggleSideChain();
   },
 };

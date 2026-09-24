@@ -44,7 +44,7 @@ export const ParametersSection = () => {
   return (
     <div class="flex-v px-4 gap-2 flex-c">
       <div className="flex-ha gap-8">
-        <div className="-mt-2.5">
+        <div className="-mt-3">
           <CurveGraph />
         </div>
         <div class="flex-ha gap-8">

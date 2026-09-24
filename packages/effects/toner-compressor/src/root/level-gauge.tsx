@@ -2,7 +2,7 @@ import { meterDbFloor } from "@/core/analyzer-engine";
 import { linearInterpolate } from "@lib/mu2609/utils/helpers";
 import { useEffect, useState } from "preact/hooks";
 import { MeterState } from "@/core/interfaces";
-import { ChannelId } from "@/core/definitions";
+import { MeterChannelId } from "@/core/definitions";
 import { analyzerEngine } from "@/core/engine-instances";
 
 const silentMeterState: MeterState = {
@@ -21,7 +21,7 @@ function formatDb(db: number) {
   return `${sign}${db.toFixed(1)}`;
 }
 
-export const LevelGauge = ({ channelId }: { channelId: ChannelId }) => {
+export const LevelGauge = ({ channelId }: { channelId: MeterChannelId }) => {
   const [meterState, setMeterState] = useState<MeterState>(silentMeterState);
 
   useEffect(() => {

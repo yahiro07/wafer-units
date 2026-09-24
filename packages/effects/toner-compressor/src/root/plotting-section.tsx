@@ -16,7 +16,6 @@ import { Button } from "@/components/button";
 
 const configs = {
   graphWidth: 600,
-  graphHeight: 140,
 };
 
 const barLengthOptions = createSelectorOptions([
@@ -95,8 +94,14 @@ const LaneLabel = ({
   );
 };
 
-const ChannelLaneContainer = ({ channelId }: { channelId: ChannelId }) => {
-  const height = channelId === "ch3" ? 50 : 120;
+const ChannelLaneContainer = ({
+  channelId,
+  height,
+}: {
+  channelId: ChannelId;
+  height: number;
+}) => {
+  // const height = channelId === "ch3" ? 50 : 120;
   const label = {
     ch1: "INPUT",
     ch2: "OUTPUT",
@@ -169,10 +174,36 @@ const TopControlBar = () => {
   );
 };
 
+const BypassButton = () => {
+  const { bypass } = useStoreSnapshot();
+  return (
+    <Button
+      children="ENABLE"
+      asr={2.4}
+      active={!bypass}
+      onClick={actions.toggleBypass}
+    />
+  );
+};
+
+const SideChainButton = () => {
+  const { sideChain } = useStoreSnapshot();
+  return (
+    <Button
+      children="SIDE-CHAIN"
+      asr={2.4}
+      active={sideChain}
+      onClick={actions.toggleSideChain}
+    />
+  );
+};
+
 const LevelMeterSection = () => {
   return (
-    <div class="flex-va gap-2 mt-1 -mr-2">
-      <Button className="-ml-6" children="BYPASS" asr={2} />
+    <div class="flex-va gap-2.5 mt-1 -mr-2">
+      <div class="-ml-7">
+        <BypassButton />
+      </div>
       <div class="flex-c gap-2">
         <div>
           <div className="text-sm">INPUT</div>
@@ -183,21 +214,39 @@ const LevelMeterSection = () => {
           <LevelGauge channelId="ch2" />
         </div>
       </div>
-      <Button className="mt-1 -mb-4 -ml-6" children="SIDE-CHAIN" asr={2} />
+      <div class="-ml-7 mt-0.5">
+        <SideChainButton />
+      </div>
+    </div>
+  );
+};
+
+const ChannelLanesPart = () => {
+  const { sideChain } = useStoreSnapshot();
+  return (
+    <div class="flex-v gap-0.5">
+      {sideChain ? (
+        <>
+          <ChannelLaneContainer channelId="ch1" height={120} />
+          <ChannelLaneContainer channelId="ch2" height={120} />
+          <ChannelLaneContainer channelId="ch3" height={48} />
+        </>
+      ) : (
+        <>
+          <ChannelLaneContainer channelId="ch1" height={145} />
+          <ChannelLaneContainer channelId="ch2" height={145} />
+        </>
+      )}
     </div>
   );
 };
 
 export const PlottingSection = () => {
   return (
-    <div class="flex-v gap-1">
+    <div class="flex-v gap-1.5">
       <TopControlBar />
       <div class="flex-h gap-7">
-        <div class="flex-v gap-1">
-          <ChannelLaneContainer channelId="ch1" />
-          <ChannelLaneContainer channelId="ch2" />
-          <ChannelLaneContainer channelId="ch3" />
-        </div>
+        <ChannelLanesPart />
         <LevelMeterSection />
       </div>
     </div>

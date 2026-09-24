@@ -5,6 +5,7 @@ export const uiColors = {
   // clControlBg: "#ccc",
   // clControlEdge: "#777",
   clButtonBg: "#444",
+  clButtonActive: "#68d",
   // clButtonText: "#667",
   // clPrimary: "#5bf",
   clGridBackground: "#222",

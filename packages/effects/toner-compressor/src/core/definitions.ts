@@ -1,5 +1,7 @@
 export type ChannelId = "ch1" | "ch2" | "ch3";
 
+export type MeterChannelId = "ch1" | "ch2";
+
 export type EffectParameters = {
   inputGain: number;
   threshold: number;
