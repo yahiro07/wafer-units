@@ -6,14 +6,14 @@ export const store = createStore<{
   hostBpm: number;
   viewActive: boolean;
   parameters: EffectParameters;
-  bypass: boolean;
+  effectEnabled: boolean;
   sideChain: boolean;
 }>({
   barLength: 1,
   hostBpm: 0,
   viewActive: false,
   parameters: defaultEffectParameters,
-  bypass: false,
+  effectEnabled: true,
   sideChain: false,
 });
 

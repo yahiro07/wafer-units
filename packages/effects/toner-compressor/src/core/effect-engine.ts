@@ -1,31 +1,46 @@
 import { UnitInterface } from "wafer-host/unit-types";
-import { EffectParameters } from "@/core/definitions";
 import { mapUnaryTo } from "@lib/mu2609/utils/synth-math-utils";
-import {
-  connectNodes,
-  disconnectNodes,
-} from "@lib/mu2609/utils/webaudio-helper";
+import { createConnectionKeeper } from "@lib/mu2609/utils/webaudio-helper";
 import { mapKnobCurveCenterUnity } from "@lib/mu2609/utils/volume-curve";
+import { EffectEngine } from "@/core/interfaces";
 
-export function createEffectEngine(unitInterface: UnitInterface | undefined) {
+export function createEffectEngine(
+  unitInterface: UnitInterface | undefined,
+): EffectEngine {
   const ac = unitInterface?.audioContext ?? new AudioContext();
   const inputNode = unitInterface?.audioInputNode ?? ac.createGain();
+  const sideChainInputNode =
+    unitInterface?.createAdditionalAudioInputNode("SC") ?? ac.createGain();
   const outputNode = unitInterface?.audioOutputNode ?? ac.destination;
 
   const inputGainNode = ac.createGain();
   const compressorNode = ac.createDynamicsCompressor();
   const outputGainNode = ac.createGain();
 
-  connectNodes(
-    inputNode,
-    inputGainNode,
-    compressorNode,
-    outputGainNode,
-    outputNode,
-  );
+  const connectionKeeper = createConnectionKeeper();
+  const flags = {
+    effectEnabled: true,
+    sideChain: false,
+  };
+
+  const updateConnection = () => {
+    const { effectEnabled, sideChain } = flags;
+    if (effectEnabled) {
+      connectionKeeper.connects(
+        inputNode,
+        inputGainNode,
+        compressorNode,
+        outputNode,
+      );
+    } else {
+      connectionKeeper.connects(inputNode, outputNode);
+    }
+  };
+
+  updateConnection();
 
   return {
-    setParameters(pr: EffectParameters) {
+    setParameters(pr) {
       const now = ac.currentTime;
       inputGainNode.gain.setValueAtTime(
         mapKnobCurveCenterUnity(pr.inputGain),
@@ -51,8 +66,16 @@ export function createEffectEngine(unitInterface: UnitInterface | undefined) {
         now,
       );
     },
+    setBypass(bypass) {
+      flags.effectEnabled = !bypass;
+      updateConnection();
+    },
+    setSideChain(sideChain) {
+      flags.sideChain = sideChain;
+      updateConnection();
+    },
     cleanup() {
-      disconnectNodes(inputNode, inputGainNode, compressorNode, outputGainNode);
+      connectionKeeper.cleanup();
     },
   };
 }

@@ -6,6 +6,8 @@ import {
 
 export type EffectEngine = {
   setParameters(parameters: EffectParameters): void;
+  setBypass(bypass: boolean): void;
+  setSideChain(sideChain: boolean): void;
   cleanup(): void;
 };
 

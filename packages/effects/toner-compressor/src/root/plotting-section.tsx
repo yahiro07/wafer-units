@@ -175,13 +175,13 @@ const TopControlBar = () => {
 };
 
 const BypassButton = () => {
-  const { bypass } = useStoreSnapshot();
+  const { effectEnabled } = useStoreSnapshot();
   return (
     <Button
       children="ENABLE"
       asr={2.4}
-      active={!bypass}
-      onClick={actions.toggleBypass}
+      active={effectEnabled}
+      onClick={actions.toggleEffectEnabled}
     />
   );
 };

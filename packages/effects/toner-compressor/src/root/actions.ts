@@ -13,8 +13,8 @@ export const actions = {
     store.setBarLength(barLength);
     analyzerEngine.setBarLength(barLength);
   },
-  toggleBypass() {
-    store.toggleBypass();
+  toggleEffectEnabled() {
+    store.toggleEffectEnabled();
   },
   toggleSideChain() {
     store.toggleSideChain();
