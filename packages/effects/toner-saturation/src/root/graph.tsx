@@ -1,3 +1,4 @@
+import { saturationCurveFunctions } from "@/core/saturation-curve-functions";
 import { store } from "@/root/store";
 import { seqNumbers } from "@lib/mu2609/utils/helpers";
 
@@ -6,19 +7,10 @@ export const GraphRoot = () => {
 
   const prTop = pr.top;
   const prDrive = pr.drive;
-  const pi = Math.PI;
-  const coreFunctions = {
-    //https://www.desmos.com/calculator/ciblmcjgxn
-    [0]: (x) => Math.tanh(x),
-    [1]: (x) => (x < 3 ? (2 / pi) * Math.atan((pi / 2) * x) * 1.15 : 1),
-    [2]: (x) => {
-      x *= 0.8;
-      return x < 1.5 ? (x * 1.5 - 0.5 * x * x) / 1.125 : 1;
-    },
-    [3]: (x) => (x < 1.5 ? x - (x * x * x) / 6.667 : 1),
-  } satisfies Record<number, (x: number) => number>;
   const coreFn =
-    coreFunctions[pr.curveType as keyof typeof coreFunctions] ?? (() => 0);
+    saturationCurveFunctions[
+      pr.curveType as keyof typeof saturationCurveFunctions
+    ] ?? (() => 0);
   const curveLogicalPoints = seqNumbers(41).map((i) => {
     const inputX = (i / 40) * 2;
     const xsc = 1 + prDrive * 1;
