@@ -8,6 +8,7 @@ export const GraphRoot = () => {
   const prDrive = pr.drive;
   const pi = Math.PI;
   const coreFunctions = {
+    //https://www.desmos.com/calculator/ciblmcjgxn
     [0]: (x) => Math.tanh(x),
     [1]: (x) => (x < 3 ? (2 / pi) * Math.atan((pi / 2) * x) * 1.15 : 1),
     [2]: (x) => {
