@@ -3,7 +3,8 @@
   "private": true,
   "type": "module",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./common/toner-ui-colors": "./src/common/toner-ui-colors.ts"
   },
   "devDependencies": {
     "@lib/mu2609": "workspace:*",

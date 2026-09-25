@@ -60,9 +60,9 @@ export const ShiftSelector = <T extends string | number>({
 };
 const styles = {
   base: cz(
-    "flex-ha justify-between min-w-[60px] h-[40px]",
-    "bg-clControlBg bd-clControlEdge cursor-pointer",
+    "flex-ha justify-between min-w-60px h-40px",
+    "bg-tuiControlBg bd-tuiControlEdge cursor-pointer",
     "hover:opacity-80",
   ),
-  caret: cz("font-[14px]", "[&.hided]:invisible"),
+  caret: cz("font-14px", "[&.hided]:invisible"),
 };

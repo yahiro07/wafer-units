@@ -18,7 +18,7 @@ export const LabeledBox = ({
       <div class="w-30px flex-c">
         <div
           class={cz(
-            "text-lg whitespace-nowrap",
+            "text-sm font-500 whitespace-nowrap",
             onLabelClick && "cursor-pointer",
           )}
           onClick={onLabelClick}

@@ -5,7 +5,7 @@ export const Button = ({
   className,
   children,
   onClick,
-  height = 36,
+  height = 34,
   asr = 1.25,
   active,
   disabled,
@@ -36,9 +36,9 @@ export const Button = ({
 };
 const styles = {
   base: cz(
-    "bg-clButtonBg rounded-[2px] flex-c cursor-pointer hover:opacity-90",
+    "bg-tuiButtonBg flex-c cursor-pointer hover:opacity-90",
     "text-white",
-    "[&.active]:(bg-clPrimary)",
+    "[&.active]:(bg-tuiButtonActive)",
     "[&.disabled]:(opacity-40 pointer-events-none)",
   ),
 };

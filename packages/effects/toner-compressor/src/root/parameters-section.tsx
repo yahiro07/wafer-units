@@ -1,9 +1,8 @@
 import { EffectParameters } from "@/core/definitions";
 import { store } from "@/root/store";
 import { actions } from "@/root/actions";
-import { Knob } from "@/components/knob";
-import { LabeledBox } from "@/components/labeled-controls";
 import { CurveGraph } from "@/root/curve-graph";
+import { Knob, LabeledBox } from "@lib/toner-ui-dark";
 
 type ParameterSpec = {
   key: keyof EffectParameters;

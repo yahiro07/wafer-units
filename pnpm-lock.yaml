@@ -293,6 +293,9 @@ importers:
       '@lib/mu2609':
         specifier: workspace:*
         version: link:../../lib/mu2609
+      '@lib/toner-ui-dark':
+        specifier: workspace:*
+        version: link:../../lib/toner-ui-dark
       '@preact/preset-vite':
         specifier: 'catalog:'
         version: 2.10.6(@babel/core@7.29.7)(preact@10.29.8)(vite@8.3.0(@types/node@26.4.0)(jiti@2.7.0))

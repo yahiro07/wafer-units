@@ -8,6 +8,7 @@
   },
   "devDependencies": {
     "@lib/mu2609": "workspace:*",
+    "@lib/toner-ui-dark": "workspace:*",
     "@preact/preset-vite": "catalog:",
     "@unocss/preset-wind4": "catalog:",
     "@unocss/vite": "catalog:",

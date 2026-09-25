@@ -1,9 +1,6 @@
 import { ComponentChildren } from "preact";
 import { useEffect, useRef } from "preact/hooks";
 import { css, styled } from "@/common/css-realm";
-import { GeneralSelector } from "@/components/general-selector";
-import { GridBackground } from "@/components/grid-background";
-import { LayeredLayout } from "@/components/layered-layout";
 import { LevelGauge } from "@/root/level-gauge";
 import { cz } from "@lib/mu2609/utils/cz";
 import { createSelectorOptions } from "@lib/mu2609/utils/selector-option";
@@ -12,7 +9,12 @@ import { ChannelId } from "@/core/definitions";
 import { useStoreSnapshot } from "@/root/store";
 import { analyzerEngine } from "@/core/engine-instances";
 import { actions } from "@/root/actions";
-import { Button } from "@/components/button";
+import {
+  LayeredLayout,
+  GeneralSelector,
+  Button,
+  GridBackground,
+} from "@lib/toner-ui-dark";
 
 const configs = {
   graphWidth: 600,

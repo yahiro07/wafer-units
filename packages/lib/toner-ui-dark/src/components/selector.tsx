@@ -38,7 +38,7 @@ export const Selector = <T extends string | number>({
 };
 const styles = {
   base: cz(
-    "text-center outline-none cursor-pointer appearance-none rounded-[1px] bg-white",
+    "text-center outline-none cursor-pointer appearance-none rounded-1px bg-white",
     "text-18px",
     "hover:opacity-90",
   ),

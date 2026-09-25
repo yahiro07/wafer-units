@@ -1,5 +1,4 @@
 import { css } from "../common/css-realm";
-import { uiColors } from "../common/ui-theme";
 import { linearInterpolate } from "@lib/mu2609/utils/helpers";
 import { KnobFrame } from "@lib/mu2609/components/headless/knob-frame";
 import { absoluteFull, flexVA } from "@lib/mu2609/utils/utility-styles";
@@ -61,7 +60,7 @@ const styles = css({
     "> .tick": {
       width: "3.5px",
       height: "15px",
-      background: uiColors.clKnobTick,
+      background: "#666",
     },
   },
 });
