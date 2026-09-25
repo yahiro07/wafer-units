@@ -258,6 +258,219 @@ importers:
         specifier: 'catalog:'
         version: 0.1.14(preact@10.29.8)(react@19.2.8)
 
+  packages/effects/toner-3band-eq:
+    devDependencies:
+      '@lib/mu2609':
+        specifier: workspace:*
+        version: link:../../lib/mu2609
+      '@lib/toner-ui':
+        specifier: workspace:*
+        version: link:../../lib/toner-ui
+      '@preact/preset-vite':
+        specifier: 'catalog:'
+        version: 2.10.6(@babel/core@7.29.7)(preact@10.29.8)(vite@8.3.0(@types/node@26.4.0)(jiti@2.7.0))
+      '@unocss/preset-wind4':
+        specifier: 'catalog:'
+        version: 66.7.5
+      '@unocss/vite':
+        specifier: 'catalog:'
+        version: 66.7.5(vite@8.3.0(@types/node@26.4.0)(jiti@2.7.0))
+      mini-css:
+        specifier: 'catalog:'
+        version: '@yahiro07/mini-css@0.1.0'
+      preact:
+        specifier: 'catalog:'
+        version: 10.29.8
+      snap-store:
+        specifier: 'catalog:'
+        version: 0.1.14(preact@10.29.8)(react@19.2.8)
+      unocss:
+        specifier: 'catalog:'
+        version: 66.7.5(vite@8.3.0(@types/node@26.4.0)(jiti@2.7.0))
+
+  packages/effects/toner-compressor:
+    devDependencies:
+      '@lib/mu2609':
+        specifier: workspace:*
+        version: link:../../lib/mu2609
+      '@lib/toner-ui-dark':
+        specifier: workspace:*
+        version: link:../../lib/toner-ui-dark
+      '@preact/preset-vite':
+        specifier: 'catalog:'
+        version: 2.10.6(@babel/core@7.29.7)(preact@10.29.8)(vite@8.3.0(@types/node@26.4.0)(jiti@2.7.0))
+      '@types/audioworklet':
+        specifier: 'catalog:'
+        version: 0.0.100
+      '@unocss/preset-wind4':
+        specifier: 'catalog:'
+        version: 66.7.5
+      '@unocss/vite':
+        specifier: 'catalog:'
+        version: 66.7.5(vite@8.3.0(@types/node@26.4.0)(jiti@2.7.0))
+      mini-css:
+        specifier: 'catalog:'
+        version: '@yahiro07/mini-css@0.1.0'
+      preact:
+        specifier: 'catalog:'
+        version: 10.29.8
+      snap-store:
+        specifier: 'catalog:'
+        version: 0.1.14(preact@10.29.8)(react@19.2.8)
+      unocss:
+        specifier: 'catalog:'
+        version: 66.7.5(vite@8.3.0(@types/node@26.4.0)(jiti@2.7.0))
+
+  packages/effects/toner-limiter:
+    devDependencies:
+      '@lib/mu2609':
+        specifier: workspace:*
+        version: link:../../lib/mu2609
+      '@lib/toner-ui':
+        specifier: workspace:*
+        version: link:../../lib/toner-ui
+      '@preact/preset-vite':
+        specifier: 'catalog:'
+        version: 2.10.6(@babel/core@7.29.7)(preact@10.29.8)(vite@8.3.0(@types/node@26.4.0)(jiti@2.7.0))
+      '@unocss/preset-wind4':
+        specifier: 'catalog:'
+        version: 66.7.5
+      '@unocss/vite':
+        specifier: 'catalog:'
+        version: 66.7.5(vite@8.3.0(@types/node@26.4.0)(jiti@2.7.0))
+      mini-css:
+        specifier: 'catalog:'
+        version: '@yahiro07/mini-css@0.1.0'
+      preact:
+        specifier: 'catalog:'
+        version: 10.29.8
+      snap-store:
+        specifier: 'catalog:'
+        version: 0.1.14(preact@10.29.8)(react@19.2.8)
+      unocss:
+        specifier: 'catalog:'
+        version: 66.7.5(vite@8.3.0(@types/node@26.4.0)(jiti@2.7.0))
+
+  packages/effects/toner-panner:
+    devDependencies:
+      '@lib/mu2609':
+        specifier: workspace:*
+        version: link:../../lib/mu2609
+      '@lib/toner-ui':
+        specifier: workspace:*
+        version: link:../../lib/toner-ui
+      '@preact/preset-vite':
+        specifier: 'catalog:'
+        version: 2.10.6(@babel/core@7.29.7)(preact@10.29.8)(vite@8.3.0(@types/node@26.4.0)(jiti@2.7.0))
+      '@unocss/preset-wind4':
+        specifier: 'catalog:'
+        version: 66.7.5
+      '@unocss/vite':
+        specifier: 'catalog:'
+        version: 66.7.5(vite@8.3.0(@types/node@26.4.0)(jiti@2.7.0))
+      mini-css:
+        specifier: 'catalog:'
+        version: '@yahiro07/mini-css@0.1.0'
+      preact:
+        specifier: 'catalog:'
+        version: 10.29.8
+      snap-store:
+        specifier: 'catalog:'
+        version: 0.1.14(preact@10.29.8)(react@19.2.8)
+      unocss:
+        specifier: 'catalog:'
+        version: 66.7.5(vite@8.3.0(@types/node@26.4.0)(jiti@2.7.0))
+
+  packages/effects/toner-reverb:
+    devDependencies:
+      '@lib/mu2609':
+        specifier: workspace:*
+        version: link:../../lib/mu2609
+      '@lib/toner-ui':
+        specifier: workspace:*
+        version: link:../../lib/toner-ui
+      '@preact/preset-vite':
+        specifier: 'catalog:'
+        version: 2.10.6(@babel/core@7.29.7)(preact@10.29.8)(vite@8.3.0(@types/node@26.4.0)(jiti@2.7.0))
+      '@unocss/preset-wind4':
+        specifier: 'catalog:'
+        version: 66.7.5
+      '@unocss/vite':
+        specifier: 'catalog:'
+        version: 66.7.5(vite@8.3.0(@types/node@26.4.0)(jiti@2.7.0))
+      mini-css:
+        specifier: 'catalog:'
+        version: '@yahiro07/mini-css@0.1.0'
+      preact:
+        specifier: 'catalog:'
+        version: 10.29.8
+      snap-store:
+        specifier: 'catalog:'
+        version: 0.1.14(preact@10.29.8)(react@19.2.8)
+      unocss:
+        specifier: 'catalog:'
+        version: 66.7.5(vite@8.3.0(@types/node@26.4.0)(jiti@2.7.0))
+
+  packages/effects/toner-saturation:
+    devDependencies:
+      '@lib/mu2609':
+        specifier: workspace:*
+        version: link:../../lib/mu2609
+      '@lib/toner-ui-dark':
+        specifier: workspace:*
+        version: link:../../lib/toner-ui-dark
+      '@preact/preset-vite':
+        specifier: 'catalog:'
+        version: 2.10.6(@babel/core@7.29.7)(preact@10.29.8)(vite@8.3.0(@types/node@26.4.0)(jiti@2.7.0))
+      '@unocss/preset-wind4':
+        specifier: 'catalog:'
+        version: 66.7.5
+      '@unocss/vite':
+        specifier: 'catalog:'
+        version: 66.7.5(vite@8.3.0(@types/node@26.4.0)(jiti@2.7.0))
+      mini-css:
+        specifier: 'catalog:'
+        version: '@yahiro07/mini-css@0.1.0'
+      preact:
+        specifier: 'catalog:'
+        version: 10.29.8
+      snap-store:
+        specifier: 'catalog:'
+        version: 0.1.14(preact@10.29.8)(react@19.2.8)
+      unocss:
+        specifier: 'catalog:'
+        version: 66.7.5(vite@8.3.0(@types/node@26.4.0)(jiti@2.7.0))
+
+  packages/effects/toner-tilt-eq:
+    devDependencies:
+      '@lib/mu2609':
+        specifier: workspace:*
+        version: link:../../lib/mu2609
+      '@lib/toner-ui':
+        specifier: workspace:*
+        version: link:../../lib/toner-ui
+      '@preact/preset-vite':
+        specifier: 'catalog:'
+        version: 2.10.6(@babel/core@7.29.7)(preact@10.29.8)(vite@8.3.0(@types/node@26.4.0)(jiti@2.7.0))
+      '@unocss/preset-wind4':
+        specifier: 'catalog:'
+        version: 66.7.5
+      '@unocss/vite':
+        specifier: 'catalog:'
+        version: 66.7.5(vite@8.3.0(@types/node@26.4.0)(jiti@2.7.0))
+      mini-css:
+        specifier: 'catalog:'
+        version: '@yahiro07/mini-css@0.1.0'
+      preact:
+        specifier: 'catalog:'
+        version: 10.29.8
+      snap-store:
+        specifier: 'catalog:'
+        version: 0.1.14(preact@10.29.8)(react@19.2.8)
+      unocss:
+        specifier: 'catalog:'
+        version: 66.7.5(vite@8.3.0(@types/node@26.4.0)(jiti@2.7.0))
+
   packages/effects/waveform-checker:
     dependencies:
       '@preact/preset-vite':
@@ -284,6 +497,30 @@ importers:
 
   packages/lib/mu2609:
     devDependencies:
+      preact:
+        specifier: 'catalog:'
+        version: 10.29.8
+
+  packages/lib/toner-ui:
+    devDependencies:
+      '@lib/mu2609':
+        specifier: workspace:*
+        version: link:../mu2609
+      mini-css:
+        specifier: 'catalog:'
+        version: '@yahiro07/mini-css@0.1.0'
+      preact:
+        specifier: 'catalog:'
+        version: 10.29.8
+
+  packages/lib/toner-ui-dark:
+    devDependencies:
+      '@lib/mu2609':
+        specifier: workspace:*
+        version: link:../mu2609
+      mini-css:
+        specifier: 'catalog:'
+        version: '@yahiro07/mini-css@0.1.0'
       preact:
         specifier: 'catalog:'
         version: 10.29.8
@@ -4712,13 +4949,13 @@ snapshots:
   unplugin-utils@0.3.2:
     dependencies:
       pathe: 2.0.3
-      picomatch: 4.0.5
+      picomatch: 4.0.7
 
   unplugin@2.3.11:
     dependencies:
       '@jridgewell/remapping': 2.3.5
       acorn: 8.18.0
-      picomatch: 4.0.5
+      picomatch: 4.0.7
       webpack-virtual-modules: 0.6.2
 
   update-browserslist-db@1.2.3(browserslist@4.28.7):

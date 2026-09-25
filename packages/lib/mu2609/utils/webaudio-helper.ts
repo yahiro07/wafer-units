@@ -3,14 +3,24 @@ type CustomUnit = {
   outputNode: AudioNode;
 };
 
-export function disconnectNodes(...units: (AudioNode | CustomUnit)[]) {
-  for (const unit of units) {
-    const port = "outputNode" in unit ? unit.outputNode : unit;
-    port.disconnect();
+type IUnit = AudioNode | CustomUnit;
+
+export function disconnectNodes(...units: IUnit[]) {
+  let unit = units[0];
+  for (let i = 1; i < units.length; i++) {
+    const nextUnit = units[i];
+    const src = "outputNode" in unit ? unit.outputNode : unit;
+    const dest = (
+      "inputNode" in nextUnit ? nextUnit.inputNode : nextUnit
+    ) as AudioNode;
+    if (src && dest) {
+      src.disconnect(dest);
+    }
+    unit = nextUnit;
   }
 }
 
-export function connectNodes(...units: (AudioNode | CustomUnit)[]) {
+export function connectNodes(...units: IUnit[]) {
   let unit = units[0];
   for (let i = 1; i < units.length; i++) {
     const nextUnit = units[i];
@@ -25,5 +35,19 @@ export function connectNodes(...units: (AudioNode | CustomUnit)[]) {
   }
   return () => {
     disconnectNodes(...units);
+  };
+}
+
+export function createConnectionKeeper() {
+  let disconnectFn: (() => void) | undefined;
+  return {
+    connects(...units: IUnit[]) {
+      disconnectFn?.();
+      disconnectFn = connectNodes(...units);
+    },
+    cleanup() {
+      disconnectFn?.();
+      disconnectFn = undefined;
+    },
   };
 }
