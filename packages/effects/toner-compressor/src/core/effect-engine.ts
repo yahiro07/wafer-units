@@ -1,9 +1,24 @@
 import { UnitInterface } from "wafer-host/unit-types";
-import { mapUnaryTo } from "@lib/mu2609/utils/synth-math-utils";
+import { mapUnaryTo, power3 } from "@lib/mu2609/utils/synth-math-utils";
 import { createConnectionKeeper } from "@lib/mu2609/utils/webaudio-helper";
 import { mapKnobCurveCenterUnity } from "@lib/mu2609/utils/volume-curve";
 import { EffectEngine } from "@/core/interfaces";
 import { createCustomCompressor } from "@/core/custom-compressor";
+
+function createCompatibleCompressor(ac: AudioContext) {
+  const compressor = ac.createDynamicsCompressor();
+  return {
+    inputNode: compressor,
+    outputNode: compressor,
+    detectorNode: ac.createGain(),
+    threshold: compressor.threshold,
+    ratio: compressor.ratio,
+    knee: compressor.knee,
+    attack: compressor.attack,
+    release: compressor.release,
+    cleanup() {},
+  };
+}
 
 export function createEffectEngine(
   unitInterface: UnitInterface | undefined,
@@ -16,6 +31,7 @@ export function createEffectEngine(
 
   const inputGainNode = ac.createGain();
   const compressor = createCustomCompressor(ac);
+  // const compressor = createCompatibleCompressor(ac);
   const outputGainNode = ac.createGain();
 
   const connectionKeeper = createConnectionKeeper();
@@ -60,11 +76,11 @@ export function createEffectEngine(
         now,
       );
 
-      compressor.threshold.setValueAtTime(
-        mapUnaryTo(pr.threshold, -40, 0),
-        now,
-      );
-      compressor.ratio.setValueAtTime(mapUnaryTo(pr.ratio, 1, 20), now);
+      const th = mapUnaryTo(pr.threshold, -40, 0);
+      const ratio = mapUnaryTo(power3(pr.ratio), 1, 20);
+
+      compressor.threshold.setValueAtTime(th, now);
+      compressor.ratio.setValueAtTime(ratio, now);
       compressor.knee.setValueAtTime(mapUnaryTo(pr.knee, 0, 40), now);
       compressor.attack.setValueAtTime(mapUnaryTo(pr.attack, 0.001, 0.08), now);
       compressor.release.setValueAtTime(mapUnaryTo(pr.release, 0.05, 0.5), now);
