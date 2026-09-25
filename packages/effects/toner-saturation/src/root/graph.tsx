@@ -6,21 +6,25 @@ export const GraphRoot = () => {
 
   const prTop = pr.top;
   const prDrive = pr.drive;
+  const pi = Math.PI;
+  const coreFunctions = {
+    [0]: (x) => Math.tanh(x),
+    [1]: (x) => (x < 3 ? (2 / pi) * Math.atan((pi / 2) * x) * 1.15 : 1),
+    [2]: (x) => {
+      x *= 0.8;
+      return x < 1.5 ? (x * 1.5 - 0.5 * x * x) / 1.125 : 1;
+    },
+    [3]: (x) => (x < 1.5 ? x - (x * x * x) / 6.667 : 1),
+  } satisfies Record<number, (x: number) => number>;
+  const coreFn =
+    coreFunctions[pr.curveType as keyof typeof coreFunctions] ?? (() => 0);
   const curveLogicalPoints = seqNumbers(41).map((i) => {
     const inputX = (i / 40) * 2;
     const xsc = 1 + prDrive * 1;
     const x = (inputX * xsc) / prTop;
     let y = 0;
     if (prTop > 0) {
-      if (pr.curveType === 0) {
-        y = Math.tanh(x);
-      } else {
-        if (x <= 1.5) {
-          y = x - (x * x * x) / 6.66;
-        } else {
-          y = 1;
-        }
-      }
+      y = coreFn(x);
     }
     return { x: inputX, y: y * prTop };
   });

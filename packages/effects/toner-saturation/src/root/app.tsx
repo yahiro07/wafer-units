@@ -14,7 +14,7 @@ type ParameterSpec = {
 };
 
 const KnobParams: ParameterSpec[] = [
-  { key: "curveType", label: "CURVE", enumMax: 1 },
+  { key: "curveType", label: "CURVE", enumMax: 3 },
   { key: "top", label: "TOP" },
   { key: "drive", label: "DRIVE" },
 ];
