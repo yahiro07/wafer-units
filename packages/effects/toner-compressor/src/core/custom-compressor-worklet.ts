@@ -1,3 +1,10 @@
+const configs = {
+  applyMakeupGain: false,
+};
+if (1) {
+  configs.applyMakeupGain = true;
+}
+
 class CustomCompressorProcessor extends AudioWorkletProcessor {
   static get parameterDescriptors() {
     return [
@@ -60,6 +67,9 @@ class CustomCompressorProcessor extends AudioWorkletProcessor {
     const side = inputs[1];
     const detector = side?.length ? side : main;
     const frameCount = Math.min(main[0].length, output[0].length);
+    const makeupGain = configs.applyMakeupGain
+      ? makeupGainFor(threshold, ratio, knee)
+      : 1;
 
     for (let i = 0; i < frameCount; i++) {
       const peak = channelPeak(detector, i);
@@ -73,7 +83,7 @@ class CustomCompressorProcessor extends AudioWorkletProcessor {
         const outputChannel = output[channel];
         const inputChannel = main[channel] ?? main[0];
         if (!outputChannel || !inputChannel) continue;
-        outputChannel[i] = (inputChannel[i] ?? 0) * this.gain;
+        outputChannel[i] = (inputChannel[i] ?? 0) * this.gain * makeupGain;
       }
     }
 
@@ -116,6 +126,11 @@ function staticGainDb(
 
   const distance = levelDb - threshold + halfKnee;
   return ((1 / safeRatio - 1) * distance * distance) / (2 * knee);
+}
+
+function makeupGainFor(threshold: number, ratio: number, knee: number) {
+  const fullScaleGain = 10 ** (staticGainDb(0, threshold, ratio, knee) / 20);
+  return fullScaleGain ** -0.6;
 }
 
 registerProcessor("custom-compressor", CustomCompressorProcessor);
