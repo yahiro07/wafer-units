@@ -75,11 +75,15 @@ export function createAudioAnalysisEngine(
   const { audioContext } = unitInterface;
   const ch1Input = ioNodeSuit.inputNode;
   const ch2Input = ioNodeSuit.outputNode;
+  const ch3Input = ioNodeSuit.sideChainInputNode;
+
   const ch1Analyser = createChannelAnalyser(ch1Input);
   const ch2Analyser = createChannelAnalyser(ch2Input);
+  const ch3Analyser = createChannelAnalyser(ch3Input);
 
   const wavePlotterCh1 = createWavePlotter();
   const wavePlotterCh2 = createWavePlotter();
+  const wavePlotterCh3 = createWavePlotter();
   const meterTrackerCh1 = createMeterTracker();
   const meterTrackerCh2 = createMeterTracker();
 
@@ -132,6 +136,7 @@ export function createAudioAnalysisEngine(
     updateAnalysers() {
       internal.feedWavePlotter(ch1Analyser, wavePlotterCh1);
       internal.feedWavePlotter(ch2Analyser, wavePlotterCh2);
+      internal.feedWavePlotter(ch3Analyser, wavePlotterCh3);
       internal.updateChannelMeter(
         "ch1",
         ch1Analyser.timeDomainData,
@@ -165,6 +170,7 @@ export function createAudioAnalysisEngine(
       internal.setDrawingActive(false);
       ch1Input.disconnect();
       ch2Input.disconnect();
+      ch3Input.disconnect();
     },
     setDrawingActive: internal.setDrawingActive,
     setBpm(bpm) {
@@ -176,12 +182,15 @@ export function createAudioAnalysisEngine(
     setBarLength(bars) {
       wavePlotterCh1.setBarLength(bars);
       wavePlotterCh2.setBarLength(bars);
+      wavePlotterCh3.setBarLength(bars);
     },
     setWaveCanvas(id, canvas) {
       if (id === "ch1") {
         wavePlotterCh1.setCanvas(canvas);
-      } else {
+      } else if (id === "ch2") {
         wavePlotterCh2.setCanvas(canvas);
+      } else if (id === "ch3") {
+        wavePlotterCh3.setCanvas(canvas);
       }
     },
     subscribeUi(fn) {
