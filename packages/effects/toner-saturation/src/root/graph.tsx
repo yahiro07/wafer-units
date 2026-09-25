@@ -29,7 +29,7 @@ export const GraphRoot = () => {
     .map(({ x, y }) => `${x},${y}`)
     .join(" ");
   return (
-    <svg viewBox="0 0 200 104" className="w-200px h-104px bg-#333">
+    <svg viewBox="0 0 200 104" className="w-200px h-104px bg-#222">
       <g transform="translate(0, 4)">
         <line
           x1={100}
