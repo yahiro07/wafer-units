@@ -6,6 +6,6 @@ export default defineConfig({
   base: "./",
   plugins: [preact(), UnoCSS()],
   resolve: { tsconfigPaths: true },
-  build: { outDir: "../../../dist/mxr1", emptyOutDir: true },
+  build: { outDir: "../../../dist/fc1", emptyOutDir: true },
   server: { port: 3000 },
 });
