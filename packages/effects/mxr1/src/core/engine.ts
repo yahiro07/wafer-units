@@ -2,7 +2,6 @@ import { UnitInterface } from "wafer-host/unit-types";
 import { ChannelParameters, EffectParameters } from "@/core/definitions";
 import { invPower2, mapUnaryFrom, mapUnaryTo } from "@/utils/synth-math-utils";
 import { connectNodes, disconnectNodes } from "@/core/webaudio-helper";
-import { mapKnobCurveCenterUnity } from "@/core/volume-curve";
 
 type ChannelStripLane = {
   inputNode: AudioNode;
@@ -109,8 +108,8 @@ function createChannelStripLane(ac: AudioContext): ChannelStripLane {
         prTilt: params.eqTilt,
       });
       panner.pan.value = params.pan;
-      mainOutputNode.gain.value = mapKnobCurveCenterUnity(params.levelMain);
-      auxOutputNode.gain.value = mapKnobCurveCenterUnity(params.levelAux);
+      // mainOutputNode.gain.value = mapKnobCurveCenterUnity(params.levelMain);
+      // auxOutputNode.gain.value = mapKnobCurveCenterUnity(params.levelAux);
     },
     cleanup() {
       disconnectNodes(inputNode, filter.node, eq);
@@ -122,20 +121,21 @@ function createChannelStripLane(ac: AudioContext): ChannelStripLane {
 export function createEngine(unitInterface: UnitInterface | undefined) {
   const ac = unitInterface?.audioContext ?? new AudioContext();
   const mainDestinationNode = unitInterface?.audioOutputNode ?? ac.destination;
-  const auxDestinationNode =
-    unitInterface?.createAdditionalAudioOutputNode("aux") ?? ac.createGain();
+  // const auxDestinationNode =
+  //   unitInterface?.createAdditionalAudioOutputNode("aux") ?? ac.createGain();
 
-  const ch1Input =
-    unitInterface?.createAdditionalAudioInputNode("ch1") ?? ac.createGain();
+  const ch1Input = unitInterface?.audioInputNode ?? ac.createGain();
+  // const ch1Input =
+  //   unitInterface?.createAdditionalAudioInputNode("ch1") ?? ac.createGain();
   // const ch2Input = unitInterface?.createAdditionalAudioInputNode("ch2");
 
   const ch1Lane = createChannelStripLane(ac);
   const mainGainNode = ac.createGain();
-  const auxGainNode = ac.createGain();
+  // const auxGainNode = ac.createGain();
 
   ch1Input.connect(ch1Lane.inputNode);
   ch1Lane.mainOutputNode.connect(mainGainNode).connect(mainDestinationNode);
-  ch1Lane.auxOutputNode.connect(auxGainNode).connect(auxDestinationNode);
+  // ch1Lane.auxOutputNode.connect(auxGainNode).connect(auxDestinationNode);
 
   return {
     setParameters(pr: EffectParameters) {
@@ -145,11 +145,11 @@ export function createEngine(unitInterface: UnitInterface | undefined) {
         filterQ: pr.ch1FilterQ,
         eqFreq: pr.ch1EqFreq,
         eqTilt: pr.ch1EqTilt,
-        levelMain: pr.ch1LevelMain,
-        levelAux: pr.ch1LevelAux,
+        // levelMain: pr.ch1LevelMain,
+        // levelAux: pr.ch1LevelAux,
       });
-      mainGainNode.gain.value = mapKnobCurveCenterUnity(pr.mainGain);
-      auxGainNode.gain.value = mapKnobCurveCenterUnity(pr.auxGain);
+      // mainGainNode.gain.value = mapKnobCurveCenterUnity(pr.mainGain);
+      // auxGainNode.gain.value = mapKnobCurveCenterUnity(pr.auxGain);
     },
     cleanup() {
       ch1Input.disconnect();

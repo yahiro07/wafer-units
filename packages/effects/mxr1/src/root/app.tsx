@@ -15,19 +15,19 @@ type ParameterSpec = {
 };
 
 const knobParamsPrimary: ParameterSpec[] = [
-  { key: "ch1Pan", label: "PAN", isBipolar: true },
   { key: "ch1FilterFreq", label: "F-FREQ" },
   { key: "ch1FilterQ", label: "Q", isSlider: true },
   { key: "ch1EqTilt", label: "EQ-TILT" },
   { key: "ch1EqFreq", label: "FREQ", isSlider: true },
-  { key: "ch1LevelMain", label: "MAIN" },
-  { key: "ch1LevelAux", label: "AUX" },
+  { key: "ch1Pan", label: "PAN", isBipolar: true },
+  // { key: "ch1LevelMain", label: "MAIN" },
+  // { key: "ch1LevelAux", label: "AUX" },
 ];
 
-const KnobParamsSecondary: ParameterSpec[] = [
-  { key: "mainGain", label: "MAIN-GAIN" },
-  { key: "auxGain", label: "AUX-GAIN" },
-];
+// const KnobParamsSecondary: ParameterSpec[] = [
+//   { key: "mainGain", label: "MAIN-GAIN" },
+//   { key: "auxGain", label: "AUX-GAIN" },
+// ];
 
 const ParameterUis = ({
   specs,
@@ -63,15 +63,15 @@ const PageRoot = () => {
 
   return (
     <div class="flex-v bg-clControlBg bd-clControlEdge py-2 px-4 gap-3">
-      <div class="text-xl font-bold">MXR1</div>
+      <div class="text-xl font-bold">FC1</div>
       <div class="flex-ha gap-6">
-        <div class="text-20px font-bold">CH1</div>
+        {/* <div class="text-20px font-bold">CH1</div> */}
         <ParameterUis specs={knobParamsPrimary} parameters={parameters} />
       </div>
-      <div class="flex-ha gap-8">
+      {/* <div class="flex-ha gap-8">
         <div class="text-20px font-bold">COMMON</div>
         <ParameterUis specs={KnobParamsSecondary} parameters={parameters} />
-      </div>
+      </div> */}
     </div>
   );
 };

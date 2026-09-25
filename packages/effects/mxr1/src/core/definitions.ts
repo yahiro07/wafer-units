@@ -4,10 +4,10 @@ export type EffectParameters = {
   ch1FilterQ: number;
   ch1EqTilt: number;
   ch1EqFreq: number;
-  ch1LevelMain: number;
-  ch1LevelAux: number;
-  mainGain: number;
-  auxGain: number;
+  // ch1LevelMain: number;
+  // ch1LevelAux: number;
+  // mainGain: number;
+  // auxGain: number;
 };
 
 export const defaultEffectParameters: EffectParameters = {
@@ -16,10 +16,10 @@ export const defaultEffectParameters: EffectParameters = {
   ch1FilterQ: 0,
   ch1EqTilt: 0.5,
   ch1EqFreq: 0.5,
-  ch1LevelMain: 0.5,
-  ch1LevelAux: 0.5,
-  mainGain: 0.5,
-  auxGain: 0.5,
+  // ch1LevelMain: 0.5,
+  // ch1LevelAux: 0.5,
+  // mainGain: 0.5,
+  // auxGain: 0.5,
 };
 
 export type ChannelParameters = {
@@ -28,8 +28,8 @@ export type ChannelParameters = {
   filterQ: number;
   eqTilt: number;
   eqFreq: number;
-  levelMain: number;
-  levelAux: number;
+  // levelMain: number;
+  // levelAux: number;
 };
 
 export type EffectEngine = {
