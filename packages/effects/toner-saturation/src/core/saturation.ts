@@ -14,6 +14,8 @@ type SaturationEffect = {
 const configs = {
   curveSize: 1024,
   curveSteps: 10,
+  //since waveShaper node can handle only input in range of -1~1,
+  //we need to scale the input to process wider range of signals
   shaperInputScaling: 4,
 };
 
@@ -67,9 +69,11 @@ export function createSaturationEffect(ac: AudioContext): SaturationEffect {
       const inputNodeBaseGain = 1 / configs.shaperInputScaling; //-4~4 ---> -1~1
 
       const xsc = 1 + prDrive * 1;
-      inputNode.gain.value = (inputNodeBaseGain * xsc) / prTop;
+      const inputGain = prTop === 0 ? 0 : (inputNodeBaseGain * xsc) / prTop;
+      const outputGain = prTop;
 
-      outputNode.gain.value = prTop;
+      inputNode.gain.setValueAtTime(inputGain, ac.currentTime + 0.01);
+      outputNode.gain.setValueAtTime(outputGain, ac.currentTime + 0.01);
     },
     cleanup() {
       disconnectNodes(inputNode, shaperNode, outputNode);
