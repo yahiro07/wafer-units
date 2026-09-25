@@ -207,7 +207,7 @@ importers:
         specifier: ^4.3.3
         version: 4.3.3
 
-  packages/effects/mxr2:
+  packages/effects/mz1:
     devDependencies:
       '@preact/preset-vite':
         specifier: 'catalog:'
