@@ -1,5 +1,5 @@
 {
-  "name": "saturation",
+  "name": "toner-saturation",
   "unitType": "effect",
   "protocol": "wafer-v01",
   "integrationFormat": "iframe",
