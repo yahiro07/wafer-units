@@ -1,4 +1,4 @@
 export const uiColors = {
-  clPanelBg: "#bbb",
-  clPanelText: "#444",
+  clPanelBg: "#444",
+  clPanelText: "#fff",
 };

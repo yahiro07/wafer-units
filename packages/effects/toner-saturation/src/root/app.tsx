@@ -4,6 +4,7 @@ import { actions } from "@/root/actions";
 import { useSetupDrivers } from "@/root/drivers";
 import { LabeledBox, Knob } from "@lib/toner-ui";
 import { cz } from "@lib/mu2609/utils/cz";
+import { GraphRoot } from "@/root/graph";
 
 type ParameterSpec = {
   key: keyof EffectParameters;
@@ -37,14 +38,12 @@ const ParameterUis = ({
 const PageRoot = () => {
   const { parameters } = store.useSnapshot();
   return (
-    <div
-      className={cz(
-        "p-4 flex-c bg-clPanelBg text-clPanelText",
-        "w-200px h-100px pb-2",
-      )}
-    >
-      <div className="flex-h gap-5">
-        <ParameterUis specs={KnobParams} parameters={parameters} />
+    <div className={cz("bg-clPanelBg text-clPanelText p-4 pb-2")}>
+      <div className="flex-vc gap-4">
+        <GraphRoot />
+        <div className="flex-h gap-6">
+          <ParameterUis specs={KnobParams} parameters={parameters} />
+        </div>
       </div>
     </div>
   );
