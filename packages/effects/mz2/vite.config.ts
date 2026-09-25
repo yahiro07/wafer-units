@@ -6,6 +6,6 @@ export default defineConfig({
   base: "./",
   plugins: [preact(), UnoCSS()],
   resolve: { tsconfigPaths: true },
-  build: { outDir: "../../../dist/maxima", emptyOutDir: true },
+  build: { outDir: "../../../dist/mz2", emptyOutDir: true },
   server: { port: 3000 },
 });

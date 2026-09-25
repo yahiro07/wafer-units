@@ -64,7 +64,7 @@ const PageRoot = () => {
 
   return (
     <div class="flex-v bg-clControlBg bd-clControlEdge py-2 px-4 gap-3">
-      <div class="text-xl font-bold">MXR2</div>
+      <div class="text-xl font-bold">MZ2</div>
       <div class="flex-ha gap-6">
         <ParameterUis specs={KnobParams} parameters={parameters} />
       </div>
