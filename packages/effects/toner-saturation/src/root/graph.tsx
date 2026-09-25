@@ -7,10 +7,22 @@ export const GraphRoot = () => {
   const prTop = pr.top;
   const prDrive = pr.drive;
   const curveLogicalPoints = seqNumbers(41).map((i) => {
-    const x = (i / 40) * 2;
+    const inputX = (i / 40) * 2;
     const xsc = 1 + prDrive * 1;
-    const y = prTop <= 0 ? 0 : prTop * Math.tanh((x * xsc) / prTop);
-    return { x, y };
+    const x = (inputX * xsc) / prTop;
+    let y = 0;
+    if (prTop > 0) {
+      if (pr.curveType === 0) {
+        y = Math.tanh(x);
+      } else {
+        if (x <= 1.5) {
+          y = x - (x * x * x) / 6.66;
+        } else {
+          y = 1;
+        }
+      }
+    }
+    return { x: inputX, y: y * prTop };
   });
   const curveScreenPoints = curveLogicalPoints.map(({ x, y }) => {
     return { x: x * 100, y: 100 - y * 100 };

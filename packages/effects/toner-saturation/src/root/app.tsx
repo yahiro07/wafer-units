@@ -10,9 +10,11 @@ type ParameterSpec = {
   key: keyof EffectParameters;
   label: string;
   isBipolar?: boolean;
+  enumMax?: number;
 };
 
 const KnobParams: ParameterSpec[] = [
+  { key: "curveType", label: "CURVE", enumMax: 1 },
   { key: "top", label: "TOP" },
   { key: "drive", label: "DRIVE" },
 ];
@@ -24,12 +26,14 @@ const ParameterUis = ({
   specs: ParameterSpec[];
   parameters: EffectParameters;
 }) => {
-  return specs.map(({ key, label, isBipolar }) => (
+  return specs.map(({ key, label, isBipolar, enumMax }) => (
     <LabeledBox key={key} label={label}>
       <Knob
         value={parameters[key] as number}
         onChange={(value) => actions.setParameter(key, value)}
         min={isBipolar ? -1 : 0}
+        max={enumMax ?? 1}
+        step={enumMax ? 1 : 0.01}
       />
     </LabeledBox>
   ));
