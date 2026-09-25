@@ -2,11 +2,12 @@ import { defineConfig } from "unocss";
 import presetWind4 from "@unocss/preset-wind4";
 import { transformerVariantGroup } from "unocss";
 import { uiColors } from "./src/common/ui-theme";
+import { tonerUiColors } from "@lib/toner-ui-dark/common/toner-ui-colors";
 
 export default defineConfig({
   transformers: [transformerVariantGroup()],
   presets: [presetWind4()],
-  theme: { colors: uiColors },
+  theme: { colors: { ...uiColors, ...tonerUiColors } },
   configDeps: ["./src/common/ui-theme.ts"],
   shortcuts: [
     {
