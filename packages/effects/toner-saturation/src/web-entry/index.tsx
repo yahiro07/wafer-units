@@ -6,7 +6,7 @@ import "virtual:uno.css";
 import { appEnvs } from "@/common/app-envs";
 import { cz } from "@lib/mu2609/utils/cz";
 import { App } from "@/root/app";
-import { tonerUiCssRealm } from "@lib/toner-ui";
+import { tonerUiCssRealm } from "@lib/toner-ui-dark";
 
 const root = document.getElementById("app")!;
 

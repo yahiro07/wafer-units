@@ -2,7 +2,7 @@ import { EffectParameters } from "@/core/definitions";
 import { store, useStoreSnapshot } from "@/root/store";
 import { actions } from "@/root/actions";
 import { useSetupDrivers } from "@/root/drivers";
-import { LabeledBox, Knob } from "@lib/toner-ui";
+import { LabeledBox, Knob } from "@lib/toner-ui-dark";
 import { cz } from "@lib/mu2609/utils/cz";
 import { GraphRoot } from "@/root/graph";
 

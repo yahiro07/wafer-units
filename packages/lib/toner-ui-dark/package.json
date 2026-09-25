@@ -1,0 +1,13 @@
+{
+  "name": "@lib/toner-ui-dark",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "devDependencies": {
+    "@lib/mu2609": "workspace:*",
+    "mini-css": "catalog:",
+    "preact": "catalog:"
+  }
+}

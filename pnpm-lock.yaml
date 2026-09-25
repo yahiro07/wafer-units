@@ -410,9 +410,9 @@ importers:
       '@lib/mu2609':
         specifier: workspace:*
         version: link:../../lib/mu2609
-      '@lib/toner-ui':
+      '@lib/toner-ui-dark':
         specifier: workspace:*
-        version: link:../../lib/toner-ui
+        version: link:../../lib/toner-ui-dark
       '@preact/preset-vite':
         specifier: 'catalog:'
         version: 2.10.6(@babel/core@7.29.7)(preact@10.29.8)(vite@8.3.0(@types/node@26.4.0)(jiti@2.7.0))
@@ -496,6 +496,18 @@ importers:
         version: 10.29.8
 
   packages/lib/toner-ui:
+    devDependencies:
+      '@lib/mu2609':
+        specifier: workspace:*
+        version: link:../mu2609
+      mini-css:
+        specifier: 'catalog:'
+        version: '@yahiro07/mini-css@0.1.0'
+      preact:
+        specifier: 'catalog:'
+        version: 10.29.8
+
+  packages/lib/toner-ui-dark:
     devDependencies:
       '@lib/mu2609':
         specifier: workspace:*
