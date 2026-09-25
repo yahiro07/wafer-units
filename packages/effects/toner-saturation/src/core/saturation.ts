@@ -1,4 +1,7 @@
-import { saturationCurveFunctions } from "@/core/saturation-curve-functions";
+import {
+  parametersMapper,
+  saturationCurveFunctions,
+} from "@/core/saturation-curve-functions";
 import {
   connectNodes,
   disconnectNodes,
@@ -68,9 +71,11 @@ export function createSaturationEffect(ac: AudioContext): SaturationEffect {
 
       const inputNodeBaseGain = 1 / configs.shaperInputScaling; //-4~4 ---> -1~1
 
-      const xsc = 1 + prDrive * 1;
-      const inputGain = prTop === 0 ? 0 : (inputNodeBaseGain * xsc) / prTop;
-      const outputGain = prTop;
+      const xScale = parametersMapper.mapPrDriveToXCale(prDrive);
+      const yScale = parametersMapper.mapPrTopToYScale(prTop);
+      const inputGain =
+        yScale === 0 ? 0 : (inputNodeBaseGain * xScale) / yScale;
+      const outputGain = yScale;
 
       inputNode.gain.setValueAtTime(inputGain, ac.currentTime + 0.01);
       outputNode.gain.setValueAtTime(outputGain, ac.currentTime + 0.01);

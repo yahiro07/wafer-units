@@ -1,3 +1,6 @@
+import { mapUnaryTo } from "@lib/mu2609/utils/helpers";
+import { power2 } from "@lib/mu2609/utils/synth-math-utils";
+
 const pi = Math.PI;
 
 export const saturationCurveFunctions = {
@@ -10,3 +13,12 @@ export const saturationCurveFunctions = {
   },
   [3]: (x) => (x < 1.5 ? x - (x * x * x) / 6.667 : 1),
 } satisfies Record<number, (x: number) => number>;
+
+export const parametersMapper = {
+  mapPrDriveToXCale(prDriver: number) {
+    return 1 + power2(prDriver) * 2;
+  },
+  mapPrTopToYScale(prTop: number) {
+    return mapUnaryTo(prTop, 0.125, 1);
+  },
+};

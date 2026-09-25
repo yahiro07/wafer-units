@@ -1,4 +1,7 @@
-import { saturationCurveFunctions } from "@/core/saturation-curve-functions";
+import {
+  parametersMapper,
+  saturationCurveFunctions,
+} from "@/core/saturation-curve-functions";
 import { store } from "@/root/store";
 import { seqNumbers } from "@lib/mu2609/utils/helpers";
 
@@ -13,13 +16,11 @@ export const GraphRoot = () => {
     ] ?? (() => 0);
   const curveLogicalPoints = seqNumbers(41).map((i) => {
     const inputX = (i / 40) * 2;
-    const xsc = 1 + prDrive * 1;
-    const x = (inputX * xsc) / prTop;
-    let y = 0;
-    if (prTop > 0) {
-      y = coreFn(x);
-    }
-    return { x: inputX, y: y * prTop };
+    const xScale = parametersMapper.mapPrDriveToXCale(prDrive);
+    const yScale = parametersMapper.mapPrTopToYScale(prTop);
+    const x = (inputX * xScale) / yScale;
+    const y = coreFn(x);
+    return { x: inputX, y: y * yScale };
   });
   const curveScreenPoints = curveLogicalPoints.map(({ x, y }) => {
     return { x: x * 100, y: 100 - y * 100 };
