@@ -129,7 +129,7 @@ const TimeSpanGauge = () => {
   const unitLength = barLength / 4;
   const unitLengthText = unitLength >= 1 ? unitLength : `1/${1 / unitLength}`;
   const unitMs = unitLength * (240 / hostBpm) * 1000;
-  const unitMsText = Number(unitMs.toFixed(3));
+  const unitMsText = Number(unitMs.toFixed(1));
 
   return (
     <div class={cssTimeSpanGauge}>
