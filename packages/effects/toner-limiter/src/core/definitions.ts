@@ -1,7 +1,9 @@
 export type EffectParameters = {
+  inputGain: number;
   ceiling: number;
 };
 
 export const defaultEffectParameters: EffectParameters = {
-  ceiling: 1,
+  inputGain: 0.5,
+  ceiling: 0.5,
 };
