@@ -11,7 +11,10 @@ type ParameterSpec = {
   isBipolar?: boolean;
 };
 
-const KnobParams: ParameterSpec[] = [{ key: "ceiling", label: "CEILING" }];
+const KnobParams: ParameterSpec[] = [
+  { key: "inputGain", label: "INPUT" },
+  { key: "ceiling", label: "CEILING" },
+];
 
 const ParameterUis = ({
   specs,
@@ -37,10 +40,12 @@ const PageRoot = () => {
     <div
       className={cz(
         "p-4 flex-c bg-clPanelBg text-clPanelText",
-        "w-100px h-100px pb-2",
+        "w-160px h-100px pb-2",
       )}
     >
-      <ParameterUis specs={KnobParams} parameters={parameters} />
+      <div className="flex-ha gap-5">
+        <ParameterUis specs={KnobParams} parameters={parameters} />
+      </div>
     </div>
   );
 };
