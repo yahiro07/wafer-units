@@ -25,12 +25,14 @@ export function createEffectEngine(
 
   return {
     setParameters(pr) {
-      const inputDb = mapUnaryTo(pr.inputGain, -24, 24);
+      const inputDb = mapUnaryTo(pr.inputGain, -80, 80);
       const inputGainValue = 10 ** (inputDb / 20);
-      inputGain.gain.value = inputGainValue;
-      const threshold = mapUnaryTo(pr.ceiling, -6, -0.1);
+      inputGain.gain.linearRampToValueAtTime(
+        inputGainValue,
+        ac.currentTime + 0.02,
+      );
+      const threshold = mapUnaryTo(pr.ceiling, -24, -0.1);
       compressor.threshold.value = threshold;
-      console.log({ inputGainValue, threshold });
       if (0) {
         outputGain.gain.value = 10 ** ((0.6 * threshold * (1 - 1 / 20)) / 20);
       }

@@ -5,5 +5,5 @@ export type EffectParameters = {
 
 export const defaultEffectParameters: EffectParameters = {
   inputGain: 0.5,
-  ceiling: 0.5,
+  ceiling: 1,
 };
