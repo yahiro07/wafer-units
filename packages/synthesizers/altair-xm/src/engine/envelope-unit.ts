@@ -115,6 +115,10 @@ export function createEnvelopeUnit(
       tailNode.gain.setValueAtTime(1, time);
     },
     gateOff(time, applyRelease) {
+      headNode.gain.cancelScheduledValues(time);
+      tailNode.gain.cancelScheduledValues(time);
+      gainNode.gain.cancelScheduledValues(time);
+
       tailNode.gain.setValueAtTime(1, time);
       if (applyRelease) {
         const pr = bus.parameters;
