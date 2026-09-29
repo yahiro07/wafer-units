@@ -2,10 +2,14 @@ import { SamplerSlot, CommonParameters } from "@/definitions/types";
 import { Store } from "snap-store";
 
 export type StoreState = {
+  //persistent
   slots: SamplerSlot[];
-  levelsMap: Record<number, number[]>; //assetIndex-->levels
-  // audioSourceText: string;
   commonParameters: CommonParameters;
+  audioSourceText: string;
+  //volatile
+  audioBaseUrl: string;
+  audioPaths: string[];
+  levelsMap: Record<number, number[]>; //audioIndex-->levels
   errorMessage: string | null;
 };
 
@@ -22,9 +26,12 @@ export const defaultStoreState: StoreState = {
     { audioIndex: 0, volume: 0.5, pan: 0, aux: 0 },
     { audioIndex: 1, volume: 0.5, pan: 0, aux: 0 },
   ],
-  levelsMap: {},
-  // audioSourceText: audioSourceTextDefault,
   commonParameters: { mainLevel: 0.5, auxLevel: 0.5 },
+  audioSourceText: "",
+  //
+  audioBaseUrl: "",
+  audioPaths: [],
+  levelsMap: {},
   errorMessage: null,
 };
 // if (appEnvs.isDevelopment) {

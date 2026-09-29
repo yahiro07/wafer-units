@@ -57,8 +57,26 @@ function createAppModel() {
   const actions = createActions(store);
 
   return {
-    setAudioSourceText(text: string) {
-      // store.setAudioSourceText(text);
+    useSnapshot: store.useSnapshot,
+    loadAudioSourceText(text: string, fromUi?: boolean) {
+      const lines = text.split("\n");
+      const audioBaseUrl = lines[0].replace("@base ", "");
+      store.setAudioBaseUrl(audioBaseUrl);
+
+      const index = lines.findIndex((line) => line.startsWith("@samples"));
+      const audioPaths = [];
+      for (let i = index + 1; i < lines.length; i++) {
+        const line = lines[i];
+        if (line && !line.startsWith("@")) {
+          audioPaths.push(line);
+        } else {
+          break;
+        }
+      }
+      store.setAudioPaths(audioPaths);
+      if (fromUi) {
+        store.setAudioSourceText(text);
+      }
     },
     setupDrivers() {
       const unsub1 = setupUnit(unitInterface, engine);

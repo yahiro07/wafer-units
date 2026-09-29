@@ -7,7 +7,7 @@ const SourceEditPanel = () => {
     const text = textAreaRef.current?.value;
     if (text) {
       //check entries length <=24
-      appModel.setAudioSourceText(text);
+      appModel.loadAudioSourceText(text, true);
     }
   };
   return (
@@ -38,9 +38,16 @@ st1.ogg
 };
 
 const SamplerSourcePanel = () => {
+  const { audioBaseUrl, audioPaths } = appModel.useSnapshot();
   return (
     <div class="w-200px h-400px bg-#aaa">
       list of entry samples, text only, max 24 entries
+      <div>base: {audioBaseUrl}</div>
+      <div>
+        {audioPaths.map((path) => (
+          <div>{path}</div>
+        ))}
+      </div>
     </div>
   );
 };
