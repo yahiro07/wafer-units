@@ -1,10 +1,9 @@
-import { AudioSourceSpec, SamplerEngine } from "@/definitions/types";
+import { AudioSourceSpec } from "@/definitions/interfaces";
 import { delayMs } from "@lib/mu2609/utils/timer-helper";
 
 export type LevelsLoader = {
   start(
     sourceSpec: AudioSourceSpec,
-    engine: SamplerEngine,
     itemCallback: (item: { audioIndex: number; levels: number[] }) => void,
   ): void;
   cancel(): void;
@@ -12,14 +11,21 @@ export type LevelsLoader = {
 
 export function createLevelsLoader(): LevelsLoader {
   let cancelled = false;
+
+  const internal = {
+    async loadLevels(url: string): Promise<number[]> {
+      // const buffer = await audioFetcher.fetchAudioBufferCached(url);
+      return [0.5, 0.3, 0.1, 0.2, 0.8, 0.3, 0.1];
+    },
+  };
   return {
-    async start(sourceSpec, engine, itemCallback) {
+    async start(sourceSpec, itemCallback) {
       try {
         const count = Math.min(sourceSpec.audioPaths.length, 12);
         for (let i = 0; i < count; i++) {
           const audioPath = sourceSpec.audioPaths[i];
           const url = `${sourceSpec.baseUrl}${audioPath}`;
-          const levels = await engine.loadLevels(url);
+          const levels = await internal.loadLevels(url);
           if (cancelled) return;
           itemCallback({ audioIndex: i, levels });
           await delayMs(500);
