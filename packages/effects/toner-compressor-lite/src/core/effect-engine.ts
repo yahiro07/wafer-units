@@ -1,6 +1,9 @@
 import { UnitInterface } from "wafer-host/unit-types";
 import { mapUnaryTo } from "@lib/mu2609/utils/synth-math-utils";
-import { createConnectionKeeper } from "@lib/mu2609/utils/webaudio-helper";
+import {
+  connectNodes,
+  disconnectNodes,
+} from "@lib/mu2609/utils/webaudio-helper";
 import { mapKnobCurveCenterUnity } from "@lib/mu2609/utils/volume-curve";
 import { EffectEngine } from "@/core/interfaces";
 import { parameterMapper } from "@/core/parameter-mapper";
@@ -16,31 +19,13 @@ export function createEffectEngine(
   const compressor = ac.createDynamicsCompressor();
   const outputGainNode = ac.createGain();
 
-  const connectionKeeper = createConnectionKeeper();
-  const detectorKeeper = createConnectionKeeper();
-  const flags = {
-    effectEnabled: true,
-    sideChain: false,
-  };
-
-  const updateConnection = () => {
-    const { effectEnabled, sideChain } = flags;
-    if (effectEnabled) {
-      connectionKeeper.connects(
-        inputNode,
-        inputGainNode,
-        compressor,
-        outputGainNode,
-        outputNode,
-      );
-    } else {
-      connectionKeeper.connects(inputNode, outputNode);
-      detectorKeeper.cleanup();
-    }
-  };
-
-  updateConnection();
-
+  connectNodes(
+    inputNode,
+    inputGainNode,
+    compressor,
+    outputGainNode,
+    outputNode,
+  );
   return {
     setParameters(pr) {
       const now = ac.currentTime;
@@ -63,17 +48,14 @@ export function createEffectEngine(
       compressor.attack.setValueAtTime(mapUnaryTo(pr.attack, 0.001, 0.08), now);
       compressor.release.setValueAtTime(mapUnaryTo(pr.release, 0.05, 0.5), now);
     },
-    setEnabled(enabled) {
-      flags.effectEnabled = enabled;
-      updateConnection();
-    },
-    setSideChain(sideChain) {
-      flags.sideChain = sideChain;
-      updateConnection();
-    },
     cleanup() {
-      connectionKeeper.cleanup();
-      detectorKeeper.cleanup();
+      disconnectNodes(
+        inputNode,
+        inputGainNode,
+        compressor,
+        outputGainNode,
+        outputNode,
+      );
     },
   };
 }

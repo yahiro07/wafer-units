@@ -7,10 +7,22 @@ import { useMemo } from "preact/hooks";
 function makeCurveGraphPath(pr: EffectParameters) {
   const tp = parameterMapper.mapThreshold(pr.threshold);
   const ratio = parameterMapper.mapRatio(pr.ratio);
-  const rp = tp - tp / ratio;
-
+  const knee = parameterMapper.mapKnee(pr.knee);
   const dbToCoord = (db: number) => linearInterpolate(db, -40, 0, 0, 100);
-  return `M 0 0 L ${dbToCoord(tp)} ${dbToCoord(tp)} L 100 ${dbToCoord(rp)}`;
+  const pt = (dbX: number, dbY: number) =>
+    `${dbToCoord(dbX)} ${dbToCoord(dbY)}`;
+  const half = knee / 2;
+  const start = Math.max(-40, tp - half);
+  const end = Math.min(0, tp + half);
+  const compressed = (x: number) => tp + (x - tp) / ratio;
+  return [
+    `M ${pt(-40, -40)}`,
+    `L ${pt(start, start)}`,
+    `Q ${pt(tp, tp)} ${pt(end, compressed(end))}`,
+    `L ${pt(0, compressed(0))}`,
+    `L ${pt(0, -40)}`,
+    `Z`,
+  ].join(" ");
 }
 
 export const CurveGraph = () => {
@@ -20,7 +32,7 @@ export const CurveGraph = () => {
     <div className="w-60px h-60px bg-#222">
       <svg viewBox="0 0 100 100" className="w-full h-full">
         <g transform="scale(1, -1) translate(0, -100)">
-          <path d={path} fill="none" stroke="#79f" strokeWidth="1" />
+          <path d={path} stroke="#79f" strokeWidth="1" fill="#79fd" />
         </g>
       </svg>
     </div>
