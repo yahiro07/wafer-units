@@ -2,7 +2,7 @@ import { render } from "preact";
 import "./page.css";
 import { onIframeUnitUnloading } from "wafer-host/unit-types";
 import { cssRealm } from "@/common/css-realm";
-import { App } from "@/root/app";
+import { App } from "@/view/app";
 import "virtual:uno.css";
 import { appEnvs } from "@/common/app-envs";
 import { cz } from "@lib/mu2609/utils/cz";
