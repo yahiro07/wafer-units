@@ -1,4 +1,5 @@
-import { SamplerSlot, CommonParameters } from "@/definitions/types";
+import { SamplerSlot, CommonParameters } from "@/definitions/definitions";
+import { seqNumbers } from "@lib/mu2609/utils/helpers";
 import { Store } from "snap-store";
 
 export type StoreState = {
@@ -9,8 +10,9 @@ export type StoreState = {
   //volatile
   audioBaseUrl: string;
   audioPaths: string[];
-  levelsMap: Record<number, number[]>; //audioIndex-->levels
+  // levelsMap: Record<number, number[]>; //audioIndex-->levels
   errorMessage: string | null;
+  currentSlotIndex: number;
 };
 
 export type AppStore = Store<StoreState>;
@@ -22,17 +24,31 @@ export type AppStore = Store<StoreState>;
 // `;
 
 export const defaultStoreState: StoreState = {
-  slots: [
-    { audioIndex: 0, volume: 0.5, pan: 0, aux: 0 },
-    { audioIndex: 1, volume: 0.5, pan: 0, aux: 0 },
-  ],
-  commonParameters: { mainLevel: 0.5, auxLevel: 0.5 },
+  slots: seqNumbers(12).map(() => ({
+    audioIndex: -1,
+    parameters: {
+      volume: 0.5,
+      pan: 0,
+      drive: 0,
+      eq: 0,
+      aux: 0,
+    },
+  })),
+  commonParameters: {
+    mainLevel: 0.5,
+    auxLevel: 0.5,
+    reverbOn: false,
+    reverbTime: 0.5,
+    reverbTone: 0.5,
+    reverbMix: 0.5,
+  },
   audioSourceText: "",
   //
   audioBaseUrl: "",
   audioPaths: [],
-  levelsMap: {},
+  // levelsMap: {},
   errorMessage: null,
+  currentSlotIndex: 0,
 };
 // if (appEnvs.isDevelopment) {
 //   defaultStoreState.audioSourceText = "";

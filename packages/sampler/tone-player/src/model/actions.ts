@@ -1,5 +1,5 @@
-import { AppStore } from "@/definitions/store-states";
-import { CommonParameters } from "@/definitions/types";
+import { AppStore } from "@/model/store-states";
+import { CommonParameters } from "@/definitions/definitions";
 
 export function createActions(store: AppStore) {
   return {
@@ -20,12 +20,12 @@ export function createActions(store: AppStore) {
     ) => {
       store.patchCommonParameters({ [key]: value });
     },
-    clearLevelsMap() {
-      store.setLevelsMap({});
-    },
-    setLevels(audioIndex: number, levels: number[]) {
-      store.patchLevelsMap({ [audioIndex]: levels });
-    },
+    // clearLevelsMap() {
+    //   store.setLevelsMap({});
+    // },
+    // setLevels(audioIndex: number, levels: number[]) {
+    //   store.patchLevelsMap({ [audioIndex]: levels });
+    // },
     setErrorMessage(errorMessage: string | null) {
       store.setErrorMessage(errorMessage);
     },

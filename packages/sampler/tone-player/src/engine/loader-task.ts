@@ -1,14 +1,12 @@
-import { AudioSourceSpec } from "@/definitions/interfaces";
-
-function parseAudioSource(audioSourceText: string): AudioSourceSpec | string {
-  //replace base url from github to jsDeliver
-  //limit paths count to 12
-  try {
-    return {} as any;
-  } catch {
-    return `error`;
-  }
-}
+// function parseAudioSource(audioSourceText: string): AudioSourceSpec | string {
+//   //replace base url from github to jsDeliver
+//   //limit paths count to 12
+//   try {
+//     return {} as any;
+//   } catch {
+//     return `error`;
+//   }
+// }
 
 // function createLoaderTaskModel() {
 //   return {
