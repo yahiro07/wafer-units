@@ -10,8 +10,8 @@ export type EffectParameters = {
 
 export const defaultEffectParameters: EffectParameters = {
   inputGain: 0.5,
-  threshold: 1,
-  ratio: 0,
+  threshold: 0.5,
+  ratio: 0.38,
   knee: 0,
   attack: 0,
   release: 0,

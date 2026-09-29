@@ -6,19 +6,20 @@ export const LabeledBox = ({
   label,
   children,
   onLabelClick,
+  valueText,
 }: {
   className?: string;
   label: string;
   children: ComponentChildren;
   onLabelClick?: () => void;
+  valueText?: string;
 }) => {
   return (
     <div class={cz("flex-vc", className)}>
-      <div>{children}</div>
       <div class="w-30px flex-c">
         <div
           class={cz(
-            "text-13px font-600 whitespace-nowrap",
+            "text-14px font-600 whitespace-nowrap",
             onLabelClick && "cursor-pointer",
           )}
           onClick={onLabelClick}
@@ -26,36 +27,15 @@ export const LabeledBox = ({
           {label}
         </div>
       </div>
-    </div>
-  );
-};
-
-export const SideLabelBox = ({
-  label,
-  children,
-}: {
-  label: string;
-  children: ComponentChildren;
-}) => {
-  return (
-    <div class="flex-ha gap-2">
-      <div class="text-sm">{label}</div>
       <div>{children}</div>
-    </div>
-  );
-};
-
-export const TopLeftLabelBox = ({
-  label,
-  children,
-}: {
-  label: string;
-  children: ComponentChildren;
-}) => {
-  return (
-    <div class="flex-v gap-1">
-      <div class="text-xl font-bold">{label}</div>
-      <div>{children}</div>
+      <div
+        class={cz(
+          "w-40px h-16px flex-c mt-2px",
+          "bg-#333 rounded-xs text-white text-xs",
+        )}
+      >
+        {valueText}
+      </div>
     </div>
   );
 };

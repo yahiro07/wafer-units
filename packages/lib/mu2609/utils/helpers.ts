@@ -1,3 +1,7 @@
+export function resultOf<T>(fn: () => T): T {
+  return fn();
+}
+
 export function seqNumbers(n: number): number[] {
   return new Array(n).fill(0).map((_, i) => i);
 }
