@@ -61,6 +61,7 @@ type AppModel = {
     key: K,
     value: SlotParameters[K],
   ): void;
+  triggerSlot(slotIndex: number): void;
 };
 
 const helpers = {
@@ -69,7 +70,13 @@ const helpers = {
     audioPaths: string[];
   } {
     const lines = text.split("\n");
-    const audioBaseUrl = lines[0].replace("@base ", "");
+    let audioBaseUrl = lines[0].replace("@base ", "");
+    if (audioBaseUrl.startsWith("https://github.com")) {
+      audioBaseUrl = audioBaseUrl
+        .replace("https://github.com", "https://cdn.jsdelivr.net/gh")
+        .replace("/tree/main", "");
+    }
+
     const index = lines.findIndex((line) => line.startsWith("@samples"));
     const audioPaths = [];
     for (let i = index + 1; i < lines.length; i++) {
@@ -97,7 +104,7 @@ function createAppModel(): AppModel {
   const internal = {
     getAudioUri(audioIndex: number) {
       const { audioBaseUrl, audioPaths } = store.state;
-      return `${audioBaseUrl}/${audioPaths[audioIndex]}`;
+      return `${audioBaseUrl}${audioPaths[audioIndex]}`;
     },
   };
 
@@ -137,6 +144,9 @@ function createAppModel(): AppModel {
       const parameters = { ...slot.parameters, [key]: value };
       engine.setSlotParameters(slotIndex, parameters);
       store.produceSlots((draft) => (draft[slotIndex].parameters = parameters));
+    },
+    triggerSlot(slotIndex) {
+      engine.trigger(slotIndex);
     },
   };
 }

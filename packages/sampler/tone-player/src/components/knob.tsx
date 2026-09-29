@@ -1,7 +1,6 @@
-import { css } from "@/common/css-realm";
-import { uiColors } from "@/common/ui-theme";
-import { KnobFrame } from "@lib/mu2609/components/headless/knob-frame";
+import { css } from "../common/css-realm";
 import { linearInterpolate } from "@lib/mu2609/utils/helpers";
+import { KnobFrame } from "@lib/mu2609/components/headless/knob-frame";
 import { absoluteFull, flexVA } from "@lib/mu2609/utils/utility-styles";
 
 export const Knob = ({
@@ -12,7 +11,7 @@ export const Knob = ({
   step = 0.01,
 }: {
   value: number;
-  onChange: (value: number) => void;
+  onChange?: (value: number) => void;
   min?: number;
   max?: number;
   step?: number;
@@ -44,10 +43,10 @@ const styles = css({
   "&:hover": {
     opacity: 0.8,
   },
-  width: "80px",
-  height: "80px",
+  width: "44px",
+  height: "44px",
   background: "linear-gradient(to bottom, #fff, #0004)",
-  padding: "7px",
+  padding: "4.5px",
   border: "solid 0.5px #666",
   "> .inner": {
     width: "100%",
@@ -59,9 +58,9 @@ const styles = css({
     ...absoluteFull(),
     ...flexVA(),
     "> .tick": {
-      width: "4px",
-      height: "18px",
-      background: uiColors.clKnobTick,
+      width: "3.5px",
+      height: "15px",
+      background: "#666",
     },
   },
 });
