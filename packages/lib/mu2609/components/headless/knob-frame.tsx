@@ -8,7 +8,7 @@ export function KnobFrame(props: {
   max: number;
   step: number;
   children: ComponentChildren;
-  onChange: (value: number) => void;
+  onChange?: (value: number) => void;
   dragRange?: number;
   onClick?: () => void;
   dragDisabled?: boolean;
@@ -40,7 +40,7 @@ export function KnobFrame(props: {
         }
         newValue = clampValue(newValue, min, max);
         if (newValue !== lastValue) {
-          props.onChange(newValue);
+          props.onChange?.(newValue);
           lastValue = newValue;
         }
         totalDist += Math.abs(e.position.y - e.originalPosition.y);
