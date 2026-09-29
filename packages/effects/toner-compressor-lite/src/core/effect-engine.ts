@@ -1,5 +1,4 @@
 import { UnitInterface } from "wafer-host/unit-types";
-import { mapUnaryTo } from "@lib/mu2609/utils/synth-math-utils";
 import {
   connectNodes,
   disconnectNodes,
@@ -41,12 +40,14 @@ export function createEffectEngine(
       const th = parameterMapper.mapThreshold(pr.threshold);
       const ratio = parameterMapper.mapRatio(pr.ratio);
       const knee = parameterMapper.mapKnee(pr.knee);
+      const attack = parameterMapper.mapAttack(pr.attack);
+      const release = parameterMapper.mapRelease(pr.release);
 
       compressor.threshold.setValueAtTime(th, now);
       compressor.ratio.setValueAtTime(ratio, now);
       compressor.knee.setValueAtTime(knee, now);
-      compressor.attack.setValueAtTime(mapUnaryTo(pr.attack, 0.001, 0.08), now);
-      compressor.release.setValueAtTime(mapUnaryTo(pr.release, 0.05, 0.5), now);
+      compressor.attack.setValueAtTime(attack, now);
+      compressor.release.setValueAtTime(release, now);
     },
     cleanup() {
       disconnectNodes(
