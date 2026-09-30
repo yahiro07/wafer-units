@@ -20,3 +20,21 @@ export type CommonParameters = {
   reverbTone: number;
   reverbMix: number;
 };
+
+export const defaultSlotParameters: SlotParameters = {
+  volume: 0.5,
+  speed: 0.5,
+  pan: 0,
+  drive: 0,
+  eq: 0.5,
+  aux: 0,
+};
+
+export const defaultCommonParameters: CommonParameters = {
+  mainLevel: 0.5,
+  auxLevel: 0,
+  reverbOn: false,
+  reverbTime: 0.5,
+  reverbTone: 0.5,
+  reverbMix: 0.5,
+};
