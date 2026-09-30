@@ -1,5 +1,6 @@
 import { SlotParameters } from "@/definitions/definitions";
 import { MasterMixer, SlotEffectChain } from "@/definitions/interfaces";
+import { createDensityShaper } from "@/engine/density-shaper";
 import { createTiltingEq } from "@/engine/tilting-eq";
 import { connectNodes } from "@lib/mu2609/utils/webaudio-helper";
 
@@ -9,7 +10,8 @@ export function createSlotEffectChain(
 ): SlotEffectChain {
   const inputNode = ac.createGain();
 
-  const tiltingEqNode = createTiltingEq(ac);
+  const tiltingEq = createTiltingEq(ac);
+  const densityShaper = createDensityShaper(ac);
   const pannerNode = ac.createStereoPanner();
 
   const pivotNode = ac.createGain();
@@ -19,7 +21,8 @@ export function createSlotEffectChain(
 
   const disconnectsChain = connectNodes(
     inputNode,
-    tiltingEqNode,
+    tiltingEq,
+    densityShaper,
     pannerNode,
     pivotNode,
   );
@@ -37,7 +40,8 @@ export function createSlotEffectChain(
   return {
     inputNode,
     setParameters(pr: SlotParameters) {
-      tiltingEqNode.update({ prFreq: 0.5, prTilt: pr.eq });
+      tiltingEq.update({ prFreq: 0.5, prTilt: pr.eq });
+      densityShaper.update(pr.drive);
       pannerNode.pan.value = pr.pan;
       mainGainNode.gain.value = pr.volume;
       auxGainNode.gain.value = pr.aux;
@@ -53,6 +57,8 @@ export function createSlotEffectChain(
       disconnectsChain();
       disconnectsMainOut();
       disconnectsAuxOut();
+      tiltingEq.cleanup();
+      densityShaper.cleanup();
     },
   };
 }
