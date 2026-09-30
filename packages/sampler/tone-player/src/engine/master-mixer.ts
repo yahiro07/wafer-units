@@ -19,7 +19,7 @@ export function createMasterMixer(
     unitInterface?.audioOutputNode ?? audioContext.destination;
   const auxOutputNode =
     unitInterface?.createAdditionalAudioOutputNode("aux") ??
-    audioContext.destination;
+    audioContext.createGain();
 
   const mainGainNode = audioContext.createGain();
   const auxGainNode = audioContext.createGain();
