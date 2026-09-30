@@ -1,7 +1,12 @@
 import { CommonParameters } from "@/definitions/definitions";
 import { MasterMixer } from "@/definitions/interfaces";
 import { UnitInterface } from "wafer-host/unit-types";
-import { connectNodes } from "@lib/mu2609/utils/webaudio-helper";
+import {
+  connectNodes,
+  createConnectionKeeper,
+} from "@lib/mu2609/utils/webaudio-helper";
+import { createReverb } from "@/engine/reverb";
+import { mapKnobCurveCenterUnity } from "@lib/mu2609/utils/volume-curve";
 
 export function createMasterMixer(
   unitInterface: UnitInterface | undefined,
@@ -19,29 +24,49 @@ export function createMasterMixer(
   const mainGainNode = audioContext.createGain();
   const auxGainNode = audioContext.createGain();
 
+  const reverb = createReverb(audioContext);
+
   const disconnectsMain = connectNodes(
     mainInputNode,
     mainGainNode,
     mainOutputNode,
   );
-  const disconnectsAux = connectNodes(auxInputNode, auxGainNode, auxOutputNode);
+
+  const auxConnectionKeeper = createConnectionKeeper();
+  auxConnectionKeeper.connects(auxInputNode, auxGainNode, auxOutputNode);
 
   return {
     mainInputNode,
     auxInputNode,
     setCommonParameters(params: CommonParameters) {
+      if (params.reverbOn) {
+        auxConnectionKeeper.connects(
+          auxInputNode,
+          reverb,
+          auxGainNode,
+          auxOutputNode,
+        );
+        reverb.apply({
+          decay: params.reverbTime,
+          damp: params.reverbTone,
+          mix: params.reverbMix,
+        });
+      } else {
+        auxConnectionKeeper.connects(auxInputNode, auxGainNode, auxOutputNode);
+      }
+
       mainGainNode.gain.linearRampToValueAtTime(
-        params.mainLevel,
+        mapKnobCurveCenterUnity(params.mainLevel),
         audioContext.currentTime + 0.01,
       );
       auxGainNode.gain.linearRampToValueAtTime(
-        params.auxLevel,
+        mapKnobCurveCenterUnity(params.auxLevel),
         audioContext.currentTime + 0.01,
       );
     },
     cleanup() {
       disconnectsMain();
-      disconnectsAux();
+      auxConnectionKeeper.cleanup();
     },
   };
 }
