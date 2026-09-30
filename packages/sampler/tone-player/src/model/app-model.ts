@@ -131,6 +131,12 @@ function createAppModel(): AppModel {
     },
   };
 
+  for (let i = 0; i < 12; i++) {
+    const slot = store.state.slots[i];
+    samplerEngine.setSlotParameters(i, slot.parameters);
+  }
+  masterMixer.setCommonParameters(store.state.commonParameters);
+
   return {
     useSnapshot: store.useSnapshot,
     loadAudioSourceText(text: string, fromUi?: boolean) {
@@ -177,6 +183,7 @@ function createAppModel(): AppModel {
     },
     setCommonParameter(key, value) {
       store.patchCommonParameters({ [key]: value });
+      masterMixer.setCommonParameters(store.state.commonParameters);
     },
     triggerSlot(slotIndex) {
       samplerEngine.trigger(slotIndex);
