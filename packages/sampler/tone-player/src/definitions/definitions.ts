@@ -32,7 +32,7 @@ export const defaultSlotParameters: SlotParameters = {
 
 export const defaultCommonParameters: CommonParameters = {
   mainLevel: 0.5,
-  auxLevel: 0,
+  auxLevel: 0.5,
   reverbOn: false,
   reverbTime: 0.5,
   reverbTone: 0.5,

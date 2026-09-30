@@ -1,6 +1,6 @@
 import { SamplerEngine } from "@/definitions/interfaces";
 import { AppStore, defaultStoreState, StoreState } from "@/model/store-states";
-import { SlotParameters } from "@/definitions/definitions";
+import { CommonParameters, SlotParameters } from "@/definitions/definitions";
 import { createAudioFetcher } from "@/engine/audio-fetcher";
 import { createLevelsLoader } from "@/engine/levels-loader";
 import { createPreviewPlayer } from "@/engine/preview-player";
@@ -68,6 +68,10 @@ type AppModel = {
     slotIndex: number,
     key: K,
     value: SlotParameters[K],
+  ): void;
+  setCommonParameter<K extends keyof CommonParameters>(
+    key: K,
+    value: CommonParameters[K],
   ): void;
   triggerSlot(slotIndex: number): void;
   unTriggerSlot(slotIndex: number): void;
@@ -174,6 +178,9 @@ function createAppModel(): AppModel {
       const parameters = { ...slot.parameters, [key]: value };
       samplerEngine.setSlotParameters(slotIndex, parameters);
       store.produceSlots((draft) => (draft[slotIndex].parameters = parameters));
+    },
+    setCommonParameter(key, value) {
+      store.patchCommonParameters({ [key]: value });
     },
     triggerSlot(slotIndex) {
       samplerEngine.trigger(slotIndex);
