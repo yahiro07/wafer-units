@@ -1,12 +1,10 @@
 <script lang="ts">
   import Knob from "./knob.svelte";
-  import { appModel } from "./app-model";
-
-  let pan = $state(0);
+  import { createAppModel } from "./app-model";
+  const appModel = createAppModel();
 
   function handlePanChange(newValue: number) {
-    pan = newValue;
-    appModel.setPan(newValue);
+    appModel.setParameter("pan", newValue);
   }
 </script>
 
@@ -14,8 +12,13 @@
   <div class="panel">
     <div class="knobs">
       <Knob
+        label="VOLUME"
+        value={appModel.parameters.volume}
+        onchange={handlePanChange}
+      />
+      <Knob
         label="PAN"
-        value={pan}
+        value={appModel.parameters.pan}
         min={-1}
         max={1}
         onchange={handlePanChange}
