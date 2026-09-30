@@ -54,7 +54,7 @@ type AppModel = {
   loadAudioSourceText(text: string, fromUi?: boolean): void;
   setupDrivers(): () => void;
   playSourcePreview(audioIndex: number): void;
-  getLevels(audioIndex: number): Promise<number[]>;
+  getLevels(audioIndex: number): Promise<number[] | undefined>;
   assignAudio(slotIndex: number, audioIndex: number): void;
   setSlotParameter<K extends keyof SlotParameters>(
     slotIndex: number,
@@ -115,7 +115,9 @@ function createAppModel(): AppModel {
   const internal = {
     getAudioUri(audioIndex: number) {
       const { audioBaseUrl, audioPaths } = store.state;
-      return `${audioBaseUrl}${audioPaths[audioIndex]}`;
+      const path = audioPaths[audioIndex];
+      if (!path) return undefined;
+      return `${audioBaseUrl}${path}`;
     },
   };
 
@@ -139,15 +141,22 @@ function createAppModel(): AppModel {
     },
     playSourcePreview(audioIndex) {
       const uri = internal.getAudioUri(audioIndex);
-      previewPlayer.play(uri);
+      if (uri) {
+        previewPlayer.play(uri);
+      }
     },
-    getLevels(audioIndex) {
+    async getLevels(audioIndex) {
       const uri = internal.getAudioUri(audioIndex);
-      return levelsLoader.loadLevels(uri);
+      if (uri) {
+        return await levelsLoader.loadLevels(uri);
+      }
+      return undefined;
     },
     assignAudio(slotIndex, audioIndex) {
       const uri = internal.getAudioUri(audioIndex);
-      samplerEngine.setSlotAudio(slotIndex, uri);
+      if (uri) {
+        samplerEngine.setSlotAudio(slotIndex, uri);
+      }
       store.produceSlots((draft) => (draft[slotIndex].audioIndex = audioIndex));
     },
     setSlotParameter(slotIndex, key, value) {
