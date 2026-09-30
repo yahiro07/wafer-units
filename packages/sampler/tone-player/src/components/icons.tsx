@@ -30,4 +30,5 @@ export const Icons = {
   Trash: iconHoc("ri-delete-bin-line"),
   Play: iconHoc("ri-play-fill"),
   ArrowDown: iconHoc("ri-arrow-down-s-line"),
+  Close: iconHoc("ri-close-line"),
 };
