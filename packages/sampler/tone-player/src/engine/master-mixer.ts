@@ -19,7 +19,7 @@ export function createMasterMixer(
     unitInterface?.audioOutputNode ?? audioContext.destination;
   const auxOutputNode =
     unitInterface?.createAdditionalAudioOutputNode("aux") ??
-    audioContext.createGain();
+    audioContext.destination;
 
   const mainGainNode = audioContext.createGain();
   const auxGainNode = audioContext.createGain();
@@ -31,30 +31,25 @@ export function createMasterMixer(
     mainGainNode,
     mainOutputNode,
   );
+  const disconnectsAux = connectNodes(auxInputNode, auxGainNode, auxOutputNode);
 
-  const auxConnectionKeeper = createConnectionKeeper();
-  auxConnectionKeeper.connects(auxInputNode, auxGainNode, auxOutputNode);
+  const reverbConnectionKeeper = createConnectionKeeper();
+  reverbConnectionKeeper.connects();
 
   return {
     mainInputNode,
     auxInputNode,
     setCommonParameters(params: CommonParameters) {
       if (params.reverbOn) {
-        auxConnectionKeeper.connects(
-          auxInputNode,
-          reverb,
-          auxGainNode,
-          auxOutputNode,
-        );
+        reverbConnectionKeeper.connects(auxInputNode, reverb, mainGainNode);
         reverb.apply({
           decay: params.reverbTime,
           damp: params.reverbTone,
           mix: params.reverbMix,
         });
       } else {
-        auxConnectionKeeper.connects(auxInputNode, auxGainNode, auxOutputNode);
+        reverbConnectionKeeper.connects();
       }
-
       mainGainNode.gain.linearRampToValueAtTime(
         mapKnobCurveCenterUnity(params.mainLevel),
         audioContext.currentTime + 0.01,
@@ -66,7 +61,8 @@ export function createMasterMixer(
     },
     cleanup() {
       disconnectsMain();
-      auxConnectionKeeper.cleanup();
+      disconnectsAux();
+      reverbConnectionKeeper.cleanup();
     },
   };
 }
