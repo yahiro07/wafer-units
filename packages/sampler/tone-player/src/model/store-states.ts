@@ -1,4 +1,9 @@
-import { SamplerSlot, CommonParameters } from "@/definitions/definitions";
+import {
+  SamplerSlot,
+  CommonParameters,
+  defaultSlotParameters,
+  defaultCommonParameters,
+} from "@/definitions/definitions";
 import { seqNumbers } from "@lib/mu2609/utils/helpers";
 import { Store } from "snap-store";
 
@@ -26,23 +31,9 @@ export type AppStore = Store<StoreState>;
 export const defaultStoreState: StoreState = {
   slots: seqNumbers(12).map(() => ({
     audioIndex: -1,
-    parameters: {
-      volume: 0.5,
-      speed: 0.5,
-      pan: 0,
-      drive: 0,
-      eq: 0,
-      aux: 0,
-    },
+    parameters: defaultSlotParameters,
   })),
-  commonParameters: {
-    mainLevel: 0.5,
-    auxLevel: 0.5,
-    reverbOn: false,
-    reverbTime: 0.5,
-    reverbTone: 0.5,
-    reverbMix: 0.5,
-  },
+  commonParameters: defaultCommonParameters,
   audioSourceText: "",
   //
   audioBaseUrl: "",
