@@ -1,22 +1,13 @@
 {
-  "extends": "@tsconfig/svelte/tsconfig.json",
   "compilerOptions": {
-    "target": "es2023",
+    "target": "esnext",
     "module": "esnext",
     "types": ["vite/client", "svelte"],
-    // "strict": true,
-    "allowArbitraryExtensions": true,
+    "strict": true,
     "noEmit": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    // "preserveSymlinks": true,
-    "allowJs": true,
-    "checkJs": true,
-    "moduleDetection": "force",
     "allowImportingTsExtensions": true
-    // "paths": {
-    //   "@/*": ["./src/*"]
-    // }
   },
   "include": ["src/**/*.ts", "src/**/*.svelte"]
 }
