@@ -1,5 +1,6 @@
 export type SlotParameters = {
   volume: number;
+  speed: number;
   pan: number;
   drive: number;
   eq: number;

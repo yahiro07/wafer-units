@@ -28,6 +28,7 @@ export const defaultStoreState: StoreState = {
     audioIndex: -1,
     parameters: {
       volume: 0.5,
+      speed: 0.5,
       pan: 0,
       drive: 0,
       eq: 0,
