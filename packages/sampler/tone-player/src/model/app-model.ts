@@ -94,10 +94,21 @@ const helpers = {
 function createAppModel(): AppModel {
   const unitInterface = queryUnitInterface("wafer-v01");
   const audioContext = unitInterface?.audioContext ?? new AudioContext();
+  const audioDestination =
+    unitInterface?.audioOutputNode ?? audioContext.destination;
+
   const audioFetcher = createAudioFetcher(audioContext);
-  const samplerEngine = createSamplerEngine(unitInterface, audioContext);
+  const samplerEngine = createSamplerEngine(
+    audioContext,
+    audioDestination,
+    audioFetcher,
+  );
   const levelsLoader = createLevelsLoader(audioFetcher);
-  const previewPlayer = createPreviewPlayer(audioContext, audioFetcher);
+  const previewPlayer = createPreviewPlayer(
+    audioContext,
+    audioDestination,
+    audioFetcher,
+  );
   const store = createStore<StoreState>(defaultStoreState);
   const actions = createActions(store);
 
