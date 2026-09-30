@@ -15,7 +15,7 @@ export type SamplerEngine = {
   // setCommonParameters(commonParameters: CommonParameters): void;
   setSlotAudio(slotIndex: number, uri: string): void;
   setSlotParameters(slotIndex: number, parameters: SlotParameters): void;
-  trigger(slotIndex: number, skipIfNotLoaded?: boolean): void;
+  trigger(slotIndex: number): void;
   cleanup(): void;
 };
 
@@ -31,5 +31,29 @@ export type MasterMixer = {
   mainInputNode: AudioNode;
   auxInputNode: AudioNode;
   setCommonParameters(commonParameters: CommonParameters): void;
+  cleanup(): void;
+};
+
+export type SampleSourcePlayerTriggerOptions = {
+  time?: number;
+  speedRate?: number;
+};
+
+export type SampleSourcePlayer = {
+  setAudio(uri: string): void;
+  trigger(options?: SampleSourcePlayerTriggerOptions): void;
+  cleanup(): void;
+};
+
+export type SlotEffectChain = {
+  inputNode: AudioNode;
+  setParameters(parameters: SlotParameters): void;
+  cleanup(): void;
+};
+
+export type SlotPlayer = {
+  setAudio(uri: string): void;
+  trigger(): void;
+  setParameters(parameters: SlotParameters): void;
   cleanup(): void;
 };
