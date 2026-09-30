@@ -6,29 +6,6 @@ import { SourceEditPanel } from "@/view/source-edit-panel";
 import { seqNumbers } from "@lib/mu2609/utils/helpers";
 import { useEffect } from "preact/hooks";
 
-const SamplerSourcePanel = () => {
-  const { audioBaseUrl, audioPaths } = appModel.useSnapshot();
-  return (
-    <div class="w-200px h-400px bg-#aaa">
-      list of entry samples, text only, max 24 entries
-      <div>base: {audioBaseUrl}</div>
-      <div>
-        {audioPaths.map((path, i) => (
-          <div key={i}>{path}</div>
-        ))}
-      </div>
-    </div>
-  );
-};
-
-const SamplerAssignmentPanel = () => {
-  return (
-    <div class="w-200px h-400px bg-#aaa">
-      slots with waveform levels 12 items
-    </div>
-  );
-};
-
 const CommonParametersPart = () => {
   return (
     <div class="flex-ha w-400px h-100px bd-#888 gap-4">
@@ -134,8 +111,6 @@ const PageRoot = () => {
       {/* <div class="text-xl font-bold">SAMPLER1</div> */}
       <div class="flex-ha gap-6">
         <SourceEditPanel />
-        <SamplerSourcePanel />
-        <SamplerAssignmentPanel />
       </div>
       <MachinePanel />
     </div>
