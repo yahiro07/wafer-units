@@ -13,9 +13,7 @@
   const angle = $derived(linearInterpolate(value, min, max, -140, 140));
 
   function handlePointerDown(e0: PointerEvent) {
-    const newValue = (value + 0.1) % 1;
     const originalValue = value;
-    onchange(newValue);
     startDragSession(e0, {
       onMove(e) {
         const deltaY = e.position.y - e.originalPosition.y;

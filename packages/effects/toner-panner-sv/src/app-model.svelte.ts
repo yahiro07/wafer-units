@@ -32,7 +32,7 @@ export function createAppModel(): AppModel {
   const gainNode = ac.createGain();
   connectNodes(inputNode, pannerNode, gainNode, outputNode);
 
-  const parameters = $state(defaultSynthParameters);
+  const parameters = $state({ ...defaultSynthParameters });
 
   const internal = {
     affectParameters(keys: SynthParameterKey[]) {
@@ -61,7 +61,7 @@ export function createAppModel(): AppModel {
       },
       persistence: {
         emitState() {
-          return { parameters };
+          return { parameters: { ...parameters } };
         },
         applyState(state) {
           const pr = state.parameters;
