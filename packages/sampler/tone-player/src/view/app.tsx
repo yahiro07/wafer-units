@@ -183,15 +183,22 @@ const SourceSampleCard = ({
       },
     });
   };
+  const isBlankCard = audioIndex === -1;
   return (
     <div
       class={cz(
-        "w-64px h-36px bd-#888 text-xs relative",
+        "w-62px h-36px bd-#888 text-xs relative",
+        isBlankCard && "!w-44px",
         isDragging && "!bd-#0af",
       )}
       onPointerDown={handlePointerDown}
     >
-      <LevelsScopeContainer audioIndex={audioIndex} />
+      {!isBlankCard && <LevelsScopeContainer audioIndex={audioIndex} />}
+      {isBlankCard && (
+        <div class="size-full flex-c">
+          <Icons.Close size={16} />
+        </div>
+      )}
       <div class="absolute top-0 left-0 w-full h-full text-xs flex-h justify-center">
         {formatAudioPath(path)}
       </div>
@@ -207,6 +214,7 @@ const SourceSamplesSection = () => {
         {audioPaths.map((path, i) => (
           <SourceSampleCard key={i} path={path} audioIndex={i} />
         ))}
+        <SourceSampleCard path="" audioIndex={-1} />
       </div>
     </div>
   );
