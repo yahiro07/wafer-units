@@ -27,10 +27,11 @@ const CurrentSlotSection = () => {
         <div>1 super-awesome-kick-123.ogg</div>
       </div>
       <div class="flex-ha gap-4">
-        <LabeledKnob label="volume" value={0} />
-        <LabeledKnob label="pan" value={0} />
+        <LabeledKnob label="volume" value={0.5} />
+        <LabeledKnob label="speed" value={0.5} />
+        <LabeledKnob label="pan" value={0} min={-1} />
         <LabeledKnob label="drive" value={0} />
-        <LabeledKnob label="eq" value={0} />
+        <LabeledKnob label="eq" value={0.5} />
         <LabeledKnob label="send" value={0} />
       </div>
     </div>
