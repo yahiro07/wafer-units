@@ -1,4 +1,4 @@
-import { SlotParameters } from "@/definitions/definitions";
+import { CommonParameters, SlotParameters } from "@/definitions/definitions";
 
 // export type AudioSourceSpec = {
 //   baseUrl: string;
@@ -25,4 +25,11 @@ export type LevelsLoader = {
 
 export type PreviewPlayer = {
   play(uri: string): void;
+};
+
+export type MasterMixer = {
+  mainInputNode: AudioNode;
+  auxInputNode: AudioNode;
+  setCommonParameters(commonParameters: CommonParameters): void;
+  cleanup(): void;
 };

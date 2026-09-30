@@ -1,5 +1,4 @@
-import { SamplerEngine } from "@/definitions/interfaces";
-import { AppStore, defaultStoreState, StoreState } from "@/model/store-states";
+import { defaultStoreState, StoreState } from "@/model/store-states";
 import { CommonParameters, SlotParameters } from "@/definitions/definitions";
 import { createAudioFetcher } from "@/engine/audio-fetcher";
 import { createLevelsLoader } from "@/engine/levels-loader";
@@ -7,44 +6,8 @@ import { createPreviewPlayer } from "@/engine/preview-player";
 import { createSamplerEngine } from "@/engine/sampler-engine";
 import { setupMidiKeyboardInput } from "@lib/mu2609/utils/midi-keyboard-input";
 import { createStore } from "snap-store";
-import { queryUnitInterface, UnitInterface } from "wafer-host/unit-types";
-
-function setupUnit(
-  unitInterface: UnitInterface | undefined,
-  samplerEngine: SamplerEngine,
-  store: AppStore,
-) {
-  const handlers = {
-    noteOn(noteNumber: number) {
-      const slotIndex = noteNumber % 12;
-      samplerEngine.trigger(slotIndex);
-      store.producePadHoldStates((draft) => (draft[slotIndex] = true));
-    },
-    noteOff(noteNumber: number) {
-      const slotIndex = noteNumber % 12;
-      store.producePadHoldStates((draft) => (draft[slotIndex] = false));
-    },
-  };
-
-  if (unitInterface) {
-    unitInterface.completeSetup({
-      unitAspects: {
-        unitType: "effect",
-        viewSize: [800, 500],
-      },
-      noteInput: {
-        noteOn: handlers.noteOn,
-        noteOff: handlers.noteOff,
-      },
-      cleanup: samplerEngine.cleanup,
-    });
-  } else {
-    return setupMidiKeyboardInput({
-      noteOn: handlers.noteOn,
-      noteOff: handlers.noteOff,
-    });
-  }
-}
+import { queryUnitInterface } from "wafer-host/unit-types";
+import { createMasterMixer } from "@/engine/master-mixer";
 
 // function setupSynchronization(store: Store<StoreState>, engine: SamplerEngine) {
 //   return store.subscribe(({ slots, commonParameters }) => {
@@ -108,19 +71,18 @@ const helpers = {
 function createAppModel(): AppModel {
   const unitInterface = queryUnitInterface("wafer-v01");
   const audioContext = unitInterface?.audioContext ?? new AudioContext();
-  const audioDestination =
-    unitInterface?.audioOutputNode ?? audioContext.destination;
+  const masterMixer = createMasterMixer(unitInterface, audioContext);
 
   const audioFetcher = createAudioFetcher(audioContext);
   const samplerEngine = createSamplerEngine(
     audioContext,
-    audioDestination,
+    masterMixer,
     audioFetcher,
   );
   const levelsLoader = createLevelsLoader(audioFetcher);
   const previewPlayer = createPreviewPlayer(
     audioContext,
-    audioDestination,
+    masterMixer.mainInputNode,
     audioFetcher,
   );
   const store = createStore<StoreState>(defaultStoreState);
@@ -132,6 +94,40 @@ function createAppModel(): AppModel {
       const path = audioPaths[audioIndex];
       if (!path) return undefined;
       return `${audioBaseUrl}${path}`;
+    },
+    setupUnit() {
+      const handlers = {
+        noteOn(noteNumber: number) {
+          const slotIndex = noteNumber % 12;
+          samplerEngine.trigger(slotIndex);
+          store.producePadHoldStates((draft) => (draft[slotIndex] = true));
+        },
+        noteOff(noteNumber: number) {
+          const slotIndex = noteNumber % 12;
+          store.producePadHoldStates((draft) => (draft[slotIndex] = false));
+        },
+      };
+      if (unitInterface) {
+        unitInterface.completeSetup({
+          unitAspects: {
+            unitType: "effect",
+            viewSize: [800, 500],
+          },
+          noteInput: {
+            noteOn: handlers.noteOn,
+            noteOff: handlers.noteOff,
+          },
+          cleanup() {
+            samplerEngine.cleanup();
+            masterMixer.cleanup();
+          },
+        });
+      } else {
+        return setupMidiKeyboardInput({
+          noteOn: handlers.noteOn,
+          noteOff: handlers.noteOff,
+        });
+      }
     },
   };
 
@@ -146,7 +142,7 @@ function createAppModel(): AppModel {
       }
     },
     setupDrivers() {
-      const unsub1 = setupUnit(unitInterface, samplerEngine, store);
+      const unsub1 = internal.setupUnit();
       // const unsub2 = setupSynchronization(store, engine);
       return () => {
         unsub1?.();
