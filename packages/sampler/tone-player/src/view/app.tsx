@@ -5,6 +5,7 @@ import { presenter } from "@/model/presenter";
 import { LevelsScope } from "@/view/levels-scope";
 import { SourceEditPanel } from "@/view/source-edit-panel";
 import { cz } from "@lib/mu2609/utils/cz";
+import { startDragSession } from "@lib/mu2609/utils/drag-session";
 import { seqNumbers } from "@lib/mu2609/utils/helpers";
 import { useEffect } from "preact/hooks";
 
@@ -97,8 +98,17 @@ const SlotColumn = ({
   slotIndex: number;
   slot: SamplerSlot;
 }) => {
-  const { currentSlotIndex } = appModel.useSnapshot();
+  const { currentSlotIndex, padHoldStates } = appModel.useSnapshot();
   const active = currentSlotIndex === slotIndex;
+  const padActive = padHoldStates[slotIndex];
+  const handlePadPointerDown = (e0: PointerEvent) => {
+    appModel.triggerSlot(slotIndex);
+    startDragSession(e0, {
+      onUpOrCancel() {
+        appModel.unTriggerSlot(slotIndex);
+      },
+    });
+  };
   return (
     <div class="flex-v w-60px">
       <div
@@ -116,10 +126,10 @@ const SlotColumn = ({
       >
         {slotIndex + 1}
       </button>
-      <div
-        class={"h-36px bd-#888"}
-        onClick={() => appModel.triggerSlot(slotIndex)}
-      ></div>
+      <button
+        class={cz("h-36px bd-#888", padActive && "bg-#0cf6")}
+        onPointerDown={handlePadPointerDown}
+      />
     </div>
   );
 };
