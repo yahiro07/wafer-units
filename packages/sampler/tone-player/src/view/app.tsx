@@ -1,5 +1,9 @@
 import { LabeledKnob } from "@/components/labeled-controls";
-import { CommonParameters, SamplerSlot } from "@/definitions/definitions";
+import {
+  CommonParameters,
+  SamplerSlot,
+  SlotParameters,
+} from "@/definitions/definitions";
 import { appModel } from "@/model/app-model";
 import { presenter } from "@/model/presenter";
 import { LevelsScope } from "@/view/levels-scope";
@@ -56,6 +60,50 @@ const LevelsScopeContainer = ({ audioIndex }: { audioIndex: number }) => {
   return <LevelsScope levels={levels} />;
 };
 
+const SlotParametersPart = ({
+  slotIndex,
+  slot,
+}: {
+  slotIndex: number;
+  slot: SamplerSlot;
+}) => {
+  const pr = slot.parameters;
+  const bindSetParameter = (key: keyof SlotParameters) => {
+    return (v: number) => appModel.setSlotParameter(slotIndex, key, v);
+  };
+  return (
+    <div class="flex-ha gap-4">
+      <LabeledKnob
+        label="volume"
+        value={pr.volume}
+        onChange={bindSetParameter("volume")}
+      />
+      <LabeledKnob
+        label="speed"
+        value={pr.speed}
+        onChange={bindSetParameter("speed")}
+      />
+      <LabeledKnob
+        label="pan"
+        value={pr.pan}
+        min={-1}
+        onChange={bindSetParameter("pan")}
+      />
+      <LabeledKnob
+        label="drive"
+        value={pr.drive}
+        onChange={bindSetParameter("drive")}
+      />
+      <LabeledKnob label="eq" value={pr.eq} onChange={bindSetParameter("eq")} />
+      <LabeledKnob
+        label="send"
+        value={pr.aux}
+        onChange={bindSetParameter("aux")}
+      />
+    </div>
+  );
+};
+
 const CurrentSlotSection = () => {
   const { slots, currentSlotIndex, audioPaths } = appModel.useSnapshot();
   const slot = slots[currentSlotIndex];
@@ -70,14 +118,7 @@ const CurrentSlotSection = () => {
           {currentSlotIndex + 1} {path ? formatAudioPath(path) : ""}
         </div>
       </div>
-      <div class="flex-ha gap-4">
-        <LabeledKnob label="volume" value={0.5} />
-        <LabeledKnob label="speed" value={0.5} />
-        <LabeledKnob label="pan" value={0} min={-1} />
-        <LabeledKnob label="drive" value={0} />
-        <LabeledKnob label="eq" value={0.5} />
-        <LabeledKnob label="send" value={0} />
-      </div>
+      <SlotParametersPart slotIndex={currentSlotIndex} slot={slot} />
     </div>
   );
 };
