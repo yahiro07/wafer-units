@@ -9,17 +9,6 @@ import { createStore } from "snap-store";
 import { queryUnitInterface } from "wafer-host/unit-types";
 import { createMasterMixer } from "@/engine/master-mixer";
 
-// function setupSynchronization(store: Store<StoreState>, engine: SamplerEngine) {
-//   return store.subscribe(({ slots, commonParameters }) => {
-//     // if (slots) {
-//     //   engine.setSlots(slots);
-//     // }
-//     // if (commonParameters) {
-//     //   engine.setCommonParameters(commonParameters);
-//     // }
-//   }, true);
-// }
-
 type AppModel = {
   useSnapshot(): StoreState;
   loadAudioSourceText(text: string, fromUi?: boolean): void;
@@ -86,7 +75,6 @@ function createAppModel(): AppModel {
     audioFetcher,
   );
   const store = createStore<StoreState>(defaultStoreState);
-  // const actions = createActions(store);
 
   const internal = {
     getAudioUri(audioIndex: number) {
