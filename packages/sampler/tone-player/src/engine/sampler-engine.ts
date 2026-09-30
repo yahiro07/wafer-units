@@ -1,4 +1,8 @@
-import { AudioFetcher, SamplerEngine } from "@/definitions/interfaces";
+import {
+  AudioFetcher,
+  MasterMixer,
+  SamplerEngine,
+} from "@/definitions/interfaces";
 import {
   defaultSlotParameters,
   SlotParameters,
@@ -15,14 +19,16 @@ type SlotPlayer = {
 
 function createSlotPlayer(
   audioContext: AudioContext,
-  audioDestination: AudioNode,
+  masterMixer: MasterMixer,
   audioFetcher: AudioFetcher,
 ): SlotPlayer {
   const slotParameters: SlotParameters = { ...defaultSlotParameters };
 
+  const tmpNode = audioContext.createGain();
+
   const sourcePlayer = createSampleSourcePlayer(
     audioContext,
-    audioDestination,
+    tmpNode,
     audioFetcher,
   );
   return {
@@ -45,11 +51,11 @@ function createSlotPlayer(
 
 export function createSamplerEngine(
   audioContext: AudioContext,
-  audioDestination: AudioNode,
+  masterMixer: MasterMixer,
   audioFetcher: AudioFetcher,
 ): SamplerEngine {
   const slotPlayers = seqNumbers(12).map(() =>
-    createSlotPlayer(audioContext, audioDestination, audioFetcher),
+    createSlotPlayer(audioContext, masterMixer, audioFetcher),
   );
   return {
     setSlotAudio(slotIndex, uri) {
