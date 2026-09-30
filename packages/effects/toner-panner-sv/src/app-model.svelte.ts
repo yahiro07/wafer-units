@@ -10,18 +10,18 @@ type SynthParameters = {
 };
 export type SynthParameterKey = keyof SynthParameters;
 
-export const defaultSynthParameters: SynthParameters = {
-  volume: 0.5,
-  pan: 0,
-};
-
 type AppStates = {
+  parameters: SynthParameters;
   viewActive: boolean;
 };
 
+const defaultAppStates: AppStates = {
+  parameters: { volume: 0.5, pan: 0 },
+  viewActive: false,
+};
+
 type AppModel = {
-  parameters: SynthParameters;
-  appStates: AppStates;
+  states: AppStates;
   setParameter<K extends SynthParameterKey>(
     key: K,
     value: SynthParameters[K],
@@ -37,16 +37,21 @@ export function createAppModel(): AppModel {
   const gainNode = ac.createGain();
   connectNodes(inputNode, pannerNode, gainNode, outputNode);
 
-  const parameters = $state({ ...defaultSynthParameters });
-  const appStates = $state({ viewActive: false });
+  const states = $state(structuredClone(defaultAppStates));
 
   const internal = {
     affectParameters(keys: SynthParameterKey[]) {
       for (const key of keys) {
         if (key === "pan") {
-          pannerNode.pan.setValueAtTime(parameters[key], ac.currentTime + 0.01);
+          pannerNode.pan.setValueAtTime(
+            states.parameters[key],
+            ac.currentTime + 0.01,
+          );
         } else if (key === "volume") {
-          gainNode.gain.setValueAtTime(parameters[key], ac.currentTime + 0.01);
+          gainNode.gain.setValueAtTime(
+            states.parameters[key],
+            ac.currentTime + 0.01,
+          );
         }
       }
     },
@@ -67,29 +72,27 @@ export function createAppModel(): AppModel {
       },
       unitCallbacks: {
         setViewActive(value) {
-          appStates.viewActive = value;
+          states.viewActive = value;
         },
       },
       persistence: {
         emitState() {
-          return { parameters: { ...parameters } };
+          return { parameters: { ...states.parameters } };
         },
-        applyState(state) {
-          const pr = state.parameters;
-          Object.assign(parameters, pr);
+        applyState(data) {
+          Object.assign(states.parameters, data.parameters);
           internal.affectParametersAll();
         },
       },
     });
   } else {
-    appStates.viewActive = true;
+    states.viewActive = true;
   }
 
   return {
-    parameters,
-    appStates,
+    states,
     setParameter(key, value) {
-      parameters[key] = value;
+      states.parameters[key] = value;
       internal.affectParameters([key]);
     },
   };
