@@ -1,5 +1,5 @@
 import { SamplerEngine } from "@/definitions/interfaces";
-import { defaultStoreState, StoreState } from "@/model/store-states";
+import { AppStore, defaultStoreState, StoreState } from "@/model/store-states";
 import { SlotParameters } from "@/definitions/definitions";
 import { createAudioFetcher } from "@/engine/audio-fetcher";
 import { createLevelsLoader } from "@/engine/levels-loader";
@@ -12,10 +12,18 @@ import { queryUnitInterface, UnitInterface } from "wafer-host/unit-types";
 function setupUnit(
   unitInterface: UnitInterface | undefined,
   samplerEngine: SamplerEngine,
+  store: AppStore,
 ) {
-  const handleNoteOn = (noteNumber: number) => {
-    const index = noteNumber % 12;
-    samplerEngine.trigger(index);
+  const handlers = {
+    noteOn(noteNumber: number) {
+      const slotIndex = noteNumber % 12;
+      samplerEngine.trigger(slotIndex);
+      store.producePadHoldStates((draft) => (draft[slotIndex] = true));
+    },
+    noteOff(noteNumber: number) {
+      const slotIndex = noteNumber % 12;
+      store.producePadHoldStates((draft) => (draft[slotIndex] = false));
+    },
   };
 
   if (unitInterface) {
@@ -25,14 +33,15 @@ function setupUnit(
         viewSize: [800, 500],
       },
       noteInput: {
-        noteOn: handleNoteOn,
-        noteOff: () => {},
+        noteOn: handlers.noteOn,
+        noteOff: handlers.noteOff,
       },
       cleanup: samplerEngine.cleanup,
     });
   } else {
     return setupMidiKeyboardInput({
-      noteOn: handleNoteOn,
+      noteOn: handlers.noteOn,
+      noteOff: handlers.noteOff,
     });
   }
 }
@@ -61,6 +70,7 @@ type AppModel = {
     value: SlotParameters[K],
   ): void;
   triggerSlot(slotIndex: number): void;
+  unTriggerSlot(slotIndex: number): void;
   selectSlot(slotIndex: number): void;
 };
 
@@ -132,7 +142,7 @@ function createAppModel(): AppModel {
       }
     },
     setupDrivers() {
-      const unsub1 = setupUnit(unitInterface, samplerEngine);
+      const unsub1 = setupUnit(unitInterface, samplerEngine, store);
       // const unsub2 = setupSynchronization(store, engine);
       return () => {
         unsub1?.();
@@ -167,6 +177,10 @@ function createAppModel(): AppModel {
     },
     triggerSlot(slotIndex) {
       samplerEngine.trigger(slotIndex);
+      store.producePadHoldStates((draft) => (draft[slotIndex] = true));
+    },
+    unTriggerSlot(slotIndex) {
+      store.producePadHoldStates((draft) => (draft[slotIndex] = false));
     },
     selectSlot(slotIndex) {
       store.setCurrentSlotIndex(slotIndex);
