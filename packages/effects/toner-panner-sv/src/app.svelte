@@ -12,14 +12,15 @@
       appModel.setParameter(key, value);
     };
   }
-  const { appStates, parameters } = appModel;
+  const { states } = appModel;
+  const parameters = states.parameters;
   const handlers = {
     pan: bindParameterHandler("pan"),
     volume: bindParameterHandler("volume"),
   };
 </script>
 
-{#if appStates.viewActive}
+{#if states.viewActive}
   <div class="page-root">
     <div class="panel">
       <div class="knobs">
