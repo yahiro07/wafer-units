@@ -12,6 +12,11 @@
       appModel.setParameter(key, value);
     };
   }
+  const parameters = appModel.parameters;
+  const handlers = {
+    pan: bindParameterHandler("pan"),
+    volume: bindParameterHandler("volume"),
+  };
 </script>
 
 <div class="page-root">
@@ -19,15 +24,15 @@
     <div class="knobs">
       <Knob
         label="VOLUME"
-        value={appModel.parameters.volume}
-        onchange={bindParameterHandler("volume")}
+        value={parameters.volume}
+        onchange={handlers.volume}
       />
       <Knob
         label="PAN"
-        value={appModel.parameters.pan}
+        value={parameters.pan}
         min={-1}
         max={1}
-        onchange={bindParameterHandler("pan")}
+        onchange={handlers.pan}
       />
     </div>
   </div>
