@@ -1,4 +1,5 @@
 import { LabeledKnob } from "@/components/labeled-controls";
+import { SamplerSlot } from "@/definitions/definitions";
 import { appModel } from "@/model/app-model";
 import { presenter } from "@/model/presenter";
 import { LevelsScope } from "@/view/levels-scope";
@@ -38,14 +39,25 @@ const CurrentSlotSection = () => {
   );
 };
 
-const SourceSampleCard = ({ path, index }: { path: string; index: number }) => {
-  const levels = presenter.useLevels(index);
+const LevelsScopeContainer = ({ audioIndex }: { audioIndex: number }) => {
+  const levels = presenter.useLevels(audioIndex);
+  if (!levels) return;
+  return <LevelsScope levels={levels} />;
+};
+
+const SourceSampleCard = ({
+  path,
+  audioIndex,
+}: {
+  path: string;
+  audioIndex: number;
+}) => {
   return (
     <div
       class="w-64px h-36px bd-#888 text-xs relative"
-      onClick={() => appModel.playSourcePreview(index)}
+      onClick={() => appModel.playSourcePreview(audioIndex)}
     >
-      <LevelsScope levels={levels} />
+      <LevelsScopeContainer audioIndex={audioIndex} />
       <div class="absolute top-0 left-0 w-full h-full text-xs flex-h justify-center">
         {path.split("/").pop()?.split(".")[0]}
       </div>
@@ -59,20 +71,28 @@ const SourceSamplesSection = () => {
     <div class="min-h-72px flex-ha">
       <div class="flex flex-wrap">
         {audioPaths.map((path, i) => (
-          <SourceSampleCard key={i} path={path} index={i} />
+          <SourceSampleCard key={i} path={path} audioIndex={i} />
         ))}
       </div>
     </div>
   );
 };
 
-const SlotColumn = ({ slotIndex }: { slotIndex: number }) => {
+const SlotColumn = ({
+  slotIndex,
+  slot,
+}: {
+  slotIndex: number;
+  slot: SamplerSlot;
+}) => {
   return (
     <div class="flex-v w-60px">
       <div
         class={"h-30px bd-#888"}
         onClick={() => appModel.assignAudio(slotIndex, slotIndex)}
-      ></div>
+      >
+        <LevelsScopeContainer audioIndex={slot.audioIndex} />
+      </div>
       <div class={"h-36px bd-#888 flex-c"}>{slotIndex + 1}</div>
       <div
         class={"h-36px bd-#888"}
@@ -83,10 +103,11 @@ const SlotColumn = ({ slotIndex }: { slotIndex: number }) => {
 };
 
 const SlotsSection = () => {
+  const { slots } = appModel.useSnapshot();
   return (
     <div class={"flex-h gap-2"}>
       {seqNumbers(12).map((i) => (
-        <SlotColumn key={i} slotIndex={i} />
+        <SlotColumn key={i} slotIndex={i} slot={slots[i]} />
       ))}
     </div>
   );
