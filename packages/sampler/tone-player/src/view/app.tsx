@@ -1,4 +1,5 @@
 import { LabeledKnob } from "@/components/labeled-controls";
+import { LedIndicator } from "@/components/led-indicator";
 import {
   CommonParameters,
   SamplerSlot,
@@ -19,7 +20,14 @@ const CommonParametersPart = () => {
     return (v: number) => appModel.setCommonParameter(key, v);
   };
   return (
-    <div class="flex-ha w-400px h-100px bd-#888 gap-4">
+    <div class="flex-ha  h-100px bd-#888 gap-4 px-4">
+      <div class={"flex-ha gap-1"}>
+        <LedIndicator
+          active={pr.reverbOn}
+          onClick={() => appModel.setCommonParameter("reverbOn", !pr.reverbOn)}
+        />
+        <div>Reverb</div>
+      </div>
       <LabeledKnob
         label="time"
         value={pr.reverbTime}
@@ -35,6 +43,7 @@ const CommonParametersPart = () => {
         value={pr.reverbMix}
         onChange={bindSetParameter("reverbMix")}
       />
+      <div class="w-10px" />
 
       <LabeledKnob
         label="main"
