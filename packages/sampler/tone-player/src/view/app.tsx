@@ -1,3 +1,4 @@
+import { Icons } from "@/components/icons";
 import { LabeledKnob } from "@/components/labeled-controls";
 import { LedIndicator } from "@/components/led-indicator";
 import {
@@ -12,7 +13,7 @@ import { SourceEditPanel } from "@/view/source-edit-panel";
 import { cz } from "@lib/mu2609/utils/cz";
 import { startDragSession } from "@lib/mu2609/utils/drag-session";
 import { seqNumbers } from "@lib/mu2609/utils/helpers";
-import { useEffect } from "preact/hooks";
+import { useEffect, useState } from "preact/hooks";
 
 const CommonParametersPart = () => {
   const { commonParameters: pr } = appModel.useSnapshot();
@@ -140,10 +141,55 @@ const SourceSampleCard = ({
   path: string;
   audioIndex: number;
 }) => {
+  const [isDragging, setIsDragging] = useState(false);
+
+  const handlePointerDown = (e0: PointerEvent) => {
+    const sectionEl = document.getElementById("domSourceSamplesSection");
+    const targetXPositions = seqNumbers(12).map((i) => {
+      const el = document.getElementById(`domSlotColumn_${i}`);
+      const rect = el?.getBoundingClientRect();
+      if (!rect) return 0;
+      return rect.left + rect.width / 2;
+    });
+    if (!sectionEl) return;
+    const sectionRect = sectionEl.getBoundingClientRect();
+
+    appModel.setDropTargetSlotIndex(-1);
+    setIsDragging(true);
+    startDragSession(e0, {
+      onMove(e) {
+        const pos = e.position;
+        if (pos.y > sectionRect.bottom) {
+          const distances = targetXPositions.map((x) => Math.abs(x - pos.x));
+          const minDistance = Math.min(...distances);
+          const index = distances.indexOf(minDistance);
+          appModel.setDropTargetSlotIndex(index);
+        } else {
+          appModel.setDropTargetSlotIndex(-1);
+        }
+      },
+      onTap() {
+        appModel.playSourcePreview(audioIndex);
+      },
+      onUp() {
+        const targetSlotIndex = appModel.getState().dropTargetSlotIndex;
+        if (targetSlotIndex !== null && targetSlotIndex >= 0) {
+          appModel.assignAudio(targetSlotIndex, audioIndex);
+        }
+      },
+      onUpOrCancel() {
+        appModel.setDropTargetSlotIndex(null);
+        setIsDragging(false);
+      },
+    });
+  };
   return (
     <div
-      class="w-64px h-36px bd-#888 text-xs relative"
-      onClick={() => appModel.playSourcePreview(audioIndex)}
+      class={cz(
+        "w-64px h-36px bd-#888 text-xs relative",
+        isDragging && "!bd-#0af",
+      )}
+      onPointerDown={handlePointerDown}
     >
       <LevelsScopeContainer audioIndex={audioIndex} />
       <div class="absolute top-0 left-0 w-full h-full text-xs flex-h justify-center">
@@ -156,7 +202,7 @@ const SourceSampleCard = ({
 const SourceSamplesSection = () => {
   const { audioPaths } = appModel.useSnapshot();
   return (
-    <div class="min-h-72px flex-ha">
+    <div class="min-h-72px flex-ha" id="domSourceSamplesSection">
       <div class="flex flex-wrap">
         {audioPaths.map((path, i) => (
           <SourceSampleCard key={i} path={path} audioIndex={i} />
@@ -173,7 +219,8 @@ const SlotColumn = ({
   slotIndex: number;
   slot: SamplerSlot;
 }) => {
-  const { currentSlotIndex, padHoldStates } = appModel.useSnapshot();
+  const { currentSlotIndex, padHoldStates, dropTargetSlotIndex } =
+    appModel.useSnapshot();
   const active = currentSlotIndex === slotIndex;
   const padActive = padHoldStates[slotIndex];
   const handlePadPointerDown = (e0: PointerEvent) => {
@@ -184,27 +231,37 @@ const SlotColumn = ({
       },
     });
   };
+  const isDragging = dropTargetSlotIndex !== null;
+  const isDropTarget = dropTargetSlotIndex === slotIndex;
   return (
-    <div class="flex-v w-60px">
-      <div
-        class={"h-30px bd-#888"}
-        onClick={() => appModel.assignAudio(slotIndex, slotIndex)}
-      >
-        <LevelsScopeContainer audioIndex={slot.audioIndex} />
+    <div class="flex-vc w-60px" id={`domSlotColumn_${slotIndex}`}>
+      <div class={cz("h-20px flex-c", isDragging ? "visible" : "invisible")}>
+        <Icons.ArrowDown className="text-#0af" />
       </div>
-      <button
+      <div
         class={cz(
-          "h-36px bd-#888 flex-c cursor-pointer",
-          active && "border border-3px border-#08f",
+          "flex-v w-full",
+          isDragging && "bd-#0af",
+          isDropTarget && "bg-#0af2",
         )}
-        onClick={() => appModel.selectSlot(slotIndex)}
       >
-        {slotIndex + 1}
-      </button>
-      <button
-        class={cz("h-36px bd-#888", padActive && "bg-#0cf6")}
-        onPointerDown={handlePadPointerDown}
-      />
+        <div class={"h-30px bd-#888"}>
+          <LevelsScopeContainer audioIndex={slot.audioIndex} />
+        </div>
+        <button
+          class={cz(
+            "h-36px bd-#888 flex-c cursor-pointer",
+            active && "border border-3px border-#08f",
+          )}
+          onClick={() => appModel.selectSlot(slotIndex)}
+        >
+          {slotIndex + 1}
+        </button>
+        <button
+          class={cz("h-36px bd-#888", padActive && "bg-#0cf6")}
+          onPointerDown={handlePadPointerDown}
+        />
+      </div>
     </div>
   );
 };

@@ -19,6 +19,7 @@ export type StoreState = {
   errorMessage: string | null;
   currentSlotIndex: number;
   padHoldStates: boolean[];
+  dropTargetSlotIndex: number | null;
 };
 
 export type AppStore = Store<StoreState>;
@@ -43,6 +44,7 @@ export const defaultStoreState: StoreState = {
   errorMessage: null,
   currentSlotIndex: 0,
   padHoldStates: seqNumbers(12).map(() => false),
+  dropTargetSlotIndex: null,
 };
 // if (appEnvs.isDevelopment) {
 //   defaultStoreState.audioSourceText = "";

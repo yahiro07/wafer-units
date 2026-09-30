@@ -10,6 +10,7 @@ import { queryUnitInterface } from "wafer-host/unit-types";
 import { createMasterMixer } from "@/engine/master-mixer";
 
 type AppModel = {
+  getState(): StoreState;
   useSnapshot(): StoreState;
   loadAudioSourceText(text: string, fromUi?: boolean): void;
   setupDrivers(): () => void;
@@ -28,6 +29,7 @@ type AppModel = {
   triggerSlot(slotIndex: number): void;
   unTriggerSlot(slotIndex: number): void;
   selectSlot(slotIndex: number): void;
+  setDropTargetSlotIndex(slotIndex: number | null): void;
 };
 
 const helpers = {
@@ -126,6 +128,7 @@ function createAppModel(): AppModel {
   masterMixer.setCommonParameters(store.state.commonParameters);
 
   return {
+    getState: () => store.state,
     useSnapshot: store.useSnapshot,
     loadAudioSourceText(text: string, fromUi?: boolean) {
       const { audioBaseUrl, audioPaths } = helpers.decodeAudioSourceText(text);
@@ -180,9 +183,8 @@ function createAppModel(): AppModel {
     unTriggerSlot(slotIndex) {
       store.producePadHoldStates((draft) => (draft[slotIndex] = false));
     },
-    selectSlot(slotIndex) {
-      store.setCurrentSlotIndex(slotIndex);
-    },
+    selectSlot: store.setCurrentSlotIndex,
+    setDropTargetSlotIndex: store.setDropTargetSlotIndex,
   };
 }
 
