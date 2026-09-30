@@ -15,8 +15,13 @@ export const defaultSynthParameters: SynthParameters = {
   pan: 0,
 };
 
+type AppStates = {
+  viewActive: boolean;
+};
+
 type AppModel = {
   parameters: SynthParameters;
+  appStates: AppStates;
   setParameter<K extends SynthParameterKey>(
     key: K,
     value: SynthParameters[K],
@@ -33,6 +38,7 @@ export function createAppModel(): AppModel {
   connectNodes(inputNode, pannerNode, gainNode, outputNode);
 
   const parameters = $state({ ...defaultSynthParameters });
+  const appStates = $state({ viewActive: false });
 
   const internal = {
     affectParameters(keys: SynthParameterKey[]) {
@@ -59,6 +65,11 @@ export function createAppModel(): AppModel {
       cleanup() {
         disconnectNodes(inputNode, pannerNode, gainNode, outputNode);
       },
+      unitCallbacks: {
+        setViewActive(value) {
+          appStates.viewActive = value;
+        },
+      },
       persistence: {
         emitState() {
           return { parameters: { ...parameters } };
@@ -70,10 +81,13 @@ export function createAppModel(): AppModel {
         },
       },
     });
+  } else {
+    appStates.viewActive = true;
   }
 
   return {
     parameters,
+    appStates,
     setParameter(key, value) {
       parameters[key] = value;
       internal.affectParameters([key]);

@@ -12,31 +12,33 @@
       appModel.setParameter(key, value);
     };
   }
-  const parameters = appModel.parameters;
+  const { appStates, parameters } = appModel;
   const handlers = {
     pan: bindParameterHandler("pan"),
     volume: bindParameterHandler("volume"),
   };
 </script>
 
-<div class="page-root">
-  <div class="panel">
-    <div class="knobs">
-      <Knob
-        label="VOLUME"
-        value={parameters.volume}
-        onchange={handlers.volume}
-      />
-      <Knob
-        label="PAN"
-        value={parameters.pan}
-        min={-1}
-        max={1}
-        onchange={handlers.pan}
-      />
+{#if appStates.viewActive}
+  <div class="page-root">
+    <div class="panel">
+      <div class="knobs">
+        <Knob
+          label="VOLUME"
+          value={parameters.volume}
+          onchange={handlers.volume}
+        />
+        <Knob
+          label="PAN"
+          value={parameters.pan}
+          min={-1}
+          max={1}
+          onchange={handlers.pan}
+        />
+      </div>
     </div>
   </div>
-</div>
+{/if}
 
 <style>
   .page-root {
