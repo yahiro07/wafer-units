@@ -1,15 +1,8 @@
-import { AudioFetcher } from "@/definitions/interfaces";
-
-type SampleSourcePlayerTriggerOptions = {
-  time?: number;
-  speedRate?: number;
-};
-
-type SampleSourcePlayer = {
-  setAudio(uri: string): void;
-  trigger(options?: SampleSourcePlayerTriggerOptions): void;
-  cleanup(): void;
-};
+import {
+  AudioFetcher,
+  SampleSourcePlayer,
+  SampleSourcePlayerTriggerOptions,
+} from "@/definitions/interfaces";
 
 export function createSampleSourcePlayer(
   audioContext: AudioContext,
