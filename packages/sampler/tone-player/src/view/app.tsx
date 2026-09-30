@@ -1,5 +1,7 @@
 import { LabeledKnob } from "@/components/labeled-controls";
 import { appModel } from "@/model/app-model";
+import { presenter } from "@/model/presenter";
+import { LevelsScope } from "@/view/levels-scope";
 import { SourceEditPanel } from "@/view/source-edit-panel";
 import { seqNumbers } from "@lib/mu2609/utils/helpers";
 import { useEffect } from "preact/hooks";
@@ -59,12 +61,14 @@ const CurrentSlotSection = () => {
 };
 
 const SourceSampleCard = ({ path, index }: { path: string; index: number }) => {
+  const levels = presenter.useLevels(index);
   return (
     <div
-      class="w-64px h-36px bd-#888 text-xs"
+      class="w-64px h-36px bd-#888 text-xs relative"
       onClick={() => appModel.playSourcePreview(index)}
     >
-      {path}
+      <LevelsScope levels={levels} />
+      <div class="absolute top-0 left-0 w-full h-full text-xs">{path}</div>
     </div>
   );
 };
