@@ -29,9 +29,8 @@ export function createSlotPlayer(
       sourcePlayer.setAudio(uri);
     },
     trigger() {
-      sourcePlayer.trigger({
-        speedRate: slotParameters.speed * 2,
-      });
+      const speedRate = 2 ** ((slotParameters.speed * 2 - 1) * 0.5);
+      sourcePlayer.trigger({ speedRate });
     },
     setParameters(attrs) {
       Object.assign(slotParameters, attrs);
