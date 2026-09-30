@@ -12,11 +12,11 @@ import { queryUnitInterface, UnitInterface } from "wafer-host/unit-types";
 
 function setupUnit(
   unitInterface: UnitInterface | undefined,
-  engine: SamplerEngine,
+  samplerEngine: SamplerEngine,
 ) {
   const handleNoteOn = (noteNumber: number) => {
     const index = noteNumber % 12;
-    engine.trigger(index);
+    samplerEngine.trigger(index);
   };
 
   if (unitInterface) {
@@ -29,7 +29,7 @@ function setupUnit(
         noteOn: handleNoteOn,
         noteOff: () => {},
       },
-      cleanup: engine.cleanup,
+      cleanup: samplerEngine.cleanup,
     });
   } else {
     return setupMidiKeyboardInput({
@@ -95,7 +95,7 @@ function createAppModel(): AppModel {
   const unitInterface = queryUnitInterface("wafer-v01");
   const audioContext = unitInterface?.audioContext ?? new AudioContext();
   const audioFetcher = createAudioFetcher(audioContext);
-  const engine = createSamplerEngine(unitInterface, audioContext);
+  const samplerEngine = createSamplerEngine(unitInterface, audioContext);
   const levelsLoader = createLevelsLoader(audioFetcher);
   const previewPlayer = createPreviewPlayer(audioContext, audioFetcher);
   const store = createStore<StoreState>(defaultStoreState);
@@ -119,7 +119,7 @@ function createAppModel(): AppModel {
       }
     },
     setupDrivers() {
-      const unsub1 = setupUnit(unitInterface, engine);
+      const unsub1 = setupUnit(unitInterface, samplerEngine);
       // const unsub2 = setupSynchronization(store, engine);
       return () => {
         unsub1?.();
@@ -136,17 +136,17 @@ function createAppModel(): AppModel {
     },
     assignAudio(slotIndex, audioIndex) {
       const uri = internal.getAudioUri(audioIndex);
-      engine.setSlotAudio(slotIndex, uri);
+      samplerEngine.setSlotAudio(slotIndex, uri);
       store.produceSlots((draft) => (draft[slotIndex].audioIndex = audioIndex));
     },
     setSlotParameter(slotIndex, key, value) {
       const slot = store.state.slots[slotIndex];
       const parameters = { ...slot.parameters, [key]: value };
-      engine.setSlotParameters(slotIndex, parameters);
+      samplerEngine.setSlotParameters(slotIndex, parameters);
       store.produceSlots((draft) => (draft[slotIndex].parameters = parameters));
     },
     triggerSlot(slotIndex) {
-      engine.trigger(slotIndex);
+      samplerEngine.trigger(slotIndex);
     },
   };
 }
