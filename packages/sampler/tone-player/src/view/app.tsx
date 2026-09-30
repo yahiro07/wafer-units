@@ -68,7 +68,9 @@ const SourceSampleCard = ({ path, index }: { path: string; index: number }) => {
       onClick={() => appModel.playSourcePreview(index)}
     >
       <LevelsScope levels={levels} />
-      <div class="absolute top-0 left-0 w-full h-full text-xs">{path}</div>
+      <div class="absolute top-0 left-0 w-full h-full text-xs flex-h justify-center">
+        {path.split("/").pop()?.split(".")[0]}
+      </div>
     </div>
   );
 };
