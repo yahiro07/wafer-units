@@ -1,24 +1,34 @@
 import { SlotParameters } from "@/definitions/definitions";
 import { MasterMixer, SlotEffectChain } from "@/definitions/interfaces";
+import { createTiltingEq } from "@/engine/tilting-eq";
 import { connectNodes } from "@lib/mu2609/utils/webaudio-helper";
 
 export function createSlotEffectChain(
-  audioContext: AudioContext,
+  ac: AudioContext,
   masterMixer: MasterMixer,
 ): SlotEffectChain {
-  const inputNode = audioContext.createGain();
-  const pivotNode = audioContext.createGain();
+  const inputNode = ac.createGain();
 
-  const mainGainNode = audioContext.createGain();
-  const auxGainNode = audioContext.createGain();
+  const tiltingEqNode = createTiltingEq(ac);
+  const pannerNode = ac.createStereoPanner();
 
-  const disconnects1 = connectNodes(inputNode, pivotNode);
-  const disconnects2 = connectNodes(
+  const pivotNode = ac.createGain();
+
+  const mainGainNode = ac.createGain();
+  const auxGainNode = ac.createGain();
+
+  const disconnectsChain = connectNodes(
+    inputNode,
+    tiltingEqNode,
+    pannerNode,
+    pivotNode,
+  );
+  const disconnectsMainOut = connectNodes(
     pivotNode,
     mainGainNode,
     masterMixer.mainInputNode,
   );
-  const disconnects3 = connectNodes(
+  const disconnectsAuxOut = connectNodes(
     pivotNode,
     auxGainNode,
     masterMixer.auxInputNode,
@@ -26,20 +36,23 @@ export function createSlotEffectChain(
 
   return {
     inputNode,
-    setParameters(parameters: SlotParameters) {
-      mainGainNode.gain.linearRampToValueAtTime(
-        parameters.volume,
-        audioContext.currentTime + 0.01,
-      );
-      auxGainNode.gain.linearRampToValueAtTime(
-        parameters.aux,
-        audioContext.currentTime + 0.01,
-      );
+    setParameters(pr: SlotParameters) {
+      tiltingEqNode.update({ prFreq: 0.5, prTilt: pr.eq });
+      pannerNode.pan.value = pr.pan;
+      mainGainNode.gain.value = pr.volume;
+      auxGainNode.gain.value = pr.aux;
+
+      // pannerNode.pan.linearRampToValueAtTime(pr.pan, ac.currentTime + 0.01);
+      // mainGainNode.gain.linearRampToValueAtTime(
+      //   pr.volume,
+      //   ac.currentTime + 0.01,
+      // );
+      // auxGainNode.gain.linearRampToValueAtTime(pr.aux, ac.currentTime + 0.01);
     },
     cleanup() {
-      disconnects1();
-      disconnects2();
-      disconnects3();
+      disconnectsChain();
+      disconnectsMainOut();
+      disconnectsAuxOut();
     },
   };
 }

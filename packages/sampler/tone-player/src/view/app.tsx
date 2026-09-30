@@ -46,14 +46,14 @@ const CommonParametersPart = () => {
       <div class="w-10px" />
 
       <LabeledKnob
-        label="main"
-        value={pr.mainLevel}
-        onChange={bindSetParameter("mainLevel")}
-      />
-      <LabeledKnob
         label="aux"
         value={pr.auxLevel}
         onChange={bindSetParameter("auxLevel")}
+      />
+      <LabeledKnob
+        label="main"
+        value={pr.mainLevel}
+        onChange={bindSetParameter("mainLevel")}
       />
     </div>
   );
@@ -83,14 +83,16 @@ const SlotParametersPart = ({
   return (
     <div class="flex-ha gap-4">
       <LabeledKnob
-        label="volume"
-        value={pr.volume}
-        onChange={bindSetParameter("volume")}
-      />
-      <LabeledKnob
         label="speed"
         value={pr.speed}
         onChange={bindSetParameter("speed")}
+      />
+
+      <LabeledKnob label="eq" value={pr.eq} onChange={bindSetParameter("eq")} />
+      <LabeledKnob
+        label="drive"
+        value={pr.drive}
+        onChange={bindSetParameter("drive")}
       />
       <LabeledKnob
         label="pan"
@@ -99,15 +101,14 @@ const SlotParametersPart = ({
         onChange={bindSetParameter("pan")}
       />
       <LabeledKnob
-        label="drive"
-        value={pr.drive}
-        onChange={bindSetParameter("drive")}
-      />
-      <LabeledKnob label="eq" value={pr.eq} onChange={bindSetParameter("eq")} />
-      <LabeledKnob
         label="send"
         value={pr.aux}
         onChange={bindSetParameter("aux")}
+      />
+      <LabeledKnob
+        label="volume"
+        value={pr.volume}
+        onChange={bindSetParameter("volume")}
       />
     </div>
   );
