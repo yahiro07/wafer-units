@@ -35,7 +35,7 @@ export function createAppModel(): AppModel {
   const parameters = $state(defaultSynthParameters);
 
   const internal = {
-    affectParametersToNodes(keys: SynthParameterKey[]) {
+    affectParameters(keys: SynthParameterKey[]) {
       for (const key of keys) {
         if (key === "pan") {
           pannerNode.pan.setValueAtTime(parameters[key], ac.currentTime + 0.01);
@@ -44,8 +44,11 @@ export function createAppModel(): AppModel {
         }
       }
     },
+    affectParametersAll() {
+      internal.affectParameters(["pan", "volume"]);
+    },
   };
-  internal.affectParametersToNodes(["pan", "volume"]);
+  internal.affectParametersAll();
 
   if (unitInterface) {
     unitInterface.completeSetup({
@@ -56,6 +59,16 @@ export function createAppModel(): AppModel {
       cleanup() {
         disconnectNodes(inputNode, pannerNode, gainNode, outputNode);
       },
+      persistence: {
+        emitState() {
+          return { parameters };
+        },
+        applyState(state) {
+          const pr = state.parameters;
+          Object.assign(parameters, pr);
+          internal.affectParametersAll();
+        },
+      },
     });
   }
 
@@ -63,7 +76,7 @@ export function createAppModel(): AppModel {
     parameters,
     setParameter(key, value) {
       parameters[key] = value;
-      internal.affectParametersToNodes([key]);
+      internal.affectParameters([key]);
     },
   };
 }
