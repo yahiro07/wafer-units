@@ -4,12 +4,18 @@ import { useEffect, useState } from "preact/hooks";
 
 export const presenter = {
   useLevels(audioIndex: number) {
-    const [levels, setLevels] = useState<number[]>([]);
+    const [levels, setLevels] = useState<number[] | undefined>();
     useEffect(() => {
-      void resultOf(async () => {
-        const levels = await appModel.getLevels(audioIndex);
-        setLevels(levels);
-      });
+      if (audioIndex >= 0) {
+        void resultOf(async () => {
+          const levels = await appModel.getLevels(audioIndex);
+          if (levels) {
+            setLevels(levels);
+          } else {
+            setLevels(undefined);
+          }
+        });
+      }
     }, [audioIndex]);
     return levels;
   },
