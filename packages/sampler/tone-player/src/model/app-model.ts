@@ -5,7 +5,6 @@ import { createAudioFetcher } from "@/engine/audio-fetcher";
 import { createLevelsLoader } from "@/engine/levels-loader";
 import { createPreviewPlayer } from "@/engine/preview-player";
 import { createSamplerEngine } from "@/engine/sampler-engine";
-import { createActions } from "@/model/actions";
 import { setupMidiKeyboardInput } from "@lib/mu2609/utils/midi-keyboard-input";
 import { createStore } from "snap-store";
 import { queryUnitInterface, UnitInterface } from "wafer-host/unit-types";
@@ -62,6 +61,7 @@ type AppModel = {
     value: SlotParameters[K],
   ): void;
   triggerSlot(slotIndex: number): void;
+  selectSlot(slotIndex: number): void;
 };
 
 const helpers = {
@@ -110,7 +110,7 @@ function createAppModel(): AppModel {
     audioFetcher,
   );
   const store = createStore<StoreState>(defaultStoreState);
-  const actions = createActions(store);
+  // const actions = createActions(store);
 
   const internal = {
     getAudioUri(audioIndex: number) {
@@ -167,6 +167,9 @@ function createAppModel(): AppModel {
     },
     triggerSlot(slotIndex) {
       samplerEngine.trigger(slotIndex);
+    },
+    selectSlot(slotIndex) {
+      store.setCurrentSlotIndex(slotIndex);
     },
   };
 }

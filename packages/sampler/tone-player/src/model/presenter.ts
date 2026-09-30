@@ -15,6 +15,8 @@ export const presenter = {
             setLevels(undefined);
           }
         });
+      } else {
+        setLevels(undefined);
       }
     }, [audioIndex]);
     return levels;

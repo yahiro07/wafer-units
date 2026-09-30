@@ -4,6 +4,7 @@ import { appModel } from "@/model/app-model";
 import { presenter } from "@/model/presenter";
 import { LevelsScope } from "@/view/levels-scope";
 import { SourceEditPanel } from "@/view/source-edit-panel";
+import { cz } from "@lib/mu2609/utils/cz";
 import { seqNumbers } from "@lib/mu2609/utils/helpers";
 import { useEffect } from "preact/hooks";
 
@@ -20,12 +21,29 @@ const CommonParametersPart = () => {
   );
 };
 
+function formatAudioPath(path: string) {
+  return path.split("/").pop()?.split(".")[0];
+}
+
+const LevelsScopeContainer = ({ audioIndex }: { audioIndex: number }) => {
+  const levels = presenter.useLevels(audioIndex);
+  if (!levels) return;
+  return <LevelsScope levels={levels} />;
+};
+
 const CurrentSlotSection = () => {
+  const { slots, currentSlotIndex, audioPaths } = appModel.useSnapshot();
+  const slot = slots[currentSlotIndex];
+  const path = audioPaths[slot.audioIndex] as string | undefined;
   return (
-    <div class="flex-ha bd-#333">
+    <div class="flex-ha bd-#333 gap-6">
       <div class="flex-v">
-        <div class={"w-220px h-70px bd-#888"}>waveform</div>
-        <div>1 super-awesome-kick-123.ogg</div>
+        <div class={"w-140px h-70px bd-#888"}>
+          <LevelsScopeContainer audioIndex={slot.audioIndex} />
+        </div>
+        <div className={"text-xs"}>
+          {currentSlotIndex + 1} {path ? formatAudioPath(path) : ""}
+        </div>
       </div>
       <div class="flex-ha gap-4">
         <LabeledKnob label="volume" value={0.5} />
@@ -37,12 +55,6 @@ const CurrentSlotSection = () => {
       </div>
     </div>
   );
-};
-
-const LevelsScopeContainer = ({ audioIndex }: { audioIndex: number }) => {
-  const levels = presenter.useLevels(audioIndex);
-  if (!levels) return;
-  return <LevelsScope levels={levels} />;
 };
 
 const SourceSampleCard = ({
@@ -59,7 +71,7 @@ const SourceSampleCard = ({
     >
       <LevelsScopeContainer audioIndex={audioIndex} />
       <div class="absolute top-0 left-0 w-full h-full text-xs flex-h justify-center">
-        {path.split("/").pop()?.split(".")[0]}
+        {formatAudioPath(path)}
       </div>
     </div>
   );
@@ -85,6 +97,8 @@ const SlotColumn = ({
   slotIndex: number;
   slot: SamplerSlot;
 }) => {
+  const { currentSlotIndex } = appModel.useSnapshot();
+  const active = currentSlotIndex === slotIndex;
   return (
     <div class="flex-v w-60px">
       <div
@@ -93,7 +107,15 @@ const SlotColumn = ({
       >
         <LevelsScopeContainer audioIndex={slot.audioIndex} />
       </div>
-      <div class={"h-36px bd-#888 flex-c"}>{slotIndex + 1}</div>
+      <button
+        class={cz(
+          "h-36px bd-#888 flex-c cursor-pointer",
+          active && "border border-3px border-#08f",
+        )}
+        onClick={() => appModel.selectSlot(slotIndex)}
+      >
+        {slotIndex + 1}
+      </button>
       <div
         class={"h-36px bd-#888"}
         onClick={() => appModel.triggerSlot(slotIndex)}
