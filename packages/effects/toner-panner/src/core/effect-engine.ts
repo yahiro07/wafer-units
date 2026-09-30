@@ -17,7 +17,8 @@ export function createEffectEngine(
 
   return {
     setParameters(pr) {
-      pannerNode.pan.setValueAtTime(pr.pan, ac.currentTime + 0.01);
+      pannerNode.pan.value = pr.pan;
+      // pannerNode.pan.linearRampToValueAtTime(pr.pan, ac.currentTime + 0.01);
     },
     cleanup() {
       disconnectNodes(inputNode, pannerNode, outputNode);
