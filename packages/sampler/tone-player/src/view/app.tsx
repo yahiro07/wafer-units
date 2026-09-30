@@ -1,5 +1,5 @@
 import { LabeledKnob } from "@/components/labeled-controls";
-import { SamplerSlot } from "@/definitions/definitions";
+import { CommonParameters, SamplerSlot } from "@/definitions/definitions";
 import { appModel } from "@/model/app-model";
 import { presenter } from "@/model/presenter";
 import { LevelsScope } from "@/view/levels-scope";
@@ -10,14 +10,38 @@ import { seqNumbers } from "@lib/mu2609/utils/helpers";
 import { useEffect } from "preact/hooks";
 
 const CommonParametersPart = () => {
+  const { commonParameters: pr } = appModel.useSnapshot();
+  const bindSetParameter = (key: keyof CommonParameters) => {
+    return (v: number) => appModel.setCommonParameter(key, v);
+  };
   return (
     <div class="flex-ha w-400px h-100px bd-#888 gap-4">
-      <LabeledKnob label="time" value={0} />
-      <LabeledKnob label="tone" value={0} />
-      <LabeledKnob label="mix" value={0} />
+      <LabeledKnob
+        label="time"
+        value={pr.reverbTime}
+        onChange={bindSetParameter("reverbTime")}
+      />
+      <LabeledKnob
+        label="tone"
+        value={pr.reverbTone}
+        onChange={bindSetParameter("reverbTone")}
+      />
+      <LabeledKnob
+        label="mix"
+        value={pr.reverbMix}
+        onChange={bindSetParameter("reverbMix")}
+      />
 
-      <LabeledKnob label="main" value={0} />
-      <LabeledKnob label="aux" value={0} />
+      <LabeledKnob
+        label="main"
+        value={pr.mainLevel}
+        onChange={bindSetParameter("mainLevel")}
+      />
+      <LabeledKnob
+        label="aux"
+        value={pr.auxLevel}
+        onChange={bindSetParameter("auxLevel")}
+      />
     </div>
   );
 };
