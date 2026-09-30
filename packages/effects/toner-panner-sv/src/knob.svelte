@@ -19,7 +19,7 @@
     startDragSession(e0, {
       onMove(e) {
         const deltaY = e.position.y - e.originalPosition.y;
-        const newValue = clampValue(originalValue - deltaY * 0.015, min, max);
+        const newValue = clampValue(originalValue - deltaY * 0.01, min, max);
         onchange(newValue);
       },
     });
