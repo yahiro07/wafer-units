@@ -1,14 +1,11 @@
-import { queryUnitInterface } from "wafer-host/unit-types";
+import { queryUnitInterface, type UnitInterface } from "wafer-host/unit-types";
 import {
-  connectNodes,
-  disconnectNodes,
-} from "@lib/mu2609/utils/webaudio-helper";
-
-type SynthParameters = {
-  volume: number;
-  pan: number;
-};
-export type SynthParameterKey = keyof SynthParameters;
+  type SynthParameters,
+  type SynthParameterKey,
+  defaultSynthParameters,
+  type EffectEngine,
+} from "./core/definitions";
+import { createEffectEngine } from "./core/effect-engine";
 
 type AppStates = {
   parameters: SynthParameters;
@@ -16,7 +13,7 @@ type AppStates = {
 };
 
 const defaultAppStates: AppStates = {
-  parameters: { volume: 0.5, pan: 0 },
+  parameters: defaultSynthParameters,
   viewActive: false,
 };
 
@@ -28,72 +25,50 @@ type AppModel = {
   ): void;
 };
 
+function setupUnit(
+  unitInterface: UnitInterface,
+  engine: EffectEngine,
+  states: AppStates,
+) {
+  unitInterface.completeSetup({
+    unitAspects: {
+      unitType: "effect",
+      viewSize: [100, 100],
+    },
+    cleanup: engine.cleanup,
+    unitCallbacks: {
+      setViewActive(value) {
+        states.viewActive = value;
+      },
+    },
+    persistence: {
+      emitState() {
+        return { parameters: { ...states.parameters } };
+      },
+      applyState(data) {
+        Object.assign(states.parameters, data.parameters);
+        engine.affectParametersAll();
+      },
+    },
+  });
+}
+
 export function createAppModel(): AppModel {
   const unitInterface = queryUnitInterface("wafer-v01");
-  const ac = unitInterface?.audioContext ?? new AudioContext();
-  const inputNode = unitInterface?.audioInputNode ?? ac.createGain();
-  const outputNode = unitInterface?.audioOutputNode ?? ac.destination;
-  const pannerNode = ac.createStereoPanner();
-  const gainNode = ac.createGain();
-  connectNodes(inputNode, pannerNode, gainNode, outputNode);
 
   const states = $state(structuredClone(defaultAppStates));
-
-  const internal = {
-    affectParameters(keys: SynthParameterKey[]) {
-      for (const key of keys) {
-        if (key === "pan") {
-          pannerNode.pan.setValueAtTime(
-            states.parameters[key],
-            ac.currentTime + 0.01,
-          );
-        } else if (key === "volume") {
-          gainNode.gain.setValueAtTime(
-            states.parameters[key],
-            ac.currentTime + 0.01,
-          );
-        }
-      }
-    },
-    affectParametersAll() {
-      internal.affectParameters(["pan", "volume"]);
-    },
-  };
-  internal.affectParametersAll();
+  const engine = createEffectEngine(unitInterface, states.parameters);
 
   if (unitInterface) {
-    unitInterface.completeSetup({
-      unitAspects: {
-        unitType: "effect",
-        viewSize: [100, 100],
-      },
-      cleanup() {
-        disconnectNodes(inputNode, pannerNode, gainNode, outputNode);
-      },
-      unitCallbacks: {
-        setViewActive(value) {
-          states.viewActive = value;
-        },
-      },
-      persistence: {
-        emitState() {
-          return { parameters: { ...states.parameters } };
-        },
-        applyState(data) {
-          Object.assign(states.parameters, data.parameters);
-          internal.affectParametersAll();
-        },
-      },
-    });
+    setupUnit(unitInterface, engine, states);
   } else {
     states.viewActive = true;
   }
-
   return {
     states,
     setParameter(key, value) {
       states.parameters[key] = value;
-      internal.affectParameters([key]);
+      engine.affectParameters([key]);
     },
   };
 }

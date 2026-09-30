@@ -1,9 +1,7 @@
 <script lang="ts">
-  import Knob from "./knob.svelte";
-  import {
-    createAppModel,
-    type SynthParameterKey,
-  } from "./app-model.svelte.ts";
+  import Knob from "./components/knob.svelte";
+  import { createAppModel } from "./app-model.svelte.ts";
+  import type { SynthParameterKey } from "./core/definitions";
 
   const appModel = createAppModel();
 
