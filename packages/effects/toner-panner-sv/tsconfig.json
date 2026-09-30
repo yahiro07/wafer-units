@@ -12,7 +12,8 @@
     // "preserveSymlinks": true,
     "allowJs": true,
     "checkJs": true,
-    "moduleDetection": "force"
+    "moduleDetection": "force",
+    "allowImportingTsExtensions": true
     // "paths": {
     //   "@/*": ["./src/*"]
     // }

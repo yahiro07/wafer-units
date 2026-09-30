@@ -8,7 +8,7 @@ type SynthParameters = {
   volume: number;
   pan: number;
 };
-type SynthParameterKey = keyof SynthParameters;
+export type SynthParameterKey = keyof SynthParameters;
 
 export const defaultSynthParameters: SynthParameters = {
   volume: 0.5,
@@ -29,7 +29,8 @@ export function createAppModel(): AppModel {
   const inputNode = unitInterface?.audioInputNode ?? ac.createGain();
   const outputNode = unitInterface?.audioOutputNode ?? ac.destination;
   const pannerNode = ac.createStereoPanner();
-  connectNodes(inputNode, pannerNode, outputNode);
+  const gainNode = ac.createGain();
+  connectNodes(inputNode, pannerNode, gainNode, outputNode);
 
   const parameters = $state(defaultSynthParameters);
 
@@ -39,7 +40,6 @@ export function createAppModel(): AppModel {
         if (key === "pan") {
           pannerNode.pan.setValueAtTime(parameters[key], ac.currentTime + 0.01);
         } else if (key === "volume") {
-          const gainNode = outputNode as GainNode;
           gainNode.gain.setValueAtTime(parameters[key], ac.currentTime + 0.01);
         }
       }
@@ -54,7 +54,7 @@ export function createAppModel(): AppModel {
         viewSize: [100, 100],
       },
       cleanup() {
-        disconnectNodes(inputNode, pannerNode, outputNode);
+        disconnectNodes(inputNode, pannerNode, gainNode, outputNode);
       },
     });
   }

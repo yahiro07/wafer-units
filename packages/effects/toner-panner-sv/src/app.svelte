@@ -1,10 +1,16 @@
 <script lang="ts">
   import Knob from "./knob.svelte";
-  import { createAppModel } from "./app-model";
+  import {
+    createAppModel,
+    type SynthParameterKey,
+  } from "./app-model.svelte.ts";
+
   const appModel = createAppModel();
 
-  function handlePanChange(newValue: number) {
-    appModel.setParameter("pan", newValue);
+  function bindParameterHandler(key: SynthParameterKey) {
+    return (value: number) => {
+      appModel.setParameter(key, value);
+    };
   }
 </script>
 
@@ -14,14 +20,14 @@
       <Knob
         label="VOLUME"
         value={appModel.parameters.volume}
-        onchange={handlePanChange}
+        onchange={bindParameterHandler("volume")}
       />
       <Knob
         label="PAN"
         value={appModel.parameters.pan}
         min={-1}
         max={1}
-        onchange={handlePanChange}
+        onchange={bindParameterHandler("pan")}
       />
     </div>
   </div>
@@ -37,7 +43,7 @@
   }
 
   .panel {
-    width: 160px;
+    width: 240px;
     height: 160px;
     background: #bbb;
     border: solid 1px #888;
@@ -50,6 +56,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 10px;
+    gap: 20px;
   }
 </style>
