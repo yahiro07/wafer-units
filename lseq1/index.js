@@ -8626,7 +8626,7 @@ function Be(e) {
 	};
 }
 //#endregion
-//#region ../../../node_modules/.pnpm/wafer-host@0.1.16_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/wafer-host/dist/unit-types/index.js
+//#region ../../../node_modules/.pnpm/wafer-host@0.1.17_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/wafer-host/dist/unit-types/index.js
 function Ve(e, t) {
 	return window?.queryUnitInterfaceForModule?.(e, t);
 }
