@@ -149,6 +149,7 @@ function createVoice(
 
     releaseNote(time: number) {
       const targetTime = Math.max(time, audioCtx.currentTime);
+      gateParam.cancelScheduledValues(targetTime);
       gateParam.setValueAtTime(0.0, targetTime);
       state = "releasing";
       releasedAt = targetTime;
