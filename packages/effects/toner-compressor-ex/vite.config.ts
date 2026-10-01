@@ -6,6 +6,6 @@ export default defineConfig({
   base: "./",
   plugins: [preact(), UnoCSS()],
   resolve: { tsconfigPaths: true },
-  build: { outDir: "../../../dist/toner-compressor", emptyOutDir: true },
+  build: { outDir: "../../../dist/toner-compressor-ex", emptyOutDir: true },
   server: { port: 3000 },
 });
