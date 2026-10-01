@@ -246,6 +246,7 @@ export function createSynthesizer(
 
   function releaseVoice(voice: Voice, time: number) {
     const targetTime = Math.max(time, audioContext.currentTime);
+    voice.gateParam.cancelScheduledValues(targetTime);
     voice.gateParam.setValueAtTime(0.0, targetTime);
     voice.state = "releasing";
     voice.releasedAt = targetTime;

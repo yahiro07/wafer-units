@@ -1,3 +1,7 @@
+export function resultOf<T>(fn: () => T): T {
+  return fn();
+}
+
 export function seqNumbers(n: number): number[] {
   return new Array(n).fill(0).map((_, i) => i);
 }
@@ -100,4 +104,12 @@ export function removeArrayItems<T>(items: T[], cond: (item: T) => boolean) {
       items.splice(i, 1);
     }
   }
+}
+
+export function arrayItemsEquals<T>(arr1: T[], arr2: T[]) {
+  if (arr1.length !== arr2.length) return false;
+  for (let i = 0; i < arr1.length; i++) {
+    if (arr1[i] !== arr2[i]) return false;
+  }
+  return true;
 }

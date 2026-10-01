@@ -1,0 +1,19 @@
+{
+  "name": "mz2",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite dev",
+    "build": "vite build"
+  },
+  "devDependencies": {
+    "@preact/preset-vite": "catalog:",
+    "@types/audioworklet": "catalog:",
+    "@unocss/preset-wind4": "catalog:",
+    "@unocss/vite": "catalog:",
+    "mini-css": "catalog:",
+    "preact": "catalog:",
+    "snap-store": "catalog:",
+    "unocss": "catalog:"
+  }
+}
