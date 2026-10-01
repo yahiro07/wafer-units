@@ -113,13 +113,13 @@ const ParameterUi = ({ spec }: { spec: ParameterSpec }) => {
 export const ParametersSection = () => {
   return (
     <div class="flex-vc gap-3">
-      <div className="flex-ha gap-7">
+      <div className="flex-ha gap-9">
         <ParameterUi spec={parametersSpecs.inputGain} />
         <ParameterUi spec={parametersSpecs.outputGain} />
         <ParameterUi spec={parametersSpecs.attack} />
         <ParameterUi spec={parametersSpecs.release} />
       </div>
-      <div class="flex-ha gap-6">
+      <div class="flex-ha gap-8">
         <div className="mt-2">
           <CurveGraph />
         </div>

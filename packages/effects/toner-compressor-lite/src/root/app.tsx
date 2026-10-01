@@ -8,7 +8,7 @@ const PageRoot = () => {
     <div
       className={cz(
         "bg-clPanelBg text-clPanelText",
-        "px-6 pt-1 pb-3 flex-v gap-2",
+        "px-10 pt-2 pb-4 flex-v gap-1",
       )}
     >
       <div class="text-xl font-bold">Compressor</div>
