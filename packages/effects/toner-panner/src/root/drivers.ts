@@ -1,4 +1,5 @@
 import { store } from "@/root/store";
+import { persistenceImpl } from "@/root/persistence";
 import { useEffect } from "preact/hooks";
 import { createEffectEngine } from "@/core/effect-engine";
 import { queryUnitInterface } from "wafer-host/unit-types";
@@ -16,6 +17,7 @@ function setupUnit() {
       unitCallbacks: {
         setViewActive: store.setViewActive,
       },
+      persistence: persistenceImpl,
       cleanup: effectEngine.cleanup,
     });
   } else {
