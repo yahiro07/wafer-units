@@ -40,7 +40,7 @@ const PageRoot = () => {
     <div
       className={cz(
         "p-4 flex-c bg-clPanelBg text-clPanelText",
-        "w-200px h-100px pb-2",
+        "w-160px h-100px pb-2",
       )}
     >
       <div className="flex-h gap-5">
