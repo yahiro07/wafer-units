@@ -1,6 +1,7 @@
 import { store } from "@/root/store";
 import { useEffect } from "preact/hooks";
 import { effectEngine, unitInterface } from "@/core/engine-instances";
+import { persistenceImpl } from "@/root/persistence";
 
 function setupUnit() {
   if (unitInterface) {
@@ -12,9 +13,8 @@ function setupUnit() {
       unitCallbacks: {
         setViewActive: store.setViewActive,
       },
-      cleanup() {
-        effectEngine.cleanup();
-      },
+      persistence: persistenceImpl,
+      cleanup: effectEngine.cleanup,
     });
   } else {
     store.setViewActive(true);
