@@ -1,4 +1,5 @@
 import { store } from "@/root/store";
+import { persistenceImpl } from "@/root/persistence";
 import { useEffect } from "preact/hooks";
 import {
   analyzerEngine,
@@ -33,6 +34,7 @@ function setupUnit() {
       unitCallbacks: {
         setViewActive,
       },
+      persistence: persistenceImpl,
       cleanup() {
         analyzerEngine.cleanup();
         effectEngine.cleanup();
