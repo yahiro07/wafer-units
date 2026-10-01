@@ -11,7 +11,7 @@ function setupUnit() {
     unitInterface.completeSetup({
       unitAspects: {
         unitType: "effect",
-        viewSize: [300, 100],
+        viewSize: [240, 100],
       },
       unitCallbacks: {
         setViewActive: store.setViewActive,
