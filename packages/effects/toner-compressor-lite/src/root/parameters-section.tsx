@@ -6,6 +6,7 @@ import { Knob } from "@/components/knob";
 import { LabeledBox } from "@/components/labeled-controls";
 import { parameterMapper } from "@/core/parameter-mapper";
 import { resultOf } from "@lib/mu2609/utils/helpers";
+import { mapKnobCurveCenterUnity } from "@lib/mu2609/utils/volume-curve";
 
 type ParameterSpec = {
   key: keyof EffectParameters;
@@ -14,15 +15,23 @@ type ParameterSpec = {
   formatValue?: (value: number) => string;
 };
 
+function levelToDb(level: number) {
+  return 20 * Math.log10(level);
+}
+function mapLevelToDbText(level: number) {
+  const db = levelToDb(level);
+  if (db < -100) return "-∞ dB";
+  return `${db.toFixed(0)} dB`;
+}
+
 const mapper = parameterMapper;
 const parametersSpecs = {
   inputGain: {
     key: "inputGain",
     label: "INPUT",
     formatValue: (value) => {
-      // const inputGain = mapper.mapInputGain(value);
-      // return `${inputGain.toFixed(0)} dB`;
-      return value.toFixed(1);
+      const level = mapKnobCurveCenterUnity(value);
+      return mapLevelToDbText(level);
     },
   },
   threshold: {
@@ -84,9 +93,8 @@ const parametersSpecs = {
     key: "outputGain",
     label: "OUTPUT",
     formatValue: (value) => {
-      // const outputGain = mapper.mapOutputGain(value);
-      // return `${outputGain.toFixed(0)} dB`;
-      return value.toFixed(1);
+      const level = mapKnobCurveCenterUnity(value);
+      return mapLevelToDbText(level);
     },
   },
 } satisfies Record<keyof EffectParameters, ParameterSpec>;
