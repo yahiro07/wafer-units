@@ -15,6 +15,8 @@
   const handlers = {
     wave: bindParameterHandler("wave"),
     shape: bindParameterHandler("shape"),
+    dense: bindParameterHandler("dense"),
+    mix: bindParameterHandler("mix"),
   };
 
   $effect(() => {
@@ -26,7 +28,7 @@
 
 {#if states.viewActive}
   <div class="h-dvh flex-c overflow-hidden">
-    <div class="w-240px h-160px flex-c bd-#888 bg-#bbb">
+    <div class="h-160px flex-c bd-#888 bg-#bbb px-4">
       <div class="flex-ha gap-5 p-2">
         <Knob
           label="WAVE"
@@ -41,6 +43,12 @@
           value={parameters.shape}
           onchange={handlers.shape}
         />
+        <Knob
+          label="DENSE"
+          value={parameters.dense}
+          onchange={handlers.dense}
+        />
+        <Knob label="MIX" value={parameters.mix} onchange={handlers.mix} />
       </div>
     </div>
   </div>
