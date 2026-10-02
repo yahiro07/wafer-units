@@ -22,7 +22,7 @@
 
   const waveformPath = $derived(generateWaveformPath(waveformParameters));
 
-  const color = "#0dd";
+  const color = "#07f";
 </script>
 
 <div class="w-300px h-150px flex-c bg-#111">

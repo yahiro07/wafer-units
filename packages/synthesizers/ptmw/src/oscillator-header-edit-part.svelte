@@ -11,7 +11,7 @@
     setParameter: (key: OscParameterKey, value: boolean) => void;
   };
   let { oscId, parameters, setParameter }: Props = $props();
-  const buttonClass = " px-1 [&.active]:(text-#0dd) cursor-pointer";
+  const buttonClass = " px-1 [&.active]:(text-#08f) cursor-pointer";
 
   const toggleParameter = (key: OscParameterKey) => {
     setParameter(key, !parameters[key]);
