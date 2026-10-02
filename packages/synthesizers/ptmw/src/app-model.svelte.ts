@@ -1,11 +1,11 @@
 import { queryUnitInterface, UnitInterface } from "wafer-host/unit-types";
 import {
-  EffectEngine,
+  SynthesizerEngine,
   ParameterEditSpec,
   type SynthParameters,
   defaultSynthParameters,
 } from "./core/definitions";
-import { createEffectEngine } from "./core/effect-engine";
+import { createSynthesizerEngine } from "./core/synthesizer-engine";
 import { setupMidiKeyboardInput } from "@lib/mu2609/utils/midi-keyboard-input";
 
 type AppStates = {
@@ -26,14 +26,14 @@ export type AppModel = {
 
 function createEngine(unitInterface: UnitInterface | undefined) {
   const rawParameters = structuredClone(defaultSynthParameters);
-  const engine = createEffectEngine(unitInterface, rawParameters);
+  const engine = createSynthesizerEngine(unitInterface, rawParameters);
   engine.applyParameters(rawParameters);
   return engine;
 }
 
 function setupUnit(
   unitInterface: UnitInterface | undefined,
-  engine: EffectEngine,
+  engine: SynthesizerEngine,
   states: AppStates,
 ) {
   if (unitInterface) {

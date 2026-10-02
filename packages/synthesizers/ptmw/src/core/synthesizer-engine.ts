@@ -5,7 +5,7 @@ import { createReverb } from "./reverb";
 import { createOscillatorUnit } from "./oscillator-unit";
 import { ParameterEditSpec, SynthParameters } from "./definitions";
 
-export function createEffectEngine(
+export function createSynthesizerEngine(
   unitInterface: UnitInterface | undefined,
   parameters: SynthParameters,
 ) {
