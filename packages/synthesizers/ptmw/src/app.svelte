@@ -13,55 +13,22 @@
   const { states } = appModel;
   const parameters = states.parameters;
   const handlers = {
-    pan: bindParameterHandler("pan"),
-    volume: bindParameterHandler("volume"),
+    wave: bindParameterHandler("wave"),
+    shape: bindParameterHandler("shape"),
   };
 </script>
 
 {#if states.viewActive}
-  <div class="page-root">
-    <div class="panel">
-      <div class="knobs bd-red">
+  <div class="h-dvh flex-c overflow-hidden">
+    <div class="w-240px h-160px flex-c bd-#888 bg-#bbb">
+      <div class="flex-ha gap-5 p-2">
+        <Knob label="WAVE" value={parameters.wave} onchange={handlers.wave} />
         <Knob
-          label="VOLUME"
-          value={parameters.volume}
-          onchange={handlers.volume}
-        />
-        <Knob
-          label="PAN"
-          value={parameters.pan}
-          min={-1}
-          max={1}
-          onchange={handlers.pan}
+          label="SHAPE"
+          value={parameters.shape}
+          onchange={handlers.shape}
         />
       </div>
     </div>
   </div>
 {/if}
-
-<style>
-  .page-root {
-    height: 100dvh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-  }
-
-  .panel {
-    width: 240px;
-    height: 160px;
-    background: #bbb;
-    border: solid 1px #888;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .knobs {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 20px;
-  }
-</style>
