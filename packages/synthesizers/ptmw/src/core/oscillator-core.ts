@@ -1,3 +1,8 @@
+import {
+  connectNodes,
+  disconnectNodes,
+} from "@lib/mu2609/utils/webaudio-helper";
+
 type OscillatorCoreSpec = {
   frequency?: number;
   waveform?: PeriodicWave;
@@ -8,6 +13,7 @@ type OscillatorCoreSpec = {
 
 type OscillatorCore = {
   update(spec: OscillatorCoreSpec): void;
+  cleanup(): void;
 };
 
 export function createOscillatorCore(
@@ -16,6 +22,9 @@ export function createOscillatorCore(
 ): OscillatorCore {
   let osc: OscillatorNode | null = null;
   let lastSetWaveform: PeriodicWave | null = null;
+  const gainNode = ac.createGain();
+  const pannerNode = ac.createStereoPanner();
+  connectNodes(gainNode, pannerNode, destinationNode);
   return {
     update(spec) {
       let oscCreated = false;
@@ -25,7 +34,7 @@ export function createOscillatorCore(
         lastSetWaveform = null;
       }
       if (osc) {
-        if (spec.frequency) {
+        if (spec.frequency !== undefined) {
           if (osc.frequency.value !== spec.frequency) {
             osc.frequency.value = spec.frequency;
           }
@@ -35,7 +44,7 @@ export function createOscillatorCore(
           lastSetWaveform = spec.waveform;
         }
         if (oscCreated) {
-          osc.connect(destinationNode);
+          osc.connect(gainNode);
           osc.start();
         }
         if (spec.isPlaying === false) {
@@ -44,6 +53,19 @@ export function createOscillatorCore(
           osc = null;
         }
       }
+      if (spec.volume !== undefined) {
+        gainNode.gain.value = spec.volume;
+      }
+      if (spec.pan !== undefined) {
+        pannerNode.pan.value = spec.pan;
+      }
+    },
+    cleanup() {
+      if (osc) {
+        osc.disconnect();
+        osc = null;
+      }
+      disconnectNodes(gainNode, pannerNode, destinationNode);
     },
   };
 }

@@ -34,15 +34,15 @@ export function createOscillatorsUnit(
       core0.update({
         frequency,
         waveform,
-        volume: 1,
-        pan: 0,
+        volume: parameters.volume,
+        pan: parameters.pan,
         isPlaying: true,
       });
       core1.update({
         frequency: frequency * 1.05,
         waveform,
-        volume: 1,
-        pan: 0,
+        volume: parameters.volume,
+        pan: parameters.pan,
         isPlaying: true,
       });
     },
@@ -59,6 +59,14 @@ export function createOscillatorsUnit(
         const waveform = internal.getPeriodicWave();
         core0.update({ waveform });
         core1.update({ waveform });
+      }
+      if (pr.volume !== undefined) {
+        core0.update({ volume: pr.volume });
+        core1.update({ volume: pr.volume });
+      }
+      if (pr.pan !== undefined) {
+        core0.update({ pan: pr.pan });
+        core1.update({ pan: pr.pan });
       }
     },
   };
