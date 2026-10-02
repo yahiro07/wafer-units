@@ -46,12 +46,12 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 4px;
+    gap: 1px;
   }
 
   .knob {
-    width: 80px;
-    height: 80px;
+    width: 50px;
+    height: 50px;
     background: #ddd;
     border: solid 1px #000;
     border-radius: 50%;
@@ -71,13 +71,14 @@
   }
 
   .tick {
-    width: 4px;
-    height: 20px;
+    width: 3px;
+    height: 12px;
     background: #444;
   }
 
   .label {
     width: 80px;
     text-align: center;
+    font-size: 15px;
   }
 </style>
