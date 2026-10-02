@@ -21,8 +21,8 @@ function createOscillatorUnit(
 ): OscillatorUnit {
   const waveProvider = createCustomWaveformProvider(ac);
 
-  let osc: OscillatorNode | undefined;
-  let latestWave: PeriodicWave | undefined;
+  let osc: OscillatorNode | null = null;
+  let latestWave: PeriodicWave | null = null;
 
   const internal = {
     applyParametersToNodes() {
@@ -48,7 +48,7 @@ function createOscillatorUnit(
       }
       const freq = midiToFrequency(noteNumber);
       osc = ac.createOscillator();
-      latestWave = undefined;
+      latestWave = null;
       internal.applyParametersToNodes();
       osc.frequency.value = freq;
       osc.connect(destinationNode);
@@ -56,6 +56,7 @@ function createOscillatorUnit(
     },
     noteOff(noteNumber) {
       osc?.stop();
+      osc = null;
     },
     applyParametersToNodes: internal.applyParametersToNodes,
   };
@@ -75,7 +76,8 @@ export function createEffectEngine(
     affectParameters(keys: SynthParameterKey[]) {
       if (keys.includes("osc1")) {
         osc1.applyParametersToNodes();
-      } else if (keys.includes("osc2")) {
+      }
+      if (keys.includes("osc2")) {
         osc2.applyParametersToNodes();
       }
     },
