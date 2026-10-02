@@ -7,6 +7,7 @@
     value = 0.5,
     min = 0,
     max = 1,
+    step = 0.01,
     onchange = (value: number) => {},
   } = $props();
 
@@ -17,7 +18,10 @@
     startDragSession(e0, {
       onMove(e) {
         const deltaY = e.position.y - e.originalPosition.y;
-        const newValue = clampValue(originalValue - deltaY * 0.01, min, max);
+        let newValue = clampValue(originalValue - deltaY * 0.01, min, max);
+        if (step > 0) {
+          newValue = Math.round(newValue / step) * step;
+        }
         onchange(newValue);
       },
     });
