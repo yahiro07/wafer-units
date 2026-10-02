@@ -10,6 +10,7 @@ import {
   SynthParameters,
 } from "./definitions";
 import { createAmplifierUnit } from "./envelope-unit";
+import { createSharedFilterUnit } from "./shared-filter-unit";
 
 type SynthesisBus = {
   audioContext: AudioContext;
@@ -81,6 +82,12 @@ export function createSynthesizerEngine(
 
   const voicesMixNode = ac.createGain();
 
+  const sharedFilter = createSharedFilterUnit(
+    ac,
+    () => bus.latestParameters.filter,
+    () => bus.latestParameters.amp,
+  );
+
   const voice = createSynthesizerVoice(bus, voicesMixNode);
 
   const titlingEq = createTiltingEq(ac);
@@ -88,6 +95,7 @@ export function createSynthesizerEngine(
 
   const disconnects = connectNodes(
     voicesMixNode,
+    sharedFilter,
     titlingEq,
     reverb,
     destinationNode,
@@ -108,6 +116,10 @@ export function createSynthesizerEngine(
       if (spec.osc3) {
         Object.assign(latestParameters.osc3, spec.osc3);
         voice.updateOscParameters("osc3", latestParameters.osc3);
+      }
+      if (spec.filter) {
+        Object.assign(latestParameters.filter, spec.filter);
+        sharedFilter.update();
       }
       if (spec.amp) {
         Object.assign(latestParameters.amp, spec.amp);
@@ -131,12 +143,14 @@ export function createSynthesizerEngine(
     noteOn(noteNumber: number, time: number) {
       time = Math.max(time ?? 0, ac.currentTime);
       voice.noteOn(noteNumber, time);
+      sharedFilter.gateOn(time);
       latestNoteNumber = noteNumber;
     },
     noteOff(noteNumber: number, time: number) {
       time = Math.max(time ?? 0, ac.currentTime);
       if (noteNumber === latestNoteNumber) {
         voice.noteOff(time);
+        sharedFilter.gateOff(time);
         latestNoteNumber = null;
       }
     },
