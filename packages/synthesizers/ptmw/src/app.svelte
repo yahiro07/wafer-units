@@ -1,23 +1,22 @@
 <script lang="ts">
-  import Knob from "./components/knob.svelte";
   import { createAppModel } from "./app-model.svelte.ts";
-  import type { SynthParameterKey } from "./core/definitions";
+  import type { OscParameterKey } from "./core/definitions";
   import OscillatorWaveformView from "./oscillator-waveform-view.svelte";
+  import type { OscId } from "./core/definitions";
+  import OscillatorKnobsEditPart from "./oscillator-knobs-edit-part.svelte";
 
   const appModel = createAppModel();
 
-  function bindParameterHandler(key: SynthParameterKey) {
-    return (value: number) => {
-      appModel.setParameter(key, value);
+  function bindOscParameterSetter(oscId: OscId) {
+    return (key: OscParameterKey, value: number) => {
+      appModel.setOscParameter(oscId, key, value);
     };
   }
   const { states } = appModel;
   const parameters = states.parameters;
   const handlers = {
-    wave: bindParameterHandler("wave"),
-    shape: bindParameterHandler("shape"),
-    dense: bindParameterHandler("dense"),
-    mix: bindParameterHandler("mix"),
+    osc1: bindOscParameterSetter("osc1"),
+    osc2: bindOscParameterSetter("osc2"),
   };
 
   $effect(() => {
@@ -30,35 +29,18 @@
 {#if states.viewActive}
   <div class="h-dvh flex-c overflow-hidden">
     <div class="flex-vc bd-#888 bg-#bbb p-4">
-      <OscillatorWaveformView
-        waveformParameters={{
-          wave: parameters.wave,
-          shape: parameters.shape,
-          dense: parameters.dense,
-          mix: parameters.mix,
-        }}
+      <OscillatorWaveformView waveformParameters={parameters.osc1} />
+      <OscillatorKnobsEditPart
+        parameters={parameters.osc1}
+        setParameter={handlers.osc1}
       />
-      <div class="flex-ha gap-5 p-2">
-        <Knob
-          label="WAVE"
-          value={parameters.wave}
-          onchange={handlers.wave}
-          min={0}
-          max={3}
-          step={1}
-        />
-        <Knob
-          label="SHAPE"
-          value={parameters.shape}
-          onchange={handlers.shape}
-        />
-        <Knob
-          label="DENSE"
-          value={parameters.dense}
-          onchange={handlers.dense}
-        />
-        <Knob label="MIX" value={parameters.mix} onchange={handlers.mix} />
-      </div>
+    </div>
+    <div class="flex-vc bd-#888 bg-#bbb p-4">
+      <OscillatorWaveformView waveformParameters={parameters.osc2} />
+      <OscillatorKnobsEditPart
+        parameters={parameters.osc2}
+        setParameter={handlers.osc2}
+      />
     </div>
   </div>
 {/if}
