@@ -3,8 +3,9 @@ import { OscId, OscParameters, SynthesisBus } from "./definitions";
 import { createAmplifierUnit } from "./envelope-unit";
 import { createOscillatorUnit } from "./oscillator-unit";
 
-type SynthesizerVoice = {
-  getGateOnTime(): number;
+export type SynthesizerVoice = {
+  noteNumber: number;
+  gateOnTime: number;
   updateOscParameters(oscId: OscId, parameters: OscParameters): void;
   noteOn(noteNumber: number, time: number): void;
   noteOff(time: number): void;
@@ -26,9 +27,8 @@ export function createSynthesizerVoice(
   const disconnects = connectNodes(oscMixNode, amplifier, destinationNode);
 
   return {
-    getGateOnTime() {
-      return 0;
-    },
+    noteNumber: -1,
+    gateOnTime: -1,
     updateOscParameters(oscId, parameters) {
       const osc = { osc1, osc2, osc3 }[oscId];
       osc.updateParameters(parameters);
