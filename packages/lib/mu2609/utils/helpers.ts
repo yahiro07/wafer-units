@@ -113,3 +113,7 @@ export function arrayItemsEquals<T>(arr1: T[], arr2: T[]) {
   }
   return true;
 }
+
+export function assignTyped<T extends object>(target: T, attrs: Partial<T>) {
+  Object.assign(target, attrs);
+}
