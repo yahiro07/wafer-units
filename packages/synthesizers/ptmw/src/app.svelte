@@ -4,6 +4,7 @@
   import EqSection from "./eq-section.svelte";
   import OscillatorSection from "./oscillator-section.svelte";
   import ReverbSection from "./reverb-section.svelte";
+  import AmplifierSection from "./amplifier-section.svelte";
 
   const appModel = createAppModel();
   setAppModelContext(appModel);
@@ -26,6 +27,7 @@
         <OscillatorSection oscId="osc3" />
       </div>
       <div class="flex-ha gap-4 justify-end">
+        <AmplifierSection />
         <EqSection />
         <ReverbSection />
       </div>

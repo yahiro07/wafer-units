@@ -9,8 +9,8 @@ import {
 } from "@lib/mu2609/utils/webaudio-helper";
 
 type OscillatorUnit = {
-  noteOn(noteNumber: number, parameters: OscParameters): void;
-  noteOff(): void;
+  noteOn(noteNumber: number, time: number, parameters: OscParameters): void;
+  noteOff(time: number): void;
   updateParameters(parameters: OscParameters): void;
   cleanup(): void;
 };
@@ -31,30 +31,33 @@ export function createOscillatorUnit(
   const cores = seqNumbers(7).map(() => createOscillatorCore(ac, gainNode));
 
   const internal = {
-    applyParameters(pr: OscParameters) {
+    applyParameters(pr: OscParameters, time: number) {
       if (playingNoteNumber === null) return;
       const waveform = waveProvider.getPeriodicWave(pr);
       const frequency = midiToFrequency(playingNoteNumber + pr.octave * 12);
       cores.forEach((core, i) => {
         const active = i <= pr.unison - 1;
-        core.update({
-          frequency: frequency * (1 + i * 0.01 * power2(pr.detune)),
-          volume: 1, //for unison mix
-          pan: 0, //for unison spread
-          isPlaying: active,
-          waveform,
-        });
+        core.update(
+          {
+            frequency: frequency * (1 + i * 0.01 * power2(pr.detune)),
+            volume: 1, //for unison mix
+            pan: 0, //for unison spread
+            isPlaying: active,
+            waveform,
+          },
+          time,
+        );
       });
     },
   };
 
   return {
-    noteOn(noteNumber, pr) {
+    noteOn(noteNumber, time, pr) {
       playingNoteNumber = noteNumber;
-      internal.applyParameters(pr);
+      internal.applyParameters(pr, time);
     },
-    noteOff() {
-      cores.forEach((core) => core.update({ isPlaying: false }));
+    noteOff(time) {
+      cores.forEach((core) => core.update({ isPlaying: false }, time));
       playingNoteNumber = null;
     },
     updateParameters(pr) {
@@ -65,7 +68,7 @@ export function createOscillatorUnit(
         pannerNode.pan.value = pr.pan;
       }
       if (playingNoteNumber === null) return;
-      internal.applyParameters(pr);
+      internal.applyParameters(pr, ac.currentTime);
     },
     cleanup() {
       disconnectNodes(gainNode, pannerNode, destinationNode);
