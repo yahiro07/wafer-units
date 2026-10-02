@@ -4,6 +4,9 @@ import {
   type SynthParameterKey,
   defaultSynthParameters,
   type EffectEngine,
+  OscParameters,
+  OscId,
+  OscParameterKey,
 } from "./core/definitions";
 import { createEffectEngine } from "./core/effect-engine";
 import { setupMidiKeyboardInput } from "@lib/mu2609/utils/midi-keyboard-input";
@@ -23,6 +26,11 @@ type AppModel = {
   setParameter<K extends SynthParameterKey>(
     key: K,
     value: SynthParameters[K],
+  ): void;
+  setOscParameter<K extends OscParameterKey>(
+    oscId: OscId,
+    key: K,
+    value: OscParameters[K],
   ): void;
   cleanup(): void;
 };
@@ -75,6 +83,10 @@ export function createAppModel(): AppModel {
     setParameter(key, value) {
       states.parameters[key] = value;
       engine.affectParameters([key]);
+    },
+    setOscParameter(oscId, key, value) {
+      states.parameters[oscId][key] = value;
+      engine.affectParameters([oscId]);
     },
     cleanup() {
       cleanupUnit?.();
