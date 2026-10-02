@@ -10,6 +10,7 @@ import {
 import { createSharedFilterUnit } from "./shared-filter-unit";
 import { createSynthesizerVoice, SynthesizerVoice } from "./synthesizer-voice";
 import { seqNumbers } from "@lib/mu2609/utils/helpers";
+import { createOutputSaturator } from "./output-saturator";
 
 function getNextVoice(voices: SynthesizerVoice[]): SynthesizerVoice {
   let nextVoice = voices.find((voice) => voice.noteNumber === -1);
@@ -73,6 +74,7 @@ function createVoicesStage(bus: SynthesisBus) {
       voices.forEach((voice) => {
         voice.cleanup();
       });
+      sharedFilter.cleanup();
       disconnects();
     },
   };
@@ -83,8 +85,17 @@ function createEffectChain(bus: SynthesisBus) {
   const inputNode = ac.createGain();
   const outputNode = ac.createGain();
   const titlingEq = createTiltingEq(ac);
+  const saturator = createOutputSaturator(ac);
+  saturator.update(1);
   const reverb = createReverb(ac);
-  const disconnects = connectNodes(inputNode, titlingEq, reverb, outputNode);
+
+  const disconnects = connectNodes(
+    inputNode,
+    titlingEq,
+    saturator,
+    reverb,
+    outputNode,
+  );
 
   return {
     inputNode,
@@ -105,6 +116,9 @@ function createEffectChain(bus: SynthesisBus) {
       }
     },
     cleanup() {
+      titlingEq.cleanup();
+      saturator.cleanup();
+      reverb.cleanup();
       disconnects();
     },
   };
