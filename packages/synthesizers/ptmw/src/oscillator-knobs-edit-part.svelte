@@ -56,9 +56,6 @@
       label="DETUNE"
       value={parameters.detune}
       onchange={(v) => setParameter("detune", v)}
-      min={-1}
-      max={1}
-      step={0.01}
     />
     <Knob
       label="PAN"
