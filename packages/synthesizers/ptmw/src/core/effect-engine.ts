@@ -7,6 +7,9 @@ import type {
 } from "./definitions";
 import { midiToFrequency } from "@lib/mu2609/utils/synth-math-utils";
 import { createCustomWaveformProvider } from "./waveforms/custom-waveform-provider";
+import { createTiltingEq } from "./tilting-eq";
+import { connectNodes } from "@lib/mu2609/utils/webaudio-helper";
+import { createReverb } from "./reverb";
 
 type OscillatorUnit = {
   noteOn(noteNumber: number): void;
@@ -67,11 +70,23 @@ export function createEffectEngine(
   parameters: SynthParameters,
 ): EffectEngine {
   const ac = unitInterface?.audioContext ?? new AudioContext();
-  const outputNode = unitInterface?.audioOutputNode ?? ac.destination;
+  const destinationNode = unitInterface?.audioOutputNode ?? ac.destination;
 
-  const osc1 = createOscillatorUnit(ac, outputNode, parameters.osc1);
-  const osc2 = createOscillatorUnit(ac, outputNode, parameters.osc2);
-  const osc3 = createOscillatorUnit(ac, outputNode, parameters.osc3);
+  const oscMixNode = ac.createGain();
+
+  const osc1 = createOscillatorUnit(ac, oscMixNode, parameters.osc1);
+  const osc2 = createOscillatorUnit(ac, oscMixNode, parameters.osc2);
+  const osc3 = createOscillatorUnit(ac, oscMixNode, parameters.osc3);
+
+  const titlingEq = createTiltingEq(ac);
+  const reverb = createReverb(ac);
+
+  const disconnects = connectNodes(
+    oscMixNode,
+    titlingEq,
+    reverb,
+    destinationNode,
+  );
 
   const internal = {
     affectParameters(keys: SynthParameterKey[]) {
@@ -84,9 +99,22 @@ export function createEffectEngine(
       if (keys.includes("osc3")) {
         osc3.applyParametersToNodes();
       }
+      if (keys.includes("eq")) {
+        titlingEq.update({
+          prFreq: parameters.eq.freq,
+          prTilt: parameters.eq.tilt,
+        });
+      }
+      if (keys.includes("reverb")) {
+        reverb.apply({
+          decay: parameters.reverb.time,
+          damp: parameters.reverb.tone,
+          mix: parameters.reverb.mix,
+        });
+      }
     },
     affectParametersAll() {
-      internal.affectParameters(["osc1", "osc2", "osc3"]);
+      internal.affectParameters(["osc1", "osc2", "osc3", "eq", "reverb"]);
     },
   };
   internal.affectParametersAll();
@@ -105,7 +133,7 @@ export function createEffectEngine(
       osc3.noteOff(noteNumber);
     },
     cleanup() {
-      // disconnectNodes(inputNode, pannerNode, gainNode, outputNode);
+      disconnects();
     },
   };
 }
