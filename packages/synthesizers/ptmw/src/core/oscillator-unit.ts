@@ -1,5 +1,5 @@
 import { midiToFrequency, power2 } from "@lib/mu2609/utils/synth-math-utils";
-import { defaultSynthParameters, OscParameters } from "./definitions";
+import { OscParameters } from "./definitions";
 import { createCustomWaveformProvider } from "./waveforms/custom-waveform-provider";
 import { createOscillatorCore } from "./oscillator-core";
 import { seqNumbers } from "@lib/mu2609/utils/helpers";
@@ -11,7 +11,7 @@ import {
 type OscillatorUnit = {
   noteOn(noteNumber: number, parameters: OscParameters): void;
   noteOff(): void;
-  updateParameters(parameters: Partial<OscParameters>): void;
+  updateParameters(parameters: OscParameters): void;
   cleanup(): void;
 };
 
@@ -22,9 +22,6 @@ export function createOscillatorUnit(
   const waveProvider = createCustomWaveformProvider(ac);
 
   let playingNoteNumber: number | null = null;
-  let latestParameters: OscParameters = structuredClone(
-    defaultSynthParameters["osc1"],
-  );
 
   const gainNode = ac.createGain();
   const pannerNode = ac.createStereoPanner();
@@ -34,13 +31,9 @@ export function createOscillatorUnit(
   const cores = seqNumbers(7).map(() => createOscillatorCore(ac, gainNode));
 
   const internal = {
-    applyWaveform() {
-      const waveform = waveProvider.getPeriodicWave(latestParameters);
-      cores.forEach((core) => core.update({ waveform }));
-    },
-    applyFormation() {
+    applyParameters(pr: OscParameters) {
       if (playingNoteNumber === null) return;
-      const pr = latestParameters;
+      const waveform = waveProvider.getPeriodicWave(pr);
       const frequency = midiToFrequency(playingNoteNumber + pr.octave * 12);
       cores.forEach((core, i) => {
         const active = i <= pr.unison - 1;
@@ -49,6 +42,7 @@ export function createOscillatorUnit(
           volume: 1, //for unison mix
           pan: 0, //for unison spread
           isPlaying: active,
+          waveform,
         });
       });
     },
@@ -56,17 +50,14 @@ export function createOscillatorUnit(
 
   return {
     noteOn(noteNumber, pr) {
-      Object.assign(latestParameters, pr);
       playingNoteNumber = noteNumber;
-      internal.applyWaveform();
-      internal.applyFormation();
+      internal.applyParameters(pr);
     },
     noteOff() {
       cores.forEach((core) => core.update({ isPlaying: false }));
       playingNoteNumber = null;
     },
     updateParameters(pr) {
-      Object.assign(latestParameters, pr);
       if (pr.volume !== undefined) {
         gainNode.gain.value = pr.volume;
       }
@@ -74,18 +65,7 @@ export function createOscillatorUnit(
         pannerNode.pan.value = pr.pan;
       }
       if (playingNoteNumber === null) return;
-      const needUpdateWave = (["wave", "shape", "dense", "mix"] as const).some(
-        (key) => pr[key] !== undefined,
-      );
-      if (needUpdateWave) {
-        internal.applyWaveform();
-      }
-      const needUpdateFormation = (
-        ["octave", "unison", "detune"] as const
-      ).some((key) => pr[key] !== undefined);
-      if (needUpdateFormation) {
-        internal.applyFormation();
-      }
+      internal.applyParameters(pr);
     },
     cleanup() {
       disconnectNodes(gainNode, pannerNode, destinationNode);
