@@ -1,63 +1,8 @@
 import type { UnitInterface } from "wafer-host/unit-types";
-import type { OscParameters } from "./definitions";
-import { midiToFrequency } from "@lib/mu2609/utils/synth-math-utils";
-import { createCustomWaveformProvider } from "./waveforms/custom-waveform-provider";
 import { createTiltingEq } from "./tilting-eq";
 import { connectNodes } from "@lib/mu2609/utils/webaudio-helper";
 import { createReverb } from "./reverb";
-
-type OscillatorUnit = {
-  noteOn(noteNumber: number, parameters: OscParameters): void;
-  noteOff(noteNumber: number): void;
-  updateParameters(parameters: OscParameters): void;
-};
-
-function createOscillatorUnit(
-  ac: AudioContext,
-  destinationNode: AudioNode,
-): OscillatorUnit {
-  const waveProvider = createCustomWaveformProvider(ac);
-
-  let osc: OscillatorNode | null = null;
-  let latestWave: PeriodicWave | null = null;
-
-  const internal = {
-    updateParameters(parameters: OscParameters) {
-      if (!osc) return;
-      const pr = parameters;
-      const wave = waveProvider.getPeriodicWave({
-        wave: pr.wave,
-        shape: pr.shape,
-        dense: pr.dense,
-        mix: pr.mix,
-      });
-      if (latestWave !== wave) {
-        osc.setPeriodicWave(wave);
-        latestWave = wave;
-      }
-    },
-  };
-
-  return {
-    noteOn(noteNumber, parameters) {
-      if (osc) {
-        osc.stop();
-      }
-      const freq = midiToFrequency(noteNumber);
-      osc = ac.createOscillator();
-      latestWave = null;
-      internal.updateParameters(parameters);
-      osc.frequency.value = freq;
-      osc.connect(destinationNode);
-      osc.start();
-    },
-    noteOff(noteNumber) {
-      osc?.stop();
-      osc = null;
-    },
-    updateParameters: internal.updateParameters,
-  };
-}
+import { createOscillatorUnit } from "./oscillator-unit";
 
 export function createEffectEngine(unitInterface: UnitInterface | undefined) {
   const ac = unitInterface?.audioContext ?? new AudioContext();
