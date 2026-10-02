@@ -7,23 +7,6 @@
     setParameter: (key: OscParameterKey, value: number) => void;
   };
   let { parameters, setParameter }: Props = $props();
-
-  function bindParameterHandler(key: OscParameterKey) {
-    return (value: number) => {
-      setParameter(key, value);
-    };
-  }
-  const handlers = {
-    octave: bindParameterHandler("octave"),
-    wave: bindParameterHandler("wave"),
-    shape: bindParameterHandler("shape"),
-    dense: bindParameterHandler("dense"),
-    mix: bindParameterHandler("mix"),
-    unison: bindParameterHandler("unison"),
-    detune: bindParameterHandler("detune"),
-    pan: bindParameterHandler("pan"),
-    volume: bindParameterHandler("volume"),
-  };
 </script>
 
 <div class="flex-v">
@@ -31,7 +14,7 @@
     <Knob
       label="OCTAVE"
       value={parameters.octave}
-      onchange={handlers.octave}
+      onchange={(v) => setParameter("octave", v)}
       min={-2}
       max={2}
       step={1}
@@ -39,20 +22,32 @@
     <Knob
       label="WAVE"
       value={parameters.wave}
-      onchange={handlers.wave}
+      onchange={(v) => setParameter("wave", v)}
       min={0}
       max={3}
       step={1}
     />
-    <Knob label="SHAPE" value={parameters.shape} onchange={handlers.shape} />
-    <Knob label="DENSE" value={parameters.dense} onchange={handlers.dense} />
-    <Knob label="MIX" value={parameters.mix} onchange={handlers.mix} />
+    <Knob
+      label="SHAPE"
+      value={parameters.shape}
+      onchange={(v) => setParameter("shape", v)}
+    />
+    <Knob
+      label="DENSE"
+      value={parameters.dense}
+      onchange={(v) => setParameter("dense", v)}
+    />
+    <Knob
+      label="MIX"
+      value={parameters.mix}
+      onchange={(v) => setParameter("mix", v)}
+    />
   </div>
   <div class="flex-ha gap-4 p-2 justify-end">
     <Knob
       label="UNISON"
       value={parameters.unison}
-      onchange={handlers.unison}
+      onchange={(v) => setParameter("unison", v)}
       min={1}
       max={7}
       step={1}
@@ -60,12 +55,21 @@
     <Knob
       label="DETUNE"
       value={parameters.detune}
-      onchange={handlers.detune}
+      onchange={(v) => setParameter("detune", v)}
       min={-1}
       max={1}
       step={0.01}
     />
-    <Knob label="PAN" value={parameters.pan} onchange={handlers.pan} min={-1} />
-    <Knob label="VOLUME" value={parameters.volume} onchange={handlers.volume} />
+    <Knob
+      label="PAN"
+      value={parameters.pan}
+      onchange={(v) => setParameter("pan", v)}
+      min={-1}
+    />
+    <Knob
+      label="VOLUME"
+      value={parameters.volume}
+      onchange={(v) => setParameter("volume", v)}
+    />
   </div>
 </div>
