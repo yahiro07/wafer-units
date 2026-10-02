@@ -27,13 +27,19 @@
 
 {#if states.viewActive}
   <div class="h-dvh flex-c overflow-hidden">
-    <OscillatorSection
-      parameters={parameters.osc1}
-      setParameter={parameterSetters.osc1}
-    />
-    <OscillatorSection
-      parameters={parameters.osc2}
-      setParameter={parameterSetters.osc2}
-    />
+    <div class="flex-ha gap-4">
+      <OscillatorSection
+        parameters={parameters.osc1}
+        setParameter={parameterSetters.osc1}
+      />
+      <OscillatorSection
+        parameters={parameters.osc2}
+        setParameter={parameterSetters.osc2}
+      />
+      <OscillatorSection
+        parameters={parameters.osc2}
+        setParameter={parameterSetters.osc2}
+      />
+    </div>
   </div>
 {/if}

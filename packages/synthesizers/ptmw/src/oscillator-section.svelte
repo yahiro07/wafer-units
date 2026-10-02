@@ -10,7 +10,7 @@
   let { parameters, setParameter }: Props = $props();
 </script>
 
-<div class="flex-vc bd-#888 bg-#bbb p-4">
+<div class="flex-vc bd-#888 bg-#bbb gap-2">
   <OscillatorWaveformView waveformParameters={parameters} />
   <OscillatorKnobsEditPart {parameters} {setParameter} />
 </div>

@@ -50,8 +50,8 @@
   }
 
   .knob {
-    width: 50px;
-    height: 50px;
+    width: 45px;
+    height: 45px;
     background: #ddd;
     border: solid 1px #000;
     border-radius: 50%;
@@ -77,8 +77,10 @@
   }
 
   .label {
-    width: 80px;
-    text-align: center;
-    font-size: 15px;
+    width: 0px;
+    display: flex;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 600;
   }
 </style>
