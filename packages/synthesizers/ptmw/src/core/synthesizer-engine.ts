@@ -20,6 +20,7 @@ function getNextVoice(voices: SynthesizerVoice[]): SynthesizerVoice {
 
 function createVoicesStage(bus: SynthesisBus) {
   const voicesMixNode = bus.audioContext.createGain();
+  voicesMixNode.gain.value = 0.7;
 
   const voices = seqNumbers(4).map(() =>
     createSynthesizerVoice(bus, voicesMixNode),
