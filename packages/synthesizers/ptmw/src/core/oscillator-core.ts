@@ -38,8 +38,9 @@ export function createOscillatorCore(
           osc.connect(destinationNode);
           osc.start();
         }
-        if (!spec.isPlaying) {
+        if (spec.isPlaying === false) {
           osc.stop();
+          osc.disconnect();
           osc = null;
         }
       }
