@@ -18,11 +18,18 @@ export type OscParameters = {
 };
 export type OscParameterKey = keyof OscParameters;
 
+export enum FilterType {
+  LP12 = 0,
+  LP24,
+}
+
 export type FilterParameters = {
   enabled: boolean;
+  type: FilterType;
   cutoff: number;
   peak: number;
   env: number;
+  envRelease: boolean;
 };
 
 export type AmpParameters = {
@@ -110,9 +117,11 @@ export const defaultSynthParameters: SynthParameters = {
   },
   filter: {
     enabled: true,
+    type: FilterType.LP12,
     cutoff: 1,
     peak: 0,
     env: 0,
+    envRelease: false,
   },
   amp: {
     enabled: true,

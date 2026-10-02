@@ -51,3 +51,23 @@ export function createConnectionKeeper() {
     },
   };
 }
+
+export function createNodeParameterSetter(
+  ac: AudioContext,
+  node: AudioParam,
+  lerpTime: number,
+) {
+  return {
+    set(value: number, immediate: boolean = false) {
+      if (value === node.value) return;
+
+      const t = ac.currentTime;
+      node.cancelScheduledValues(t);
+      if (!immediate) {
+        node.linearRampToValueAtTime(value, t + lerpTime);
+      } else {
+        node.value = value;
+      }
+    },
+  };
+}

@@ -5,6 +5,7 @@
   import OscillatorSection from "./oscillator-section.svelte";
   import ReverbSection from "./reverb-section.svelte";
   import AmplifierSection from "./amplifier-section.svelte";
+  import FilterSection from "./filter-section.svelte";
 
   const appModel = createAppModel();
   setAppModelContext(appModel);
@@ -20,13 +21,14 @@
 
 {#if states.viewActive}
   <div class="h-dvh flex-c overflow-hidden">
-    <div class="flex-v">
+    <div class="flex-v gap-3">
       <div class="flex-ha gap-4">
         <OscillatorSection oscId="osc1" />
         <OscillatorSection oscId="osc2" />
         <OscillatorSection oscId="osc3" />
       </div>
       <div class="flex-ha gap-4 justify-end">
+        <FilterSection />
         <AmplifierSection />
         <EqSection />
         <ReverbSection />
