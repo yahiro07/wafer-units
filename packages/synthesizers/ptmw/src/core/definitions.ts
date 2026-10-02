@@ -9,6 +9,10 @@ export type OscParameters = {
   detune: number;
   pan: number;
   volume: number;
+  phaseRandom: boolean;
+  spread: boolean;
+  sub: boolean;
+  full: boolean;
 };
 export type OscParameterKey = keyof OscParameters;
 
@@ -65,6 +69,10 @@ export const defaultSynthParameters: SynthParameters = {
     detune: 0.5,
     pan: 0,
     volume: 0.5,
+    phaseRandom: true,
+    spread: true,
+    sub: false,
+    full: true,
   },
   osc2: {
     enabled: false,
@@ -77,6 +85,10 @@ export const defaultSynthParameters: SynthParameters = {
     detune: 0.5,
     pan: 0,
     volume: 0.5,
+    phaseRandom: true,
+    spread: true,
+    sub: false,
+    full: true,
   },
   osc3: {
     enabled: false,
@@ -89,6 +101,10 @@ export const defaultSynthParameters: SynthParameters = {
     detune: 0.5,
     pan: 0,
     volume: 0.5,
+    phaseRandom: true,
+    spread: true,
+    sub: false,
+    full: true,
   },
   filter: {
     enabled: true,
