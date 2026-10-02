@@ -10,7 +10,7 @@ import {
 
 type OscillatorUnit = {
   noteOn(noteNumber: number, parameters: OscParameters): void;
-  noteOff(noteNumber: number): void;
+  noteOff(): void;
   updateParameters(parameters: Partial<OscParameters>): void;
   cleanup(): void;
 };
@@ -61,7 +61,7 @@ export function createOscillatorUnit(
       internal.applyWaveform();
       internal.applyFormation();
     },
-    noteOff(noteNumber) {
+    noteOff() {
       cores.forEach((core) => core.update({ isPlaying: false }));
       playingNoteNumber = null;
     },
