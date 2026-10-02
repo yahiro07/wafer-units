@@ -9,10 +9,10 @@
   };
   let { oscId }: Props = $props();
   const appModel = getAppModelContext();
-  const parameters = appModel.states.parameters[oscId];
+  const parameters = $derived(appModel.states.parameters[oscId]);
 
   const setParameter = (key: OscParameterKey, value: number) => {
-    appModel.editOperator.setOscParameter(oscId, key, value);
+    appModel.editOperator.dispatchParameterEdit({ [oscId]: { [key]: value } });
   };
 </script>
 

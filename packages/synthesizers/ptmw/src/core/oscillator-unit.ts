@@ -1,11 +1,11 @@
 import { midiToFrequency } from "@lib/mu2609/utils/synth-math-utils";
-import { OscParameters } from "./definitions";
+import { defaultSynthParameters, OscParameters } from "./definitions";
 import { createCustomWaveformProvider } from "./waveforms/custom-waveform-provider";
 
 type OscillatorUnit = {
   noteOn(noteNumber: number, parameters: OscParameters): void;
   noteOff(noteNumber: number): void;
-  updateParameters(parameters: OscParameters): void;
+  updateParameters(parameters: Partial<OscParameters>): void;
 };
 
 export function createOscillatorUnit(
@@ -16,6 +16,7 @@ export function createOscillatorUnit(
 
   let osc: OscillatorNode | null = null;
   let latestWave: PeriodicWave | null = null;
+  let latestParameters: OscParameters = defaultSynthParameters["osc1"];
 
   const internal = {
     updateParameters(parameters: OscParameters) {
@@ -30,6 +31,26 @@ export function createOscillatorUnit(
       if (latestWave !== wave) {
         osc.setPeriodicWave(wave);
         latestWave = wave;
+      }
+      latestParameters = parameters;
+    },
+    updateParametersPartially(parameters: Partial<OscParameters>) {
+      if (!osc) return;
+      const pr = parameters;
+      const needUpdateWave = (["wave", "shape", "dense", "mix"] as const).some(
+        (key) => pr[key] !== undefined,
+      );
+      if (needUpdateWave) {
+        const wave = waveProvider.getPeriodicWave({
+          wave: pr.wave ?? latestParameters.wave,
+          shape: pr.shape ?? latestParameters.shape,
+          dense: pr.dense ?? latestParameters.dense,
+          mix: pr.mix ?? latestParameters.mix,
+        });
+        if (latestWave !== wave) {
+          osc.setPeriodicWave(wave);
+          latestWave = wave;
+        }
       }
     },
   };
@@ -51,6 +72,6 @@ export function createOscillatorUnit(
       osc?.stop();
       osc = null;
     },
-    updateParameters: internal.updateParameters,
+    updateParameters: internal.updateParametersPartially,
   };
 }
