@@ -8,7 +8,14 @@ import {
   SynthParameters,
 } from "./definitions";
 import { createSharedFilterUnit } from "./shared-filter-unit";
-import { createSynthesizerVoice } from "./synthesizer-voice";
+import { createSynthesizerVoice, SynthesizerVoice } from "./synthesizer-voice";
+import { seqNumbers } from "@lib/mu2609/utils/helpers";
+
+function getNextVoice(voices: SynthesizerVoice[]): SynthesizerVoice {
+  let nextVoice = voices.find((voice) => voice.noteNumber === -1);
+  if (nextVoice) return nextVoice;
+  return [...voices].sort((a, b) => a.gateOnTime - b.gateOnTime)[0];
+}
 
 export function createSynthesizerEngine(
   unitInterface: UnitInterface | undefined,
@@ -28,7 +35,9 @@ export function createSynthesizerEngine(
     () => bus.latestParameters.amp,
   );
 
-  const voice = createSynthesizerVoice(bus, voicesMixNode);
+  const voices = seqNumbers(4).map(() =>
+    createSynthesizerVoice(bus, voicesMixNode),
+  );
 
   const titlingEq = createTiltingEq(ac);
   const reverb = createReverb(ac);
@@ -41,21 +50,25 @@ export function createSynthesizerEngine(
     destinationNode,
   );
 
-  let latestNoteNumber: number | null = null;
-
   return {
     applyParameters(spec: ParameterEditSpec) {
       if (spec.osc1) {
         Object.assign(latestParameters.osc1, spec.osc1);
-        voice.updateOscParameters("osc1", latestParameters.osc1);
+        voices.forEach((voice) => {
+          voice.updateOscParameters("osc1", latestParameters.osc1);
+        });
       }
       if (spec.osc2) {
         Object.assign(latestParameters.osc2, spec.osc2);
-        voice.updateOscParameters("osc2", latestParameters.osc2);
+        voices.forEach((voice) => {
+          voice.updateOscParameters("osc2", latestParameters.osc2);
+        });
       }
       if (spec.osc3) {
         Object.assign(latestParameters.osc3, spec.osc3);
-        voice.updateOscParameters("osc3", latestParameters.osc3);
+        voices.forEach((voice) => {
+          voice.updateOscParameters("osc3", latestParameters.osc3);
+        });
       }
       if (spec.filter) {
         Object.assign(latestParameters.filter, spec.filter);
@@ -82,19 +95,25 @@ export function createSynthesizerEngine(
     },
     noteOn(noteNumber: number, time: number) {
       time = Math.max(time ?? 0, ac.currentTime);
+      const voice = getNextVoice(voices);
       voice.noteOn(noteNumber, time);
+      voice.noteNumber = noteNumber;
+      voice.gateOnTime = time;
       sharedFilter.gateOn(time);
-      latestNoteNumber = noteNumber;
     },
     noteOff(noteNumber: number, time: number) {
       time = Math.max(time ?? 0, ac.currentTime);
-      if (noteNumber === latestNoteNumber) {
+      const voice = voices.find((voice) => voice.noteNumber === noteNumber);
+      if (voice) {
         voice.noteOff(time);
         sharedFilter.gateOff(time);
-        latestNoteNumber = null;
+        voice.noteNumber = -1;
       }
     },
     cleanup() {
+      voices.forEach((voice) => {
+        voice.cleanup();
+      });
       disconnects();
     },
   };
