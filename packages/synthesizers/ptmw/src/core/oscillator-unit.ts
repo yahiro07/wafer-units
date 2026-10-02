@@ -1,4 +1,4 @@
-import { midiToFrequency, power2 } from "@lib/mu2609/utils/synth-math-utils";
+import { midiToFrequency } from "@lib/mu2609/utils/synth-math-utils";
 import { OscParameters } from "./definitions";
 import { createCustomWaveformProvider } from "./waveforms/custom-waveform-provider";
 import { createOscillatorCore } from "./oscillator-core";
@@ -7,12 +7,17 @@ import {
   connectNodes,
   disconnectNodes,
 } from "@lib/mu2609/utils/webaudio-helper";
+import { buildUnisonPartialSpecs } from "./unison-partial-specs";
 
 type OscillatorUnit = {
   noteOn(noteNumber: number, time: number, parameters: OscParameters): void;
   noteOff(time: number): void;
   updateParameters(parameters: OscParameters): void;
   cleanup(): void;
+};
+
+const configs = {
+  phaseRandomMaxSec: 0.003,
 };
 
 export function createOscillatorUnit(
@@ -31,30 +36,47 @@ export function createOscillatorUnit(
   const cores = seqNumbers(7).map(() => createOscillatorCore(ac, gainNode));
 
   const internal = {
-    applyParameters(pr: OscParameters, time: number) {
+    applyParameters(
+      pr: OscParameters,
+      time: number,
+      withStartDelay: boolean = false,
+    ) {
       if (playingNoteNumber === null) return;
       const waveform = waveProvider.getPeriodicWave(pr);
-      const frequency = midiToFrequency(playingNoteNumber + pr.octave * 12);
-      cores.forEach((core, i) => {
+      const unisonPartialSpecs = buildUnisonPartialSpecs(pr);
+      const frequency = midiToFrequency(playingNoteNumber);
+      for (let i = 0; i < 7; i++) {
         const active = i <= pr.unison - 1;
+        const core = cores[i];
+        if (!active) {
+          core.update({ isPlaying: false }, time);
+          continue;
+        }
+        const spec = unisonPartialSpecs[i];
+        const detune = spec.octave * 1200 + spec.detune * 100;
+        const startDelay =
+          withStartDelay && !spec.isCore
+            ? Math.random() * configs.phaseRandomMaxSec
+            : 0;
         core.update(
           {
-            frequency: frequency * (1 + i * 0.01 * power2(pr.detune)),
-            volume: 1, //for unison mix
-            pan: 0, //for unison spread
+            frequency,
+            detune,
+            volume: spec.volume,
+            pan: spec.panning,
             isPlaying: active,
             waveform,
           },
-          time,
+          time + startDelay,
         );
-      });
+      }
     },
   };
 
   return {
     noteOn(noteNumber, time, pr) {
       playingNoteNumber = noteNumber;
-      internal.applyParameters(pr, time);
+      internal.applyParameters(pr, time, pr.phaseRandom);
     },
     noteOff(time) {
       cores.forEach((core) => core.update({ isPlaying: false }, time));
