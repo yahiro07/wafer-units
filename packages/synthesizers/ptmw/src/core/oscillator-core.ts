@@ -21,7 +21,7 @@ export function createOscillatorCore(
   destinationNode: AudioNode,
 ): OscillatorCore {
   let osc: OscillatorNode | null = null;
-  let latestWaveform: PeriodicWave | null = null;
+  let lastSetWaveform: PeriodicWave | null = null;
   const gainNode = ac.createGain();
   const pannerNode = ac.createStereoPanner();
   connectNodes(gainNode, pannerNode, destinationNode);
@@ -30,9 +30,7 @@ export function createOscillatorCore(
       let oscCreated = false;
       if (!osc && spec.isPlaying) {
         osc = ac.createOscillator();
-        if (latestWaveform) {
-          osc.setPeriodicWave(latestWaveform);
-        }
+        lastSetWaveform = null;
         oscCreated = true;
       }
       if (osc) {
@@ -41,6 +39,11 @@ export function createOscillatorCore(
             osc.frequency.value = spec.frequency;
           }
         }
+        if (spec.waveform && spec.waveform !== lastSetWaveform) {
+          osc.setPeriodicWave(spec.waveform);
+          lastSetWaveform = spec.waveform;
+        }
+
         if (oscCreated) {
           osc.connect(gainNode);
           osc.start();
@@ -50,12 +53,6 @@ export function createOscillatorCore(
           osc.disconnect();
           osc = null;
         }
-      }
-      if (spec.waveform !== undefined) {
-        if (osc && spec.waveform !== latestWaveform) {
-          osc.setPeriodicWave(spec.waveform);
-        }
-        latestWaveform = spec.waveform;
       }
       if (spec.volume !== undefined) {
         gainNode.gain.value = spec.volume;

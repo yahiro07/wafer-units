@@ -20,7 +20,7 @@ type SynthesisBus = {
 
 type SynthesizerVoice = {
   getGateOnTime(): number;
-  updateOscParameters(oscId: OscId, parameters: Partial<OscParameters>): void;
+  updateOscParameters(oscId: OscId, parameters: OscParameters): void;
   noteOn(noteNumber: number): void;
   noteOff(): void;
   cleanup(): void;
@@ -96,16 +96,16 @@ export function createSynthesizerEngine(
   return {
     applyParameters(spec: ParameterEditSpec) {
       if (spec.osc1) {
-        voice.updateOscParameters("osc1", spec.osc1);
         Object.assign(latestParameters.osc1, spec.osc1);
+        voice.updateOscParameters("osc1", latestParameters.osc1);
       }
       if (spec.osc2) {
-        voice.updateOscParameters("osc2", spec.osc2);
         Object.assign(latestParameters.osc2, spec.osc2);
+        voice.updateOscParameters("osc2", latestParameters.osc2);
       }
       if (spec.osc3) {
-        voice.updateOscParameters("osc3", spec.osc3);
         Object.assign(latestParameters.osc3, spec.osc3);
+        voice.updateOscParameters("osc3", latestParameters.osc3);
       }
       if (spec.reverb) {
         reverb.apply({
