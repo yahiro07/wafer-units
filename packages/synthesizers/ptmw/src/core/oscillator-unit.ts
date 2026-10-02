@@ -15,6 +15,7 @@ export function createOscillatorUnit(
 ): OscillatorUnit {
   const waveProvider = createCustomWaveformProvider(ac);
 
+  let playingNoteNumber: number | null = null;
   let latestParameters: OscParameters = defaultSynthParameters["osc1"];
 
   const core0 = createOscillatorCore(ac, destinationNode);
@@ -24,31 +25,42 @@ export function createOscillatorUnit(
     getPeriodicWave() {
       return waveProvider.getPeriodicWave(latestParameters);
     },
-  };
-
-  return {
-    noteOn(noteNumber, parameters) {
-      latestParameters = parameters;
-      const frequency = midiToFrequency(noteNumber);
+    updateCores() {
+      if (playingNoteNumber === null) return;
+      const pr = latestParameters;
+      const frequency = midiToFrequency(playingNoteNumber);
       const waveform = internal.getPeriodicWave();
       core0.update({
         frequency,
         waveform,
-        volume: parameters.volume,
-        pan: parameters.pan,
+        volume: pr.volume,
+        pan: pr.pan,
         isPlaying: true,
       });
-      core1.update({
-        frequency: frequency * 1.05,
-        waveform,
-        volume: parameters.volume,
-        pan: parameters.pan,
-        isPlaying: true,
-      });
+      if (pr.unison >= 2) {
+        core1.update({
+          frequency: frequency * 1.05,
+          waveform,
+          volume: pr.volume,
+          pan: pr.pan,
+          isPlaying: true,
+        });
+      } else {
+        core1.update({ isPlaying: false });
+      }
+    },
+  };
+
+  return {
+    noteOn(noteNumber, pr) {
+      latestParameters = pr;
+      playingNoteNumber = noteNumber;
+      internal.updateCores();
     },
     noteOff(noteNumber) {
       core0.update({ isPlaying: false });
       core1.update({ isPlaying: false });
+      playingNoteNumber = null;
     },
     updateParameters(pr) {
       Object.assign(latestParameters, pr);
@@ -67,6 +79,9 @@ export function createOscillatorUnit(
       if (pr.pan !== undefined) {
         core0.update({ pan: pr.pan });
         core1.update({ pan: pr.pan });
+      }
+      if (pr.unison !== undefined && playingNoteNumber !== null) {
+        internal.updateCores();
       }
     },
   };
