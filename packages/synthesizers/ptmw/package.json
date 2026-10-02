@@ -1,0 +1,14 @@
+{
+  "name": "ptmw",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite dev",
+    "build": "vite build"
+  },
+  "devDependencies": {
+    "@lib/mu2609": "workspace:*",
+    "@sveltejs/vite-plugin-svelte": "^7.3.0",
+    "svelte": "^5.57.0"
+  }
+}
