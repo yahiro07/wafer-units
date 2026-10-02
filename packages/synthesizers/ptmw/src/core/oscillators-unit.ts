@@ -2,16 +2,16 @@ import { midiToFrequency } from "@lib/mu2609/utils/synth-math-utils";
 import { defaultSynthParameters, OscParameters } from "./definitions";
 import { createCustomWaveformProvider } from "./waveforms/custom-waveform-provider";
 
-type OscillatorUnit = {
+type OscillatorsUnit = {
   noteOn(noteNumber: number, parameters: OscParameters): void;
   noteOff(noteNumber: number): void;
   updateParameters(parameters: Partial<OscParameters>): void;
 };
 
-export function createOscillatorUnit(
+export function createOscillatorsUnit(
   ac: AudioContext,
   destinationNode: AudioNode,
-): OscillatorUnit {
+): OscillatorsUnit {
   const waveProvider = createCustomWaveformProvider(ac);
 
   let osc: OscillatorNode | null = null;
