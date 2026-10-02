@@ -6,6 +6,7 @@ import {
   type EffectEngine,
 } from "./core/definitions";
 import { createEffectEngine } from "./core/effect-engine";
+import { setupMidiKeyboardInput } from "@lib/mu2609/utils/midi-keyboard-input";
 
 type AppStates = {
   parameters: SynthParameters;
@@ -26,31 +27,39 @@ type AppModel = {
 };
 
 function setupUnit(
-  unitInterface: UnitInterface,
+  unitInterface: UnitInterface | undefined,
   engine: EffectEngine,
   states: AppStates,
 ) {
-  unitInterface.completeSetup({
-    unitAspects: {
-      unitType: "effect",
-      viewSize: [100, 100],
-    },
-    cleanup: engine.cleanup,
-    unitCallbacks: {
-      setViewActive(value) {
-        states.viewActive = value;
+  if (unitInterface) {
+    unitInterface.completeSetup({
+      unitAspects: {
+        unitType: "effect",
+        viewSize: [100, 100],
       },
-    },
-    persistence: {
-      emitState() {
-        return { parameters: { ...states.parameters } };
+      cleanup: engine.cleanup,
+      unitCallbacks: {
+        setViewActive(value) {
+          states.viewActive = value;
+        },
       },
-      applyState(data) {
-        Object.assign(states.parameters, data.parameters);
-        engine.affectParametersAll();
+      persistence: {
+        emitState() {
+          return { parameters: { ...states.parameters } };
+        },
+        applyState(data) {
+          Object.assign(states.parameters, data.parameters);
+          engine.affectParametersAll();
+        },
       },
-    },
-  });
+    });
+  } else {
+    states.viewActive = true;
+    setupMidiKeyboardInput({
+      noteOn: engine.noteOn,
+      noteOff: engine.noteOff,
+    });
+  }
 }
 
 export function createAppModel(): AppModel {
@@ -58,12 +67,8 @@ export function createAppModel(): AppModel {
 
   const states = $state(structuredClone(defaultAppStates));
   const engine = createEffectEngine(unitInterface, states.parameters);
+  setupUnit(unitInterface, engine, states);
 
-  if (unitInterface) {
-    setupUnit(unitInterface, engine, states);
-  } else {
-    states.viewActive = true;
-  }
   return {
     states,
     setParameter(key, value) {

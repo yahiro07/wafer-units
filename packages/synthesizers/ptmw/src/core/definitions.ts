@@ -12,5 +12,7 @@ export const defaultSynthParameters: SynthParameters = {
 export type EffectEngine = {
   affectParameters(keys: SynthParameterKey[]): void;
   affectParametersAll(): void;
+  noteOn(noteNumber: number): void;
+  noteOff(noteNumber: number): void;
   cleanup(): void;
 };

@@ -22,7 +22,14 @@
   <div class="h-dvh flex-c overflow-hidden">
     <div class="w-240px h-160px flex-c bd-#888 bg-#bbb">
       <div class="flex-ha gap-5 p-2">
-        <Knob label="WAVE" value={parameters.wave} onchange={handlers.wave} />
+        <Knob
+          label="WAVE"
+          value={parameters.wave}
+          onchange={handlers.wave}
+          min={0}
+          max={3}
+          step={1}
+        />
         <Knob
           label="SHAPE"
           value={parameters.shape}
