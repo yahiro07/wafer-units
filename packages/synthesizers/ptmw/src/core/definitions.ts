@@ -143,7 +143,7 @@ export type ParameterEditSpec = {
   reverb?: Partial<ReverbParameters>;
 };
 
-export type EffectEngine = {
+export type SynthesizerEngine = {
   applyParameters(spec: ParameterEditSpec): void;
   noteOn(noteNumber: number): void;
   noteOff(noteNumber: number): void;
