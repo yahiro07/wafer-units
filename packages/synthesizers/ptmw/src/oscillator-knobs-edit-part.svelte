@@ -21,7 +21,7 @@
   };
 </script>
 
-<div class="flex-ha gap-5 p-2">
+<div class="flex-ha gap-0 p-2">
   <Knob
     label="WAVE"
     value={parameters.wave}
