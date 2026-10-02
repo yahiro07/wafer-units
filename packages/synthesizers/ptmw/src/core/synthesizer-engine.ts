@@ -17,79 +17,43 @@ function getNextVoice(voices: SynthesizerVoice[]): SynthesizerVoice {
   return [...voices].sort((a, b) => a.gateOnTime - b.gateOnTime)[0];
 }
 
-export function createSynthesizerEngine(
-  unitInterface: UnitInterface | undefined,
-  parameters: SynthParameters,
-) {
-  const latestParameters = parameters;
-  const ac = unitInterface?.audioContext ?? new AudioContext();
-  const destinationNode = unitInterface?.audioOutputNode ?? ac.destination;
-
-  const bus: SynthesisBus = { audioContext: ac, latestParameters };
-
-  const voicesMixNode = ac.createGain();
-
-  const sharedFilter = createSharedFilterUnit(
-    ac,
-    () => bus.latestParameters.filter,
-    () => bus.latestParameters.amp,
-  );
+function createVoicesStage(bus: SynthesisBus) {
+  const voicesMixNode = bus.audioContext.createGain();
 
   const voices = seqNumbers(4).map(() =>
     createSynthesizerVoice(bus, voicesMixNode),
   );
-
-  const titlingEq = createTiltingEq(ac);
-  const reverb = createReverb(ac);
-
-  const disconnects = connectNodes(
-    voicesMixNode,
-    sharedFilter,
-    titlingEq,
-    reverb,
-    destinationNode,
+  const sharedFilter = createSharedFilterUnit(
+    bus.audioContext,
+    () => bus.latestParameters.filter,
+    () => bus.latestParameters.amp,
   );
+  const disconnects = connectNodes(voicesMixNode, sharedFilter);
 
   return {
+    outputNode: sharedFilter,
     applyParameters(spec: ParameterEditSpec) {
-      for (const _key in spec) {
-        const key = _key as keyof SynthParameters;
-        Object.assign(latestParameters[key], spec[key]);
-      }
       if (spec.osc1) {
         voices.forEach((voice) => {
-          voice.updateOscParameters("osc1", latestParameters.osc1);
+          voice.updateOscParameters("osc1", bus.latestParameters.osc1);
         });
       }
       if (spec.osc2) {
         voices.forEach((voice) => {
-          voice.updateOscParameters("osc2", latestParameters.osc2);
+          voice.updateOscParameters("osc2", bus.latestParameters.osc2);
         });
       }
       if (spec.osc3) {
         voices.forEach((voice) => {
-          voice.updateOscParameters("osc3", latestParameters.osc3);
+          voice.updateOscParameters("osc3", bus.latestParameters.osc3);
         });
       }
       if (spec.filter) {
         sharedFilter.update();
       }
-      if (spec.reverb) {
-        reverb.apply({
-          decay: spec.reverb.time,
-          damp: spec.reverb.tone,
-          mix: spec.reverb.mix,
-        });
-      }
-      if (spec.eq) {
-        titlingEq.update({
-          prFreq: latestParameters.eq.freq,
-          prTilt: latestParameters.eq.tilt,
-        });
-      }
     },
     noteOn(noteNumber: number, time: number) {
-      time = Math.max(time ?? 0, ac.currentTime);
+      time = Math.max(time ?? 0, bus.audioContext.currentTime);
       const voice = getNextVoice(voices);
       voice.noteOn(noteNumber, time);
       voice.noteNumber = noteNumber;
@@ -97,7 +61,7 @@ export function createSynthesizerEngine(
       sharedFilter.gateOn(time);
     },
     noteOff(noteNumber: number, time: number) {
-      time = Math.max(time ?? 0, ac.currentTime);
+      time = Math.max(time ?? 0, bus.audioContext.currentTime);
       const voice = voices.find((voice) => voice.noteNumber === noteNumber);
       if (voice) {
         voice.noteOff(time);
@@ -109,6 +73,79 @@ export function createSynthesizerEngine(
       voices.forEach((voice) => {
         voice.cleanup();
       });
+      disconnects();
+    },
+  };
+}
+
+function createEffectChain(bus: SynthesisBus) {
+  const ac = bus.audioContext;
+  const inputNode = ac.createGain();
+  const outputNode = ac.createGain();
+  const titlingEq = createTiltingEq(ac);
+  const reverb = createReverb(ac);
+  const disconnects = connectNodes(inputNode, titlingEq, reverb, outputNode);
+
+  return {
+    inputNode,
+    outputNode,
+    applyParameters(spec: ParameterEditSpec) {
+      if (spec.reverb) {
+        reverb.apply({
+          decay: spec.reverb.time,
+          damp: spec.reverb.tone,
+          mix: spec.reverb.mix,
+        });
+      }
+      if (spec.eq) {
+        titlingEq.update({
+          prFreq: bus.latestParameters.eq.freq,
+          prTilt: bus.latestParameters.eq.tilt,
+        });
+      }
+    },
+    cleanup() {
+      disconnects();
+    },
+  };
+}
+
+export function createSynthesizerEngine(
+  unitInterface: UnitInterface | undefined,
+  parameters: SynthParameters,
+) {
+  const ac = unitInterface?.audioContext ?? new AudioContext();
+  const destinationNode = unitInterface?.audioOutputNode ?? ac.destination;
+
+  const bus: SynthesisBus = { audioContext: ac, latestParameters: parameters };
+
+  const voicesStage = createVoicesStage(bus);
+  const effectChain = createEffectChain(bus);
+
+  const disconnects = connectNodes(
+    voicesStage.outputNode,
+    effectChain,
+    destinationNode,
+  );
+
+  return {
+    applyParameters(spec: ParameterEditSpec) {
+      for (const _key in spec) {
+        const key = _key as keyof SynthParameters;
+        Object.assign(bus.latestParameters[key], spec[key]);
+      }
+      voicesStage.applyParameters(spec);
+      effectChain.applyParameters(spec);
+    },
+    noteOn(noteNumber: number, time: number) {
+      voicesStage.noteOn(noteNumber, time);
+    },
+    noteOff(noteNumber: number, time: number) {
+      voicesStage.noteOff(noteNumber, time);
+    },
+    cleanup() {
+      voicesStage.cleanup();
+      effectChain.cleanup();
       disconnects();
     },
   };
