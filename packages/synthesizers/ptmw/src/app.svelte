@@ -16,6 +16,7 @@
   const parameterSetters = {
     osc1: bindOscParameterSetter("osc1"),
     osc2: bindOscParameterSetter("osc2"),
+    osc3: bindOscParameterSetter("osc3"),
   };
 
   $effect(() => {
@@ -29,16 +30,19 @@
   <div class="h-dvh flex-c overflow-hidden">
     <div class="flex-ha gap-4">
       <OscillatorSection
+        oscId="osc1"
         parameters={parameters.osc1}
         setParameter={parameterSetters.osc1}
       />
       <OscillatorSection
+        oscId="osc2"
         parameters={parameters.osc2}
         setParameter={parameterSetters.osc2}
       />
       <OscillatorSection
-        parameters={parameters.osc2}
-        setParameter={parameterSetters.osc2}
+        oscId="osc3"
+        parameters={parameters.osc3}
+        setParameter={parameterSetters.osc3}
       />
     </div>
   </div>

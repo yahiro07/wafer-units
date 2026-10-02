@@ -71,6 +71,7 @@ export function createEffectEngine(
 
   const osc1 = createOscillatorUnit(ac, outputNode, parameters.osc1);
   const osc2 = createOscillatorUnit(ac, outputNode, parameters.osc2);
+  const osc3 = createOscillatorUnit(ac, outputNode, parameters.osc3);
 
   const internal = {
     affectParameters(keys: SynthParameterKey[]) {
@@ -80,9 +81,12 @@ export function createEffectEngine(
       if (keys.includes("osc2")) {
         osc2.applyParametersToNodes();
       }
+      if (keys.includes("osc3")) {
+        osc3.applyParametersToNodes();
+      }
     },
     affectParametersAll() {
-      internal.affectParameters(["osc1", "osc2"]);
+      internal.affectParameters(["osc1", "osc2", "osc3"]);
     },
   };
   internal.affectParametersAll();
@@ -93,10 +97,12 @@ export function createEffectEngine(
     noteOn(noteNumber) {
       osc1.noteOn(noteNumber);
       osc2.noteOn(noteNumber);
+      osc3.noteOn(noteNumber);
     },
     noteOff(noteNumber) {
       osc1.noteOff(noteNumber);
       osc2.noteOff(noteNumber);
+      osc3.noteOff(noteNumber);
     },
     cleanup() {
       // disconnectNodes(inputNode, pannerNode, gainNode, outputNode);
