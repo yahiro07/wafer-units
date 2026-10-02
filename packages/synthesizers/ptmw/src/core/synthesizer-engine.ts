@@ -1,9 +1,6 @@
 import type { UnitInterface } from "wafer-host/unit-types";
 import { createTiltingEq } from "./tilting-eq";
-import {
-  connectNodes,
-  disconnectNodes,
-} from "@lib/mu2609/utils/webaudio-helper";
+import { connectNodes } from "@lib/mu2609/utils/webaudio-helper";
 import { createReverb } from "./reverb";
 import { createOscillatorUnit } from "./oscillator-unit";
 import {
@@ -12,6 +9,7 @@ import {
   ParameterEditSpec,
   SynthParameters,
 } from "./definitions";
+import { createAmplifierUnit } from "./envelope-unit";
 
 type SynthesisBus = {
   audioContext: AudioContext;
@@ -21,8 +19,8 @@ type SynthesisBus = {
 type SynthesizerVoice = {
   getGateOnTime(): number;
   updateOscParameters(oscId: OscId, parameters: OscParameters): void;
-  noteOn(noteNumber: number): void;
-  noteOff(): void;
+  noteOn(noteNumber: number, time: number): void;
+  noteOff(time: number): void;
   cleanup(): void;
 };
 
@@ -36,33 +34,37 @@ function createSynthesizerVoice(
   const osc1 = createOscillatorUnit(ac, oscMixNode);
   const osc2 = createOscillatorUnit(ac, oscMixNode);
   const osc3 = createOscillatorUnit(ac, oscMixNode);
+  const amplifier = createAmplifierUnit(ac, () => bus.latestParameters.amp);
 
-  connectNodes(oscMixNode, destinationNode);
+  const disconnects = connectNodes(oscMixNode, amplifier, destinationNode);
 
   return {
     getGateOnTime() {
       return 0;
     },
-    updateOscParameters(oscId, attrs) {
-      const osc = {
-        osc1: osc1,
-        osc2: osc2,
-        osc3: osc3,
-      }[oscId];
-      osc.updateParameters(attrs);
+    updateOscParameters(oscId, parameters) {
+      const osc = { osc1, osc2, osc3 }[oscId];
+      osc.updateParameters(parameters);
     },
-    noteOn(noteNumber: number) {
-      osc1.noteOn(noteNumber, bus.latestParameters.osc1);
-      osc2.noteOn(noteNumber, bus.latestParameters.osc2);
-      osc3.noteOn(noteNumber, bus.latestParameters.osc3);
+    noteOn(noteNumber: number, time: number) {
+      const params = bus.latestParameters;
+      osc1.noteOn(noteNumber, time, params.osc1);
+      osc2.noteOn(noteNumber, time, params.osc2);
+      osc3.noteOn(noteNumber, time, params.osc3);
+      amplifier.gateOn(time);
     },
-    noteOff() {
-      osc1.noteOff();
-      osc2.noteOff();
-      osc3.noteOff();
+    noteOff(time: number) {
+      const tOff = amplifier.gateOff(time, true);
+      osc1.noteOff(tOff);
+      osc2.noteOff(tOff);
+      osc3.noteOff(tOff);
     },
     cleanup() {
-      disconnectNodes(oscMixNode, destinationNode);
+      disconnects();
+      osc1.cleanup();
+      osc2.cleanup();
+      osc3.cleanup();
+      amplifier.cleanup();
     },
   };
 }
@@ -107,6 +109,9 @@ export function createSynthesizerEngine(
         Object.assign(latestParameters.osc3, spec.osc3);
         voice.updateOscParameters("osc3", latestParameters.osc3);
       }
+      if (spec.amp) {
+        Object.assign(latestParameters.amp, spec.amp);
+      }
       if (spec.reverb) {
         reverb.apply({
           decay: spec.reverb.time,
@@ -123,13 +128,15 @@ export function createSynthesizerEngine(
         Object.assign(latestParameters.eq, spec.eq);
       }
     },
-    noteOn(noteNumber: number) {
-      voice.noteOn(noteNumber);
+    noteOn(noteNumber: number, time: number) {
+      time = Math.max(time ?? 0, ac.currentTime);
+      voice.noteOn(noteNumber, time);
       latestNoteNumber = noteNumber;
     },
-    noteOff(noteNumber: number) {
+    noteOff(noteNumber: number, time: number) {
+      time = Math.max(time ?? 0, ac.currentTime);
       if (noteNumber === latestNoteNumber) {
-        voice.noteOff();
+        voice.noteOff(time);
         latestNoteNumber = null;
       }
     },

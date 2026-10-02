@@ -12,7 +12,7 @@ type OscillatorCoreSpec = {
 };
 
 type OscillatorCore = {
-  update(spec: OscillatorCoreSpec): void;
+  update(spec: OscillatorCoreSpec, time: number): void;
   cleanup(): void;
 };
 
@@ -26,7 +26,7 @@ export function createOscillatorCore(
   const pannerNode = ac.createStereoPanner();
   connectNodes(gainNode, pannerNode, destinationNode);
   return {
-    update(spec) {
+    update(spec, time) {
       let oscCreated = false;
       if (!osc && spec.isPlaying) {
         osc = ac.createOscillator();
@@ -46,11 +46,11 @@ export function createOscillatorCore(
 
         if (oscCreated) {
           osc.connect(gainNode);
-          osc.start();
+          osc.start(time);
         }
         if (spec.isPlaying === false) {
-          osc.stop();
-          osc.disconnect();
+          osc.stop(time);
+          // osc.disconnect();
           osc = null;
         }
       }

@@ -152,7 +152,7 @@ export type ParameterEditSpec = {
 
 export type SynthesizerEngine = {
   applyParameters(spec: ParameterEditSpec): void;
-  noteOn(noteNumber: number): void;
-  noteOff(noteNumber: number): void;
+  noteOn(noteNumber: number, time?: number): void;
+  noteOff(noteNumber: number, time?: number): void;
   cleanup(): void;
 };
