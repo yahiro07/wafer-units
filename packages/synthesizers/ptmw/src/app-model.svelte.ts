@@ -1,11 +1,11 @@
 import { queryUnitInterface } from "wafer-host/unit-types";
 import {
-  type SynthParameters,
-  type SynthParameterKey,
-  defaultSynthParameters,
-  OscParameters,
   OscId,
   OscParameterKey,
+  OscParameters,
+  SynthParameterKey,
+  type SynthParameters,
+  defaultSynthParameters,
 } from "./core/definitions";
 import { createEffectEngine } from "./core/effect-engine";
 import { setupMidiKeyboardInput } from "@lib/mu2609/utils/midi-keyboard-input";
@@ -20,8 +20,7 @@ const defaultAppStates: AppStates = {
   viewActive: false,
 };
 
-type AppModel = {
-  states: AppStates;
+export type EditOperator = {
   setParameter<K extends SynthParameterKey>(
     key: K,
     value: SynthParameters[K],
@@ -31,7 +30,12 @@ type AppModel = {
     key: K,
     value: OscParameters[K],
   ): void;
+};
+
+export type AppModel = {
+  states: AppStates;
   cleanup(): void;
+  editOperator: EditOperator;
 };
 
 export function createAppModel(): AppModel {
@@ -126,16 +130,18 @@ export function createAppModel(): AppModel {
 
   const cleanupUnit = setupUnit(); //unitInterface, engine, states);
 
-  return {
-    states,
+  const editOperator: EditOperator = {
     setParameter(key, value) {
       states.parameters[key] = value;
-      // internal.affectParameters([key]);
     },
     setOscParameter(oscId, key, value) {
       states.parameters[oscId][key] = value;
-      // internal.affectParameters([oscId]);
     },
+  };
+
+  return {
+    states,
+    editOperator,
     cleanup() {
       cleanupUnit?.();
     },

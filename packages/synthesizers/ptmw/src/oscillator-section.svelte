@@ -1,18 +1,19 @@
 <script lang="ts">
-  import type {
-    OscId,
-    OscParameterKey,
-    OscParameters,
-  } from "./core/definitions";
+  import type { OscId, OscParameterKey } from "./core/definitions";
   import OscillatorWaveformView from "./oscillator-waveform-view.svelte";
   import OscillatorKnobsEditPart from "./oscillator-knobs-edit-part.svelte";
+  import { getAppModelContext } from "./app-context.ts";
 
   type Props = {
     oscId: OscId;
-    parameters: OscParameters;
-    setParameter: (key: OscParameterKey, value: number) => void;
   };
-  let { oscId, parameters, setParameter }: Props = $props();
+  let { oscId }: Props = $props();
+  const appModel = getAppModelContext();
+  const parameters = appModel.states.parameters[oscId];
+
+  const setParameter = (key: OscParameterKey, value: number) => {
+    appModel.editOperator.setOscParameter(oscId, key, value);
+  };
 </script>
 
 <div class="flex-vc bd-#888 bg-#bbb gap-2">
