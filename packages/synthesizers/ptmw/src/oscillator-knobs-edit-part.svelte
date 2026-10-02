@@ -14,6 +14,7 @@
     };
   }
   const handlers = {
+    octave: bindParameterHandler("octave"),
     wave: bindParameterHandler("wave"),
     shape: bindParameterHandler("shape"),
     dense: bindParameterHandler("dense"),
@@ -28,6 +29,14 @@
 <div class="flex-v">
   <div class="flex-ha gap-4 p-2">
     <Knob
+      label="OCTAVE"
+      value={parameters.octave}
+      onchange={handlers.octave}
+      min={-2}
+      max={2}
+      step={1}
+    />
+    <Knob
       label="WAVE"
       value={parameters.wave}
       onchange={handlers.wave}
@@ -39,7 +48,7 @@
     <Knob label="DENSE" value={parameters.dense} onchange={handlers.dense} />
     <Knob label="MIX" value={parameters.mix} onchange={handlers.mix} />
   </div>
-  <div class="flex-ha gap-4 p-2">
+  <div class="flex-ha gap-4 p-2 justify-end">
     <Knob
       label="UNISON"
       value={parameters.unison}
