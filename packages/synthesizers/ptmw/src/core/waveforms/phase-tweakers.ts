@@ -4,7 +4,7 @@ import { power2, fracPart, mixValue } from "@lib/mu2609/utils/synth-math-utils";
 const randomSequence = seqNumbers(200).map(() => Math.random());
 export const phaseTweakers = {
   speed(phase, color) {
-    const rate = 1 + power2(color) * 7;
+    const rate = 1 + color * 15;
     return fracPart(phase * rate);
   },
   accel(phase, color) {
