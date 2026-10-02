@@ -1,3 +1,5 @@
+import { appEnvs } from "../base/app-envs";
+
 export type OscParameters = {
   enabled: boolean;
   octave: number;
@@ -128,10 +130,15 @@ export const defaultSynthParameters: SynthParameters = {
     enabled: false,
     time: 0.5,
     tone: 0.5,
-    // mix: 0.5,
-    mix: 0,
+    mix: 0.5,
   },
 };
+if (appEnvs.isDevelopment) {
+  const ds = defaultSynthParameters;
+  ds.reverb.mix = 0;
+  ds.osc2.volume = 0;
+  ds.osc3.volume = 0;
+}
 
 export type ParameterEditSpec = {
   osc1?: Partial<OscParameters>;
