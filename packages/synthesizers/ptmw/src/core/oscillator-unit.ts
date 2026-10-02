@@ -16,7 +16,9 @@ export function createOscillatorUnit(
   const waveProvider = createCustomWaveformProvider(ac);
 
   let playingNoteNumber: number | null = null;
-  let latestParameters: OscParameters = defaultSynthParameters["osc1"];
+  let latestParameters: OscParameters = structuredClone(
+    defaultSynthParameters["osc1"],
+  );
 
   const core0 = createOscillatorCore(ac, destinationNode);
   const core1 = createOscillatorCore(ac, destinationNode);
@@ -64,6 +66,7 @@ export function createOscillatorUnit(
     },
     updateParameters(pr) {
       Object.assign(latestParameters, pr);
+      if (playingNoteNumber === null) return;
       const needUpdateWave = (["wave", "shape", "dense", "mix"] as const).some(
         (key) => pr[key] !== undefined,
       );
@@ -80,7 +83,7 @@ export function createOscillatorUnit(
         core0.update({ pan: pr.pan });
         core1.update({ pan: pr.pan });
       }
-      if (pr.unison !== undefined && playingNoteNumber !== null) {
+      if (pr.unison !== undefined) {
         internal.updateCores();
       }
     },
