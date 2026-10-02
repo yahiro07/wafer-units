@@ -3,6 +3,7 @@ import {
   OscId,
   OscParameterKey,
   OscParameters,
+  ReverbParameters,
   SynthParameterKey,
   type SynthParameters,
   defaultSynthParameters,
@@ -30,6 +31,7 @@ export type EditOperator = {
     key: K,
     value: OscParameters[K],
   ): void;
+  patchReverbParameters(attrs: Partial<ReverbParameters>): void;
 };
 
 export type AppModel = {
@@ -136,6 +138,9 @@ export function createAppModel(): AppModel {
     },
     setOscParameter(oscId, key, value) {
       states.parameters[oscId][key] = value;
+    },
+    patchReverbParameters(attrs) {
+      Object.assign(states.parameters.reverb, attrs);
     },
   };
 
