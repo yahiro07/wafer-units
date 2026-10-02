@@ -21,7 +21,7 @@
 {#if states.viewActive}
   <div class="page-root">
     <div class="panel">
-      <div class="knobs">
+      <div class="knobs bd-red">
         <Knob
           label="VOLUME"
           value={parameters.volume}
