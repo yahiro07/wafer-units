@@ -54,10 +54,11 @@ function setupUnit(
       },
       persistence: {
         emitState() {
-          return { parameters: { ...states.parameters } };
+          return { parameters: structuredClone(states.parameters) };
         },
         applyState(data) {
-          Object.assign(states.parameters, data.parameters);
+          Object.assign(states.parameters.osc1, data.parameters.osc1);
+          Object.assign(states.parameters.osc2, data.parameters.osc2);
           engine.affectParametersAll();
         },
       },
