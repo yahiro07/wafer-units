@@ -28,7 +28,7 @@ export function createCoreWaveformGenerator(pr: CustomWaveParameters) {
   });
   const denseGainFix = resultOf(() => {
     if (d > 0) {
-      return mapUnaryTo(power2(d), 1, 0.6);
+      return mapUnaryTo(power2(d), 1, 0.9);
     } else {
       return mapUnaryTo(power3(-d), 1, 1.8);
     }
