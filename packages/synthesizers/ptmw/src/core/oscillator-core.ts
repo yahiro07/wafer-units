@@ -5,6 +5,7 @@ import {
 
 type OscillatorCoreSpec = {
   frequency?: number;
+  detune?: number;
   waveform?: PeriodicWave;
   isPlaying?: boolean;
   volume?: number;
@@ -37,6 +38,11 @@ export function createOscillatorCore(
         if (spec.frequency !== undefined) {
           if (osc.frequency.value !== spec.frequency) {
             osc.frequency.value = spec.frequency;
+          }
+        }
+        if (spec.detune !== undefined) {
+          if (osc.detune.value !== spec.detune) {
+            osc.detune.value = spec.detune;
           }
         }
         if (spec.waveform && spec.waveform !== lastSetWaveform) {
