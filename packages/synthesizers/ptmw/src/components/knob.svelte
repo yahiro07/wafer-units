@@ -2,14 +2,23 @@
   import { startDragSession } from "@lib/mu2609/utils/drag-session";
   import { clampValue, linearInterpolate } from "@lib/mu2609/utils/helpers";
 
+  type Props = {
+    label?: string;
+    value: number;
+    min?: number;
+    max?: number;
+    step?: number;
+    onchange?: (value: number) => void;
+  };
+
   let {
     label = "",
-    value = 0.5,
+    value,
     min = 0,
     max = 1,
     step = 0.01,
-    onchange = (value: number) => {},
-  } = $props();
+    onchange = () => {},
+  }: Props = $props();
 
   const angle = $derived(linearInterpolate(value, min, max, -140, 140));
 
