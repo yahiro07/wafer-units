@@ -7,7 +7,7 @@
   const parameters = appModel.states.parameters.eq;
 
   const setParameter = (key: keyof EqParameters, value: number) => {
-    appModel.editOperator.dispatchParameterEdit({ eq: { [key]: value } });
+    appModel.dispatchParameterEdit({ eq: { [key]: value } });
   };
 </script>
 

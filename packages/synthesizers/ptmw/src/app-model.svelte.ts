@@ -18,14 +18,10 @@ const defaultAppStates: AppStates = {
   viewActive: false,
 };
 
-export type EditOperator = {
-  dispatchParameterEdit(spec: ParameterEditSpec): void;
-};
-
 export type AppModel = {
   states: AppStates;
   cleanup(): void;
-  editOperator: EditOperator;
+  dispatchParameterEdit(spec: ParameterEditSpec): void;
 };
 
 function createEngine(unitInterface: UnitInterface | undefined) {
@@ -79,7 +75,8 @@ export function createAppModel(): AppModel {
 
   const cleanupUnit = setupUnit(unitInterface, engine, states);
 
-  const editOperator: EditOperator = {
+  return {
+    states,
     dispatchParameterEdit(spec) {
       engine.applyParameters(spec);
       for (const _key in spec) {
@@ -88,11 +85,6 @@ export function createAppModel(): AppModel {
         Object.assign(states.parameters[key], attrs);
       }
     },
-  };
-
-  return {
-    states,
-    editOperator,
     cleanup() {
       cleanupUnit?.();
     },
