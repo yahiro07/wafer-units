@@ -3,16 +3,16 @@ import { defaultSynthParameters, OscParameters } from "./definitions";
 import { createCustomWaveformProvider } from "./waveforms/custom-waveform-provider";
 import { createOscillatorCore } from "./oscillator-core";
 
-type OscillatorsUnit = {
+type OscillatorUnit = {
   noteOn(noteNumber: number, parameters: OscParameters): void;
   noteOff(noteNumber: number): void;
   updateParameters(parameters: Partial<OscParameters>): void;
 };
 
-export function createOscillatorsUnit(
+export function createOscillatorUnit(
   ac: AudioContext,
   destinationNode: AudioNode,
-): OscillatorsUnit {
+): OscillatorUnit {
   const waveProvider = createCustomWaveformProvider(ac);
 
   let latestParameters: OscParameters = defaultSynthParameters["osc1"];

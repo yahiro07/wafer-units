@@ -2,7 +2,7 @@ import type { UnitInterface } from "wafer-host/unit-types";
 import { createTiltingEq } from "./tilting-eq";
 import { connectNodes } from "@lib/mu2609/utils/webaudio-helper";
 import { createReverb } from "./reverb";
-import { createOscillatorsUnit } from "./oscillators-unit";
+import { createOscillatorUnit } from "./oscillator-unit";
 import { ParameterEditSpec, SynthParameters } from "./definitions";
 
 export function createEffectEngine(
@@ -15,9 +15,9 @@ export function createEffectEngine(
 
   const oscMixNode = ac.createGain();
 
-  const osc1 = createOscillatorsUnit(ac, oscMixNode);
-  const osc2 = createOscillatorsUnit(ac, oscMixNode);
-  const osc3 = createOscillatorsUnit(ac, oscMixNode);
+  const osc1 = createOscillatorUnit(ac, oscMixNode);
+  const osc2 = createOscillatorUnit(ac, oscMixNode);
+  const osc3 = createOscillatorUnit(ac, oscMixNode);
 
   const titlingEq = createTiltingEq(ac);
   const reverb = createReverb(ac);
