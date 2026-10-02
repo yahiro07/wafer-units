@@ -24,6 +24,7 @@ type AppModel = {
     key: K,
     value: SynthParameters[K],
   ): void;
+  cleanup(): void;
 };
 
 function setupUnit(
@@ -55,7 +56,7 @@ function setupUnit(
     });
   } else {
     states.viewActive = true;
-    setupMidiKeyboardInput({
+    return setupMidiKeyboardInput({
       noteOn: engine.noteOn,
       noteOff: engine.noteOff,
     });
@@ -67,13 +68,16 @@ export function createAppModel(): AppModel {
 
   const states = $state(structuredClone(defaultAppStates));
   const engine = createEffectEngine(unitInterface, states.parameters);
-  setupUnit(unitInterface, engine, states);
+  const cleanupUnit = setupUnit(unitInterface, engine, states);
 
   return {
     states,
     setParameter(key, value) {
       states.parameters[key] = value;
       engine.affectParameters([key]);
+    },
+    cleanup() {
+      cleanupUnit?.();
     },
   };
 }
