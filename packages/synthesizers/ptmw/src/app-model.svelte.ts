@@ -1,10 +1,9 @@
-import { queryUnitInterface } from "wafer-host/unit-types";
+import { queryUnitInterface, UnitInterface } from "wafer-host/unit-types";
 import {
   OscId,
   OscParameterKey,
   OscParameters,
-  ReverbParameters,
-  SynthParameterKey,
+  ParameterEditSpec,
   type SynthParameters,
   defaultSynthParameters,
 } from "./core/definitions";
@@ -22,16 +21,12 @@ const defaultAppStates: AppStates = {
 };
 
 export type EditOperator = {
-  setParameter<K extends SynthParameterKey>(
-    key: K,
-    value: SynthParameters[K],
-  ): void;
   setOscParameter<K extends OscParameterKey>(
     oscId: OscId,
     key: K,
     value: OscParameters[K],
   ): void;
-  patchReverbParameters(attrs: Partial<ReverbParameters>): void;
+  dispatchParameterEdit(spec: ParameterEditSpec): void;
 };
 
 export type AppModel = {
@@ -40,28 +35,22 @@ export type AppModel = {
   editOperator: EditOperator;
 };
 
+function createEngine(unitInterface: UnitInterface | undefined) {
+  const rawParameters = structuredClone(defaultSynthParameters);
+  const engine = createEffectEngine(unitInterface, rawParameters);
+  engine.applyParameters(rawParameters);
+  return engine;
+}
+
 export function createAppModel(): AppModel {
   const unitInterface = queryUnitInterface("wafer-v01");
 
+  const engine = createEngine(unitInterface);
+
   const states = $state(structuredClone(defaultAppStates));
-  const engine = createEffectEngine(unitInterface);
 
-  const { osc1, osc2, osc3, titlingEq, reverb } = engine;
+  const { osc1, osc2, osc3 } = engine;
   const { parameters } = states;
-
-  $effect(() => {
-    titlingEq.update({
-      prFreq: parameters.eq.freq,
-      prTilt: parameters.eq.tilt,
-    });
-  });
-  $effect(() => {
-    reverb.apply({
-      decay: parameters.reverb.time,
-      damp: parameters.reverb.tone,
-      mix: parameters.reverb.mix,
-    });
-  });
 
   $effect(() => {
     const params = $state.snapshot(parameters.osc1);
@@ -133,14 +122,16 @@ export function createAppModel(): AppModel {
   const cleanupUnit = setupUnit(); //unitInterface, engine, states);
 
   const editOperator: EditOperator = {
-    setParameter(key, value) {
-      states.parameters[key] = value;
-    },
     setOscParameter(oscId, key, value) {
       states.parameters[oscId][key] = value;
     },
-    patchReverbParameters(attrs) {
-      Object.assign(states.parameters.reverb, attrs);
+    dispatchParameterEdit(spec) {
+      engine.applyParameters(spec);
+      for (const _key in spec) {
+        const key = _key as keyof SynthParameters;
+        const attrs = spec[key];
+        Object.assign(states.parameters[key], attrs);
+      }
     },
   };
 

@@ -116,9 +116,18 @@ export const defaultSynthParameters: SynthParameters = {
   },
 };
 
+export type ParameterEditSpec = {
+  osc1?: Partial<OscParameters>;
+  osc2?: Partial<OscParameters>;
+  osc3?: Partial<OscParameters>;
+  filter?: Partial<FilterParameters>;
+  amp?: Partial<AmpParameters>;
+  eq?: Partial<EqParameters>;
+  reverb?: Partial<ReverbParameters>;
+};
+
 export type EffectEngine = {
-  // affectParameters(keys: SynthParameterKey[]): void;
-  // affectParametersAll(): void;
+  applyParameters(spec: ParameterEditSpec): void;
   noteOn(noteNumber: number): void;
   noteOff(noteNumber: number): void;
   cleanup(): void;

@@ -7,9 +7,7 @@
   const parameters = appModel.states.parameters.reverb;
 
   const setParameter = (key: keyof ReverbParameters, value: number) => {
-    appModel.editOperator.patchReverbParameters({
-      [key]: value,
-    });
+    appModel.editOperator.dispatchParameterEdit({ reverb: { [key]: value } });
   };
 </script>
 

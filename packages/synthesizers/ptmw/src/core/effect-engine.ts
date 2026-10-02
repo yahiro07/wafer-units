@@ -3,8 +3,12 @@ import { createTiltingEq } from "./tilting-eq";
 import { connectNodes } from "@lib/mu2609/utils/webaudio-helper";
 import { createReverb } from "./reverb";
 import { createOscillatorUnit } from "./oscillator-unit";
+import { ParameterEditSpec, SynthParameters } from "./definitions";
 
-export function createEffectEngine(unitInterface: UnitInterface | undefined) {
+export function createEffectEngine(
+  unitInterface: UnitInterface | undefined,
+  parameters: SynthParameters,
+) {
   const ac = unitInterface?.audioContext ?? new AudioContext();
   const destinationNode = unitInterface?.audioOutputNode ?? ac.destination;
 
@@ -30,8 +34,23 @@ export function createEffectEngine(unitInterface: UnitInterface | undefined) {
     osc3,
     titlingEq,
     reverb,
-    // affectParameters: internal.affectParameters,
-    // affectParametersAll: internal.affectParametersAll,
+    applyParameters(spec: ParameterEditSpec) {
+      if (spec.reverb) {
+        reverb.apply({
+          decay: spec.reverb.time,
+          damp: spec.reverb.tone,
+          mix: spec.reverb.mix,
+        });
+        Object.assign(parameters.reverb, spec.reverb);
+      }
+      if (spec.eq) {
+        titlingEq.update({
+          prFreq: spec.eq.freq ?? parameters.eq.freq,
+          prTilt: spec.eq.tilt ?? parameters.eq.tilt,
+        });
+        Object.assign(parameters.eq, spec.eq);
+      }
+    },
     // noteOn(noteNumber: number) {
     //   osc1.noteOn(noteNumber);
     //   osc2.noteOn(noteNumber);
