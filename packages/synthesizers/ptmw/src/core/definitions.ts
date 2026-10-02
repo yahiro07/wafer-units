@@ -128,7 +128,8 @@ export const defaultSynthParameters: SynthParameters = {
     enabled: false,
     time: 0.5,
     tone: 0.5,
-    mix: 0.5,
+    // mix: 0.5,
+    mix: 0,
   },
 };
 
