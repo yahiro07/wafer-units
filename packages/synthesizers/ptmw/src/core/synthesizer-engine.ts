@@ -13,9 +13,8 @@ import { seqNumbers } from "@lib/mu2609/utils/helpers";
 import { createOutputSaturator } from "./output-saturator";
 
 function getNextVoice(voices: SynthesizerVoice[]): SynthesizerVoice {
-  let nextVoice = voices.find((voice) => voice.noteNumber === -1);
-  if (nextVoice) return nextVoice;
-  return [...voices].sort((a, b) => a.gateOnTime - b.gateOnTime)[0];
+  const sorted = [...voices].sort((a, b) => a.gateOnTime - b.gateOnTime);
+  return sorted.find((it) => it.noteNumber === -1) ?? sorted[0];
 }
 
 function createVoicesStage(bus: SynthesisBus) {

@@ -21,6 +21,7 @@ export function createOscillatorCore(
   ac: AudioContext,
   destinationNode: AudioNode,
 ): OscillatorCore {
+  let prevOsc: OscillatorNode | null = null;
   let osc: OscillatorNode | null = null;
   let lastSetWaveform: PeriodicWave | null = null;
   const gainNode = ac.createGain();
@@ -30,6 +31,12 @@ export function createOscillatorCore(
     update(spec, time) {
       let oscCreated = false;
       if (!osc && spec.isPlaying) {
+        if (prevOsc) {
+          const node = prevOsc;
+          prevOsc = null;
+          node.onended = null;
+          node.disconnect();
+        }
         osc = ac.createOscillator();
         lastSetWaveform = null;
         oscCreated = true;
@@ -56,8 +63,12 @@ export function createOscillatorCore(
         }
         if (spec.isPlaying === false) {
           osc.stop(time);
-          // osc.disconnect();
+          prevOsc = osc;
           osc = null;
+          prevOsc.onended = () => {
+            prevOsc?.disconnect();
+            prevOsc = null;
+          };
         }
       }
       if (spec.volume !== undefined) {
