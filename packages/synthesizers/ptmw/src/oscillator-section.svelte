@@ -12,7 +12,7 @@
   const parameters = $derived(appModel.states.parameters[oscId]);
 
   const setParameter = (key: OscParameterKey, value: number) => {
-    appModel.editOperator.dispatchParameterEdit({ [oscId]: { [key]: value } });
+    appModel.dispatchParameterEdit({ [oscId]: { [key]: value } });
   };
 </script>
 
