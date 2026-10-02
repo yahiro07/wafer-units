@@ -52,30 +52,27 @@ export function createSynthesizerEngine(
 
   return {
     applyParameters(spec: ParameterEditSpec) {
+      for (const _key in spec) {
+        const key = _key as keyof SynthParameters;
+        Object.assign(latestParameters[key], spec[key]);
+      }
       if (spec.osc1) {
-        Object.assign(latestParameters.osc1, spec.osc1);
         voices.forEach((voice) => {
           voice.updateOscParameters("osc1", latestParameters.osc1);
         });
       }
       if (spec.osc2) {
-        Object.assign(latestParameters.osc2, spec.osc2);
         voices.forEach((voice) => {
           voice.updateOscParameters("osc2", latestParameters.osc2);
         });
       }
       if (spec.osc3) {
-        Object.assign(latestParameters.osc3, spec.osc3);
         voices.forEach((voice) => {
           voice.updateOscParameters("osc3", latestParameters.osc3);
         });
       }
       if (spec.filter) {
-        Object.assign(latestParameters.filter, spec.filter);
         sharedFilter.update();
-      }
-      if (spec.amp) {
-        Object.assign(latestParameters.amp, spec.amp);
       }
       if (spec.reverb) {
         reverb.apply({
@@ -83,14 +80,12 @@ export function createSynthesizerEngine(
           damp: spec.reverb.tone,
           mix: spec.reverb.mix,
         });
-        Object.assign(latestParameters.reverb, spec.reverb);
       }
       if (spec.eq) {
         titlingEq.update({
-          prFreq: spec.eq.freq ?? latestParameters.eq.freq,
-          prTilt: spec.eq.tilt ?? latestParameters.eq.tilt,
+          prFreq: latestParameters.eq.freq,
+          prTilt: latestParameters.eq.tilt,
         });
-        Object.assign(latestParameters.eq, spec.eq);
       }
     },
     noteOn(noteNumber: number, time: number) {
