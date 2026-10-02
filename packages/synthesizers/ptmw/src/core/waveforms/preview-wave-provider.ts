@@ -1,6 +1,6 @@
 import { seqNumbers } from "@lib/mu2609/utils/helpers";
-import { createCoreWaveformGenerator } from "./waveforms/core-waveform-generator";
-import { CustomWaveParameters } from "./waveforms/waveform-types";
+import { createCoreWaveformGenerator } from "./core-waveform-generator";
+import { CustomWaveParameters } from "./waveform-types";
 
 type PreviewWaveProvider = {
   getPreviewWave(params: CustomWaveParameters): number[];

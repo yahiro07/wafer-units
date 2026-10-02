@@ -2,6 +2,7 @@
   import Knob from "./components/knob.svelte";
   import { createAppModel } from "./app-model.svelte.ts";
   import type { SynthParameterKey } from "./core/definitions";
+  import OscillatorWaveformView from "./oscillator-waveform-view.svelte";
 
   const appModel = createAppModel();
 
@@ -28,7 +29,15 @@
 
 {#if states.viewActive}
   <div class="h-dvh flex-c overflow-hidden">
-    <div class="h-160px flex-c bd-#888 bg-#bbb px-4">
+    <div class="flex-vc bd-#888 bg-#bbb p-4">
+      <OscillatorWaveformView
+        waveformParameters={{
+          wave: parameters.wave,
+          shape: parameters.shape,
+          dense: parameters.dense,
+          mix: parameters.mix,
+        }}
+      />
       <div class="flex-ha gap-5 p-2">
         <Knob
           label="WAVE"
