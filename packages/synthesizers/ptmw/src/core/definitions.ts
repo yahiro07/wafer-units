@@ -1,12 +1,12 @@
 export type SynthParameters = {
-  volume: number;
-  pan: number;
+  wave: number;
+  shape: number;
 };
 export type SynthParameterKey = keyof SynthParameters;
 
 export const defaultSynthParameters: SynthParameters = {
-  volume: 0.5,
-  pan: 0,
+  wave: 0,
+  shape: 0,
 };
 
 export type EffectEngine = {
