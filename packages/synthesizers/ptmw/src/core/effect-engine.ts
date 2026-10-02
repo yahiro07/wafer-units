@@ -1,24 +1,20 @@
-import {
-  connectNodes,
-  disconnectNodes,
-} from "@lib/mu2609/utils/webaudio-helper";
 import type { UnitInterface } from "wafer-host/unit-types";
 import type {
   SynthParameters,
   EffectEngine,
   SynthParameterKey,
 } from "./definitions";
+import { midiToFrequency } from "@lib/mu2609/utils/synth-math-utils";
 
 export function createEffectEngine(
   unitInterface: UnitInterface | undefined,
   parameters: SynthParameters,
 ): EffectEngine {
   const ac = unitInterface?.audioContext ?? new AudioContext();
-  const inputNode = unitInterface?.audioInputNode ?? ac.createGain();
   const outputNode = unitInterface?.audioOutputNode ?? ac.destination;
-  const pannerNode = ac.createStereoPanner();
-  const gainNode = ac.createGain();
-  connectNodes(inputNode, pannerNode, gainNode, outputNode);
+  // const pannerNode = ac.createStereoPanner();
+  // const gainNode = ac.createGain();
+  // connectNodes(inputNode, pannerNode, gainNode, outputNode);
 
   const internal = {
     affectParameters(keys: SynthParameterKey[]) {
@@ -36,11 +32,27 @@ export function createEffectEngine(
   };
   internal.affectParametersAll();
 
+  let osc: OscillatorNode | undefined;
+
   return {
     affectParameters: internal.affectParameters,
     affectParametersAll: internal.affectParametersAll,
+    noteOn(noteNumber) {
+      if (osc) {
+        osc.stop();
+      }
+      const freq = midiToFrequency(noteNumber);
+      osc = ac.createOscillator();
+      osc.type = "sawtooth";
+      osc.frequency.value = freq;
+      osc.connect(outputNode);
+      osc.start();
+    },
+    noteOff(noteNumber) {
+      osc?.stop();
+    },
     cleanup() {
-      disconnectNodes(inputNode, pannerNode, gainNode, outputNode);
+      // disconnectNodes(inputNode, pannerNode, gainNode, outputNode);
     },
   };
 }
