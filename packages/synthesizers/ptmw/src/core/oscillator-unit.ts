@@ -19,22 +19,22 @@ export function createOscillatorUnit(
   let latestParameters: OscParameters = defaultSynthParameters["osc1"];
 
   const internal = {
-    updateParameters(parameters: OscParameters) {
-      if (!osc) return;
-      const pr = parameters;
-      const wave = waveProvider.getPeriodicWave({
-        wave: pr.wave,
-        shape: pr.shape,
-        dense: pr.dense,
-        mix: pr.mix,
-      });
-      if (latestWave !== wave) {
-        osc.setPeriodicWave(wave);
-        latestWave = wave;
-      }
-      latestParameters = parameters;
-    },
-    updateParametersPartially(parameters: Partial<OscParameters>) {
+    // updateParameters(parameters: OscParameters) {
+    //   if (!osc) return;
+    //   const pr = parameters;
+    //   const wave = waveProvider.getPeriodicWave({
+    //     wave: pr.wave,
+    //     shape: pr.shape,
+    //     dense: pr.dense,
+    //     mix: pr.mix,
+    //   });
+    //   if (latestWave !== wave) {
+    //     osc.setPeriodicWave(wave);
+    //     latestWave = wave;
+    //   }
+    //   // latestParameters = parameters;
+    // },
+    updateParameters(parameters: Partial<OscParameters>) {
       if (!osc) return;
       const pr = parameters;
       const needUpdateWave = (["wave", "shape", "dense", "mix"] as const).some(
@@ -64,6 +64,7 @@ export function createOscillatorUnit(
       osc = ac.createOscillator();
       latestWave = null;
       internal.updateParameters(parameters);
+      latestParameters = parameters;
       osc.frequency.value = freq;
       osc.connect(destinationNode);
       osc.start();
@@ -72,6 +73,6 @@ export function createOscillatorUnit(
       osc?.stop();
       osc = null;
     },
-    updateParameters: internal.updateParametersPartially,
+    updateParameters: internal.updateParameters,
   };
 }
