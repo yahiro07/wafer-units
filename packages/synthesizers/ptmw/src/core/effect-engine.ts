@@ -38,6 +38,7 @@ export function createEffectEngine(
     affectParameters: internal.affectParameters,
     affectParametersAll: internal.affectParametersAll,
     noteOn(noteNumber) {
+      // console.log("noteOn", noteNumber);
       if (osc) {
         osc.stop();
       }

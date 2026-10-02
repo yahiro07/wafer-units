@@ -16,6 +16,12 @@
     wave: bindParameterHandler("wave"),
     shape: bindParameterHandler("shape"),
   };
+
+  $effect(() => {
+    return () => {
+      appModel.cleanup();
+    };
+  });
 </script>
 
 {#if states.viewActive}
