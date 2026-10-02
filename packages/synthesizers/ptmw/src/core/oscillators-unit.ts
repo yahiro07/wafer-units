@@ -1,6 +1,7 @@
 import { midiToFrequency } from "@lib/mu2609/utils/synth-math-utils";
 import { defaultSynthParameters, OscParameters } from "./definitions";
 import { createCustomWaveformProvider } from "./waveforms/custom-waveform-provider";
+import { createOscillatorCore } from "./oscillator-core";
 
 type OscillatorsUnit = {
   noteOn(noteNumber: number, parameters: OscParameters): void;
@@ -14,65 +15,51 @@ export function createOscillatorsUnit(
 ): OscillatorsUnit {
   const waveProvider = createCustomWaveformProvider(ac);
 
-  let osc: OscillatorNode | null = null;
-  let latestWave: PeriodicWave | null = null;
   let latestParameters: OscParameters = defaultSynthParameters["osc1"];
 
+  const core0 = createOscillatorCore(ac, destinationNode);
+  const core1 = createOscillatorCore(ac, destinationNode);
+
   const internal = {
-    // updateParameters(parameters: OscParameters) {
-    //   if (!osc) return;
-    //   const pr = parameters;
-    //   const wave = waveProvider.getPeriodicWave({
-    //     wave: pr.wave,
-    //     shape: pr.shape,
-    //     dense: pr.dense,
-    //     mix: pr.mix,
-    //   });
-    //   if (latestWave !== wave) {
-    //     osc.setPeriodicWave(wave);
-    //     latestWave = wave;
-    //   }
-    //   // latestParameters = parameters;
-    // },
-    updateParameters(parameters: Partial<OscParameters>) {
-      if (!osc) return;
-      const pr = parameters;
-      const needUpdateWave = (["wave", "shape", "dense", "mix"] as const).some(
-        (key) => pr[key] !== undefined,
-      );
-      if (needUpdateWave) {
-        const wave = waveProvider.getPeriodicWave({
-          wave: pr.wave ?? latestParameters.wave,
-          shape: pr.shape ?? latestParameters.shape,
-          dense: pr.dense ?? latestParameters.dense,
-          mix: pr.mix ?? latestParameters.mix,
-        });
-        if (latestWave !== wave) {
-          osc.setPeriodicWave(wave);
-          latestWave = wave;
-        }
-      }
+    getPeriodicWave() {
+      return waveProvider.getPeriodicWave(latestParameters);
     },
   };
 
   return {
     noteOn(noteNumber, parameters) {
-      if (osc) {
-        osc.stop();
-      }
-      const freq = midiToFrequency(noteNumber);
-      osc = ac.createOscillator();
-      latestWave = null;
-      internal.updateParameters(parameters);
       latestParameters = parameters;
-      osc.frequency.value = freq;
-      osc.connect(destinationNode);
-      osc.start();
+      const frequency = midiToFrequency(noteNumber);
+      const waveform = internal.getPeriodicWave();
+      core0.update({
+        frequency,
+        waveform,
+        volume: 1,
+        pan: 0,
+        isPlaying: true,
+      });
+      core1.update({
+        frequency: frequency * 1.05,
+        waveform,
+        volume: 1,
+        pan: 0,
+        isPlaying: true,
+      });
     },
     noteOff(noteNumber) {
-      osc?.stop();
-      osc = null;
+      core0.update({ isPlaying: false });
+      core1.update({ isPlaying: false });
     },
-    updateParameters: internal.updateParameters,
+    updateParameters(pr) {
+      Object.assign(latestParameters, pr);
+      const needUpdateWave = (["wave", "shape", "dense", "mix"] as const).some(
+        (key) => pr[key] !== undefined,
+      );
+      if (needUpdateWave) {
+        const waveform = internal.getPeriodicWave();
+        core0.update({ waveform });
+        core1.update({ waveform });
+      }
+    },
   };
 }
