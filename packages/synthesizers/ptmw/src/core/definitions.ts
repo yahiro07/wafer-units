@@ -165,3 +165,8 @@ export type SynthesizerEngine = {
   noteOff(noteNumber: number, time?: number): void;
   cleanup(): void;
 };
+
+export type SynthesisBus = {
+  audioContext: AudioContext;
+  latestParameters: SynthParameters;
+};
