@@ -4,7 +4,14 @@ import type {
   EffectEngine,
   SynthParameterKey,
 } from "./definitions";
-import { fracPart, midiToFrequency } from "@lib/mu2609/utils/synth-math-utils";
+import {
+  fracPart,
+  mapUnaryTo,
+  midiToFrequency,
+  mixValue,
+  power2,
+} from "@lib/mu2609/utils/synth-math-utils";
+import { seqNumbers } from "@lib/mu2609/utils/helpers";
 
 type CustomWaveProvider = {
   getPeriodicWave(wave: number, shape: number): PeriodicWave;
@@ -37,6 +44,39 @@ function makePeriodicWave(context: AudioContext, fn: (pp: number) => number) {
   });
 }
 
+const randomSequence = seqNumbers(200).map(() => Math.random());
+const phaseTweakers = {
+  speed(phase, color) {
+    const rate = 1 + power2(color) * 7;
+    return fracPart(phase * rate);
+  },
+  accel(phase, color) {
+    const rate = 1 + power2(color) * 8;
+    return fracPart(power2(phase * rate));
+  },
+  sfm(phase, color) {
+    const fmRatio = mapUnaryTo(color, 1, 4);
+    const fmDepth = color * 2;
+    const fmOscValue = Math.sin(2 * Math.PI * phase * fmRatio);
+    return fracPart(phase + fmOscValue * fmDepth);
+  },
+  sdm(phase, color) {
+    const speedRate = mapUnaryTo(color, 1, 100);
+    const indexF = phase * speedRate;
+    const i0 = Math.floor(indexF);
+    const i1 = i0 + 1;
+    const m = indexF - i0;
+    const y1 = phase;
+    const y2 = mixValue(
+      i0 === 0 ? 0 : randomSequence[i0],
+      randomSequence[i1],
+      m,
+    );
+    const y3 = mixValue(y1, y2, color);
+    return mixValue(y1, y3, color);
+  },
+} satisfies Record<string, (phase: number, color: number) => number>;
+
 function createCustomWaveProvider(ac: AudioContext): CustomWaveProvider {
   const shapeStep = 80;
 
@@ -45,13 +85,18 @@ function createCustomWaveProvider(ac: AudioContext): CustomWaveProvider {
 
   const internal = {
     generateWaveform(wave: number, color: number): PeriodicWave {
-      if (wave === 0) {
-        return makePeriodicWave(ac, (pp) => {
-          pp = fracPart(pp * (1 + color * 7));
-          return 2 * pp - 1;
-        });
-      }
-      return makePeriodicWave(ac, (pp) => 2 * pp - 1);
+      const phaseTweakerFn =
+        {
+          [0]: phaseTweakers.speed,
+          [1]: phaseTweakers.accel,
+          [2]: phaseTweakers.sfm,
+          [3]: phaseTweakers.sdm,
+        }[wave] ?? phaseTweakers.speed;
+
+      return makePeriodicWave(ac, (pp) => {
+        pp = phaseTweakerFn(pp, color);
+        return pp * 2 - 1;
+      });
     },
   };
 
