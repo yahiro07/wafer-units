@@ -1,6 +1,7 @@
 <script lang="ts">
   import { setAppModelContext } from "./app-context.ts";
   import { createAppModel } from "./app-model.svelte.ts";
+  import EqSection from "./eq-section.svelte";
   import OscillatorSection from "./oscillator-section.svelte";
   import ReverbSection from "./reverb-section.svelte";
 
@@ -25,6 +26,7 @@
         <OscillatorSection oscId="osc3" />
       </div>
       <div class="flex-ha gap-4 justify-end">
+        <EqSection />
         <ReverbSection />
       </div>
     </div>
