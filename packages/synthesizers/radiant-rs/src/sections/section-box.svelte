@@ -3,9 +3,9 @@
   type Props = {
     headerLabel?: string;
     headerContent?: Snippet;
-    bodyContent: Snippet;
+    children: Snippet;
   };
-  const { headerLabel, headerContent, bodyContent }: Props = $props();
+  const { headerLabel, headerContent, children }: Props = $props();
 </script>
 
 <div class="flex-vc">
@@ -19,6 +19,6 @@
     {/if}
   </div>
   <div class="flex-ha bg-#e4e4e4">
-    {@render bodyContent()}
+    {@render children()}
   </div>
 </div>

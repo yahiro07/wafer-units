@@ -3,7 +3,7 @@
     OscId,
     OscParameterKey,
     OscParameters,
-  } from "./core/definitions";
+  } from "../core/definitions";
   import { cz } from "@lib/mu2609/utils/cz";
 
   type Props = {

@@ -11,7 +11,7 @@
     step?: number;
     onchange?: (value: number) => void;
     dragRange?: number;
-    content: Snippet;
+    children: Snippet;
   };
 
   let {
@@ -22,7 +22,7 @@
     step = 0.01,
     onchange = () => {},
     dragRange = 100,
-    content,
+    children,
   }: Props = $props();
 
   function handlePointerDown(e0: PointerEvent) {
@@ -49,5 +49,5 @@
   class={className}
   style="cursor: pointer;"
 >
-  {@render content()}
+  {@render children()}
 </div>

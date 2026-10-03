@@ -12,7 +12,7 @@
   };
 </script>
 
-{#snippet bodyContent()}
+<SectionBox headerLabel="EQ">
   <div class="flex-ha gap-5 p-2 px-4.75">
     <Knob
       label="TILT"
@@ -25,6 +25,4 @@
       onchange={(v) => setParameter("freq", v)}
     />
   </div>
-{/snippet}
-
-<SectionBox headerLabel="EQ" {bodyContent}></SectionBox>
+</SectionBox>

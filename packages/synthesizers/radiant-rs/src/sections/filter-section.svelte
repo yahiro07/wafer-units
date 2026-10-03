@@ -12,7 +12,7 @@
   };
 </script>
 
-{#snippet bodyContent()}
+<SectionBox headerLabel="FILTER">
   <div class="flex-ha gap-5 p-2 px-5">
     <Knob
       label="CUTOFF"
@@ -30,6 +30,4 @@
       onchange={(v) => setParameter("env", v)}
     />
   </div>
-{/snippet}
-
-<SectionBox headerLabel="FILTER" {bodyContent}></SectionBox>
+</SectionBox>
