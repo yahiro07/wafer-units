@@ -34,7 +34,7 @@ export function createPreviewWaveProvider(): PreviewWaveProvider {
         const shape = shapeIndex / paramStep;
         const dense = denseIndex / paramStep;
         const mix = mixIndex / paramStep;
-        console.log(`generating preview waveform for ${key}`);
+        // console.log(`generating preview waveform for ${key}`);
         latestWave = internal.generateWaveform({ wave, shape, dense, mix });
         latestKey = key;
       }
