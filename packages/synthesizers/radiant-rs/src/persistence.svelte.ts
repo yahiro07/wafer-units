@@ -157,7 +157,11 @@ export function createPersistenceImpl(
         bytes[0] === formatRevision
       ) {
         const parameters = mappers.deserializeParameters([...bytes.slice(1)]);
-        Object.assign(states.parameters, parameters);
+        // Object.assign(states.parameters, parameters);
+        for (const _key in parameters) {
+          const key = _key as keyof SynthParameters;
+          Object.assign(states.parameters[key], parameters[key]);
+        }
         engine.applyParameters(parameters);
       } else {
         console.warn(`[ptmw] skipped incompatible data on applyStateBytes`);
