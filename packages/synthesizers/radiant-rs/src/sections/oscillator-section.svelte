@@ -18,11 +18,10 @@
   };
 </script>
 
-{#snippet headerContent()}
-  <OscillatorHeaderEditPart {oscId} {parameters} {setParameter} />
-{/snippet}
-
-{#snippet bodyContent()}
+<SectionBox>
+  {#snippet headerContent()}
+    <OscillatorHeaderEditPart {oscId} {parameters} {setParameter} />
+  {/snippet}
   <div class="flex-vc gap-2.5">
     <OscillatorWaveformView
       waveformParameters={parameters}
@@ -30,6 +29,4 @@
     />
     <OscillatorKnobsEditPart {parameters} {setParameter} />
   </div>
-{/snippet}
-
-<SectionBox {headerContent} {bodyContent}></SectionBox>
+</SectionBox>

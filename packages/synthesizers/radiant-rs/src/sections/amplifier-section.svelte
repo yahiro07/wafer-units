@@ -12,7 +12,7 @@
   };
 </script>
 
-{#snippet bodyContent()}
+<SectionBox headerLabel="AMP">
   <div class="flex-ha gap-5 p-2 px-5">
     <Knob
       label="ATTACK"
@@ -35,6 +35,4 @@
       onchange={(v) => setParameter("release", v)}
     />
   </div>
-{/snippet}
-
-<SectionBox headerLabel="AMP" {bodyContent}></SectionBox>
+</SectionBox>

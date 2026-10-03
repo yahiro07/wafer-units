@@ -2,14 +2,14 @@
   import type { Snippet } from "svelte";
   type Props = {
     label: string;
-    content: Snippet;
+    children: Snippet;
   };
-  const { label, content }: Props = $props();
+  const { label, children }: Props = $props();
 </script>
 
 <div class="flex-vc gap-0px">
   <div class="h-50px flex-c">
-    {@render content()}
+    {@render children()}
   </div>
   <div class="text-13px text-#347 w-0px flex-c">
     {label}

@@ -21,15 +21,10 @@
   }: Props = $props();
 </script>
 
-{#snippet knobContent()}
-  <div class="w-45px h-30px flex-c bg-#ddd8 bd-#2224 border-0.5px text-#347">
-    {value}
-  </div>
-{/snippet}
-
-{#snippet controlContent()}
-  <KnobFrame {value} {min} {max} {step} {onchange} content={knobContent}
-  ></KnobFrame>
-{/snippet}
-
-<LabeledBox content={controlContent} {label}></LabeledBox>
+<LabeledBox {label}>
+  <KnobFrame {value} {min} {max} {step} {onchange}>
+    <div class="w-45px h-30px flex-c bg-#ddd8 bd-#2224 border-0.5px text-#347">
+      {value}
+    </div>
+  </KnobFrame>
+</LabeledBox>

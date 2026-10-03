@@ -26,21 +26,16 @@
   const angle = $derived(linearInterpolate(value, min, max, -140, 140));
 </script>
 
-{#snippet knobContent()}
-  <div class="knob" style={`width: ${size}px; height: ${size}px;`}>
-    <div class="knob-inner"></div>
-    <div class="tick-plane" style="transform: rotate({angle}deg);">
-      <div class="tick"></div>
+<LabeledBox {label}>
+  <KnobFrame {value} {min} {max} {step} {onchange}>
+    <div class="knob" style={`width: ${size}px; height: ${size}px;`}>
+      <div class="knob-inner"></div>
+      <div class="tick-plane" style="transform: rotate({angle}deg);">
+        <div class="tick"></div>
+      </div>
     </div>
-  </div>
-{/snippet}
-
-{#snippet controlContent()}
-  <KnobFrame {value} {min} {max} {step} {onchange} content={knobContent}
-  ></KnobFrame>
-{/snippet}
-
-<LabeledBox content={controlContent} {label}></LabeledBox>
+  </KnobFrame>
+</LabeledBox>
 
 <style>
   .knob {

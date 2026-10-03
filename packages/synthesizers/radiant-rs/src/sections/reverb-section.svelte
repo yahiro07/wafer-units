@@ -18,20 +18,19 @@
   };
 </script>
 
-{#snippet headerContent()}
-  <div class="h-full flex-ha pl-1">
-    <button
-      class="px-1 flex-ha gap-1 text-#7898 [&.active]:(text-#36f) cursor-pointer"
-      class:active={parameters.enabled}
-      onclick={toggleEnabled}
-    >
-      <i class="ri-shut-down-line text-lg"></i>
-      <span>REVERB</span>
-    </button>
-  </div>
-{/snippet}
-
-{#snippet bodyContent()}
+<SectionBox>
+  {#snippet headerContent()}
+    <div class="h-full flex-ha pl-1">
+      <button
+        class="px-1 flex-ha gap-1 text-#7898 [&.active]:(text-#36f) cursor-pointer"
+        class:active={parameters.enabled}
+        onclick={toggleEnabled}
+      >
+        <i class="ri-shut-down-line text-lg"></i>
+        <span>REVERB</span>
+      </button>
+    </div>
+  {/snippet}
   <div class="flex-ha gap-5 p-2 px-5">
     <Knob
       label="TIME"
@@ -49,6 +48,4 @@
       onchange={(v) => setParameter("mix", v)}
     />
   </div>
-{/snippet}
-
-<SectionBox {headerContent} {bodyContent}></SectionBox>
+</SectionBox>
