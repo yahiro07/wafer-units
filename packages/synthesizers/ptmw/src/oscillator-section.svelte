@@ -4,6 +4,7 @@
   import OscillatorKnobsEditPart from "./oscillator-knobs-edit-part.svelte";
   import { getAppModelContext } from "./app-context.ts";
   import OscillatorHeaderEditPart from "./oscillator-header-edit-part.svelte";
+  import SectionBox from "./section-box.svelte";
 
   type Props = {
     oscId: OscId;
@@ -17,10 +18,15 @@
   };
 </script>
 
-<div class="flex-vc bd-#888 bg-#bbb">
+{#snippet headerContent()}
   <OscillatorHeaderEditPart {oscId} {parameters} {setParameter} />
-  <div class="flex-vc p-2px pt-3px gap-1">
+{/snippet}
+
+{#snippet bodyContent()}
+  <div class="flex-vc gap-2 pb-1">
     <OscillatorWaveformView waveformParameters={parameters} />
     <OscillatorKnobsEditPart {parameters} {setParameter} />
   </div>
-</div>
+{/snippet}
+
+<SectionBox {headerContent} {bodyContent}></SectionBox>
