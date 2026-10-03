@@ -3,6 +3,7 @@
   import type { FilterParameters } from "../core/definitions.ts";
   import Knob from "../components/knob.svelte";
   import SectionBox from "./section-box.svelte";
+  import { sectionCommonStyles } from "./section-common-styles";
 
   const appModel = getAppModelContext();
   const parameters = appModel.states.parameters.filter;
@@ -13,7 +14,7 @@
 </script>
 
 <SectionBox headerLabel="FILTER">
-  <div class="flex-ha gap-5 p-2 px-5">
+  <div class={sectionCommonStyles.knobsBox}>
     <Knob
       label="CUTOFF"
       value={parameters.cutoff}
