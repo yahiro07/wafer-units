@@ -94,6 +94,5 @@
     display: flex;
     justify-content: center;
     font-size: 13px;
-    font-weight: 600;
   }
 </style>
