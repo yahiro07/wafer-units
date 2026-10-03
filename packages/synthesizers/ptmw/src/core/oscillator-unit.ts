@@ -43,6 +43,10 @@ export function createOscillatorUnit(
       withStartDelay: boolean = false,
     ) {
       if (playingNoteNumber === null) return;
+      if (!pr.enabled) {
+        cores.forEach((core) => core.update({ isPlaying: false }, time));
+        return;
+      }
       const waveform = waveProvider.getPeriodicWave(pr);
       const unisonPartialSpecs = buildUnisonPartialSpecs(pr);
       const frequency = midiToFrequency(playingNoteNumber);
