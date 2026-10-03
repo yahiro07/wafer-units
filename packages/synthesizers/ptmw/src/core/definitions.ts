@@ -53,6 +53,10 @@ export type ReverbParameters = {
   mix: number;
 };
 
+export type MiscParameters = {
+  patchVolume: number;
+};
+
 export type SynthParameters = {
   osc1: OscParameters;
   osc2: OscParameters;
@@ -61,6 +65,7 @@ export type SynthParameters = {
   amp: AmpParameters;
   eq: EqParameters;
   reverb: ReverbParameters;
+  misc: MiscParameters;
 };
 export type SynthParameterKey = keyof SynthParameters;
 
@@ -141,6 +146,9 @@ export const defaultSynthParameters: SynthParameters = {
     tone: 0.5,
     mix: 0.5,
   },
+  misc: {
+    patchVolume: 0.5,
+  },
 };
 if (appEnvs.isDevelopment) {
   const ds = defaultSynthParameters;
@@ -160,6 +168,7 @@ export type ParameterEditSpec = {
   amp?: Partial<AmpParameters>;
   eq?: Partial<EqParameters>;
   reverb?: Partial<ReverbParameters>;
+  misc?: Partial<MiscParameters>;
 };
 
 export type SynthesizerEngine = {

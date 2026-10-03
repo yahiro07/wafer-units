@@ -8,6 +8,7 @@ import {
   disconnectNodes,
 } from "@lib/mu2609/utils/webaudio-helper";
 import { buildUnisonPartialSpecs } from "./unison-partial-specs";
+import { mapKnobCurveCenterUnity } from "@lib/mu2609/utils/volume-curve";
 
 type OscillatorUnit = {
   noteOn(noteNumber: number, time: number, parameters: OscParameters): void;
@@ -84,7 +85,7 @@ export function createOscillatorUnit(
     },
     updateParameters(pr) {
       if (pr.volume !== undefined) {
-        gainNode.gain.value = pr.volume;
+        gainNode.gain.value = mapKnobCurveCenterUnity(pr.volume);
       }
       if (pr.pan !== undefined) {
         pannerNode.pan.value = pr.pan;

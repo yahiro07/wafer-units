@@ -10,6 +10,7 @@
     max?: number;
     step?: number;
     onchange?: (value: number) => void;
+    size?: number;
   };
 
   let {
@@ -19,13 +20,14 @@
     max = 1,
     step = 0.01,
     onchange = () => {},
+    size = 45,
   }: Props = $props();
 
   const angle = $derived(linearInterpolate(value, min, max, -140, 140));
 </script>
 
 {#snippet knobContent()}
-  <div class="knob">
+  <div class="knob" style={`width: ${size}px; height: ${size}px;`}>
     <div class="knob-inner"></div>
     <div class="tick-plane" style="transform: rotate({angle}deg);">
       <div class="tick"></div>
@@ -42,8 +44,6 @@
 
 <style>
   .knob {
-    width: 45px;
-    height: 45px;
     position: relative;
     border-radius: 50%;
     display: flex;

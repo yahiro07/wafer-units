@@ -11,6 +11,7 @@ import { createSharedFilterUnit } from "./shared-filter-unit";
 import { createSynthesizerVoice, SynthesizerVoice } from "./synthesizer-voice";
 import { seqNumbers } from "@lib/mu2609/utils/helpers";
 import { createOutputSaturator } from "./output-saturator";
+import { mapKnobCurveCenterUnity } from "@lib/mu2609/utils/volume-curve";
 
 function getNextVoice(voices: SynthesizerVoice[]): SynthesizerVoice {
   const sorted = [...voices].sort((a, b) => a.gateOnTime - b.gateOnTime);
@@ -113,6 +114,11 @@ function createEffectChain(bus: SynthesisBus) {
           prFreq: bus.latestParameters.eq.freq,
           prTilt: bus.latestParameters.eq.tilt,
         });
+      }
+      if (spec.misc) {
+        outputNode.gain.value = mapKnobCurveCenterUnity(
+          bus.latestParameters.misc.patchVolume,
+        );
       }
     },
     cleanup() {
