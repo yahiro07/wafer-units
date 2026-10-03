@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { startDragSession } from "@lib/mu2609/utils/drag-session";
-  import { clampValue, linearInterpolate } from "@lib/mu2609/utils/helpers";
+  import { linearInterpolate } from "@lib/mu2609/utils/helpers";
+  import KnobFrame from "./knob-frame.svelte";
 
   type Props = {
     label?: string;
@@ -21,34 +21,19 @@
   }: Props = $props();
 
   const angle = $derived(linearInterpolate(value, min, max, -140, 140));
-
-  function handlePointerDown(e0: PointerEvent) {
-    const originalValue = value;
-    startDragSession(e0, {
-      onMove(e) {
-        const deltaY = e.position.y - e.originalPosition.y;
-        let newValue = clampValue(
-          originalValue - deltaY * 0.01 * (max - min),
-          min,
-          max,
-        );
-        if (step > 0) {
-          newValue = Math.round(newValue / step) * step;
-        }
-        onchange(newValue);
-      },
-    });
-  }
 </script>
 
-<!-- svelte-ignore a11y_no_static_element_interactions -->
-<!-- svelte-ignore a11y_click_events_have_key_events -->
-<div class="base">
-  <div class="knob" onpointerdown={handlePointerDown}>
+{#snippet knobContent()}
+  <div class="knob">
     <div class="tick-plane" style="transform: rotate({angle}deg);">
       <div class="tick"></div>
     </div>
   </div>
+{/snippet}
+
+<div class="base">
+  <KnobFrame {value} {min} {max} {step} {onchange} content={knobContent}
+  ></KnobFrame>
   <div class="label">
     {label}
   </div>
