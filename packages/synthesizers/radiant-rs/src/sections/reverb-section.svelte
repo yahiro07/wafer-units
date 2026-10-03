@@ -7,10 +7,29 @@
   const appModel = getAppModelContext();
   const parameters = appModel.states.parameters.reverb;
 
-  const setParameter = (key: keyof ReverbParameters, value: number) => {
+  const setParameter = (
+    key: keyof ReverbParameters,
+    value: number | boolean,
+  ) => {
     appModel.dispatchParameterEdit({ reverb: { [key]: value } });
   };
+  const toggleEnabled = () => {
+    setParameter("enabled", !parameters.enabled);
+  };
 </script>
+
+{#snippet headerContent()}
+  <div class="h-full flex-ha pl-1">
+    <button
+      class="px-1 flex-ha gap-1 text-#7898 [&.active]:(text-#36f) cursor-pointer"
+      class:active={parameters.enabled}
+      onclick={toggleEnabled}
+    >
+      <i class="ri-shut-down-line text-lg"></i>
+      <span>REVERB</span>
+    </button>
+  </div>
+{/snippet}
 
 {#snippet bodyContent()}
   <div class="flex-ha gap-5 p-2 px-5">
@@ -32,4 +51,4 @@
   </div>
 {/snippet}
 
-<SectionBox headerLabel="REVERB" {bodyContent}></SectionBox>
+<SectionBox {headerContent} {bodyContent}></SectionBox>

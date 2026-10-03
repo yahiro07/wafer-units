@@ -153,8 +153,6 @@ export const defaultSynthParameters: SynthParameters = {
 if (appEnvs.isDevelopment) {
   const ds = defaultSynthParameters;
   ds.reverb.mix = 0;
-  ds.osc2.volume = 0;
-  ds.osc3.volume = 0;
   ds.osc1.unison = 7;
   ds.osc2.unison = 7;
   ds.osc3.unison = 7;
