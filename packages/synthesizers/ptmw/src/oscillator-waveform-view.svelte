@@ -25,7 +25,7 @@
   const color = "#07f";
 </script>
 
-<div class="w-280px h-140px flex-c bg-#111">
+<div class="w-290px h-145px flex-c bg-#111">
   <svg viewBox="0 0 400 200" class="w-full h-full">
     <path
       d={waveformPath}

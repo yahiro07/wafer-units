@@ -12,7 +12,7 @@
   let { parameters, setParameter }: Props = $props();
 </script>
 
-<div class="flex-v gap-2">
+<div class="flex-v gap-2 pt-1 pb-3">
   <div class="flex-ha gap-4">
     <Slider
       label="OCT"

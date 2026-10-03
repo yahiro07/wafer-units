@@ -13,7 +13,7 @@
 </script>
 
 {#snippet bodyContent()}
-  <div class="flex-ha gap-4 p-2">
+  <div class="flex-ha gap-5 p-2 px-5">
     <Knob
       label="TIME"
       value={parameters.time}

@@ -18,7 +18,7 @@
       {@render headerContent?.()}
     {/if}
   </div>
-  <div class="flex-ha gap-4 px-2 bg-#e4e4e4 pt-2">
+  <div class="flex-ha bg-#e4e4e4">
     {@render bodyContent()}
   </div>
 </div>

@@ -23,7 +23,7 @@
 {/snippet}
 
 {#snippet bodyContent()}
-  <div class="flex-vc gap-2.5 pb-2">
+  <div class="flex-vc gap-2.5">
     <OscillatorWaveformView waveformParameters={parameters} />
     <OscillatorKnobsEditPart {parameters} {setParameter} />
   </div>
