@@ -1,5 +1,6 @@
 <script lang="ts">
   import Knob from "./components/knob.svelte";
+  import Slider from "./components/slider.svelte";
   import type { OscParameterKey, OscParameters } from "./core/definitions";
   import { numWaveformSpecs } from "./core/waveforms/core-waveform-generator";
 
@@ -12,12 +13,12 @@
 
 <div class="flex-v">
   <div class="flex-ha gap-4 p-2">
-    <Knob
-      label="OCTAVE"
+    <Slider
+      label="OCT"
       value={parameters.octave}
       onchange={(v) => setParameter("octave", v)}
-      min={-2}
-      max={2}
+      min={-1}
+      max={1}
       step={1}
     />
     <Knob
