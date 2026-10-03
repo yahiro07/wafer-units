@@ -14,7 +14,7 @@
     return [
       "M 0 100",
       ...points.map((point, index) => {
-        return `L ${(index / 256) * 400} ${-point * 100 + 100}`;
+        return `L ${(index / 256) * 400} ${-point * 98 + 100}`;
       }),
       "L 400 100",
     ].join(" ");
