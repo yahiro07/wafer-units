@@ -55,9 +55,9 @@ const waveformSpecMap: Record<number, WaveformSpec> = {
   [3]: { ptmKind: "sdm" },
   [4]: { ptmKind: "screw" },
   [5]: { ptmKind: "drill", ptmLevelScaling: 0.8 },
-  [6]: { ptmKind: "creep2", windowType: "tailHann" },
-  [7]: { ptmKind: "ridge", windowType: "slopeD" },
-  [8]: {
+  // [6]: { ptmKind: "creep2", windowType: "tailHann" },
+  // [7]: { ptmKind: "ridge", windowType: "slopeD" },
+  [6]: {
     ptmKind: "squash",
     ptmLevelScaling: 1,
     windowType: "wideHann",
