@@ -1,6 +1,6 @@
 <script lang="ts">
   import { getAppModelContext } from "../app-context.ts";
-  import type { EqParameters, MiscParameters } from "../core/definitions.ts";
+  import type { MiscParameters } from "../core/definitions.ts";
   import Knob from "../components/knob.svelte";
 
   const appModel = getAppModelContext();
