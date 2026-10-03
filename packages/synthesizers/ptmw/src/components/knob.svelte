@@ -27,7 +27,11 @@
     startDragSession(e0, {
       onMove(e) {
         const deltaY = e.position.y - e.originalPosition.y;
-        let newValue = clampValue(originalValue - deltaY * 0.01, min, max);
+        let newValue = clampValue(
+          originalValue - deltaY * 0.01 * (max - min),
+          min,
+          max,
+        );
         if (step > 0) {
           newValue = Math.round(newValue / step) * step;
         }
