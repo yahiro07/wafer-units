@@ -74,7 +74,7 @@ export const defaultSynthParameters: SynthParameters = {
     shape: 0,
     dense: 0.5,
     mix: 1,
-    unison: 7,
+    unison: 1,
     detune: 0.5,
     pan: 0,
     volume: 0.5,
@@ -90,7 +90,7 @@ export const defaultSynthParameters: SynthParameters = {
     shape: 0,
     dense: 0.5,
     mix: 1,
-    unison: 7,
+    unison: 1,
     detune: 0.5,
     pan: 0,
     volume: 0.5,
@@ -106,7 +106,7 @@ export const defaultSynthParameters: SynthParameters = {
     shape: 0,
     dense: 0.5,
     mix: 1,
-    unison: 7,
+    unison: 1,
     detune: 0.5,
     pan: 0,
     volume: 0.5,
@@ -147,6 +147,9 @@ if (appEnvs.isDevelopment) {
   ds.reverb.mix = 0;
   ds.osc2.volume = 0;
   ds.osc3.volume = 0;
+  ds.osc1.unison = 7;
+  ds.osc2.unison = 7;
+  ds.osc3.unison = 7;
 }
 
 export type ParameterEditSpec = {
