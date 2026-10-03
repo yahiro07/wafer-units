@@ -44,6 +44,10 @@
   }
 </script>
 
-<div onpointerdown={handlePointerDown} class={className}>
+<div
+  onpointerdown={handlePointerDown}
+  class={className}
+  style="cursor: pointer;"
+>
   {@render content()}
 </div>
