@@ -22,12 +22,12 @@
 {#if states.viewActive}
   <div class="h-dvh flex-c overflow-hidden">
     <div class="flex-v gap-3">
-      <div class="flex-ha gap-4">
+      <div class="flex-ha gap-3">
         <OscillatorSection oscId="osc1" />
         <OscillatorSection oscId="osc2" />
         <OscillatorSection oscId="osc3" />
       </div>
-      <div class="flex-ha gap-4 justify-end">
+      <div class="flex-ha gap-3 justify-end">
         <FilterSection />
         <AmplifierSection />
         <EqSection />
