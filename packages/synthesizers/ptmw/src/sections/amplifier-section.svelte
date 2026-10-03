@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { getAppModelContext } from "./app-context.ts";
-  import type { AmpParameters } from "./core/definitions.ts";
-  import Knob from "./components/knob.svelte";
+  import { getAppModelContext } from "../app-context.ts";
+  import type { AmpParameters } from "../core/definitions.ts";
+  import Knob from "../components/knob.svelte";
   import SectionBox from "./section-box.svelte";
 
   const appModel = getAppModelContext();

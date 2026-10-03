@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { createPreviewWaveProvider } from "./core/waveforms/preview-wave-provider";
-  import type { CustomWaveParameters } from "./core/waveforms/waveform-types";
+  import { createPreviewWaveProvider } from "../core/waveforms/preview-wave-provider";
+  import type { CustomWaveParameters } from "../core/waveforms/waveform-types";
 
   type Props = {
     waveformParameters: CustomWaveParameters;

@@ -1,9 +1,9 @@
 <script lang="ts">
-  import Knob from "./components/knob.svelte";
-  import NumberSliderBox from "./components/number-slider-box.svelte";
-  import Slider from "./components/slider.svelte";
-  import type { OscParameterKey, OscParameters } from "./core/definitions";
-  import { numWaveformSpecs } from "./core/waveforms/core-waveform-generator";
+  import Knob from "../components/knob.svelte";
+  import NumberSliderBox from "../components/number-slider-box.svelte";
+  import Slider from "../components/slider.svelte";
+  import type { OscParameterKey, OscParameters } from "../core/definitions";
+  import { numWaveformSpecs } from "../core/waveforms/core-waveform-generator";
 
   type Props = {
     parameters: OscParameters;

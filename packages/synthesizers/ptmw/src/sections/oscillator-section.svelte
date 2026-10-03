@@ -1,8 +1,8 @@
 <script lang="ts">
-  import type { OscId, OscParameterKey } from "./core/definitions";
+  import type { OscId, OscParameterKey } from "../core/definitions.ts";
   import OscillatorWaveformView from "./oscillator-waveform-view.svelte";
   import OscillatorKnobsEditPart from "./oscillator-knobs-edit-part.svelte";
-  import { getAppModelContext } from "./app-context.ts";
+  import { getAppModelContext } from "../app-context.ts";
   import OscillatorHeaderEditPart from "./oscillator-header-edit-part.svelte";
   import SectionBox from "./section-box.svelte";
 
