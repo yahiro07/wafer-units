@@ -1,7 +1,8 @@
 <script lang="ts">
   import { getAppModelContext } from "./app-context.ts";
-  import type { EqParameters, ReverbParameters } from "./core/definitions.ts";
+  import type { EqParameters } from "./core/definitions.ts";
   import Knob from "./components/knob.svelte";
+  import SectionBox from "./section-box.svelte";
 
   const appModel = getAppModelContext();
   const parameters = appModel.states.parameters.eq;
@@ -11,8 +12,7 @@
   };
 </script>
 
-<div class="flex-vc bd-#888 bg-#bbb gap-2">
-  <div class="w-full h-40px bg-#444 flex-ha pl-2 text-white">EQ</div>
+{#snippet bodyContent()}
   <div class="flex-ha gap-4 p-2">
     <Knob
       label="TILT"
@@ -25,4 +25,6 @@
       onchange={(v) => setParameter("freq", v)}
     />
   </div>
-</div>
+{/snippet}
+
+<SectionBox headerLabel="EQ" {bodyContent}></SectionBox>

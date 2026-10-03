@@ -4,6 +4,7 @@
     OscParameterKey,
     OscParameters,
   } from "./core/definitions";
+  import { cz } from "@lib/mu2609/utils/cz";
 
   type Props = {
     oscId: OscId;
@@ -12,47 +13,47 @@
   };
   let { oscId, parameters, setParameter }: Props = $props();
 
-  const powerButtonClass =
-    " px-1 text-#777 [&.active]:(text-#0cf) cursor-pointer";
-
-  const buttonClass = " px-1 text-#777 [&.active]:(text-#fff) cursor-pointer";
+  const styles = {
+    powerButton:
+      "px-1 flex-ha gap-1 text-#789a [&.active]:(text-#36f) cursor-pointer",
+    button: cz(
+      "w-40px h-26px bg-#bbb8 text-#fff8 text-sm cursor-pointer",
+      "[&.active]:(bg-#48f8 text-#fff)",
+    ),
+  };
 
   const toggleParameter = (key: OscParameterKey) => {
     setParameter(key, !parameters[key]);
   };
 </script>
 
-<div class="w-full h-40px bg-#444 flex-ha pl-2 text-white gap-1">
-  <div class="flex-ha gap-2px">
-    <button
-      class={powerButtonClass}
-      class:active={parameters.enabled}
-      onclick={() => toggleParameter("enabled")}
-    >
-      <i class="ri-shut-down-line text-lg"></i>
-    </button>
-    <div>
-      {oscId.toUpperCase()}
-    </div>
-  </div>
+<div class={cz("w-full h-40px flex-ha pl-1 gap-1.5")}>
+  <button
+    class={styles.powerButton}
+    class:active={parameters.enabled}
+    onclick={() => toggleParameter("enabled")}
+  >
+    <i class="ri-shut-down-line text-lg"></i>
+    {oscId.toUpperCase()}
+  </button>
   <div class="grow"></div>
   <button
-    class={buttonClass}
+    class={styles.button}
     class:active={parameters.phaseRandom}
     onclick={() => toggleParameter("phaseRandom")}>PRND</button
   >
   <button
-    class={buttonClass}
+    class={styles.button}
     class:active={parameters.spread}
     onclick={() => toggleParameter("spread")}>SPR</button
   >
   <button
-    class={buttonClass}
+    class={styles.button}
     class:active={parameters.sub}
     onclick={() => toggleParameter("sub")}>SUB</button
   >
   <button
-    class={buttonClass}
+    class={styles.button}
     class:active={parameters.full}
     onclick={() => toggleParameter("full")}>FULL</button
   >
