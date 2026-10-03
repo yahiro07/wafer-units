@@ -1,5 +1,5 @@
 import { mapKnobCurveCenterUnity } from "@lib/mu2609/utils/volume-curve";
-import { connectNodes } from "@lib/mu2609/utils/webaudio-helper";
+import { createConnectionKeeper } from "@lib/mu2609/utils/webaudio-helper";
 import { SynthesisBus, ParameterEditSpec } from "./definitions";
 import { createOutputSaturator } from "./output-saturator";
 import { createReverb } from "./reverb";
@@ -14,13 +14,9 @@ export function createEffectChain(bus: SynthesisBus) {
   saturator.update(1);
   const reverb = createReverb(ac);
 
-  const disconnects = connectNodes(
-    inputNode,
-    titlingEq,
-    saturator,
-    reverb,
-    outputNode,
-  );
+  const connectionKeeper = createConnectionKeeper();
+
+  connectionKeeper.connects(inputNode, titlingEq, saturator, outputNode);
 
   return {
     inputNode,
@@ -32,6 +28,24 @@ export function createEffectChain(bus: SynthesisBus) {
           damp: spec.reverb.tone,
           mix: spec.reverb.mix,
         });
+        if (spec.reverb.enabled !== undefined) {
+          if (spec.reverb.enabled) {
+            connectionKeeper.connects(
+              inputNode,
+              titlingEq,
+              saturator,
+              reverb,
+              outputNode,
+            );
+          } else {
+            connectionKeeper.connects(
+              inputNode,
+              titlingEq,
+              saturator,
+              outputNode,
+            );
+          }
+        }
       }
       if (spec.eq) {
         titlingEq.update({
@@ -49,7 +63,7 @@ export function createEffectChain(bus: SynthesisBus) {
       titlingEq.cleanup();
       saturator.cleanup();
       reverb.cleanup();
-      disconnects();
+      connectionKeeper.cleanup();
     },
   };
 }
