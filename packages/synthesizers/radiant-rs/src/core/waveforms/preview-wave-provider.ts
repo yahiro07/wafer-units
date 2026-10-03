@@ -3,7 +3,7 @@ import { createCoreWaveformGenerator } from "./core-waveform-generator";
 import { CustomWaveParameters } from "./waveform-types";
 
 type PreviewWaveProvider = {
-  getPreviewWave(params: CustomWaveParameters): number[];
+  getPreviewWave(params: CustomWaveParameters, affectMix: boolean): number[];
 };
 
 export function createPreviewWaveProvider(): PreviewWaveProvider {
@@ -23,17 +23,19 @@ export function createPreviewWaveProvider(): PreviewWaveProvider {
   };
 
   return {
-    getPreviewWave(pr) {
+    getPreviewWave(pr, affectMix) {
       const shapeIndex = Math.round(pr.shape * paramStep);
       const denseIndex = Math.round(pr.dense * paramStep);
       const mixIndex = Math.round(pr.mix * paramStep);
 
       const wave = pr.wave;
-      const key = `${wave}-${shapeIndex}-${denseIndex}-${mixIndex}`;
+      const key = affectMix
+        ? `${wave}-${shapeIndex}-${denseIndex}-${mixIndex}`
+        : `${wave}-${shapeIndex}-${denseIndex}`;
       if (key !== latestKey) {
         const shape = shapeIndex / paramStep;
         const dense = denseIndex / paramStep;
-        const mix = mixIndex / paramStep;
+        const mix = affectMix ? mixIndex / paramStep : 1;
         // console.log(`generating preview waveform for ${key}`);
         latestWave = internal.generateWaveform({ wave, shape, dense, mix });
         latestKey = key;

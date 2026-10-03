@@ -24,7 +24,10 @@
 
 {#snippet bodyContent()}
   <div class="flex-vc gap-2.5">
-    <OscillatorWaveformView waveformParameters={parameters} />
+    <OscillatorWaveformView
+      waveformParameters={parameters}
+      affectMixForPreview={appModel.states.affectMixForPreview}
+    />
     <OscillatorKnobsEditPart {parameters} {setParameter} />
   </div>
 {/snippet}

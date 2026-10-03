@@ -4,12 +4,18 @@
   import Slider from "../components/slider.svelte";
   import type { OscParameterKey, OscParameters } from "../core/definitions";
   import { numWaveformSpecs } from "../core/waveforms/core-waveform-generator";
+  import { getAppModelContext } from "../app-context.ts";
 
   type Props = {
     parameters: OscParameters;
     setParameter: (key: OscParameterKey, value: number) => void;
   };
   let { parameters, setParameter }: Props = $props();
+
+  const appModel = getAppModelContext();
+  const toggleMixPreview = () => {
+    appModel.states.affectMixForPreview = !appModel.states.affectMixForPreview;
+  };
 </script>
 
 <div class="flex-v gap-2 pt-1 pb-3">
@@ -40,11 +46,17 @@
       value={parameters.dense}
       onchange={(v) => setParameter("dense", v)}
     />
-    <Knob
-      label="MIX"
-      value={parameters.mix}
-      onchange={(v) => setParameter("mix", v)}
-    />
+    <div class="relative">
+      <Knob
+        label="MIX"
+        value={parameters.mix}
+        onchange={(v) => setParameter("mix", v)}
+      />
+      <div
+        class="absolute bottom-0 left-0 w-full h-18px"
+        onclick={toggleMixPreview}
+      ></div>
+    </div>
   </div>
   <div class="flex-ha gap-4 justify-end">
     <NumberSliderBox
