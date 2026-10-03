@@ -35,7 +35,7 @@ function makePeriodicWave(context: AudioContext, fn: (pp: number) => number) {
 export function createCustomWaveformProvider(
   ac: AudioContext,
 ): CustomWaveformProvider {
-  const paramStep = 80;
+  const paramStep = 40;
 
   let latestKey: string | undefined;
   let latestWave: PeriodicWave | undefined;
@@ -61,7 +61,7 @@ export function createCustomWaveformProvider(
         const shape = shapeIndex / paramStep;
         const dense = denseIndex / paramStep;
         const mix = mixIndex / paramStep;
-        console.log(`generating waveform for ${key}`);
+        // console.log(`generating waveform for ${key}`);
         latestWave = internal.generateWaveform({ wave, shape, dense, mix });
         latestKey = key;
       }
