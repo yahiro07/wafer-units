@@ -40,12 +40,20 @@ function setupUnit(
     unitInterface.completeSetup({
       unitAspects: {
         unitType: "effect",
-        viewSize: [100, 100],
+        viewSize: [900, 560],
       },
       cleanup: engine.cleanup,
       unitCallbacks: {
         setViewActive(value) {
           states.viewActive = value;
+        },
+      },
+      noteInput: {
+        noteOn(noteNumber, time) {
+          engine.noteOn(noteNumber, time);
+        },
+        noteOff(noteNumber, time) {
+          engine.noteOff(noteNumber, time);
         },
       },
       persistence: {
