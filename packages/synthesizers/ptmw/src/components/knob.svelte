@@ -26,6 +26,7 @@
 
 {#snippet knobContent()}
   <div class="knob">
+    <div class="knob-inner"></div>
     <div class="tick-plane" style="transform: rotate({angle}deg);">
       <div class="tick"></div>
     </div>
@@ -43,16 +44,32 @@
   .knob {
     width: 45px;
     height: 45px;
-    background: #ddd;
-    border: solid 1px #000;
+    position: relative;
     border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
+    background: linear-gradient(to bottom, #fff, #0004);
+    padding: 5px;
+    border: solid 0.5px #666;
+
+    &:hover {
+      opacity: 0.9;
+    }
+  }
+
+  .knob-inner {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: #eee;
   }
 
   .tick-plane {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
     pointer-events: none;
@@ -64,6 +81,6 @@
   .tick {
     width: 3px;
     height: 12px;
-    background: #444;
+    background: #458;
   }
 </style>
