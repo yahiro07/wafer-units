@@ -1,6 +1,7 @@
 <script lang="ts">
   import { linearInterpolate } from "@lib/mu2609/utils/helpers";
   import KnobFrame from "./knob-frame.svelte";
+  import LabeledBox from "./labeled-box.svelte";
 
   type Props = {
     label?: string;
@@ -31,22 +32,14 @@
   </div>
 {/snippet}
 
-<div class="base">
+{#snippet controlContent()}
   <KnobFrame {value} {min} {max} {step} {onchange} content={knobContent}
   ></KnobFrame>
-  <div class="label">
-    {label}
-  </div>
-</div>
+{/snippet}
+
+<LabeledBox content={controlContent} {label}></LabeledBox>
 
 <style>
-  .base {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1px;
-  }
-
   .knob {
     width: 45px;
     height: 45px;
@@ -72,12 +65,5 @@
     width: 3px;
     height: 12px;
     background: #444;
-  }
-
-  .label {
-    width: 0px;
-    display: flex;
-    justify-content: center;
-    font-size: 13px;
   }
 </style>
