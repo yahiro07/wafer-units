@@ -23,8 +23,8 @@
 {#if states.viewActive}
   <div class="h-dvh flex-c overflow-hidden">
     <div class="flex-v gap-3">
-      <div class="h-50px flex-ha bg-#c0c0c8 -mb-1 justify-between">
-        <h1 class="text-#fff text-2xl pl-2">Radiant RS</h1>
+      <div class="h-50px flex-ha bg-#f8f8f8 -mb-1 justify-between">
+        <h1 class="text-#889 text-2xl pl-2">Radiant RS</h1>
         <TopBarControlSection />
       </div>
       <div class="flex-ha gap-3">
