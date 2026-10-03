@@ -17,8 +17,10 @@
   };
 </script>
 
-<div class="flex-vc bd-#888 bg-#bbb gap-2">
+<div class="flex-vc bd-#888 bg-#bbb">
   <OscillatorHeaderEditPart {oscId} {parameters} {setParameter} />
-  <OscillatorWaveformView waveformParameters={parameters} />
-  <OscillatorKnobsEditPart {parameters} {setParameter} />
+  <div class="flex-vc p-2px pt-3px gap-1">
+    <OscillatorWaveformView waveformParameters={parameters} />
+    <OscillatorKnobsEditPart {parameters} {setParameter} />
+  </div>
 </div>
