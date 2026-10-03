@@ -1,5 +1,6 @@
 <script lang="ts">
   import Knob from "./components/knob.svelte";
+  import NumberSliderBox from "./components/number-slider-box.svelte";
   import Slider from "./components/slider.svelte";
   import type { OscParameterKey, OscParameters } from "./core/definitions";
   import { numWaveformSpecs } from "./core/waveforms/core-waveform-generator";
@@ -46,7 +47,7 @@
     />
   </div>
   <div class="flex-ha gap-4 justify-end">
-    <Knob
+    <NumberSliderBox
       label="UNISON"
       value={parameters.unison}
       onchange={(v) => setParameter("unison", v)}
