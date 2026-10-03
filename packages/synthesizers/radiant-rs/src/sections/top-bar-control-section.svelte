@@ -12,7 +12,7 @@
 </script>
 
 <div class="flex-ha gap-1.5 px-2">
-  <div class="text-#347 text-13px">VOLUME</div>
+  <div class="text-clKnobText text-13px">VOLUME</div>
   <Knob
     value={parameters.patchVolume}
     onchange={(v) => setParameter("patchVolume", v)}
