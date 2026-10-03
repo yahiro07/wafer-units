@@ -10,6 +10,7 @@ import { createSynthesizerEngine } from "./core/synthesizer-engine";
 import { setupMidiKeyboardInput } from "@lib/mu2609/utils/midi-keyboard-input";
 import { createPersistenceImpl } from "./persistence.svelte.ts";
 import { createAutomationInput } from "./automation-input.ts";
+import { createRandomParameters } from "./randomizer.ts";
 
 type AppStates = {
   parameters: SynthParameters;
@@ -42,6 +43,7 @@ function setupUnit(
   states: AppStates,
   editParametersReceiver: IEditParametersReceiver,
 ) {
+  const getParameters = () => $state.snapshot(states.parameters);
   if (unitInterface) {
     unitInterface.completeSetup({
       unitAspects: {
@@ -62,11 +64,24 @@ function setupUnit(
           engine.noteOff(noteNumber, time);
         },
       },
-      persistence: createPersistenceImpl(states, engine),
+      persistence: createPersistenceImpl(getParameters, editParametersReceiver),
       automationInput: createAutomationInput(
-        () => states.parameters,
+        getParameters,
         editParametersReceiver,
       ),
+      presetProvider: {
+        getCommandNames() {
+          return ["init", "rand"];
+        },
+        applyCommand(commandName) {
+          if (commandName === "init") {
+            editParametersReceiver.setAllParameters(defaultSynthParameters);
+          } else if (commandName === "rand") {
+            const newParameters = createRandomParameters();
+            editParametersReceiver.setAllParameters(newParameters);
+          }
+        },
+      },
     });
   } else {
     states.viewActive = true;
@@ -91,6 +106,13 @@ export function createAppModel(): AppModel {
         const attrs = spec[key];
         Object.assign(states.parameters[key], attrs);
       }
+    },
+    setAllParameters(parameters) {
+      for (const _key in parameters) {
+        const key = _key as keyof SynthParameters;
+        Object.assign(states.parameters[key], parameters[key]);
+      }
+      engine.applyParameters(parameters);
     },
   };
   const cleanupUnit = setupUnit(
