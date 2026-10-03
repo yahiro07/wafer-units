@@ -7,6 +7,7 @@ import {
 } from "./core/definitions";
 import { createSynthesizerEngine } from "./core/synthesizer-engine";
 import { setupMidiKeyboardInput } from "@lib/mu2609/utils/midi-keyboard-input";
+import { createPersistenceImpl } from "./persistence.svelte.ts";
 
 type AppStates = {
   parameters: SynthParameters;
@@ -56,15 +57,7 @@ function setupUnit(
           engine.noteOff(noteNumber, time);
         },
       },
-      persistence: {
-        emitState() {
-          return { parameters: $state.snapshot(states.parameters) };
-        },
-        applyState(data) {
-          Object.assign(states.parameters, data.parameters);
-          engine.applyParameters(data.parameters);
-        },
-      },
+      persistence: createPersistenceImpl(states, engine),
     });
   } else {
     states.viewActive = true;
