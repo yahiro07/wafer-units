@@ -12,9 +12,7 @@
 </script>
 
 <div class="flex-vc bd-#888 bg-#bbb gap-2">
-  <div class="w-full h-40px bg-#444 flex-ha pl-2 text-white font-600">
-    FILTER
-  </div>
+  <div class="w-full h-40px bg-#444 flex-ha pl-2 text-white">FILTER</div>
   <div class="flex-ha gap-4 p-2">
     <Knob
       label="CUTOFF"

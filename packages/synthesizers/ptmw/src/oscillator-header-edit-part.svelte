@@ -18,7 +18,7 @@
   };
 </script>
 
-<div class="w-full h-40px bg-#444 flex-ha pl-2 text-white font-600 gap-1">
+<div class="w-full h-40px bg-#444 flex-ha pl-2 text-white gap-1">
   <button
     class={buttonClass}
     class:active={parameters.enabled}
