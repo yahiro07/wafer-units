@@ -4,10 +4,12 @@ import {
   ParameterEditSpec,
   type SynthParameters,
   defaultSynthParameters,
+  IEditParametersReceiver,
 } from "./core/definitions";
 import { createSynthesizerEngine } from "./core/synthesizer-engine";
 import { setupMidiKeyboardInput } from "@lib/mu2609/utils/midi-keyboard-input";
 import { createPersistenceImpl } from "./persistence.svelte.ts";
+import { createAutomationInput } from "./automation-input.ts";
 
 type AppStates = {
   parameters: SynthParameters;
@@ -36,6 +38,7 @@ function setupUnit(
   unitInterface: UnitInterface | undefined,
   engine: SynthesizerEngine,
   states: AppStates,
+  editParametersReceiver: IEditParametersReceiver,
 ) {
   if (unitInterface) {
     unitInterface.completeSetup({
@@ -58,6 +61,10 @@ function setupUnit(
         },
       },
       persistence: createPersistenceImpl(states, engine),
+      automationInput: createAutomationInput(
+        () => states.parameters,
+        editParametersReceiver,
+      ),
     });
   } else {
     states.viewActive = true;
@@ -74,10 +81,7 @@ export function createAppModel(): AppModel {
   const engine = createEngine(unitInterface);
   const states = $state(structuredClone(defaultAppStates));
 
-  const cleanupUnit = setupUnit(unitInterface, engine, states);
-
-  return {
-    states,
+  const editParametersReceiver: IEditParametersReceiver = {
     dispatchParameterEdit(spec) {
       engine.applyParameters(spec);
       for (const _key in spec) {
@@ -86,6 +90,16 @@ export function createAppModel(): AppModel {
         Object.assign(states.parameters[key], attrs);
       }
     },
+  };
+  const cleanupUnit = setupUnit(
+    unitInterface,
+    engine,
+    states,
+    editParametersReceiver,
+  );
+  return {
+    states,
+    dispatchParameterEdit: editParametersReceiver.dispatchParameterEdit,
     cleanup() {
       cleanupUnit?.();
     },

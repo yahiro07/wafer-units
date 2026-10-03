@@ -182,3 +182,7 @@ export type SynthesisBus = {
   audioContext: AudioContext;
   latestParameters: SynthParameters;
 };
+
+export type IEditParametersReceiver = {
+  dispatchParameterEdit(spec: ParameterEditSpec): void;
+};
