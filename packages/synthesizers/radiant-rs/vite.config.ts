@@ -6,6 +6,6 @@ export default defineConfig({
   base: "./",
   plugins: [svelte(), UnoCSS()],
   // resolve: { tsconfigPaths: true },
-  build: { outDir: "../../../dist/ptmw", emptyOutDir: true },
+  build: { outDir: "../../../dist/radiant-rs", emptyOutDir: true },
   server: { port: 3000 },
 });
