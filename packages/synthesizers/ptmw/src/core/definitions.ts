@@ -102,7 +102,7 @@ export const defaultSynthParameters: SynthParameters = {
   osc3: {
     enabled: false,
     octave: 0,
-    wave: 0,
+    wave: 2,
     shape: 0,
     dense: 0.5,
     mix: 1,

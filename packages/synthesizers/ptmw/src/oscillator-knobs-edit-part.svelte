@@ -1,6 +1,7 @@
 <script lang="ts">
   import Knob from "./components/knob.svelte";
   import type { OscParameterKey, OscParameters } from "./core/definitions";
+  import { numWaveformSpecs } from "./core/waveforms/core-waveform-generator";
 
   type Props = {
     parameters: OscParameters;
@@ -24,7 +25,7 @@
       value={parameters.wave}
       onchange={(v) => setParameter("wave", v)}
       min={0}
-      max={3}
+      max={numWaveformSpecs - 1}
       step={1}
     />
     <Knob
