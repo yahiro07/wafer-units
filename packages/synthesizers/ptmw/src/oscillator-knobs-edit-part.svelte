@@ -11,8 +11,8 @@
   let { parameters, setParameter }: Props = $props();
 </script>
 
-<div class="flex-v">
-  <div class="flex-ha gap-4 p-2">
+<div class="flex-v gap-2">
+  <div class="flex-ha gap-4">
     <Slider
       label="OCT"
       value={parameters.octave}
@@ -45,7 +45,7 @@
       onchange={(v) => setParameter("mix", v)}
     />
   </div>
-  <div class="flex-ha gap-4 p-2 justify-end">
+  <div class="flex-ha gap-4 justify-end">
     <Knob
       label="UNISON"
       value={parameters.unison}
