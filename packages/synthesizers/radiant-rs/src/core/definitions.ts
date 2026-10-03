@@ -1,4 +1,4 @@
-import { appEnvs } from "../base/app-envs";
+import { appEnvs } from "../common/app-envs";
 
 export type OscParameters = {
   enabled: boolean;

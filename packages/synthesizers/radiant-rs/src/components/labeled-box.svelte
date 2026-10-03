@@ -11,7 +11,7 @@
   <div class="h-50px flex-c">
     {@render children()}
   </div>
-  <div class="text-13px text-#347 w-0px flex-c">
+  <div class="text-13px text-clKnobText w-0px flex-c">
     {label}
   </div>
 </div>
