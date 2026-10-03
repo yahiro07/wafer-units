@@ -22,6 +22,9 @@
 {#if states.viewActive}
   <div class="h-dvh flex-c overflow-hidden">
     <div class="flex-v gap-3">
+      <div class="h-50px flex-ha bg-#c0c0c8 -mb-1">
+        <h1 class="text-#fff text-2xl pl-2">Radiant RS</h1>
+      </div>
       <div class="flex-ha gap-3">
         <OscillatorSection oscId="osc1" />
         <OscillatorSection oscId="osc2" />
