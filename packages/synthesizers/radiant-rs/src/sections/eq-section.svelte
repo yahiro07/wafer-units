@@ -3,6 +3,8 @@
   import type { EqParameters } from "../core/definitions.ts";
   import Knob from "../components/knob.svelte";
   import SectionBox from "./section-box.svelte";
+  import { sectionCommonStyles } from "./section-common-styles";
+  import { cz } from "@lib/mu2609/utils/cz";
 
   const appModel = getAppModelContext();
   const parameters = appModel.states.parameters.eq;
@@ -13,7 +15,7 @@
 </script>
 
 <SectionBox headerLabel="EQ">
-  <div class="flex-ha gap-5 p-2 px-4.75">
+  <div class={cz(sectionCommonStyles.knobsBox, "!px-4.75")}>
     <Knob
       label="TILT"
       value={parameters.tilt}
