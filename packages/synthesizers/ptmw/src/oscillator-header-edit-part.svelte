@@ -15,10 +15,10 @@
 
   const styles = {
     powerButton:
-      "px-1 flex-ha gap-1 text-#789a [&.active]:(text-#36f) cursor-pointer",
+      "px-1 flex-ha gap-1 text-#7898 [&.active]:(text-#36f) cursor-pointer",
     button: cz(
       "w-40px h-26px bg-#bbb8 text-#fff8 text-sm cursor-pointer",
-      "[&.active]:(bg-#48f8 text-#fff)",
+      "[&.active]:(bg-#8af text-#fff)",
     ),
   };
 
