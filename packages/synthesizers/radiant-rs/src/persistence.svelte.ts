@@ -1,9 +1,9 @@
 import { clampValue } from "@lib/mu2609/utils/helpers";
 import {
   FilterType,
+  IEditParametersReceiver,
   type OscParameters,
   type SynthParameters,
-  type SynthesizerEngine,
 } from "./core/definitions";
 import { numWaveformSpecs } from "./core/waveforms/core-waveform-generator";
 
@@ -142,12 +142,12 @@ const mappers = {
 };
 
 export function createPersistenceImpl(
-  states: { parameters: SynthParameters },
-  engine: SynthesizerEngine,
+  getParameters: () => SynthParameters,
+  editParametersReceiver: IEditParametersReceiver,
 ) {
   return {
     emitStateBytes() {
-      const parameters = $state.snapshot(states.parameters);
+      const parameters = getParameters();
       const paramBytes = mappers.serializeParameters(parameters);
       return new Uint8Array([formatRevision, ...paramBytes]);
     },
@@ -157,12 +157,7 @@ export function createPersistenceImpl(
         bytes[0] === formatRevision
       ) {
         const parameters = mappers.deserializeParameters([...bytes.slice(1)]);
-        // Object.assign(states.parameters, parameters);
-        for (const _key in parameters) {
-          const key = _key as keyof SynthParameters;
-          Object.assign(states.parameters[key], parameters[key]);
-        }
-        engine.applyParameters(parameters);
+        editParametersReceiver.setAllParameters(parameters);
       } else {
         console.warn(`[ptmw] skipped incompatible data on applyStateBytes`);
       }

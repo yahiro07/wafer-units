@@ -183,4 +183,5 @@ export type SynthesisBus = {
 
 export type IEditParametersReceiver = {
   dispatchParameterEdit(spec: ParameterEditSpec): void;
+  setAllParameters(parameters: SynthParameters): void;
 };
