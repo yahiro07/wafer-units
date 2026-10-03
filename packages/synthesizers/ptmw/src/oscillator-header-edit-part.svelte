@@ -11,6 +11,10 @@
     setParameter: (key: OscParameterKey, value: boolean) => void;
   };
   let { oscId, parameters, setParameter }: Props = $props();
+
+  const powerButtonClass =
+    " px-1 text-#777 [&.active]:(text-#0cf) cursor-pointer";
+
   const buttonClass = " px-1 text-#777 [&.active]:(text-#fff) cursor-pointer";
 
   const toggleParameter = (key: OscParameterKey) => {
@@ -21,7 +25,7 @@
 <div class="w-full h-40px bg-#444 flex-ha pl-2 text-white gap-1">
   <div class="flex-ha gap-2px">
     <button
-      class={buttonClass}
+      class={powerButtonClass}
       class:active={parameters.enabled}
       onclick={() => toggleParameter("enabled")}
     >
