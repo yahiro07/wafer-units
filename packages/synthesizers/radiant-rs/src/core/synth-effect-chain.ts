@@ -11,7 +11,7 @@ export function createEffectChain(bus: SynthesisBus) {
   const outputNode = ac.createGain();
   const titlingEq = createTiltingEq(ac);
   const saturator = createOutputSaturator(ac);
-  saturator.update(1);
+  saturator.update(0);
   const reverb = createReverb(ac);
 
   const connectionKeeper = createConnectionKeeper();
