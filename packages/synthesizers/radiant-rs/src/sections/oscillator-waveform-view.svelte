@@ -4,13 +4,17 @@
 
   type Props = {
     waveformParameters: CustomWaveParameters;
+    affectMixForPreview: boolean;
   };
-  let { waveformParameters }: Props = $props();
+  let { waveformParameters, affectMixForPreview }: Props = $props();
 
   const previewWaveProvider = createPreviewWaveProvider();
 
   function generateWaveformPath(params: CustomWaveParameters) {
-    const points = previewWaveProvider.getPreviewWave(params);
+    const points = previewWaveProvider.getPreviewWave(
+      params,
+      affectMixForPreview,
+    );
     return [
       "M 0 100",
       ...points.map((point, index) => {

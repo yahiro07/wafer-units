@@ -1,4 +1,5 @@
 import {
+  clampValue,
   linearInterpolate,
   mapUnaryTo,
   resultOf,
@@ -132,12 +133,14 @@ export function createCoreWaveformGenerator(pr: CustomWaveParameters) {
         win = mixValue(1, win, power2(color));
       }
       y2 *= win;
-      if (0) {
+      if (1) {
         const y = mixValue(y1, y2, pr.mix);
-        return denseFn(y);
+        const z = denseFn(y);
+        return clampValue(z, -1, 1);
       } else {
         y2 = denseFn(y2);
-        return mixValue(y1, y2, pr.mix);
+        const z = mixValue(y1, y2, pr.mix);
+        return clampValue(z, -1, 1);
       }
     },
   };

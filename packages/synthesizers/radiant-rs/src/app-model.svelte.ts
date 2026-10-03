@@ -14,11 +14,13 @@ import { createAutomationInput } from "./automation-input.ts";
 type AppStates = {
   parameters: SynthParameters;
   viewActive: boolean;
+  affectMixForPreview: boolean;
 };
 
 const defaultAppStates: AppStates = {
   parameters: defaultSynthParameters,
   viewActive: false,
+  affectMixForPreview: false,
 };
 
 export type AppModel = {
