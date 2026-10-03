@@ -11,7 +11,7 @@ function getNextVoice(voices: SynthesizerVoice[]): SynthesizerVoice {
 
 export function createVoicesStage(bus: SynthesisBus) {
   const voicesMixNode = bus.audioContext.createGain();
-  voicesMixNode.gain.value = 0.7;
+  voicesMixNode.gain.value = 0.5;
 
   const voices = seqNumbers(6).map(() =>
     createSynthesizerVoice(bus, voicesMixNode),
