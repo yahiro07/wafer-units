@@ -12,6 +12,7 @@ import { createPersistenceImpl } from "./persistence.svelte.ts";
 import { createAutomationInput } from "./automation-input.ts";
 import { createRandomParameters } from "./randomizer.ts";
 import { appEnvs } from "../common/app-envs.ts";
+import { presets } from "../core/presets.ts";
 
 type AppStates = {
   parameters: SynthParameters;
@@ -61,8 +62,24 @@ function createParametersFacade(
       }
     },
     dumpParameters() {
+      function formatSection(value: object): string {
+        const body = Object.entries(value)
+          .map(([key, item]) => `${key}: ${JSON.stringify(item)}`)
+          .join(", ");
+        return `{ ${body} }`;
+      }
+      function formatParameters(parameters: SynthParameters): string {
+        const lines = Object.entries(parameters).map(
+          ([key, value]) => `  ${key}: ${formatSection(value)},`,
+        );
+        const text = `{\n${lines.join("\n")}\n}`;
+        return text.replace(/(?<![0-9])0\.\d+/g, (match) =>
+          (Math.round(Number(match) * 100) / 100).toString(),
+        );
+      }
       const parameters = getParameters();
-      console.log(JSON.stringify(parameters, null, 2));
+      const formattedText = formatParameters(parameters);
+      console.log(formattedText);
     },
   };
 }
@@ -96,8 +113,17 @@ function setupUnit(
       persistence: createPersistenceImpl(parametersFacade),
       automationInput: createAutomationInput(parametersFacade),
       presetProvider: {
+        getPresetNames() {
+          return Object.keys(presets);
+        },
+        applyPreset(presetName) {
+          const preset = presets[presetName as keyof typeof presets];
+          if (preset) {
+            parametersFacade.setParameters(preset);
+          }
+        },
         getCommandNames() {
-          return appEnvs.isDevelopment
+          return appEnvs.isDevelopment || appEnvs.isLocalDebug
             ? ["init", "rand", "dump"]
             : ["init", "rand"];
         },
