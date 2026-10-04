@@ -5,8 +5,8 @@ import {
   type SynthParameters,
   defaultSynthParameters,
   IEditParametersReceiver,
-} from "./core/definitions";
-import { createSynthesizerEngine } from "./core/synthesizer-engine";
+} from "../core/definitions.ts";
+import { createSynthesizerEngine } from "../core/synthesizer-engine.ts";
 import { setupMidiKeyboardInput } from "@lib/mu2609/utils/midi-keyboard-input";
 import { createPersistenceImpl } from "./persistence.svelte.ts";
 import { createAutomationInput } from "./automation-input.ts";

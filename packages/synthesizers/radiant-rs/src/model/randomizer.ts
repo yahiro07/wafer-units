@@ -6,8 +6,8 @@ import {
   OscParameters,
   ReverbParameters,
   SynthParameters,
-} from "./core/definitions";
-import { numWaveformSpecs } from "./core/waveforms/core-waveform-generator";
+} from "../core/definitions";
+import { numWaveformSpecs } from "../core/waveforms/core-waveform-generator";
 
 const randF = Math.random;
 

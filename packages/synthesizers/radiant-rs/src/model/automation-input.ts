@@ -3,7 +3,7 @@ import {
   IEditParametersReceiver,
   ParameterEditSpec,
   SynthParameters,
-} from "./core/definitions";
+} from "../core/definitions";
 import { resultOf } from "@lib/mu2609/utils/helpers";
 
 export function createAutomationInput(

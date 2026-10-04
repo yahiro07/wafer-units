@@ -1,6 +1,6 @@
 <script lang="ts">
   import { setAppModelContext } from "./app-context.ts";
-  import { createAppModel } from "./app-model.svelte.ts";
+  import { createAppModel } from "./model/app-model.svelte.ts";
   import EqSection from "./sections/eq-section.svelte";
   import OscillatorSection from "./sections/oscillator-section.svelte";
   import ReverbSection from "./sections/reverb-section.svelte";

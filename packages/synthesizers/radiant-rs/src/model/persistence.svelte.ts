@@ -4,8 +4,8 @@ import {
   IEditParametersReceiver,
   type OscParameters,
   type SynthParameters,
-} from "./core/definitions";
-import { numWaveformSpecs } from "./core/waveforms/core-waveform-generator";
+} from "../core/definitions";
+import { numWaveformSpecs } from "../core/waveforms/core-waveform-generator";
 
 const formatRevision = 1;
 const oscByteCount = 14;
