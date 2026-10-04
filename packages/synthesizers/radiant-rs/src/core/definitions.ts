@@ -79,7 +79,7 @@ export const defaultSynthParameters: SynthParameters = {
     shape: 0,
     dense: 0.5,
     mix: 0.66,
-    unison: 1,
+    unison: 7,
     detune: 0.5,
     pan: 0,
     volume: 0.5,
@@ -152,8 +152,6 @@ export const defaultSynthParameters: SynthParameters = {
 };
 if (appEnvs.isDevelopment) {
   const ds = defaultSynthParameters;
-  ds.reverb.mix = 0;
-  ds.osc1.unison = 7;
   ds.osc2.unison = 7;
   ds.osc3.unison = 7;
 }
@@ -181,7 +179,9 @@ export type SynthesisBus = {
   latestParameters: SynthParameters;
 };
 
-export type IEditParametersReceiver = {
+export type ParametersFacade = {
+  getParameters(): SynthParameters;
+  setParameters(parameters: SynthParameters): void;
   dispatchParameterEdit(spec: ParameterEditSpec): void;
-  setAllParameters(parameters: SynthParameters): void;
+  dumpParameters(): void;
 };

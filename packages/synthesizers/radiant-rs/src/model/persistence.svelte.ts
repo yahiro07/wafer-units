@@ -1,7 +1,7 @@
 import { clampValue } from "@lib/mu2609/utils/helpers";
 import {
   FilterType,
-  IEditParametersReceiver,
+  ParametersFacade,
   type OscParameters,
   type SynthParameters,
 } from "../core/definitions";
@@ -141,13 +141,10 @@ const mappers = {
   },
 };
 
-export function createPersistenceImpl(
-  getParameters: () => SynthParameters,
-  editParametersReceiver: IEditParametersReceiver,
-) {
+export function createPersistenceImpl(parametersFacade: ParametersFacade) {
   return {
     emitStateBytes() {
-      const parameters = getParameters();
+      const parameters = parametersFacade.getParameters();
       const paramBytes = mappers.serializeParameters(parameters);
       return new Uint8Array([formatRevision, ...paramBytes]);
     },
@@ -157,7 +154,7 @@ export function createPersistenceImpl(
         bytes[0] === formatRevision
       ) {
         const parameters = mappers.deserializeParameters([...bytes.slice(1)]);
-        editParametersReceiver.setAllParameters(parameters);
+        parametersFacade.setParameters(parameters);
       } else {
         console.warn(`[ptmw] skipped incompatible data on applyStateBytes`);
       }

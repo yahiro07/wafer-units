@@ -1,14 +1,9 @@
 import { AutomationInputPort } from "wafer-host/unit-types";
-import {
-  IEditParametersReceiver,
-  ParameterEditSpec,
-  SynthParameters,
-} from "../core/definitions";
+import { ParametersFacade, ParameterEditSpec } from "../core/definitions";
 import { resultOf } from "@lib/mu2609/utils/helpers";
 
 export function createAutomationInput(
-  getParameters: () => SynthParameters,
-  editParametersReceiver: IEditParametersReceiver,
+  parametersFacade: ParametersFacade,
 ): AutomationInputPort {
   return {
     getParameterSpecs() {
@@ -20,7 +15,7 @@ export function createAutomationInput(
       ];
     },
     getParameter(id) {
-      const parameters = getParameters();
+      const parameters = parametersFacade.getParameters();
       if (id === "osc1Shape") {
         return parameters.osc1.shape;
       }
@@ -42,7 +37,7 @@ export function createAutomationInput(
         if (id === "filterCutoff") return { filter: { cutoff: value } };
       });
       if (editSpec) {
-        editParametersReceiver.dispatchParameterEdit(editSpec);
+        parametersFacade.dispatchParameterEdit(editSpec);
       }
     },
   };
