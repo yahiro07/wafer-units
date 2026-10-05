@@ -11,6 +11,16 @@
       appModel.cleanup();
     };
   });
+
+  function getRecordingProgressText() {
+    if (states.recordingProgress) {
+      const rp = states.recordingProgress;
+      const pos = rp.currentBarPosition / rp.totalBars;
+      return `${(pos * 100).toFixed(0)}%`;
+    } else {
+      return "0%";
+    }
+  }
 </script>
 
 {#snippet button({
@@ -40,15 +50,12 @@
   <div class="h-dvh flex-c overflow-hidden">
     <div class="flex-vc gap-1">
       <div class="flex-c w-full bg-#aaa text-white py-2">
-        <div>
-          {states.recordingProgress?.currentBarPosition ?? 0} / {states
-            .recordingProgress?.totalBars ?? 0}
-        </div>
+        {getRecordingProgressText()}
       </div>
       <div class="flex-h gap-1">
         {@render button({
           text: "standby",
-          active: states.recordingStatus !== "none",
+          active: states.recordingStatus === "reserved",
           disabled:
             states.recordingStatus === "recording" ||
             states.recordingStatus === "done",
@@ -58,20 +65,20 @@
           text: "recording",
           active: states.recordingStatus === "recording",
           disabled: true,
-          activeColor: "#fa0",
+          activeColor: "#f90",
         })}
         {@render button({
           text: "DL",
           active: states.recordingStatus === "done",
           disabled: states.recordingStatus !== "done",
-          activeColor: "#0c0",
+          activeColor: "#4c4",
           onClick: appModel.downloadRecordedAudio,
         })}
         {@render button({
           text: "x",
           active: states.recordingStatus === "done",
           disabled: states.recordingStatus !== "done",
-          activeColor: "#0c0",
+          activeColor: "#4c4",
           onClick: appModel.clearRecordedAudio,
         })}
       </div>

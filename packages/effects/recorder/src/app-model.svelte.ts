@@ -127,11 +127,13 @@ export function createAppModel(): AppModel {
         a.click();
         URL.revokeObjectURL(url);
         states.recordingStatus = "none";
+        states.recordingProgress = null;
       }
     },
     clearRecordedAudio() {
       recordedBlob = null;
       states.recordingStatus = "none";
+      states.recordingProgress = null;
     },
     cleanup() {
       audioInputNode.disconnect();
