@@ -21,6 +21,7 @@ export type AppModel = {
   states: AppStates;
   reserveRecording(): void;
   downloadRecordedAudio(): void;
+  clearRecordedAudio(): void;
   cleanup(): void;
 };
 
@@ -82,7 +83,7 @@ export function createAppModel(): AppModel {
     unitInterface.completeSetup({
       unitAspects: {
         unitType: "effect",
-        viewSize: [320, 200],
+        viewSize: [320, 100],
       },
       cleanup() {},
       unitCallbacks: {
@@ -113,6 +114,8 @@ export function createAppModel(): AppModel {
     reserveRecording() {
       if (states.recordingStatus === "none") {
         states.recordingStatus = "reserved";
+      } else if (states.recordingStatus === "reserved") {
+        states.recordingStatus = "none";
       }
     },
     downloadRecordedAudio() {
@@ -125,6 +128,10 @@ export function createAppModel(): AppModel {
         URL.revokeObjectURL(url);
         states.recordingStatus = "none";
       }
+    },
+    clearRecordedAudio() {
+      recordedBlob = null;
+      states.recordingStatus = "none";
     },
     cleanup() {
       audioInputNode.disconnect();
