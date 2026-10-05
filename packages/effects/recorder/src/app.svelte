@@ -28,8 +28,8 @@
 })}
   <button
     class={cz(
-      "bg-#aaa text-white px-4 py-2",
-      !disabled ? "cursor-pointer" : "pointer-events-none",
+      "bg-#aaa text-white px-2.5 py-2",
+      !disabled ? "cursor-pointer hover:opacity-90" : "pointer-events-none",
     )}
     style={active ? `background-color: ${activeColor}` : undefined}
     onclick={onClick}>{text}</button
@@ -58,20 +58,20 @@
           text: "recording",
           active: states.recordingStatus === "recording",
           disabled: true,
-          activeColor: "#fc0",
+          activeColor: "#fa0",
         })}
         {@render button({
           text: "DL",
           active: states.recordingStatus === "done",
           disabled: states.recordingStatus !== "done",
-          activeColor: "#fc0",
+          activeColor: "#0c0",
           onClick: appModel.downloadRecordedAudio,
         })}
         {@render button({
           text: "x",
           active: states.recordingStatus === "done",
           disabled: states.recordingStatus !== "done",
-          activeColor: "#fc0",
+          activeColor: "#0c0",
           onClick: appModel.clearRecordedAudio,
         })}
       </div>

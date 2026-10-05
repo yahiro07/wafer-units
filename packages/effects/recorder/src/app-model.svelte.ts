@@ -83,7 +83,7 @@ export function createAppModel(): AppModel {
     unitInterface.completeSetup({
       unitAspects: {
         unitType: "effect",
-        viewSize: [320, 100],
+        viewSize: [280, 100],
       },
       cleanup() {},
       unitCallbacks: {
