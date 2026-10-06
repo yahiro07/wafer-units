@@ -35,28 +35,26 @@ type WaveformSpec = {
 };
 
 const waveformSpecMap: Record<number, WaveformSpec> = {
-  [0]: {
+  [0]: { ptmKind: "sdm" },
+  [1]: {
     ptmKind: "sfm",
     windowType: "slopeD",
     windowMix: true,
   },
-  [1]: {
+  [2]: {
     ptmKind: "speed",
     ptmLevelScaling: 0.7,
     windowType: "slope",
     windowMix: true,
   },
-  [2]: {
+  [3]: {
     ptmKind: "accel",
     ptmLevelScaling: 0.7,
     windowType: "slopeD",
     windowMix: true,
   },
-  [3]: { ptmKind: "sdm" },
   [4]: { ptmKind: "screw" },
   [5]: { ptmKind: "drill", ptmLevelScaling: 0.8 },
-  // [6]: { ptmKind: "creep2", windowType: "tailHann" },
-  // [7]: { ptmKind: "ridge", windowType: "slopeD" },
   [6]: {
     ptmKind: "squash",
     ptmLevelScaling: 1,
