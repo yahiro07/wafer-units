@@ -282,6 +282,27 @@ importers:
         specifier: ^4.3.3
         version: 4.3.3
 
+  packages/effects/recorder:
+    devDependencies:
+      '@lib/mu2609':
+        specifier: workspace:*
+        version: link:../../lib/mu2609
+      '@sveltejs/vite-plugin-svelte':
+        specifier: ^7.3.0
+        version: 7.3.1(svelte@5.57.1)(vite@8.3.0(@types/node@26.4.0)(jiti@2.7.0))
+      '@unocss/preset-wind4':
+        specifier: 'catalog:'
+        version: 66.7.5
+      '@unocss/vite':
+        specifier: 'catalog:'
+        version: 66.7.5(vite@8.3.0(@types/node@26.4.0)(jiti@2.7.0))
+      svelte:
+        specifier: ^5.57.0
+        version: 5.57.1
+      unocss:
+        specifier: 'catalog:'
+        version: 66.7.5(vite@8.3.0(@types/node@26.4.0)(jiti@2.7.0))
+
   packages/effects/sunset-chorus-mini:
     devDependencies:
       '@preact/preset-vite':
