@@ -19,7 +19,7 @@ const ControlsPart = () => {
   return (
     <div sx={qu.flexV().gap(1.5)}>
       <div sx={qu.flexHA().fJustify("between").pl(1.5).pr(1)}>
-        <div sx={qu.fontSize(17).weight("bold")}>Channel Strip</div>
+        <div sx={qu.fontSize(17).weight("bold")}>CSFX</div>
         <div sx={qu.flexHA().gap(4)}>
           <LabeledBox label="effect" width={36} contentHeight={24}>
             <ButtonWithIndicator
