@@ -6,6 +6,7 @@ import { store } from "@/root/store";
 import { actions } from "@/root/actions";
 import { Slider } from "@/components/slider";
 import { cz } from "@/utils/cz";
+import { ScalerBoxSC } from "@/components/headless/scaler-box-sc";
 
 type ParameterSpec = {
   key: keyof EffectParameters;
@@ -62,17 +63,19 @@ const PageRoot = () => {
   const { parameters } = store.useSnapshot();
 
   return (
-    <div class="flex-v bg-clControlBg bd-clControlEdge py-2 px-4 gap-3">
-      <div class="text-xl font-bold">FC1</div>
-      <div class="flex-ha gap-6">
-        {/* <div class="text-20px font-bold">CH1</div> */}
-        <ParameterUis specs={knobParamsPrimary} parameters={parameters} />
-      </div>
-      {/* <div class="flex-ha gap-8">
+    <ScalerBoxSC scale={0.66}>
+      <div class="flex-v bg-clPanelBg py-2 px-6 gap-3">
+        <div class="text-xl font-bold">FC1</div>
+        <div class="flex-ha gap-6">
+          {/* <div class="text-20px font-bold">CH1</div> */}
+          <ParameterUis specs={knobParamsPrimary} parameters={parameters} />
+        </div>
+        {/* <div class="flex-ha gap-8">
         <div class="text-20px font-bold">COMMON</div>
         <ParameterUis specs={KnobParamsSecondary} parameters={parameters} />
       </div> */}
-    </div>
+      </div>
+    </ScalerBoxSC>
   );
 };
 
