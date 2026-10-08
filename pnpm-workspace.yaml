@@ -8,6 +8,7 @@ minimumReleaseAgeExclude:
   - mofur@0.1.1
   - wafer-host
   - snap-store@0.1.14
+  - solid-js@1.9.17
 catalog:
   "qulex": "npm:@yahiro07/qulex@^0.1.7"
   "@preact/preset-vite": "^2.10.6"

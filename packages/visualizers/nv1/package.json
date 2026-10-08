@@ -1,0 +1,17 @@
+{
+  "name": "nv1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite dev",
+    "build": "vite build"
+  },
+  "devDependencies": {
+    "@lib/mu2609": "workspace:*",
+    "@unocss/preset-wind4": "catalog:",
+    "@unocss/vite": "catalog:",
+    "solid-js": "^1.9.17",
+    "unocss": "catalog:",
+    "vite-plugin-solid": "^2.11.14"
+  }
+}
