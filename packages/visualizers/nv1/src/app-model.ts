@@ -1,6 +1,7 @@
 import { createStore } from "solid-js/store";
 import { seqNumbers } from "@lib/mu2609/utils/helpers";
 import { queryUnitInterface } from "wafer-host/unit-types";
+import { WaferExNotesVisualizer } from "@/wafer-ex-notes-visualizer";
 
 type Size = { width: number; height: number };
 
@@ -50,15 +51,24 @@ function createAppModel() {
       },
       unitCallbacks: {
         setViewActive: actions.setViewActive,
-      },
-      noteInput: {
-        noteOn(noteNumber) {
-          actions.noteOn(0, noteNumber);
+        onMessageFromHost(message: WaferExNotesVisualizer["MessageFromHost"]) {
+          if (message.type === "note") {
+            if (message.isOn) {
+              actions.noteOn(message.ch, message.noteNumber);
+            } else {
+              actions.noteOff(message.ch, message.noteNumber);
+            }
+          }
         },
-        noteOff(noteNumber) {
-          actions.noteOff(0, noteNumber);
-        },
       },
+      // noteInput: {
+      //   noteOn(noteNumber) {
+      //     actions.noteOn(0, noteNumber);
+      //   },
+      //   noteOff(noteNumber) {
+      //     actions.noteOff(0, noteNumber);
+      //   },
+      // },
     });
   } else {
     actions.setViewActive(true);
