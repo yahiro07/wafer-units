@@ -1,0 +1,16 @@
+.spectrumView {
+  display: flex;
+  gap: 6px;
+  & > div {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 7px;
+    & > div {
+      width: 44px;
+      height: 3px;
+      &.active {
+        background: #0fc;
+      }
+    }
+  }
+}
