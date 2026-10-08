@@ -2,6 +2,7 @@ import { constants } from "@/constants";
 import { seqNumbers } from "@lib/mu2609/utils/helpers";
 import { cz } from "@lib/mu2609/utils/cz";
 import { appModel } from "@/app-model";
+import { Show } from "solid-js";
 
 const KeyboardView = (props: { ch: number }) => {
   const { bottomNoteNumber, numOctaves } = constants;
@@ -12,7 +13,7 @@ const KeyboardView = (props: { ch: number }) => {
     blackOuter: "relative w-0",
     black:
       "absolute left-0 top-0 w-18px h-62% bg-#888 bd-#000 -translate-x-1/2",
-    active: "!bg-#0f0",
+    active: "!bg-#0dc",
   };
 
   return (
@@ -48,14 +49,16 @@ const KeyboardView = (props: { ch: number }) => {
 export const App = () => {
   appModel.setSize({ width: 938, height: 252 });
   return (
-    <div class="h-dvh flex-c">
-      <div class="p-4 bd-#0002">
-        <div class="flex-v gap-1.5">
-          {seqNumbers(appModel.getters.numActiveChannels()).map((ch) => {
-            return <KeyboardView ch={ch} />;
-          })}
+    <Show when={appModel.getters.viewActive()}>
+      <div class="h-dvh flex-c bg-#678">
+        <div class="p-4 bd-#0002">
+          <div class="flex-v gap-1.5">
+            {seqNumbers(appModel.getters.numActiveChannels()).map((ch) => {
+              return <KeyboardView ch={ch} />;
+            })}
+          </div>
         </div>
       </div>
-    </div>
+    </Show>
   );
 };

@@ -10,9 +10,11 @@ function createAppModel() {
   const [appState, setAppState] = createStore<{
     numActiveChannels: number;
     notes: Record<number, number[]>;
+    viewActive: boolean;
   }>({
     numActiveChannels: 4,
     notes: Object.fromEntries(seqNumbers(6).map((i) => [i, []])),
+    viewActive: false,
   });
 
   const actions = {
@@ -28,31 +30,45 @@ function createAppModel() {
         [ch]: prev[ch].filter((n) => n !== noteNumber),
       }));
     },
+    setViewActive(active: boolean) {
+      setAppState("viewActive", active);
+    },
   };
 
-  // actions.noteOn(0, 60);
-  // actions.noteOn(0, 67);
-  // actions.noteOn(1, 48);
-  // actions.noteOn(2, 72);
-  // actions.noteOn(2, 75);
+  if (0) {
+    actions.noteOn(0, 60);
+    actions.noteOn(0, 67);
+    actions.noteOn(1, 48);
+    actions.noteOn(2, 72);
+    actions.noteOn(2, 75);
+  }
 
-  unitInterface?.completeSetup({
-    unitAspects: {
-      unitType: "effect",
-    },
-    noteInput: {
-      noteOn(noteNumber) {
-        actions.noteOn(0, noteNumber);
+  if (unitInterface) {
+    unitInterface.completeSetup({
+      unitAspects: {
+        unitType: "effect",
       },
-      noteOff(noteNumber) {
-        actions.noteOff(0, noteNumber);
+      unitCallbacks: {
+        setViewActive: actions.setViewActive,
       },
-    },
-  });
+      noteInput: {
+        noteOn(noteNumber) {
+          actions.noteOn(0, noteNumber);
+        },
+        noteOff(noteNumber) {
+          actions.noteOff(0, noteNumber);
+        },
+      },
+    });
+  } else {
+    actions.setViewActive(true);
+  }
+
   return {
     getters: {
       numActiveChannels: () => appState.numActiveChannels,
       channelNotes: (ch: number) => appState.notes[ch],
+      viewActive: () => appState.viewActive,
     },
     setSize(size: Size) {
       unitInterface?.setViewSize(size);
