@@ -48,13 +48,7 @@ function createAppModel() {
       },
     });
   } else {
-    //development
     setAppState("viewActive", true);
-    const fftData = new Float32Array([
-      0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 0.8, 0.6, 0.4, 0.2, 0.1,
-      0.15,
-    ]);
-    coreActions.setFftData(fftData);
   }
 
   return {

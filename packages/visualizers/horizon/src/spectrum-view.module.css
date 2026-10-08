@@ -8,7 +8,6 @@
     & > div {
       width: 44px;
       height: 3px;
-      background: #000;
       &.active {
         background: #0fc;
       }
