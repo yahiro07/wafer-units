@@ -11,7 +11,7 @@ const KeyboardView = (props: { ch: number }) => {
     white: "w-24px h-full bd-#000 bg-#fff",
     blackOuter: "relative w-0",
     black:
-      "absolute left-0 top-0 w-17px h-62% bg-#888 bd-#000 -translate-x-1/2",
+      "absolute left-0 top-0 w-18px h-62% bg-#888 bd-#000 -translate-x-1/2",
     active: "!bg-#0f0",
   };
 
@@ -25,10 +25,16 @@ const KeyboardView = (props: { ch: number }) => {
             .channelNotes(props.ch)
             .includes(noteNumber);
 
-          if ([1, 3, 6, 8, 10].includes(i % 12)) {
+          const si = i % 12;
+          if ([1, 3, 6, 8, 10].includes(si)) {
+            const d = 1.6;
+            const offset = { [1]: -d, [3]: d, [6]: -d, [10]: d }[si];
             return (
               <div class={styles.blackOuter}>
-                <div class={cz(styles.black, active && styles.active)} />
+                <div
+                  class={cz(styles.black, active && styles.active)}
+                  style={offset ? { left: `${offset}px` } : undefined}
+                />
               </div>
             );
           }
