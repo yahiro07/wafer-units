@@ -1,16 +1,16 @@
-import { seqNumbers } from "@lib/mu2609/utils/helpers";
+import { mapUnaryFrom, seqNumbers } from "@lib/mu2609/utils/helpers";
 import styles from "./spectrum-view.module.css";
 
 function readFftData(fftData: Float32Array, xpos: number) {
   const index = Math.round(xpos * fftData.length - 1);
-  return fftData[index];
+  return mapUnaryFrom(fftData[index], -180, 0, true);
 }
 
 export const SpectrumView = (props: { fftData: Float32Array | null }) => {
   return (
     <div class={styles.spectrumView}>
       {seqNumbers(16).map((i) => {
-        const xpos = i / 15;
+        let xpos = (i === 0 ? 0.5 : i) / 15;
         const level = props.fftData ? readFftData(props.fftData, xpos) : 0;
         return (
           <div>
