@@ -10,7 +10,7 @@
       height: 3px;
       background: #000;
       &.active {
-        background: #4fc;
+        background: #0fc;
       }
     }
   }
