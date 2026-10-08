@@ -61,14 +61,6 @@ function createAppModel() {
           }
         },
       },
-      // noteInput: {
-      //   noteOn(noteNumber) {
-      //     actions.noteOn(0, noteNumber);
-      //   },
-      //   noteOff(noteNumber) {
-      //     actions.noteOff(0, noteNumber);
-      //   },
-      // },
     });
   } else {
     actions.setViewActive(true);
