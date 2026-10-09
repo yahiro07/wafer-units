@@ -11,8 +11,8 @@ export const EffectorBody = ({
   return (
     <div
       sx={[
-        qu.bg("#ffe899").p(4).color("#333").rounded(2),
-        qu.bd("inset 1px #0004"),
+        qu.bg("#ffe899").p(4).color("#333"),
+        qu.bd("inset 1px #0004").rounded(2),
         className,
       ]}
     >

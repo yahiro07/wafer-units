@@ -11,7 +11,7 @@ function setupUnit() {
   unitInterface?.completeSetup({
     unitAspects: {
       unitType: "effect",
-      viewSize: [530, 168],
+      viewSize: [359, 109],
     },
     cleanup: engine.cleanup,
   });

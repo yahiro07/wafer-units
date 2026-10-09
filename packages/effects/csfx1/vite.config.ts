@@ -11,6 +11,6 @@ export default defineConfig({
   optimizeDeps: {
     exclude: ["wafer-host", "snap-store"],
   },
-  build: { outDir: "../../../dist/channel-strip", emptyOutDir: true },
+  build: { outDir: "../../../dist/csfx1", emptyOutDir: true },
   server: { port: 3000 },
 });

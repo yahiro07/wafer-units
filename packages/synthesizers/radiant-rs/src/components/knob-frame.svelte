@@ -2,6 +2,7 @@
   import { startDragSession } from "@lib/mu2609/utils/drag-session";
   import { clampValue } from "@lib/mu2609/utils/helpers";
   import type { Snippet } from "svelte";
+  import { cz } from "@lib/mu2609/utils/cz";
 
   type Props = {
     className?: string;
@@ -44,10 +45,15 @@
   }
 </script>
 
-<div
-  onpointerdown={handlePointerDown}
-  class={className}
-  style="cursor: pointer;"
->
+<div onpointerdown={handlePointerDown} class={cz("knob-frame", className)}>
   {@render children()}
 </div>
+
+<style>
+  .knob-frame {
+    cursor: pointer;
+    touch-action: none;
+    pointer-events: auto;
+    -webkit-tap-highlight-color: transparent;
+  }
+</style>
