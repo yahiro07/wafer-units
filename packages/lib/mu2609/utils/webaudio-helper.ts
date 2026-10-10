@@ -39,15 +39,49 @@ export function connectNodes(...units: IUnit[]) {
 }
 
 export function createConnectionKeeper() {
-  let disconnectFn: (() => void) | undefined;
+  let lastConnectedUnits: IUnit[] | undefined;
+
+  const disconnects = () => {
+    if (lastConnectedUnits) {
+      disconnectNodes(...lastConnectedUnits);
+      lastConnectedUnits = undefined;
+    }
+  };
   return {
     connects(...units: IUnit[]) {
-      disconnectFn?.();
-      disconnectFn = connectNodes(...units);
+      const changed = !(
+        lastConnectedUnits &&
+        lastConnectedUnits.length === units.length &&
+        lastConnectedUnits.every((unit, index) => unit === units[index])
+      );
+      if (changed) {
+        disconnects();
+        connectNodes(...units);
+        lastConnectedUnits = units;
+      }
     },
     cleanup() {
-      disconnectFn?.();
-      disconnectFn = undefined;
+      disconnects();
+    },
+  };
+}
+
+export function createNodeParameterSetter(
+  ac: AudioContext,
+  node: AudioParam,
+  lerpTime: number,
+) {
+  return {
+    set(value: number, immediate: boolean = false) {
+      if (value === node.value) return;
+
+      const t = ac.currentTime;
+      node.cancelScheduledValues(t);
+      if (!immediate) {
+        node.linearRampToValueAtTime(value, t + lerpTime);
+      } else {
+        node.value = value;
+      }
     },
   };
 }

@@ -1,0 +1,14 @@
+@import url("https://cdn.jsdelivr.net/npm/remixicon@4.9.1/fonts/remixicon.min.css");
+@import url("https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@400;500;600;700&display=swap");
+
+body {
+  background: #a9abbd;
+  font-family: "Barlow Semi Condensed", sans-serif;
+  font-weight: 600;
+  font-size-adjust: 0.55;
+  user-select: none;
+}
+
+img {
+  -webkit-user-drag: none;
+}
