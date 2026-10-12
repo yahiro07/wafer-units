@@ -6,9 +6,9 @@ export const App = () => {
   return (
     <Show when={appModel.getters.viewActive()}>
       <div class="h-dvh flex-c bg-#ccc text-#444">
-        <div class="pt-3.5 pb-1.5 px-6">
+        <div class="w-100px h-100px flex-c pt-2">
           <LabeledKnob
-            label="Volume"
+            label="VOLUME"
             value={appModel.getters.parameters().volume}
             onChange={(v) => appModel.actions.setParameter("volume", v)}
           />
