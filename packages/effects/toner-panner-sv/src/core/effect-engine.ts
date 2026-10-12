@@ -24,14 +24,15 @@ export function createEffectEngine(
     affectParameters(keys: SynthParameterKey[]) {
       for (const key of keys) {
         if (key === "pan") {
-          pannerNode.pan.setValueAtTime(parameters[key], ac.currentTime + 0.01);
-        } else if (key === "volume") {
-          gainNode.gain.setValueAtTime(parameters[key], ac.currentTime + 0.01);
+          pannerNode.pan.linearRampToValueAtTime(
+            parameters[key],
+            ac.currentTime + 0.01,
+          );
         }
       }
     },
     affectParametersAll() {
-      internal.affectParameters(["pan", "volume"]);
+      internal.affectParameters(["pan"]);
     },
   };
   internal.affectParametersAll();
