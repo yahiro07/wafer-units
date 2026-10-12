@@ -1,26 +1,47 @@
-import { UnitInterface } from "wafer-host/unit-types";
 import {
   connectNodes,
   disconnectNodes,
 } from "@lib/mu2609/utils/webaudio-helper";
-import { EffectEngine } from "@/core/interfaces";
+import type { UnitInterface } from "wafer-host/unit-types";
+import type {
+  SynthParameters,
+  EffectEngine,
+  SynthParameterKey,
+} from "./definitions";
 
 export function createEffectEngine(
   unitInterface: UnitInterface | undefined,
+  parameters: SynthParameters,
 ): EffectEngine {
   const ac = unitInterface?.audioContext ?? new AudioContext();
   const inputNode = unitInterface?.audioInputNode ?? ac.createGain();
   const outputNode = unitInterface?.audioOutputNode ?? ac.destination;
   const pannerNode = ac.createStereoPanner();
+  const gainNode = ac.createGain();
+  connectNodes(inputNode, pannerNode, gainNode, outputNode);
 
-  connectNodes(inputNode, pannerNode, outputNode);
+  const internal = {
+    affectParameters(keys: SynthParameterKey[]) {
+      for (const key of keys) {
+        if (key === "pan") {
+          pannerNode.pan.linearRampToValueAtTime(
+            parameters[key],
+            ac.currentTime + 0.01,
+          );
+        }
+      }
+    },
+    affectParametersAll() {
+      internal.affectParameters(["pan"]);
+    },
+  };
+  internal.affectParametersAll();
 
   return {
-    setParameters(pr) {
-      pannerNode.pan.setValueAtTime(pr.pan, ac.currentTime + 0.01);
-    },
+    affectParameters: internal.affectParameters,
+    affectParametersAll: internal.affectParametersAll,
     cleanup() {
-      disconnectNodes(inputNode, pannerNode, outputNode);
+      disconnectNodes(inputNode, pannerNode, gainNode, outputNode);
     },
   };
 }
