@@ -30,8 +30,8 @@
     align-items: center;
 
     > .tick {
-      width: 3.5px;
-      height: 15px;
+      width: 3.2px;
+      height: 13px;
       background: #666;
     }
   }

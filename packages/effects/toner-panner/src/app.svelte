@@ -11,7 +11,7 @@
 
 {#if states.viewActive}
   <div class="h-dvh flex-c">
-    <div class="w-100px h-100px bg-#ccc flex-c pt-4 pb-1 px-6">
+    <div class="w-98px h-94px bg-#ccc flex-c pt-3">
       <LabeledKnob
         label="PAN"
         value={parameters.pan}

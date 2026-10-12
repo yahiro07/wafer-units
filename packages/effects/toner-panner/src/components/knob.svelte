@@ -74,8 +74,8 @@
   }
 
   .tick {
-    width: 3px;
-    height: 12px;
-    background: #458;
+    width: 3.2px;
+    height: 13px;
+    background: #666;
   }
 </style>
