@@ -8,7 +8,7 @@
 </script>
 
 <div class="flex-vc">
-  <div class="h-55px flex-c">
+  <div class="h-50px flex-c">
     {@render children()}
   </div>
   <div class="text-lg text-#333 w-0 flex-c">

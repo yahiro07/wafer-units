@@ -20,7 +20,7 @@
     max = 1,
     step = 0.01,
     onchange = () => {},
-    size = 55,
+    size = 50,
   }: Props = $props();
 
   const angle = $derived(linearInterpolate(value, min, max, -140, 140));
