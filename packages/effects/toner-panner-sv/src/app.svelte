@@ -7,9 +7,6 @@
 
   const { states } = appModel;
   const parameters = states.parameters;
-  const setParameter = (key: SynthParameterKey, value: number) => {
-    appModel.setParameter(key, value);
-  };
 </script>
 
 {#if states.viewActive}
@@ -20,7 +17,7 @@
         value={parameters.pan}
         min={-1}
         max={1}
-        onchange={(v) => setParameter("pan", v)}
+        onchange={(v) => appModel.setParameter("pan", v)}
       />
     </div>
   </div>

@@ -6,6 +6,7 @@ import {
   type EffectEngine,
 } from "./core/definitions";
 import { createEffectEngine } from "./core/effect-engine";
+import { createPersistence } from "./persistence";
 
 type AppStates = {
   parameters: SynthParameters;
@@ -41,15 +42,13 @@ function setupUnit(
         states.viewActive = value;
       },
     },
-    persistence: {
-      emitState() {
-        return { parameters: { ...states.parameters } };
-      },
-      applyState(data) {
-        Object.assign(states.parameters, data.parameters);
+    persistence: createPersistence({
+      getParameters: () => states.parameters,
+      applyParameters(parameters) {
+        states.parameters.pan = parameters.pan;
         engine.affectParametersAll();
       },
-    },
+    }),
   });
 }
 
