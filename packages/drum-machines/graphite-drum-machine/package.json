@@ -9,12 +9,12 @@
     "typecheck": "tsc"
   },
   "devDependencies": {
-    "@preact/preset-vite": "2.10.6",
+    "@preact/preset-vite": "catalog:",
     "@tailwindcss/vite": "^4.3.3",
     "clsx": "^2.1.1",
     "mofur": "^0.1.1",
-    "preact": "^10.29.2",
-    "snap-store": "^0.1.12",
+    "preact": "catalog:",
+    "snap-store": "catalog:",
     "tailwindcss": "^4.3.3"
   }
 }
