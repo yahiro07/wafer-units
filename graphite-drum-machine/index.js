@@ -1245,7 +1245,7 @@ function Wt(e, t) {
 	};
 }
 //#endregion
-//#region ../../../node_modules/.pnpm/snap-store@0.1.12_preact@10.29.8_react@19.2.8/node_modules/snap-store/dist/store-impl-CzL-_B7V.js
+//#region ../../../node_modules/.pnpm/snap-store@0.1.14_preact@10.29.8_react@19.2.8/node_modules/snap-store/dist/store-impl-VSv4Uyxk.js
 var Gt = Symbol("V"), Kt = Symbol("IMMUT_BASE"), qt = Symbol("IS_RAW"), Jt = Symbol("P"), U = "Array", Yt = [
 	Symbol.iterator,
 	Symbol.toStringTag,
@@ -2223,15 +2223,15 @@ function Xr(e, t) {
 	n !== -1 && e.splice(n, 1);
 }
 function Zr(e, t) {
-	let { useEffect: n, useRef: r, useState: i } = t, a = {}, o = e, s = {}, c = s, l = [], u, d = !1;
-	function f(e) {
+	let { useEffect: n, useRef: r, useState: i } = t, a = {}, o = e, s = {}, c = s, l = [], u, d = !1, f = 0;
+	function p(e) {
 		for (let t of l) t(e);
 	}
 	for (let t in e) {
 		let e = t, n = (t) => {
 			let n;
 			if (n = typeof t == "function" ? t(o[e]) : t, n !== o[e]) {
-				o[e] = n, d ? (u ??= {}, u[e] = n) : f({ [e]: n });
+				o[e] = n, f++, d ? (u ??= {}, u[e] = n) : p({ [e]: n });
 				for (let t in a) {
 					let n = a[t];
 					if (n.dependentFieldKeys.has(e)) {
@@ -2255,12 +2255,12 @@ function Zr(e, t) {
 			n((e) => !e);
 		};
 	}
-	let p = (e) => {
+	let m = (e) => {
 		for (let t in e) {
 			let n = Yr(t), r = e[t], i = c[`set${n}`];
 			i?.(r);
 		}
-	}, m = (t) => {
+	}, h = (t) => {
 		let n = {}, r = /* @__PURE__ */ new Set();
 		for (let t in e) Object.defineProperty(n, t, { get() {
 			return r.has(t) || r.add(t), o[t];
@@ -2274,37 +2274,45 @@ function Zr(e, t) {
 			},
 			deactivate() {
 				a[t] === i && delete a[t];
-			}
+			},
+			renderedStateVersion: f
 		};
 		return i;
-	}, h = () => {
+	}, g = () => {
 		let [, e] = i(0), t = r(null);
-		return t.current ||= m(Math.random().toString(36).substring(2, 15)), n(() => (t.current && (t.current.refreshView = () => e((e) => e + 1), t.current.activate()), () => {
-			var e;
-			(e = t.current) == null || e.deactivate();
-		}), []), t.current.getterObject;
-	}, g = (e) => (l.push(e), () => {
+		return t.current ||= h(Math.random().toString(36).substring(2, 15)), t.current.renderedStateVersion = f, n(() => {
+			let n = t.current;
+			if (n && (n.refreshView = () => e((e) => e + 1), n.activate(), n.renderedStateVersion !== f)) {
+				var r;
+				(r = n.refreshView) == null || r.call(n);
+			}
+			return () => {
+				var e;
+				(e = t.current) == null || e.deactivate();
+			};
+		}, []), t.current.getterObject;
+	}, _ = (e, t) => (l.push(e), t && e(o), () => {
 		Xr(l, e);
-	}), _ = (e) => {
+	}), v = (e) => {
 		d = !0;
 		try {
 			e();
 		} finally {
-			d = !1, u !== void 0 && (f(u), u = void 0);
+			d = !1, u !== void 0 && (p(u), u = void 0);
 		}
 	};
 	return {
 		state: o,
-		assign: p,
-		useSnapshot: h,
-		subscribe: g,
+		assign: m,
+		useSnapshot: g,
+		subscribe: _,
 		mutations: s,
 		...s,
-		batch: _
+		batch: v
 	};
 }
 //#endregion
-//#region ../../../node_modules/.pnpm/snap-store@0.1.12_preact@10.29.8_react@19.2.8/node_modules/snap-store/dist/preact/index.js
+//#region ../../../node_modules/.pnpm/snap-store@0.1.14_preact@10.29.8_react@19.2.8/node_modules/snap-store/dist/preact/index.js
 function Qr(e) {
 	return Zr(e, {
 		useEffect: Ot,
